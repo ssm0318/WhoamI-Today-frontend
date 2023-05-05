@@ -8,7 +8,6 @@ function Root() {
   return (
     <>
       <Header />
-      xd
       <main>
         <Outlet />
       </main>
