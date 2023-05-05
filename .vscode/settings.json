@@ -1,0 +1,12 @@
+{
+  "editor.codeActionsOnSave": [
+    "source.organizeImports",
+    "source.fixAll.eslint"
+  ],
+  "editor.formatOnSave": true,
+  "eslint.workingDirectories": [
+    {
+      "directory": "/src"
+    }
+  ]
+}
