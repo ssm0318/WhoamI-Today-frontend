@@ -1,4 +1,4 @@
-import _create from './index';
+import { StateCreator } from 'zustand';
 
 interface CounterState {
   count: number;
@@ -14,7 +14,9 @@ const initialState = {
   count: 0,
 };
 
-const useCounterStore = _create<CounterState & CounterAction>((set, get) => ({
+export type CounterSlice = CounterState & CounterAction;
+
+export const createCounterSlice: StateCreator<CounterSlice> = (set, get) => ({
   ...initialState,
   increase: () => set(({ count }) => ({ count: count + 1 })),
   decrease: () => set(({ count }) => ({ count: count - 1 })),
@@ -23,6 +25,4 @@ const useCounterStore = _create<CounterState & CounterAction>((set, get) => ({
     return `${count}개`;
   },
   clear: () => set(initialState),
-}));
-
-export default useCounterStore;
+});
