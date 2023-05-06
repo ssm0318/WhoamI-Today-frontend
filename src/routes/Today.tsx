@@ -1,5 +1,5 @@
 function Today() {
-  return <h1>Today</h1>;
+  return <div>Today</div>;
 }
 
 export default Today;

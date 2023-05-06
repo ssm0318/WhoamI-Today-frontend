@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { MAX_WINDOW_WIDTH, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 
 export const HeaderWrapper = styled.header`
+  position: fixed;
+  top: 0;
+  display: flex;
+  max-width: ${MAX_WINDOW_WIDTH}px;
+  background-color: white;
+  height: ${TOP_NAVIGATION_HEIGHT}px;
   width: 100%;
-  height: 50px;
-  border: 1px solid;
-  display: fixed;
-  padding: 10px 0;
+  box-sizing: border-box;
 `;
 
 export const Menu = styled.div`
@@ -14,8 +18,7 @@ export const Menu = styled.div`
 `;
 
 export const Logo = styled.div`
-  font-size: 50px;
-  font-weight: 500px;
+  font-size: 30px;
   text-align: center;
   flex-grow: 1;
 `;
