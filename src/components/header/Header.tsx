@@ -1,4 +1,4 @@
-import { Font, Layout } from '@design-system';
+import { Button, Font, Layout } from '@design-system';
 import { HeaderWrapper, Logo, Menu, Noti } from './Header.styled';
 
 function Header() {
@@ -12,6 +12,9 @@ function Header() {
         </Font.Body>
         <Font.Display type="24_bold">123</Font.Display>
       </Layout.FlexCol>
+      <Layout.FlexRow>
+        <Button.Large type="white_fill" text="로그인/회원가입" status="normal" />
+      </Layout.FlexRow>
       <Logo>WhoAmI Today</Logo>
       <Noti to="/notifications">noti</Noti>
     </HeaderWrapper>

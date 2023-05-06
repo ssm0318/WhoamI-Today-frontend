@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { Colors } from '@design-system';
+import GlobalStyle from '@styles/global-styles';
 import ErrorPage from './components/error-page/ErrorPage';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
+    <GlobalStyle />
     <ThemeProvider theme={Colors}>
       <RouterProvider router={router} />
     </ThemeProvider>
