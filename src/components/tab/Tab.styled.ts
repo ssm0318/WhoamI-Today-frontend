@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 
 export const TabWrapper = styled.nav`
   position: fixed;
@@ -9,7 +10,7 @@ export const TabWrapper = styled.nav`
   max-width: 500px;
   margin: 0 auto;
   background-color: white;
-  height: 80px;
+  height: ${BOTTOM_TABBAR_HEIGHT}px;
 `;
 
 export const TabItem = styled(Link)`

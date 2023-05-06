@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { BOTTOM_TABBAR_HEIGHT, DEFAULT_MARGIN, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 
 export const RootContainer = styled(Layout.FlexCol)`
@@ -7,8 +8,7 @@ export const RootContainer = styled(Layout.FlexCol)`
 `;
 
 export const MainWrapper = styled.main`
-  padding-top: 50px;
-  padding-bottom: 80px;
   height: 100%;
   background-color: ${({ theme }) => theme.BASIC_WHITE};
+  padding: ${TOP_NAVIGATION_HEIGHT}px ${DEFAULT_MARGIN}px ${BOTTOM_TABBAR_HEIGHT}px;
 `;

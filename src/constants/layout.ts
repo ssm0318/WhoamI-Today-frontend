@@ -1,7 +1,7 @@
 const MAX_WINDOW_WIDTH = 500;
-const BOTTOM_TABBAR_HEIGHT = 56;
+const BOTTOM_TABBAR_HEIGHT = 80;
 const TOP_NAVIGATION_HEIGHT = 54;
-const DEFAULT_MARGIN = 80;
+const DEFAULT_MARGIN = 24;
 const SCREEN_WIDTH = typeof window !== 'undefined' ? Math.min(window.innerWidth, 500) : 0;
 const SCREEN_HEIGHT = typeof window !== 'undefined' ? window.innerHeight : 0;
 

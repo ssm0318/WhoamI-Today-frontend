@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 
 export const HeaderWrapper = styled.header`
   position: fixed;
@@ -7,7 +8,7 @@ export const HeaderWrapper = styled.header`
   display: flex;
   max-width: 500px;
   background-color: white;
-  height: 50px;
+  height: ${TOP_NAVIGATION_HEIGHT}px;
   width: 100%;
   box-sizing: border-box;
 `;
