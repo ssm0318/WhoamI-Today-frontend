@@ -1,3 +1,4 @@
+// 추후에 color 코드 확정되면 여기에 추가
 export const Colors = {
   BASIC_BLACK: '#000000',
   BASIC_WHITE: '#FFFFFF',
