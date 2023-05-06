@@ -2,24 +2,37 @@ import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 
 const GlobalStyle = createGlobalStyle`
-  ${reset};
+    ${reset};
+    @font-face {
+        font-family: 'Roboto';
+        font-weight: 400;
+        src: url("fonts/Roboto-Regular.ttf") format("truetype");
+    }
 
-  * {
-    font-family: 'Roboto', sans-serif
-  }
+    @font-face {
+        font-family: 'Roboto';
+        font-weight: 600;
+        src: url("fonts/Roboto-Medium.ttf") format("truetype");
+    }
 
-  button {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    outline: inherit;
-  }
+    @font-face {
+        font-family: 'Roboto';
+        font-weight: 700;
+        src: url("fonts/Roboto-Bold.ttf") format("truetype");
+    }
 
-  a {
-    text-decoration: none;
-    color: #000;
-  }
+    button {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        outline: inherit;
+    }
+
+    * {
+        font-family: 'Roboto', sans-serif !important;
+    }
+
 `;
 
 export default GlobalStyle;
