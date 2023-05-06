@@ -11,11 +11,11 @@ function Button(
 ) {
   const { size, ...buttonProps } = props;
   const { sizing } = buttonProps;
-  const { text, color, outline, fill, ...handlers } = useButton(buttonProps);
+  const { text, color, outline, fill, status, ...handlers } = useButton(buttonProps);
   const { ButtonComponent, fontType } = buttons[size];
   return (
     <S.Container sizing={sizing}>
-      <button type="button" {...handlers}>
+      <button type="button" {...handlers} disabled={status === 'disabled'}>
         <ButtonComponent sizing={sizing} outline={outline} fill={fill}>
           {!!text && (
             <Font.Body type={fontType} color={color} textAlign="center">
@@ -34,7 +34,7 @@ const buttons: ButtonSetting = {
   Large: {
     ButtonComponent: S.LargeButton,
     gap: 4,
-    fontType: '12_regular',
+    fontType: '18_semibold',
   },
 };
 

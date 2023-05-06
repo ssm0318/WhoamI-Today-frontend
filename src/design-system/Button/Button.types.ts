@@ -12,7 +12,7 @@ export type ButtonSetting = {
   };
 };
 
-export type ButtonType = 'white_fill';
+export type ButtonType = 'filled' | 'outlined' | 'white_fill';
 
 export type ButtonStatus = 'normal' | 'pressed' | 'disabled' | 'completed';
 
