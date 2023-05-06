@@ -1,45 +1,22 @@
 import { Outlet, redirect } from 'react-router-dom';
 import Header from '@components/header/Header';
 import Tab from '@components/tab/Tab';
+import { Layout } from '@design-system';
+import { MainWrapper, RootContainer } from '@styles/wrappers';
 
 function Root() {
   redirect('/today');
 
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        backgroundColor: '#000000',
-      }}
-    >
-      <div
-        style={{
-          width: '100%',
-          maxWidth: 500,
-          height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          overflowY: 'auto',
-          backgroundColor: 'white',
-        }}
-      >
+    <Layout.FlexRow justifyContent="center" bgColor="BASIC_BLACK" h="100vh" w="100%">
+      <RootContainer w="100%" h="100vh" bgColor="BASIC_WHITE">
         <Header />
-        <main
-          style={{
-            paddingTop: 50,
-            paddingBottom: 80,
-            height: '100%',
-            backgroundColor: 'white',
-          }}
-        >
+        <MainWrapper>
           <Outlet />
-        </main>
+        </MainWrapper>
         <Tab />
-      </div>
-    </div>
+      </RootContainer>
+    </Layout.FlexRow>
   );
 }
 
