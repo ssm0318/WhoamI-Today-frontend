@@ -5,7 +5,6 @@ import { ThemeProvider } from 'styled-components';
 import { Colors } from '@design-system';
 import GlobalStyle from '@styles/global-styles';
 import ErrorPage from './components/error-page/ErrorPage';
-import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Friends from './routes/Friends';
 import Login from './routes/Login';

@@ -2,11 +2,15 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const HeaderWrapper = styled.header`
-  width: 100%;
+  position: fixed;
+  top: 0;
+  display: flex;
+  max-width: 500px;
+  background-color: white;
+  border: 1px solid #000000;
   height: 50px;
-  border: 1px solid;
-  display: fixed;
-  padding: 10px 0;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 export const Menu = styled.div`
@@ -14,8 +18,7 @@ export const Menu = styled.div`
 `;
 
 export const Logo = styled.div`
-  font-size: 50px;
-  font-weight: 500px;
+  font-size: 30px;
   text-align: center;
   flex-grow: 1;
 `;
