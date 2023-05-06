@@ -7,22 +7,24 @@ import GlobalStyle from '@styles/global-styles';
 import ErrorPage from './components/error-page/ErrorPage';
 import reportWebVitals from './reportWebVitals';
 import Friends from './routes/Friends';
-import Login from './routes/Login';
+import Intro from './routes/Intro';
 import My from './routes/My';
 import Notification from './routes/Notification';
 import Root from './routes/Root';
+import Login from './routes/SignIn';
 import SignUp from './routes/SignUp';
 import Today from './routes/Today';
 import Counter from './routes/ZustandExample';
 
 const router = createBrowserRouter([
+  { path: '', element: <Intro /> },
   {
     path: '/',
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '',
+        path: '/today',
         element: <Today />,
       },
       {
@@ -43,7 +45,8 @@ const router = createBrowserRouter([
       },
     ],
   },
-  { path: 'login', element: <Login /> },
+
+  { path: 'signin', element: <Login /> },
   { path: 'signup', element: <SignUp /> },
 ]);
 
