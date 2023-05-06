@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Font from '../Font/Font';
 import * as S from './Button.styles';
 import { ButtonProps, ButtonSetting } from './Button.types';
@@ -9,21 +10,33 @@ function Button(
     size: keyof typeof buttons;
   } & ButtonProps,
 ) {
-  const { size, ...buttonProps } = props;
+  const { size, to, ...buttonProps } = props;
   const { sizing } = buttonProps;
   const { text, color, outline, fill, status, ...handlers } = useButton(buttonProps);
   const { ButtonComponent, fontType } = buttons[size];
   return (
     <S.Container sizing={sizing}>
-      <button type="button" {...handlers} disabled={status === 'disabled'}>
-        <ButtonComponent sizing={sizing} outline={outline} fill={fill}>
-          {!!text && (
-            <Font.Body type={fontType} color={color} textAlign="center">
-              {text}
-            </Font.Body>
-          )}
-        </ButtonComponent>
-      </button>
+      {to ? (
+        <Link to={to} {...handlers}>
+          <ButtonComponent sizing={sizing} outline={outline} fill={fill}>
+            {!!text && (
+              <Font.Body type={fontType} color={color} textAlign="center">
+                {text}
+              </Font.Body>
+            )}
+          </ButtonComponent>
+        </Link>
+      ) : (
+        <button type="button" {...handlers} disabled={status === 'disabled'}>
+          <ButtonComponent sizing={sizing} outline={outline} fill={fill}>
+            {!!text && (
+              <Font.Body type={fontType} color={color} textAlign="center">
+                {text}
+              </Font.Body>
+            )}
+          </ButtonComponent>
+        </button>
+      )}
     </S.Container>
   );
 }

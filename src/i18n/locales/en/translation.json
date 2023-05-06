@@ -1,4 +1,8 @@
 {
+  "intro": {
+    "sign_in": "Sign In",
+    "sign_up": "SIgn Up"
+  },
   "sign_in": {
     "username_or_email": "username or email",
     "password": "password",

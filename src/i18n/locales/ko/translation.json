@@ -1,4 +1,8 @@
 {
+  "intro": {
+    "sign_in": "로그인",
+    "sign_up": "회원가입"
+  },
   "sign_in": {
     "username_or_email": "사용자 이름 또는 이메일",
     "password": "비밀번호",

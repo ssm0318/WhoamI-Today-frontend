@@ -7,6 +7,7 @@ import GlobalStyle from '@styles/global-styles';
 import ErrorPage from './components/error-page/ErrorPage';
 import './i18n';
 import reportWebVitals from './reportWebVitals';
+import ForgotPassword from './routes/ForgotPassword';
 import Friends from './routes/Friends';
 import Intro from './routes/Intro';
 import My from './routes/My';
@@ -46,9 +47,9 @@ const router = createBrowserRouter([
       },
     ],
   },
-
   { path: 'signin', element: <Login /> },
   { path: 'signup', element: <SignUp /> },
+  { path: 'forgot-password', element: <ForgotPassword /> },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

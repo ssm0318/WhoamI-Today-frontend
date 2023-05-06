@@ -26,4 +26,8 @@ export type ButtonProps = {
   text: string;
   sizing?: 'fit-content' | 'stretch';
   onClick?: () => void;
+  /**
+   * use axios Link component
+   */
+  to?: string;
 };

@@ -1,12 +1,11 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import Button from '@components/_common/buttons/Button';
-import LinkButton from '@components/_common/buttons/LinkButton';
-import CommonInput from '@components/_common/Inputs/Input.styled';
+import { Button } from '@design-system';
 import { SignInParams } from '@models/api/user';
 import { CommonWrapper } from '@styles/wrappers.styled';
 import signIn from '@utils/apis/user';
+import CommonInput from 'src/design-system/Inputs/Input.styled';
 
 function SignIn() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_in' });
@@ -46,15 +45,19 @@ function SignIn() {
         onKeyDown={onKeySubmit}
       />
 
-      <Button type="primary" onClick={onSubmit}>
-        {t('sign_in')}
-      </Button>
-      <LinkButton to="/forgot-password" type="secondary">
-        {t('forgot_password')}
-      </LinkButton>
-      <LinkButton to="/signup" type="secondary">
-        {t('sign_up')}
-      </LinkButton>
+      <Button.Large
+        type="filled"
+        onClick={onSubmit}
+        text={t('sign_in')}
+        status={signInInfo.username === '' || signInInfo.password === '' ? 'disabled' : 'normal'}
+      />
+      <Button.Large
+        type="white_fill"
+        status="normal"
+        to="/forgot-password"
+        text={t('forgot_password')}
+      />
+      <Button.Large type="white_fill" status="normal" to="/signup" text={t('sign_up')} />
     </CommonWrapper>
   );
 }
