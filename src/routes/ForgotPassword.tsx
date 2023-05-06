@@ -1,5 +1,11 @@
+import MainContainer from '@components/_common/main-container/MainContainer';
+
 function ForgotPassword() {
-  return <h1>Forgot Password</h1>;
+  return (
+    <MainContainer>
+      <h1>Forgot Password</h1>
+    </MainContainer>
+  );
 }
 
 export default ForgotPassword;

@@ -13,7 +13,7 @@ import Intro from './routes/Intro';
 import My from './routes/My';
 import Notification from './routes/Notification';
 import Root from './routes/Root';
-import Login from './routes/SignIn';
+import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
 import Today from './routes/Today';
 import Counter from './routes/ZustandExample';
@@ -47,7 +47,7 @@ const router = createBrowserRouter([
       },
     ],
   },
-  { path: 'signin', element: <Login /> },
+  { path: 'signin', element: <SignIn /> },
   { path: 'signup', element: <SignUp /> },
   { path: 'forgot-password', element: <ForgotPassword /> },
 ]);
