@@ -11,6 +11,7 @@ import Notification from './routes/Notification';
 import Root from './routes/Root';
 import SignUp from './routes/SignUp';
 import Today from './routes/Today';
+import Counter from './routes/ZustandExample';
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: 'notifications',
         element: <Notification />,
+      },
+      {
+        path: 'zustand-example',
+        element: <Counter />,
       },
     ],
   },
