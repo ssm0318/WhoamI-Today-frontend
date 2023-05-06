@@ -5,7 +5,7 @@ import { Layout } from '@design-system';
 
 function Home() {
   return (
-    <Layout.FlexCol>
+    <Layout.FlexCol w="100%">
       <TodaysMoments />
       <Divider width={2} />
       <TodaysQuestions />
