@@ -9,6 +9,8 @@ export const Colors = {
   SYSTEM_ERROR: '#BF0000',
   SYSTEM_SUCCESS: '#1FB881',
 
+  GRAY_1: '#D6D6D6',
+
   TRANSPARENT: 'transparent',
   DIM: '#000000b3',
 };

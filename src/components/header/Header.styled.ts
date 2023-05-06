@@ -11,6 +11,7 @@ export const HeaderWrapper = styled.header`
   height: ${TOP_NAVIGATION_HEIGHT}px;
   width: 100%;
   box-sizing: border-box;
+  border-bottom: 2px solid ${({ theme }) => theme.GRAY_1};
 `;
 
 export const Menu = styled.div`
@@ -25,6 +26,4 @@ export const Logo = styled.div`
 
 export const Noti = styled(Link)`
   text-decoration: none;
-  color: black;
-  padding: 0 20px;
 `;

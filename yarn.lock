@@ -2297,6 +2297,15 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
+"@tanem/svg-injector@^10.1.52":
+  version "10.1.53"
+  resolved "https://registry.yarnpkg.com/@tanem/svg-injector/-/svg-injector-10.1.53.tgz#d001b8c6c2e1e386f899e986f7afa0eb1676dedd"
+  integrity sha512-tR2Kh0GcTk+7hFTUsCo7JcEsAxz7j28dvaeC77jDp+acgGVdWXtk1v6lY8G0v1g813sgBrBzUr3St8RPBSmjEQ==
+  dependencies:
+    "@babel/runtime" "^7.21.5"
+    content-type "^1.0.5"
+    tslib "^2.5.0"
+
 "@testing-library/dom@^8.5.0":
   version "8.20.0"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.20.0.tgz#914aa862cef0f5e89b98cc48e3445c4c921010f6"
@@ -2603,7 +2612,7 @@
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.7.2.tgz#6c2324641cc4ba050a8c710b2b251b377581fbf0"
   integrity sha512-KufADq8uQqo1pYKVIYzfKbJfBAc0sOeXqGbFaSpv8MRmC/zXgowNZmFcbngndGk922QDmOASEXUZCaY48gs4cg==
 
-"@types/prop-types@*":
+"@types/prop-types@*", "@types/prop-types@^15.7.5":
   version "15.7.5"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
@@ -3975,7 +3984,7 @@ content-disposition@0.5.4:
   dependencies:
     safe-buffer "5.2.1"
 
-content-type@~1.0.4:
+content-type@^1.0.5, content-type@~1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/content-type/-/content-type-1.0.5.tgz#8b773162656d1d1086784c8f23a54ce6d73d7918"
   integrity sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==
@@ -8790,6 +8799,16 @@ react-scripts@5.0.1:
     workbox-webpack-plugin "^6.4.1"
   optionalDependencies:
     fsevents "^2.3.2"
+
+react-svg@^16.1.11:
+  version "16.1.11"
+  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-16.1.11.tgz#01c427c60d4aed4e5de82928c7cb86de7e56360d"
+  integrity sha512-Utrm1NATp/1PVML4g97yrFyLvbKZ9HhzFydSsUPuCd8eEYf8llj8sBaYgLO1d5UX5sJ9j2sLgSbOLrGGRhd8NQ==
+  dependencies:
+    "@babel/runtime" "^7.21.5"
+    "@tanem/svg-injector" "^10.1.52"
+    "@types/prop-types" "^15.7.5"
+    prop-types "^15.8.1"
 
 react@^18.2.0:
   version "18.2.0"

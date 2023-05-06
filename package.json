@@ -20,6 +20,7 @@
     "react-i18next": "^12.2.2",
     "react-router-dom": "^6.11.1",
     "react-scripts": "5.0.1",
+    "react-svg": "^16.1.11",
     "styled-components": "^5.3.10",
     "styled-reset": "^4.4.6",
     "typescript": "^4.9.5",
