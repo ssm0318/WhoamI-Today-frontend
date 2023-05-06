@@ -3,9 +3,7 @@ export const isMac = (userAgent = window?.navigator.userAgent) => {
   return /Mac/i.test(userAgent);
 };
 
-export const getMobileDeviceInfo = (
-  userAgent = window?.navigator.userAgent
-) => {
+export const getMobileDeviceInfo = (userAgent = window?.navigator.userAgent) => {
   const isMobile = /Mobile/i.test(userAgent);
   const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
   const isAndroid = /Android/i.test(userAgent);
