@@ -7,6 +7,8 @@ export const signIn = async (signInInfo: SignInParams, onSuccess: () => void) =>
       data: { access },
     } = await axios.post<SignInResponse>('/user/token/', signInInfo);
 
+    // FIXME: 이후 가능하면 backend에서 쿠키를 세팅하는 방식으로 변경하려 합니다
+    // https://github.com/GooJinSun/WhoAmI-Today-backend/issues/1#issuecomment-1537058512
     axios.defaults.headers.common.Authorization = `Bearer ${access}`;
 
     // FIXME: 유저정보 세팅
