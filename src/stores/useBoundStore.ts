@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { create, StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
