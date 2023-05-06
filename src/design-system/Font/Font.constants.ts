@@ -14,6 +14,11 @@ export const DisplaySettings: { [key in DisplayType]: FontSettings } = {
     fontWeight: FontWeight.BOLD,
     lineHeight: 1.4,
   },
+  '14_regular': {
+    fontSize: 14,
+    fontWeight: FontWeight.REGULAR,
+    lineHeight: 1.4,
+  },
 };
 
 /**

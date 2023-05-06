@@ -14,7 +14,7 @@ export type FontSettings = {
   textAlign?: 'left' | 'right' | 'center';
 };
 
-export type DisplayType = '24_bold' | '18_bold';
+export type DisplayType = '24_bold' | '18_bold' | '14_regular';
 
 export type BodyType =
   | '20_regular'
