@@ -5,18 +5,20 @@ import { CounterSlice, createCounterSlice } from './example';
 
 export type BoundState = CounterSlice;
 
-type BoundStateCreator = StateCreator<
+export type BoundStateCreator = StateCreator<BoundState>;
+
+export type SliceStateCreator<Slice> = StateCreator<
   BoundState,
   [['zustand/devtools', never], ['zustand/immer', never]],
   [],
-  BoundState
+  Slice
 >;
+type BoundStore = SliceStateCreator<BoundState>;
 
-const middleWares = (store: BoundStateCreator) => {
-  return (process.env.NODE_ENV !== 'production'
+const middleWares = (store: BoundStore) =>
+  (process.env.NODE_ENV !== 'production'
     ? devtools(immer(store))
-    : immer(store)) as unknown as StateCreator<BoundState>;
-};
+    : immer(store)) as BoundStateCreator;
 
 export const useBoundStore = create<BoundState>()(
   middleWares((...a) => ({

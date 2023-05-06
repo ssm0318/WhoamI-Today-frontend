@@ -1,4 +1,4 @@
-import { StateCreator } from 'zustand';
+import { SliceStateCreator } from './useBoundStore';
 
 interface CounterState {
   count: number;
@@ -16,13 +16,13 @@ const initialState = {
 
 export type CounterSlice = CounterState & CounterAction;
 
-export const createCounterSlice: StateCreator<CounterSlice> = (set, get) => ({
+export const createCounterSlice: SliceStateCreator<CounterSlice> = (set, get) => ({
   ...initialState,
-  increase: () => set(({ count }) => ({ count: count + 1 })),
-  decrease: () => set(({ count }) => ({ count: count - 1 })),
+  increase: () => set(({ count }) => ({ count: count + 1 }), false, 'count/increase'),
+  decrease: () => set(({ count }) => ({ count: count - 1 }), false, 'count/decrease'),
   getCounterText: () => {
     const { count } = get();
     return `${count}개`;
   },
-  clear: () => set(initialState),
+  clear: () => set(initialState, false, 'count/clear'),
 });
