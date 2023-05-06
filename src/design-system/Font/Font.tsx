@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react';
 import { ColorKeys } from '../colors';
 import { Margin } from '../layouts';
 import { BodySettings, DisplaySettings } from './Font.constants';
-import * as S from './Font.styles';
+import * as S from './Font.styled';
 import { BodyType, DisplayType } from './Font.types';
 
 const Display: React.FC<PropsWithChildren<DisplayProps>> = React.memo((props) => {

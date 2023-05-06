@@ -27,11 +27,18 @@ const Button = styled.div<ButtonProps>`
 
 export const BUTTON_HEIGHT = {
   LARGE: 52,
+  SMALL: 25,
 };
 
 export const LargeButton = styled(Button)`
   height: ${BUTTON_HEIGHT.LARGE}px;
   padding: 0 20px;
+  border-radius: 12px;
+`;
+
+export const SmallButton = styled(Button)`
+  height: ${BUTTON_HEIGHT.SMALL}px;
+  padding: 4px 18px;
   border-radius: 12px;
 `;
 

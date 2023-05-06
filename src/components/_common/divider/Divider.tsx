@@ -1,5 +1,5 @@
 import React from 'react';
-import * as S from './Divider.styles';
+import * as S from './Divider.styled';
 import { DividerProps } from './Divider.types';
 
 /**
