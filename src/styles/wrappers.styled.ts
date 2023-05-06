@@ -6,6 +6,10 @@ export const IntroWrapper = styled.div`
   width: 100%;
 `;
 
+export const CommonWrapper = styled.div`
+  width: 100%;
+`;
+
 export const FlexStackWrapper = styled.div`
   display: flex;
   flex-direction: column;

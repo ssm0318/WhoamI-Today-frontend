@@ -5,6 +5,8 @@ const commonButtonStyles = css`
   width: 100%;
   padding: 10px 0;
   text-align: center;
+  border: none;
+  outline: none;
 `;
 
 const primaryButtonStyles = css`
@@ -21,15 +23,15 @@ const secondaryButtonStyles = css`
 export type ButtonType = 'primary' | 'secondary';
 
 interface ButtonProps {
-  type: ButtonType;
+  buttonType: ButtonType;
 }
 
 export const StyledLinkButton = styled(Link)<ButtonProps>`
-  ${(props) => (props.type === 'primary' ? primaryButtonStyles : secondaryButtonStyles)}
+  ${({ buttonType }) => (buttonType === 'primary' ? primaryButtonStyles : secondaryButtonStyles)}
   text-decoration: none;
 `;
 
-export const StyledButton = styled.button`
-  ${(props: ButtonProps) =>
-    props.type === 'primary' ? primaryButtonStyles : secondaryButtonStyles}
+export const StyledButton = styled.button<ButtonProps>`
+  ${({ buttonType }) => (buttonType === 'primary' ? primaryButtonStyles : secondaryButtonStyles)}
+  outline: none;
 `;

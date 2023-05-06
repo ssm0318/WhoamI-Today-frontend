@@ -9,7 +9,7 @@ interface ButtonLink {
 
 function LinkButton({ to, children, type }: ButtonLink) {
   return (
-    <StyledLinkButton type={type} to={to}>
+    <StyledLinkButton buttonType={type} to={to}>
       {children}
     </StyledLinkButton>
   );

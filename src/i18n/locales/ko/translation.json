@@ -3,6 +3,7 @@
     "username_or_email": "사용자 이름 또는 이메일",
     "password": "비밀번호",
     "sign_in": "로그인",
-    "forgot_password": "비밀번호를 잊어버렸어요"
+    "forgot_password": "비밀번호를 잊어버렸어요",
+    "sign_up": "회원가입"
   }
 }

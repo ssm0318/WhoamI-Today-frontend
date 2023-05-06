@@ -13,6 +13,7 @@ export const signIn = async (signInInfo: SignInParams, onSuccess: () => void) =>
     axios.get('/user/me/');
     onSuccess();
   } catch (e) {
+    // TODO: 에러 핸들링
     console.log(e);
   }
 };
