@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { TOP_NAVIGATION_HEIGHT } from '@constants/layout';
+import { MAX_WINDOW_WIDTH, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 
 export const HeaderWrapper = styled.header`
   position: fixed;
   top: 0;
   display: flex;
-  max-width: 500px;
+  max-width: ${MAX_WINDOW_WIDTH}px;
   background-color: white;
   height: ${TOP_NAVIGATION_HEIGHT}px;
   width: 100%;
