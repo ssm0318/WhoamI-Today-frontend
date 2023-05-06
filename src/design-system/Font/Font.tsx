@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { ColorKeys } from 'src/design-system/colors';
+import { ColorKeys } from '../colors';
 import { Margin } from '../layouts';
 import { BodySettings, DisplaySettings } from './Font.constants';
 import * as S from './Font.styles';

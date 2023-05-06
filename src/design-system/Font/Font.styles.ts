@@ -26,7 +26,7 @@ export const Font = styled.span<FontSettings & TextPropsBase>`
   font-size: ${({ fontSize }) => fontSize}px;
   font-weight: ${({ fontWeight }) => fontWeight};
   line-height: ${({ fontSize, lineHeight }) => fontSize * lineHeight}px;
-  color: ${({ color, theme }) => theme[color || 'GRAY_900']};
+  color: ${({ color, theme }) => theme[color || 'BASIC_BLACK']};
   text-align: ${({ textAlign = 'left' }) => textAlign};
   ${({ m, mh, mv, mt, mr, mb, ml }) =>
     getStyle('margin', toMarginPaddingString(m, mh, mv, mt, mr, mb, ml))}
