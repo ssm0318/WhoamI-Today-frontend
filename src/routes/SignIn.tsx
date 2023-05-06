@@ -1,9 +1,8 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@design-system';
+import { Button, Layout } from '@design-system';
 import { SignInParams } from '@models/api/user';
-import { CommonWrapper } from '@styles/wrappers.styled';
 import signIn from '@utils/apis/user';
 import CommonInput from 'src/design-system/Inputs/Input.styled';
 
@@ -29,7 +28,7 @@ function SignIn() {
   };
 
   return (
-    <CommonWrapper>
+    <Layout.FlexCol w="100%">
       <CommonInput
         name="username"
         placeholder={t('username_or_email') || undefined}
@@ -50,15 +49,23 @@ function SignIn() {
         onClick={onSubmit}
         text={t('sign_in')}
         status={signInInfo.username === '' || signInInfo.password === '' ? 'disabled' : 'normal'}
+        sizing="stretch"
       />
       <Button.Large
         type="white_fill"
         status="normal"
         to="/forgot-password"
         text={t('forgot_password')}
+        sizing="stretch"
       />
-      <Button.Large type="white_fill" status="normal" to="/signup" text={t('sign_up')} />
-    </CommonWrapper>
+      <Button.Large
+        type="white_fill"
+        status="normal"
+        to="/signup"
+        text={t('sign_up')}
+        sizing="stretch"
+      />
+    </Layout.FlexCol>
   );
 }
 
