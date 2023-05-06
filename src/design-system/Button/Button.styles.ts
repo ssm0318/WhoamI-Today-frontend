@@ -42,6 +42,5 @@ export const Container = styled.div<{ sizing?: 'fit-content' | 'stretch' }>`
     sizing === 'stretch' &&
     css`
       align-self: stretch;
-      flex: 1;
     `}
 `;
