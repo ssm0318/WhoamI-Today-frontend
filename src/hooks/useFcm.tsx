@@ -1,24 +1,14 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging } from 'firebase/messaging';
-import { useEffect, useState } from 'react';
-import {
-  addForegroundMessageEventListener,
-  firebaseConfig,
-  requestPermission,
-} from '../utils/firebaseHelpers';
+import { useEffect } from 'react';
+import { addForegroundMessageEventListener, firebaseConfig } from '../utils/firebaseHelpers';
 import { getMobileDeviceInfo } from '../utils/getUserAgent';
 
+// TODO(Gina): 추후 로직 보완 필요
 const useFcm = () => {
   const { isMobile } = getMobileDeviceInfo();
 
-  const [notiPermissionStatus, setNotiPermissionStatus] = useState(
-    !isMobile ? Notification.permission : null,
-  );
-
-  const requestPermissionHandler = async () => {
-    const permission = await requestPermission();
-    setNotiPermissionStatus(permission);
-  };
+  const notiPermissionStatus = !isMobile ? Notification.permission : null;
 
   useEffect(() => {
     // if (!currentUser || isMobile) return;
@@ -30,7 +20,7 @@ const useFcm = () => {
         const app = initializeApp(firebaseConfig);
         const messaging = getMessaging(app);
 
-        if (notiPermissionStatus !== 'granted' || !app || !messaging) return;
+        if (notiPermissionStatus !== 'granted') return;
 
         // const token = await getFCMRegistrationToken(messaging);
         addForegroundMessageEventListener(messaging);
@@ -44,7 +34,7 @@ const useFcm = () => {
     initializeFcm();
   }, [notiPermissionStatus, isMobile]);
 
-  return { notiPermissionStatus, requestPermissionHandler };
+  return { notiPermissionStatus };
 };
 
 export default useFcm;
