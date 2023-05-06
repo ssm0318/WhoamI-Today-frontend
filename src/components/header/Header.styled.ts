@@ -7,7 +7,6 @@ export const HeaderWrapper = styled.header`
   display: flex;
   max-width: 500px;
   background-color: white;
-  border: 1px solid #000000;
   height: 50px;
   width: 100%;
   box-sizing: border-box;
