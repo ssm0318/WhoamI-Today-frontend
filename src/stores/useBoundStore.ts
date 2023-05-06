@@ -5,14 +5,14 @@ import { CounterSlice, createCounterSlice } from './example';
 
 export type BoundState = CounterSlice;
 
-export type BoundStateCreator = StateCreator<BoundState>;
-
 export type SliceStateCreator<Slice> = StateCreator<
   BoundState,
   [['zustand/devtools', never], ['zustand/immer', never]],
   [],
   Slice
 >;
+
+type BoundStateCreator = StateCreator<BoundState>;
 type BoundStore = SliceStateCreator<BoundState>;
 
 const middleWares = (store: BoundStore) =>
