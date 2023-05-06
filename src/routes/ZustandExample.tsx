@@ -1,12 +1,14 @@
-import { useBoundStore } from '@stores/useBoundStore';
+import { BoundState, useBoundStore } from '@stores/useBoundStore';
+
+const countSelector = (state: BoundState) => ({
+  count: state.count,
+  getCounterText: state.getCounterText,
+  increase: state.increase,
+  decrease: state.decrease,
+});
 
 function Counter() {
-  const { count, getCounterText, increase, decrease } = useBoundStore((state) => ({
-    count: state.count,
-    getCounterText: state.getCounterText,
-    increase: state.increase,
-    decrease: state.decrease,
-  }));
+  const { count, getCounterText, increase, decrease } = useBoundStore(countSelector);
 
   return (
     <div>
