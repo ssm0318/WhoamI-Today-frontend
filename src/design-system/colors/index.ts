@@ -11,6 +11,8 @@ export const Colors = {
 
   GRAY_1: '#D6D6D6',
 
+  BACKGROUND_COLOR: '#F5F5F5',
+
   TRANSPARENT: 'transparent',
   DIM: '#000000b3',
 };

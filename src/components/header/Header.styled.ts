@@ -10,7 +10,6 @@ export const HeaderWrapper = styled.header`
   background-color: white;
   height: ${TOP_NAVIGATION_HEIGHT}px;
   width: 100%;
-  box-sizing: border-box;
   border-bottom: 2px solid ${({ theme }) => theme.GRAY_1};
 `;
 

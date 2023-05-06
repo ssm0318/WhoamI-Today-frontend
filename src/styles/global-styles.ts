@@ -39,6 +39,7 @@ const GlobalStyle = createGlobalStyle`
 
     * {
         font-family: 'Roboto', sans-serif !important;
+        box-sizing: border-box;
     }
 
     body {

@@ -1,5 +1,13 @@
+import Divider from '@components/_common/divider/Divider';
+import TodaysQuestions from '@components/home/todays-questions/TodaysQuestions';
+
 function Home() {
-  return <div>Today</div>;
+  return (
+    <>
+      <Divider width={2} />
+      <TodaysQuestions />
+    </>
+  );
 }
 
 export default Home;
