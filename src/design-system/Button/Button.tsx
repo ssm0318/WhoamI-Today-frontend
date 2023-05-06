@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Font from '../Font/Font';
 import * as S from './Button.styles';
@@ -14,27 +14,29 @@ function Button(
   const { sizing } = buttonProps;
   const { text, color, outline, fill, status, ...handlers } = useButton(buttonProps);
   const { ButtonComponent, fontType } = buttons[size];
+
+  const buttonChildren = useMemo(
+    () => (
+      <ButtonComponent sizing={sizing} outline={outline} fill={fill}>
+        {!!text && (
+          <Font.Body type={fontType} color={color} textAlign="center">
+            {text}
+          </Font.Body>
+        )}
+      </ButtonComponent>
+    ),
+    [ButtonComponent, color, fill, fontType, outline, sizing, text],
+  );
+
   return (
     <S.Container sizing={sizing}>
       {to ? (
         <Link to={to} {...handlers}>
-          <ButtonComponent sizing={sizing} outline={outline} fill={fill}>
-            {!!text && (
-              <Font.Body type={fontType} color={color} textAlign="center">
-                {text}
-              </Font.Body>
-            )}
-          </ButtonComponent>
+          {buttonChildren}
         </Link>
       ) : (
         <button type="button" {...handlers} disabled={status === 'disabled'}>
-          <ButtonComponent sizing={sizing} outline={outline} fill={fill}>
-            {!!text && (
-              <Font.Body type={fontType} color={color} textAlign="center">
-                {text}
-              </Font.Body>
-            )}
-          </ButtonComponent>
+          {buttonChildren}
         </button>
       )}
     </S.Container>
