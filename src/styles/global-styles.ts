@@ -9,8 +9,11 @@ const GlobalStyle = createGlobalStyle`
   }
 
   button {
-    outline: none;
+    background: none;
+    border: none;
+    padding: 0;
     cursor: pointer;
+    outline: inherit;
   }
 
   a {

@@ -13,7 +13,7 @@ function Header() {
         <Font.Display type="24_bold">123</Font.Display>
       </Layout.FlexCol>
       <Layout.FlexRow>
-        <Button.Large type="white_fill" text="로그인/회원가입" status="normal" />
+        <Button.Large type="white_fill" text="버튼" status="normal" />
       </Layout.FlexRow>
       <Logo>WhoAmI Today</Logo>
       <Noti to="/notifications">noti</Noti>
