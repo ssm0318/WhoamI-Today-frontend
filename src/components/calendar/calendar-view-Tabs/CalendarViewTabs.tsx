@@ -2,8 +2,8 @@ import { CALENDAR_VIEW } from '@models/calendar';
 import { useBoundStore } from '@stores/useBoundStore';
 
 const CALENDAR_VIEW_TAB_LIST = [
-  { key: CALENDAR_VIEW.MONTHLY, text: 'M' },
   { key: CALENDAR_VIEW.WEEKLY, text: 'W' },
+  { key: CALENDAR_VIEW.MONTHLY, text: 'M' },
 ];
 
 function CalendarViewTabs() {

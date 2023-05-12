@@ -10,7 +10,7 @@ interface CalendarViewAction {
 }
 
 const initialState = {
-  calendarView: CALENDAR_VIEW.MONTHLY,
+  calendarView: CALENDAR_VIEW.WEEKLY,
 };
 
 export type CalendarViewSlice = CalendarViewState & CalendarViewAction;
