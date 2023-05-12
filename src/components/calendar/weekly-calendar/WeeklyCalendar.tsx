@@ -2,8 +2,7 @@ import { format } from 'date-fns';
 import { Layout } from '@design-system';
 import { CalendarProps } from '@models/calendar';
 import CalendarHeader from '../calendar-header/CalendarHeader';
-import { DAYS_OF_WEEK } from '../Calendar.helper';
-import { CalendarTable } from '../Calendar.styled';
+import CalendarTable, { CalendarCell } from '../calendar-table/CalendarTable';
 
 interface WeeklyCalendarProps extends CalendarProps {
   currentWeekOfMonth: number;
@@ -27,21 +26,12 @@ function WeeklyCalendar({
       />
       <Layout.FlexCol>
         <CalendarTable>
-          <thead>
-            <tr>
-              {DAYS_OF_WEEK.map((day) => (
-                <th key={day}>{day}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              {calendarMatrix[currentWeekOfMonth]?.map((day, i) => {
-                const dayKey = `day_${i}`;
-                return <th key={dayKey}>{day ? format(day, 'dd') : ''}</th>;
-              })}
-            </tr>
-          </tbody>
+          <tr>
+            {calendarMatrix[currentWeekOfMonth]?.map((date, i) => {
+              const dateKey = `date_${i}`;
+              return <CalendarCell key={dateKey} date={date} />;
+            })}
+          </tr>
         </CalendarTable>
       </Layout.FlexCol>
     </Layout.FlexCol>

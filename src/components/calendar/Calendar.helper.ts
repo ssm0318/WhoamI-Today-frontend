@@ -1,8 +1,6 @@
 import { addDays, differenceInCalendarMonths, endOfMonth, startOfMonth } from 'date-fns';
 import { CalendarDates, CalendarMatrix } from '@models/calendar';
 
-export const DAYS_OF_WEEK = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-
 export const getCalendarMatrix = (currentDate: Date): CalendarMatrix => {
   const startDate = startOfMonth(currentDate);
   const endDate = endOfMonth(currentDate);

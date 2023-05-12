@@ -2,8 +2,7 @@ import { format } from 'date-fns';
 import { Layout } from '@design-system';
 import { CalendarProps } from '@models/calendar';
 import CalendarHeader from '../calendar-header/CalendarHeader';
-import { CalendarTable } from '../Calendar.styled';
-import { DAYS_OF_WEEK } from './MonthlyCalendar.helper';
+import CalendarTable, { CalendarCell } from '../calendar-table/CalendarTable';
 
 interface MonthlyCalendarProps extends CalendarProps {
   moveToPrevMonth: () => void;
@@ -25,26 +24,17 @@ function MonthlyCalendar({
       />
       <Layout.FlexCol>
         <CalendarTable>
-          <thead>
-            <tr>
-              {DAYS_OF_WEEK.map((day) => (
-                <th key={day}>{day}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {calendarMatrix.map((week, i) => {
-              const weekKey = `week_${i}`;
-              return (
-                <tr key={weekKey}>
-                  {week.map((day, j) => {
-                    const dayKey = `day_${i}_${j}`;
-                    return <th key={dayKey}>{day ? format(day, 'dd') : ''}</th>;
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
+          {calendarMatrix.map((week, i) => {
+            const weekKey = `week_${i}`;
+            return (
+              <tr key={weekKey}>
+                {week.map((date, j) => {
+                  const dateKey = `date_${i}_${j}`;
+                  return <CalendarCell key={dateKey} date={date} />;
+                })}
+              </tr>
+            );
+          })}
         </CalendarTable>
       </Layout.FlexCol>
     </Layout.FlexCol>
