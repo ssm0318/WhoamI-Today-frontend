@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
-import { Font, Layout } from '@design-system';
+import { Layout } from '@design-system';
 import { CalendarProps } from '@models/calendar';
+import CalendarHeader from '../calendar-header/CalendarHeader';
 import { DAYS_OF_WEEK } from '../Calendar.helper';
 import { CalendarTable } from '../Calendar.styled';
 
@@ -19,22 +20,11 @@ function WeeklyCalendar({
 }: WeeklyCalendarProps) {
   return (
     <Layout.FlexCol>
-      <Layout.FlexRow>
-        <div>
-          {/* TODO: 다국어 적용 */}
-          <Font.Body type="14_semibold">
-            {format(currentDate, 'MMMM yyyy')} {currentWeekOfMonth + 1}
-          </Font.Body>
-        </div>
-        <div>
-          <button type="button" onClick={moveToPrevWeek}>
-            {'<'}
-          </button>
-          <button type="button" onClick={moveToNextWeek}>
-            {'>'}
-          </button>
-        </div>
-      </Layout.FlexRow>
+      <CalendarHeader
+        title={`${format(currentDate, 'MMMM yyyy')} ${currentWeekOfMonth + 1}`}
+        onClickPrevBtn={moveToPrevWeek}
+        onClickNextBtn={moveToNextWeek}
+      />
       <Layout.FlexCol>
         <CalendarTable>
           <thead>

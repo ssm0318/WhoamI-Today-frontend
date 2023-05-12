@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
-import { Font, Layout } from '@design-system';
+import { Layout } from '@design-system';
 import { CalendarProps } from '@models/calendar';
+import CalendarHeader from '../calendar-header/CalendarHeader';
 import { CalendarTable } from '../Calendar.styled';
 import { DAYS_OF_WEEK } from './MonthlyCalendar.helper';
 
@@ -17,19 +18,11 @@ function MonthlyCalendar({
 }: MonthlyCalendarProps) {
   return (
     <Layout.FlexCol>
-      <Layout.FlexRow>
-        <div>
-          <Font.Body type="14_semibold">{format(currentDate, 'MMMM yyyy')}</Font.Body>
-        </div>
-        <div>
-          <button type="button" onClick={moveToPrevMonth}>
-            {'<'}
-          </button>
-          <button type="button" onClick={moveToNextMonth}>
-            {'>'}
-          </button>
-        </div>
-      </Layout.FlexRow>
+      <CalendarHeader
+        title={format(currentDate, 'MMMM yyyy')}
+        onClickPrevBtn={moveToPrevMonth}
+        onClickNextBtn={moveToNextMonth}
+      />
       <Layout.FlexCol>
         <CalendarTable>
           <thead>
