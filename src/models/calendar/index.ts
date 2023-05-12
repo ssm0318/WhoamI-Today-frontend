@@ -3,4 +3,10 @@ export enum CALENDAR_VIEW {
   WEEKLY = 'weekly',
 }
 
-export const k = 1;
+export type CalendarDates = (Date | null)[];
+export type CalendarMatrix = CalendarDates[];
+
+export interface CalendarProps {
+  calendarMatrix: CalendarMatrix;
+  currentDate: Date;
+}

@@ -1,23 +1,20 @@
-import { addMonths, format } from 'date-fns';
-import { subMonths } from 'date-fns/esm';
-import { useMemo, useState } from 'react';
+import { format } from 'date-fns';
 import { Font, Layout } from '@design-system';
-import { DAYS_OF_WEEK, getCalendarMatrix } from './MonthlyCalendar.helper';
-import { CalendarTable } from './MonthlyCalendar.styled';
+import { CalendarProps } from '@models/calendar';
+import { CalendarTable } from '../Calendar.styled';
+import { DAYS_OF_WEEK } from './MonthlyCalendar.helper';
 
-function MonthlyCalendar() {
-  const [currentDate, setCurrentDate] = useState(new Date());
+interface MonthlyCalendarProps extends CalendarProps {
+  moveToPrevMonth: () => void;
+  moveToNextMonth: () => void;
+}
 
-  const datesOfCurrMonth = useMemo(() => getCalendarMatrix(currentDate), [currentDate]);
-
-  const moveToPrevMonth = () => {
-    setCurrentDate((prev) => subMonths(prev, 1));
-  };
-
-  const moveToNextMonth = () => {
-    setCurrentDate((prev) => addMonths(prev, 1));
-  };
-
+function MonthlyCalendar({
+  calendarMatrix,
+  currentDate,
+  moveToPrevMonth,
+  moveToNextMonth,
+}: MonthlyCalendarProps) {
   return (
     <Layout.FlexCol>
       <Layout.FlexRow>
@@ -43,7 +40,7 @@ function MonthlyCalendar() {
             </tr>
           </thead>
           <tbody>
-            {datesOfCurrMonth.map((week, i) => {
+            {calendarMatrix.map((week, i) => {
               const weekKey = `week_${i}`;
               return (
                 <tr key={weekKey}>
