@@ -9,5 +9,16 @@
     "sign_in": "Sign In",
     "forgot_password": "Forgot password",
     "sign_up": "Sign Up"
+  },
+  "home": {
+    "moment": {
+      "todays_moments": "Today's Moments?"
+    }, 
+    "question": {
+      "todays_questions": "Today's Questions",
+      "see_all": "See all",
+      "short_answer": "Short Answer",
+      "multiple_choice": "Multiple Choice"
+    }
   }
 }
