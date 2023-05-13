@@ -9,6 +9,7 @@ import './i18n';
 import reportWebVitals from './reportWebVitals';
 import ForgotPassword from './routes/ForgotPassword';
 import Friends from './routes/Friends';
+import Home from './routes/Home';
 import Intro from './routes/Intro';
 import My from './routes/My';
 import Notification from './routes/Notification';
@@ -25,8 +26,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '/today',
-        element: <Today />,
+        path: '/home',
+        element: <Home />,
       },
       {
         path: 'my',

@@ -6,7 +6,7 @@ import { Layout } from '@design-system';
 import { MainWrapper, RootContainer } from '@styles/wrappers';
 
 function Root() {
-  redirect('/today');
+  redirect('/home');
 
   return (
     <Layout.FlexRow justifyContent="center" bgColor="BASIC_BLACK" h="100vh" w="100%">
