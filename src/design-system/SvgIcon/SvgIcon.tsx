@@ -18,7 +18,8 @@ import { IconNames } from './SvgIcon.types';
 
 const SvgIcon = React.memo((props: SvgIconProps) => {
   const { name, color = 'BASIC_BLACK', width, height, size } = props;
-  const src = allIconNames[name];
+  const iconName = allIconNames[name];
+
   const w = size || width;
   const h = size || height;
 
@@ -27,7 +28,7 @@ const SvgIcon = React.memo((props: SvgIconProps) => {
   }
   return (
     <ReactSVG
-      src={src}
+      src={`/icons/${iconName}.svg`}
       beforeInjection={(svg: SVGSVGElement) => {
         if (!svg) return;
         svg.setAttribute('width', w.toString());
