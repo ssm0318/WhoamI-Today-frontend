@@ -5,14 +5,19 @@ import { Layout } from '@design-system';
 
 function My() {
   return (
-    <Layout.FlexCol>
-      <Layout.FlexRow>
+    <Layout.FlexCol w="100%" pt={20}>
+      <Layout.FlexRow
+        w="100%"
+        alignItems="center"
+        justifyContent="space-between"
+        pl={24}
+        pr={24}
+        pb={14}
+      >
         <MyProfile />
         <CalendarViewTabs />
       </Layout.FlexRow>
-      <Layout.FlexCol>
-        <Calendar />
-      </Layout.FlexCol>
+      <Calendar />
     </Layout.FlexCol>
   );
 }
