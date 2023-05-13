@@ -1,5 +1,7 @@
+import { Font } from '@design-system';
 import { CALENDAR_VIEW } from '@models/calendar';
 import { useBoundStore } from '@stores/useBoundStore';
+import * as S from './CalendarViewTabs.styled';
 
 const CALENDAR_VIEW_TAB_LIST = [
   { key: CALENDAR_VIEW.WEEKLY, text: 'W' },
@@ -17,18 +19,20 @@ function CalendarViewTabs() {
   };
 
   return (
-    <div>
+    <S.CalendarViewTabs>
       {CALENDAR_VIEW_TAB_LIST.map(({ key, text }) => (
-        <button
+        <S.CalendarViewTab
           key={key}
           type="button"
-          className={`${calendarView === key ? 'active' : ''}`}
+          className={key === calendarView ? 'active' : ''}
           onClick={() => onClickTab(key)}
         >
-          {text}
-        </button>
+          <Font.Display type="18_bold" textAlign="center">
+            {text}
+          </Font.Display>
+        </S.CalendarViewTab>
       ))}
-    </div>
+    </S.CalendarViewTabs>
   );
 }
 
