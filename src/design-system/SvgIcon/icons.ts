@@ -7,6 +7,9 @@ const moment_emoji_normal = 'moment_emoji_normal';
 const moment_pencil_normal = 'moment_pencil_normal';
 const moment_photo_normal = 'moment_photo_normal';
 const my_profile = 'my_profile';
+const moment_emoji_disabled = 'moment_emoji_disabled';
+const moment_pencil_disabled = 'moment_pencil_disabled';
+const moment_photo_disabled = 'moment_photo_disabled';
 
 export {
   top_navigation_hamburger,
@@ -17,4 +20,7 @@ export {
   moment_pencil_normal,
   moment_photo_normal,
   my_profile,
+  moment_emoji_disabled,
+  moment_pencil_disabled,
+  moment_photo_disabled,
 };
