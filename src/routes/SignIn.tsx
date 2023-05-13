@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import { Button } from '@design-system';
 import { SignInParams } from '@models/api/user';
-import signIn from '@utils/apis/user';
+import { signIn } from '@utils/apis/user';
 import CommonInput from 'src/design-system/Inputs/Input.styled';
 
 function SignIn() {
@@ -19,7 +19,7 @@ function SignIn() {
 
   const navigate = useNavigate();
   const onSubmit = () => {
-    signIn(signInInfo, () => navigate('/today'));
+    signIn(signInInfo, () => navigate('/home'));
   };
 
   const onKeySubmit = (e: KeyboardEvent) => {
