@@ -29,5 +29,6 @@ export const useButton = (props: ButtonProps) => {
     onTouchStart: onMouseEnter,
     onTouchEnd: onMouseLeave,
     onClick,
+    status,
   };
 };

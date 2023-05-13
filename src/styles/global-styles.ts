@@ -27,6 +27,14 @@ const GlobalStyle = createGlobalStyle`
         padding: 0;
         cursor: pointer;
         outline: inherit;
+
+        &:disabled {
+            cursor: default;
+        }
+    }
+
+    a {
+        text-decoration: none;
     }
 
     * {

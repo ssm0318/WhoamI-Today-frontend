@@ -1,0 +1,13 @@
+{
+  "intro": {
+    "sign_in": "Sign In",
+    "sign_up": "SIgn Up"
+  },
+  "sign_in": {
+    "username_or_email": "username or email",
+    "password": "password",
+    "sign_in": "Sign In",
+    "forgot_password": "Forgot password",
+    "sign_up": "Sign Up"
+  }
+}
