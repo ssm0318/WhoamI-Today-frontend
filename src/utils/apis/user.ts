@@ -19,3 +19,7 @@ export const checkIfSignIn = async () => {
     return redirect('/signin');
   }
 };
+
+export const signOut = () => {
+  axios.get('/user/logout/');
+};
