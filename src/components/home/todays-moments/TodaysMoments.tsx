@@ -5,8 +5,10 @@ import { MomentData } from '@models/moment';
 import { BoundState, useBoundStore } from '@stores/useBoundStore';
 import { IconWrapper } from './TodaysMoments.styled';
 
-const momentSelector = (state: Pick<BoundState, 'mood' | 'photo' | 'description'>) => ({
-  ...state,
+const momentSelector = (state: BoundState) => ({
+  mood: state.mood,
+  description: state.description,
+  photo: state.photo,
 });
 
 function TodaysMoments() {
@@ -22,29 +24,29 @@ function TodaysMoments() {
       </Layout.FlexRow>
       {/* 컨텐츠 */}
       <IconWrapper w="100%" justifyContent="center" mt={32}>
-        <MomentIcon key="mood" state={moment} />
-        <MomentIcon key="photo" state={moment} />
-        <MomentIcon key="description" state={moment} />
+        <MomentIcon name="mood" state={moment} />
+        <MomentIcon name="photo" state={moment} />
+        <MomentIcon name="description" state={moment} />
       </IconWrapper>
     </Layout.FlexCol>
   );
 }
 
-function MomentIcon({ key, state }: { key: keyof MomentData; state: MomentData }) {
+function MomentIcon({ name, state }: { name: keyof MomentData; state: MomentData }) {
   const sendMessageToApp = usePostAppMessage();
 
   const handleClickUploadMoment = () => {
     sendMessageToApp('NAVIGATE', {
       screenName: 'MomentUploadScreen',
       params: {
-        step: key,
+        step: name,
         state,
       },
     });
   };
   return (
     <button type="button" onClick={handleClickUploadMoment}>
-      <SvgIcon name={state[key] ? 'moment_emoji_disabled' : 'moment_emoji_normal'} size={46} />
+      <SvgIcon name={state[name] ? `moment_${name}_disabled` : `moment_${name}_normal`} size={46} />
     </button>
   );
 }
