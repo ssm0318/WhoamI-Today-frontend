@@ -19,6 +19,12 @@ import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
 import Counter from './routes/ZustandExample';
 
+declare global {
+  interface Window {
+    ReactNativeWebView?: any;
+  }
+}
+
 const router = createBrowserRouter([
   { path: '', element: <Intro /> },
   {
