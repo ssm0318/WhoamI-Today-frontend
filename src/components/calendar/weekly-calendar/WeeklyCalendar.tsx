@@ -1,33 +1,34 @@
-import { format } from 'date-fns';
+import { addWeeks, format, getWeekOfMonth, subWeeks } from 'date-fns';
+import { useMemo, useState } from 'react';
 import { Layout } from '@design-system';
-import { CalendarProps } from '@models/calendar';
 import CalendarHeader from '../calendar-header/CalendarHeader';
 import CalendarTable, { CalendarCell } from '../calendar-table/CalendarTable';
+import { getCalendarWeek } from './WeeklyCalendar.helper';
 
-interface WeeklyCalendarProps extends CalendarProps {
-  currentWeekOfMonth: number;
-  moveToPrevWeek: () => void;
-  moveToNextWeek: () => void;
-}
+function WeeklyCalendar() {
+  const [currentDate, setCurrentDate] = useState(new Date());
 
-function WeeklyCalendar({
-  calendarMatrix,
-  currentDate,
-  currentWeekOfMonth,
-  moveToPrevWeek,
-  moveToNextWeek,
-}: WeeklyCalendarProps) {
+  const calendarWeek = useMemo(() => getCalendarWeek(currentDate), [currentDate]);
+
+  const moveToPrevWeek = () => {
+    setCurrentDate((prev) => subWeeks(prev, 1));
+  };
+
+  const moveToNextWeek = () => {
+    setCurrentDate((prev) => addWeeks(prev, 1));
+  };
+
   return (
     <Layout.FlexCol>
       <CalendarHeader
-        title={`${format(currentDate, 'MMMM yyyy')} ${currentWeekOfMonth + 1}`}
+        title={`${format(currentDate, 'MMMM yyyy')} ${getWeekOfMonth(currentDate)} week`}
         onClickPrevBtn={moveToPrevWeek}
         onClickNextBtn={moveToNextWeek}
       />
       <Layout.FlexCol>
         <CalendarTable>
           <tr>
-            {calendarMatrix[currentWeekOfMonth]?.map((date, i) => {
+            {calendarWeek.map((date, i) => {
               const dateKey = `date_${i}`;
               return <CalendarCell key={dateKey} date={date} />;
             })}

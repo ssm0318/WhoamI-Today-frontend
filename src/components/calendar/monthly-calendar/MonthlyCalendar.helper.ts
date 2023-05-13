@@ -1,5 +1,7 @@
 import { addDays, differenceInCalendarMonths, endOfMonth, startOfMonth } from 'date-fns';
-import { CalendarDates, CalendarMatrix } from '@models/calendar';
+
+type CalendarDates = (Date | null)[];
+type CalendarMatrix = CalendarDates[];
 
 export const getCalendarMatrix = (currentDate: Date): CalendarMatrix => {
   const startDate = startOfMonth(currentDate);

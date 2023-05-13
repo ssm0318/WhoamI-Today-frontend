@@ -1,20 +1,23 @@
-import { format } from 'date-fns';
+import { addMonths, format, subMonths } from 'date-fns';
+import { useMemo, useState } from 'react';
 import { Layout } from '@design-system';
-import { CalendarProps } from '@models/calendar';
 import CalendarHeader from '../calendar-header/CalendarHeader';
 import CalendarTable, { CalendarCell } from '../calendar-table/CalendarTable';
+import { getCalendarMatrix } from './MonthlyCalendar.helper';
 
-interface MonthlyCalendarProps extends CalendarProps {
-  moveToPrevMonth: () => void;
-  moveToNextMonth: () => void;
-}
+function MonthlyCalendar() {
+  const [currentDate, setCurrentDate] = useState(new Date());
 
-function MonthlyCalendar({
-  calendarMatrix,
-  currentDate,
-  moveToPrevMonth,
-  moveToNextMonth,
-}: MonthlyCalendarProps) {
+  const calendarMatrix = useMemo(() => getCalendarMatrix(currentDate), [currentDate]);
+
+  const moveToPrevMonth = () => {
+    setCurrentDate((prev) => subMonths(prev, 1));
+  };
+
+  const moveToNextMonth = () => {
+    setCurrentDate((prev) => addMonths(prev, 1));
+  };
+
   return (
     <Layout.FlexCol>
       <CalendarHeader
