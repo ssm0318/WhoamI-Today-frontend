@@ -9,6 +9,12 @@ export const Colors = {
   SYSTEM_ERROR: '#BF0000',
   SYSTEM_SUCCESS: '#1FB881',
 
+  GRAY_1: '#D6D6D6',
+  GRAY_2: '#D9D9D9',
+  GRAY_3: '#555555',
+
+  BACKGROUND_COLOR: '#F5F5F5',
+
   TRANSPARENT: 'transparent',
   DIM: '#000000b3',
 };

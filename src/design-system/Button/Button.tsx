@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Font from '../Font/Font';
-import * as S from './Button.styles';
+import * as S from './Button.styled';
 import { ButtonProps, ButtonSetting } from './Button.types';
 import { useButton } from './useButton';
 
@@ -45,12 +45,17 @@ function Button(
 
 const Large = React.memo((props: ButtonProps) => <Button {...props} size="Large" />);
 
+const Small = React.memo((props: ButtonProps) => <Button {...props} size="Small" />);
+
 const buttons: ButtonSetting = {
   Large: {
     ButtonComponent: S.LargeButton,
-    gap: 4,
-    fontType: '18_semibold',
+    fontType: '12_regular',
+  },
+  Small: {
+    ButtonComponent: S.SmallButton,
+    fontType: '12_regular',
   },
 };
 
-export default { Large };
+export default { Large, Small };

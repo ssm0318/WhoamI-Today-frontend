@@ -35,6 +35,7 @@
   "rules": {
     "react/jsx-filename-extension": ["warn", { "extensions": [".tsx"] }],
     "react/react-in-jsx-scope": "off",
+    "react/require-default-props": "off",
     "no-unused-vars": "off",
     "camelcase": "off",
     "no-shadow": "off",

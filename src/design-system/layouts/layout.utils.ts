@@ -1,6 +1,7 @@
+import { DEFAULT_MARGIN } from '@constants/layout';
 import { DefaultOrNumber } from './layout.types';
 
-export const toPx = (value: 'default' | number) => (value === 'default' ? 20 : value);
+export const toPx = (value: 'default' | number) => (value === 'default' ? DEFAULT_MARGIN : value);
 
 export const toMarginPaddingString = (
   ...[all = 0, h = 0, v = 0, t = 0, r = 0, b = 0, l = 0]: (DefaultOrNumber | undefined)[]

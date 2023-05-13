@@ -1,13 +1,12 @@
 import { ColorKeys } from 'src/design-system/colors';
 import { BodyType } from '../Font/Font.types';
-import * as S from './Button.styles';
+import * as S from './Button.styled';
 
-export type ButtonSize = 'Large';
+export type ButtonSize = 'Large' | 'Small';
 
 export type ButtonSetting = {
   [key in ButtonSize]: {
-    ButtonComponent: typeof S.LargeButton;
-    gap: number;
+    ButtonComponent: typeof S.LargeButton | typeof S.SmallButton;
     fontType: BodyType;
   };
 };
