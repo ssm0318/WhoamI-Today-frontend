@@ -1,8 +1,8 @@
 import { addMonths, format, subMonths } from 'date-fns';
 import { useMemo, useState } from 'react';
 import { Layout } from '@design-system';
-import CalendarHeader from '../calendar-header/CalendarHeader';
-import CalendarTable, { CalendarCell } from '../calendar-table/CalendarTable';
+import CalendarCell from '../calendar-cell/CalendarCell';
+import CalendarViewWrapper from '../calendar-view-wrapper/CalendarViewWrapper';
 import { getCalendarMatrix } from './MonthlyCalendar.helper';
 
 function MonthlyCalendar() {
@@ -20,26 +20,23 @@ function MonthlyCalendar() {
 
   return (
     <Layout.FlexCol>
-      <CalendarHeader
+      <CalendarViewWrapper
         title={format(currentDate, 'MMMM yyyy')}
         onClickPrevBtn={moveToPrevMonth}
         onClickNextBtn={moveToNextMonth}
-      />
-      <Layout.FlexCol>
-        <CalendarTable>
-          {calendarMatrix.map((week, i) => {
-            const weekKey = `week_${i}`;
-            return (
-              <tr key={weekKey}>
-                {week.map((date, j) => {
-                  const dateKey = `date_${i}_${j}`;
-                  return <CalendarCell key={dateKey} date={date} />;
-                })}
-              </tr>
-            );
-          })}
-        </CalendarTable>
-      </Layout.FlexCol>
+      >
+        {calendarMatrix.map((week, i) => {
+          const weekKey = `week_${i}`;
+          return (
+            <tr key={weekKey}>
+              {week.map((date, j) => {
+                const dateKey = `date_${i}_${j}`;
+                return <CalendarCell key={dateKey} date={date} />;
+              })}
+            </tr>
+          );
+        })}
+      </CalendarViewWrapper>
     </Layout.FlexCol>
   );
 }
