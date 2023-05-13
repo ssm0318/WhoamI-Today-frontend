@@ -1,14 +1,15 @@
-import { addWeeks, format, getWeekOfMonth, subWeeks } from 'date-fns';
+import { addWeeks, subWeeks } from 'date-fns';
 import { useMemo, useState } from 'react';
 import { Layout } from '@design-system';
 import CalendarCell from '../calendar-cell/CalendarCell';
 import CalendarViewWrapper from '../calendar-view-wrapper/CalendarViewWrapper';
-import { getCalendarWeek } from './WeeklyCalendar.helper';
+import { getCalendarTitle, getCalendarWeek } from './WeeklyCalendar.helper';
 
 function WeeklyCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const calendarWeek = useMemo(() => getCalendarWeek(currentDate), [currentDate]);
+  const calendarTitle = useMemo(() => getCalendarTitle(currentDate), [currentDate]);
 
   const moveToPrevWeek = () => {
     setCurrentDate((prev) => subWeeks(prev, 1));
@@ -21,7 +22,7 @@ function WeeklyCalendar() {
   return (
     <Layout.FlexCol>
       <CalendarViewWrapper
-        title={`${format(currentDate, 'MMMM yyyy')} ${getWeekOfMonth(currentDate)} week`}
+        title={calendarTitle}
         onClickPrevBtn={moveToPrevWeek}
         onClickNextBtn={moveToNextWeek}
       >
