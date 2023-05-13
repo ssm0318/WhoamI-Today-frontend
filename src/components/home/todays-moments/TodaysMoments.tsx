@@ -33,9 +33,11 @@ function TodaysMoments() {
 }
 
 function MomentIcon({ name, state }: { name: keyof MomentData; state: MomentData }) {
+  const momentState = state[name];
   const sendMessageToApp = usePostAppMessage();
 
   const handleClickUploadMoment = () => {
+    if (momentState) return;
     sendMessageToApp('NAVIGATE', {
       screenName: 'MomentUploadScreen',
       params: {
@@ -45,8 +47,8 @@ function MomentIcon({ name, state }: { name: keyof MomentData; state: MomentData
     });
   };
   return (
-    <button type="button" onClick={handleClickUploadMoment}>
-      <SvgIcon name={state[name] ? `moment_${name}_disabled` : `moment_${name}_normal`} size={46} />
+    <button type="button" onClick={handleClickUploadMoment} disabled={!!momentState}>
+      <SvgIcon name={momentState ? `moment_${name}_disabled` : `moment_${name}_normal`} size={46} />
     </button>
   );
 }
