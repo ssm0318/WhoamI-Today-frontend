@@ -8,14 +8,7 @@ interface CalendarHeaderProps {
 
 function CalendarHeader({ title, onClickPrevBtn, onClickNextBtn }: CalendarHeaderProps) {
   return (
-    <Layout.FlexRow
-      w="100%"
-      justifyContent="space-between"
-      alignItems="center"
-      pl={18}
-      pr={17}
-      pt={14}
-    >
+    <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
       <Font.Body type="20_semibold">{title}</Font.Body>
       <Layout.FlexRow justifyContent="space-between" alignItems="center">
         <button type="button" onClick={onClickPrevBtn}>

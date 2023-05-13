@@ -13,6 +13,7 @@ export const Colors = {
   GRAY_2: '#D9D9D9',
   GRAY_3: '#555555',
   GRAY_4: '#585858',
+  GRAY_5: '#B5B5B5',
 
   BACKGROUND_COLOR: '#F5F5F5',
 

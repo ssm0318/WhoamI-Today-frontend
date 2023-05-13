@@ -18,18 +18,16 @@ function CalendarViewWrapper({
   onClickNextBtn,
 }: CalendarViewWrapperProps) {
   return (
-    <Layout.FlexCol>
+    <Layout.FlexCol w="100%" pl={18} pr={17} pt={14}>
       <CalendarHeader
         title={title}
         onClickPrevBtn={onClickPrevBtn}
         onClickNextBtn={onClickNextBtn}
       />
-      <Layout.FlexCol>
-        <StyledCalendarTable>
-          <CalendarTableHeader />
-          <tbody>{children}</tbody>
-        </StyledCalendarTable>
-      </Layout.FlexCol>
+      <StyledCalendarTable>
+        <CalendarTableHeader />
+        <tbody>{children}</tbody>
+      </StyledCalendarTable>
     </Layout.FlexCol>
   );
 }

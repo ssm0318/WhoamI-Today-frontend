@@ -1,6 +1,5 @@
 import { addWeeks, subWeeks } from 'date-fns';
 import { useMemo, useState } from 'react';
-import { Layout } from '@design-system';
 import CalendarCell from '../calendar-cell/CalendarCell';
 import CalendarViewWrapper from '../calendar-view-wrapper/CalendarViewWrapper';
 import { getCalendarTitle, getCalendarWeek } from './WeeklyCalendar.helper';
@@ -20,20 +19,18 @@ function WeeklyCalendar() {
   };
 
   return (
-    <Layout.FlexCol>
-      <CalendarViewWrapper
-        title={calendarTitle}
-        onClickPrevBtn={moveToPrevWeek}
-        onClickNextBtn={moveToNextWeek}
-      >
-        <tr>
-          {calendarWeek.map((date, i) => {
-            const dateKey = `date_${i}`;
-            return <CalendarCell key={dateKey} date={date} />;
-          })}
-        </tr>
-      </CalendarViewWrapper>
-    </Layout.FlexCol>
+    <CalendarViewWrapper
+      title={calendarTitle}
+      onClickPrevBtn={moveToPrevWeek}
+      onClickNextBtn={moveToNextWeek}
+    >
+      <tr>
+        {calendarWeek.map((date, i) => {
+          const dateKey = `date_${i}`;
+          return <CalendarCell key={dateKey} date={date} />;
+        })}
+      </tr>
+    </CalendarViewWrapper>
   );
 }
 
