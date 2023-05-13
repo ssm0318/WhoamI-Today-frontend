@@ -29,7 +29,7 @@ const useGetAppMessage = ({
 
 // 웹 -> 앱 메시지 발신 (POST)
 const usePostAppMessage = () => {
-  const sendMessage = useCallback((key: PostMessageKeyType, data: PostMessageDataType) => {
+  const sendMessage = useCallback((key: PostMessageKeyType, data: Omit<MessageDataType, 'key'>) => {
     if (!window.ReactNativeWebView) return;
     window.ReactNativeWebView.postMessage(
       JSON.stringify({

@@ -29,7 +29,7 @@ function Button(
   );
 
   return (
-    <S.Container sizing={sizing}>
+    <S.Container sizing={sizing} status={status}>
       {to ? (
         <Link to={to} {...handlers}>
           {buttonChildren}

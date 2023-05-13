@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { ColorKeys } from 'src/design-system/colors';
+import { ButtonStatus } from './Button.types';
 
 type ButtonProps = {
   outline?: ColorKeys;
@@ -42,12 +43,18 @@ export const SmallButton = styled(Button)`
   border-radius: 12px;
 `;
 
-export const Container = styled.div<{ sizing?: 'fit-content' | 'stretch' }>`
+export const Container = styled.div<{ sizing?: 'fit-content' | 'stretch'; status: ButtonStatus }>`
   display: flex;
   flex-direction: column;
   ${({ sizing = 'fit-content' }) =>
     sizing === 'stretch' &&
     css`
       align-self: stretch;
+    `}
+  ${({ status }) =>
+    status !== 'completed' &&
+    status !== 'disabled' &&
+    css`
+      cursor: 'pointer';
     `}
 `;
