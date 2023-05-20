@@ -14,6 +14,7 @@ export const Colors = {
   GRAY_3: '#555555',
   GRAY_4: '#585858',
   GRAY_5: '#B5B5B5',
+  GRAY_6: '#ECEBEC',
 
   BACKGROUND_COLOR: '#F5F5F5',
 

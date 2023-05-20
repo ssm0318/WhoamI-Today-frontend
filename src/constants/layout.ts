@@ -4,6 +4,7 @@ const TOP_NAVIGATION_HEIGHT = 84;
 const DEFAULT_MARGIN = 24;
 const SCREEN_WIDTH = typeof window !== 'undefined' ? Math.min(window.innerWidth, 500) : 0;
 const SCREEN_HEIGHT = typeof window !== 'undefined' ? window.innerHeight : 0;
+const TITLE_HEADER_HEIGHT = 56;
 
 export {
   BOTTOM_TABBAR_HEIGHT,
@@ -12,4 +13,5 @@ export {
   SCREEN_WIDTH,
   SCREEN_HEIGHT,
   MAX_WINDOW_WIDTH,
+  TITLE_HEADER_HEIGHT,
 };

@@ -41,6 +41,7 @@ export const LayoutBase = styled.div<BgColor & Flex & BoxStyle & Border>`
     bgColor = 'TRANSPARENT',
     justifyContent = 'flex-start',
     cursor,
+    gap = 0,
   }) => css`
     ${getStyle('padding', toMarginPaddingString(p, ph, pv, pt, pr, pb, pl))}
     ${getStyle('margin', toMarginPaddingString(m, mh, mv, mt, mr, mb, ml))}
@@ -58,6 +59,7 @@ export const LayoutBase = styled.div<BgColor & Flex & BoxStyle & Border>`
     justify-content: ${justifyContent};
     background-color: ${theme[bgColor]};
     cursor: ${cursor};
+    gap: ${gap}px;
   `}
 `;
 

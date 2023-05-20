@@ -12,6 +12,7 @@ const moment_pencil_disabled = 'moment_pencil_disabled';
 const moment_mood_disabled = 'moment_mood_disabled';
 const moment_description_disabled = 'moment_description_disabled';
 const moment_photo_disabled = 'moment_photo_disabled';
+const question_send = 'question_send';
 
 export {
   top_navigation_hamburger,
@@ -27,4 +28,5 @@ export {
   moment_mood_disabled,
   moment_description_disabled,
   moment_photo_disabled,
+  question_send,
 };
