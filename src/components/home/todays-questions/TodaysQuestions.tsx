@@ -11,6 +11,7 @@ function TodaysQuestions() {
   const today = new Date();
   // TODAY_QUESTION_FIRST_DATE와 today를 비교 후, 더 나중 날짜를 currentDate로 set
   // TODAY_QUESTION_FIRST_DATE보다 이전에 접속하면 항상 TODAY_QUESTION_FIRST_DATE로 유지
+  // TODO currentDate 기준으로 나중에 오늘의 질문 data 요청할 예정
   const [currentDate, setCurrentDate] = useState(
     isBefore(today, TODAY_QUESTION_FIRST_DATE) ? TODAY_QUESTION_FIRST_DATE : today,
   );
