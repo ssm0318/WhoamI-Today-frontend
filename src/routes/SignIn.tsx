@@ -62,7 +62,7 @@ function SignIn() {
       <Button.Large
         type="white_fill"
         status="normal"
-        to="/signup"
+        to="/signup/email"
         text={t('sign_up')}
         sizing="stretch"
       />

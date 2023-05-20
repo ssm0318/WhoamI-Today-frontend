@@ -11,6 +11,7 @@
     "sign_up": "Sign Up"
   },
   "sign_up": {
+    "create_an_account": "Create an account",
     "email": "Email",
     "password": "Password",
     "username": "Username",

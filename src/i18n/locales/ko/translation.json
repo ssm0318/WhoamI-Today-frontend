@@ -11,6 +11,7 @@
     "sign_up": "회원가입"
   },
   "sign_up": {
+    "create_an_account": "새로운 계정 만들기",
     "email": "이메일",
     "password": "비밀번호",
     "username": "닉네임",
