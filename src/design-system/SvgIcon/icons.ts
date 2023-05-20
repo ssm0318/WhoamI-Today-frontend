@@ -6,6 +6,7 @@ const arrow_right = 'arrow_right';
 const moment_emoji_normal = 'moment_emoji_normal';
 const moment_pencil_normal = 'moment_pencil_normal';
 const moment_photo_normal = 'moment_photo_normal';
+const my_profile = 'my_profile';
 
 export {
   top_navigation_hamburger,
@@ -15,4 +16,5 @@ export {
   moment_emoji_normal,
   moment_pencil_normal,
   moment_photo_normal,
+  my_profile,
 };

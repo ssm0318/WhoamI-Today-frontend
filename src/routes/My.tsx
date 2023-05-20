@@ -1,5 +1,25 @@
+import Calendar from '@components/calendar/Calendar';
+import CalendarViewTabs from '@components/calendar/calendar-view-Tabs/CalendarViewTabs';
+import MyProfile from '@components/my-profile/MyProfile';
+import { Layout } from '@design-system';
+
 function My() {
-  return <h1>My</h1>;
+  return (
+    <Layout.FlexCol w="100%" pt={20}>
+      <Layout.FlexRow
+        w="100%"
+        alignItems="center"
+        justifyContent="space-between"
+        pl={24}
+        pr={24}
+        pb={14}
+      >
+        <MyProfile />
+        <CalendarViewTabs />
+      </Layout.FlexRow>
+      <Calendar />
+    </Layout.FlexCol>
+  );
 }
 
 export default My;
