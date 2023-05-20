@@ -6,6 +6,7 @@ interface QuestionItemProps {
   id: number;
 }
 
+// TODO 답변 작성 아이콘 추가 필요
 function QuestionItem({ title, id }: QuestionItemProps) {
   const handleSendQuestion = () => {
     // TODO(handle send)
