@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-interface InputProps {
+export interface InputProps {
   width?: number;
 }
 
