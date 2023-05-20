@@ -1,30 +1,28 @@
 import { MomentData } from '@models/moment';
+import { getTodayMoment } from '@utils/apis/moment';
 import { SliceStateCreator } from './useBoundStore';
 
-interface MomentState extends MomentData {}
+interface MomentState {
+  moment: MomentData;
+}
 interface MomentAction {
-  update: (data: MomentData) => void;
-  reset: () => void;
+  fetch: () => Promise<void>;
 }
 
-const initialState: MomentState = {
-  mood: null,
-  photo: null,
-  description: null,
+const initialState = {
+  moment: {
+    mood: null,
+    photo: null,
+    description: null,
+  },
 };
 
 export type MomentSlice = MomentState & MomentAction;
 
 export const createMomentSlice: SliceStateCreator<MomentSlice> = (set) => ({
   ...initialState,
-  update: (data: MomentData) =>
-    set(
-      (state: MomentState) => ({
-        ...state,
-        ...data,
-      }),
-      false,
-      'moment/update',
-    ),
-  reset: () => set(initialState, false, 'moment/reset'),
+  fetch: async () => {
+    const moment = await getTodayMoment();
+    set(() => ({ moment }));
+  },
 });
