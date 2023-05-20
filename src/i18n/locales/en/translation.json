@@ -17,7 +17,8 @@
     "username": "Username",
     "add": "Add",
     "skip": "Skip",
-    "next": "Next"
+    "next": "Next",
+    "temporary_error": "An error has occurred temporarily. Please try again later."
   },
   "home": {
     "moment": {

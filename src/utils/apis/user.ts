@@ -1,6 +1,8 @@
+import { AxiosError } from 'axios';
 import { redirect } from 'react-router-dom';
-import { SignInParams, SignInResponse } from '@models/api/user';
-import axios from '@utils/apis/axios';
+import i18n from '@i18n/index';
+import { SignInParams, SignInResponse, SignUpError } from '@models/api/user';
+import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 
 export const signIn = (signInInfo: SignInParams, onSuccess: () => void) => {
   axios
@@ -22,4 +24,27 @@ export const checkIfSignIn = async () => {
 
 export const signOut = () => {
   axios.get('/user/logout/');
+};
+
+export const validateEmail = ({
+  email,
+  onSuccess,
+  onError,
+}: {
+  email: string;
+  onSuccess: () => void;
+  onError: (errorMsg: string) => void;
+}) => {
+  axiosFormDataInstance
+    .post('/user/signup/email/', { email })
+    .then(() => {
+      onSuccess();
+    })
+    .catch((e: AxiosError<SignUpError>) => {
+      if (e.response?.data.detail) {
+        onError(e.response.data.detail);
+        return;
+      }
+      onError(i18n.t('sign_up.temporary_error'));
+    });
 };
