@@ -6,18 +6,24 @@ export const useButton = (props: ButtonProps) => {
   const { type, status, text, onClick: _onClick } = props;
   const colorSetting = buttonColorSettings[type];
 
-  const [pressed, setPressed] = useState(false);
-  const onMouseEnter = useCallback(() => status === 'normal' && setPressed(true), [status]);
-  const onMouseLeave = useCallback(() => status === 'normal' && setPressed(false), [status]);
+  const [hovered, setHovered] = useState(false);
+  const onMouseEnter = useCallback(() => status === 'normal' && setHovered(true), [status]);
+  const onMouseLeave = useCallback(() => status === 'normal' && setHovered(false), [status]);
 
+  const interactionDisabled = status === 'disabled' || status === 'completed';
   const onClick = useCallback(() => {
-    if (status !== 'normal' && status !== 'pressed') return;
+    if (interactionDisabled) return;
     _onClick?.();
-  }, [status, _onClick]);
+  }, [interactionDisabled, _onClick]);
 
-  const fill = pressed ? colorSetting.pressed.background : colorSetting[status].background;
-  const outline = pressed ? colorSetting.pressed.outline : colorSetting[status].outline;
-  const color = pressed ? colorSetting.pressed.text : colorSetting[status].text;
+  const fill =
+    !interactionDisabled && hovered
+      ? colorSetting.hovered.background
+      : colorSetting[status].background;
+  const outline =
+    !interactionDisabled && hovered ? colorSetting.hovered.outline : colorSetting[status].outline;
+  const color =
+    !interactionDisabled && hovered ? colorSetting.hovered.text : colorSetting[status].text;
 
   return {
     text,
