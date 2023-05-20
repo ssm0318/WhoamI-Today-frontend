@@ -1,23 +1,25 @@
+import { redirect } from 'react-router-dom';
 import { SignInParams, SignInResponse } from '@models/api/user';
 import axios from '@utils/apis/axios';
 
-export const signIn = async (signInInfo: SignInParams, onSuccess: () => void) => {
+export const signIn = (signInInfo: SignInParams, onSuccess: () => void) => {
+  axios
+    .post<SignInResponse>('/user/login/', signInInfo)
+    .then(() => onSuccess())
+    // TODO
+    .catch((e) => console.log(e));
+};
+
+export const checkIfSignIn = async () => {
   try {
-    const {
-      data: { access },
-    } = await axios.post<SignInResponse>('/user/token/', signInInfo);
-
-    // FIXME: 이후 가능하면 backend에서 쿠키를 세팅하는 방식으로 변경하려 합니다
-    // https://github.com/GooJinSun/WhoAmI-Today-backend/issues/1#issuecomment-1537058512
-    axios.defaults.headers.common.Authorization = `Bearer ${access}`;
-
-    // FIXME: 유저정보 세팅
-    axios.get('/user/me/');
-    onSuccess();
-  } catch (e) {
-    // TODO: 에러 핸들링
-    console.log(e);
+    const user = await axios.get('/user/me/');
+    // TODO: zustand 상태 설정 등
+    return user;
+  } catch {
+    return redirect('/signin');
   }
 };
 
-export default signIn;
+export const signOut = () => {
+  axios.get('/user/logout/');
+};
