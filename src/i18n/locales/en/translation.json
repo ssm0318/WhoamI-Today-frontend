@@ -10,6 +10,14 @@
     "forgot_password": "Forgot password",
     "sign_up": "Sign Up"
   },
+  "sign_up": {
+    "email": "Email",
+    "password": "Password",
+    "username": "Username",
+    "add": "Add",
+    "skip": "Skip",
+    "next": "Next"
+  },
   "home": {
     "moment": {
       "todays_moments": "Today's Moments?"

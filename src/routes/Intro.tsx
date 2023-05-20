@@ -10,7 +10,7 @@ function Intro() {
         <Button.Large
           type="filled"
           status="normal"
-          to="/signup"
+          to="/signup/email"
           text={t('sign_up')}
           sizing="stretch"
         />

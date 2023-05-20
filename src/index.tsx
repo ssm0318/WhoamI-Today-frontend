@@ -15,6 +15,10 @@ import Intro from './routes/Intro';
 import My from './routes/My';
 import Notification from './routes/Notification';
 import Root from './routes/Root';
+import Email from './routes/sign-up/Email';
+import Password from './routes/sign-up/Password';
+import ProfileImage from './routes/sign-up/ProfileImage';
+import UserName from './routes/sign-up/UserName';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
 import Counter from './routes/ZustandExample';
@@ -50,7 +54,16 @@ const router = createBrowserRouter([
     ],
   },
   { path: 'signin', element: <SignIn /> },
-  { path: 'signup', element: <SignUp /> },
+  {
+    path: 'signup',
+    element: <SignUp />,
+    children: [
+      { path: 'email', element: <Email /> },
+      { path: 'password', element: <Password /> },
+      { path: 'username', element: <UserName /> },
+      { path: 'profile-image', element: <ProfileImage /> },
+    ],
+  },
   { path: 'forgot-password', element: <ForgotPassword /> },
 ]);
 

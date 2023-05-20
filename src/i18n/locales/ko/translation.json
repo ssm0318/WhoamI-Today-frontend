@@ -10,6 +10,14 @@
     "forgot_password": "비밀번호를 잊어버렸어요",
     "sign_up": "회원가입"
   },
+  "sign_up": {
+    "email": "이메일",
+    "password": "비밀번호",
+    "username": "닉네임",
+    "add": "추가",
+    "skip": "건너뛰기",
+    "next": "다음"
+  },
   "home": {
     "moment": {
       "todays_moments": "오늘의 순간들"
