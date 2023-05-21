@@ -8,7 +8,7 @@ export interface SignInResponse {
   refresh: string;
 }
 
-export interface SignUpError {
+export interface EmailError {
   detail: EmailValidateErrorType;
 }
 
@@ -41,3 +41,21 @@ export const PasswordValidateError = {
 
 export type PasswordValidateErrorType =
   (typeof PasswordValidateError)[keyof typeof PasswordValidateError];
+
+export interface UsernameError {
+  detail: UsernameValidateErrorType;
+}
+
+export const UsernameValidateError = {
+  ALREADY_EXIST_KO: '이미 존재하는 닉네임입니다.',
+  ALREADY_EXIST_EN: 'Username already exists.',
+  NO_MORE_THAN_20_CHAR_KO: '닉네임은 20글자 이하로 설정해주세요.',
+  NO_MORE_THAN_20_CHAR_EN: 'Username must be shorter than 21 letters.',
+  CHAR_CONSTRAINTS_KO:
+    '유효하지 않은 닉네임입니다. 닉네임은 영어, 한글, 숫자, 특수문자(_)만 포함할 수 있습니다.',
+  CHAR_CONSTRAINTS_EN:
+    'Username format is invalid. Usernames can only include letters (alphabet/Korean), numbers and underscores(_).',
+} as const;
+
+export type UsernameValidateErrorType =
+  (typeof UsernameValidateError)[keyof typeof UsernameValidateError];

@@ -1,7 +1,13 @@
 import { AxiosError } from 'axios';
 import { redirect } from 'react-router-dom';
 import i18n from '@i18n/index';
-import { PasswordError, SignInParams, SignInResponse, SignUpError } from '@models/api/user';
+import {
+  EmailError,
+  PasswordError,
+  SignInParams,
+  SignInResponse,
+  UsernameError,
+} from '@models/api/user';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 
 export const signIn = (signInInfo: SignInParams, onSuccess: () => void) => {
@@ -40,7 +46,7 @@ export const validateEmail = ({
     .then(() => {
       onSuccess();
     })
-    .catch((e: AxiosError<SignUpError>) => {
+    .catch((e: AxiosError<EmailError>) => {
       if (e.response?.data.detail) {
         onError(e.response.data.detail);
         return;
@@ -66,6 +72,29 @@ export const validatePassword = ({
     .catch((e: AxiosError<PasswordError>) => {
       if (e.response?.data.password) {
         onError(e.response.data.password);
+        return;
+      }
+      onError(i18n.t('sign_up.temporary_error'));
+    });
+};
+
+export const validateUsername = ({
+  username,
+  onSuccess,
+  onError,
+}: {
+  username: string;
+  onSuccess: () => void;
+  onError: (errorMsg: string) => void;
+}) => {
+  axiosFormDataInstance
+    .post('/user/signup/username/', { username })
+    .then(() => {
+      onSuccess();
+    })
+    .catch((e: AxiosError<UsernameError>) => {
+      if (e.response?.data.detail) {
+        onError(e.response.data.detail);
         return;
       }
       onError(i18n.t('sign_up.temporary_error'));
