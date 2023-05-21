@@ -18,7 +18,8 @@
     "add": "Add",
     "skip": "Skip",
     "next": "Next",
-    "temporary_error": "An error has occurred temporarily. Please try again later."
+    "temporary_error": "An error has occurred temporarily. Please try again later.",
+    "password_constraints": "The password must be at least 8 characters with a mix of upper and lowercase letters, numbers and symbols."
   },
   "home": {
     "moment": {

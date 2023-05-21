@@ -4,7 +4,11 @@ const StyledValidatedInput = styled.div`
   width: 100%;
 
   span {
-    color: ${({ theme }) => theme.ERROR};
+    color: ${({ theme }) => theme.BASIC_BLACK};
+
+    &.error {
+      color: ${({ theme }) => theme.ERROR};
+    }
   }
 `;
 

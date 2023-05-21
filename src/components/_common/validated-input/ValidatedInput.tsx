@@ -5,15 +5,17 @@ import StyledValidatedInput from './ValidatedInput.styled';
 type ValidatedInputProps = InputHTMLAttributes<HTMLInputElement> &
   InputProps & {
     error: string | null;
+    guide?: string | null;
   };
 
 function ValidatedInput(props: ValidatedInputProps) {
-  const { error, ...inputProps } = props;
+  const { error, guide, ...inputProps } = props;
 
   return (
     <StyledValidatedInput>
       <CommonInput {...inputProps} />
-      {error && <span>{error}</span>}
+      {error && <span className="error">{error}</span>}
+      {guide && !error && <span>{guide}</span>}
     </StyledValidatedInput>
   );
 }
