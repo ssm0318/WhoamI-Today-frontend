@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { Colors } from '@design-system';
 import GlobalStyle from '@styles/global-styles';
-import { checkIfSignIn } from '@utils/apis/user';
 import ErrorPage from './components/error-page/ErrorPage';
 import './i18n';
 import reportWebVitals from './reportWebVitals';
@@ -15,6 +14,7 @@ import Home from './routes/Home';
 import Intro from './routes/Intro';
 import My from './routes/My';
 import Notification from './routes/Notification';
+import QuestionResponse from './routes/QuestionResponse';
 import Root from './routes/Root';
 import Email from './routes/sign-up/Email';
 import Password from './routes/sign-up/Password';
@@ -30,7 +30,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     errorElement: <ErrorPage />,
-    loader: checkIfSignIn,
+    // loader: checkIfSignIn,
     children: [
       {
         path: 'home',
@@ -67,6 +67,10 @@ const router = createBrowserRouter([
   },
   { path: 'forgot-password', element: <ForgotPassword /> },
   { path: 'questions', element: <AllQuestions /> },
+  {
+    path: 'question-response/:questionId',
+    element: <QuestionResponse />,
+  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

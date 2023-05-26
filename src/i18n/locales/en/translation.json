@@ -33,6 +33,11 @@
       "multiple_choice": "Multiple Choice"
     }
   },
+  "question": {
+    "response": {
+      "placeholder": "Answer as your want."
+    }
+  },
   "calendar": {
     "title_format": "MMMM yyyy",
     "weeks_one": "{{count}}st week",

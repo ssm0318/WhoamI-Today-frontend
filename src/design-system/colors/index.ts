@@ -14,11 +14,14 @@ export const Colors = {
   GRAY_3: '#555555',
   GRAY_4: '#585858',
   GRAY_5: '#B5B5B5',
-  GRAY_6: '#ECEBEC',
+  GRAY_6: '#303030',
+  GRAY_7: '#ECEBEC',
 
   CALENDAR_TODAY: '#FF8754',
 
   BACKGROUND_COLOR: '#F5F5F5',
+
+  RESPONSE_INPUT_DIVIDER: '#A4B4F3',
 
   TRANSPARENT: 'transparent',
   DIM: '#000000b3',

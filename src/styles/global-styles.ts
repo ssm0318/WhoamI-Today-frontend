@@ -46,6 +46,10 @@ const GlobalStyle = createGlobalStyle`
         background-color: #000000
     }
 
+    input {
+        outline: none;
+    }
+
 `;
 
 export default GlobalStyle;
