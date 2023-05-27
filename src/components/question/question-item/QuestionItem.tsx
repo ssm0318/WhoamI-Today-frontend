@@ -37,7 +37,7 @@ function QuestionItem({ question }: QuestionItemProps) {
         <Font.Body type="18_regular">{content}</Font.Body>
         {type === QUESTION_TYPE.SHORT_ANSWER && (
           <Layout.FlexRow gap={4}>
-            <Link to="/short-answer-response" state={question}>
+            <Link to="/response/short-answer" state={question}>
               <SvgIcon name="moment_description_normal" size={36} />
             </Link>
             <button type="button" onClick={handleSend}>

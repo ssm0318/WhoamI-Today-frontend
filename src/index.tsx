@@ -15,8 +15,9 @@ import Intro from './routes/Intro';
 import My from './routes/My';
 import Notification from './routes/Notification';
 import QuestionDetail from './routes/QuestionDetail';
+import MultipleChoiceResponse from './routes/response/MultipleChoiceResponse';
+import ShortAnswerResponse from './routes/response/ShortAnswerResponse';
 import Root from './routes/Root';
-import ShortAnswerResponse from './routes/ShortAnswerResponse';
 import Email from './routes/sign-up/Email';
 import Password from './routes/sign-up/Password';
 import ProfileImage from './routes/sign-up/ProfileImage';
@@ -69,7 +70,13 @@ const router = createBrowserRouter([
   { path: 'forgot-password', element: <ForgotPassword /> },
   { path: 'questions', element: <AllQuestions /> },
   { path: 'question/:questionId', element: <QuestionDetail /> },
-  { path: 'short-answer-response', element: <ShortAnswerResponse /> },
+  {
+    path: 'response',
+    children: [
+      { path: 'short-answer', element: <ShortAnswerResponse /> },
+      { path: 'multiple-choice', element: <MultipleChoiceResponse /> },
+    ],
+  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

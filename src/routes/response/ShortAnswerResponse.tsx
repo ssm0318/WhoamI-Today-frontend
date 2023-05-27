@@ -17,9 +17,9 @@ function ShortAnswerResponse() {
   const [t] = useTranslation('translation', { keyPrefix: 'question.response' });
 
   const handlePost = () => {
-    // TODO 작성이 완료되었고, 질문 보내기 창 한번 띄워줌
+    // TODO 답변 업로드
     if (!textareaRef.current) return;
-    console.log(12);
+    console.log(textareaRef.current);
   };
 
   return (

@@ -15,6 +15,8 @@ const moment_photo_disabled = 'moment_photo_disabled';
 const question_send = 'question_send';
 const circle_check_checked = 'circle_check_checked';
 const circle_check_unchecked = 'circle_check_unchecked';
+const box_check_unchecked = 'box_check_unchecked';
+const box_check_checked = 'box_check_checked';
 
 export {
   top_navigation_hamburger,
@@ -33,4 +35,6 @@ export {
   question_send,
   circle_check_checked,
   circle_check_unchecked,
+  box_check_checked,
+  box_check_unchecked,
 };
