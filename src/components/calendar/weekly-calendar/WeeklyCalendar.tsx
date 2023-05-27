@@ -3,13 +3,12 @@ import { useMemo, useState } from 'react';
 import { CALENDAR_VIEW } from '@models/calendar';
 import CalendarCell from '../calendar-cell/CalendarCell';
 import CalendarViewWrapper from '../calendar-view-wrapper/CalendarViewWrapper';
-import { getCalendarTitle, getCalendarWeek } from './WeeklyCalendar.helper';
+import { getCalendarWeek } from './WeeklyCalendar.helper';
 
 function WeeklyCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const calendarWeek = useMemo(() => getCalendarWeek(currentDate), [currentDate]);
-  const calendarTitle = useMemo(() => getCalendarTitle(currentDate), [currentDate]);
 
   const moveToPrevWeek = () => {
     setCurrentDate((prev) => subWeeks(prev, 1));
@@ -22,7 +21,6 @@ function WeeklyCalendar() {
   return (
     <CalendarViewWrapper
       type={CALENDAR_VIEW.WEEKLY}
-      title={calendarTitle}
       currentDate={currentDate}
       onClickPrevBtn={moveToPrevWeek}
       onClickNextBtn={moveToNextWeek}

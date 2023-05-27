@@ -7,7 +7,6 @@ import { StyledCalendarTable } from './CalendarViewWrapper.styled';
 
 interface CalendarViewWrapperProps {
   type: CALENDAR_VIEW;
-  title: string;
   children: ReactNode;
   currentDate: Date;
   onClickPrevBtn: () => void;
@@ -16,7 +15,6 @@ interface CalendarViewWrapperProps {
 
 function CalendarViewWrapper({
   type,
-  title,
   children,
   currentDate,
   onClickPrevBtn,
@@ -26,7 +24,6 @@ function CalendarViewWrapper({
     <Layout.FlexCol w="100%" pl={18} pr={17} pt={14}>
       <CalendarHeader
         type={type}
-        title={title}
         currentDate={currentDate}
         onClickPrevBtn={onClickPrevBtn}
         onClickNextBtn={onClickNextBtn}

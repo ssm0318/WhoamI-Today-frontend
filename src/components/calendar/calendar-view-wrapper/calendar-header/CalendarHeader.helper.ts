@@ -1,4 +1,5 @@
-import { isBefore, isToday, startOfMonth, startOfWeek } from 'date-fns';
+import { format, isBefore, isToday, nextWednesday, startOfMonth, startOfWeek } from 'date-fns';
+import i18n from '@i18n/index';
 import { CALENDAR_VIEW } from '@models/calendar';
 
 export const ARROW_ICON_SIZE = 36;
@@ -18,3 +19,22 @@ export const validatePrevBtnActivation = (
 };
 
 export const validateNextBtnActivation = (currentDate: Date) => !isToday(currentDate);
+
+export const getCalendarTitle = (type: CALENDAR_VIEW, currentDate: Date) => {
+  if (type === CALENDAR_VIEW.MONTHLY) {
+    return format(currentDate, i18n.t('calendar.title_format'));
+  }
+
+  const startDayOfMonth = startOfMonth(currentDate).getDay();
+  const baseDateOfWeek = nextWednesday(startOfWeek(currentDate));
+
+  const baseDay = baseDateOfWeek.getDate();
+
+  const correctionValue = startDayOfMonth <= 3 ? 1 : 0;
+  const weekOfMonth = Math.ceil((baseDay - (7 - startDayOfMonth) + 1) / 7) + correctionValue;
+
+  return `${format(baseDateOfWeek, i18n.t('calendar.title_format'))} ${i18n.t('calendar.weeks', {
+    count: weekOfMonth,
+    ordinal: true,
+  })}`;
+};

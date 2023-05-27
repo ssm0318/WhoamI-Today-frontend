@@ -3,13 +3,13 @@ import { CALENDAR_VIEW } from '@models/calendar';
 import {
   ARROW_ICON_SIZE,
   getArrowIconColor,
+  getCalendarTitle,
   validateNextBtnActivation,
   validatePrevBtnActivation,
 } from './CalendarHeader.helper';
 
 interface CalendarHeaderProps {
   type: CALENDAR_VIEW;
-  title: string;
   currentDate: Date;
   onClickPrevBtn: () => void;
   onClickNextBtn: () => void;
@@ -17,7 +17,6 @@ interface CalendarHeaderProps {
 
 function CalendarHeader({
   type,
-  title,
   currentDate,
   onClickPrevBtn,
   onClickNextBtn,
@@ -27,7 +26,7 @@ function CalendarHeader({
 
   return (
     <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
-      <Font.Body type="20_semibold">{title}</Font.Body>
+      <Font.Body type="20_semibold">{getCalendarTitle(type, currentDate)}</Font.Body>
       <Layout.FlexRow justifyContent="space-between" alignItems="center">
         <button type="button" onClick={onClickPrevBtn} disabled={!isPrevBtnActive}>
           <SvgIcon
