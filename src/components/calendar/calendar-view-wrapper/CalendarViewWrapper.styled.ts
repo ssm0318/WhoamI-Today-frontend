@@ -13,10 +13,15 @@ export const StyledCalendarTable = styled.table`
     background-color: rgba(0, 0, 0, 0.2);
     position: relative;
 
-    &:after {
+    &::after {
       display: block;
       padding-bottom: 100%;
       content: '';
+    }
+
+    &.is_today::after {
+      box-shadow: 0 0 0 3px ${Colors.CALENDAR_TODAY} inset;
+      border-radius: 5px;
     }
 
     &.empty_cell {

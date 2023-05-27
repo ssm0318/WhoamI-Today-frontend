@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format, isToday } from 'date-fns';
 import { Font } from '@design-system';
 
 interface CalendarCellProps {
@@ -7,7 +7,7 @@ interface CalendarCellProps {
 
 function CalendarCell({ date }: CalendarCellProps) {
   return date ? (
-    <td>
+    <td className={isToday(date) ? 'is_today' : ''}>
       <Font.Body type="14_semibold" color="BASIC_WHITE" textAlign="center">
         {format(date, 'dd')}
       </Font.Body>
