@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
@@ -12,10 +13,12 @@ function QuestionResponse() {
   const location = useLocation();
   const question = String(location.state.question);
   const [t] = useTranslation('translation', { keyPrefix: 'question.response' });
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleResponse = () => {
     // TODO 작성이 완료되었고, 질문 보내기 창 한번 띄워줌
     console.log(questionId);
+    console.log(textareaRef.current?.value);
   };
 
   return (
@@ -29,7 +32,7 @@ function QuestionResponse() {
       />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" ph={DEFAULT_MARGIN}>
         <QuestionItem question={question} />
-        <ResponseInput />
+        <ResponseInput inputRef={textareaRef} />
       </Layout.FlexCol>
     </MainContainer>
   );

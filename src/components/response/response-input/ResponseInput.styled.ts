@@ -1,9 +1,11 @@
+import TextareaAutosize from 'react-textarea-autosize';
 import styled from 'styled-components';
 
-export const ResponseTextInput = styled.input`
-  color: #a0a0a0;
+export const ResponseTextInput = styled(TextareaAutosize)`
   width: 100%;
-  margin-left: 12px;
   font-size: 18px;
-  text-align-vertical: top;
+
+  ::placeholder {
+    color: #a0a0a0;
+  }
 `;
