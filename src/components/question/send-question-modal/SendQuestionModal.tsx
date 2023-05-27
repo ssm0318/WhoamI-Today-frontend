@@ -13,7 +13,9 @@ function SendQuestionModal({ userList, isVisible, setIsVisible }: SendQuestionMo
   const [selectedIdList, setSelectedIdList] = useState<number[]>([]);
 
   const handleConfirm = () => {
+    // TODO 질문 보내기 동작
     console.log(selectedIdList);
+    setIsVisible(false);
   };
 
   const handleOnClose = () => {
