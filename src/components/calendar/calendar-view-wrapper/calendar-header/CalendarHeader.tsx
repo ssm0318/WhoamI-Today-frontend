@@ -22,7 +22,7 @@ function CalendarHeader({
   onClickNextBtn,
 }: CalendarHeaderProps) {
   const isPrevBtnActive = validatePrevBtnActivation(type, currentDate);
-  const isNextBtnActive = validateNextBtnActivation(currentDate);
+  const isNextBtnActive = validateNextBtnActivation(type, currentDate);
 
   return (
     <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">

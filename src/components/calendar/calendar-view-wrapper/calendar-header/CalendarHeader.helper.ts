@@ -1,4 +1,13 @@
-import { format, isBefore, isToday, nextWednesday, startOfMonth, startOfWeek } from 'date-fns';
+import {
+  endOfMonth,
+  endOfWeek,
+  format,
+  isAfter,
+  isBefore,
+  nextWednesday,
+  startOfMonth,
+  startOfWeek,
+} from 'date-fns';
 import i18n from '@i18n/index';
 import { CALENDAR_VIEW } from '@models/calendar';
 
@@ -18,7 +27,11 @@ export const validatePrevBtnActivation = (
   return isBefore(firstDate, startDate);
 };
 
-export const validateNextBtnActivation = (currentDate: Date) => !isToday(currentDate);
+export const validateNextBtnActivation = (type: CALENDAR_VIEW, currentDate: Date) => {
+  const today = new Date();
+  const endDate = type === CALENDAR_VIEW.WEEKLY ? endOfWeek(currentDate) : endOfMonth(currentDate);
+  return isAfter(today, endDate);
+};
 
 export const getCalendarTitle = (type: CALENDAR_VIEW, currentDate: Date) => {
   if (type === CALENDAR_VIEW.MONTHLY) {
