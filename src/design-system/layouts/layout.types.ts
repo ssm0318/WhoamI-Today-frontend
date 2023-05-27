@@ -45,4 +45,5 @@ export type Flex = {
   alignItems?: FlexType;
   justifyContent?: FlexType | 'space-between' | 'space-evenly';
   cursor?: 'pointer' | 'grab' | undefined;
+  gap?: number;
 };
