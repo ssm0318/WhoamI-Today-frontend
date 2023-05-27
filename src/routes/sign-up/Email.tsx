@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import { Button, Layout } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
 import { validateEmail } from '@utils/apis/user';
 
 function Email() {
@@ -10,6 +11,7 @@ function Email() {
 
   const [emailInput, setEmailInput] = useState('');
   const [emailError, setEmailError] = useState<string | null>(null);
+  const setSignupInfo = useBoundStore((state) => state.setSignupInfo);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmailInput(e.target.value);
@@ -20,7 +22,10 @@ function Email() {
   const onClickNext = () => {
     validateEmail({
       email: emailInput,
-      onSuccess: () => navigate('/signup/password'),
+      onSuccess: () => {
+        setSignupInfo({ email: emailInput });
+        navigate('/signup/username');
+      },
       onError: (e) => setEmailError(e),
     });
   };

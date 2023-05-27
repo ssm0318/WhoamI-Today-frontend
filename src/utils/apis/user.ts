@@ -6,6 +6,7 @@ import {
   PasswordError,
   SignInParams,
   SignInResponse,
+  SignupParams,
   UsernameError,
 } from '@models/api/user';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
@@ -56,16 +57,20 @@ export const validateEmail = ({
 };
 
 export const validatePassword = ({
+  email,
+  username,
   password,
   onSuccess,
   onError,
 }: {
+  email: string;
+  username: string;
   password: string;
   onSuccess: () => void;
   onError: (errorMsg: string) => void;
 }) => {
   axiosFormDataInstance
-    .post('/user/signup/password/', { password })
+    .post('/user/signup/password/', { email, username, password })
     .then(() => {
       onSuccess();
     })
@@ -98,5 +103,34 @@ export const validateUsername = ({
         return;
       }
       onError(i18n.t('sign_up.temporary_error'));
+    });
+};
+
+export const signup = ({
+  signupInfo,
+  onSuccess,
+  onError,
+}: {
+  signupInfo: SignupParams;
+  onSuccess: () => void;
+  onError: (error: string) => void;
+}) => {
+  const formData = new FormData();
+
+  const { email, password, username, profileImage } = signupInfo;
+  if (!email || !password || !username) return;
+
+  if (profileImage) {
+    formData.append('profile_image', profileImage);
+  }
+  formData.append('email', email);
+  formData.append('username', username);
+  formData.append('password', password);
+
+  axiosFormDataInstance
+    .post('/user/signup/', formData)
+    .then(() => onSuccess())
+    .catch((e) => {
+      onError(e);
     });
 };

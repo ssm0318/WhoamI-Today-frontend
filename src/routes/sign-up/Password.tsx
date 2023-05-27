@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import { Button, Layout } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
 import { validatePassword } from '@utils/apis/user';
 
 function Password() {
@@ -10,6 +11,10 @@ function Password() {
 
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [signupInfo, setSignupInfo] = useBoundStore((state) => [
+    state.signupInfo,
+    state.setSignupInfo,
+  ]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPasswordInput(e.target.value);
@@ -18,9 +23,21 @@ function Password() {
 
   const navigate = useNavigate();
   const onClickNext = () => {
+    const { email, username } = signupInfo;
+
+    if (!email || !username) {
+      // TODO
+      return;
+    }
+
     validatePassword({
+      email,
+      username,
       password: passwordInput,
-      onSuccess: () => navigate('/signup/username'),
+      onSuccess: () => {
+        setSignupInfo({ password: passwordInput });
+        navigate('/signup/profile-image');
+      },
       onError: (e) => setPasswordError(e),
     });
   };

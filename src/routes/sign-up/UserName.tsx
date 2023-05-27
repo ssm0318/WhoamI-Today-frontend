@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import { Button, Layout } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
 import { validateUsername } from '@utils/apis/user';
 
 function UserName() {
@@ -10,6 +11,7 @@ function UserName() {
 
   const [usernameInput, setUsernameInput] = useState('');
   const [usernameError, setUsernameError] = useState<string | null>(null);
+  const setSignupInfo = useBoundStore((state) => state.setSignupInfo);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUsernameInput(e.target.value);
@@ -20,7 +22,10 @@ function UserName() {
   const onClickNext = () => {
     validateUsername({
       username: usernameInput,
-      onSuccess: () => navigate('/signup/profile-image'),
+      onSuccess: () => {
+        setSignupInfo({ username: usernameInput });
+        navigate('/signup/password');
+      },
       onError: (e) => setUsernameError(e),
     });
   };

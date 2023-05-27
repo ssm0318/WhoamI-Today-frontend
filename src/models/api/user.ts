@@ -8,6 +8,12 @@ export interface SignInResponse {
   refresh: string;
 }
 
+export interface SignupParams {
+  email?: string;
+  username?: string;
+  password?: string;
+  profileImage?: File;
+}
 export interface EmailError {
   detail: EmailValidateErrorType;
 }
