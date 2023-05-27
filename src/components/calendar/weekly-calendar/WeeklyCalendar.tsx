@@ -1,5 +1,6 @@
 import { addWeeks, subWeeks } from 'date-fns';
 import { useMemo, useState } from 'react';
+import { CALENDAR_VIEW } from '@models/calendar';
 import CalendarCell from '../calendar-cell/CalendarCell';
 import CalendarViewWrapper from '../calendar-view-wrapper/CalendarViewWrapper';
 import { getCalendarTitle, getCalendarWeek } from './WeeklyCalendar.helper';
@@ -20,7 +21,9 @@ function WeeklyCalendar() {
 
   return (
     <CalendarViewWrapper
+      type={CALENDAR_VIEW.WEEKLY}
       title={calendarTitle}
+      currentDate={currentDate}
       onClickPrevBtn={moveToPrevWeek}
       onClickNextBtn={moveToNextWeek}
     >
