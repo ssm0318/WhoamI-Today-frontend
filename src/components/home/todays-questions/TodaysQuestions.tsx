@@ -1,5 +1,6 @@
 import { addDays, format, isAfter, isBefore, isEqual, isSameDay, subDays } from 'date-fns';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TODAY_QUESTION_FIRST_DATE } from '@constants/question';
 import { Button, Font, Layout, SvgIcon } from '@design-system';
 
@@ -7,6 +8,7 @@ const shortAnswer = `Let's talk about your own way to get refreshed.`;
 const multipleChoices = ['as I am introverted.', 'kl I am introverted.', 'jj I am introverted.'];
 
 function TodaysQuestions() {
+  const [t] = useTranslation('translation', { keyPrefix: 'home.question' });
   // 오늘 날짜
   const today = new Date();
   // TODAY_QUESTION_FIRST_DATE와 today를 비교 후, 더 나중 날짜를 currentDate로 set
@@ -38,7 +40,7 @@ function TodaysQuestions() {
         </Layout.LayoutBase>
         <Font.Display type="18_bold">
           {isSameDay(currentDate, today) || isBefore(today, TODAY_QUESTION_FIRST_DATE)
-            ? `Today's Questions`
+            ? `${t('todays_questions')}`
             : format(currentDate, 'yyyy/MM/dd')}
         </Font.Display>
         <Layout.LayoutBase onClick={moveToNextDate} w={36} h={36}>
@@ -49,9 +51,9 @@ function TodaysQuestions() {
       {/* Short Answer */}
       <Layout.FlexRow mb={10} mt={32} justifyContent="space-between" w="100%" alignItems="center">
         <Font.Display type="14_regular" color="GRAY_3">
-          Short Answer
+          {t('short_answer')}
         </Font.Display>
-        <Button.Small text="See all" type="white_fill" status="normal" />
+        <Button.Small text={t('see_all')} type="white_fill" status="normal" />
       </Layout.FlexRow>
       <Layout.LayoutBase bgColor="GRAY_2" w="100%" ph={16} pv={14} rounded={10}>
         <Font.Body type="18_regular" textAlign="center">
@@ -61,7 +63,7 @@ function TodaysQuestions() {
       {/* Multiple Choice */}
       <Layout.FlexRow mt={20} mb={8} justifyContent="flex-start" w="100%" alignItems="center">
         <Font.Display type="14_regular" color="GRAY_3">
-          Multiple Choice
+          {t('multiple_choice')}
         </Font.Display>
       </Layout.FlexRow>
       <Layout.LayoutBase bgColor="GRAY_2" w="100%" ph={16} pv={14} rounded={10} alignItems="center">

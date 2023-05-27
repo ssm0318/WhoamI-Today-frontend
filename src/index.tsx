@@ -28,7 +28,7 @@ const router = createBrowserRouter([
     loader: checkIfSignIn,
     children: [
       {
-        path: '/home',
+        path: 'home',
         element: <Home />,
       },
       {

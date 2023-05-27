@@ -2,9 +2,10 @@ import { create, StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { CounterSlice, createCounterSlice } from './example';
+import { createMomentSlice, MomentSlice } from './moment';
 import { CalendarViewSlice, createCalendarViewSlice } from './my';
 
-export type BoundState = CounterSlice & CalendarViewSlice;
+export type BoundState = CounterSlice & MomentSlice & CalendarViewSlice;
 
 export type SliceStateCreator<Slice> = StateCreator<
   BoundState,
@@ -25,5 +26,6 @@ export const useBoundStore = create<BoundState>()(
   middleWares((...a) => ({
     ...createCounterSlice(...a),
     ...createCalendarViewSlice(...a),
+    ...createMomentSlice(...a),
   })),
 );

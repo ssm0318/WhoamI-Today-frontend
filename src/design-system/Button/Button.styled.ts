@@ -42,7 +42,7 @@ export const SmallButton = styled(Button)`
   border-radius: 12px;
 `;
 
-export const Container = styled.div<{ sizing?: 'fit-content' | 'stretch' }>`
+export const Container = styled.div<{ sizing?: 'fit-content' | 'stretch'; disabled: boolean }>`
   display: flex;
   flex-direction: column;
   ${({ sizing = 'fit-content' }) =>
@@ -50,4 +50,12 @@ export const Container = styled.div<{ sizing?: 'fit-content' | 'stretch' }>`
     css`
       align-self: stretch;
     `}
+  ${({ disabled }) =>
+    !disabled
+      ? css`
+          cursor: pointer;
+        `
+      : css`
+          pointer-events: none;
+        `}
 `;

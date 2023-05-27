@@ -29,13 +29,13 @@ function Button(
   );
 
   return (
-    <S.Container sizing={sizing}>
+    <S.Container sizing={sizing} disabled={status === 'completed' || status === 'disabled'}>
       {to ? (
         <Link to={to} {...handlers}>
           {buttonChildren}
         </Link>
       ) : (
-        <button type="button" {...handlers} disabled={status === 'disabled'}>
+        <button type="button" {...handlers}>
           {buttonChildren}
         </button>
       )}

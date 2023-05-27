@@ -9,5 +9,16 @@
     "sign_in": "로그인",
     "forgot_password": "비밀번호를 잊어버렸어요",
     "sign_up": "회원가입"
+  },
+  "home": {
+    "moment": {
+      "todays_moments": "오늘의 순간들"
+    }, 
+    "question": {
+      "todays_questions": "오늘의 질문",
+      "see_all": "전체 보기",
+      "short_answer": "짧은 답변",
+      "multiple_choice": "선택지 고르기"
+    }
   }
 }
