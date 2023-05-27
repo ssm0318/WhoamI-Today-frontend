@@ -29,7 +29,7 @@ function QuestionItem({ title, id }: QuestionItemProps) {
       <Font.Body type="18_regular">{title}</Font.Body>
       <Layout.FlexRow gap={4}>
         <button type="button" onClick={handleResponse}>
-          <SvgIcon name="moment_pencil_normal" size={36} />
+          <SvgIcon name="moment_description_normal" size={36} />
         </button>
         <button type="button" onClick={handleSend}>
           <SvgIcon name="question_send" size={36} />
