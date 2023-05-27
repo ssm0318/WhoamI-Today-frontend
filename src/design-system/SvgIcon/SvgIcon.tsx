@@ -34,6 +34,7 @@ const SvgIcon = React.memo((props: SvgIconProps) => {
         svg.setAttribute('width', w.toString());
         svg.setAttribute('height', h.toString());
         svg.setAttribute('color', Colors[color]);
+        svg.setAttribute('stroke', Colors[color]);
       }}
     />
   );
