@@ -20,6 +20,8 @@ export const Colors = {
 
   TRANSPARENT: 'transparent',
   DIM: '#000000b3',
+
+  ERROR: '#FF2D2D',
 };
 
 export type ColorType = typeof Colors;

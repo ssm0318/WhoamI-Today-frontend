@@ -14,4 +14,12 @@ const JSON_DEFAULT_OPTIONS: AxiosRequestConfig = {
 
 const axiosJsonInstance: AxiosInstance = axios.create(JSON_DEFAULT_OPTIONS);
 
+export const axiosFormDataInstance: AxiosInstance = axios.create({
+  ...JSON_DEFAULT_OPTIONS,
+  headers: {
+    ...JSON_DEFAULT_OPTIONS.headers,
+    'Content-Type': 'multipart/form-data',
+  },
+});
+
 export default axiosJsonInstance;

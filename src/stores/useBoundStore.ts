@@ -4,8 +4,9 @@ import { immer } from 'zustand/middleware/immer';
 import { CounterSlice, createCounterSlice } from './example';
 import { createMomentSlice, MomentSlice } from './moment';
 import { CalendarViewSlice, createCalendarViewSlice } from './my';
+import { createSignUpInfoSlice, SignUpInfoSlice } from './signUpInfo';
 
-export type BoundState = CounterSlice & MomentSlice & CalendarViewSlice;
+export type BoundState = CounterSlice & MomentSlice & CalendarViewSlice & SignUpInfoSlice;
 
 export type SliceStateCreator<Slice> = StateCreator<
   BoundState,
@@ -27,5 +28,6 @@ export const useBoundStore = create<BoundState>()(
     ...createCounterSlice(...a),
     ...createCalendarViewSlice(...a),
     ...createMomentSlice(...a),
+    ...createSignUpInfoSlice(...a),
   })),
 );

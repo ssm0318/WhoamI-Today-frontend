@@ -13,7 +13,7 @@ export type ButtonSetting = {
 
 export type ButtonType = 'filled' | 'outlined' | 'white_fill';
 
-export type ButtonStatus = 'normal' | 'pressed' | 'disabled' | 'completed';
+export type ButtonStatus = 'normal' | 'hovered' | 'disabled' | 'completed';
 
 type Colors = { background: ColorKeys; outline?: ColorKeys; text: ColorKeys };
 

@@ -10,6 +10,18 @@
     "forgot_password": "Forgot password",
     "sign_up": "Sign Up"
   },
+  "sign_up": {
+    "create_an_account": "Create an account",
+    "email": "Email",
+    "email_guide": "You will need to verify your email later.",
+    "password": "Password",
+    "username": "Username",
+    "add": "Add",
+    "skip": "Skip",
+    "next": "Next",
+    "temporary_error": "An error has occurred temporarily. Please try again later.",
+    "password_constraints": "The password must be at least 8 characters with a mix of upper and lowercase letters, numbers and symbols."
+  },
   "home": {
     "moment": {
       "todays_moments": "Today's Moments?"
