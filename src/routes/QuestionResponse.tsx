@@ -17,8 +17,9 @@ function QuestionResponse() {
 
   const handleResponse = () => {
     // TODO 작성이 완료되었고, 질문 보내기 창 한번 띄워줌
+    if (!textareaRef.current) return;
     console.log(questionId);
-    console.log(textareaRef.current?.value);
+    console.log(textareaRef.current.value);
   };
 
   return (
