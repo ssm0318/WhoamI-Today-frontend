@@ -57,20 +57,16 @@ export const validateEmail = ({
 };
 
 export const validatePassword = ({
-  email,
-  username,
   password,
   onSuccess,
   onError,
 }: {
-  email: string;
-  username: string;
   password: string;
   onSuccess: () => void;
   onError: (errorMsg: string) => void;
 }) => {
   axiosFormDataInstance
-    .post('/user/signup/password/', { email, username, password })
+    .post('/user/signup/password/', { password })
     .then(() => {
       onSuccess();
     })

@@ -24,7 +24,7 @@ function UserName() {
       username: usernameInput,
       onSuccess: () => {
         setSignUpInfo({ username: usernameInput });
-        navigate('/signup/password');
+        navigate('/signup/profile-image');
       },
       onError: (e) => setUsernameError(e),
     });

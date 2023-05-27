@@ -59,8 +59,8 @@ const router = createBrowserRouter([
     element: <SignUp />,
     children: [
       { path: 'email', element: <Email /> },
-      { path: 'username', element: <UserName /> },
       { path: 'password', element: <Password /> },
+      { path: 'username', element: <UserName /> },
       { path: 'profile-image', element: <ProfileImage /> },
     ],
   },

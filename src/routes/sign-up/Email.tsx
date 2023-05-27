@@ -24,7 +24,7 @@ function Email() {
       email: emailInput,
       onSuccess: () => {
         setSignUpInfo({ email: emailInput });
-        navigate('/signup/username');
+        navigate('/signup/password');
       },
       onError: (e) => setEmailError(e),
     });
