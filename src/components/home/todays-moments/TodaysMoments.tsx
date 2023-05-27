@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { MomentData } from '@models/moment';
+import { Moment } from '@models/moment';
 import { BoundState, useBoundStore } from '@stores/useBoundStore';
 import { IconWrapper } from './TodaysMoments.styled';
 
@@ -35,7 +35,7 @@ function TodaysMoments() {
   );
 }
 
-function MomentIcon({ name }: { name: keyof MomentData }) {
+function MomentIcon({ name }: { name: keyof Moment }) {
   const sendMessageToApp = usePostAppMessage();
   const { moment } = useBoundStore(momentSelector);
 

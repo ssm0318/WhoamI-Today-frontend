@@ -1,5 +1,5 @@
 // moment data
-export interface MomentData {
+export interface Moment {
   mood: string | null;
   photo: string | null;
   description: string | null;
