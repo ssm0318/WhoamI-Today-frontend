@@ -4,6 +4,7 @@ import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 
+// TODO 나중에 mock data 제거
 const questions = [
   { id: 1, title: 'question1' },
   { id: 2, title: 'question2' },

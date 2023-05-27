@@ -6,12 +6,17 @@ interface QuestionItemProps {
   id: number;
 }
 
-// TODO 답변 작성 아이콘 추가 필요
 function QuestionItem({ title, id }: QuestionItemProps) {
-  const handleSendQuestion = () => {
+  const handleSend = () => {
     // TODO(handle send)
     console.log(id);
   };
+
+  const handleResponse = () => {
+    // TODO(handle response)
+    console.log(id);
+  };
+
   return (
     <Layout.FlexRow
       p={16}
@@ -22,9 +27,14 @@ function QuestionItem({ title, id }: QuestionItemProps) {
       w="100%"
     >
       <Font.Body type="18_regular">{title}</Font.Body>
-      <button type="button" onClick={handleSendQuestion}>
-        <SvgIcon name="question_send" size={36} />
-      </button>
+      <Layout.FlexRow gap={4}>
+        <button type="button" onClick={handleResponse}>
+          <SvgIcon name="moment_pencil_normal" size={36} />
+        </button>
+        <button type="button" onClick={handleSend}>
+          <SvgIcon name="question_send" size={36} />
+        </button>
+      </Layout.FlexRow>
     </Layout.FlexRow>
   );
 }
