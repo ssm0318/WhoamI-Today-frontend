@@ -1,3 +1,25 @@
+export enum POST_TYPE {
+  RESPONSE = 'Response',
+  QUESTION = 'Question',
+}
+
+export interface ShareSettings {
+  share_with_friends: boolean;
+  share_anonymously: boolean;
+}
+
+interface QuestionShareSettings extends ShareSettings {}
+
+export interface QuestionDraft extends QuestionShareSettings {
+  type: POST_TYPE.QUESTION;
+}
+
+export interface Question extends QuestionShareSettings, ContentsCommon {
+  type: POST_TYPE.QUESTION;
+  selected_date: string | null;
+  is_admin_question: boolean;
+}
+
 export interface ContentsCommon {
   id: number;
   content: string;

@@ -1,32 +1,34 @@
+import { useNavigate } from 'react-router-dom';
 import { Font, Layout, SvgIcon } from '@design-system';
+import { Question } from '@models/post';
 
-// TODO 나중에 postType의 question 타입으로 수정
-interface QuestionItemProps {
-  title: string;
-  id: number;
-}
+interface QuestionItemProps extends Question {}
 
-function QuestionItem({ title, id }: QuestionItemProps) {
+function QuestionItem({ content, id }: QuestionItemProps) {
+  const navigate = useNavigate();
   const handleSend = () => {
-    // TODO(handle send)
+    // TODO 친구 모달 등장
     console.log(id);
   };
 
   const handleResponse = () => {
-    // TODO(handle response)
-    console.log(id);
+    navigate(`/question-response/${id}`, {
+      state: {
+        question: content,
+      },
+    });
   };
 
   return (
     <Layout.FlexRow
       p={16}
-      bgColor="GRAY_6"
+      bgColor="GRAY_7"
       rounded={12}
       justifyContent="space-between"
       alignItems="center"
       w="100%"
     >
-      <Font.Body type="18_regular">{title}</Font.Body>
+      <Font.Body type="18_regular">{content}</Font.Body>
       <Layout.FlexRow gap={4}>
         <button type="button" onClick={handleResponse}>
           <SvgIcon name="moment_description_normal" size={36} />

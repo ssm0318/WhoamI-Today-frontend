@@ -53,7 +53,7 @@ function TodaysQuestions() {
         <Font.Display type="14_regular" color="GRAY_3">
           {t('short_answer')}
         </Font.Display>
-        <Button.Small text={t('see_all')} type="white_fill" status="normal" />
+        <Button.Small text={t('see_all')} type="white_fill" status="normal" to="/questions" />
       </Layout.FlexRow>
       <Layout.LayoutBase bgColor="GRAY_2" w="100%" ph={16} pv={14} rounded={10}>
         <Font.Body type="18_regular" textAlign="center">

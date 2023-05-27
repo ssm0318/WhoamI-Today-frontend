@@ -4,7 +4,7 @@ import { Font, Layout, SvgIcon } from '@design-system';
 import { HeaderWrapper } from './TitleHeader.styled';
 
 interface TitleHeaderProps {
-  title: string;
+  title?: string;
   onGoBack?: () => void;
   RightComponent?: React.ReactNode;
 }
@@ -31,8 +31,8 @@ function TitleHeader({ title, onGoBack, RightComponent }: TitleHeaderProps) {
             <SvgIcon name="arrow_left" size={36} />
           </button>
         </Layout.LayoutBase>
-        <Font.Display type="24_bold">{title}</Font.Display>
-        <Layout.LayoutBase w={36} h={36}>
+        {title && <Font.Display type="24_bold">{title}</Font.Display>}
+        <Layout.LayoutBase w={title ? 36 : undefined}>
           {RightComponent && RightComponent}
         </Layout.LayoutBase>
       </Layout.FlexRow>

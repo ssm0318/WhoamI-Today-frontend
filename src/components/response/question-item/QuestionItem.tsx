@@ -1,6 +1,10 @@
 import { Font, Layout, SvgIcon } from '@design-system';
 
-function QuestionItem() {
+interface QuestionItemProps {
+  question: string;
+}
+
+function QuestionItem({ question }: QuestionItemProps) {
   return (
     <Layout.FlexCol
       pt={22}
@@ -12,11 +16,10 @@ function QuestionItem() {
       alignItems="center"
     >
       <Font.Body type="20_regular" color="GRAY_6" textAlign="center">
-        What Makes me cynical?
+        {question}
       </Font.Body>
       <Layout.FlexRow w="100%" alignItems="center" justifyContent="flex-end" mt={5}>
-        {/* TODO 나중에 send 아이콘으로 바꾸기 */}
-        <SvgIcon name="arrow_right" size={36} />
+        <SvgIcon name="question_send" size={36} />
       </Layout.FlexRow>
     </Layout.FlexCol>
   );
