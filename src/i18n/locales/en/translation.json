@@ -20,7 +20,9 @@
     "skip": "Skip",
     "next": "Next",
     "temporary_error": "An error has occurred temporarily. Please try again later.",
-    "password_constraints": "The password must be at least 8 characters with a mix of upper and lowercase letters, numbers and symbols."
+    "password_constraints": "The password must be at least 8 characters with a mix of upper and lowercase letters, numbers and symbols.",
+    "agree_to_research": "agree (optional, unless you are currently participating in the research led by Univ. of Washington research team).",
+    "learn_more_about_whoami_today": "Learn more about WhoAmI Today"
   },
   "home": {
     "moment": {

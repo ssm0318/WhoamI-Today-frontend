@@ -24,7 +24,7 @@ function Password() {
       password: passwordInput,
       onSuccess: () => {
         setSignUpInfo({ password: passwordInput });
-        navigate('/signup/username');
+        navigate('/signup/research-intro');
       },
       onError: (e) => setPasswordError(e),
     });

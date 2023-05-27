@@ -27,6 +27,8 @@ export const Colors = {
   DIM: '#000000b3',
 
   ERROR: '#FF2D2D',
+
+  ANCHOR: '#0000FF',
 };
 
 export type ColorType = typeof Colors;
