@@ -3,6 +3,7 @@ import {
   differenceInCalendarWeeks,
   endOfWeek,
   format,
+  nextWednesday,
   startOfMonth,
   startOfWeek,
 } from 'date-fns';
@@ -23,7 +24,8 @@ export const getCalendarWeek = (currentDate: Date) => {
 
 export const getCalendarTitle = (currentDate: Date) => {
   const startDayOfMonth = startOfMonth(currentDate).getDay();
-  const baseDateOfWeek = startOfWeek(currentDate, { weekStartsOn: 3 });
+  const baseDateOfWeek = nextWednesday(startOfWeek(currentDate));
+
   const baseDay = baseDateOfWeek.getDate();
 
   const correctionValue = startDayOfMonth <= 3 ? 1 : 0;
