@@ -11,7 +11,7 @@ function UserName() {
 
   const [usernameInput, setUsernameInput] = useState('');
   const [usernameError, setUsernameError] = useState<string | null>(null);
-  const setSignupInfo = useBoundStore((state) => state.setSignupInfo);
+  const setSignUpInfo = useBoundStore((state) => state.setSignUpInfo);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUsernameInput(e.target.value);
@@ -23,7 +23,7 @@ function UserName() {
     validateUsername({
       username: usernameInput,
       onSuccess: () => {
-        setSignupInfo({ username: usernameInput });
+        setSignUpInfo({ username: usernameInput });
         navigate('/signup/password');
       },
       onError: (e) => setUsernameError(e),

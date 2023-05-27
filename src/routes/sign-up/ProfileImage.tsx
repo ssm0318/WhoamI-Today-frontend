@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
-import { signup } from '@utils/apis/user';
+import { signUp } from '@utils/apis/user';
 
 function ProfileImage() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_up' });
@@ -11,10 +11,10 @@ function ProfileImage() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [profileImagePreview, setProfileImagePreview] = useState<string>();
-  const [signupInfo, setSignupInfo, resetSignupInfo] = useBoundStore((state) => [
-    state.signupInfo,
-    state.setSignupInfo,
-    state.resetSignupInfo,
+  const [signUpInfo, setSignUpInfo, resetSignUpInfo] = useBoundStore((state) => [
+    state.signUpInfo,
+    state.setSignUpInfo,
+    state.resetSignUpInfo,
   ]);
 
   const onClickAdd = () => {
@@ -27,7 +27,7 @@ function ProfileImage() {
     const image = e.target.files[0];
 
     // TODO: 이미지 크롭, 압축
-    setSignupInfo({ profileImage: image });
+    setSignUpInfo({ profileImage: image });
 
     const objectUrl = URL.createObjectURL(image);
     setProfileImagePreview(objectUrl);
@@ -35,11 +35,11 @@ function ProfileImage() {
 
   const navigate = useNavigate();
   const onClickNextOrSkip = () => {
-    signup({
-      signupInfo,
+    signUp({
+      signUpInfo,
       onSuccess: () => {
         // TODO: access_token 쿠키 세팅 확인
-        resetSignupInfo();
+        resetSignUpInfo();
         navigate('/home');
       },
       onError: (e) => {

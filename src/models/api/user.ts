@@ -8,7 +8,7 @@ export interface SignInResponse {
   refresh: string;
 }
 
-export interface SignupParams {
+export interface SignUpParams {
   email?: string;
   username?: string;
   password?: string;

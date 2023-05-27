@@ -11,9 +11,9 @@ function Password() {
 
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [signupInfo, setSignupInfo] = useBoundStore((state) => [
-    state.signupInfo,
-    state.setSignupInfo,
+  const [signUpInfo, setSignUpInfo] = useBoundStore((state) => [
+    state.signUpInfo,
+    state.setSignUpInfo,
   ]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +23,7 @@ function Password() {
 
   const navigate = useNavigate();
   const onClickNext = () => {
-    const { email, username } = signupInfo;
+    const { email, username } = signUpInfo;
 
     if (!email || !username) {
       // TODO
@@ -35,7 +35,7 @@ function Password() {
       username,
       password: passwordInput,
       onSuccess: () => {
-        setSignupInfo({ password: passwordInput });
+        setSignUpInfo({ password: passwordInput });
         navigate('/signup/profile-image');
       },
       onError: (e) => setPasswordError(e),

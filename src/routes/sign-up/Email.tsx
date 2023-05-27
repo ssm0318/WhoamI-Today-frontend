@@ -11,7 +11,7 @@ function Email() {
 
   const [emailInput, setEmailInput] = useState('');
   const [emailError, setEmailError] = useState<string | null>(null);
-  const setSignupInfo = useBoundStore((state) => state.setSignupInfo);
+  const setSignUpInfo = useBoundStore((state) => state.setSignUpInfo);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmailInput(e.target.value);
@@ -23,7 +23,7 @@ function Email() {
     validateEmail({
       email: emailInput,
       onSuccess: () => {
-        setSignupInfo({ email: emailInput });
+        setSignUpInfo({ email: emailInput });
         navigate('/signup/username');
       },
       onError: (e) => setEmailError(e),

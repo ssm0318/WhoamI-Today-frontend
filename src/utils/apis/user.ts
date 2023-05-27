@@ -6,7 +6,7 @@ import {
   PasswordError,
   SignInParams,
   SignInResponse,
-  SignupParams,
+  SignUpParams,
   UsernameError,
 } from '@models/api/user';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
@@ -106,18 +106,18 @@ export const validateUsername = ({
     });
 };
 
-export const signup = ({
-  signupInfo,
+export const signUp = ({
+  signUpInfo,
   onSuccess,
   onError,
 }: {
-  signupInfo: SignupParams;
+  signUpInfo: SignUpParams;
   onSuccess: () => void;
   onError: (error: string) => void;
 }) => {
   const formData = new FormData();
 
-  const { email, password, username, profileImage } = signupInfo;
+  const { email, password, username, profileImage } = signUpInfo;
   if (!email || !password || !username) return;
 
   if (profileImage) {
