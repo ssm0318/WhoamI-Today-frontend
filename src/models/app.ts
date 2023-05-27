@@ -15,7 +15,7 @@ export interface ScreenNavigateData {
   params: any;
 }
 
-// 앱, 웹 서로 약속한 키값
-export type PostMessageKeyType = 'SET_TOKEN' | 'REDIRECT' | 'NAVIGATE';
 // 앱, 웹 서로 약속한 키값에 따른 메시지 타입
 export type PostMessageDataType = SetTokenData | RedirectData | ScreenNavigateData;
+// 앱, 웹 서로 약속한 키값
+export type PostMessageKeyType = PostMessageDataType['key'];
