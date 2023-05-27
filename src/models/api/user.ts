@@ -21,9 +21,8 @@ export const EmailValidateError = {
 
 export type EmailValidateErrorType = (typeof EmailValidateError)[keyof typeof EmailValidateError];
 
-/** TODO: 패스워드 유효 검증 백엔드 반영 후 확인 필요 */
 export interface PasswordError {
-  password: PasswordValidateErrorType;
+  password: PasswordValidateErrorType[];
 }
 
 export const PasswordValidateError = {

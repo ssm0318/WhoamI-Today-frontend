@@ -70,8 +70,8 @@ export const validatePassword = ({
       onSuccess();
     })
     .catch((e: AxiosError<PasswordError>) => {
-      if (e.response?.data.password) {
-        onError(e.response.data.password);
+      if (e.response?.data.password[0]) {
+        onError(e.response.data.password[0]);
         return;
       }
       onError(i18n.t('sign_up.temporary_error'));
