@@ -30,7 +30,8 @@
       "todays_questions": "Today's Questions",
       "see_all": "See all",
       "short_answer": "Short Answer",
-      "multiple_choice": "Multiple Choice"
+      "multiple_choice": "Multiple Choice",
+      "all_questions": "Questions"
     }
   },
   "question": {

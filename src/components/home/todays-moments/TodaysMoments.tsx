@@ -8,15 +8,15 @@ import { IconWrapper } from './TodaysMoments.styled';
 
 const momentSelector = (state: BoundState) => ({
   moment: state.moment,
-  fetch: state.fetch,
+  fetchMoment: state.fetchMoment,
 });
 
 function TodaysMoments() {
   const [t] = useTranslation('translation', { keyPrefix: 'home.moment' });
-  const { fetch } = useBoundStore(momentSelector);
+  const { fetchMoment } = useBoundStore(momentSelector);
 
   useAsyncEffect(async () => {
-    await fetch();
+    await fetchMoment();
   }, []);
 
   return (

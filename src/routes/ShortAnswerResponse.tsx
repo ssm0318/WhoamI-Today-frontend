@@ -1,32 +1,32 @@
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import QuestionItem from '@components/response/question-item/QuestionItem';
 import ResponseInput from '@components/response/response-input/ResponseInput';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout } from '@design-system';
+import { ShortAnswerQuestion } from '@models/post';
 
-function QuestionResponse() {
-  const { questionId } = useParams();
-  const location = useLocation();
-  const question = String(location.state.question);
-  const [t] = useTranslation('translation', { keyPrefix: 'question.response' });
+// 주관식 질문 답변
+function ShortAnswerResponse() {
+  const { state: question } = useLocation() as { state: ShortAnswerQuestion };
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleResponse = () => {
+  const [t] = useTranslation('translation', { keyPrefix: 'question.response' });
+
+  const handlePost = () => {
     // TODO 작성이 완료되었고, 질문 보내기 창 한번 띄워줌
     if (!textareaRef.current) return;
-    console.log(questionId);
-    console.log(textareaRef.current.value);
+    console.log(12);
   };
 
   return (
     <MainContainer>
       <TitleHeader
         RightComponent={
-          <button type="button" onClick={handleResponse}>
+          <button type="button" onClick={handlePost}>
             <Font.Display type="18_bold">{t('post')}</Font.Display>
           </button>
         }
@@ -39,4 +39,4 @@ function QuestionResponse() {
   );
 }
 
-export default QuestionResponse;
+export default ShortAnswerResponse;

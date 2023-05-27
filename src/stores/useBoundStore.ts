@@ -5,8 +5,13 @@ import { CounterSlice, createCounterSlice } from './example';
 import { createMomentSlice, MomentSlice } from './moment';
 import { CalendarViewSlice, createCalendarViewSlice } from './my';
 import { createSignUpInfoSlice, SignUpInfoSlice } from './signUpInfo';
+import { createTodaysQuestionsSlice, TodaysQuestionsSlice } from './todaysQuestions';
 
-export type BoundState = CounterSlice & MomentSlice & CalendarViewSlice & SignUpInfoSlice;
+export type BoundState = CounterSlice &
+  MomentSlice &
+  CalendarViewSlice &
+  SignUpInfoSlice &
+  TodaysQuestionsSlice;
 
 export type SliceStateCreator<Slice> = StateCreator<
   BoundState,
@@ -29,5 +34,6 @@ export const useBoundStore = create<BoundState>()(
     ...createCalendarViewSlice(...a),
     ...createMomentSlice(...a),
     ...createSignUpInfoSlice(...a),
+    ...createTodaysQuestionsSlice(...a),
   })),
 );

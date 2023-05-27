@@ -1,12 +1,11 @@
 import { Moment } from '@models/moment';
-import { getTodayMoment } from '@utils/apis/moment';
 import { SliceStateCreator } from './useBoundStore';
 
 interface MomentState {
   moment: Moment;
 }
 interface MomentAction {
-  fetch: () => Promise<void>;
+  fetchMoment: () => Promise<void>;
 }
 
 const initialState = {
@@ -21,8 +20,9 @@ export type MomentSlice = MomentState & MomentAction;
 
 export const createMomentSlice: SliceStateCreator<MomentSlice> = (set) => ({
   ...initialState,
-  fetch: async () => {
-    const moment = await getTodayMoment();
-    set(() => ({ moment }));
+  fetchMoment: async () => {
+    // 실제 배포되기 전까지 일단 주석처리
+    // const moment = await getTodayMoment();
+    set(() => ({ moment: initialState }));
   },
 });

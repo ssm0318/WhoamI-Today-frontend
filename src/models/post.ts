@@ -1,6 +1,6 @@
-export enum POST_TYPE {
-  RESPONSE = 'Response',
-  QUESTION = 'Question',
+export enum QUESTION_TYPE {
+  SHORT_ANSWER = 'SHORT_ANSWER',
+  MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
 }
 
 export interface ShareSettings {
@@ -8,16 +8,15 @@ export interface ShareSettings {
   share_anonymously: boolean;
 }
 
-interface QuestionShareSettings extends ShareSettings {}
+// TODO Question 타입 나중에 확정되면 수정 필요
+export type Question = ShortAnswerQuestion | MultipleChoiceQuestion;
 
-export interface QuestionDraft extends QuestionShareSettings {
-  type: POST_TYPE.QUESTION;
+export interface ShortAnswerQuestion extends ContentsCommon {
+  type: QUESTION_TYPE.SHORT_ANSWER;
 }
-
-export interface Question extends QuestionShareSettings, ContentsCommon {
-  type: POST_TYPE.QUESTION;
-  selected_date: string | null;
-  is_admin_question: boolean;
+export interface MultipleChoiceQuestion extends ContentsCommon {
+  type: QUESTION_TYPE.MULTIPLE_CHOICE;
+  answerList: { value: number; text: string }[];
 }
 
 export interface ContentsCommon {
