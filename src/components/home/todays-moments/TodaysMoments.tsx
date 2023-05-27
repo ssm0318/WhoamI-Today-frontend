@@ -42,14 +42,17 @@ function MomentIcon({ name }: { name: keyof MomentData }) {
 
   const handleClickUploadMoment = () => {
     if (moment[name]) return;
-    // TODO 나중에 무조건 앱으로 보내는게 아니고, 웹에서의 핸들이 필요할 수도 있음
-    sendMessageToApp('NAVIGATE', {
-      screenName: 'MomentUploadScreen',
-      params: {
-        step: name,
-        state: moment,
-      },
-    });
+    // 사진 업로드의 경우 앱 화면으로 이동
+    if (name === 'photo') {
+      sendMessageToApp('NAVIGATE', {
+        screenName: 'MomentUploadScreen',
+        params: {
+          state: moment,
+        },
+      });
+    } else {
+      // TODO 웹 화면 routing
+    }
   };
 
   return (

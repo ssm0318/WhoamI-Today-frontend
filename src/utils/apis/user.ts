@@ -16,7 +16,7 @@ export const checkIfSignIn = async () => {
     // TODO: zustand 상태 설정 등
     return user;
   } catch {
-    return redirect('/home');
+    return redirect('/signin');
   }
 };
 
