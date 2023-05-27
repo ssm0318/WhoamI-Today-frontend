@@ -35,7 +35,8 @@
   },
   "question": {
     "response": {
-      "placeholder": "Answer as your want."
+      "placeholder": "Answer as your want.",
+      "post": "Post"
     }
   },
   "calendar": {

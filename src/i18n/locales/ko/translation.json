@@ -35,7 +35,8 @@
   },
   "question": {
     "response": {
-      "placeholder": "쓰고 싶은 내용을 쓰세요."
+      "placeholder": "쓰고 싶은 내용을 쓰세요.",
+      "post": "완료"
     }
   },
   "calendar": {

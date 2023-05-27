@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import QuestionItem from '@components/response/question-item/QuestionItem';
@@ -10,6 +11,7 @@ function QuestionResponse() {
   const { questionId } = useParams();
   const location = useLocation();
   const question = String(location.state.question);
+  const [t] = useTranslation('translation', { keyPrefix: 'question.response' });
 
   const handleResponse = () => {
     // TODO 작성이 완료되었고, 질문 보내기 창 한번 띄워줌
@@ -21,7 +23,7 @@ function QuestionResponse() {
       <TitleHeader
         RightComponent={
           <button type="button" onClick={handleResponse}>
-            <Font.Display type="18_bold">Post</Font.Display>
+            <Font.Display type="18_bold">{t('post')}</Font.Display>
           </button>
         }
       />
