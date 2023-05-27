@@ -13,6 +13,9 @@ import ForgotPassword from './routes/ForgotPassword';
 import Friends from './routes/Friends';
 import Home from './routes/Home';
 import Intro from './routes/Intro';
+import Description from './routes/moment/Description';
+import Mood from './routes/moment/Mood';
+import MomentUpload from './routes/MomentUpload';
 import My from './routes/My';
 import Notification from './routes/Notification';
 import QuestionDetail from './routes/QuestionDetail';
@@ -73,6 +76,14 @@ const router = createBrowserRouter([
   {
     path: 'response',
     children: [{ path: 'short-answer', element: <ShortAnswerResponse /> }],
+  },
+  {
+    path: 'moment-upload',
+    element: <MomentUpload />,
+    children: [
+      { path: 'mood', element: <Mood /> },
+      { path: 'description', element: <Description /> },
+    ],
   },
 ]);
 
