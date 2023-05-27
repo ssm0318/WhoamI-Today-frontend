@@ -11,3 +11,6 @@ export interface GetMomentResponse extends Moment {
   created_at: string;
   comments: Comment[];
 }
+
+// POST today's moment
+export interface PostMomentParams extends Moment {}
