@@ -13,6 +13,7 @@
   "sign_up": {
     "create_an_account": "새로운 계정 만들기",
     "email": "이메일",
+    "email_guide": "나중에 이메일 인증이 필요하므로 정확히 입력해주세요.",
     "password": "비밀번호",
     "username": "닉네임",
     "add": "추가",

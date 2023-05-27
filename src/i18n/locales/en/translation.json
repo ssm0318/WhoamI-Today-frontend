@@ -13,6 +13,7 @@
   "sign_up": {
     "create_an_account": "Create an account",
     "email": "Email",
+    "email_guide": "You will need to verify your email later.",
     "password": "Password",
     "username": "Username",
     "add": "Add",

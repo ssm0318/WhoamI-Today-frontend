@@ -39,6 +39,7 @@ function Email() {
         value={emailInput}
         onChange={handleChange}
         error={emailError}
+        guide={t('email_guide')}
       />
       <Layout.Absolute w="100%" b="50px" flexDirection="column">
         <Button.Large
