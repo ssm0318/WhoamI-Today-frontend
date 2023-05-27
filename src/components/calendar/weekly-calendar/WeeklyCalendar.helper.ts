@@ -7,6 +7,7 @@ import {
   startOfMonth,
   startOfWeek,
 } from 'date-fns';
+import i18n from '@i18n/index';
 
 export const getCalendarWeek = (currentDate: Date) => {
   const startDate = startOfWeek(currentDate);
@@ -31,5 +32,8 @@ export const getCalendarTitle = (currentDate: Date) => {
   const correctionValue = startDayOfMonth <= 3 ? 1 : 0;
   const weekOfMonth = Math.ceil((baseDay - (7 - startDayOfMonth) + 1) / 7) + correctionValue;
 
-  return `${format(baseDateOfWeek, 'MMMM yyyy')} ${weekOfMonth} week`;
+  return `${format(baseDateOfWeek, i18n.t('calendar.title_format'))} ${i18n.t('calendar.weeks', {
+    count: weekOfMonth,
+    ordinal: true,
+  })}`;
 };

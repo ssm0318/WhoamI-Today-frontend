@@ -20,5 +20,21 @@
       "short_answer": "Short Answer",
       "multiple_choice": "Multiple Choice"
     }
+  },
+  "calendar": {
+    "title_format": "MMMM yyyy",
+    "weeks_one": "{{count}}st week",
+    "weeks_two": "{{count}}nd week",
+    "weeks_few": "{{count}}rd week",
+    "weeks_other": "{{count}}th week",
+    "table_header": {
+      "sun": "SUN",
+      "mon": "MON",
+      "tue": "TUE",
+      "wed": "WED",
+      "thu": "THU",
+      "fri": "FRI",
+      "sat": "SAT"
+    }
   }
 }
