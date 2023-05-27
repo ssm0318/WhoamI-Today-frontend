@@ -13,6 +13,8 @@ const moment_mood_disabled = 'moment_mood_disabled';
 const moment_description_disabled = 'moment_description_disabled';
 const moment_photo_disabled = 'moment_photo_disabled';
 const question_send = 'question_send';
+const circle_check_checked = 'circle_check_checked';
+const circle_check_unchecked = 'circle_check_unchecked';
 
 export {
   top_navigation_hamburger,
@@ -29,4 +31,6 @@ export {
   moment_description_disabled,
   moment_photo_disabled,
   question_send,
+  circle_check_checked,
+  circle_check_unchecked,
 };
