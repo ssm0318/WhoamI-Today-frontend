@@ -1,14 +1,13 @@
-import { TODAY_QUESTION_FIRST_DATE } from '@constants/question';
-import { Button, Font, Layout, SvgIcon } from '@design-system';
 import { addDays, format, isAfter, isBefore, isEqual, isSameDay, subDays } from 'date-fns';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { TODAY_QUESTION_FIRST_DATE } from '@constants/question';
+import { Button, Font, Layout, SvgIcon } from '@design-system';
 
 const shortAnswer = `Let's talk about your own way to get refreshed.`;
 const multipleChoices = ['as I am introverted.', 'kl I am introverted.', 'jj I am introverted.'];
 
 function TodaysQuestions() {
-
   const [t] = useTranslation('translation', { keyPrefix: 'home.question' });
   // 오늘 날짜
   const today = new Date();
@@ -41,7 +40,7 @@ function TodaysQuestions() {
         </Layout.LayoutBase>
         <Font.Display type="18_bold">
           {isSameDay(currentDate, today) || isBefore(today, TODAY_QUESTION_FIRST_DATE)
-            ? {t('todays_questions')}
+            ? `${t('todays_questions')}`
             : format(currentDate, 'yyyy/MM/dd')}
         </Font.Display>
         <Layout.LayoutBase onClick={moveToNextDate} w={36} h={36}>
