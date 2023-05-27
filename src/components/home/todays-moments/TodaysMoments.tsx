@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
@@ -65,4 +64,4 @@ function MomentIcon({ name }: { name: keyof MomentData }) {
   );
 }
 
-export default React.memo(TodaysMoments);
+export default TodaysMoments;
