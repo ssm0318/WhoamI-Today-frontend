@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { Colors } from '@design-system';
 import GlobalStyle from '@styles/global-styles';
+import { checkIfSignIn } from '@utils/apis/user';
 import ErrorPage from './components/error-page/ErrorPage';
 import './i18n';
 import reportWebVitals from './reportWebVitals';
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     errorElement: <ErrorPage />,
-    // loader: checkIfSignIn,
+    loader: checkIfSignIn,
     children: [
       {
         path: 'home',
