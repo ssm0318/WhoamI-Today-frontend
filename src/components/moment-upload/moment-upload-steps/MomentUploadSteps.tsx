@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Font, Layout } from '@design-system';
@@ -9,8 +9,10 @@ import DescriptionStep from './description-step/DescriptionStep';
 import MoodStep from './mood-step/MoodStep';
 
 function MomentUploadSteps() {
-  const { state } = useLocation() as { state: keyof Omit<Moment, 'photo'> };
-  const [currentStep, setCurrentStep] = useState<keyof Omit<Moment, 'photo'>>(state || 'mood');
+  const location = useLocation();
+  const [currentStep, setCurrentStep] = useState<keyof Omit<Moment, 'photo'>>(
+    location.state || 'mood',
+  );
   const navigate = useNavigate();
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
   const [description, setDescription] = useState('');
@@ -43,6 +45,13 @@ function MomentUploadSteps() {
     navigate('/home');
   };
 
+  useEffect(() => {
+    if (!location.state) {
+      navigate(-1);
+    }
+  }, [navigate, location]);
+
+  if (!location.state) return null;
   return (
     <Layout.FlexCol
       alignItems="center"
