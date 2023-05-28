@@ -15,7 +15,7 @@ function MomentUploadTextInput({ setInput, placeholder }: MomentUploadTextInputP
   return (
     <Layout.FlexRow h={SCREEN_WIDTH} w="100%" bgColor="BASIC_WHITE" rounded={14} p={30}>
       <Layout.FlexRow w="100%">
-        <Layout.FlexRow h={18} w={1} bgColor="ERROR" mh={12} />
+        <Layout.FlexRow bgColor="RESPONSE_INPUT_DIVIDER" h={18} w={1} mr={12} />
         {/* TODO react text auto resize 적용 */}
         <S.InputContainer onChange={handleChangeInput} placeholder={placeholder} />
       </Layout.FlexRow>

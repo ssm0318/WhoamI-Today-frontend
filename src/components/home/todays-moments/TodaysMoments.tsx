@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -27,6 +28,7 @@ function TodaysMoments() {
       </Layout.FlexRow>
       {/* 컨텐츠 */}
       <IconWrapper w="100%" justifyContent="center" mt={32}>
+        {/* TODO photo의 경우 데스크톱에서 disable 처리 */}
         <MomentIcon name="photo" />
         <MomentIcon name="mood" />
         <MomentIcon name="description" />
@@ -38,11 +40,14 @@ function TodaysMoments() {
 function MomentIcon({ name }: { name: keyof TodayMoment }) {
   const sendMessageToApp = usePostAppMessage();
   const { todayMoment } = useBoundStore(momentSelector);
+  const navigate = useNavigate();
 
   const handleClickUploadMoment = () => {
     if (todayMoment[name]) return;
     // 사진 업로드의 경우 앱 화면으로 이동
     if (name === 'photo') {
+      // 사진 업로드의 경우 앱 화면으로 이동
+      if (!window?.ReactNativeWebView) return;
       sendMessageToApp('NAVIGATE', {
         screenName: 'MomentUploadScreen',
         params: {
@@ -50,7 +55,7 @@ function MomentIcon({ name }: { name: keyof TodayMoment }) {
         },
       });
     } else {
-      // TODO 웹 화면 routing
+      navigate('/moment-upload', { state: name });
     }
   };
 
