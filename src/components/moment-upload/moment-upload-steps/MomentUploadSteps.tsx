@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Font, Layout } from '@design-system';
 import { Moment } from '@models/moment';
+import { postTodayMoment } from '@utils/apis/moment';
+import { isEmojiOnly } from '@utils/validateHelpers';
 import DescriptionStep from './description-step/DescriptionStep';
 import MoodStep from './mood-step/MoodStep';
 
@@ -14,14 +16,21 @@ function MomentUploadSteps() {
   const [description, setDescription] = useState('');
   const [mood, setMood] = useState('');
 
-  const handlePost = () => {
+  const handlePost = async () => {
     if (currentStep === 'mood') {
-      // TODO mood 업로드
-      console.log(mood);
+      if (!isEmojiOnly(mood)) {
+        // TODO 이모지만 입력해야한다고 alert
+        alert('이모지만!');
+        return;
+      }
+      await postTodayMoment({
+        mood,
+      });
       setCurrentStep('description');
     } else {
-      // TODO description 업로드
-      console.log(description);
+      await postTodayMoment({
+        description,
+      });
       navigate('/home');
     }
   };

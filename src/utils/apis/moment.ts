@@ -8,13 +8,15 @@ import {
 import axios from './axios';
 
 // GET today's moment
-export const getTodayMoment = async ({ year, month, day }: MomentRequestParams) => {
+export const getTodayMoment = async () => {
+  const { year, month, day } = getMomentRequestParams(new Date());
   const { data } = await axios.get<GetMomentResponse>(`/moment/daily/${year}/${month}/${day}`);
   return data;
 };
 
 // POST today's moment
-export const postTodayMoment = async ({ year, month, day, moment }: PostMomentRequest) => {
+export const postTodayMoment = async ({ moment }: PostMomentRequest) => {
+  const { year, month, day } = getMomentRequestParams(new Date());
   const { data } = await axios.post<GetMomentResponse>(
     `/moment/today/${year}/${month}/${day}`,
     moment,
@@ -23,7 +25,8 @@ export const postTodayMoment = async ({ year, month, day, moment }: PostMomentRe
 };
 
 // PUT today's moment
-export const updateTodayMoment = async ({ year, month, day, moment }: UpdateMomentRequest) => {
+export const updateTodayMoment = async ({ moment }: UpdateMomentRequest) => {
+  const { year, month, day } = getMomentRequestParams(new Date());
   const { data } = await axios.put<GetMomentResponse>(
     `/moment/today/${year}/${month}/${day}`,
     moment,

@@ -28,6 +28,7 @@ function DescriptionStep({ onSkip, setDescription }: DescriptionStepProps) {
         <MomentUploadTextInput
           setInput={setDescription}
           placeholder={t('description_placeholder') || undefined}
+          maxLength={20}
         />
       </Layout.FlexCol>
     </Layout.Absolute>
