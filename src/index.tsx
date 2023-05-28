@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { Colors } from '@design-system';
 import GlobalStyle from '@styles/global-styles';
-import { checkIfSignIn } from '@utils/apis/user';
 import ErrorPage from './components/error-page/ErrorPage';
 import './i18n';
 import reportWebVitals from './reportWebVitals';
@@ -13,8 +12,6 @@ import ForgotPassword from './routes/ForgotPassword';
 import Friends from './routes/Friends';
 import Home from './routes/Home';
 import Intro from './routes/Intro';
-import Description from './routes/moment/Description';
-import Mood from './routes/moment/Mood';
 import MomentUpload from './routes/MomentUpload';
 import My from './routes/My';
 import Notification from './routes/Notification';
@@ -35,7 +32,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     errorElement: <ErrorPage />,
-    loader: checkIfSignIn,
+    // loader: checkIfSignIn,
     children: [
       {
         path: 'home',
@@ -80,10 +77,6 @@ const router = createBrowserRouter([
   {
     path: 'moment-upload',
     element: <MomentUpload />,
-    children: [
-      { path: 'mood', element: <Mood /> },
-      { path: 'description', element: <Description /> },
-    ],
   },
 ]);
 

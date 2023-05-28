@@ -1,11 +1,11 @@
-import { Outlet } from 'react-router-dom';
-import MainContainer from '@components/_common/main-container/MainContainer';
+import MomentUploadSteps from '@components/moment-upload/moment-upload-steps/MomentUploadSteps';
+import { Layout } from '@design-system';
 
 function MomentUpload() {
   return (
-    <MainContainer>
-      <Outlet />
-    </MainContainer>
+    <Layout.AbsoluteFullScreen bgColor="BASIC_BLACK">
+      <MomentUploadSteps />
+    </Layout.AbsoluteFullScreen>
   );
 }
 

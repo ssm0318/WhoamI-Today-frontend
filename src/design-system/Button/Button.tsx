@@ -47,10 +47,16 @@ const Large = React.memo((props: ButtonProps) => <Button {...props} size="Large"
 
 const Small = React.memo((props: ButtonProps) => <Button {...props} size="Small" />);
 
+const Medium = React.memo((props: ButtonProps) => <Button {...props} size="Medium" />);
+
 const buttons: ButtonSetting = {
   Large: {
     ButtonComponent: S.LargeButton,
     fontType: '12_regular',
+  },
+  Medium: {
+    ButtonComponent: S.MediumButton,
+    fontType: '18_semibold',
   },
   Small: {
     ButtonComponent: S.SmallButton,
@@ -58,4 +64,4 @@ const buttons: ButtonSetting = {
   },
 };
 
-export default { Large, Small };
+export default { Large, Medium, Small };

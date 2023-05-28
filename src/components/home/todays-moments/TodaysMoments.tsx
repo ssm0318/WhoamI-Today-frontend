@@ -27,8 +27,8 @@ function TodaysMoments() {
       </Layout.FlexRow>
       {/* 컨텐츠 */}
       <IconWrapper w="100%" justifyContent="center" mt={32}>
-        <MomentIcon name="mood" />
         <MomentIcon name="photo" />
+        <MomentIcon name="mood" />
         <MomentIcon name="description" />
       </IconWrapper>
     </Layout.FlexCol>
