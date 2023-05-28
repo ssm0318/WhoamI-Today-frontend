@@ -8,8 +8,8 @@ export interface ShareSettings {
   share_anonymously: boolean;
 }
 
-// TODO Question 타입 나중에 확정되면 수정 필요
-export type Question = ShortAnswerQuestion | MultipleChoiceQuestion;
+// Question 타입 나중에 확장되면 추가
+export type Question = ShortAnswerQuestion;
 
 export interface ShortAnswerQuestion extends ContentsCommon {
   type: QUESTION_TYPE.SHORT_ANSWER;
