@@ -5,18 +5,16 @@ import { useNavigate } from 'react-router-dom';
 import { TODAY_QUESTION_FIRST_DATE } from '@constants/question';
 import { Button, Font, Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { MultipleChoiceQuestion, ShortAnswerQuestion } from '@models/post';
+import { ShortAnswerQuestion } from '@models/post';
 import { BoundState, useBoundStore } from '@stores/useBoundStore';
 
 const todaysQuestionsSelector = (state: BoundState) => ({
-  shortAnswerQuestion: state.shortAnswerQuestion,
-  multipleChoiceQuestions: state.multipleChoiceQuestions,
+  shortAnswerQuestions: state.shortAnswerQuestions,
   fetchTodaysQuestions: state.fetchTodaysQuestions,
 });
 
 function TodaysQuestions() {
-  const { fetchTodaysQuestions, shortAnswerQuestion, multipleChoiceQuestions } =
-    useBoundStore(todaysQuestionsSelector);
+  const { fetchTodaysQuestions, shortAnswerQuestions } = useBoundStore(todaysQuestionsSelector);
   const [t] = useTranslation('translation', { keyPrefix: 'home.question' });
   // 오늘 날짜
   const today = new Date();
@@ -41,18 +39,13 @@ function TodaysQuestions() {
   const isPrevButtonExists = isAfter(currentDate, TODAY_QUESTION_FIRST_DATE);
   const isNextButtonExists = !(isAfter(currentDate, today) || isEqual(currentDate, today));
 
+  const handleShortAnswer = (question: ShortAnswerQuestion) => {
+    navigate(`/response/short-answer`, { state: question });
+  };
+
   useAsyncEffect(async () => {
     await fetchTodaysQuestions();
   }, []);
-
-  const handleShortAnswer = (question: ShortAnswerQuestion) => {
-    navigate(`/question/${question.id}`, { state: question });
-  };
-
-  const handleMultipleChoice = (questions: MultipleChoiceQuestion[]) => {
-    // TODO 객관식 상세 페이지로 이동
-    console.log(questions);
-  };
 
   return (
     <Layout.FlexCol w="100%" bgColor="BACKGROUND_COLOR" ph="default" pt={22} pb={100}>
@@ -70,22 +63,15 @@ function TodaysQuestions() {
           {isNextButtonExists && <SvgIcon name="arrow_right" size={36} />}
         </Layout.LayoutBase>
       </Layout.FlexRow>
-      {/* 컨텐츠 */}
       {/* Short Answer */}
-      {shortAnswerQuestion && (
-        <>
-          <Layout.FlexRow
-            mb={10}
-            mt={32}
-            justifyContent="space-between"
-            w="100%"
-            alignItems="center"
-          >
-            <Font.Display type="14_regular" color="GRAY_3">
-              {t('short_answer')}
-            </Font.Display>
-            <Button.Small text={t('see_all')} type="white_fill" status="normal" to="/questions" />
-          </Layout.FlexRow>
+      <Layout.FlexRow mb={10} mt={32} justifyContent="space-between" w="100%" alignItems="center">
+        <Font.Display type="14_regular" color="GRAY_3">
+          {t('short_answer')}
+        </Font.Display>
+        <Button.Small text={t('see_all')} type="white_fill" status="normal" to="/questions" />
+      </Layout.FlexRow>
+      <Layout.FlexCol w="100%" gap={12}>
+        {shortAnswerQuestions.map((saq) => (
           <Layout.FlexRow
             bgColor="GRAY_2"
             w="100%"
@@ -93,39 +79,15 @@ function TodaysQuestions() {
             pv={14}
             rounded={10}
             justifyContent="center"
-            onClick={() => handleShortAnswer(shortAnswerQuestion)}
+            onClick={() => handleShortAnswer(saq)}
+            key={saq.id}
           >
             <Font.Body type="18_regular" textAlign="center">
-              {shortAnswerQuestion.content}
+              {saq.content}
             </Font.Body>
           </Layout.FlexRow>
-        </>
-      )}
-      {/* Multiple Choice */}
-      {multipleChoiceQuestions.length !== 0 && (
-        <>
-          <Layout.FlexRow mt={20} mb={8} justifyContent="flex-start" w="100%" alignItems="center">
-            <Font.Display type="14_regular" color="GRAY_3">
-              {t('multiple_choice')}
-            </Font.Display>
-          </Layout.FlexRow>
-          <Layout.LayoutBase
-            bgColor="GRAY_2"
-            w="100%"
-            ph={16}
-            pv={14}
-            rounded={10}
-            alignItems="center"
-            onClick={() => handleMultipleChoice(multipleChoiceQuestions)}
-          >
-            {multipleChoiceQuestions.map((question, index) => (
-              <Font.Body type="18_regular" textAlign="center" key={question.id}>
-                {index + 1}. {question.content}
-              </Font.Body>
-            ))}
-          </Layout.LayoutBase>
-        </>
-      )}
+        ))}
+      </Layout.FlexCol>
     </Layout.FlexCol>
   );
 }

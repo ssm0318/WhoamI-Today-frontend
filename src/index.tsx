@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { Colors } from '@design-system';
 import GlobalStyle from '@styles/global-styles';
-import { checkIfSignIn } from '@utils/apis/user';
 import ErrorPage from './components/error-page/ErrorPage';
 import './i18n';
 import reportWebVitals from './reportWebVitals';
@@ -16,7 +15,6 @@ import Intro from './routes/Intro';
 import My from './routes/My';
 import Notification from './routes/Notification';
 import QuestionDetail from './routes/QuestionDetail';
-import MultipleChoiceResponse from './routes/response/MultipleChoiceResponse';
 import ShortAnswerResponse from './routes/response/ShortAnswerResponse';
 import Root from './routes/Root';
 import Email from './routes/sign-up/Email';
@@ -33,7 +31,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     errorElement: <ErrorPage />,
-    loader: checkIfSignIn,
+    // loader: checkIfSignIn,
     children: [
       {
         path: 'home',
@@ -73,10 +71,7 @@ const router = createBrowserRouter([
   { path: 'question/:questionId', element: <QuestionDetail /> },
   {
     path: 'response',
-    children: [
-      { path: 'short-answer', element: <ShortAnswerResponse /> },
-      { path: 'multiple-choice', element: <MultipleChoiceResponse /> },
-    ],
+    children: [{ path: 'short-answer', element: <ShortAnswerResponse /> }],
   },
 ]);
 

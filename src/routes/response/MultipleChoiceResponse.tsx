@@ -8,6 +8,7 @@ import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { MultipleChoiceQuestion } from '@models/post';
 
+// NOTE 객관식 질문은 추후에 추가 예정
 // 객관식 질문 답변
 function MultipleChoiceResponse() {
   const { state: questions } = useLocation() as {
