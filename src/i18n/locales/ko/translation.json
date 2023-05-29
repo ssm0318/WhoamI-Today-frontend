@@ -32,5 +32,18 @@
       "short_answer": "짧은 답변",
       "multiple_choice": "선택지 고르기"
     }
+  },
+  "calendar": {
+    "title_format": "yyyy년 M월",
+    "weeks": "{{count}}번째 주",
+    "table_header": {
+      "sun": "일",
+      "mon": "월",
+      "tue": "화",
+      "wed": "수",
+      "thu": "목",
+      "fri": "금",
+      "sat": "토"
+    }
   }
 }

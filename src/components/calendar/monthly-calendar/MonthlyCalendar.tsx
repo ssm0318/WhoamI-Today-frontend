@@ -1,5 +1,6 @@
-import { addMonths, format, subMonths } from 'date-fns';
+import { addMonths, subMonths } from 'date-fns';
 import { useMemo, useState } from 'react';
+import { CALENDAR_VIEW } from '@models/calendar';
 import CalendarCell from '../calendar-cell/CalendarCell';
 import CalendarViewWrapper from '../calendar-view-wrapper/CalendarViewWrapper';
 import { getCalendarMatrix } from './MonthlyCalendar.helper';
@@ -19,7 +20,8 @@ function MonthlyCalendar() {
 
   return (
     <CalendarViewWrapper
-      title={format(currentDate, 'MMMM yyyy')}
+      type={CALENDAR_VIEW.MONTHLY}
+      currentDate={currentDate}
       onClickPrevBtn={moveToPrevMonth}
       onClickNextBtn={moveToNextMonth}
     >

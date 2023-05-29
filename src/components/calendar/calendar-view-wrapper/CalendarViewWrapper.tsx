@@ -1,26 +1,30 @@
 import { ReactNode } from 'react';
 import { Layout } from '@design-system';
+import { CALENDAR_VIEW } from '@models/calendar';
 import CalendarHeader from './calendar-header/CalendarHeader';
 import CalendarTableHeader from './calendar-table-header/CalendarTableHeader';
 import { StyledCalendarTable } from './CalendarViewWrapper.styled';
 
 interface CalendarViewWrapperProps {
-  title: string;
+  type: CALENDAR_VIEW;
   children: ReactNode;
+  currentDate: Date;
   onClickPrevBtn: () => void;
   onClickNextBtn: () => void;
 }
 
 function CalendarViewWrapper({
-  title,
+  type,
   children,
+  currentDate,
   onClickPrevBtn,
   onClickNextBtn,
 }: CalendarViewWrapperProps) {
   return (
     <Layout.FlexCol w="100%" pl={18} pr={17} pt={14}>
       <CalendarHeader
-        title={title}
+        type={type}
+        currentDate={currentDate}
         onClickPrevBtn={onClickPrevBtn}
         onClickNextBtn={onClickNextBtn}
       />

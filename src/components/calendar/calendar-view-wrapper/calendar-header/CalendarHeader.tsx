@@ -1,21 +1,46 @@
 import { Font, Layout, SvgIcon } from '@design-system';
+import { CALENDAR_VIEW } from '@models/calendar';
+import {
+  ARROW_ICON_SIZE,
+  getArrowIconColor,
+  getCalendarTitle,
+  validateNextBtnActivation,
+  validatePrevBtnActivation,
+} from './CalendarHeader.helper';
 
 interface CalendarHeaderProps {
-  title: string;
+  type: CALENDAR_VIEW;
+  currentDate: Date;
   onClickPrevBtn: () => void;
   onClickNextBtn: () => void;
 }
 
-function CalendarHeader({ title, onClickPrevBtn, onClickNextBtn }: CalendarHeaderProps) {
+function CalendarHeader({
+  type,
+  currentDate,
+  onClickPrevBtn,
+  onClickNextBtn,
+}: CalendarHeaderProps) {
+  const isPrevBtnActive = validatePrevBtnActivation(type, currentDate);
+  const isNextBtnActive = validateNextBtnActivation(type, currentDate);
+
   return (
     <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
-      <Font.Body type="20_semibold">{title}</Font.Body>
+      <Font.Body type="20_semibold">{getCalendarTitle(type, currentDate)}</Font.Body>
       <Layout.FlexRow justifyContent="space-between" alignItems="center">
-        <button type="button" onClick={onClickPrevBtn}>
-          <SvgIcon name="arrow_left" size={36} />
+        <button type="button" onClick={onClickPrevBtn} disabled={!isPrevBtnActive}>
+          <SvgIcon
+            name="arrow_left"
+            size={ARROW_ICON_SIZE}
+            color={getArrowIconColor(isPrevBtnActive)}
+          />
         </button>
-        <button type="button" onClick={onClickNextBtn}>
-          <SvgIcon name="arrow_right" size={36} />
+        <button type="button" onClick={onClickNextBtn} disabled={!isNextBtnActive}>
+          <SvgIcon
+            name="arrow_right"
+            size={ARROW_ICON_SIZE}
+            color={getArrowIconColor(isNextBtnActive)}
+          />
         </button>
       </Layout.FlexRow>
     </Layout.FlexRow>

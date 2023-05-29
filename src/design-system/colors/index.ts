@@ -16,6 +16,8 @@ export const Colors = {
   GRAY_5: '#B5B5B5',
   GRAY_6: '#ECEBEC',
 
+  CALENDAR_TODAY: '#FF8754',
+
   BACKGROUND_COLOR: '#F5F5F5',
 
   TRANSPARENT: 'transparent',
