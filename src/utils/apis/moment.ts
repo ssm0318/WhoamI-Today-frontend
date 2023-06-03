@@ -1,10 +1,6 @@
 import { Response } from '@models/api/common';
-import {
-  GetMomentResponse,
-  MomentRequestParams,
-  PostMomentRequest,
-  UpdateMomentRequest,
-} from '@models/api/moment';
+import { GetMomentResponse, MomentRequestParams } from '@models/api/moment';
+import { TodayMoment } from '@models/moment';
 import axios from './axios';
 
 // GET today's moment
@@ -15,22 +11,17 @@ export const getTodayMoment = async () => {
 };
 
 // POST today's moment
-export const postTodayMoment = async ({ moment }: PostMomentRequest) => {
+export const postTodayMoment = async (moment: Partial<TodayMoment>) => {
   const { year, month, day } = getMomentRequestParams(new Date());
-  const { data } = await axios.post<GetMomentResponse>(
-    `/moment/today/${year}/${month}/${day}`,
-    moment,
-  );
+  const { data } = await axios.post(`/moment/daily/${year}/${month}/${day}`, moment);
   return data;
 };
 
 // PUT today's moment
-export const updateTodayMoment = async ({ moment }: UpdateMomentRequest) => {
+export const updateTodayMoment = async (moment: Partial<TodayMoment>) => {
   const { year, month, day } = getMomentRequestParams(new Date());
-  const { data } = await axios.put<GetMomentResponse>(
-    `/moment/today/${year}/${month}/${day}`,
-    moment,
-  );
+
+  const { data } = await axios.put(`/moment/daily/${year}/${month}/${day}`, moment);
   return data;
 };
 
