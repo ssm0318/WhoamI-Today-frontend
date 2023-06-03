@@ -64,5 +64,16 @@
     "description_placeholder": "Feel free to write down your TMI.",
     "skip": "Skip",
     "post": "Post"
+  },
+  "my_detail": {
+    "title_format": "d/M/yy (E)"
+  },
+  "the_days_detail": {
+    "moments": {
+      "title": "The Day's Moments"
+    },
+    "questions": {
+      "title": "The Day's Questions"
+    }
   }
 }

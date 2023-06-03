@@ -15,6 +15,7 @@ import Home from './routes/Home';
 import Intro from './routes/Intro';
 import MomentUpload from './routes/MomentUpload';
 import My from './routes/My';
+import MyDetail from './routes/my/MyDeatil';
 import Notification from './routes/Notification';
 import QuestionDetail from './routes/QuestionDetail';
 import ShortAnswerResponse from './routes/response/ShortAnswerResponse';
@@ -41,7 +42,10 @@ const router = createBrowserRouter([
       },
       {
         path: 'my',
-        element: <My />,
+        children: [
+          { path: ':detailDate', element: <MyDetail /> },
+          { path: '', element: <My /> },
+        ],
       },
       {
         path: 'friends',

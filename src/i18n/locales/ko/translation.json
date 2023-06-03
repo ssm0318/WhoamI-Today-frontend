@@ -61,5 +61,16 @@
     "description_placeholder": "자유롭게 생각을 적어주세요.",
     "skip": "건너뛰기",
     "post": "게시"
+  },
+  "my_detail": {
+    "title_format": "yy/M/d (E)"
+  },
+  "the_days_detail": {
+    "moments": {
+      "title": "그 날의 순간들"
+    },
+    "questions": {
+      "title": "그 날의 질문들"
+    }
   }
 }
