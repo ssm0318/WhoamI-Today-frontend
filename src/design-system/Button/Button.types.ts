@@ -2,11 +2,11 @@ import { ColorKeys } from 'src/design-system/colors';
 import { BodyType } from '../Font/Font.types';
 import * as S from './Button.styled';
 
-export type ButtonSize = 'Large' | 'Small';
+export type ButtonSize = 'Large' | 'Medium' | 'Small';
 
 export type ButtonSetting = {
   [key in ButtonSize]: {
-    ButtonComponent: typeof S.LargeButton | typeof S.SmallButton;
+    ButtonComponent: typeof S.LargeButton | typeof S.SmallButton | typeof S.MediumButton;
     fontType: BodyType;
   };
 };

@@ -27,6 +27,8 @@ export const Colors = {
   DIM: '#000000b3',
 
   ERROR: '#FF2D2D',
+
+  RESPONSE_INPUT_DIVIDER: '#A4B4F3',
 };
 
 export type ColorType = typeof Colors;

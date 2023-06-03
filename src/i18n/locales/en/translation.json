@@ -55,5 +55,14 @@
       "fri": "FRI",
       "sat": "SAT"
     }
+  },
+  "moment_upload": {
+    "mood_title": "Today's Moment",
+    "mood_subtitle": "Mood",
+    "mood_placeholder": "Feel free to express your mood with Emojis.",
+    "description_title": "How would you describe\nyour day so far in 20 characters?",
+    "description_placeholder": "Feel free to write down your TMI.",
+    "skip": "Skip",
+    "post": "Post"
   }
 }

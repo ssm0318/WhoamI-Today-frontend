@@ -49,7 +49,6 @@ const GlobalStyle = createGlobalStyle`
     input {
         outline: none;
     }
-
     textarea {
         border: none;
         overflow: auto;
