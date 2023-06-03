@@ -119,5 +119,14 @@
     "password": "Password",
     "continue": "Continue",
     "are_you_sure": "Are you sure?\nThis cannot be done."
+  },
+  "time": {
+    "just_a_moment_ago": "just a moment ago",
+    "minute_ago_one": "{{minute}} minute ago",
+    "minute_ago_other": "{{minute}} minutes ago",
+    "hour_ago_one": "{{hour}} hour ago",
+    "hour_ago_other": "{{hour}} hours ago",    
+    "day_ago_one": "yesterday",
+    "day_ago_other": "{{day}} days ago"
   }
 }

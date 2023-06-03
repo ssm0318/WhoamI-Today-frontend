@@ -25,7 +25,7 @@ function QuestionItem({ question }: QuestionItemProps) {
     navigate(`/response/short-answer`, { state: question });
   };
 
-  const handleClick = () => {
+  const handleClickQuestion = () => {
     navigate(`/question/${question.id}`);
   };
 
@@ -38,7 +38,7 @@ function QuestionItem({ question }: QuestionItemProps) {
         justifyContent="space-between"
         alignItems="center"
         w="100%"
-        onClick={handleClick}
+        onClick={handleClickQuestion}
       >
         <Font.Body type="18_regular">{content}</Font.Body>
         <Layout.FlexRow gap={4}>

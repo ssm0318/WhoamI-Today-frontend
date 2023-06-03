@@ -2,6 +2,10 @@ export enum QUESTION_TYPE {
   SHORT_ANSWER = 'SHORT_ANSWER',
 }
 
+export enum POST_TYPE {
+  RESPONSE = 'Response',
+}
+
 export interface ShareSettings {
   share_with_friends: boolean;
   share_anonymously: boolean;
@@ -55,4 +59,12 @@ export interface Author {
 // 어드민 작성자
 export interface AdminAuthor {
   color_hex: string;
+}
+
+// 답변
+export interface Response extends ContentsCommon {
+  type: POST_TYPE.RESPONSE;
+  comments: Comment[];
+  question: Question;
+  question_id: number;
 }
