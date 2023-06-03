@@ -74,7 +74,7 @@ export const convertTimeDiffByString = (now: Date, day: Date | string) => {
 
   if (diffDay >= 7) {
     // 7일 이상 차이나는 경우 날짜를 보여줌
-    return format(new Date(day), 'YYYY.MM.DD');
+    return format(new Date(day), 'yyyy.MM.dd');
   }
 
   if (diffDay >= 2) {
