@@ -3,13 +3,13 @@ import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { CounterSlice, createCounterSlice } from './example';
 import { createMomentSlice, MomentSlice } from './moment';
-import { CalendarViewSlice, createCalendarViewSlice } from './my';
+import { createMyPageSlice, MyPageSlice } from './my';
 import { createSignUpInfoSlice, SignUpInfoSlice } from './signUpInfo';
 import { createTodaysQuestionsSlice, TodaysQuestionsSlice } from './todaysQuestions';
 
 export type BoundState = CounterSlice &
   MomentSlice &
-  CalendarViewSlice &
+  MyPageSlice &
   SignUpInfoSlice &
   TodaysQuestionsSlice;
 
@@ -31,7 +31,7 @@ const middleWares = (store: BoundStore) =>
 export const useBoundStore = create<BoundState>()(
   middleWares((...a) => ({
     ...createCounterSlice(...a),
-    ...createCalendarViewSlice(...a),
+    ...createMyPageSlice(...a),
     ...createMomentSlice(...a),
     ...createSignUpInfoSlice(...a),
     ...createTodaysQuestionsSlice(...a),
