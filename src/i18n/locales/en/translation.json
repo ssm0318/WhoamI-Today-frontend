@@ -22,7 +22,21 @@
     "temporary_error": "An error has occurred temporarily. Please try again later.",
     "password_constraints": "The password must be at least 8 characters with a mix of upper and lowercase letters, numbers and symbols.",
     "agree_to_research": "agree (optional, unless you are currently participating in the research led by Univ. of Washington research team).",
-    "learn_more_about_whoami_today": "Learn more about WhoAmI Today"
+    "learn_more_about_whoami_today": "Learn more about WhoAmI Today",
+    "age": "Age",
+    "gender": "Gender",
+    "female": "Female",
+    "male": "Male",
+    "transgender": "Transgender",
+    "non_binary": "Non-binary/Non-conforming",
+    "dont_want_to_respond": "Don't want to respond",
+    "parental_permission": "Parental Permission",
+    "need_parental_permission_error": "Users under 18 need parental permission",
+    "yes": "Yes",
+    "no": "No",
+    "i_agree_to_provide_consent_to_my_child’s_participation_in_the_research": "I agree to provide consent to my child’s participation in the research.",
+    "printing_your_name_below": "Printing your name below will act as a signature to consent to the information above.",
+    "data_security_guide": "The data we collect will be confidential and will not be stored with your name. All data and audio and recordings will be stored securely."
   },
   "home": {
     "moment": {

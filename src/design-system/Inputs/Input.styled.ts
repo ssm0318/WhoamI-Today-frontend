@@ -8,9 +8,9 @@ export const CommonInput = styled.input`
   ${(props: InputProps) =>
     `outline: none;
     width: ${props.width ? `${props.width}px` : '100%'};`}
-  padding: 0 20px;
-  height: 48px;
+  height: 24px;
   font-size: 18px;
+  border-width: 0 0 1px;
 `;
 
 export default CommonInput;
