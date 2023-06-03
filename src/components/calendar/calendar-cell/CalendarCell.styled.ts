@@ -1,8 +1,7 @@
 import styled, { css } from 'styled-components';
-import { Colors } from '@design-system';
 
 const CommonCalendarCell = styled.td`
-  border: 6px solid ${Colors.BACKGROUND_COLOR};
+  border: 6px solid ${({ theme }) => theme.BACKGROUND_COLOR};
   border-radius: 15px;
   background-color: rgba(0, 0, 0, 0.2);
   position: relative;
@@ -50,7 +49,7 @@ export const DateCell = styled(CommonCalendarCell)<DateCellProps>`
     isToday
       ? css`
           &::before {
-            box-shadow: 0 0 0 3px ${Colors.CALENDAR_TODAY} inset;
+            box-shadow: 0 0 0 3px ${({ theme }) => theme.CALENDAR_TODAY} inset;
           }
         `
       : ''}
@@ -72,6 +71,6 @@ export const DateCell = styled(CommonCalendarCell)<DateCellProps>`
 `;
 
 export const EmptyCell = styled(CommonCalendarCell)`
-  background-color: ${Colors.BACKGROUND_COLOR};
+  background-color: ${({ theme }) => theme.BACKGROUND_COLOR};
   visibility: hidden;
 `;
