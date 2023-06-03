@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ExternalAnchor from '@components/_common/external-anchor/ExternalAnchor';
 import { Button, Font, Layout } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
 
 const PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_EN =
   'https://www.notion.so/jinsungoo/Privacy-Policy-Consent-Form-413087ddc0674afe9fc951e703236489';
@@ -17,14 +18,19 @@ function ResearchIntro() {
   const [t, i18n] = useTranslation('translation', { keyPrefix: 'sign_up' });
   const [agree, setAgree] = useState(false);
 
+  const setSignUpInfo = useBoundStore((state) => state.setSignUpInfo);
+
   const toggleAgree = () => setAgree((prev) => !prev);
 
   const navigate = useNavigate();
   const onClickNext = () => {
     if (agree) {
+      setSignUpInfo({ research_agreement: true });
       navigate('/signup/research-consent-form');
       return;
     }
+
+    setSignUpInfo({ research_agreement: false });
     navigate('/signup/username');
   };
 
