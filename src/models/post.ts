@@ -1,6 +1,5 @@
 export enum QUESTION_TYPE {
   SHORT_ANSWER = 'SHORT_ANSWER',
-  MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
 }
 
 export interface ShareSettings {
@@ -13,10 +12,6 @@ export type Question = ShortAnswerQuestion;
 
 export interface ShortAnswerQuestion extends ContentsCommon {
   type: QUESTION_TYPE.SHORT_ANSWER;
-}
-export interface MultipleChoiceQuestion extends ContentsCommon {
-  type: QUESTION_TYPE.MULTIPLE_CHOICE;
-  answerList: { value: number; text: string }[];
 }
 
 export interface ContentsCommon {
