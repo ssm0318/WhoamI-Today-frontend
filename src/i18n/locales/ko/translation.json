@@ -56,7 +56,7 @@
       "placeholder": "쓰고 싶은 내용을 쓰세요.",
       "post": "완료"
     }
-  }, 
+  },
   "calendar": {
     "title_format": "yyyy년 M월",
     "weeks": "{{count}}번째 주",
