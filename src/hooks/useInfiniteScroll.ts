@@ -18,6 +18,7 @@ const useInfiniteScroll = <T extends HTMLElement>(
 
   const onIntersect = useCallback(
     ([entry]: IntersectionObserverEntry[]) => {
+      console.log(21, entry);
       if (entry.isIntersecting) {
         onIntersectCallback();
       }
