@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Colors } from '@design-system';
 
 export const CalendarViewTabs = styled.div`
   box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.1);
@@ -16,6 +15,6 @@ export const CalendarViewTab = styled.button`
 
   &.active {
     box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.1);
-    background-color: ${Colors.BASIC_WHITE};
+    background-color: ${({ theme }) => theme.BASIC_WHITE};
   }
 `;

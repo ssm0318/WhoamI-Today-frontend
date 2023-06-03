@@ -1,25 +1,33 @@
 import { addDays, differenceInCalendarMonths, endOfMonth, startOfMonth } from 'date-fns';
+import { DayMoment } from '@models/calendar';
 
-type CalendarDates = (Date | null)[];
-type CalendarMatrix = CalendarDates[];
-
-export const getCalendarMatrix = (currentDate: Date): CalendarMatrix => {
+export const getCalendarMonth = (currentDate: Date): DayMoment[] => {
   const startDate = startOfMonth(currentDate);
   const endDate = endOfMonth(currentDate);
-  const dayOfStartDate = startDate.getDay();
-  const dayOfEndDate = endDate.getDay();
-  const emptyDatesOfFirstWeek = new Array(dayOfStartDate).fill(null);
-  const emptyDatesOfLastWeek = new Array(6 - dayOfEndDate).fill(null);
 
-  const dates: Date[] = [];
+  const dates: DayMoment[] = [];
   let curr = startDate;
   while (differenceInCalendarMonths(endDate, curr) >= 0) {
-    dates.push(curr);
+    dates.push({ date: curr });
     curr = addDays(curr, 1);
   }
+
+  return dates;
+};
+
+type CalendarDates = (DayMoment | null)[];
+type CalendarMatrix = CalendarDates[];
+
+export const getCalendarMatrix = (calendarMonth: DayMoment[]): CalendarMatrix => {
+  if (calendarMonth.length < 1) return [];
+  const startDay = calendarMonth[0].date.getDay();
+  const endDay = calendarMonth[calendarMonth.length - 1].date.getDay();
+  const emptyDatesOfFirstWeek = new Array(startDay).fill(null);
+  const emptyDatesOfLastWeek = new Array(6 - endDay).fill(null);
+
   const calendarDates: CalendarDates = [
     ...emptyDatesOfFirstWeek,
-    ...dates,
+    ...calendarMonth,
     ...emptyDatesOfLastWeek,
   ];
 

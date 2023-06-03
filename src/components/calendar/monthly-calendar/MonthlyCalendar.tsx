@@ -1,14 +1,28 @@
 import { addMonths, subMonths } from 'date-fns';
-import { useMemo, useState } from 'react';
-import { CALENDAR_VIEW } from '@models/calendar';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import useAsyncEffect from '@hooks/useAsyncEffect';
+import { CALENDAR_VIEW, DayMoment } from '@models/calendar';
+import { getMomentRequestParams, getMonthlyMoments } from '@utils/apis/moment';
+import { mapMomentToCalendar } from '../_helpers/mapMomentToCalendar';
 import CalendarCell from '../calendar-cell/CalendarCell';
 import CalendarViewWrapper from '../calendar-view-wrapper/CalendarViewWrapper';
-import { getCalendarMatrix } from './MonthlyCalendar.helper';
+import { getCalendarMatrix, getCalendarMonth } from './MonthlyCalendar.helper';
 
 function MonthlyCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [calendarMonth, setCalendarMonth] = useState<DayMoment[]>([]);
+  const calendarMatrix = useMemo(() => getCalendarMatrix(calendarMonth), [calendarMonth]);
 
-  const calendarMatrix = useMemo(() => getCalendarMatrix(currentDate), [currentDate]);
+  useEffect(() => {
+    setCalendarMonth(getCalendarMonth(currentDate));
+  }, [currentDate]);
+
+  const updateMonthlyMoments = useCallback(async () => {
+    const { year, month } = getMomentRequestParams(currentDate);
+    const data = await getMonthlyMoments({ year, month });
+    setCalendarMonth((prev) => mapMomentToCalendar(prev, data));
+  }, [currentDate]);
+  useAsyncEffect(updateMonthlyMoments, [updateMonthlyMoments]);
 
   const moveToPrevMonth = () => {
     setCurrentDate((prev) => subMonths(prev, 1));
@@ -29,9 +43,9 @@ function MonthlyCalendar() {
         const weekKey = `week_${i}`;
         return (
           <tr key={weekKey}>
-            {week.map((date, j) => {
+            {week.map((dayMoment, j) => {
               const dateKey = `date_${i}_${j}`;
-              return <CalendarCell key={dateKey} date={date} />;
+              return <CalendarCell key={dateKey} dayMoment={dayMoment} />;
             })}
           </tr>
         );
