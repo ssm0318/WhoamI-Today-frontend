@@ -1,24 +1,21 @@
+import { useTranslation } from 'react-i18next';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import QuestionItem from '@components/question/question-item/QuestionItem';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
-
-// TODO 나중에 mock data 제거
-const questions = [
-  { id: 1, title: 'question1' },
-  { id: 2, title: 'question2' },
-  { id: 3, title: 'question3' },
-  { id: 4, title: 'question4' },
-];
+import { shortAnswerQuestions } from '@mock/questions';
 
 function AllQuestions() {
+  const [t] = useTranslation('translation', { keyPrefix: 'home.question' });
+
   return (
     <MainContainer>
-      <TitleHeader title="Questions" />
+      <TitleHeader title={t('all_questions') || undefined} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" ph={DEFAULT_MARGIN} gap={20}>
-        {questions.map((question) => (
-          <QuestionItem {...question} key={question.id} />
+        {/* TODO 나중에 실제 데이터 적용 필요 */}
+        {shortAnswerQuestions.map((question) => (
+          <QuestionItem question={question} key={question.id} />
         ))}
       </Layout.FlexCol>
     </MainContainer>

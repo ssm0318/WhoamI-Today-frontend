@@ -1,3 +1,19 @@
+export enum QUESTION_TYPE {
+  SHORT_ANSWER = 'SHORT_ANSWER',
+}
+
+export interface ShareSettings {
+  share_with_friends: boolean;
+  share_anonymously: boolean;
+}
+
+// Question 타입 나중에 확장되면 추가
+export type Question = ShortAnswerQuestion;
+
+export interface ShortAnswerQuestion extends ContentsCommon {
+  type: QUESTION_TYPE.SHORT_ANSWER;
+}
+
 export interface ContentsCommon {
   id: number;
   content: string;

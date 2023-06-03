@@ -2,21 +2,21 @@ import { useTranslation } from 'react-i18next';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { Moment } from '@models/moment';
+import { TodayMoment } from '@models/moment';
 import { BoundState, useBoundStore } from '@stores/useBoundStore';
 import { IconWrapper } from './TodaysMoments.styled';
 
 const momentSelector = (state: BoundState) => ({
-  moment: state.moment,
-  fetch: state.fetch,
+  todayMoment: state.todayMoment,
+  fetchTodayMoment: state.fetchTodayMoment,
 });
 
 function TodaysMoments() {
   const [t] = useTranslation('translation', { keyPrefix: 'home.moment' });
-  const { fetch } = useBoundStore(momentSelector);
+  const { fetchTodayMoment } = useBoundStore(momentSelector);
 
   useAsyncEffect(async () => {
-    await fetch();
+    await fetchTodayMoment();
   }, []);
 
   return (
@@ -35,18 +35,18 @@ function TodaysMoments() {
   );
 }
 
-function MomentIcon({ name }: { name: keyof Moment }) {
+function MomentIcon({ name }: { name: keyof TodayMoment }) {
   const sendMessageToApp = usePostAppMessage();
-  const { moment } = useBoundStore(momentSelector);
+  const { todayMoment } = useBoundStore(momentSelector);
 
   const handleClickUploadMoment = () => {
-    if (moment[name]) return;
+    if (todayMoment[name]) return;
     // 사진 업로드의 경우 앱 화면으로 이동
     if (name === 'photo') {
       sendMessageToApp('NAVIGATE', {
         screenName: 'MomentUploadScreen',
         params: {
-          state: moment,
+          state: todayMoment,
         },
       });
     } else {
@@ -55,9 +55,9 @@ function MomentIcon({ name }: { name: keyof Moment }) {
   };
 
   return (
-    <button type="button" onClick={handleClickUploadMoment} disabled={!!moment[name]}>
+    <button type="button" onClick={handleClickUploadMoment} disabled={!!todayMoment[name]}>
       <SvgIcon
-        name={moment[name] ? `moment_${name}_disabled` : `moment_${name}_normal`}
+        name={todayMoment[name] ? `moment_${name}_disabled` : `moment_${name}_normal`}
         size={46}
       />
     </button>

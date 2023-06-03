@@ -29,8 +29,15 @@
     "question": {
       "todays_questions": "오늘의 질문",
       "see_all": "전체 보기",
-      "short_answer": "짧은 답변",
-      "multiple_choice": "선택지 고르기"
+      "short_answer": "주관식",
+      "multiple_choice": "객관식",
+      "all_questions": "전체 질문"
+    }
+  },
+  "question": {
+    "response": {
+      "placeholder": "쓰고 싶은 내용을 쓰세요.",
+      "post": "완료"
     }
   },
   "calendar": {
