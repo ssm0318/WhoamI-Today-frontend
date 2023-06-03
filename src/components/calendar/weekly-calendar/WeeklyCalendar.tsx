@@ -1,14 +1,27 @@
-import { addWeeks, subWeeks } from 'date-fns';
-import { useMemo, useState } from 'react';
-import { CALENDAR_VIEW } from '@models/calendar';
+import { addWeeks, startOfWeek, subWeeks } from 'date-fns';
+import { useCallback, useEffect, useState } from 'react';
+import useAsyncEffect from '@hooks/useAsyncEffect';
+import { CALENDAR_VIEW, DayMoment } from '@models/calendar';
+import { getMomentRequestParams, getWeeklyMoments } from '@utils/apis/moment';
+import { mapMomentToCalendar } from '../_helpers/mapMomentToCalendar';
 import CalendarCell from '../calendar-cell/CalendarCell';
 import CalendarViewWrapper from '../calendar-view-wrapper/CalendarViewWrapper';
 import { getCalendarWeek } from './WeeklyCalendar.helper';
 
 function WeeklyCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [calendarWeek, setCalendarWeek] = useState<DayMoment[]>([]);
 
-  const calendarWeek = useMemo(() => getCalendarWeek(currentDate), [currentDate]);
+  useEffect(() => {
+    setCalendarWeek(getCalendarWeek(currentDate));
+  }, [currentDate]);
+
+  const updateWeeklyMoments = useCallback(async () => {
+    const { year, month, day } = getMomentRequestParams(startOfWeek(currentDate));
+    const data = await getWeeklyMoments({ year, month, day });
+    setCalendarWeek((prev) => mapMomentToCalendar(prev, data));
+  }, [currentDate]);
+  useAsyncEffect(updateWeeklyMoments, [updateWeeklyMoments]);
 
   const moveToPrevWeek = () => {
     setCurrentDate((prev) => subWeeks(prev, 1));
@@ -26,9 +39,9 @@ function WeeklyCalendar() {
       onClickNextBtn={moveToNextWeek}
     >
       <tr>
-        {calendarWeek.map((date, i) => {
+        {calendarWeek.map((dayMoment, i) => {
           const dateKey = `date_${i}`;
-          return <CalendarCell key={dateKey} date={date} />;
+          return <CalendarCell key={dateKey} dayMoment={dayMoment} />;
         })}
       </tr>
     </CalendarViewWrapper>
