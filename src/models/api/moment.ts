@@ -1,8 +1,8 @@
-import { Moment } from '@models/moment';
+import { TodayMoment } from '@models/moment';
 import { Comment } from '@models/post';
 
 // GET today's moment
-export interface GetMomentResponse extends Moment {
+export interface GetMomentResponse extends TodayMoment {
   id: number;
   type: 'Moment';
   like_count: number;
@@ -13,7 +13,7 @@ export interface GetMomentResponse extends Moment {
 }
 
 // POST today's moment
-export interface PostMomentParams extends Moment {}
+export interface PostMomentParams extends TodayMoment {}
 
 export interface MomentRequestParams {
   year: number;

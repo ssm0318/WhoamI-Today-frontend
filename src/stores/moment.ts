@@ -1,8 +1,8 @@
-import { Moment } from '@models/moment';
+import { TodayMoment } from '@models/moment';
 import { SliceStateCreator } from './useBoundStore';
 
 interface MomentState {
-  todayMoment: Moment;
+  todayMoment: TodayMoment;
 }
 interface MomentAction {
   fetchTodayMoment: () => Promise<void>;
