@@ -26,7 +26,6 @@ import ProfileImage from './routes/sign-up/ProfileImage';
 import UserName from './routes/sign-up/UserName';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
-import Counter from './routes/ZustandExample';
 
 const router = createBrowserRouter([
   { path: '', element: <Intro /> },
@@ -54,10 +53,6 @@ const router = createBrowserRouter([
       {
         path: 'notifications',
         element: <Notification />,
-      },
-      {
-        path: 'zustand-example',
-        element: <Counter />,
       },
     ],
   },
