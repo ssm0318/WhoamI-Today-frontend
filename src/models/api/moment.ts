@@ -14,3 +14,9 @@ export interface GetMomentResponse extends Moment {
 
 // POST today's moment
 export interface PostMomentParams extends Moment {}
+
+export interface MomentRequestParams {
+  year: number;
+  month: number;
+  day: number;
+}
