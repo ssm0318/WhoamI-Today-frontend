@@ -1,29 +1,28 @@
-import { RefObject, useCallback, useEffect, useRef } from 'react';
+import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 /**
- * @param onIntersectCallback // 데이터를 추가로 로드하기 위해 fetchData 함수 호출
- * @returns // targetRef
  * @example
  * const handleIntersection = () => {
  *      Intersection Observer 콜백에서 호출되는 함수
  *      데이터를 추가로 로드하기 위해 fetchData 함수 호출
  *      fetchData();
  * };
- * const targetRef = useInfiniteScroll<HTMLDivElement>(handleIntersection);
+ * const { targetRef, isLoading, setIsLoading  } = useInfiniteScroll<HTMLDivElement>(handleIntersection);
  */
 const useInfiniteScroll = <T extends HTMLElement>(
   onIntersectCallback: () => void,
-): RefObject<T> => {
+): { targetRef: RefObject<T>; isLoading: boolean; setIsLoading: (isLoading: boolean) => void } => {
   const targetRef = useRef<T>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onIntersect = useCallback(
-    ([entry]: IntersectionObserverEntry[]) => {
-      console.log(21, entry);
-      if (entry.isIntersecting) {
+    async ([entry]: IntersectionObserverEntry[]) => {
+      if (entry.isIntersecting && !isLoading) {
+        setIsLoading(true);
         onIntersectCallback();
       }
     },
-    [onIntersectCallback],
+    [onIntersectCallback, isLoading],
   );
 
   useEffect(() => {
@@ -36,7 +35,7 @@ const useInfiniteScroll = <T extends HTMLElement>(
     return () => observer?.disconnect();
   }, [onIntersect]);
 
-  return targetRef;
+  return { targetRef, isLoading, setIsLoading };
 };
 
 export default useInfiniteScroll;
