@@ -6,17 +6,23 @@ import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
-import { fetchShortAnswerQuestionsAsync, shortAnswerQuestions } from '@mock/questions';
+import { shortAnswerQuestions } from '@mock/questions';
 import { ShortAnswerQuestion } from '@models/post';
 
 function AllQuestions() {
   const [t] = useTranslation('translation', { keyPrefix: 'home.question' });
-  // TODO 나중에 실제 데이터 적용 필요
+  // TODO 나중에 실제 데이터 적용 필요 및 테스트 코드 제거
   const [questions, setQuestions] = useState<ShortAnswerQuestion[]>(shortAnswerQuestions);
+  const [fetchCount, setFetchCount] = useState(0);
 
   const fetchMoreQuestions = async () => {
-    const data = await fetchShortAnswerQuestionsAsync(shortAnswerQuestions);
-    setQuestions([...questions, ...data]);
+    setTimeout(() => {
+      const newQuestions = shortAnswerQuestions.map((q) => {
+        return { ...q, id: q.id + 15 * (fetchCount + 1) };
+      });
+      setQuestions([...questions, ...newQuestions]);
+      setFetchCount((prev) => prev + 1);
+    }, 1000);
   };
 
   const targetRef = useInfiniteScroll<HTMLDivElement>(fetchMoreQuestions);
