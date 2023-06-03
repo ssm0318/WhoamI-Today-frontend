@@ -26,7 +26,7 @@ function QuestionItem({ question }: QuestionItemProps) {
   };
 
   const handleClickQuestion = () => {
-    navigate(`/question/${question.id}`);
+    navigate(`/response-history/${question.id}`);
   };
 
   return (

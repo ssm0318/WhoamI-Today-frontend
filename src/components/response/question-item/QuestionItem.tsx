@@ -6,9 +6,10 @@ import { Question } from '@models/post';
 interface QuestionItemProps {
   question: Question;
   onSend?: () => void;
+  disableClickQuestion?: boolean;
 }
 
-function QuestionItem({ question, onSend }: QuestionItemProps) {
+function QuestionItem({ question, onSend, disableClickQuestion = false }: QuestionItemProps) {
   const { content } = question;
   const navigate = useNavigate();
 
@@ -17,8 +18,9 @@ function QuestionItem({ question, onSend }: QuestionItemProps) {
     onSend?.();
   };
 
-  const handleClick = () => {
-    navigate(`/question/${question.id}`);
+  const handleClickQuestion = () => {
+    if (disableClickQuestion) return;
+    navigate(`/response-history/${question.id}`);
   };
 
   return (
@@ -30,7 +32,7 @@ function QuestionItem({ question, onSend }: QuestionItemProps) {
       bgColor="GRAY_7"
       w="100%"
       alignItems="center"
-      onClick={handleClick}
+      onClick={handleClickQuestion}
     >
       <Font.Body type="20_regular" color="GRAY_6" textAlign="center">
         {content}
