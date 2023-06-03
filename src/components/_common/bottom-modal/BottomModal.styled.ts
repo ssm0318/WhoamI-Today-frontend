@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { MAX_WINDOW_WIDTH } from '@constants/layout';
 import { Layout } from '@design-system';
 
 export const Background = styled(Layout.Absolute)<{
@@ -27,8 +28,9 @@ export const Container = styled(Layout.Absolute)<{
   transform: translateY(${(props) => (props.visible ? -props.height : 0)}px);
   transition: transform 0.3s ease-in;
   overflow: hidden;
-  left: 0;
   position: fixed;
+  align-self: center;
+  max-width: ${MAX_WINDOW_WIDTH}px;
 `;
 
 export const Body = styled(Layout.LayoutBase)`
