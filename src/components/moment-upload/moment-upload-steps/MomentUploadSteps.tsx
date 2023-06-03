@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Font, Layout } from '@design-system';
+import useRedirectGuard from '@hooks/useRedirectGuard';
 import { Moment } from '@models/moment';
 import { postTodayMoment } from '@utils/apis/moment';
 import { isEmojiOnly } from '@utils/validateHelpers';
@@ -45,11 +46,7 @@ function MomentUploadSteps() {
     navigate('/home');
   };
 
-  useEffect(() => {
-    if (!location.state) {
-      navigate(-1);
-    }
-  }, [navigate, location]);
+  useRedirectGuard();
 
   if (!location.state) return null;
   return (
