@@ -2,12 +2,12 @@ import format from 'date-fns/format';
 import { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import { Button, Font } from '@design-system';
 import { Gender } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import CheckBox from 'src/design-system/Inputs/CheckBox';
 import CommonInput from 'src/design-system/Inputs/Input.styled';
-import SignUpInput from 'src/design-system/Inputs/SignUpInput';
 import { LayoutBase } from 'src/design-system/layouts';
 
 const NEED_PARENTAL_PERMISSION_AGE = 18;
@@ -71,16 +71,14 @@ function ResearchConsentForm() {
   return (
     <LayoutBase ml={24} mr={24}>
       {/* Age */}
-      <LayoutBase mb={45}>
-        <SignUpInput
-          label={t('age')}
-          inputMode="numeric"
-          pattern="[0-9]*"
-          name="age"
-          value={ageInput}
-          onChange={handleChangeAge}
-        />
-      </LayoutBase>
+      <ValidatedInput
+        label={t('age')}
+        inputMode="numeric"
+        pattern="[0-9]*"
+        name="age"
+        value={ageInput}
+        onChange={handleChangeAge}
+      />
       {/* Parental Permission */}
       {showParentalPermissionRef.current && (
         <LayoutBase mb={45}>
@@ -142,6 +140,14 @@ function ResearchConsentForm() {
         </Font.Body>
         <CommonInput type="name" value={signature} onChange={handleChangeSign} />
       </LayoutBase>
+      {/* Date of Signature */}
+      <ValidatedInput
+        type="date"
+        value={today}
+        name="date_of_signature"
+        label={t('date_of_signature')}
+        disabled
+      />
       <LayoutBase mb={112}>
         <Font.Display type="14_regular">{t('data_security_guide')}</Font.Display>
       </LayoutBase>

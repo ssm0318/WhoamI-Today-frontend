@@ -36,6 +36,7 @@
     "no": "아니오, 동의하지 않습니다.",
     "i_agree_to_provide_consent_to_my_child’s_participation_in_the_research": "자녀의 연구 참여에 동의합니다.",
     "printing_your_name_below": "아래에 귀하의 이름을 입력하면 위의 정보에 동의하는 서명이 됩니다.",
+    "date_of_signature": "서명 날짜",
     "data_security_guide": "수집한 데이터는 기밀이며 사용자 이름으로 저장되지 않습니다. 모든 데이터, 오디오 및 녹음은 안전하게 저장됩니다."
   },
   "home": {
