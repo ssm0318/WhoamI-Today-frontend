@@ -18,6 +18,7 @@ export const Colors = {
   GRAY_7: '#ECEBEC',
   GRAY_8: '#515151',
   GRAY_9: '#6A6A6A',
+  GRAY_10: '#EBEBEB',
 
   CALENDAR_TODAY: '#FF8754',
 
