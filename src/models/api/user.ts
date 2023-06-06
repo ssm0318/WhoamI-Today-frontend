@@ -8,6 +8,17 @@ export interface SignInResponse {
   refresh: string;
 }
 
+export interface SignInError {
+  code: SignInErrorCodeType;
+  detail: string;
+}
+
+const SignInErrorCode = {
+  NO_USERNAME: 'username_does_not_exist',
+  WRONG_PASSWORD: 'wrong_password',
+} as const;
+
+type SignInErrorCodeType = (typeof SignInErrorCode)[keyof typeof SignInErrorCode];
 export interface SignUpParams {
   email: string;
   username: string;
