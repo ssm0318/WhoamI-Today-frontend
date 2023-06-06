@@ -33,9 +33,10 @@ function Email() {
   return (
     <>
       <ValidatedInput
+        label={t('email')}
         name="email"
-        placeholder={t('email') || ''}
         type="email"
+        inputMode="email"
         value={emailInput}
         onChange={handleChange}
         error={emailError}

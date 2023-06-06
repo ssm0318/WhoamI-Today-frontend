@@ -7,6 +7,7 @@ import { Gender } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import CheckBox from 'src/design-system/Inputs/CheckBox';
 import CommonInput from 'src/design-system/Inputs/Input.styled';
+import SignUpInput from 'src/design-system/Inputs/SignUpInput';
 import { LayoutBase } from 'src/design-system/layouts';
 
 const NEED_PARENTAL_PERMISSION_AGE = 18;
@@ -71,10 +72,8 @@ function ResearchConsentForm() {
     <LayoutBase ml={24} mr={24}>
       {/* Age */}
       <LayoutBase mb={45}>
-        <Font.Body type="18_regular" mb={24}>
-          {t('age')}
-        </Font.Body>
-        <CommonInput
+        <SignUpInput
+          label={t('age')}
           inputMode="numeric"
           pattern="[0-9]*"
           name="age"

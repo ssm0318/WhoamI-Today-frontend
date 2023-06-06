@@ -11,6 +11,7 @@ export const CommonInput = styled.input`
   height: 24px;
   font-size: 18px;
   border-width: 0 0 1px;
+  border-color: ${({ theme }) => theme.GRAY_1};
 `;
 
 export default CommonInput;

@@ -33,8 +33,8 @@ function Password() {
   return (
     <>
       <ValidatedInput
+        label={t('password')}
         name="password"
-        placeholder={t('password') || ''}
         type="password"
         value={passwordInput}
         onChange={handleChange}
