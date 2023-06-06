@@ -1,9 +1,9 @@
 import { Font } from '@design-system';
-import SignUpInput, { SignUpInputProps } from 'src/design-system/Inputs/SignUpInput';
+import Input, { InputProps } from 'src/design-system/Inputs/Input';
 import StyledValidatedInput from './ValidatedInput.styled';
 
-type ValidatedInputProps = SignUpInputProps & {
-  error: string | null;
+type ValidatedInputProps = InputProps & {
+  error?: string | null;
   guide?: string | null;
 };
 
@@ -12,7 +12,7 @@ function ValidatedInput(props: ValidatedInputProps) {
 
   return (
     <StyledValidatedInput>
-      <SignUpInput label={label} {...inputProps} />
+      <Input label={label} {...inputProps} />
       {error && (
         <Font.Display type="14_regular" color="ERROR">
           {error}

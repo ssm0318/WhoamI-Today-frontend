@@ -39,7 +39,9 @@ const GlobalStyle = createGlobalStyle`
 
     * {
         font-family: 'Roboto', sans-serif !important;
-        box-sizing: border-box;
+        -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+        -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+        box-sizing: border-box;         /* Opera/IE 8+ */
     }
 
     body {
