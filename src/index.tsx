@@ -15,7 +15,7 @@ import Home from './routes/Home';
 import Intro from './routes/Intro';
 import MomentUpload from './routes/MomentUpload';
 import My from './routes/My';
-import MyDetail from './routes/my/MyDeatil';
+import MyDetail from './routes/my/MyDetail';
 import Notification from './routes/Notification';
 import QuestionDetail from './routes/QuestionDetail';
 import ShortAnswerResponse from './routes/response/ShortAnswerResponse';
