@@ -11,11 +11,13 @@ function TheDaysWrapper({ type, children }: TheDaysWrapperProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'the_days_detail' });
 
   return (
-    <Layout.FlexCol w="100%">
-      <Layout.FlexRow w="100%" justifyContent="center" alignItems="center">
+    <Layout.FlexCol w="100%" pt={28} pb={28}>
+      <Layout.FlexRow w="100%" justifyContent="center" alignItems="center" mb={14}>
         <Font.Display type="20_bold">{t(`${type}.title`)}</Font.Display>
       </Layout.FlexRow>
-      {children}
+      <Layout.FlexCol w="100%" gap={14}>
+        {children}
+      </Layout.FlexCol>
     </Layout.FlexCol>
   );
 }
