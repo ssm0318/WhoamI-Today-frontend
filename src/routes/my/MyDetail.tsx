@@ -5,8 +5,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import TheDaysDetail from '@components/the-days-detail/TheDaysDetail';
 import TitleHeader from '@components/title-header/TitleHeader';
+import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font } from '@design-system';
-import { getValidDate } from './MyDetail.helper';
+import { getValidDate, MOCK_MOMENT } from './MyDetail.helper';
 
 function MyDetail() {
   const { detailDate } = useParams();
@@ -19,6 +20,8 @@ function MyDetail() {
     navigate('/my', { replace: true });
   }, [currDate, navigate]);
 
+  // TODO: moment, questions 요청
+
   const [t] = useTranslation('translation', { keyPrefix: 'my_detail' });
   return (
     <MainContainer>
@@ -29,7 +32,7 @@ function MyDetail() {
           )
         }
       />
-      <TheDaysDetail />
+      <TheDaysDetail moment={MOCK_MOMENT} mt={TITLE_HEADER_HEIGHT} useDeleteButton />
     </MainContainer>
   );
 }
