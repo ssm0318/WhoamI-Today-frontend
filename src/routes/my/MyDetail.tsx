@@ -7,7 +7,8 @@ import TheDaysDetail from '@components/the-days-detail/TheDaysDetail';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font } from '@design-system';
-import { getValidDate, MOCK_MOMENT } from './MyDetail.helper';
+import { MOCK_MOMENT } from '@mock/myDetail';
+import { getValidDate } from './MyDetail.helper';
 
 function MyDetail() {
   const { detailDate } = useParams();
