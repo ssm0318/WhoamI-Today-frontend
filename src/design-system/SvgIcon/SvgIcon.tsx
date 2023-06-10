@@ -17,7 +17,7 @@ import { IconNames } from './SvgIcon.types';
  */
 
 const SvgIcon = React.memo((props: SvgIconProps) => {
-  const { name, color = 'BASIC_BLACK', width, height, size } = props;
+  const { name, color, width, height, size } = props;
   const iconName = allIconNames[name];
 
   const w = size || width;
@@ -34,7 +34,7 @@ const SvgIcon = React.memo((props: SvgIconProps) => {
         svg.setAttribute('width', w.toString());
         svg.setAttribute('height', h.toString());
 
-        if (color === null) return;
+        if (!color) return;
         svg.setAttribute('color', Colors[color]);
         svg.setAttribute('stroke', Colors[color]);
       }}
