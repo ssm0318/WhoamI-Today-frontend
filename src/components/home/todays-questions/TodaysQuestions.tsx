@@ -52,7 +52,7 @@ function TodaysQuestions() {
       {/* 타이틀 */}
       <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" h={38}>
         <Layout.LayoutBase onClick={moveToPrevDate} w={36} h={36}>
-          {isPrevButtonExists && <SvgIcon name="arrow_left" size={36} />}
+          {isPrevButtonExists && <SvgIcon name="arrow_left" size={36} color="BASIC_BLACK" />}
         </Layout.LayoutBase>
         <Font.Display type="18_bold">
           {isSameDay(currentDate, today) || isBefore(today, TODAY_QUESTION_FIRST_DATE)
@@ -60,7 +60,7 @@ function TodaysQuestions() {
             : format(currentDate, 'yyyy/MM/dd')}
         </Font.Display>
         <Layout.LayoutBase onClick={moveToNextDate} w={36} h={36}>
-          {isNextButtonExists && <SvgIcon name="arrow_right" size={36} />}
+          {isNextButtonExists && <SvgIcon name="arrow_right" size={36} color="BASIC_BLACK" />}
         </Layout.LayoutBase>
       </Layout.FlexRow>
       {/* Short Answer */}

@@ -28,7 +28,7 @@ function TitleHeader({ title, onGoBack, RightComponent }: TitleHeaderProps) {
       >
         <Layout.LayoutBase w={36} h={36}>
           <button type="button" onClick={handleGoBack}>
-            <SvgIcon name="arrow_left" size={36} />
+            <SvgIcon name="arrow_left" size={36} color="BASIC_BLACK" />
           </button>
         </Layout.LayoutBase>
         {title && <Font.Display type="24_bold">{title}</Font.Display>}
