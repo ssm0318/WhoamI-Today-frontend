@@ -110,7 +110,9 @@
     "notification_settings": "Notification Settings",
     "push_notifications": "Push notifications",
     "terms_of_uses": "Terms of uses & Policy",
-    "logout": "Log out",
+    "logout": "Logout",
+    "are_you_sure_you_want_to_log_out": "Are you sure you want to log out?",
+    "cancel": "Cancel",
     "delete_account": "Delete Account"
   }
 }

@@ -29,8 +29,10 @@ export const checkIfSignIn = async () => {
   }
 };
 
-export const signOut = () => {
-  axios.get('/user/logout/');
+export const signOut = async (onSuccess: () => void) => {
+  axios.get('/user/logout/').then(() => {
+    onSuccess();
+  });
 };
 
 export const validateEmail = ({

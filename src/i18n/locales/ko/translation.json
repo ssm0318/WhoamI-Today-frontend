@@ -108,6 +108,8 @@
     "push_notifications": "푸시 알림 설정",
     "terms_of_uses": "개인정보 수집 및 이용 약관",
     "logout": "로그아웃",
+    "are_you_sure_you_want_to_log_out": "정말로 로그아웃 하시겠습니까?",
+    "cancel": "취소",
     "delete_account": "계정 삭제 및 탈퇴하기"
   }
 }

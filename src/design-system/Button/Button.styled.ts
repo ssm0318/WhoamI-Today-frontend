@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components';
+import { DEFAULT_MARGIN } from '@constants/layout';
 import { ColorKeys } from 'src/design-system/colors';
+import { FlexRow } from '../layouts';
 
 type ButtonProps = {
   outline?: ColorKeys;
@@ -65,4 +67,17 @@ export const Container = styled.div<{ sizing?: 'fit-content' | 'stretch'; disabl
       : css`
           pointer-events: none;
         `}
+`;
+
+export const RowButtonContainer = styled(FlexRow)<{ pl?: number }>`
+  width: 100%;
+
+  div {
+    flex-grow: 1;
+    width: 100%;
+  }
+
+  div + div {
+    padding-left: ${({ pl }) => pl ?? DEFAULT_MARGIN}px;
+  }
 `;
