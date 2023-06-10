@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { HeaderWrapper } from './TitleHeader.styled';
 
+type TitleHeaderType = 'MAIN' | 'SUB';
 interface TitleHeaderProps {
-  title?: string;
+  title?: string | null;
+  type?: TitleHeaderType;
   onGoBack?: () => void;
   RightComponent?: React.ReactNode;
 }
 
-function TitleHeader({ title, onGoBack, RightComponent }: TitleHeaderProps) {
+function TitleHeader({ title, type = 'MAIN', onGoBack, RightComponent }: TitleHeaderProps) {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
@@ -31,7 +33,9 @@ function TitleHeader({ title, onGoBack, RightComponent }: TitleHeaderProps) {
             <SvgIcon name="arrow_left" size={36} color="BASIC_BLACK" />
           </button>
         </Layout.LayoutBase>
-        {title && <Font.Display type="24_bold">{title}</Font.Display>}
+        {title && (
+          <Font.Display type={type === 'MAIN' ? '24_bold' : '20_bold'}>{title}</Font.Display>
+        )}
         <Layout.LayoutBase w={title ? 36 : undefined}>
           {RightComponent && RightComponent}
         </Layout.LayoutBase>
