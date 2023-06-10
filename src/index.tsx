@@ -15,6 +15,7 @@ import Home from './routes/Home';
 import Intro from './routes/Intro';
 import MomentUpload from './routes/MomentUpload';
 import My from './routes/My';
+import MyDetail from './routes/my/MyDetail';
 import Notification from './routes/Notification';
 import QuestionDetail from './routes/QuestionDetail';
 import ShortAnswerResponse from './routes/response/ShortAnswerResponse';
@@ -25,7 +26,6 @@ import ProfileImage from './routes/sign-up/ProfileImage';
 import UserName from './routes/sign-up/UserName';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
-import Counter from './routes/ZustandExample';
 
 const router = createBrowserRouter([
   { path: '', element: <Intro /> },
@@ -41,7 +41,10 @@ const router = createBrowserRouter([
       },
       {
         path: 'my',
-        element: <My />,
+        children: [
+          { path: 'detail/:detailDate', element: <MyDetail /> },
+          { path: '', element: <My /> },
+        ],
       },
       {
         path: 'friends',
@@ -50,10 +53,6 @@ const router = createBrowserRouter([
       {
         path: 'notifications',
         element: <Notification />,
-      },
-      {
-        path: 'zustand-example',
-        element: <Counter />,
       },
     ],
   },

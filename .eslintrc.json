@@ -47,6 +47,7 @@
     "@typescript-eslint/no-empty-interface": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": false }],
     "react/jsx-props-no-spreading": "off",
+    "consistent-return": "off",
     "import/extensions": [
       // airbnb config does not allow importing typescript files
       "error",

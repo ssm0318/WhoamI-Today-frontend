@@ -9,6 +9,11 @@ export const DisplaySettings: { [key in DisplayType]: FontSettings } = {
     fontWeight: FontWeight.BOLD,
     lineHeight: 1.4,
   },
+  '20_bold': {
+    fontSize: 20,
+    fontWeight: FontWeight.BOLD,
+    lineHeight: 1.4,
+  },
   '18_bold': {
     fontSize: 18,
     fontWeight: FontWeight.BOLD,

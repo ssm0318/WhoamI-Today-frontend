@@ -1,7 +1,8 @@
-import { addWeeks, startOfWeek, subWeeks } from 'date-fns';
+import { startOfWeek } from 'date-fns';
 import { useCallback, useEffect, useState } from 'react';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { CALENDAR_VIEW, DayMoment } from '@models/calendar';
+import { useBoundStore } from '@stores/useBoundStore';
 import { getMomentRequestParams, getWeeklyMoments } from '@utils/apis/moment';
 import { mapMomentToCalendar } from '../_helpers/mapMomentToCalendar';
 import CalendarCell from '../calendar-cell/CalendarCell';
@@ -9,7 +10,11 @@ import CalendarViewWrapper from '../calendar-view-wrapper/CalendarViewWrapper';
 import { getCalendarWeek } from './WeeklyCalendar.helper';
 
 function WeeklyCalendar() {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const { currentDate, moveToPrevWeek, moveToNextWeek } = useBoundStore((state) => ({
+    currentDate: state.myPageCurrDate,
+    moveToPrevWeek: state.subWeekFromCurrDate,
+    moveToNextWeek: state.addWeekFromCurrDate,
+  }));
   const [calendarWeek, setCalendarWeek] = useState<DayMoment[]>([]);
 
   useEffect(() => {
@@ -22,14 +27,6 @@ function WeeklyCalendar() {
     setCalendarWeek((prev) => mapMomentToCalendar(prev, data));
   }, [currentDate]);
   useAsyncEffect(updateWeeklyMoments, [updateWeeklyMoments]);
-
-  const moveToPrevWeek = () => {
-    setCurrentDate((prev) => subWeeks(prev, 1));
-  };
-
-  const moveToNextWeek = () => {
-    setCurrentDate((prev) => addWeeks(prev, 1));
-  };
 
   return (
     <CalendarViewWrapper
