@@ -20,6 +20,9 @@ import Notification from './routes/Notification';
 import QuestionDetail from './routes/QuestionDetail';
 import ShortAnswerResponse from './routes/response/ShortAnswerResponse';
 import Root from './routes/Root';
+import ConfirmPassword from './routes/settings/ConfirmPassword';
+import EditProfile from './routes/settings/EditProfile';
+import ResetPassword from './routes/settings/ResetPassword';
 import Settings from './routes/settings/Settings';
 import Email from './routes/sign-up/Email';
 import Password from './routes/sign-up/Password';
@@ -81,7 +84,16 @@ const router = createBrowserRouter([
     element: <MomentUpload />,
   },
   { path: 'my/detail/:detailDate', element: <MyDetail /> },
-  { path: 'settings', element: <Settings />, loader: checkIfSignIn },
+  {
+    path: 'settings',
+    loader: checkIfSignIn,
+    children: [
+      { path: '', element: <Settings /> },
+      { path: 'edit-profile', element: <EditProfile /> },
+      { path: 'confirm-password', element: <ConfirmPassword /> },
+      { path: 'reset-password', element: <ResetPassword /> },
+    ],
+  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

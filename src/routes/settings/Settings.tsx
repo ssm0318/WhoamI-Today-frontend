@@ -22,7 +22,7 @@ function Settings() {
 
   const navigate = useNavigate();
   const handleClickEditProfile = () => navigate('/settings/edit-profile');
-  const handleClickChangePassword = () => navigate('/settings/change-password');
+  const handleClickChangePassword = () => navigate('/settings/confirm-password');
 
   const handlePushNotiOn = () => console.log('todo: push on');
   const handlePushNotiOff = () => console.log('todo: push off');
@@ -36,7 +36,7 @@ function Settings() {
 
   return (
     <MainContainer>
-      <TitleHeader title={t('title') || ''} />
+      <TitleHeader title={t('title')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" gap={10}>
         {/* profile */}
         <Layout.FlexRow justifyContent="center" mb={8} ph={DEFAULT_MARGIN}>
