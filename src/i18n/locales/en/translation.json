@@ -103,6 +103,8 @@
     "update": "Update",
     "change_password": "Change Password",
     "confirm_password": "Confirm Password",
+    "enter_your_current_password": "Enter your current password.",
+    "enter_your_new_password": "Enter your new password.",
     "reset_password": "Reset Password",
     "confirm": "Confirm",
     "notification_settings": "Notification Settings",

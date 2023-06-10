@@ -99,6 +99,8 @@
     "email": "이메일",
     "update": "변경하기",
     "change_password": "비밀번호 변경",
+    "enter_your_current_password": "현재 비밀번호를 입력하세요.",
+    "enter_your_new_password": "새로운 비밀번호를 입력하세요.",
     "confirm_password": "비밀번호 확인",
     "reset_password": "비밀번호 재설정",
     "confirm": "확인",
