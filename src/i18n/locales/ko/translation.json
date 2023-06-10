@@ -110,6 +110,11 @@
     "logout": "로그아웃",
     "are_you_sure_you_want_to_log_out": "정말로 로그아웃 하시겠습니까?",
     "cancel": "취소",
-    "delete_account": "계정 삭제 및 탈퇴하기"
+    "delete_account": "계정 삭제 및 탈퇴하기",
+    "please_check_your_password": "보안을 위해 비밀번호를 입력해주세요.",
+    "password_invalid": "입력한 비밀번호가 맞지 않습니다.",
+    "password": "비밀번호",
+    "continue": "계속하기",
+    "are_you_sure": "정말로 계속하시겠습니까?\n한 번 계정을 삭제하면 다시 복구할 수 없습니다."
   }
 }

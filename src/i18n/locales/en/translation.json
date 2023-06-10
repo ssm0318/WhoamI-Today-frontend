@@ -113,6 +113,11 @@
     "logout": "Logout",
     "are_you_sure_you_want_to_log_out": "Are you sure you want to log out?",
     "cancel": "Cancel",
-    "delete_account": "Delete Account"
+    "delete_account": "Delete Account",
+    "please_check_your_password": "Please enter your password for security to proceed.",
+    "password_invalid": "The password you entered is invalid.",
+    "password": "Password",
+    "continue": "Continue",
+    "are_you_sure": "Are you sure?\nThis cannot be done."
   }
 }

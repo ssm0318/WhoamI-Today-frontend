@@ -26,6 +26,9 @@ const my_inactive = 'my_inactive';
 const delete_button = 'delete_button';
 const heart = 'heart';
 const comment = 'comment';
+const error = 'error';
+const show_password_eye = 'show-password-eye';
+const hide_password_eye = 'hide-password-eye';
 
 export {
   top_navigation_hamburger,
@@ -55,4 +58,7 @@ export {
   delete_button,
   heart,
   comment,
+  error,
+  show_password_eye,
+  hide_password_eye,
 };
