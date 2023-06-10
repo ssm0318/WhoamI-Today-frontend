@@ -23,6 +23,8 @@ import Root from './routes/Root';
 import Email from './routes/sign-up/Email';
 import Password from './routes/sign-up/Password';
 import ProfileImage from './routes/sign-up/ProfileImage';
+import ResearchConsentForm from './routes/sign-up/ResearchConsentForm';
+import ResearchIntro from './routes/sign-up/ResearchIntro';
 import UserName from './routes/sign-up/UserName';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
@@ -63,6 +65,8 @@ const router = createBrowserRouter([
     children: [
       { path: 'email', element: <Email /> },
       { path: 'password', element: <Password /> },
+      { path: 'research-intro', element: <ResearchIntro /> },
+      { path: 'research-consent-form', element: <ResearchConsentForm /> },
       { path: 'username', element: <UserName /> },
       { path: 'profile-image', element: <ProfileImage /> },
     ],

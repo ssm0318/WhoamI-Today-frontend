@@ -16,6 +16,8 @@ export const Colors = {
   GRAY_5: '#B5B5B5',
   GRAY_6: '#303030',
   GRAY_7: '#ECEBEC',
+  GRAY_8: '#515151',
+  GRAY_9: '#6A6A6A',
 
   CALENDAR_TODAY: '#FF8754',
 
@@ -27,6 +29,8 @@ export const Colors = {
   DIM: '#000000b3',
 
   ERROR: '#FF2D2D',
+
+  ANCHOR: '#0000FF',
 };
 
 export type ColorType = typeof Colors;

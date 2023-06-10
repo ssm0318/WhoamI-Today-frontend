@@ -24,7 +24,7 @@ function Password() {
       password: passwordInput,
       onSuccess: () => {
         setSignUpInfo({ password: passwordInput });
-        navigate('/signup/username');
+        navigate('/signup/research-intro');
       },
       onError: (e) => setPasswordError(e),
     });
@@ -33,8 +33,8 @@ function Password() {
   return (
     <>
       <ValidatedInput
+        label={t('password')}
         name="password"
-        placeholder={t('password') || ''}
         type="password"
         value={passwordInput}
         onChange={handleChange}

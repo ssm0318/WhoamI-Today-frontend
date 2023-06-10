@@ -113,8 +113,17 @@ export const signUp = ({
 }) => {
   const formData = new FormData();
 
-  const { email, password, username, profileImage } = signUpInfo;
-  if (!email || !password || !username) return;
+  const {
+    email,
+    password,
+    username,
+    profileImage,
+    research_agreement,
+    age,
+    gender,
+    signature,
+    date_of_signature,
+  } = signUpInfo;
 
   if (profileImage) {
     formData.append('profile_image', profileImage);
@@ -122,6 +131,14 @@ export const signUp = ({
   formData.append('email', email);
   formData.append('username', username);
   formData.append('password', password);
+
+  if (research_agreement) {
+    formData.append('research_agreement', `${research_agreement}`);
+    if (age) formData.append('age', `${age}`);
+    if (gender) formData.append('gender', `${gender}`);
+    if (signature) formData.append('signature', `${signature}`);
+    if (date_of_signature) formData.append('date_of_signature', `${date_of_signature}`);
+  }
 
   axiosFormDataInstance
     .post('/user/signup/', formData)

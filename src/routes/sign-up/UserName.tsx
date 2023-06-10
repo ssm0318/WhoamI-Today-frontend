@@ -33,8 +33,8 @@ function UserName() {
   return (
     <>
       <ValidatedInput
+        label={t('username')}
         name="username"
-        placeholder={t('username') || ''}
         type="name"
         value={usernameInput}
         onChange={handleChange}

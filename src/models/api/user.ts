@@ -9,10 +9,31 @@ export interface SignInResponse {
 }
 
 export interface SignUpParams {
-  email?: string;
-  username?: string;
-  password?: string;
+  email: string;
+  username: string;
+  password: string;
   profileImage?: File;
+  research_agreement: boolean;
+  age?: number;
+  gender?: Gender;
+  signature?: string;
+  date_of_signature?: string;
+}
+
+export const hasMandatorySignUpParams = (
+  signUpParams: Partial<SignUpParams>,
+): signUpParams is SignUpParams =>
+  !!signUpParams.email &&
+  !!signUpParams.username &&
+  !!signUpParams.password &&
+  signUpParams.research_agreement !== undefined;
+
+export enum Gender {
+  FEMALE,
+  MALE,
+  TRANSGENDER,
+  NON_BINARY,
+  NO_RESPOND,
 }
 export interface EmailError {
   detail: EmailValidateErrorType;

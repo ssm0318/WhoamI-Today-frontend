@@ -2,6 +2,7 @@ import { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Layout } from '@design-system';
+import { hasMandatorySignUpParams } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { signUp } from '@utils/apis/user';
 
@@ -35,10 +36,11 @@ function ProfileImage() {
 
   const navigate = useNavigate();
   const onClickNextOrSkip = () => {
+    if (!hasMandatorySignUpParams(signUpInfo)) return;
+
     signUp({
       signUpInfo,
       onSuccess: () => {
-        // TODO: access_token 쿠키 세팅 확인
         resetSignUpInfo();
         navigate('/home');
       },

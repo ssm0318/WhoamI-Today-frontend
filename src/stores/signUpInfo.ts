@@ -23,7 +23,7 @@ export type SignUpInfoSlice = SignUpInfoState & SignupInfoAction;
 
 export const createSignUpInfoSlice: SliceStateCreator<SignUpInfoSlice> = (set) => ({
   ...initialState,
-  setSignUpInfo: (signUpInfo: SignUpParams) =>
+  setSignUpInfo: (signUpInfo) =>
     set(
       (state) => ({ signUpInfo: { ...state.signUpInfo, ...signUpInfo } }),
       false,

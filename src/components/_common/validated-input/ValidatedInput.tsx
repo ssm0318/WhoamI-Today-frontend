@@ -1,21 +1,28 @@
-import { InputHTMLAttributes } from 'react';
-import CommonInput, { InputProps } from 'src/design-system/Inputs/Input.styled';
+import { Font } from '@design-system';
+import Input, { InputProps } from 'src/design-system/Inputs/Input';
 import StyledValidatedInput from './ValidatedInput.styled';
 
-type ValidatedInputProps = InputHTMLAttributes<HTMLInputElement> &
-  InputProps & {
-    error: string | null;
-    guide?: string | null;
-  };
+type ValidatedInputProps = InputProps & {
+  error?: string | null;
+  guide?: string | null;
+};
 
 function ValidatedInput(props: ValidatedInputProps) {
-  const { error, guide, ...inputProps } = props;
+  const { label, error, guide, ...inputProps } = props;
 
   return (
     <StyledValidatedInput>
-      <CommonInput {...inputProps} />
-      {error && <span className="error">{error}</span>}
-      {guide && !error && <span>{guide}</span>}
+      <Input label={label} {...inputProps} />
+      {error && (
+        <Font.Display type="14_regular" color="ERROR">
+          {error}
+        </Font.Display>
+      )}
+      {guide && !error && (
+        <Font.Display type="14_regular" color="GRAY_4">
+          {guide}
+        </Font.Display>
+      )}
     </StyledValidatedInput>
   );
 }
