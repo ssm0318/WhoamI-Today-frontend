@@ -43,7 +43,10 @@ const router = createBrowserRouter([
       },
       {
         path: 'my',
-        element: <My />,
+        children: [
+          { path: 'detail/:detailDate', element: <MyDetail /> },
+          { path: '', element: <My /> },
+        ],
       },
       {
         path: 'friends',
@@ -79,7 +82,6 @@ const router = createBrowserRouter([
     path: 'moment-upload',
     element: <MomentUpload />,
   },
-  { path: 'my/detail/:detailDate', element: <MyDetail /> },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
