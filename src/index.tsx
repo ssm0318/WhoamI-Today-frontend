@@ -20,6 +20,7 @@ import Notification from './routes/Notification';
 import QuestionDetail from './routes/QuestionDetail';
 import ShortAnswerResponse from './routes/response/ShortAnswerResponse';
 import Root from './routes/Root';
+import Settings from './routes/settings/Settings';
 import Email from './routes/sign-up/Email';
 import Password from './routes/sign-up/Password';
 import ProfileImage from './routes/sign-up/ProfileImage';
@@ -80,6 +81,7 @@ const router = createBrowserRouter([
     element: <MomentUpload />,
   },
   { path: 'my/detail/:detailDate', element: <MyDetail /> },
+  { path: 'settings', element: <Settings />, loader: checkIfSignIn },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
