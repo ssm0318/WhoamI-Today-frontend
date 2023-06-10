@@ -1,3 +1,4 @@
+import Divider from '@components/_common/divider/Divider';
 import { Layout } from '@design-system';
 import { GetMomentResponse } from '@models/api/moment';
 import { ShortAnswerQuestion } from '@models/post';
@@ -7,16 +8,16 @@ import TheDaysQuestions from './the-days-questions/TheDaysQuestions';
 interface TheDaysDetailProps {
   mt?: number;
   moment?: GetMomentResponse;
-  questions?: ShortAnswerQuestion;
+  questions?: ShortAnswerQuestion[];
   useDeleteButton?: boolean;
 }
 
 function TheDaysDetail({ mt, moment, questions, useDeleteButton }: TheDaysDetailProps) {
   return (
-    <Layout.FlexCol w="100%" mt={mt} pl={24} pr={24}>
+    <Layout.FlexCol w="100%" mt={mt}>
       {moment && <TheDaysMoments moment={moment} useDeleteButton={useDeleteButton} />}
-      {/* TODO: The Day's Questions 마크업 */}
-      {questions && <TheDaysQuestions />}
+      {moment && questions && <Divider width={2} />}
+      {questions && <TheDaysQuestions questions={questions} />}
     </Layout.FlexCol>
   );
 }
