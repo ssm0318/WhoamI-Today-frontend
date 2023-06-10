@@ -23,6 +23,7 @@ const friends_active = 'friends_active';
 const friends_inactive = 'friends_inactive';
 const my_active = 'my_active';
 const my_inactive = 'my_inactive';
+const delete_button = 'delete_button';
 
 export {
   top_navigation_hamburger,
@@ -49,4 +50,5 @@ export {
   friends_inactive,
   my_active,
   my_inactive,
+  delete_button,
 };
