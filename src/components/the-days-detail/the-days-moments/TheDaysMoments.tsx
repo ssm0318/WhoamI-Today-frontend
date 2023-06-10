@@ -1,5 +1,5 @@
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
-import { Layout } from '@design-system';
+import { Font, Layout } from '@design-system';
 import { GetMomentResponse } from '@models/api/moment';
 import ReactionButtons from '../reaction-buttons/ReactionButtons';
 import TheDaysWrapper from '../the-days-wrapper/TheDaysWrapper';
@@ -45,7 +45,7 @@ function TheDaysMoments({ moment, useDeleteButton }: TheDaysMomentsProps) {
       )}
       {description && (
         <S.ContentWrapper>
-          <span>{description}</span>
+          <Font.Body type="20_regular">{description}</Font.Body>
           {useDeleteButton && <DeleteButton onClick={onClickDescriptionDelete} />}
         </S.ContentWrapper>
       )}
