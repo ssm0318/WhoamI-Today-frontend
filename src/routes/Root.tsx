@@ -1,4 +1,4 @@
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import Header from '@components/header/Header';
 import Tab from '@components/tab/Tab';
 import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
@@ -6,16 +6,13 @@ import { Layout } from '@design-system';
 import { MainWrapper, RootContainer } from '@styles/wrappers';
 
 function Root() {
-  const { detailDate } = useParams();
-  const showHeader = !detailDate;
-
   return (
     <Layout.FlexRow justifyContent="center" bgColor="BASIC_BLACK" h="100vh" w="100%">
       <RootContainer w="100%" h="100vh" bgColor="BASIC_WHITE">
-        {showHeader && <Header />}
+        <Header />
         <MainWrapper
           alignItems="center"
-          pt={showHeader ? TOP_NAVIGATION_HEIGHT : undefined}
+          pt={TOP_NAVIGATION_HEIGHT}
           pb={BOTTOM_TABBAR_HEIGHT}
           bgColor="BACKGROUND_COLOR"
         >
