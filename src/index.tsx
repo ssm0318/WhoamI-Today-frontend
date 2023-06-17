@@ -17,8 +17,8 @@ import MomentUpload from './routes/MomentUpload';
 import My from './routes/My';
 import MyDetail from './routes/my/MyDetail';
 import Notification from './routes/Notification';
-import QuestionDetail from './routes/QuestionDetail';
 import ShortAnswerResponse from './routes/response/ShortAnswerResponse';
+import ResponseHistory from './routes/ResponseHistory';
 import Root from './routes/Root';
 import ConfirmPassword from './routes/settings/ConfirmPassword';
 import DeleteAccount from './routes/settings/DeleteAccount';
@@ -75,7 +75,7 @@ const router = createBrowserRouter([
   },
   { path: 'forgot-password', element: <ForgotPassword /> },
   { path: 'questions', element: <AllQuestions /> },
-  { path: 'question/:questionId', element: <QuestionDetail /> },
+  { path: 'response-history/:questionId', element: <ResponseHistory /> },
   {
     path: 'response',
     children: [{ path: 'short-answer', element: <ShortAnswerResponse /> }],
