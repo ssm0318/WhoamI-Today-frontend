@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ConfirmBottomModal from '@components/_common/bottom-modal/ConfirmBottomModal';
 import MainContainer from '@components/_common/main-container/MainContainer';
-import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
+import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Font, Layout } from '@design-system';
@@ -38,10 +38,9 @@ function DeleteAccount() {
         <Font.Display type="14_regular" mb={22}>
           {t('please_check_your_password')}
         </Font.Display>
-        <ValidatedInput
+        <ValidatedPasswordInput
           label={t('password')}
           name="password"
-          type="password"
           value={passwordInput}
           onChange={handleChange}
           error={passwordError}

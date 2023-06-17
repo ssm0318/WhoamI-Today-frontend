@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MainContainer from '@components/_common/main-container/MainContainer';
-import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
+import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Layout } from '@design-system';
@@ -22,11 +22,10 @@ function ResetPassword() {
     <MainContainer>
       <TitleHeader title={t('reset_password')} type="SUB" />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" gap={10} pl={24} pr={24}>
-        <ValidatedInput
+        <ValidatedPasswordInput
           label={t('enter_your_new_password')}
           labelType="14_regular"
           name="password"
-          type="password"
           value={passwordInput}
           onChange={handleChange}
         />
