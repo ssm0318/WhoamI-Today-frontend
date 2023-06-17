@@ -94,11 +94,27 @@
     "title": "설정",
     "account_settings": "계정 설정",
     "edit_profile": "프로필 수정",
+    "change_picture": "사진 변경하기",
+    "username": "닉네임",
+    "email": "이메일",
+    "update": "변경하기",
     "change_password": "비밀번호 변경",
+    "enter_your_current_password": "현재 비밀번호를 입력하세요.",
+    "enter_your_new_password": "새로운 비밀번호를 입력하세요.",
+    "confirm_password": "비밀번호 확인",
+    "reset_password": "비밀번호 재설정",
+    "confirm": "확인",
     "notification_settings": "알림 설정",
     "push_notifications": "푸시 알림 설정",
     "terms_of_uses": "개인정보 수집 및 이용 약관",
     "logout": "로그아웃",
-    "delete_account": "계정 삭제 및 탈퇴하기"
+    "are_you_sure_you_want_to_log_out": "정말로 로그아웃 하시겠습니까?",
+    "cancel": "취소",
+    "delete_account": "계정 삭제 및 탈퇴하기",
+    "please_check_your_password": "보안을 위해 비밀번호를 입력해주세요.",
+    "password_invalid": "입력한 비밀번호가 맞지 않습니다.",
+    "password": "비밀번호",
+    "continue": "계속하기",
+    "are_you_sure": "정말로 계속하시겠습니까?\n한 번 계정을 삭제하면 다시 복구할 수 없습니다."
   }
 }

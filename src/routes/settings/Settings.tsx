@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import ConfirmBottomModal from '@components/_common/bottom-modal/ConfirmBottomModal';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import {
@@ -22,21 +24,31 @@ function Settings() {
 
   const navigate = useNavigate();
   const handleClickEditProfile = () => navigate('/settings/edit-profile');
-  const handleClickChangePassword = () => navigate('/settings/change-password');
+  const handleClickChangePassword = () => navigate('/settings/confirm-password');
 
   const handlePushNotiOn = () => console.log('todo: push on');
   const handlePushNotiOff = () => console.log('todo: push off');
 
-  const handleClickLogout = async () => {
-    await signOut();
-    navigate('/');
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const handleOnClose = () => {
+    setLogoutModalVisible(false);
   };
 
-  const handleClickDeleteAccount = () => console.log('TODO: delete account');
+  const handleClickLogout = () => {
+    setLogoutModalVisible(true);
+  };
+
+  const handleClickConfirmLogout = async () => {
+    await signOut(() => {
+      handleOnClose();
+      navigate('/');
+    });
+  };
+  const handleClickDeleteAccount = () => navigate('/settings/delete-account');
 
   return (
     <MainContainer>
-      <TitleHeader title={t('title') || ''} />
+      <TitleHeader title={t('title')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" gap={10}>
         {/* profile */}
         <Layout.FlexRow justifyContent="center" mb={8} ph={DEFAULT_MARGIN}>
@@ -80,6 +92,19 @@ function Settings() {
         </StyledSettingsAnchor>
         <Divider width={1} />
         <SettingsButton text={t('logout')} onClick={handleClickLogout} />
+        {logoutModalVisible && (
+          <ConfirmBottomModal
+            isVisible={logoutModalVisible}
+            setIsVisible={setLogoutModalVisible}
+            title={t('logout')}
+            confirmText={t('logout')}
+            onConfirm={handleClickConfirmLogout}
+          >
+            <Font.Body type="18_regular" mt={38} mb={70}>
+              {t('are_you_sure_you_want_to_log_out')}
+            </Font.Body>
+          </ConfirmBottomModal>
+        )}
         <Divider width={1} />
         <SettingsButton text={t('delete_account')} onClick={handleClickDeleteAccount} />
       </Layout.FlexCol>

@@ -32,7 +32,7 @@ function AllQuestions() {
 
   return (
     <MainContainer>
-      <TitleHeader title={t('all_questions') || undefined} />
+      <TitleHeader title={t('all_questions')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} pv={14} w="100%" ph={DEFAULT_MARGIN} gap={20}>
         {questions.map((question) => (
           <QuestionItem question={question} key={question.id} />

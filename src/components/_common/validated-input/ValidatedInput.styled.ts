@@ -6,7 +6,16 @@ const StyledValidatedInput = styled.div`
 
   span {
     display: block;
-    margin-top: 19px;
+  }
+
+  input + button {
+    padding-right: 10px;
+  }
+
+  button {
+    position: absolute;
+    right: 32px;
+    margin-top: 12px;
   }
 `;
 

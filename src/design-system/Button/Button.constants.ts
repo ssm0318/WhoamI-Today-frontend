@@ -13,7 +13,6 @@ export const buttonColorSettings: { [key in ButtonType]: ButtonColorSetting } = 
     disabled: {
       background: 'BASIC_DISABLED_SOFT',
       text: 'BASIC_DISABLED_DEEP',
-      outline: 'BASIC_BLACK',
     },
     completed: { background: 'BASIC_BLACK', text: 'BASIC_WHITE' },
   },

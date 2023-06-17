@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
+import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
 import { Button, Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 import { validatePassword } from '@utils/apis/user';
@@ -32,10 +32,9 @@ function Password() {
 
   return (
     <>
-      <ValidatedInput
+      <ValidatedPasswordInput
         label={t('password')}
         name="password"
-        type="password"
         value={passwordInput}
         onChange={handleChange}
         error={passwordError}
