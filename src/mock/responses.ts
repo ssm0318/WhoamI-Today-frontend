@@ -14,7 +14,7 @@ export const responseList: Response[] = [
     },
     like_count: 10,
     current_user_liked: false,
-    created_at: '2023-04-10',
+    created_at: '2023-06-16',
     type: POST_TYPE.RESPONSE,
     comments: [
       {

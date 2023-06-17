@@ -17,7 +17,7 @@ function ResponseItem({ response }: ResponseItemProps) {
         </Font.Body>
         <Layout.FlexRow w="100%" justifyContent="flex-end">
           <Font.Body type="12_regular" color="GRAY_8">
-            {convertTimeDiffByString(new Date(), created_at)}
+            {convertTimeDiffByString(new Date(), new Date(created_at))}
           </Font.Body>
         </Layout.FlexRow>
       </Layout.FlexCol>

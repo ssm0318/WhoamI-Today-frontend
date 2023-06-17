@@ -119,11 +119,7 @@
   },
   "time": {
     "just_a_moment_ago": "방금 전",
-    "minute_ago_one": "{{minute}}분 전",
-    "minute_ago_other": "{{minute}}분 전",
-    "hour_ago_one": "{{hour}}시간 전",
-    "hour_ago_other": "{{hour}}시간 전",
-    "day_ago_one": "어제",
-    "day_ago_other": "{{day}}일 전"
+    "minute_ago": "{{minute}}분 전",
+    "hour_ago": "{{hour}}시간 전"
   }
 }

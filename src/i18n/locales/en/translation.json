@@ -125,8 +125,6 @@
     "minute_ago_one": "{{minute}} minute ago",
     "minute_ago_other": "{{minute}} minutes ago",
     "hour_ago_one": "{{hour}} hour ago",
-    "hour_ago_other": "{{hour}} hours ago",    
-    "day_ago_one": "yesterday",
-    "day_ago_other": "{{day}} days ago"
+    "hour_ago_other": "{{hour}} hours ago"
   }
 }
