@@ -126,5 +126,8 @@
     "minute_ago_other": "{{minute}} minutes ago",
     "hour_ago_one": "{{hour}} hour ago",
     "hour_ago_other": "{{hour}} hours ago"
+  },
+  "notifications" : {
+    "title": "Notifications"
   }
 }
