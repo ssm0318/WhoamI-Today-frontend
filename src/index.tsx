@@ -40,7 +40,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     errorElement: <ErrorPage />,
-    // loader: checkIfSignIn,
+    loader: checkIfSignIn,
     children: [
       {
         path: 'home',
