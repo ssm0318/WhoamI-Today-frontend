@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
+import MomentUploadEmojiInput from '@components/moment-upload/moment-upload-emoji-input/MomentUploadEmojiInput';
 import { Button, Font, Layout } from '@design-system';
-import MomentUploadTextInput from '../../moment-upload-text-input/MomentUploadTextInput';
 
 interface MoodStepProps {
   onSkip: () => void;
@@ -28,7 +28,7 @@ function MoodStep({ onSkip, setMood }: MoodStepProps) {
             <Button.Small type="white_fill" status="normal" text={t('skip')} onClick={onSkip} />
           </Layout.Absolute>
         </Layout.FlexRow>
-        <MomentUploadTextInput
+        <MomentUploadEmojiInput
           setInput={setMood}
           placeholder={t('mood_placeholder') || undefined}
         />

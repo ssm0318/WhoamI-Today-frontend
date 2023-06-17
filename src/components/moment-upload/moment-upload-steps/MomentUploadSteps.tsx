@@ -5,7 +5,6 @@ import { Button, Font, Layout } from '@design-system';
 import useRedirectGuard from '@hooks/useRedirectGuard';
 import { TodayMoment } from '@models/moment';
 import { postTodayMoment } from '@utils/apis/moment';
-import { isEmojiOnly } from '@utils/validateHelpers';
 import DescriptionStep from './description-step/DescriptionStep';
 import MoodStep from './mood-step/MoodStep';
 
@@ -21,11 +20,6 @@ function MomentUploadSteps() {
 
   const handlePost = async () => {
     if (currentStep === 'mood') {
-      if (!isEmojiOnly(mood)) {
-        // TODO 이모지만 입력해야한다고 alert
-        alert('이모지만!');
-        return;
-      }
       await postTodayMoment({
         mood,
       });
