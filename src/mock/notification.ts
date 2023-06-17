@@ -1,7 +1,7 @@
 import { Notification } from '@models/notification';
 
-export const notification: Notification = {
-  id: 1,
+export const notificationList: Notification[] = Array.from({ length: 15 }, (_value, index) => ({
+  id: index,
   redirect_url: `/home`,
   is_read: false,
   actor_detail: {
@@ -14,4 +14,4 @@ export const notification: Notification = {
   is_response_request: false,
   question_content: 'Question',
   created_at: new Date().toISOString(),
-};
+}));

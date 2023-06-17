@@ -4,13 +4,13 @@ import NotificationItem from '@components/notification/NotificationItem';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
-import { notification } from '@mock/notification';
+import { notificationList } from '@mock/notification';
 import { Notification } from '@models/notification';
 
 function Notifications() {
   const [t] = useTranslation('translation', { keyPrefix: 'notifications' });
 
-  const notiList: Notification[] = [notification];
+  const notiList: Notification[] = [...notificationList];
 
   return (
     <MainContainer>
