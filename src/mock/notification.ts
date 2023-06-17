@@ -10,7 +10,7 @@ export const notificationList: Notification[] = Array.from({ length: 15 }, (_val
     profile_pic: '',
     color_hex: '#FFFFFF',
   },
-  message: `Notification`,
+  message: `Notification ${index}`,
   is_response_request: false,
   question_content: 'Question',
   created_at: new Date().toISOString(),
