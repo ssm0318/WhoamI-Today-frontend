@@ -16,7 +16,7 @@ import Intro from './routes/Intro';
 import MomentUpload from './routes/MomentUpload';
 import My from './routes/My';
 import MyDetail from './routes/my/MyDetail';
-import Notification from './routes/Notification';
+import Notifications from './routes/Notifications';
 import ShortAnswerResponse from './routes/response/ShortAnswerResponse';
 import ResponseHistory from './routes/ResponseHistory';
 import Root from './routes/Root';
@@ -54,10 +54,6 @@ const router = createBrowserRouter([
         path: 'friends',
         element: <Friends />,
       },
-      {
-        path: 'notifications',
-        element: <Notification />,
-      },
     ],
   },
   { path: 'signin', element: <SignIn /> },
@@ -85,6 +81,10 @@ const router = createBrowserRouter([
     element: <MomentUpload />,
   },
   { path: 'my/detail/:detailDate', element: <MyDetail /> },
+  {
+    path: 'notifications',
+    element: <Notifications />,
+  },
   {
     path: 'settings',
     loader: checkIfSignIn,
