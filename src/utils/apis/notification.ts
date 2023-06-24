@@ -10,3 +10,11 @@ export const getNotifications = async (page: string | null) => {
   );
   return data;
 };
+
+// PATCH notification/read (노티 읽음 처리)
+export const readNotification = async (ids: number[]) => {
+  const { data } = await axios.patch<Notification[]>(`/notifications/read`, {
+    ids,
+  });
+  return data;
+};

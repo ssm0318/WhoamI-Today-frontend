@@ -3,6 +3,7 @@ import { useTheme } from 'styled-components';
 import UserProfile from '@components/_common/user-profile/UserProfile';
 import { Font, Layout } from '@design-system';
 import { Notification } from '@models/notification';
+import { readNotification } from '@utils/apis/notification';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 
 interface NotificationItemProps {
@@ -16,8 +17,9 @@ function NotificationItem({ item }: NotificationItemProps) {
 
   const navigate = useNavigate();
 
-  const handleClickNotification = () => {
-    return navigate(redirect_url);
+  const handleClickNotification = async () => {
+    navigate(redirect_url);
+    await readNotification([item.id]);
   };
 
   return (
