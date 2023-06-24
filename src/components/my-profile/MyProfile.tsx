@@ -1,13 +1,19 @@
-import { Font, Layout, SvgIcon } from '@design-system';
+import UserProfile from '@components/_common/user-profile/UserProfile';
+import { Font, Layout } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
 
 function MyProfile() {
-  // TODO: 유저 정보 불러오기
+  const myProfile = useBoundStore((state) => state.myProfile);
+
+  if (!myProfile) return null;
+
+  const { username, profile_image } = myProfile;
   return (
     <Layout.FlexRow alignItems="center" h={36}>
-      <SvgIcon name="my_profile" size={36} />
+      <UserProfile imageUrl={profile_image} username={username} size={36} />
       <Layout.FlexRow alignItems="center" pl={8}>
         <Font.Body type="18_regular" color="GRAY_4">
-          User Name
+          {username}
         </Font.Body>
       </Layout.FlexRow>
     </Layout.FlexRow>

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ConfirmBottomModal from '@components/_common/bottom-modal/ConfirmBottomModal';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import UserProfile from '@components/_common/user-profile/UserProfile';
 import {
   AccountSettingButton,
   SettingsButton,
@@ -16,11 +17,14 @@ import {
   PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_EN,
   PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_KO,
 } from '@constants/url';
-import { Font, Layout, SvgIcon } from '@design-system';
+import { Font, Layout } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
 import { signOut } from '@utils/apis/user';
 
 function Settings() {
   const [t, i18n] = useTranslation('translation', { keyPrefix: 'settings' });
+
+  const myProfile = useBoundStore((state) => state.myProfile);
 
   const navigate = useNavigate();
   const handleClickEditProfile = () => navigate('/settings/edit-profile');
@@ -52,16 +56,23 @@ function Settings() {
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" gap={10}>
         {/* profile */}
         <Layout.FlexRow justifyContent="center" mb={8} ph={DEFAULT_MARGIN}>
-          {/* TODO: 실제 유저 정보 */}
-          <SvgIcon name="my_profile" size={55} />
-          <Layout.FlexCol ml={12}>
-            <Font.Body type="14_semibold" mt={4}>
-              KNKN
-            </Font.Body>
-            <Font.Body type="12_regular" mt={4}>
-              kyungji01@naver.com
-            </Font.Body>
-          </Layout.FlexCol>
+          {myProfile && (
+            <>
+              <UserProfile
+                imageUrl={myProfile.profile_image}
+                username={myProfile.username}
+                size={55}
+              />
+              <Layout.FlexCol ml={12}>
+                <Font.Body type="14_semibold" mt={4}>
+                  {myProfile.username}
+                </Font.Body>
+                <Font.Body type="12_regular" mt={4}>
+                  {myProfile.email}
+                </Font.Body>
+              </Layout.FlexCol>
+            </>
+          )}
         </Layout.FlexRow>
         <Divider width={2} />
         {/* account settings */}
