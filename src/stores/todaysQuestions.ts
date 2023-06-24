@@ -1,5 +1,5 @@
-import { shortAnswerQuestions } from '@mock/questions';
 import { ShortAnswerQuestion } from '@models/post';
+import { getTodayQuestions } from '@utils/apis/todayQuestions';
 import { SliceStateCreator } from './useBoundStore';
 
 interface TodaysQuestionsState {
@@ -18,8 +18,9 @@ export type TodaysQuestionsSlice = TodaysQuestionsState & TodaysQuestionsAction;
 export const createTodaysQuestionsSlice: SliceStateCreator<TodaysQuestionsSlice> = (set) => ({
   ...initialState,
   fetchTodaysQuestions: async () => {
+    const todayQuestions = await getTodayQuestions();
     set(() => ({
-      shortAnswerQuestions,
+      shortAnswerQuestions: todayQuestions,
     }));
   },
 });
