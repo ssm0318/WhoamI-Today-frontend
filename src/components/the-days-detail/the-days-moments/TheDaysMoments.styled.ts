@@ -3,6 +3,7 @@ import { Layout } from '@design-system';
 
 export const PhotoWrapper = styled.div`
   position: relative;
+  width: 100%;
 `;
 
 export const ContentWrapper = styled(Layout.FlexRow).attrs({
