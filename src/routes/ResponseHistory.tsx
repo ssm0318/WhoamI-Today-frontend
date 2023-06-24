@@ -7,30 +7,35 @@ import ResponseItem from '@components/response/response-item/ResponseItem';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, SvgIcon } from '@design-system';
-import { shortAnswerQuestions } from '@mock/questions';
+import useAsyncEffect from '@hooks/useAsyncEffect';
 import { responseList } from '@mock/responses';
 import { userList } from '@mock/users';
+import { ShortAnswerQuestion } from '@models/post';
+import { getQuestionDetail } from '@utils/apis/questions';
 
 function ResponseHistory() {
   const { questionId } = useParams();
   const [sendModalVisible, setSendModalVisible] = useState(false);
   const navigate = useNavigate();
+  const [question, setQuestion] = useState<ShortAnswerQuestion | null>(null);
 
-  // questionId로 질문 상세 가져와서 보여주기
-  // 내가 작성한 답변도 있다면 보여줘야 함
-  console.log(questionId);
-  // TODO 실제 데이터로 바꾸기
-  const question = shortAnswerQuestions[0];
   const responses = responseList;
 
   const handleClickResponse = () => {
-    navigate(`/response/short-answer`, { state: question });
+    if (!question) return;
+    navigate(`/questions/${question.id}/short-answer`);
   };
 
   const handleSend = () => {
     setSendModalVisible(true);
   };
 
+  useAsyncEffect(async () => {
+    const res = await getQuestionDetail(Number(questionId));
+    setQuestion(res);
+  }, [questionId]);
+
+  if (!question) return null;
   return (
     <MainContainer>
       <TitleHeader

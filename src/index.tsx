@@ -73,8 +73,8 @@ const router = createBrowserRouter([
   { path: 'questions', element: <AllQuestions /> },
   { path: 'response-history/:questionId', element: <ResponseHistory /> },
   {
-    path: 'response',
-    children: [{ path: 'short-answer', element: <ShortAnswerResponse /> }],
+    path: 'questions',
+    children: [{ path: ':questionId/short-answer', element: <ShortAnswerResponse /> }],
   },
   {
     path: 'moment-upload',

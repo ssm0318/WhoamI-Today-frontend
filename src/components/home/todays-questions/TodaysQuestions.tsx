@@ -39,7 +39,7 @@ function TodaysQuestions() {
   const isNextButtonExists = !(isAfter(currentDate, today) || isEqual(currentDate, today));
 
   const handleShortAnswer = (question: ShortAnswerQuestion) => {
-    navigate(`/response/short-answer`, { state: question });
+    navigate(`/questions/${question.id}/short-answer`);
   };
 
   useAsyncEffect(async () => {

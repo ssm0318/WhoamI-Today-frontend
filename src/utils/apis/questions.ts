@@ -17,6 +17,7 @@ export const getAllQuestions = async (page: string | null) => {
   return data;
 };
 
+// GET question detail
 export const getQuestionDetail = async (id: number) => {
   const { data } = await axios.get<ShortAnswerQuestion>(`/feed/questions/${id}/`);
   return data;
