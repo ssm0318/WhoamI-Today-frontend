@@ -4,30 +4,42 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Font, Layout } from '@design-system';
 import useRedirectGuard from '@hooks/useRedirectGuard';
 import { TodayMoment } from '@models/moment';
-import { postTodayMoment } from '@utils/apis/moment';
+import { BoundState, useBoundStore } from '@stores/useBoundStore';
+import { postTodayMoment, updateTodayMoment } from '@utils/apis/moment';
+import { areAllValuesNull } from '@utils/validateHelpers';
 import DescriptionStep from './description-step/DescriptionStep';
 import MoodStep from './mood-step/MoodStep';
+
+const momentSelector = (state: BoundState) => ({
+  todayMoment: state.todayMoment,
+  setTodayMoment: state.setTodayMoment,
+});
 
 function MomentUploadSteps() {
   const location = useLocation();
   const [currentStep, setCurrentStep] = useState<keyof Omit<TodayMoment, 'photo'>>(
     location.state || 'mood',
   );
+  const { todayMoment, setTodayMoment } = useBoundStore(momentSelector);
+
   const navigate = useNavigate();
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
   const [description, setDescription] = useState('');
   const [mood, setMood] = useState('');
 
+  const handleUploadMoment = async (moment: Partial<TodayMoment>) => {
+    const res = areAllValuesNull(todayMoment)
+      ? await postTodayMoment(moment)
+      : await updateTodayMoment(moment);
+    if (res) setTodayMoment(res);
+  };
+
   const handlePost = async () => {
     if (currentStep === 'mood') {
-      await postTodayMoment({
-        mood,
-      });
+      handleUploadMoment({ mood });
       setCurrentStep('description');
     } else {
-      await postTodayMoment({
-        description,
-      });
+      handleUploadMoment({ description });
       navigate('/home');
     }
   };

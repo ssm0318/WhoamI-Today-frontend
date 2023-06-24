@@ -19,11 +19,13 @@ export interface GetMomentResponse extends TodayMoment {
 }
 
 // POST today's moment
-export interface PostMomentParams extends TodayMoment {}
-
 export interface PostMomentRequest extends MomentRequestParams {
   moment: TodayMoment;
 }
 
+export interface PostMomentResponse extends TodayMoment {}
+
 // PUT today's moment
 export interface UpdateMomentRequest extends PostMomentRequest {}
+
+export interface UpdateMomentResponse extends TodayMoment {}

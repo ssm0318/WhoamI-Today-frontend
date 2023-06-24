@@ -1,5 +1,14 @@
-export const isEmojiOnly = (text: string) => {
-  const pattern =
-    /^(?:(?:[\u{1F000}-\u{1FFFF}\u{20000}-\u{3FFFF}\u{E0000}-\u{EFFFF}\u{FE000}-\u{FEFFF}\u{FF000}-\u{FFFFF}])+\s*)+$/u;
-  return pattern.test(text);
+// object의 모든 value가 null인지 확인
+export const areAllValuesNull = (obj: { [key: string]: any }): boolean => {
+  return Object.values(obj).every((value) => value === null);
+};
+
+// object를 FormData 형태로 변환하는 serializer
+export const objectFormDataSerializer = (object: Record<string, any>) => {
+  const formData = new FormData();
+  Object.keys(object).forEach((key) => {
+    const value = object[key];
+    formData.append(key, value || '');
+  });
+  return formData;
 };
