@@ -46,18 +46,23 @@ function TheDaysQuestions({ responses, useDeleteButton }: TheDaysMomentsProps) {
               </S.Question>
             </Layout.FlexCol>
             <S.ResponseList>
-              {responseList.map(({ id, content: responseContent, created_at }) => (
-                <S.Response key={id}>
+              {responseList.map((response) => (
+                <S.Response key={response.id}>
                   <ContentWrapper>
-                    <Font.Body type="18_regular">{responseContent}</Font.Body>
-                    {useDeleteButton && <DeleteButton onClick={onClickResponseDelete(id)} />}
+                    <Font.Body type="18_regular">{response.content}</Font.Body>
+                    {useDeleteButton && (
+                      <DeleteButton onClick={onClickResponseDelete(response.id)} />
+                    )}
                   </ContentWrapper>
                   <S.ResponseFooter>
                     <Font.Body type="12_regular" color="GRAY_12">
-                      {format(new Date(created_at), 'HH:mm')}
+                      {format(new Date(response.created_at), 'HH:mm')}
                     </Font.Body>
-                    {/* TODO: 좋아요, 댓글창 버튼 기능 추가 */}
-                    <ReactionButtons />
+                    <ReactionButtons
+                      postType="Response"
+                      post={response}
+                      isAuthor={useDeleteButton} // FIXME: 사용자 작성글인지 구분
+                    />
                   </S.ResponseFooter>
                 </S.Response>
               ))}

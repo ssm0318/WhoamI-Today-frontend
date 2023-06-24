@@ -57,8 +57,11 @@ function TheDaysMoments({ moment, useDeleteButton }: TheDaysMomentsProps) {
         </S.ContentWrapper>
       )}
       <Layout.FlexRow w="100%" justifyContent="flex-end" pt={6} pr={8} pb={6}>
-        {/* TODO: 좋아요, 댓글창 버튼 기능 추가 */}
-        <ReactionButtons />
+        <ReactionButtons
+          postType="Moment"
+          post={moment}
+          isAuthor={useDeleteButton} // FIXME: 사용자 작성글인지 구분
+        />
       </Layout.FlexRow>
       <DeleteAlert
         visible={!!deleteTarget}
