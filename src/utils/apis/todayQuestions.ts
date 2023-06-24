@@ -8,8 +8,11 @@ export const getTodayQuestions = async () => {
   return data;
 };
 
-// GET all questions
-export const getAllQuestions = async () => {
-  const { data } = await axios.get<GetAllQuestionsResponse>(`/feed/questions`);
+// GET all questions (pagination)
+export const getAllQuestions = async (page: string | null) => {
+  const requestPage = page ? page.split('page=')[1] : null;
+  const { data } = await axios.get<GetAllQuestionsResponse>(
+    `/feed/questions/${!requestPage ? '' : `?page=${requestPage}`}`,
+  );
   return data;
 };
