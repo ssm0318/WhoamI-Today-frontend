@@ -11,13 +11,15 @@ import { IconNames } from './SvgIcon.types';
  * @props `size` for same width & height icons **(required)**
  * @props `width` icon width **(required)**
  * @props `height` icon height **(required)**
+ * @props `onClick` on click event handler **(optional)**
+ * @props `className` additional className for svg **(optional)**
  *
  * @description Check icon Names types.
  *
  */
 
 const SvgIcon = React.memo((props: SvgIconProps) => {
-  const { name, color, width, height, size } = props;
+  const { name, color, width, height, size, onClick, className } = props;
   const iconName = allIconNames[name];
 
   const w = size || width;
@@ -38,6 +40,8 @@ const SvgIcon = React.memo((props: SvgIconProps) => {
         svg.setAttribute('color', Colors[color]);
         svg.setAttribute('stroke', Colors[color]);
       }}
+      onClick={onClick}
+      className={className}
     />
   );
 });
@@ -48,6 +52,8 @@ type SvgIconProps = {
   size: number;
   color?: ColorKeys | null;
   name: IconNames;
+  onClick?: () => void;
+  className?: string;
 };
 
 const allIconNames = {
