@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { MAX_WINDOW_WIDTH, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
+import { MAX_WINDOW_WIDTH, TOP_NAVIGATION_HEIGHT, Z_INDEX } from '@constants/layout';
 
 export const HeaderWrapper = styled.header`
   position: fixed;
@@ -11,6 +11,7 @@ export const HeaderWrapper = styled.header`
   height: ${TOP_NAVIGATION_HEIGHT}px;
   width: 100%;
   border-bottom: 2px solid ${({ theme }) => theme.GRAY_1};
+  z-index: ${Z_INDEX.TITLE_HEADER};
 `;
 
 export const Menu = styled.div`

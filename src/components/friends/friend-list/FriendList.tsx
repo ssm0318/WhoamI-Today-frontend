@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
 import UserProfile from '@components/_common/user-profile/UserProfile';
 import { Font } from '@design-system';
 import { friendList } from '@mock/friends';
@@ -7,7 +6,7 @@ import { StyledFriendListWrapper, StyledFriendProfile } from './FriendProfile.st
 
 interface FriendListProps {
   selectedFriend?: User;
-  selectFriend: Dispatch<SetStateAction<User | undefined>>;
+  selectFriend: (user: User) => void;
 }
 function FriendList({ selectedFriend, selectFriend }: FriendListProps) {
   return (
@@ -15,7 +14,7 @@ function FriendList({ selectedFriend, selectFriend }: FriendListProps) {
       {friendList.map((user) => {
         const { id, profile_image, username } = user;
         return (
-          <StyledFriendProfile onClick={() => selectFriend(user)}>
+          <StyledFriendProfile key={id} onClick={() => selectFriend(user)}>
             <UserProfile
               imageUrl={profile_image}
               username={username}
