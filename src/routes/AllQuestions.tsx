@@ -13,20 +13,18 @@ import { getAllQuestions } from '@utils/apis/todayQuestions';
 function AllQuestions() {
   const [t] = useTranslation('translation', { keyPrefix: 'home.question' });
   const [questions, setQuestions] = useState<ShortAnswerQuestion[]>([]);
-  const [nextPage, setNextPage] = useState<string | null>(null);
-  const [isEnd, setIsEnd] = useState(false);
+  const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
   const fetchQuestions = async (page: string | null) => {
     const { results, next } = await getAllQuestions(page);
     setNextPage(next);
-    setIsEnd(!next);
     setQuestions([...questions, ...results]);
     setIsLoading(false);
   };
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
-    if (isEnd) return setIsLoading(false);
-    await fetchQuestions(nextPage);
+    if (nextPage === null) return setIsLoading(false);
+    await fetchQuestions(nextPage === undefined ? null : nextPage);
   });
 
   return (
