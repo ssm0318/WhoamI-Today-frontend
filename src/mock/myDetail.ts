@@ -1,4 +1,5 @@
 import { GetMomentResponse } from '@models/api/moment';
+import { POST_TYPE, QUESTION_TYPE, Response } from '@models/post';
 
 export const MOCK_MOMENT: GetMomentResponse = {
   id: 7,
@@ -12,3 +13,102 @@ export const MOCK_MOMENT: GetMomentResponse = {
   date: '2023-05-20',
   created_at: '2023-06-03T14:40:11.939262+09:00',
 };
+
+const MOCK_AUTHOR_DETAIL = {
+  id: 1,
+  profile_image: null,
+  profile_pic: '',
+  url: '',
+  username: 'yuri',
+};
+
+const MOCK_QUESTIONS = [
+  {
+    id: 1,
+    content: '오늘 점심에 먹은 음식은?',
+    author: null,
+    author_detail: MOCK_AUTHOR_DETAIL,
+    like_count: null,
+    current_user_liked: false,
+    created_at: '2023-05-20T09:40:00.939262+09:00',
+    type: QUESTION_TYPE.SHORT_ANSWER,
+  },
+  {
+    id: 2,
+    content: '좋아하는 색깔은?',
+    author: null,
+    author_detail: MOCK_AUTHOR_DETAIL,
+    like_count: null,
+    current_user_liked: false,
+    created_at: '2023-05-20T14:26:11.939262+09:00',
+    type: QUESTION_TYPE.SHORT_ANSWER,
+  },
+];
+
+export const MOCK_RESPONSES: Response[] = [
+  {
+    id: 1,
+    content: '감바스',
+    author: null,
+    author_detail: MOCK_AUTHOR_DETAIL,
+    like_count: 10,
+    current_user_liked: false,
+    created_at: '2023-05-20T09:40:00.939262+09:00',
+    type: POST_TYPE.RESPONSE,
+    comments: [],
+    question: MOCK_QUESTIONS[0],
+    question_id: MOCK_QUESTIONS[0].id,
+  },
+  {
+    id: 2,
+    content: '노랑',
+    author: null,
+    author_detail: MOCK_AUTHOR_DETAIL,
+    like_count: 5,
+    current_user_liked: false,
+    created_at: '2023-05-20T09:40:00.939262+09:00',
+    type: POST_TYPE.RESPONSE,
+    comments: [],
+    question: MOCK_QUESTIONS[1],
+    question_id: MOCK_QUESTIONS[1].id,
+  },
+  {
+    id: 3,
+    content: '리코타 치즈 샐러드, 버터 갈릭 브레드, 쉬림프 파스타, 알리오 올리오, 에그 베네딕트',
+    author: null,
+    author_detail: MOCK_AUTHOR_DETAIL,
+    like_count: 5,
+    current_user_liked: false,
+    created_at: '2023-05-20T09:40:00.939262+09:00',
+    type: POST_TYPE.RESPONSE,
+    comments: [],
+    question: MOCK_QUESTIONS[0],
+    question_id: MOCK_QUESTIONS[0].id,
+  },
+  {
+    id: 4,
+    content: '빨주노초파남보',
+    author: null,
+    author_detail: MOCK_AUTHOR_DETAIL,
+    like_count: 5,
+    current_user_liked: false,
+    created_at: '2023-05-20T09:40:00.939262+09:00',
+    type: POST_TYPE.RESPONSE,
+    comments: [],
+    question: MOCK_QUESTIONS[1],
+    question_id: MOCK_QUESTIONS[1].id,
+  },
+  {
+    id: 5,
+    content: '고등어회 고기국수 딱새우',
+    author: null,
+    author_detail: MOCK_AUTHOR_DETAIL,
+    like_count: 1,
+    current_user_liked: false,
+    created_at: '2023-05-20T09:40:00.939262+09:00',
+    type: POST_TYPE.RESPONSE,
+    comments: [],
+    question: MOCK_QUESTIONS[0],
+    question_id: MOCK_QUESTIONS[0].id,
+  },
+];

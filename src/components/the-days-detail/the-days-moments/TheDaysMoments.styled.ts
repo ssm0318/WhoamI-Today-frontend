@@ -7,7 +7,6 @@ export const PhotoWrapper = styled.div`
 
 export const ContentWrapper = styled(Layout.FlexRow).attrs({
   w: '100%',
-  alignItems: 'center',
   justifyContent: 'space-between',
 })`
   span {
@@ -15,7 +14,7 @@ export const ContentWrapper = styled(Layout.FlexRow).attrs({
   }
 
   button {
-    padding-right: 12px;
+    padding: 6px 12px;
   }
 `;
 

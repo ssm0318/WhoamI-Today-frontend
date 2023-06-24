@@ -10,10 +10,10 @@ function ReactionButtons({ onClickLike, onClickComments }: ReactionButtonsProps)
   return (
     <Layout.FlexRow>
       <S.Button onClick={onClickLike}>
-        <SvgIcon name="heart" size={24} />
+        <SvgIcon name="heart" size={18} />
       </S.Button>
       <S.Button onClick={onClickComments}>
-        <SvgIcon name="comment" size={24} />
+        <SvgIcon name="comment" size={18} />
       </S.Button>
     </Layout.FlexRow>
   );

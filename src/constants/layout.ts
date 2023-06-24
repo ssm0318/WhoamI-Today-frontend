@@ -6,6 +6,10 @@ const SCREEN_WIDTH = typeof window !== 'undefined' ? Math.min(window.innerWidth,
 const SCREEN_HEIGHT = typeof window !== 'undefined' ? window.innerHeight : 0;
 const TITLE_HEADER_HEIGHT = 56;
 
+const Z_INDEX = {
+  TITLE_HEADER: 100,
+};
+
 export {
   BOTTOM_TABBAR_HEIGHT,
   TOP_NAVIGATION_HEIGHT,
@@ -14,4 +18,5 @@ export {
   SCREEN_HEIGHT,
   MAX_WINDOW_WIDTH,
   TITLE_HEADER_HEIGHT,
+  Z_INDEX,
 };
