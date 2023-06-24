@@ -2,7 +2,7 @@ import { ColorKeys } from 'src/design-system/colors';
 import { BodyType } from '../Font/Font.types';
 import * as S from './Button.styled';
 
-export type ButtonSize = 'Large' | 'Medium' | 'Small';
+export type ButtonSize = 'Large' | 'Medium' | 'Small' | 'Dialog';
 
 export type ButtonSetting = {
   [key in ButtonSize]: {
@@ -11,7 +11,7 @@ export type ButtonSetting = {
   };
 };
 
-export type ButtonType = 'filled' | 'outlined' | 'white_fill';
+export type ButtonType = 'filled' | 'outlined' | 'white_fill' | 'gray_fill';
 
 export type ButtonStatus = 'normal' | 'hovered' | 'disabled' | 'completed';
 

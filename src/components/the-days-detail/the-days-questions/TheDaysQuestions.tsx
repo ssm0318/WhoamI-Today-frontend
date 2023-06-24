@@ -1,8 +1,9 @@
 import { format } from 'date-fns';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import { Font, Layout } from '@design-system';
 import { Response } from '@models/post';
+import DeleteAlert from '../delete-alert/DeleteAlert';
 import ReactionButtons from '../reaction-buttons/ReactionButtons';
 import { ContentWrapper } from '../the-days-moments/TheDaysMoments.styled';
 import TheDaysWrapper from '../the-days-wrapper/TheDaysWrapper';
@@ -15,8 +16,19 @@ interface TheDaysMomentsProps {
 }
 
 function TheDaysQuestions({ responses, useDeleteButton }: TheDaysMomentsProps) {
-  const onClickResponseDelete = () => {
-    console.log('click response delete button');
+  const [deleteTarget, setDeleteTarget] = useState<number>();
+
+  const closeDeleteAlert = () => {
+    setDeleteTarget(undefined);
+  };
+
+  const onClickResponseDelete = (responseId: number) => () => {
+    setDeleteTarget(responseId);
+  };
+
+  const deleteResponse = () => {
+    console.log(`TODO: delete response ${deleteTarget}`);
+    closeDeleteAlert();
   };
 
   const daysQuestionList = useMemo(() => getDaysQuestionList(responses), [responses]);
@@ -38,7 +50,7 @@ function TheDaysQuestions({ responses, useDeleteButton }: TheDaysMomentsProps) {
                 <S.Response key={id}>
                   <ContentWrapper>
                     <Font.Body type="18_regular">{responseContent}</Font.Body>
-                    {useDeleteButton && <DeleteButton onClick={onClickResponseDelete} />}
+                    {useDeleteButton && <DeleteButton onClick={onClickResponseDelete(id)} />}
                   </ContentWrapper>
                   <S.ResponseFooter>
                     <Font.Body type="12_regular" color="GRAY_12">
@@ -54,6 +66,11 @@ function TheDaysQuestions({ responses, useDeleteButton }: TheDaysMomentsProps) {
         ),
         [],
       )}
+      <DeleteAlert
+        visible={!!deleteTarget}
+        close={closeDeleteAlert}
+        onClickConfirm={deleteResponse}
+      />
     </TheDaysWrapper>
   );
 }
