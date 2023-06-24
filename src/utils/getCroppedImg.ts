@@ -97,16 +97,11 @@ const getCroppedImg = async (
     pixelCrop.height,
   );
 
-  // As Base64 string
-  // return croppedCanvas.toDataURL('image/jpeg');
-
-  // As a blob
-
   return new Promise((resolve) => {
     croppedCanvas.toBlob((blob) => {
       if (!blob) return;
       resolve({
-        file: new File([blob], 'fileName.jpg', { type: 'image/jpeg' }),
+        file: new File([blob], `${imageSrc}_cropped.jpg`, { type: 'image/jpeg' }),
         url: URL.createObjectURL(blob),
       });
     }, 'image/jpeg');
