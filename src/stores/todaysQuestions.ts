@@ -1,5 +1,5 @@
 import { ShortAnswerQuestion } from '@models/post';
-import { getTodayQuestions } from '@utils/apis/todayQuestions';
+import { getTodayQuestions } from '@utils/apis/questions';
 import { SliceStateCreator } from './useBoundStore';
 
 interface TodaysQuestionsState {
