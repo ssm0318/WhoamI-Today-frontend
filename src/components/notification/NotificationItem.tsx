@@ -25,17 +25,19 @@ function NotificationItem({ item }: NotificationItemProps) {
       <Layout.FlexRow w={50} h={50} mr={7} alignItems="center" justifyContent="center">
         <UserProfile imageUrl={profile_image} size={40} />
       </Layout.FlexRow>
-      <Font.Body type="14_regular">
-        {message}
-        <span
-          style={{
-            color: theme.GRAY_4,
-            marginLeft: 4,
-          }}
-        >
-          {convertTimeDiffByString(new Date(), new Date(created_at))}
-        </span>
-      </Font.Body>
+      <Layout.FlexRow flex={1}>
+        <Font.Body type="14_regular">
+          {message}
+          <span
+            style={{
+              color: theme.GRAY_4,
+              marginLeft: 4,
+            }}
+          >
+            {convertTimeDiffByString(new Date(), new Date(created_at))}
+          </span>
+        </Font.Body>
+      </Layout.FlexRow>
     </Layout.FlexRow>
   );
 }
