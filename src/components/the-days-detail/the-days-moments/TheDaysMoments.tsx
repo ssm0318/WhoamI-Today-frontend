@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import { Font, Layout } from '@design-system';
 import { GetMomentResponse } from '@models/api/moment';
+import { TodayMoment } from '@models/moment';
+import DeleteAlert from '../delete-alert/DeleteAlert';
 import ReactionButtons from '../reaction-buttons/ReactionButtons';
 import TheDaysWrapper from '../the-days-wrapper/TheDaysWrapper';
 import * as S from './TheDaysMoments.styled';
@@ -10,19 +13,23 @@ interface TheDaysMomentsProps {
   useDeleteButton?: boolean;
 }
 
+type MomentType = keyof TodayMoment;
+
 function TheDaysMoments({ moment, useDeleteButton }: TheDaysMomentsProps) {
   const { mood, photo, description } = moment;
+  const [deleteTarget, setDeleteTarget] = useState<MomentType>();
 
-  const onClickMoodDelete = () => {
-    console.log('click mood delete button');
+  const closeDeleteAlert = () => {
+    setDeleteTarget(undefined);
   };
 
-  const onClickPhotoDelete = () => {
-    console.log('click photo delete button');
+  const onClickDelete = (momentType: MomentType) => () => {
+    setDeleteTarget(momentType);
   };
 
-  const onClickDescriptionDelete = () => {
-    console.log('click description delete button');
+  const deleteMoment = () => {
+    console.log(`TODO: delete moment /${moment.id}/${deleteTarget}`);
+    closeDeleteAlert();
   };
 
   return (
@@ -30,7 +37,7 @@ function TheDaysMoments({ moment, useDeleteButton }: TheDaysMomentsProps) {
       {mood && (
         <S.ContentWrapper>
           <span>{mood}</span>
-          {useDeleteButton && <DeleteButton onClick={onClickMoodDelete} />}
+          {useDeleteButton && <DeleteButton onClick={onClickDelete('mood')} />}
         </S.ContentWrapper>
       )}
       {photo && (
@@ -38,7 +45,7 @@ function TheDaysMoments({ moment, useDeleteButton }: TheDaysMomentsProps) {
           <S.Photo src={photo} alt="moment_photo" loading="lazy" />
           {useDeleteButton && (
             <Layout.Absolute t={12} r={12}>
-              <DeleteButton onClick={onClickPhotoDelete} />
+              <DeleteButton onClick={onClickDelete('photo')} />
             </Layout.Absolute>
           )}
         </S.PhotoWrapper>
@@ -46,13 +53,18 @@ function TheDaysMoments({ moment, useDeleteButton }: TheDaysMomentsProps) {
       {description && (
         <S.ContentWrapper>
           <Font.Body type="20_regular">{description}</Font.Body>
-          {useDeleteButton && <DeleteButton onClick={onClickDescriptionDelete} />}
+          {useDeleteButton && <DeleteButton onClick={onClickDelete('description')} />}
         </S.ContentWrapper>
       )}
       <Layout.FlexRow w="100%" justifyContent="flex-end" pt={6} pr={8} pb={6}>
         {/* TODO: 좋아요, 댓글창 버튼 기능 추가 */}
         <ReactionButtons />
       </Layout.FlexRow>
+      <DeleteAlert
+        visible={!!deleteTarget}
+        close={closeDeleteAlert}
+        onClickConfirm={deleteMoment}
+      />
     </TheDaysWrapper>
   );
 }
