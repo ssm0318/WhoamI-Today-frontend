@@ -1,8 +1,10 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import i18n from '@i18n/index';
 
+export const API_BASE_URL = 'http://localhost:8000/api/';
+
 const JSON_DEFAULT_OPTIONS: AxiosRequestConfig = {
-  baseURL: 'http://localhost:8000/api/',
+  baseURL: API_BASE_URL,
   withCredentials: true,
   xsrfHeaderName: 'X-CSRFTOKEN',
   xsrfCookieName: 'csrftoken',

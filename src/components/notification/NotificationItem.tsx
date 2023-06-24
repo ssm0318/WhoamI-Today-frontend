@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from 'styled-components';
 import UserProfile from '@components/_common/user-profile/UserProfile';
 import { Font, Layout } from '@design-system';
 import { Notification } from '@models/notification';
+import { readNotification } from '@utils/apis/notification';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 
 interface NotificationItemProps {
@@ -16,8 +18,12 @@ function NotificationItem({ item }: NotificationItemProps) {
 
   const navigate = useNavigate();
 
-  const handleClickNotification = () => {
-    return navigate(redirect_url);
+  const [createdAt] = useState(() => new Date(created_at));
+  const [currentDate] = useState(() => new Date());
+
+  const handleClickNotification = async () => {
+    navigate(redirect_url);
+    await readNotification([item.id]);
   };
 
   return (
@@ -25,17 +31,19 @@ function NotificationItem({ item }: NotificationItemProps) {
       <Layout.FlexRow w={50} h={50} mr={7} alignItems="center" justifyContent="center">
         <UserProfile imageUrl={profile_image} size={40} />
       </Layout.FlexRow>
-      <Font.Body type="14_regular">
-        {message}
-        <span
-          style={{
-            color: theme.GRAY_4,
-            marginLeft: 4,
-          }}
-        >
-          {convertTimeDiffByString(new Date(), new Date(created_at))}
-        </span>
-      </Font.Body>
+      <Layout.FlexRow flex={1}>
+        <Font.Body type="14_regular">
+          {message}
+          <span
+            style={{
+              color: theme.GRAY_4,
+              marginLeft: 4,
+            }}
+          >
+            {convertTimeDiffByString(currentDate, createdAt)}
+          </span>
+        </Font.Body>
+      </Layout.FlexRow>
     </Layout.FlexRow>
   );
 }
