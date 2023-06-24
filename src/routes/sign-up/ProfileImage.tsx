@@ -1,22 +1,28 @@
 import { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
+import UserProfile from '@components/_common/user-profile/UserProfile';
 import { Button, Layout } from '@design-system';
 import { hasMandatorySignUpParams } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { signUp } from '@utils/apis/user';
+import { CroppedImg, readFile } from '@utils/getCroppedImg';
 
 function ProfileImage() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_up' });
 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const [originalImageFileUrl, setOriginalImageFileURL] = useState<string>();
   const [profileImagePreview, setProfileImagePreview] = useState<string>();
   const [signUpInfo, setSignUpInfo, resetSignUpInfo] = useBoundStore((state) => [
     state.signUpInfo,
     state.setSignUpInfo,
     state.resetSignUpInfo,
   ]);
+
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
   const onClickAdd = () => {
     inputRef.current?.click();
@@ -27,11 +33,24 @@ function ProfileImage() {
 
     const image = e.target.files[0];
 
-    // TODO: 이미지 크롭, 압축
-    setSignUpInfo({ profileImage: image });
+    try {
+      const imageDataUrl = await readFile(image);
 
-    const objectUrl = URL.createObjectURL(image);
-    setProfileImagePreview(objectUrl);
+      if (typeof imageDataUrl !== 'string') {
+        throw new Error('read file error');
+      }
+
+      setOriginalImageFileURL(imageDataUrl);
+      setIsEditModalVisible(true);
+    } catch (error) {
+      // TODO
+      console.error(error);
+    }
+  };
+
+  const onCompleteImageCrop = (croppedImage: CroppedImg) => {
+    setSignUpInfo({ profileImage: croppedImage.file });
+    setProfileImagePreview(croppedImage.url);
   };
 
   const navigate = useNavigate();
@@ -53,9 +72,7 @@ function ProfileImage() {
 
   return (
     <>
-      {profileImagePreview && (
-        <img src={profileImagePreview} width={400} height={400} alt="profile" />
-      )}
+      {profileImagePreview && <UserProfile imageUrl={profileImagePreview} size={400} />}
       <input
         ref={inputRef}
         type="file"
@@ -82,6 +99,13 @@ function ProfileImage() {
           onClick={onClickNextOrSkip}
         />
       </Layout.Absolute>
+      {isEditModalVisible && (
+        <ProfileImageEdit
+          setIsVisible={setIsEditModalVisible}
+          image={originalImageFileUrl}
+          onCompleteImageCrop={onCompleteImageCrop}
+        />
+      )}
     </>
   );
 }
