@@ -13,7 +13,7 @@ import axios, { axiosFormDataInstance } from './axios';
 export const getTodayMoment = async () => {
   const { year, month, day } = getMomentRequestParams(new Date());
   const { data } = await axios.get<GetMomentResponse | null>(
-    `/moment/daily/${year}/${month}/${day}`,
+    `/moment/daily/${year}/${month}/${day}/`,
   );
   return data;
 };
@@ -23,7 +23,7 @@ export const postTodayMoment = async (moment: Partial<TodayMoment>) => {
   const { year, month, day } = getMomentRequestParams(new Date());
   const momentFormData = objectFormDataSerializer(moment);
   const { data } = await axiosFormDataInstance.post<PostMomentResponse>(
-    `/moment/daily/${year}/${month}/${day}`,
+    `/moment/daily/${year}/${month}/${day}/`,
     momentFormData,
   );
   return data;
@@ -34,7 +34,7 @@ export const updateTodayMoment = async (moment: Partial<TodayMoment>) => {
   const { year, month, day } = getMomentRequestParams(new Date());
   const momentFormData = objectFormDataSerializer(moment);
   const { data } = await axiosFormDataInstance.put<UpdateMomentResponse>(
-    `/moment/daily/${year}/${month}/${day}`,
+    `/moment/daily/${year}/${month}/${day}/`,
     momentFormData,
   );
   return data;
@@ -42,14 +42,14 @@ export const updateTodayMoment = async (moment: Partial<TodayMoment>) => {
 
 export const getWeeklyMoments = async ({ year, month, day }: MomentRequestParams) => {
   const { data } = await axios.get<Response<GetMomentResponse[]>>(
-    `/moment/weekly/${year}/${month}/${day}`,
+    `/moment/weekly/${year}/${month}/${day}/`,
   );
   return data?.results || [];
 };
 
 export const getMonthlyMoments = async ({ year, month }: Omit<MomentRequestParams, 'day'>) => {
   const { data } = await axios.get<Response<GetMomentResponse[]>>(
-    `/moment/monthly/${year}/${month}`,
+    `/moment/monthly/${year}/${month}/`,
   );
   return data?.results || [];
 };
