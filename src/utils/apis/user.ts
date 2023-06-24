@@ -3,12 +3,14 @@ import { redirect } from 'react-router-dom';
 import i18n from '@i18n/index';
 import {
   EmailError,
+  MyProfile,
   PasswordError,
   SignInParams,
   SignInResponse,
   SignUpParams,
   UsernameError,
 } from '@models/api/user';
+import { useBoundStore } from '@stores/useBoundStore';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 
 export const signIn = (signInInfo: SignInParams, onSuccess: () => void) => {
@@ -21,8 +23,8 @@ export const signIn = (signInInfo: SignInParams, onSuccess: () => void) => {
 
 export const checkIfSignIn = async () => {
   try {
-    const user = await axios.get('/user/me/');
-    // TODO: zustand 상태 설정 등
+    const user = await axios.get<MyProfile>('/user/me/');
+    useBoundStore.getState().setMyProfile(user.data);
     return user;
   } catch {
     return redirect('/signin');
