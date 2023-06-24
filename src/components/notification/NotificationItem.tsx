@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from 'styled-components';
 import UserProfile from '@components/_common/user-profile/UserProfile';
@@ -16,6 +17,9 @@ function NotificationItem({ item }: NotificationItemProps) {
   const theme = useTheme();
 
   const navigate = useNavigate();
+
+  const [createdAt] = useState(() => new Date(created_at));
+  const [currentDate] = useState(() => new Date());
 
   const handleClickNotification = async () => {
     navigate(redirect_url);
@@ -36,7 +40,7 @@ function NotificationItem({ item }: NotificationItemProps) {
               marginLeft: 4,
             }}
           >
-            {convertTimeDiffByString(new Date(), new Date(created_at))}
+            {convertTimeDiffByString(currentDate, createdAt)}
           </span>
         </Font.Body>
       </Layout.FlexRow>
