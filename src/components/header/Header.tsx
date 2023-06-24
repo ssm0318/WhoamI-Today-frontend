@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import IconNudge from '@components/_common/icon-nudge/IconNudge';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { HeaderWrapper, Noti } from './Header.styled';
 
@@ -18,6 +19,7 @@ function Header() {
         <Font.Display type="24_bold">Who Am I</Font.Display>
         <Noti to="/notifications">
           <SvgIcon name="top_navigation_noti" size={36} />
+          <IconNudge />
         </Noti>
       </Layout.FlexRow>
     </HeaderWrapper>

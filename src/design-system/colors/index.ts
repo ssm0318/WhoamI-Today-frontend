@@ -35,6 +35,8 @@ export const Colors = {
   ERROR: '#FF2D2D',
 
   ANCHOR: '#0000FF',
+
+  NUDGE: '#FF2D3D',
 };
 
 export type ColorType = typeof Colors;

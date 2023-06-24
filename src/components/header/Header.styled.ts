@@ -26,4 +26,5 @@ export const Logo = styled.div`
 
 export const Noti = styled(Link)`
   text-decoration: none;
+  position: relative;
 `;
