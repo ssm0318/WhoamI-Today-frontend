@@ -21,10 +21,10 @@ export const getTodayMoment = async () => {
 // POST today's moment
 export const postTodayMoment = async (moment: Partial<TodayMoment>) => {
   const { year, month, day } = getMomentRequestParams(new Date());
-  const momentData = objectFormDataSerializer(moment);
+  const momentFormData = objectFormDataSerializer(moment);
   const { data } = await axiosFormDataInstance.post<PostMomentResponse>(
     `/moment/daily/${year}/${month}/${day}`,
-    momentData,
+    momentFormData,
   );
   return data;
 };
@@ -32,10 +32,10 @@ export const postTodayMoment = async (moment: Partial<TodayMoment>) => {
 // PUT today's moment
 export const updateTodayMoment = async (moment: Partial<TodayMoment>) => {
   const { year, month, day } = getMomentRequestParams(new Date());
-  const momentData = objectFormDataSerializer(moment);
+  const momentFormData = objectFormDataSerializer(moment);
   const { data } = await axiosFormDataInstance.put<UpdateMomentResponse>(
     `/moment/daily/${year}/${month}/${day}`,
-    momentData,
+    momentFormData,
   );
   return data;
 };
