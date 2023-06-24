@@ -57,6 +57,7 @@ export const Container = styled.div<{ sizing?: 'fit-content' | 'stretch'; disabl
   ${({ sizing = 'fit-content' }) =>
     sizing === 'stretch' &&
     css`
+      width: 100%;
       align-self: stretch;
     `}
   ${({ disabled }) =>

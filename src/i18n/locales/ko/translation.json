@@ -80,7 +80,12 @@
     "post": "게시"
   },
   "my_detail": {
-    "title_format": "yy/M/d (E)"
+    "title_format": "yy/M/d (E)",
+    "delete_alert": {
+      "content": "정말로 삭제하실 건가요?",
+      "cancel_btn": "취소",
+      "confirm_btn": "삭제"
+    }
   },
   "the_days_detail": {
     "moments": {

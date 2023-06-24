@@ -49,6 +49,10 @@ const Small = React.memo((props: ButtonProps) => <Button {...props} size="Small"
 
 const Medium = React.memo((props: ButtonProps) => <Button {...props} size="Medium" />);
 
+const Dialog = React.memo((props: ButtonProps) => (
+  <Button {...props} size="Dialog" sizing="stretch" />
+));
+
 const buttons: ButtonSetting = {
   Large: {
     ButtonComponent: S.LargeButton,
@@ -62,6 +66,10 @@ const buttons: ButtonSetting = {
     ButtonComponent: S.SmallButton,
     fontType: '12_regular',
   },
+  Dialog: {
+    ButtonComponent: S.MediumButton,
+    fontType: '14_regular',
+  },
 };
 
-export default { Large, Medium, Small };
+export default { Large, Medium, Small, Dialog };
