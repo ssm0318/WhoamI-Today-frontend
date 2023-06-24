@@ -3,10 +3,15 @@ import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { createMomentSlice, MomentSlice } from './moment';
 import { createMyPageSlice, MyPageSlice } from './my';
+import { createMyProfileSlice, MyProfileSlice } from './myProfile';
 import { createSignUpInfoSlice, SignUpInfoSlice } from './signUpInfo';
 import { createTodaysQuestionsSlice, TodaysQuestionsSlice } from './todaysQuestions';
 
-export type BoundState = MomentSlice & MyPageSlice & SignUpInfoSlice & TodaysQuestionsSlice;
+export type BoundState = MomentSlice &
+  MyPageSlice &
+  SignUpInfoSlice &
+  TodaysQuestionsSlice &
+  MyProfileSlice;
 
 export type SliceStateCreator<Slice> = StateCreator<
   BoundState,
@@ -29,5 +34,6 @@ export const useBoundStore = create<BoundState>()(
     ...createMomentSlice(...a),
     ...createSignUpInfoSlice(...a),
     ...createTodaysQuestionsSlice(...a),
+    ...createMyProfileSlice(...a),
   })),
 );
