@@ -15,10 +15,9 @@ export const StyledFriendProfile = styled.li`
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  cursor: pointer;
 
-  img {
-    border-radius: 50%;
-    width: 66px;
-    height: 66px;
+  .selected {
+    border: 2px solid ${({ theme }) => theme.CALENDAR_TODAY};
   }
 `;
