@@ -25,7 +25,7 @@ function Notifications() {
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextPage === null) return setIsLoading(false);
-    await fetchNotifications(nextPage === undefined ? null : nextPage);
+    await fetchNotifications(nextPage ?? null);
   });
 
   return (
