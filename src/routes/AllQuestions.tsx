@@ -17,6 +17,7 @@ function AllQuestions() {
 
   const fetchQuestions = async (page: string | null) => {
     const { results, next } = await getAllQuestions(page);
+    if (!results) return;
     setNextPage(next);
     setQuestions([...questions, ...results]);
     setIsLoading(false);

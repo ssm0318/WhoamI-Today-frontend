@@ -3,3 +3,8 @@ export interface Response<T> {
   detail?: string;
   results?: T;
 }
+
+export interface PaginationResponse<T> extends Response<T> {
+  next: string | null;
+  previous: string | null;
+}

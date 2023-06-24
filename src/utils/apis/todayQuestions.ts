@@ -1,4 +1,4 @@
-import { GetAllQuestionsResponse } from '@models/api/todayQuestions';
+import { PaginationResponse } from '@models/api/common';
 import { ShortAnswerQuestion } from '@models/post';
 import axios from './axios';
 
@@ -11,7 +11,7 @@ export const getTodayQuestions = async () => {
 // GET all questions (pagination)
 export const getAllQuestions = async (page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
-  const { data } = await axios.get<GetAllQuestionsResponse>(
+  const { data } = await axios.get<PaginationResponse<ShortAnswerQuestion[]>>(
     `/feed/questions/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
