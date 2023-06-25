@@ -22,7 +22,7 @@ function QuestionItem({ question }: QuestionItemProps) {
 
   const handleResponse = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/response/short-answer`, { state: question });
+    navigate(`/questions/${question.id}/short-answer`);
   };
 
   const handleClickQuestion = () => {

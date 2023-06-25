@@ -6,14 +6,14 @@ import axios from './axios';
 export const getNotifications = async (page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Notification[]>>(
-    `/notifications/${!requestPage ? '' : `?page=${requestPage}`}`,
+    `/notifications/${!requestPage ? '' : `?page=${requestPage}/`}`,
   );
   return data;
 };
 
 // PATCH notification/read (노티 읽음 처리)
 export const readNotification = async (ids: number[]) => {
-  const { data } = await axios.patch<Notification[]>(`/notifications/read`, {
+  const { data } = await axios.patch<Notification[]>(`/notifications/read/`, {
     ids,
   });
   return data;
