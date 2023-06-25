@@ -70,11 +70,13 @@ const router = createBrowserRouter([
     ],
   },
   { path: 'forgot-password', element: <ForgotPassword /> },
-  { path: 'questions', element: <AllQuestions /> },
   { path: 'response-history/:questionId', element: <ResponseHistory /> },
   {
     path: 'questions',
-    children: [{ path: ':questionId/short-answer', element: <ShortAnswerResponse /> }],
+    children: [
+      { path: '', element: <AllQuestions /> },
+      { path: ':questionId/short-answer', element: <ShortAnswerResponse /> },
+    ],
   },
   {
     path: 'moment-upload',
