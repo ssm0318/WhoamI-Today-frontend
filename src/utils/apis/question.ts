@@ -1,6 +1,6 @@
 import { PaginationResponse } from '@models/api/common';
-import { ResponseQuestionRequestParams, ResponseQuestionResponse } from '@models/api/question';
-import { ShortAnswerQuestion } from '@models/post';
+import { ResponseQuestionRequestParams } from '@models/api/question';
+import { Response, ShortAnswerQuestion } from '@models/post';
 import { getYearMonthDayFromDate } from '@utils/timeHelpers';
 import axios from './axios';
 
@@ -44,10 +44,7 @@ export const requestResponse = async (
 // POST response today's question
 export const responseQuestion = async (params: ResponseQuestionRequestParams) => {
   const { year, month, day } = getYearMonthDayFromDate(new Date());
-  const { data } = await axios.post<ResponseQuestionResponse>(
-    `/feed/responses/${year}/${month}/${day}/`,
-    params,
-  );
+  const { data } = await axios.post<Response>(`/feed/responses/${year}/${month}/${day}/`, params);
 
   return data;
 };

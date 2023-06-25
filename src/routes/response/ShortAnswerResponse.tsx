@@ -30,7 +30,7 @@ function ShortAnswerResponse() {
     setSendModalVisible(true);
     if (!textareaRef.current) return;
     await responseQuestion({ question_id: Number(questionId), content: textareaRef.current.value });
-    return navigate(`/respone-history/${Number(questionId)}`);
+    return navigate(`/response-history/${Number(questionId)}`);
   };
 
   const handleSkipSendQuestion = async () => {
