@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { MAX_WINDOW_WIDTH, Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
 
@@ -17,6 +17,31 @@ export const Background = styled(Layout.Absolute)<{
   z-index: ${Z_INDEX.MODAL_CONTAINER};
 `;
 
+const fadeIn = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
+const fadeOut = keyframes`
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+`;
+
+export const TopComponentContainer = styled(Layout.Absolute)<{
+  visible: boolean;
+}>`
+  animation: ${(props) => (props.visible ? fadeIn : fadeOut)} 0.15s ease-in;
+  transition: visibility 0.15s ease-in;
+`;
+
 export const Container = styled(Layout.Absolute)<{
   visible: boolean;
   height: number;
@@ -32,6 +57,8 @@ export const Container = styled(Layout.Absolute)<{
   position: fixed;
   align-self: center;
   max-width: ${MAX_WINDOW_WIDTH}px;
+  display: flex;
+  flex-direction: column;
   z-index: ${Z_INDEX.MODAL_CONTAINER};
 `;
 

@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from 'react';
+import { DEFAULT_MARGIN } from '@constants/layout';
 import * as S from './BottomModal.styled';
 
 interface BottomModalProps {
@@ -7,6 +9,7 @@ interface BottomModalProps {
   children: React.ReactNode;
   bgColor?: string;
   maxHeight?: number; // 바텀 모달의 최대 높이
+  TopComponent?: React.ReactNode; // 바텀 모달 위 컴포넌트
 }
 
 function BottomModal({
@@ -15,6 +18,7 @@ function BottomModal({
   children,
   bgColor = 'rgba(0, 0, 0, 0.7)',
   maxHeight = 450,
+  TopComponent,
 }: BottomModalProps) {
   const bodyRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
@@ -30,7 +34,21 @@ function BottomModal({
 
   return (
     <>
-      {visible && <S.Background onClick={onClose} backgroundColor={bgColor} />}
+      {visible && (
+        <S.Background onClick={onClose} backgroundColor={bgColor}>
+          {TopComponent && (
+            <S.TopComponentContainer
+              w="100%"
+              b={height + 16}
+              justifyContent="flex-end"
+              r={DEFAULT_MARGIN}
+              visible={visible}
+            >
+              {TopComponent}
+            </S.TopComponentContainer>
+          )}
+        </S.Background>
+      )}
       <S.Container visible={visible} height={height}>
         <S.Body ref={bodyRef}>{children}</S.Body>
       </S.Container>

@@ -1,22 +1,30 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
-import { Font, Layout } from '@design-system';
+import { Button, Font, Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { requestResponse } from '@utils/apis/questions';
+import { requestResponse } from '@utils/apis/question';
 import SendQuestionFriendItem from '../send-question-friend-item/SendQuestionFriendItem';
 
 type SendQuestionModalProps = {
   isVisible: boolean;
   setIsVisible: (visible: boolean) => void;
   questionId: number;
+  onSkip?: () => void;
 };
 
-function SendQuestionModal({ isVisible, setIsVisible, questionId }: SendQuestionModalProps) {
+function SendQuestionModal({
+  isVisible,
+  setIsVisible,
+  questionId,
+  onSkip,
+}: SendQuestionModalProps) {
   const { myProfile: currentUser, friendList, getFriendList } = useBoundStore(UserSelector);
 
   const [selectedIdList, setSelectedIdList] = useState<number[]>([]);
+  const [t] = useTranslation('translation', { keyPrefix: 'question.send' });
 
   const handleConfirm = () => {
     if (!currentUser || !selectedIdList.length) return;
@@ -43,7 +51,15 @@ function SendQuestionModal({ isVisible, setIsVisible, questionId }: SendQuestion
   }, []);
 
   return (
-    <BottomModal visible={isVisible} onClose={handleOnClose}>
+    <BottomModal
+      visible={isVisible}
+      onClose={handleOnClose}
+      TopComponent={
+        <Layout.FlexRow>
+          <Button.Small type="white_fill" status="normal" text={t('skip')} onClick={onSkip} />
+        </Layout.FlexRow>
+      }
+    >
       <Layout.LayoutBase
         w="100%"
         bgColor="BASIC_WHITE"
@@ -74,9 +90,8 @@ function SendQuestionModal({ isVisible, setIsVisible, questionId }: SendQuestion
               justifyContent="center"
               rounded={14}
               pv={13}
-              ph={126}
             >
-              <Font.Display type="24_bold">ask</Font.Display>
+              <Font.Display type="24_bold">{t('ask')}</Font.Display>
             </Layout.FlexRow>
           </Layout.FlexRow>
         </Layout.Absolute>

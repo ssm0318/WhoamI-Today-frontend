@@ -55,6 +55,10 @@
     "response": {
       "placeholder": "Answer as your want.",
       "post": "Post"
+    },
+    "send": {
+      "ask": "ask",
+      "skip": "skip"
     }
   },
   "calendar": {

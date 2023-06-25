@@ -31,6 +31,11 @@ function ShortAnswerResponse() {
     await responseQuestion({ question_id: Number(questionId), content: textareaRef.current.value });
   };
 
+  const handleSkip = async () => {
+    setSendModalVisible(false);
+    await handlePost();
+  };
+
   useAsyncEffect(async () => {
     const res = await getQuestionDetail(Number(questionId));
     setQuestion(res);
@@ -55,6 +60,7 @@ function ShortAnswerResponse() {
         questionId={question.id}
         isVisible={sendModalVisible}
         setIsVisible={setSendModalVisible}
+        onSkip={handleSkip}
       />
     </MainContainer>
   );
