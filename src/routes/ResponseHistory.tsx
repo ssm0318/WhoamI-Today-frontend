@@ -10,7 +10,7 @@ import { Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { responseList } from '@mock/responses';
 import { ShortAnswerQuestion } from '@models/post';
-import { getQuestionDetail } from '@utils/apis/questions';
+import { getQuestionDetail } from '@utils/apis/question';
 
 function ResponseHistory() {
   const { questionId } = useParams();

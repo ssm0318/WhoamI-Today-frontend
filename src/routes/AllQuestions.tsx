@@ -8,7 +8,7 @@ import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { ShortAnswerQuestion } from '@models/post';
-import { getAllQuestions } from '@utils/apis/questions';
+import { getAllQuestions } from '@utils/apis/question';
 
 function AllQuestions() {
   const [t] = useTranslation('translation', { keyPrefix: 'home.question' });
