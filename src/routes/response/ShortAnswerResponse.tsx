@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import SendQuestionModal from '@components/question/send-question-modal/SendQuestionModal';
 import QuestionItem from '@components/response/question-item/QuestionItem';
@@ -18,6 +18,7 @@ function ShortAnswerResponse() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [sendModalVisible, setSendModalVisible] = useState(false);
   const [question, setQuestion] = useState<ShortAnswerQuestion | null>(null);
+  const navigate = useNavigate();
 
   const [t] = useTranslation('translation', { keyPrefix: 'question.response' });
 
@@ -29,9 +30,10 @@ function ShortAnswerResponse() {
     setSendModalVisible(true);
     if (!textareaRef.current) return;
     await responseQuestion({ question_id: Number(questionId), content: textareaRef.current.value });
+    return navigate(`/respone-history/${Number(questionId)}`);
   };
 
-  const handleSkip = async () => {
+  const handleSkipSendQuestion = async () => {
     setSendModalVisible(false);
     await handlePost();
   };
@@ -60,7 +62,7 @@ function ShortAnswerResponse() {
         questionId={question.id}
         isVisible={sendModalVisible}
         setIsVisible={setSendModalVisible}
-        onSkip={handleSkip}
+        onSkip={handleSkipSendQuestion}
       />
     </MainContainer>
   );
