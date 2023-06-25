@@ -10,12 +10,11 @@ import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { ShortAnswerQuestion } from '@models/post';
-import { getQuestionDetail } from '@utils/apis/questions';
+import { getQuestionDetail, responseQuestion } from '@utils/apis/question';
 
 // 주관식 질문 답변
 function ShortAnswerResponse() {
   const { questionId } = useParams();
-  // const { state: question } = useLocation() as { state: ShortAnswerQuestion };
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [sendModalVisible, setSendModalVisible] = useState(false);
   const [question, setQuestion] = useState<ShortAnswerQuestion | null>(null);
@@ -26,11 +25,10 @@ function ShortAnswerResponse() {
     setSendModalVisible(true);
   };
 
-  const handlePost = () => {
-    // TODO 답변 업로드
+  const handlePost = async () => {
     setSendModalVisible(true);
     if (!textareaRef.current) return;
-    console.log(textareaRef.current);
+    await responseQuestion({ question_id: Number(questionId), content: textareaRef.current.value });
   };
 
   useAsyncEffect(async () => {
