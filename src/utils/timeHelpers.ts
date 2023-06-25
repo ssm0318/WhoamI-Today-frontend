@@ -34,3 +34,10 @@ export const convertTimeDiffByString = (now: Date, day: Date, dateFormat?: DateF
 
   return format(new Date(day), dateFormat ?? DEFAULT_FORMAT);
 };
+
+export const getYearMonthDayFromDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return { year, month, day };
+};
