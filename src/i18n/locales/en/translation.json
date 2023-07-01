@@ -83,12 +83,12 @@
     "post": "Post"
   },
   "my_detail": {
-    "title_format": "d/M/yy (E)",
-    "delete_alert": {
-      "content": "Are you sure you want to delete it?",
-      "cancel_btn": "Cancel",
-      "confirm_btn": "Delete"
-    }
+    "title_format": "d/M/yy (E)"
+  },
+  "delete_alert": {
+    "content": "Are you sure you want to delete it?",
+    "cancel_btn": "Cancel",
+    "confirm_btn": "Delete"
   },
   "the_days_detail": {
     "moments": {
