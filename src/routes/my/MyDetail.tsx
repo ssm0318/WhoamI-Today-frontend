@@ -7,7 +7,7 @@ import TheDaysDetail from '@components/the-days-detail/TheDaysDetail';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font } from '@design-system';
-import { MOCK_MOMENT, MOCK_RESPONSES } from '@mock/myDetail';
+import { MOCK_MOMENT, MOCK_QUESTIONS } from '@mock/myDetail';
 import { getValidDate } from './MyDetail.helper';
 
 function MyDetail() {
@@ -35,7 +35,7 @@ function MyDetail() {
       />
       <TheDaysDetail
         moment={MOCK_MOMENT}
-        responses={MOCK_RESPONSES}
+        questions={MOCK_QUESTIONS}
         mt={TITLE_HEADER_HEIGHT}
         useDeleteButton
       />

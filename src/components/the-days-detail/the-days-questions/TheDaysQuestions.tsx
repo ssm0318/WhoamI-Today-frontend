@@ -1,21 +1,20 @@
 import { format } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import { Font, Layout } from '@design-system';
-import { Response } from '@models/post';
+import { DayQuestion } from '@models/post';
 import DeleteAlert from '../delete-alert/DeleteAlert';
 import ReactionButtons from '../reaction-buttons/ReactionButtons';
 import { ContentWrapper } from '../the-days-moments/TheDaysMoments.styled';
 import TheDaysWrapper from '../the-days-wrapper/TheDaysWrapper';
-import { getDaysQuestionList } from './TheDaysQuestions.helper';
 import * as S from './TheDaysQuestions.styled';
 
-interface TheDaysMomentsProps {
-  responses: Response[];
+interface TheDaysQuestionsProps {
+  questions: DayQuestion[];
   useDeleteButton?: boolean;
 }
 
-function TheDaysQuestions({ responses, useDeleteButton }: TheDaysMomentsProps) {
+function TheDaysQuestions({ questions, useDeleteButton }: TheDaysQuestionsProps) {
   const [deleteTarget, setDeleteTarget] = useState<number>();
 
   const closeDeleteAlert = () => {
@@ -31,12 +30,10 @@ function TheDaysQuestions({ responses, useDeleteButton }: TheDaysMomentsProps) {
     closeDeleteAlert();
   };
 
-  const daysQuestionList = useMemo(() => getDaysQuestionList(responses), [responses]);
-
   return (
     <TheDaysWrapper type="questions">
-      {daysQuestionList.map(
-        ({ question, responseList }) => (
+      {questions.map(
+        (question) => (
           <S.QuestionWrapper key={question.id}>
             <Layout.FlexCol w="100%" pl={12} pr={12}>
               <S.Question>
@@ -46,7 +43,7 @@ function TheDaysQuestions({ responses, useDeleteButton }: TheDaysMomentsProps) {
               </S.Question>
             </Layout.FlexCol>
             <S.ResponseList>
-              {responseList.map((response) => (
+              {question.responses.map((response) => (
                 <S.Response key={response.id}>
                   <ContentWrapper>
                     <Font.Body type="18_regular">{response.content}</Font.Body>
