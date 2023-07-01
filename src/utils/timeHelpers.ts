@@ -21,15 +21,15 @@ export const convertTimeDiffByString = (
   const diffMins = differenceInMinutes(now, day);
   const diffHours = differenceInHours(now, day);
 
-  if (diffMins <= 1) {
+  if (diffMins < 1) {
     return i18n.t('time.just_a_moment_ago');
   }
 
-  if (diffHours <= 1) {
+  if (diffHours < 1) {
     return i18n.t('time.minute_ago', { minute: diffMins });
   }
 
-  if (diffHours <= 24) {
+  if (diffHours < 24) {
     return i18n.t('time.hour_ago', { hour: diffHours });
   }
 
