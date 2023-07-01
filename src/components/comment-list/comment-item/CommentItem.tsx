@@ -12,9 +12,10 @@ import CommentInputBox from '../comment-input-box/CommentInputBox';
 interface CommentItemProps {
   comment: Comment;
   onClickReplyBtn?: () => void;
+  onClickDeleteBtn: (comment: Comment) => void;
 }
 
-function CommentItem({ comment, onClickReplyBtn }: CommentItemProps) {
+function CommentItem({ comment, onClickReplyBtn, onClickDeleteBtn }: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
 
   const { author_detail, replies, is_reply } = comment;
@@ -31,7 +32,7 @@ function CommentItem({ comment, onClickReplyBtn }: CommentItemProps) {
   };
 
   const deleteComment = () => {
-    console.log('delete comment');
+    onClickDeleteBtn?.(comment);
   };
 
   return (
@@ -62,7 +63,6 @@ function CommentItem({ comment, onClickReplyBtn }: CommentItemProps) {
                   {t('reply')}
                 </Font.Body>
               </button>
-              {/* TODO: 삭제 팝업 연결 */}
               {isCommentAuthor && (
                 <button type="button" onClick={deleteComment}>
                   <Font.Body type="12_semibold" color="GRAY_12">
@@ -77,7 +77,12 @@ function CommentItem({ comment, onClickReplyBtn }: CommentItemProps) {
       </Layout.FlexRow>
       <Layout.FlexCol w="100%" gap={2}>
         {replies.map((reply) => (
-          <CommentItem key={reply.id} comment={reply} onClickReplyBtn={toggleReplyInput} />
+          <CommentItem
+            key={reply.id}
+            comment={reply}
+            onClickReplyBtn={toggleReplyInput}
+            onClickDeleteBtn={onClickDeleteBtn}
+          />
         ))}
       </Layout.FlexCol>
       {!is_reply && showReplyInput && <CommentInputBox isReply />}
