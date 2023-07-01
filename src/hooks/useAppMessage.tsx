@@ -1,21 +1,21 @@
 import { useCallback, useEffect } from 'react';
-import { PostMessageDataType, PostMessageKeyType } from '@models/app';
+import { PostMessageDataType, PostMessageKeyToData, PostMessageKeyType } from '@models/app';
 
 type MessageDataType = Extract<PostMessageDataType, { key: PostMessageKeyType }>;
 
 // 앱 -> 웹 메시지 수신 (GET)
-const useGetAppMessage = ({
+export const useGetAppMessage = <K extends PostMessageKeyType>({
   cb,
   key,
 }: {
-  cb: (data: PostMessageDataType) => void;
-  key: PostMessageKeyType;
+  cb: (data: PostMessageKeyToData[K]) => void;
+  key: K;
 }) => {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       const { data } = event;
       if (typeof data !== 'string') return;
-      const messageData = JSON.parse(data) as MessageDataType;
+      const messageData = JSON.parse(data) as PostMessageKeyToData[K];
       if (messageData.key !== key) return;
       cb(messageData);
     };
@@ -28,7 +28,7 @@ const useGetAppMessage = ({
 };
 
 // 웹 -> 앱 메시지 발신 (POST)
-const usePostAppMessage = () => {
+export const usePostAppMessage = () => {
   const sendMessage = useCallback((key: PostMessageKeyType, data: Omit<MessageDataType, 'key'>) => {
     if (!window.ReactNativeWebView) return;
     window.ReactNativeWebView.postMessage(
@@ -41,5 +41,3 @@ const usePostAppMessage = () => {
 
   return sendMessage;
 };
-
-export { usePostAppMessage, useGetAppMessage };

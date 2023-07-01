@@ -38,9 +38,9 @@ function TodaysMoments() {
 }
 
 function MomentIcon({ name }: { name: keyof TodayMoment }) {
-  const sendMessageToApp = usePostAppMessage();
   const { todayMoment } = useBoundStore(momentSelector);
   const navigate = useNavigate();
+  const postMessage = usePostAppMessage();
 
   const handleClickUploadMoment = () => {
     if (todayMoment[name]) return;
@@ -48,8 +48,8 @@ function MomentIcon({ name }: { name: keyof TodayMoment }) {
     if (name === 'photo') {
       // 사진 업로드의 경우 앱 화면으로 이동
       if (!window?.ReactNativeWebView) return;
-      sendMessageToApp('NAVIGATE', {
-        screenName: 'MomentUploadScreen',
+      postMessage('NAVIGATE', {
+        screenName: 'MomentPhotoUploadScreen',
         params: {
           state: todayMoment,
         },
