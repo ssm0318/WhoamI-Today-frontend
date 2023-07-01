@@ -129,5 +129,9 @@
   },
   "notifications" : {
     "title": "알림"
+  },
+  "comment": {
+    "reply": "답글",
+    "delete": "삭제"
   }
 }

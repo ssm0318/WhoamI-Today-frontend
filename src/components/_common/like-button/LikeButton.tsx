@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { GetMomentResponse } from '@models/api/moment';
-import { QuestionResponse } from '@models/post';
+import { Comment, QuestionResponse } from '@models/post';
 
 interface LikeButtonProps {
-  postType: 'Moment' | 'Response';
-  post: GetMomentResponse | QuestionResponse;
+  postType: 'Moment' | 'Response' | 'Comment';
+  post: GetMomentResponse | QuestionResponse | Comment;
   isAuthor?: boolean;
   btnClassName?: string;
 }
@@ -34,7 +34,7 @@ function LikeButton({ postType, post, isAuthor, btnClassName = '' }: LikeButtonP
   };
 
   return (
-    <Layout.FlexRow w="100%" alignItems="center">
+    <Layout.FlexRow alignItems="center">
       {isAuthor && <Font.Body type="12_regular">{likeCount ?? 0}</Font.Body>}
       <button type="button" className={btnClassName} onClick={toggleLike}>
         <SvgIcon name="heart" size={18} fill={liked ? 'BASIC_BLACK' : null} />

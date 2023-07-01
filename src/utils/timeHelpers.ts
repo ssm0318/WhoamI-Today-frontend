@@ -13,7 +13,11 @@ import i18n from '@i18n/index';
  * @param day 기준 날짜
  * @returns
  */
-export const convertTimeDiffByString = (now: Date, day: Date) => {
+export const convertTimeDiffByString = (
+  now: Date,
+  day: Date,
+  dateFormat = 'yyyy.MM.dd HH:mm:ss',
+) => {
   const diffMins = differenceInMinutes(now, day);
   const diffHours = differenceInHours(now, day);
 
@@ -29,5 +33,5 @@ export const convertTimeDiffByString = (now: Date, day: Date) => {
     return i18n.t('time.hour_ago', { hour: diffHours });
   }
 
-  return format(new Date(day), 'yyyy.MM.dd HH:mm:ss');
+  return format(new Date(day), dateFormat);
 };

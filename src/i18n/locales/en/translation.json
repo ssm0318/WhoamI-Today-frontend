@@ -134,5 +134,9 @@
   },
   "notifications" : {
     "title": "Notifications"
+  },
+  "comment": {
+    "reply": "Reply",
+    "delete": "Delete"
   }
 }

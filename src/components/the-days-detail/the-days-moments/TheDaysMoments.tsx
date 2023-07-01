@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
+import CommentList from '@components/comment-list/CommentList';
 import { Font, Layout } from '@design-system';
 import { GetMomentResponse } from '@models/api/moment';
 import { TodayMoment } from '@models/moment';
@@ -32,6 +33,12 @@ function TheDaysMoments({ moment, useDeleteButton }: TheDaysMomentsProps) {
     closeDeleteAlert();
   };
 
+  const [showComments, setShowComments] = useState(false);
+
+  const toggleComments = () => {
+    setShowComments((prev) => !prev);
+  };
+
   return (
     <TheDaysWrapper type="moments">
       {mood && (
@@ -61,8 +68,10 @@ function TheDaysMoments({ moment, useDeleteButton }: TheDaysMomentsProps) {
           postType="Moment"
           post={moment}
           isAuthor={useDeleteButton} // FIXME: 사용자 작성글인지 구분
+          onClickComments={toggleComments}
         />
       </Layout.FlexRow>
+      {showComments && <CommentList postType="Moment" />}
       <DeleteAlert
         visible={!!deleteTarget}
         close={closeDeleteAlert}
