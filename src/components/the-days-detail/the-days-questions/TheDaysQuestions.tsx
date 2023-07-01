@@ -4,7 +4,7 @@ import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import CommentList from '@components/comment-list/CommentList';
 import { Font, Layout } from '@design-system';
 import { DayQuestion, QuestionResponse } from '@models/post';
-import DeleteAlert from '../delete-alert/DeleteAlert';
+import DeleteAlert from '../../_common/alert-dialog/delete-alert/DeleteAlert';
 import ReactionButtons from '../reaction-buttons/ReactionButtons';
 import { ContentWrapper } from '../the-days-moments/TheDaysMoments.styled';
 import TheDaysWrapper from '../the-days-wrapper/TheDaysWrapper';

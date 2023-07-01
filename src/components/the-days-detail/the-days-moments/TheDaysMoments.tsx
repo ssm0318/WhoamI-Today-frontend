@@ -4,7 +4,7 @@ import CommentList from '@components/comment-list/CommentList';
 import { Font, Layout } from '@design-system';
 import { GetMomentResponse } from '@models/api/moment';
 import { TodayMoment } from '@models/moment';
-import DeleteAlert from '../delete-alert/DeleteAlert';
+import DeleteAlert from '../../_common/alert-dialog/delete-alert/DeleteAlert';
 import ReactionButtons from '../reaction-buttons/ReactionButtons';
 import TheDaysWrapper from '../the-days-wrapper/TheDaysWrapper';
 import * as S from './TheDaysMoments.styled';
