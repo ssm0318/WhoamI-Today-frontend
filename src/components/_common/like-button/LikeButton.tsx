@@ -2,15 +2,17 @@ import { useState } from 'react';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { GetMomentResponse } from '@models/api/moment';
 import { Comment, QuestionResponse } from '@models/post';
+import * as S from './LikeButton.styled';
 
 interface LikeButtonProps {
   postType: 'Moment' | 'Response' | 'Comment';
   post: GetMomentResponse | QuestionResponse | Comment;
   isAuthor?: boolean;
-  btnClassName?: string;
+  m?: number;
+  iconSize: number;
 }
 
-function LikeButton({ postType, post, isAuthor, btnClassName = '' }: LikeButtonProps) {
+function LikeButton({ postType, post, isAuthor, iconSize, m = 6 }: LikeButtonProps) {
   const { id, current_user_liked, like_count } = post;
 
   const [liked, setLiked] = useState(current_user_liked);
@@ -36,9 +38,9 @@ function LikeButton({ postType, post, isAuthor, btnClassName = '' }: LikeButtonP
   return (
     <Layout.FlexRow alignItems="center">
       {isAuthor && <Font.Body type="12_regular">{likeCount ?? 0}</Font.Body>}
-      <button type="button" className={btnClassName} onClick={toggleLike}>
-        <SvgIcon name="heart" size={18} fill={liked ? 'BASIC_BLACK' : null} />
-      </button>
+      <S.IconButton type="button" m={m} onClick={toggleLike}>
+        <SvgIcon name="heart" size={iconSize} fill={liked ? 'BASIC_BLACK' : null} />
+      </S.IconButton>
     </Layout.FlexRow>
   );
 }

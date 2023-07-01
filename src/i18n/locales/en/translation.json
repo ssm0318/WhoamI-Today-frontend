@@ -137,6 +137,9 @@
   },
   "comment": {
     "reply": "Reply",
-    "delete": "Delete"
+    "delete": "Delete",
+    "post": "Post",
+    "comment_place_holder": "Please enter a comment.",
+    "reply_place_holder": "Please enter a reply."
   }
 }

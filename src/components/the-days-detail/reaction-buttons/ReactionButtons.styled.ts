@@ -6,3 +6,7 @@ export const ReactionButtonsWrapper = styled(Layout.FlexRow)`
     margin: 6px;
   }
 `;
+
+export const IconButton = styled.button`
+  margin: 6px;
+`;
