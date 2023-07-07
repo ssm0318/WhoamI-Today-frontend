@@ -1,12 +1,11 @@
 import LikeButton from '@components/_common/like-button/LikeButton';
 import { Layout, SvgIcon } from '@design-system';
-import { GetMomentResponse } from '@models/api/moment';
-import { QuestionResponse } from '@models/post';
+import { MomentPost, QuestionResponse } from '@models/post';
 import * as S from './ReactionButtons.styled';
 
 interface ReactionButtonsProps {
   postType: 'Moment' | 'Response';
-  post: GetMomentResponse | QuestionResponse;
+  post: MomentPost | QuestionResponse;
   isAuthor?: boolean;
   onClickComments?: () => void;
 }

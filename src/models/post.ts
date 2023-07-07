@@ -1,3 +1,4 @@
+import { GetMomentResponse } from './api/moment';
 import { User } from './user';
 
 export enum QUESTION_TYPE {
@@ -78,3 +79,5 @@ export type QuestionResponse = Omit<ContentsCommon, 'author_detail' | 'author'> 
     question_id: number;
     author?: string;
   };
+
+export interface MomentPost extends GetMomentResponse {}
