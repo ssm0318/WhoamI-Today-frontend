@@ -8,10 +8,10 @@ import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { MOCK_QUESTIONS } from '@mock/myDetail';
-import { MomentPost } from '@models/post';
+import { DayQuestion, MomentPost } from '@models/post';
 import { getDateRequestParams } from '@utils/apis/common';
 import { getDailyMoment } from '@utils/apis/moment';
+import { getDayQuestions } from '@utils/apis/responses';
 import { getValidDate } from './MyDetail.helper';
 
 function MyDetail() {
@@ -25,17 +25,28 @@ function MyDetail() {
     navigate('/my', { replace: true });
   }, [currDate, navigate]);
 
+  const params = useMemo(() => {
+    if (!currDate) return;
+    return getDateRequestParams(currDate);
+  }, [currDate]);
+
   const [moment, setMoment] = useState<MomentPost>();
 
   const getMoment = useCallback(async () => {
-    if (!currDate) return;
-    const params = getDateRequestParams(currDate);
+    if (!params) return;
     const data = await getDailyMoment(params);
     setMoment(data ?? undefined);
-  }, [currDate]);
+  }, [params]);
   useAsyncEffect(getMoment, [getMoment]);
 
-  // TODO: questions 요청
+  const [questions, setQuestions] = useState<DayQuestion[]>();
+
+  const getQuestions = useCallback(async () => {
+    if (!params) return;
+    const data = await getDayQuestions(params);
+    setQuestions(data);
+  }, [params]);
+  useAsyncEffect(getQuestions, [getQuestions]);
 
   const [t] = useTranslation('translation', { keyPrefix: 'my_detail' });
   return (
@@ -49,7 +60,7 @@ function MyDetail() {
       />
       <TheDaysDetail
         moment={moment}
-        questions={MOCK_QUESTIONS}
+        questions={questions}
         mt={TITLE_HEADER_HEIGHT}
         useDeleteButton
       />
