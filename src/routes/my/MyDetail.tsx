@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
@@ -7,7 +7,11 @@ import TheDaysDetail from '@components/the-days-detail/TheDaysDetail';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font } from '@design-system';
-import { MOCK_MOMENT, MOCK_QUESTIONS } from '@mock/myDetail';
+import useAsyncEffect from '@hooks/useAsyncEffect';
+import { MOCK_QUESTIONS } from '@mock/myDetail';
+import { MomentPost } from '@models/post';
+import { getDateRequestParams } from '@utils/apis/common';
+import { getDailyMoment } from '@utils/apis/moment';
 import { getValidDate } from './MyDetail.helper';
 
 function MyDetail() {
@@ -21,7 +25,17 @@ function MyDetail() {
     navigate('/my', { replace: true });
   }, [currDate, navigate]);
 
-  // TODO: moment, questions 요청
+  const [moment, setMoment] = useState<MomentPost>();
+
+  const getMoment = useCallback(async () => {
+    if (!currDate) return;
+    const params = getDateRequestParams(currDate);
+    const data = await getDailyMoment(params);
+    setMoment(data ?? undefined);
+  }, [currDate]);
+  useAsyncEffect(getMoment, [getMoment]);
+
+  // TODO: questions 요청
 
   const [t] = useTranslation('translation', { keyPrefix: 'my_detail' });
   return (
@@ -34,7 +48,7 @@ function MyDetail() {
         }
       />
       <TheDaysDetail
-        moment={MOCK_MOMENT}
+        moment={moment}
         questions={MOCK_QUESTIONS}
         mt={TITLE_HEADER_HEIGHT}
         useDeleteButton

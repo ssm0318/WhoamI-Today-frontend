@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { CALENDAR_VIEW, DayMoment } from '@models/calendar';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getMomentRequestParams, getMonthlyMoments } from '@utils/apis/moment';
+import { getDateRequestParams } from '@utils/apis/common';
+import { getMonthlyMoments } from '@utils/apis/moment';
 import { mapMomentToCalendar } from '../_helpers/mapMomentToCalendar';
 import CalendarCell from '../calendar-cell/CalendarCell';
 import CalendarViewWrapper from '../calendar-view-wrapper/CalendarViewWrapper';
@@ -22,7 +23,7 @@ function MonthlyCalendar() {
   }, [currentDate]);
 
   const updateMonthlyMoments = useCallback(async () => {
-    const { year, month } = getMomentRequestParams(currentDate);
+    const { year, month } = getDateRequestParams(currentDate);
     const data = await getMonthlyMoments({ year, month });
     setCalendarMonth((prev) => mapMomentToCalendar(prev, data));
   }, [currentDate]);

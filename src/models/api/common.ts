@@ -8,3 +8,9 @@ export interface PaginationResponse<T> extends Response<T> {
   next: string | null;
   previous: string | null;
 }
+
+export interface DateRequestParams {
+  year: number;
+  month: number;
+  day: number;
+}

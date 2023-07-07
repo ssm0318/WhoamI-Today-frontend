@@ -3,7 +3,8 @@ import { useCallback, useEffect, useState } from 'react';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { CALENDAR_VIEW, DayMoment } from '@models/calendar';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getMomentRequestParams, getWeeklyMoments } from '@utils/apis/moment';
+import { getDateRequestParams } from '@utils/apis/common';
+import { getWeeklyMoments } from '@utils/apis/moment';
 import { mapMomentToCalendar } from '../_helpers/mapMomentToCalendar';
 import CalendarCell from '../calendar-cell/CalendarCell';
 import CalendarViewWrapper from '../calendar-view-wrapper/CalendarViewWrapper';
@@ -22,7 +23,7 @@ function WeeklyCalendar() {
   }, [currentDate]);
 
   const updateWeeklyMoments = useCallback(async () => {
-    const { year, month, day } = getMomentRequestParams(startOfWeek(currentDate));
+    const { year, month, day } = getDateRequestParams(startOfWeek(currentDate));
     const data = await getWeeklyMoments({ year, month, day });
     setCalendarWeek((prev) => mapMomentToCalendar(prev, data));
   }, [currentDate]);
