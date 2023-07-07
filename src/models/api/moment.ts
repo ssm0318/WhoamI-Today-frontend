@@ -1,5 +1,4 @@
 import { TodayMoment } from '@models/moment';
-import { Comment } from '@models/post';
 
 export interface MomentRequestParams {
   year: number;
@@ -15,7 +14,6 @@ export interface GetMomentResponse extends TodayMoment {
   current_user_liked: boolean;
   date: string;
   created_at: string;
-  comments: Comment[];
 }
 
 // POST today's moment

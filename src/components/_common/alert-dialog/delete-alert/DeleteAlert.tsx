@@ -9,7 +9,7 @@ interface DeleteAlertProps {
 }
 
 function DeleteAlert({ visible, close, onClickConfirm }: DeleteAlertProps) {
-  const [t] = useTranslation('translation', { keyPrefix: 'my_detail.delete_alert' });
+  const [t] = useTranslation('translation', { keyPrefix: 'delete_alert' });
 
   return (
     <AlertDialog visible={visible} onClickDimmed={close}>

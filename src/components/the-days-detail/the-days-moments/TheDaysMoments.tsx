@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
+import CommentList from '@components/comment-list/CommentList';
 import { Font, Layout } from '@design-system';
 import { GetMomentResponse } from '@models/api/moment';
 import { TodayMoment } from '@models/moment';
-import DeleteAlert from '../delete-alert/DeleteAlert';
+import DeleteAlert from '../../_common/alert-dialog/delete-alert/DeleteAlert';
 import ReactionButtons from '../reaction-buttons/ReactionButtons';
 import TheDaysWrapper from '../the-days-wrapper/TheDaysWrapper';
 import * as S from './TheDaysMoments.styled';
@@ -32,6 +33,12 @@ function TheDaysMoments({ moment, useDeleteButton }: TheDaysMomentsProps) {
     closeDeleteAlert();
   };
 
+  const [showComments, setShowComments] = useState(false);
+
+  const toggleComments = () => {
+    setShowComments((prev) => !prev);
+  };
+
   return (
     <TheDaysWrapper type="moments">
       {mood && (
@@ -57,9 +64,14 @@ function TheDaysMoments({ moment, useDeleteButton }: TheDaysMomentsProps) {
         </S.ContentWrapper>
       )}
       <Layout.FlexRow w="100%" justifyContent="flex-end" pt={6} pr={8} pb={6}>
-        {/* TODO: 좋아요, 댓글창 버튼 기능 추가 */}
-        <ReactionButtons />
+        <ReactionButtons
+          postType="Moment"
+          post={moment}
+          isAuthor={useDeleteButton} // FIXME: 사용자 작성글인지 구분
+          onClickComments={toggleComments}
+        />
       </Layout.FlexRow>
+      {showComments && <CommentList postType="Moment" />}
       <DeleteAlert
         visible={!!deleteTarget}
         close={closeDeleteAlert}

@@ -1,3 +1,4 @@
+import { GetMomentResponse } from './api/moment';
 import { User } from './user';
 
 export enum QUESTION_TYPE {
@@ -61,3 +62,22 @@ export interface Response extends ContentsCommon {
   question: Question;
   question_id: number;
 }
+
+// 질문에 대한 답변 리스트
+export interface DayQuestion {
+  id: number;
+  type: 'Question';
+  content: string;
+  created_at: string;
+  is_admin_question: boolean;
+  responses: QuestionResponse[];
+}
+
+export type QuestionResponse = Omit<ContentsCommon, 'author_detail' | 'author'> &
+  ShareSettings & {
+    type: POST_TYPE.RESPONSE;
+    question_id: number;
+    author?: string;
+  };
+
+export interface MomentPost extends GetMomentResponse {}

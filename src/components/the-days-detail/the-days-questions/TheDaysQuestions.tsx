@@ -1,28 +1,28 @@
 import { format } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
+import CommentList from '@components/comment-list/CommentList';
 import { Font, Layout } from '@design-system';
-import { Response } from '@models/post';
-import DeleteAlert from '../delete-alert/DeleteAlert';
+import { DayQuestion, QuestionResponse } from '@models/post';
+import DeleteAlert from '../../_common/alert-dialog/delete-alert/DeleteAlert';
 import ReactionButtons from '../reaction-buttons/ReactionButtons';
 import { ContentWrapper } from '../the-days-moments/TheDaysMoments.styled';
 import TheDaysWrapper from '../the-days-wrapper/TheDaysWrapper';
-import { getDaysQuestionList } from './TheDaysQuestions.helper';
 import * as S from './TheDaysQuestions.styled';
 
-interface TheDaysMomentsProps {
-  responses: Response[];
+interface TheDaysQuestionsProps {
+  questions: DayQuestion[];
   useDeleteButton?: boolean;
 }
 
-function TheDaysQuestions({ responses, useDeleteButton }: TheDaysMomentsProps) {
+export default function TheDaysQuestions({ questions, useDeleteButton }: TheDaysQuestionsProps) {
   const [deleteTarget, setDeleteTarget] = useState<number>();
 
   const closeDeleteAlert = () => {
     setDeleteTarget(undefined);
   };
 
-  const onClickResponseDelete = (responseId: number) => () => {
+  const onClickResponseDelete = (responseId: number) => {
     setDeleteTarget(responseId);
   };
 
@@ -31,41 +31,29 @@ function TheDaysQuestions({ responses, useDeleteButton }: TheDaysMomentsProps) {
     closeDeleteAlert();
   };
 
-  const daysQuestionList = useMemo(() => getDaysQuestionList(responses), [responses]);
-
   return (
     <TheDaysWrapper type="questions">
-      {daysQuestionList.map(
-        ({ question, responseList }) => (
-          <S.QuestionWrapper key={question.id}>
-            <Layout.FlexCol w="100%" pl={12} pr={12}>
-              <S.Question>
-                <Font.Display type="18_bold" color="GRAY_3">
-                  {question.content}
-                </Font.Display>
-              </S.Question>
-            </Layout.FlexCol>
-            <S.ResponseList>
-              {responseList.map(({ id, content: responseContent, created_at }) => (
-                <S.Response key={id}>
-                  <ContentWrapper>
-                    <Font.Body type="18_regular">{responseContent}</Font.Body>
-                    {useDeleteButton && <DeleteButton onClick={onClickResponseDelete(id)} />}
-                  </ContentWrapper>
-                  <S.ResponseFooter>
-                    <Font.Body type="12_regular" color="GRAY_12">
-                      {format(new Date(created_at), 'HH:mm')}
-                    </Font.Body>
-                    {/* TODO: 좋아요, 댓글창 버튼 기능 추가 */}
-                    <ReactionButtons />
-                  </S.ResponseFooter>
-                </S.Response>
-              ))}
-            </S.ResponseList>
-          </S.QuestionWrapper>
-        ),
-        [],
-      )}
+      {questions.map((question) => (
+        <S.QuestionWrapper key={question.id}>
+          <Layout.FlexCol w="100%" pl={12} pr={12}>
+            <S.Question>
+              <Font.Display type="18_bold" color="GRAY_3">
+                {question.content}
+              </Font.Display>
+            </S.Question>
+          </Layout.FlexCol>
+          <S.ResponseList>
+            {question.responses.map((response) => (
+              <ResponseItem
+                key={response.id}
+                response={response}
+                useDeleteButton={useDeleteButton}
+                onClickDeleteBtn={onClickResponseDelete}
+              />
+            ))}
+          </S.ResponseList>
+        </S.QuestionWrapper>
+      ))}
       <DeleteAlert
         visible={!!deleteTarget}
         close={closeDeleteAlert}
@@ -75,4 +63,41 @@ function TheDaysQuestions({ responses, useDeleteButton }: TheDaysMomentsProps) {
   );
 }
 
-export default TheDaysQuestions;
+interface ResponseItemProps {
+  response: QuestionResponse;
+  useDeleteButton?: boolean;
+  onClickDeleteBtn?: (responseId: number) => void;
+}
+
+function ResponseItem({ response, useDeleteButton, onClickDeleteBtn }: ResponseItemProps) {
+  const [showComments, setShowComments] = useState(false);
+
+  const handleDeleteBtn = (responseId: number) => () => {
+    onClickDeleteBtn?.(responseId);
+  };
+
+  const toggleComments = () => {
+    setShowComments((prev) => !prev);
+  };
+
+  return (
+    <S.Response>
+      <ContentWrapper>
+        <Font.Body type="18_regular">{response.content}</Font.Body>
+        {useDeleteButton && <DeleteButton onClick={handleDeleteBtn(response.id)} />}
+      </ContentWrapper>
+      <S.ResponseFooter>
+        <Font.Body type="12_regular" color="GRAY_12">
+          {format(new Date(response.created_at), 'HH:mm')}
+        </Font.Body>
+        <ReactionButtons
+          postType="Response"
+          post={response}
+          isAuthor={useDeleteButton} // FIXME: 사용자 작성글인지 구분
+          onClickComments={toggleComments}
+        />
+      </S.ResponseFooter>
+      {showComments && <CommentList postType="Response" />}
+    </S.Response>
+  );
+}

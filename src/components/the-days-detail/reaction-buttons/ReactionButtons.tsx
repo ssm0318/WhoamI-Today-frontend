@@ -1,20 +1,22 @@
+import LikeButton from '@components/_common/like-button/LikeButton';
 import { Layout, SvgIcon } from '@design-system';
+import { MomentPost, QuestionResponse } from '@models/post';
 import * as S from './ReactionButtons.styled';
 
 interface ReactionButtonsProps {
-  onClickLike?: () => void;
+  postType: 'Moment' | 'Response';
+  post: MomentPost | QuestionResponse;
+  isAuthor?: boolean;
   onClickComments?: () => void;
 }
 
-function ReactionButtons({ onClickLike, onClickComments }: ReactionButtonsProps) {
+function ReactionButtons({ postType, post, isAuthor, onClickComments }: ReactionButtonsProps) {
   return (
-    <Layout.FlexRow>
-      <S.Button onClick={onClickLike}>
-        <SvgIcon name="heart" size={18} />
-      </S.Button>
-      <S.Button onClick={onClickComments}>
+    <Layout.FlexRow alignItems="center">
+      <LikeButton postType={postType} post={post} isAuthor={isAuthor} iconSize={18} />
+      <S.IconButton type="button" onClick={onClickComments}>
         <SvgIcon name="comment" size={18} />
-      </S.Button>
+      </S.IconButton>
     </Layout.FlexRow>
   );
 }
