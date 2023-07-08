@@ -151,3 +151,16 @@ export const signUp = ({
       onError(e);
     });
 };
+
+export const changeProfileImage = (imageFile: File, onSuccess: () => void) => {
+  const formData = new FormData();
+  formData.append('profile_image', imageFile);
+
+  axiosFormDataInstance
+    .patch('/user/me/', formData)
+    .then(() => onSuccess())
+    .catch((e) => {
+      // TODO
+      console.error(e);
+    });
+};
