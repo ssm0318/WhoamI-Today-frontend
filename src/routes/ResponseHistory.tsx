@@ -9,7 +9,6 @@ import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { responseList } from '@mock/responses';
-import { userList } from '@mock/users';
 import { ShortAnswerQuestion } from '@models/post';
 import { getQuestionDetail } from '@utils/apis/questions';
 
@@ -55,12 +54,7 @@ function ResponseHistory() {
           ))}
         </Layout.FlexCol>
       </Layout.FlexCol>
-      {/* TODO 실제 userList 적용 필요 */}
-      <SendQuestionModal
-        userList={userList}
-        isVisible={sendModalVisible}
-        setIsVisible={setSendModalVisible}
-      />
+      <SendQuestionModal isVisible={sendModalVisible} setIsVisible={setSendModalVisible} />
     </MainContainer>
   );
 }

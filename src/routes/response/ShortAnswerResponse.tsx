@@ -9,7 +9,6 @@ import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { userList } from '@mock/users';
 import { ShortAnswerQuestion } from '@models/post';
 import { getQuestionDetail } from '@utils/apis/questions';
 
@@ -54,12 +53,7 @@ function ShortAnswerResponse() {
         <QuestionItem question={question} onSend={handleSend} />
         <ResponseInput inputRef={textareaRef} />
       </Layout.FlexCol>
-      {/* TODO 실제 userList 적용 필요 */}
-      <SendQuestionModal
-        userList={userList}
-        isVisible={sendModalVisible}
-        setIsVisible={setSendModalVisible}
-      />
+      <SendQuestionModal isVisible={sendModalVisible} setIsVisible={setSendModalVisible} />
     </MainContainer>
   );
 }

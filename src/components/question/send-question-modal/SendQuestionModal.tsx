@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { Font, Layout } from '@design-system';
+import useAsyncEffect from '@hooks/useAsyncEffect';
+import { User } from '@models/user';
+import { getFriendList } from '@utils/apis/user';
 import SendQuestionFriendItem from '../send-question-friend-item/SendQuestionFriendItem';
 
 type SendQuestionModalProps = {
-  userList: { id: number; profile_pic: string; name: string }[];
   isVisible: boolean;
   setIsVisible: (visible: boolean) => void;
 };
 
-function SendQuestionModal({ userList, isVisible, setIsVisible }: SendQuestionModalProps) {
+function SendQuestionModal({ isVisible, setIsVisible }: SendQuestionModalProps) {
+  const [friendList, setFriendList] = useState<User[]>();
   const [selectedIdList, setSelectedIdList] = useState<number[]>([]);
 
   const handleConfirm = () => {
@@ -30,6 +33,13 @@ function SendQuestionModal({ userList, isVisible, setIsVisible }: SendQuestionMo
     }
   };
 
+  const updateFriendList = useCallback(async () => {
+    const result = await getFriendList();
+    setFriendList(result);
+  }, []);
+
+  useAsyncEffect(updateFriendList, [updateFriendList]);
+
   return (
     <BottomModal visible={isVisible} onClose={handleOnClose}>
       <Layout.LayoutBase
@@ -39,7 +49,8 @@ function SendQuestionModal({ userList, isVisible, setIsVisible }: SendQuestionMo
         ph={10}
         pb={12 + BOTTOM_BUTTON_SECTION_HEIGHT}
       >
-        {userList.map((user) => (
+        {/* TODO: 친구가 없는 유저의 경우 대응 */}
+        {friendList?.map((user) => (
           <SendQuestionFriendItem
             user={user}
             onToggle={(selected) => handleToggleItem(user.id, selected)}

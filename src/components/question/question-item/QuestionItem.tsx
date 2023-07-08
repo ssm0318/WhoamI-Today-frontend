@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Font, Layout, SvgIcon } from '@design-system';
-import { userList } from '@mock/users';
 import { Question } from '@models/post';
 import SendQuestionModal from '../send-question-modal/SendQuestionModal';
 
@@ -50,11 +49,7 @@ function QuestionItem({ question }: QuestionItemProps) {
           </button>
         </Layout.FlexRow>
       </Layout.FlexRow>
-      <SendQuestionModal
-        userList={userList}
-        isVisible={sendModalVisible}
-        setIsVisible={setSendModalVisible}
-      />
+      <SendQuestionModal isVisible={sendModalVisible} setIsVisible={setSendModalVisible} />
     </>
   );
 }

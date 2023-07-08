@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios';
 import { redirect } from 'react-router-dom';
 import i18n from '@i18n/index';
+import { PaginationResponse } from '@models/api/common';
 import {
   EmailError,
   MyProfile,
@@ -10,6 +11,7 @@ import {
   SignUpParams,
   UsernameError,
 } from '@models/api/user';
+import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 
@@ -150,4 +152,9 @@ export const signUp = ({
     .catch((e) => {
       onError(e);
     });
+};
+
+export const getFriendList = async () => {
+  const { data } = await axios.get<PaginationResponse<User[]>>('/user/me/friends/');
+  return data.results;
 };
