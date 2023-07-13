@@ -1,11 +1,10 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { Font, Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { requestResponse } from '@utils/apis/questions';
-import { getFriendList } from '@utils/apis/user';
 import SendQuestionFriendItem from '../send-question-friend-item/SendQuestionFriendItem';
 
 type SendQuestionModalProps = {
@@ -15,9 +14,8 @@ type SendQuestionModalProps = {
 };
 
 function SendQuestionModal({ isVisible, setIsVisible, questionId }: SendQuestionModalProps) {
-  const currentUser = useBoundStore((state) => state.myProfile);
+  const { myProfile: currentUser, friendList, getFriendList } = useBoundStore(UserSelector);
 
-  const [friendList, setFriendList] = useState<User[]>();
   const [selectedIdList, setSelectedIdList] = useState<number[]>([]);
 
   const handleConfirm = () => {
@@ -39,12 +37,10 @@ function SendQuestionModal({ isVisible, setIsVisible, questionId }: SendQuestion
     }
   };
 
-  const updateFriendList = useCallback(async () => {
-    const result = await getFriendList();
-    setFriendList(result);
+  useAsyncEffect(async () => {
+    if (friendList) return;
+    await getFriendList();
   }, []);
-
-  useAsyncEffect(updateFriendList, [updateFriendList]);
 
   return (
     <BottomModal visible={isVisible} onClose={handleOnClose}>
