@@ -3,21 +3,27 @@ import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { Font, Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { User } from '@models/user';
+import { useBoundStore } from '@stores/useBoundStore';
+import { requestResponse } from '@utils/apis/questions';
 import { getFriendList } from '@utils/apis/user';
 import SendQuestionFriendItem from '../send-question-friend-item/SendQuestionFriendItem';
 
 type SendQuestionModalProps = {
   isVisible: boolean;
   setIsVisible: (visible: boolean) => void;
+  questionId: number;
 };
 
-function SendQuestionModal({ isVisible, setIsVisible }: SendQuestionModalProps) {
+function SendQuestionModal({ isVisible, setIsVisible, questionId }: SendQuestionModalProps) {
+  const currentUser = useBoundStore((state) => state.myProfile);
+
   const [friendList, setFriendList] = useState<User[]>();
   const [selectedIdList, setSelectedIdList] = useState<number[]>([]);
 
   const handleConfirm = () => {
-    // TODO 질문 보내기 동작
-    console.log(selectedIdList);
+    if (!currentUser || !selectedIdList.length) return;
+
+    requestResponse(currentUser.id, questionId, selectedIdList);
     setIsVisible(false);
   };
 
@@ -26,7 +32,7 @@ function SendQuestionModal({ isVisible, setIsVisible }: SendQuestionModalProps) 
   };
 
   const handleToggleItem = (userId: number, selected: boolean) => {
-    if (selected) {
+    if (!selected) {
       setSelectedIdList((prev) => prev.filter((id) => id !== userId));
     } else {
       setSelectedIdList((prev) => [...prev, userId]);

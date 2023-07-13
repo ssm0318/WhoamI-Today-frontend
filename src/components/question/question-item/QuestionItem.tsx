@@ -49,7 +49,11 @@ function QuestionItem({ question }: QuestionItemProps) {
           </button>
         </Layout.FlexRow>
       </Layout.FlexRow>
-      <SendQuestionModal isVisible={sendModalVisible} setIsVisible={setSendModalVisible} />
+      <SendQuestionModal
+        questionId={question.id}
+        isVisible={sendModalVisible}
+        setIsVisible={setSendModalVisible}
+      />
     </>
   );
 }

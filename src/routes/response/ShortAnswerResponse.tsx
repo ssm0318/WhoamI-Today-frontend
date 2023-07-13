@@ -53,7 +53,11 @@ function ShortAnswerResponse() {
         <QuestionItem question={question} onSend={handleSend} />
         <ResponseInput inputRef={textareaRef} />
       </Layout.FlexCol>
-      <SendQuestionModal isVisible={sendModalVisible} setIsVisible={setSendModalVisible} />
+      <SendQuestionModal
+        questionId={question.id}
+        isVisible={sendModalVisible}
+        setIsVisible={setSendModalVisible}
+      />
     </MainContainer>
   );
 }

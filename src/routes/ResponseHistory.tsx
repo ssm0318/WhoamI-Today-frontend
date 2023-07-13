@@ -54,7 +54,11 @@ function ResponseHistory() {
           ))}
         </Layout.FlexCol>
       </Layout.FlexCol>
-      <SendQuestionModal isVisible={sendModalVisible} setIsVisible={setSendModalVisible} />
+      <SendQuestionModal
+        questionId={question.id}
+        isVisible={sendModalVisible}
+        setIsVisible={setSendModalVisible}
+      />
     </MainContainer>
   );
 }
