@@ -13,11 +13,12 @@ interface TheDaysDetailProps {
 }
 
 function TheDaysDetail({ mt, moment, questions, useDeleteButton }: TheDaysDetailProps) {
+  const hasQuestions = questions && questions.length > 0;
   return (
     <Layout.FlexCol w="100%" mt={mt}>
       {moment && <TheDaysMoments moment={moment} useDeleteButton={useDeleteButton} />}
-      {moment && questions && <Divider width={2} />}
-      {questions && <TheDaysQuestions questions={questions} useDeleteButton={useDeleteButton} />}
+      {moment && hasQuestions && <Divider width={2} />}
+      {hasQuestions && <TheDaysQuestions questions={questions} useDeleteButton={useDeleteButton} />}
     </Layout.FlexCol>
   );
 }

@@ -1,10 +1,5 @@
 import { TodayMoment } from '@models/moment';
-
-export interface MomentRequestParams {
-  year: number;
-  month: number;
-  day: number;
-}
+import { DateRequestParams } from './common';
 
 // GET today's moment
 export interface GetMomentResponse extends TodayMoment {
@@ -17,7 +12,7 @@ export interface GetMomentResponse extends TodayMoment {
 }
 
 // POST today's moment
-export interface PostMomentRequest extends MomentRequestParams {
+export interface PostMomentRequest extends DateRequestParams {
   moment: TodayMoment;
 }
 
