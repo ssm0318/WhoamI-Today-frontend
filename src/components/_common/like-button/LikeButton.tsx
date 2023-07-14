@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { Comment, MomentPost, QuestionResponse, Response } from '@models/post';
+import { deleteLike, postLike } from '@utils/apis/likes';
 import * as S from './LikeButton.styled';
 
 interface LikeButtonProps {
@@ -18,15 +19,17 @@ function LikeButton({ postType, post, isAuthor, iconSize, m = 6 }: LikeButtonPro
   const [likeCount, setLikeCount] = useState(like_count ?? 0);
 
   const like = () => {
-    console.log(`TODO: like ${postType} ${id}`);
-    setLiked(true);
-    setLikeCount((prev) => prev + 1);
+    postLike({ target_id: id, target_type: postType }).then(() => {
+      setLiked(true);
+      setLikeCount((prev) => prev + 1);
+    });
   };
 
   const unLike = () => {
-    console.log(`TODO: unlike ${postType} ${id}`);
-    setLiked(false);
-    setLikeCount((prev) => prev - 1);
+    deleteLike({ target_id: id, target_type: postType }).then(() => {
+      setLiked(false);
+      setLikeCount((prev) => prev - 1);
+    });
   };
 
   const toggleLike = () => {
