@@ -80,7 +80,7 @@ function TheDaysMoments({ moment, useDeleteButton, reloadMoment }: TheDaysMoment
           onClickComments={toggleComments}
         />
       </Layout.FlexRow>
-      {showComments && <CommentList postType="Moment" />}
+      {showComments && <CommentList postType="Moment" post={moment} />}
       <DeleteAlert
         visible={!!deleteTarget}
         close={closeDeleteAlert}

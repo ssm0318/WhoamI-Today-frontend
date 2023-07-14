@@ -1,5 +1,5 @@
-import { DateRequestParams } from '@models/api/common';
-import { DayQuestion } from '@models/post';
+import { DateRequestParams, PaginationResponse } from '@models/api/common';
+import { Comment, DayQuestion } from '@models/post';
 import axios from './axios';
 
 export const getDayQuestions = async ({ year, month, day }: DateRequestParams) => {
@@ -9,4 +9,12 @@ export const getDayQuestions = async ({ year, month, day }: DateRequestParams) =
 
 export const deleteResponse = async (responseId: number) => {
   return axios.delete(`/feed/responses/${responseId}/`);
+};
+
+export const getCommentsOfResponse = async (responseId: number) => {
+  // TODO: response type 확인!
+  const { data } = await axios.get<PaginationResponse<Comment[][]>>(
+    `/feed/responses/comments/${responseId}/`,
+  );
+  return data?.results?.[0] || [];
 };

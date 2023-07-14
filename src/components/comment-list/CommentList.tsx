@@ -1,21 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAlert';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import { Layout } from '@design-system';
-import { MOCK_COMMENTS } from '@mock/myDetail';
-import { Comment } from '@models/post';
+import useAsyncEffect from '@hooks/useAsyncEffect';
+import { Comment, MomentPost, QuestionResponse } from '@models/post';
 import CommentInputBox from './comment-input-box/CommentInputBox';
 import CommentItem from './comment-item/CommentItem';
+import { getCommentList } from './CommentList.helper';
 
 interface CommentListProps {
   postType: 'Moment' | 'Response';
+  post: MomentPost | QuestionResponse;
 }
 
-function CommentList({ postType }: CommentListProps) {
-  useEffect(() => {
-    // TODO: GET comments
-    console.log(`GET ${postType} comments`);
-  }, [postType]);
+function CommentList({ postType, post }: CommentListProps) {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const getComments = useCallback(async () => {
+    const commentList = await getCommentList(postType, post.id);
+    setComments(commentList);
+  }, [post.id, postType]);
+  useAsyncEffect(getComments, [getComments]);
 
   const [deleteTarget, setDeleteTarget] = useState<Comment>();
 
@@ -38,7 +42,7 @@ function CommentList({ postType }: CommentListProps) {
       <Divider width={1} marginTrailing={10} />
       <Layout.FlexCol w="100%" gap={2}>
         {/* TODO: private comments */}
-        {MOCK_COMMENTS.map((comment) => (
+        {comments.map((comment) => (
           <CommentItem
             key={comment.id}
             comment={comment}
