@@ -4,6 +4,7 @@ import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import CommentList from '@components/comment-list/CommentList';
 import { Font, Layout } from '@design-system';
 import { DayQuestion, QuestionResponse } from '@models/post';
+import { deleteResponse } from '@utils/apis/responses';
 import DeleteAlert from '../../_common/alert-dialog/delete-alert/DeleteAlert';
 import ReactionButtons from '../reaction-buttons/ReactionButtons';
 import { ContentWrapper } from '../the-days-moments/TheDaysMoments.styled';
@@ -13,9 +14,14 @@ import * as S from './TheDaysQuestions.styled';
 interface TheDaysQuestionsProps {
   questions: DayQuestion[];
   useDeleteButton?: boolean;
+  reloadQuestions?: () => void;
 }
 
-export default function TheDaysQuestions({ questions, useDeleteButton }: TheDaysQuestionsProps) {
+export default function TheDaysQuestions({
+  questions,
+  useDeleteButton,
+  reloadQuestions,
+}: TheDaysQuestionsProps) {
   const [deleteTarget, setDeleteTarget] = useState<number>();
 
   const closeDeleteAlert = () => {
@@ -26,9 +32,18 @@ export default function TheDaysQuestions({ questions, useDeleteButton }: TheDays
     setDeleteTarget(responseId);
   };
 
-  const deleteResponse = () => {
-    console.log(`TODO: delete response ${deleteTarget}`);
-    closeDeleteAlert();
+  const confirmDeleteAlert = () => {
+    if (!deleteTarget) {
+      closeDeleteAlert();
+      return;
+    }
+
+    deleteResponse(deleteTarget)
+      .then(() => {
+        reloadQuestions?.();
+      })
+      .catch(() => console.log('TODO: 삭제 실패 알림'))
+      .finally(() => closeDeleteAlert());
   };
 
   return (
@@ -57,7 +72,7 @@ export default function TheDaysQuestions({ questions, useDeleteButton }: TheDays
       <DeleteAlert
         visible={!!deleteTarget}
         close={closeDeleteAlert}
-        onClickConfirm={deleteResponse}
+        onClickConfirm={confirmDeleteAlert}
       />
     </TheDaysWrapper>
   );

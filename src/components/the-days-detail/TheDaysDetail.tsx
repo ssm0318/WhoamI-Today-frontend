@@ -11,6 +11,7 @@ interface TheDaysDetailProps {
   questions?: DayQuestion[];
   useDeleteButton?: boolean;
   reloadMoment?: () => void;
+  reloadQuestions?: () => void;
 }
 
 function TheDaysDetail({
@@ -19,6 +20,7 @@ function TheDaysDetail({
   questions,
   useDeleteButton,
   reloadMoment,
+  reloadQuestions,
 }: TheDaysDetailProps) {
   const hasQuestions = questions && questions.length > 0;
 
@@ -34,7 +36,13 @@ function TheDaysDetail({
         />
       )}
       {moment && hasQuestions && <Divider width={2} />}
-      {hasQuestions && <TheDaysQuestions questions={questions} useDeleteButton={useDeleteButton} />}
+      {hasQuestions && (
+        <TheDaysQuestions
+          questions={questions}
+          useDeleteButton={useDeleteButton}
+          reloadQuestions={reloadQuestions}
+        />
+      )}
     </Layout.FlexCol>
   );
 }

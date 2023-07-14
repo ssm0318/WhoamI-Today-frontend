@@ -70,6 +70,7 @@ function MyDetail() {
         mt={TITLE_HEADER_HEIGHT}
         useDeleteButton
         reloadMoment={getMoment}
+        reloadQuestions={getQuestions}
       />
     </MainContainer>
   );

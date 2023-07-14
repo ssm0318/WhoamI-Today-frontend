@@ -55,5 +55,5 @@ export const getMonthlyMoments = async ({ year, month }: Omit<DateRequestParams,
 };
 
 export const deleteMoment = async ({ id, type }: { id: number; type: MomentType }) => {
-  await axios.delete(`/moment/${id}/${type}/`);
+  return axios.delete(`/moment/${id}/${type}/`);
 };
