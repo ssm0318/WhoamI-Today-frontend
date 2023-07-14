@@ -3,7 +3,8 @@ import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import CommentList from '@components/comment-list/CommentList';
 import { Font, Layout } from '@design-system';
 import { GetMomentResponse } from '@models/api/moment';
-import { TodayMoment } from '@models/moment';
+import { MomentType } from '@models/moment';
+import { deleteMoment } from '@utils/apis/moment';
 import DeleteAlert from '../../_common/alert-dialog/delete-alert/DeleteAlert';
 import ReactionButtons from '../reaction-buttons/ReactionButtons';
 import TheDaysWrapper from '../the-days-wrapper/TheDaysWrapper';
@@ -12,11 +13,10 @@ import * as S from './TheDaysMoments.styled';
 interface TheDaysMomentsProps {
   moment: GetMomentResponse;
   useDeleteButton?: boolean;
+  reloadMoment?: () => void;
 }
 
-type MomentType = keyof TodayMoment;
-
-function TheDaysMoments({ moment, useDeleteButton }: TheDaysMomentsProps) {
+function TheDaysMoments({ moment, useDeleteButton, reloadMoment }: TheDaysMomentsProps) {
   const { mood, photo, description } = moment;
   const [deleteTarget, setDeleteTarget] = useState<MomentType>();
 
@@ -28,9 +28,18 @@ function TheDaysMoments({ moment, useDeleteButton }: TheDaysMomentsProps) {
     setDeleteTarget(momentType);
   };
 
-  const deleteMoment = () => {
-    console.log(`TODO: delete moment /${moment.id}/${deleteTarget}`);
-    closeDeleteAlert();
+  const confirmDeleteAlert = () => {
+    if (!deleteTarget) {
+      closeDeleteAlert();
+      return;
+    }
+
+    deleteMoment({ id: moment.id, type: deleteTarget })
+      .then(() => {
+        reloadMoment?.();
+      })
+      .catch(() => console.log('TODO: 삭제 실패 알림'))
+      .finally(() => closeDeleteAlert());
   };
 
   const [showComments, setShowComments] = useState(false);
@@ -75,7 +84,7 @@ function TheDaysMoments({ moment, useDeleteButton }: TheDaysMomentsProps) {
       <DeleteAlert
         visible={!!deleteTarget}
         close={closeDeleteAlert}
-        onClickConfirm={deleteMoment}
+        onClickConfirm={confirmDeleteAlert}
       />
     </TheDaysWrapper>
   );
