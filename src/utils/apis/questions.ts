@@ -22,3 +22,19 @@ export const getQuestionDetail = async (id: number) => {
   const { data } = await axios.get<ShortAnswerQuestion>(`/feed/questions/${id}/`);
   return data;
 };
+
+export const requestResponse = async (
+  currentUserId: number,
+  questionId: number,
+  selectedFriendIdList: number[],
+) => {
+  Promise.all(
+    selectedFriendIdList.map((friend) =>
+      axios.post(`/feed/questions/response-request/`, {
+        requester_id: currentUserId,
+        requestee_id: friend,
+        question_id: questionId,
+      }),
+    ),
+  );
+};

@@ -1,20 +1,27 @@
 import { useState } from 'react';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { Font, Layout } from '@design-system';
+import useAsyncEffect from '@hooks/useAsyncEffect';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
+import { requestResponse } from '@utils/apis/questions';
 import SendQuestionFriendItem from '../send-question-friend-item/SendQuestionFriendItem';
 
 type SendQuestionModalProps = {
-  userList: { id: number; profile_pic: string; name: string }[];
   isVisible: boolean;
   setIsVisible: (visible: boolean) => void;
+  questionId: number;
 };
 
-function SendQuestionModal({ userList, isVisible, setIsVisible }: SendQuestionModalProps) {
+function SendQuestionModal({ isVisible, setIsVisible, questionId }: SendQuestionModalProps) {
+  const { myProfile: currentUser, friendList, getFriendList } = useBoundStore(UserSelector);
+
   const [selectedIdList, setSelectedIdList] = useState<number[]>([]);
 
   const handleConfirm = () => {
-    // TODO 질문 보내기 동작
-    console.log(selectedIdList);
+    if (!currentUser || !selectedIdList.length) return;
+
+    requestResponse(currentUser.id, questionId, selectedIdList);
     setIsVisible(false);
   };
 
@@ -23,12 +30,17 @@ function SendQuestionModal({ userList, isVisible, setIsVisible }: SendQuestionMo
   };
 
   const handleToggleItem = (userId: number, selected: boolean) => {
-    if (selected) {
+    if (!selected) {
       setSelectedIdList((prev) => prev.filter((id) => id !== userId));
     } else {
       setSelectedIdList((prev) => [...prev, userId]);
     }
   };
+
+  useAsyncEffect(async () => {
+    if (friendList) return;
+    await getFriendList();
+  }, []);
 
   return (
     <BottomModal visible={isVisible} onClose={handleOnClose}>
@@ -39,7 +51,8 @@ function SendQuestionModal({ userList, isVisible, setIsVisible }: SendQuestionMo
         ph={10}
         pb={12 + BOTTOM_BUTTON_SECTION_HEIGHT}
       >
-        {userList.map((user) => (
+        {/* TODO: 친구가 없는 유저의 경우 대응 */}
+        {friendList?.map((user) => (
           <SendQuestionFriendItem
             user={user}
             onToggle={(selected) => handleToggleItem(user.id, selected)}
