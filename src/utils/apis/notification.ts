@@ -18,3 +18,18 @@ export const readNotification = async (ids: number[]) => {
   });
   return data;
 };
+
+// POST activate device (노티 설정)
+export const activateFirebaseNotification = async ({
+  token,
+  active,
+}: {
+  token: string;
+  active: boolean;
+}) => {
+  await axios.post(`/devices/`, {
+    type: 'web',
+    registration_id: token,
+    active,
+  });
+};
