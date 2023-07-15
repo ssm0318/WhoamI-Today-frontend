@@ -30,9 +30,6 @@ function Settings() {
   const handleClickEditProfile = () => navigate('/settings/edit-profile');
   const handleClickChangePassword = () => navigate('/settings/confirm-password');
 
-  const handlePushNotiOn = () => console.log('todo: push on');
-  const handlePushNotiOff = () => console.log('todo: push off');
-
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const handleOnClose = () => {
     setLogoutModalVisible(false);
@@ -86,8 +83,9 @@ function Settings() {
         <Layout.FlexCol ph={DEFAULT_MARGIN} gap={10} w="100%">
           <Font.Display type="20_bold">{t('notification_settings')}</Font.Display>
           <Layout.FlexRow w="100%" justifyContent="space-between">
+            {/* TODO(Gina): 웹의 경우 어떻게 보여야할지 확인중 */}
             <Font.Body type="18_regular">{t('push_notifications')}</Font.Body>
-            <SettingsToggleButton onToggleOn={handlePushNotiOn} onToggleOff={handlePushNotiOff} />
+            <SettingsToggleButton />
           </Layout.FlexRow>
         </Layout.FlexCol>
         <Divider width={1} />

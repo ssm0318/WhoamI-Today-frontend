@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Font, SvgIcon } from '@design-system';
 import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
-import useFcm from '@hooks/useFcm';
 import {
   StyledAccountSettingsButton,
   StyledSettingsButton,
@@ -30,42 +29,25 @@ export function SettingsButton({ text, onClick }: SettingButtonProps) {
   );
 }
 
-interface SettingsToggleButtonProps {
-  onToggleOn: () => void;
-  onToggleOff: () => void;
-}
-
-export function SettingsToggleButton({ onToggleOn, onToggleOff }: SettingsToggleButtonProps) {
-  const [on, setOn] = useState(false);
-  const { notiPermissionStatus } = useFcm();
+// TODO(Gina): 앱에서만 노출 확정 필요
+export function SettingsToggleButton() {
   const postMessage = usePostAppMessage();
+  const [on, setOn] = useState(false);
 
-  const handleToggle = () => {
+  const handleToggle = async () => {
+    if (!window?.ReactNativeWebView) return;
     // 앱인 경우 설정창으로 보냄
-    if (window?.ReactNativeWebView) {
-      return postMessage('OPEN_SETTING', {});
-    }
-
-    setOn((prev) => !prev);
-
-    if (on) {
-      onToggleOff();
-      return;
-    }
-    onToggleOn();
+    return postMessage('OPEN_SETTING', {});
   };
 
-  // 앱인 경우
-  useGetAppMessage({ key: 'SET_NOTI_PERMISSION', cb: ({ value }) => setOn(value) });
+  useGetAppMessage({
+    cb: ({ value }) => {
+      setOn(value);
+    },
+    key: 'SET_NOTI_PERMISSION',
+  });
 
-  useEffect(() => {
-    // 앱이 아닌 경우
-    if (!window?.ReactNativeWebView) {
-      // TODO(Gina): notiPermissionStatus 정의 다시 확인
-      setOn(notiPermissionStatus === 'default');
-    }
-  }, [notiPermissionStatus]);
-
+  if (!window?.ReactNativeWebView) return null;
   return (
     <StyledToggleButton>
       <input type="checkbox" checked={on} onChange={handleToggle} />
