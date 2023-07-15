@@ -42,12 +42,6 @@ function MomentContent({ moment, useDeleteButton, reloadMoment }: MomentContentP
 
   return (
     <>
-      {mood && (
-        <ContentWrapper>
-          <span>{mood}</span>
-          {useDeleteButton && <DeleteButton onClick={onClickDelete('mood')} />}
-        </ContentWrapper>
-      )}
       {photo && (
         <S.PhotoWrapper>
           <S.Photo src={photo} alt="moment_photo" loading="lazy" />
@@ -57,6 +51,12 @@ function MomentContent({ moment, useDeleteButton, reloadMoment }: MomentContentP
             </Layout.Absolute>
           )}
         </S.PhotoWrapper>
+      )}
+      {mood && (
+        <ContentWrapper>
+          <span>{mood}</span>
+          {useDeleteButton && <DeleteButton onClick={onClickDelete('mood')} />}
+        </ContentWrapper>
       )}
       {description && (
         <ContentWrapper>
