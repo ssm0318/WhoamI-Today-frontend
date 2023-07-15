@@ -13,9 +13,15 @@ interface CommentItemProps {
   comment: Comment;
   onClickReplyBtn?: () => void;
   onClickDeleteBtn: (comment: Comment) => void;
+  reloadComments?: () => void;
 }
 
-function CommentItem({ comment, onClickReplyBtn, onClickDeleteBtn }: CommentItemProps) {
+function CommentItem({
+  comment,
+  onClickReplyBtn,
+  onClickDeleteBtn,
+  reloadComments,
+}: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
 
   const { author_detail, replies, is_reply } = comment;
@@ -51,6 +57,7 @@ function CommentItem({ comment, onClickReplyBtn, onClickDeleteBtn }: CommentItem
               />
               <Font.Body type="14_semibold">{username}</Font.Body>
             </Layout.FlexRow>
+            {/* TODO: 줄바꿈 표시 */}
             <Font.Body type="14_regular">{comment.content}</Font.Body>
           </Layout.FlexRow>
           <Layout.FlexRow w="100%" gap={10}>
@@ -85,7 +92,14 @@ function CommentItem({ comment, onClickReplyBtn, onClickDeleteBtn }: CommentItem
           />
         ))}
       </Layout.FlexCol>
-      {!is_reply && showReplyInput && <CommentInputBox isReply />}
+      {!is_reply && showReplyInput && (
+        <CommentInputBox
+          isReply
+          post={comment}
+          postType="Comment"
+          reloadComments={reloadComments}
+        />
+      )}
     </Layout.FlexCol>
   );
 }

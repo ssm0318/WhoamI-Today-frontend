@@ -112,7 +112,7 @@ function ResponseItem({ response, useDeleteButton, onClickDeleteBtn }: ResponseI
           onClickComments={toggleComments}
         />
       </S.ResponseFooter>
-      {showComments && <CommentList postType="Response" />}
+      {showComments && <CommentList postType="Response" post={response} />}
     </S.Response>
   );
 }

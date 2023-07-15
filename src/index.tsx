@@ -82,7 +82,7 @@ const router = createBrowserRouter([
     path: 'moment-upload',
     element: <MomentUpload />,
   },
-  { path: 'my/detail/:detailDate', element: <MyDetail /> },
+  { path: 'my/detail/:detailDate', element: <MyDetail />, loader: checkIfSignIn },
   {
     path: 'notifications',
     element: <Notifications />,
