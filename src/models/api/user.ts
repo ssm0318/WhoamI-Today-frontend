@@ -1,3 +1,5 @@
+import { User } from '@models/user';
+
 export interface SignInParams {
   username: string;
   password: string;
@@ -86,12 +88,8 @@ export const UsernameValidateError = {
 export type UsernameValidateErrorType =
   (typeof UsernameValidateError)[keyof typeof UsernameValidateError];
 
-export interface MyProfile {
-  id: number;
-  username: string;
+export interface MyProfile extends User {
   email: string;
-  profile_image: string | null;
-  profile_pic: string;
   date_of_birth: string | null;
   date_of_signature: string | null;
   ethnicity: unknown;
@@ -100,5 +98,4 @@ export interface MyProfile {
   question_history: number[] | null;
   research_agreement: boolean;
   signature: string | null;
-  url: string;
 }
