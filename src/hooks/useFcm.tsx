@@ -1,10 +1,12 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging } from 'firebase/messaging';
+import { useCallback } from 'react';
 import { useBoundStore } from '@stores/useBoundStore';
 import {
   addForegroundMessageEventListener,
   firebaseConfig,
   getFCMRegistrationToken,
+  requestPermission,
 } from '../utils/firebaseHelpers';
 
 const useFcm = () => {
@@ -12,10 +14,15 @@ const useFcm = () => {
     setFcmToken: state.setFcmToken,
   }));
 
+  const requestNotiPermission = useCallback(() => {
+    requestPermission();
+  }, []);
+
   const initializeFcm = async () => {
     try {
       const app = initializeApp(firebaseConfig);
       const messaging = getMessaging(app);
+
       if (Notification.permission !== 'granted') return;
       addForegroundMessageEventListener(messaging);
 
@@ -30,6 +37,7 @@ const useFcm = () => {
 
   return {
     initializeFcm,
+    requestNotiPermission,
   };
 };
 

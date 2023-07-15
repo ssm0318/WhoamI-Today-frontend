@@ -10,7 +10,7 @@ import { MainWrapper, RootContainer } from '@styles/wrappers';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 
 function Root() {
-  const { initializeFcm } = useFcm();
+  const { initializeFcm, requestNotiPermission } = useFcm();
   const { isMobile } = getMobileDeviceInfo();
 
   useAsyncEffect(async () => {
@@ -30,7 +30,9 @@ function Root() {
         >
           <Outlet />
         </MainWrapper>
-        {Notification.permission === 'default' && <NotiPermissionBanner />}
+        {Notification.permission === 'default' && (
+          <NotiPermissionBanner onClick={requestNotiPermission} />
+        )}
         <Tab />
       </RootContainer>
     </Layout.FlexRow>

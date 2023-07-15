@@ -19,11 +19,15 @@ export const requestPermission = async () => {
   return permission;
 };
 
+// activate device
+// after successfully initialized
 export const activateDevice = (token: string | null) => {
   if (!token) return;
   activateFirebaseNotification({ token, active: true });
 };
 
+// deactivate device
+// 로그아웃, 탈퇴 등
 export const deactivateDevice = (token: string | null) => {
   if (!token) return;
   activateFirebaseNotification({ token, active: false });
