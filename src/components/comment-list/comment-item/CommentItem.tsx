@@ -26,8 +26,8 @@ function CommentItem({
 
   const { author_detail, replies, is_reply } = comment;
 
-  const myProfile = useBoundStore((state) => state.myProfile);
-  const isCommentAuthor = (author_detail as User).id === myProfile?.id;
+  const isUserAuthor = useBoundStore((state) => state.isUserAuthor);
+  const isCommentAuthor = isUserAuthor((author_detail as User).id);
 
   const [showReplyInput, setShowReplyInput] = useState(false);
 
@@ -53,7 +53,11 @@ function CommentItem({
           </Layout.FlexRow>
           <Layout.FlexRow w="100%" gap={10}>
             <Font.Body type="12_regular" color="GRAY_12">
-              {convertTimeDiffByString(new Date(), new Date(comment.created_at))}
+              {convertTimeDiffByString(
+                new Date(),
+                new Date(comment.created_at),
+                'yyyy.MM.dd HH:mm',
+              )}
             </Font.Body>
             <Layout.FlexRow gap={5}>
               <button type="button" onClick={toggleReplyInput}>

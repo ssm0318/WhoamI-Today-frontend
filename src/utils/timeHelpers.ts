@@ -1,6 +1,9 @@
 import { differenceInHours, differenceInMinutes, format } from 'date-fns';
 import i18n from '@i18n/index';
 
+const DEFAULT_FORMAT = 'yyyy.MM.dd HH:mm:ss';
+type DateFormat = typeof DEFAULT_FORMAT | 'yyyy.MM.dd HH:mm';
+
 /**
  * 현재 날짜와 기준 날짜 차이를 계산 후 포맷팅
  *
@@ -13,11 +16,7 @@ import i18n from '@i18n/index';
  * @param day 기준 날짜
  * @returns
  */
-export const convertTimeDiffByString = (
-  now: Date,
-  day: Date,
-  dateFormat = 'yyyy.MM.dd HH:mm:ss',
-) => {
+export const convertTimeDiffByString = (now: Date, day: Date, dateFormat?: DateFormat) => {
   const diffMins = differenceInMinutes(now, day);
   const diffHours = differenceInHours(now, day);
 
@@ -33,5 +32,5 @@ export const convertTimeDiffByString = (
     return i18n.t('time.hour_ago', { hour: diffHours });
   }
 
-  return format(new Date(day), dateFormat);
+  return format(new Date(day), dateFormat ?? DEFAULT_FORMAT);
 };

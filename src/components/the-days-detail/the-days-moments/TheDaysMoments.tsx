@@ -21,7 +21,11 @@ function TheDaysMoments({ moment, useDeleteButton, reloadMoment }: TheDaysMoment
 
   return (
     <TheDaysWrapper type="moments">
-      <MomentContent moment={moment} reloadMoment={reloadMoment} />
+      <MomentContent
+        moment={moment}
+        useDeleteButton={useDeleteButton}
+        reloadMoment={reloadMoment}
+      />
       <Layout.FlexRow w="100%" justifyContent="flex-end" pt={6} pr={8} pb={6}>
         <ReactionButtons
           postType="Moment"
