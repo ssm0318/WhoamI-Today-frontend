@@ -30,7 +30,8 @@ function Root() {
         >
           <Outlet />
         </MainWrapper>
-        {Notification.permission === 'default' && (
+        {/* 앱이거나 모바일 웹인 경우는 보여주지 않음 */}
+        {!isMobile && Notification.permission === 'default' && (
           <NotiPermissionBanner onClick={requestNotiPermission} />
         )}
         <Tab />
