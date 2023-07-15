@@ -12,9 +12,8 @@ export const deleteResponse = async (responseId: number) => {
 };
 
 export const getCommentsOfResponse = async (responseId: number) => {
-  // TODO: response type 확인!
   const { data } = await axios.get<PaginationResponse<Comment[][]>>(
     `/feed/responses/comments/${responseId}/`,
   );
-  return data?.results?.[0] || [];
+  return data?.results || [[]];
 };

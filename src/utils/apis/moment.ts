@@ -60,9 +60,8 @@ export const deleteMoment = async ({ id, type }: { id: number; type: MomentType 
 };
 
 export const getCommentsOfMoment = async (momentId: number) => {
-  // TODO: response type 확인!
   const { data } = await axios.get<PaginationResponse<Comment[][]>>(
     `/moment/comments/${momentId}/`,
   );
-  return data?.results?.[0] || [];
+  return data?.results || [[]];
 };

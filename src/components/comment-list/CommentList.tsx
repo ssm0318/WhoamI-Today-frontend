@@ -18,7 +18,8 @@ function CommentList({ postType, post }: CommentListProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const getComments = useCallback(async () => {
     const commentList = await getCommentList(postType, post.id);
-    setComments(commentList);
+    // TODO: comment pagination 추가
+    setComments(commentList.flat());
   }, [post.id, postType]);
   useAsyncEffect(getComments, [getComments]);
 
