@@ -1,6 +1,6 @@
 import { DateRequestParams, Response } from '@models/api/common';
 import { GetMomentResponse, PostMomentResponse, UpdateMomentResponse } from '@models/api/moment';
-import { TodayMoment } from '@models/moment';
+import { MomentType, TodayMoment } from '@models/moment';
 import { objectFormDataSerializer } from '@utils/validateHelpers';
 import axios, { axiosFormDataInstance } from './axios';
 import { getDateRequestParams } from './common';
@@ -52,4 +52,8 @@ export const getMonthlyMoments = async ({ year, month }: Omit<DateRequestParams,
     `/moment/monthly/${year}/${month}/`,
   );
   return data?.results || [];
+};
+
+export const deleteMoment = async ({ id, type }: { id: number; type: MomentType }) => {
+  return axios.delete(`/moment/${id}/${type}/`);
 };

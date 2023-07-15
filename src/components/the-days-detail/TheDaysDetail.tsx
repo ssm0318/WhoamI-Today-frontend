@@ -10,15 +10,39 @@ interface TheDaysDetailProps {
   moment?: GetMomentResponse;
   questions?: DayQuestion[];
   useDeleteButton?: boolean;
+  reloadMoment?: () => void;
+  reloadQuestions?: () => void;
 }
 
-function TheDaysDetail({ mt, moment, questions, useDeleteButton }: TheDaysDetailProps) {
+function TheDaysDetail({
+  mt,
+  moment,
+  questions,
+  useDeleteButton,
+  reloadMoment,
+  reloadQuestions,
+}: TheDaysDetailProps) {
   const hasQuestions = questions && questions.length > 0;
+
+  // TODO: moment, questions 모두 없는 케이스
+  if (!moment && !hasQuestions) return <>NotFound</>;
   return (
     <Layout.FlexCol w="100%" mt={mt}>
-      {moment && <TheDaysMoments moment={moment} useDeleteButton={useDeleteButton} />}
+      {moment && (
+        <TheDaysMoments
+          moment={moment}
+          useDeleteButton={useDeleteButton}
+          reloadMoment={reloadMoment}
+        />
+      )}
       {moment && hasQuestions && <Divider width={2} />}
-      {hasQuestions && <TheDaysQuestions questions={questions} useDeleteButton={useDeleteButton} />}
+      {hasQuestions && (
+        <TheDaysQuestions
+          questions={questions}
+          useDeleteButton={useDeleteButton}
+          reloadQuestions={reloadQuestions}
+        />
+      )}
     </Layout.FlexCol>
   );
 }

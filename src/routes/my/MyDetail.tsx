@@ -34,8 +34,13 @@ function MyDetail() {
 
   const getMoment = useCallback(async () => {
     if (!params) return;
-    const data = await getDailyMoment(params);
-    setMoment(data ?? undefined);
+    getDailyMoment(params)
+      .then((data) => {
+        setMoment(data ?? undefined);
+      })
+      .catch(() => {
+        setMoment(undefined);
+      });
   }, [params]);
   useAsyncEffect(getMoment, [getMoment]);
 
@@ -49,6 +54,7 @@ function MyDetail() {
   useAsyncEffect(getQuestions, [getQuestions]);
 
   const [t] = useTranslation('translation', { keyPrefix: 'my_detail' });
+
   return (
     <MainContainer>
       <TitleHeader
@@ -63,6 +69,8 @@ function MyDetail() {
         questions={questions}
         mt={TITLE_HEADER_HEIGHT}
         useDeleteButton
+        reloadMoment={getMoment}
+        reloadQuestions={getQuestions}
       />
     </MainContainer>
   );

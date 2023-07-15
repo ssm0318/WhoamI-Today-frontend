@@ -4,3 +4,5 @@ export interface TodayMoment {
   photo: string | null;
   description: string | null;
 }
+
+export type MomentType = keyof TodayMoment;
