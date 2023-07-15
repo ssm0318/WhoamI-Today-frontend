@@ -1,6 +1,6 @@
-// import axios from '@utils/api';
 import { getToken, MessagePayload, Messaging, onMessage } from 'firebase/messaging';
-// import i18n from '@i18n';
+import i18n from '@i18n/index';
+import { activateFirebaseNotification } from './apis/notification';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -19,27 +19,14 @@ export const requestPermission = async () => {
   return permission;
 };
 
-const activateDevice = (token: string) => {
+export const activateDevice = (token: string | null) => {
   if (!token) return;
-  console.log(token);
-  // TODO(Gina): axios 셋팅 후 주석 해제 및 수정 필요
-  //   axios.post('/devices/', {
-  //     type: 'web',
-  //     registration_id: token,
-  //     active: true
-  //   });
+  activateFirebaseNotification({ token, active: true });
 };
 
-export const deactivateFirebaseDevice = (token: string) => {
+export const deactivateDevice = (token: string | null) => {
   if (!token) return;
-  console.log(token);
-
-  // TODO(Gina): axios 셋팅 후 주석 해제 및 수정 필요
-  //   axios.post('/devices/', {
-  //     type: 'web',
-  //     registration_id: token,
-  //     active: true
-  //   });
+  activateFirebaseNotification({ token, active: false });
 };
 
 export const getFCMRegistrationToken = async (messaging: Messaging) => {
@@ -58,12 +45,10 @@ export const addForegroundMessageEventListener = (messaging: Messaging) => {
   onMessage(messaging, (payload: MessagePayload) => {
     const { data } = payload;
     if (!data) return;
-    const { message_ko, url, tag, type } = data;
+    const { message_ko, url, tag, type, message_en } = data;
     const title = 'WhoAmI Today';
     const options = {
-      // TODO(Gina): i18n 셋팅 후 적용 필요
-      //   body: i18n.language === "ko" ? message_ko : message_en,
-      body: message_ko,
+      body: i18n.language === 'ko' ? message_ko : message_en,
       tag,
       // TODO(Gina): icon 설정 필요
       icon: 'https://diivers.world/assets/logo/full-logo.svg',
