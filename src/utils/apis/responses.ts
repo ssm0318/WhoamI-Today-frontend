@@ -15,5 +15,6 @@ export const getCommentsOfResponse = async (responseId: number) => {
   const { data } = await axios.get<PaginationResponse<Comment[][]>>(
     `/feed/responses/comments/${responseId}/`,
   );
+  // TODO: 페이지네이션 작업시 수정
   return data?.results || [[]];
 };
