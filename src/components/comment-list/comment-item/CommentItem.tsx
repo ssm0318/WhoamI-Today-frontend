@@ -57,6 +57,7 @@ function CommentItem({
               />
               <Font.Body type="14_semibold">{username}</Font.Body>
             </Layout.FlexRow>
+            {/* TODO: 줄바꿈 표시 */}
             <Font.Body type="14_regular">{comment.content}</Font.Body>
           </Layout.FlexRow>
           <Layout.FlexRow w="100%" gap={10}>

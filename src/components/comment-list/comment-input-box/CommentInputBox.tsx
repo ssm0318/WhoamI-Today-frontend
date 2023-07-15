@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Layout, SvgIcon } from '@design-system';
 import { Comment, MomentPost, QuestionResponse } from '@models/post';
@@ -30,11 +30,24 @@ function CommentInputBox({ isReply, postType, post, reloadComments }: CommentInp
     setContent(e.target.value);
   };
 
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.nativeEvent.isComposing || e.key !== 'Enter') return;
+    if (e.shiftKey) return;
+
+    e.preventDefault();
+    handleSubmitComment();
+  };
+
   return (
     <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between" gap={5}>
       {/* FIXME: reply icon 교체 */}
       {isReply && <SvgIcon name="arrow_right" color="BASIC_BLACK" size={20} />}
-      <S.CommentInput placeholder={placeholder} onChange={handleChangeInput} value={content} />
+      <S.CommentInput
+        placeholder={placeholder}
+        onChange={handleChangeInput}
+        value={content}
+        onKeyDown={handleKeyDown}
+      />
       <Button.Small
         text={t('post')}
         type="white_fill"
