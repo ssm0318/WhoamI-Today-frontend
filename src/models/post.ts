@@ -50,6 +50,9 @@ export interface UserTag {
   length: number;
 }
 
+export const isAdminAuthor = (author: User | AdminAuthor): author is AdminAuthor => {
+  return (author as AdminAuthor).color_hex !== undefined;
+};
 // 어드민 작성자
 export interface AdminAuthor {
   color_hex: string;
