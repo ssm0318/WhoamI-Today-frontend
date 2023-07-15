@@ -4,6 +4,7 @@ import { Divider } from '@components/_common/divider/Divider.styled';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { Comment, MomentPost, QuestionResponse } from '@models/post';
+import { deleteComment } from '@utils/apis/comments';
 import CommentInputBox from './comment-input-box/CommentInputBox';
 import CommentItem from './comment-item/CommentItem';
 import { getCommentList } from './CommentList.helper';
@@ -31,9 +32,12 @@ function CommentList({ postType, post }: CommentListProps) {
     setDeleteTarget(comment);
   };
 
-  const deleteComment = () => {
+  const confirmDeleteAlert = () => {
     if (!deleteTarget) return;
-    console.log(`TODO: delete ${postType} comment ${deleteTarget.id}`);
+    deleteComment(deleteTarget.id)
+      .then(() => getComments())
+      .catch(() => console.log('TODO: 삭제 실패 알림'))
+      .finally(() => closeDeleteAlert());
     closeDeleteAlert();
   };
 
@@ -55,7 +59,7 @@ function CommentList({ postType, post }: CommentListProps) {
       <DeleteAlert
         visible={!!deleteTarget}
         close={closeDeleteAlert}
-        onClickConfirm={deleteComment}
+        onClickConfirm={confirmDeleteAlert}
       />
     </Layout.FlexCol>
   );

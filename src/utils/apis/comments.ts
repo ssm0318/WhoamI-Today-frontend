@@ -8,3 +8,7 @@ interface PostCommentProps extends CommonTarget {
 export const postComment = async (postInfo: PostCommentProps) => {
   return axios.post(`/comments/`, postInfo);
 };
+
+export const deleteComment = async (commentId: number) => {
+  return axios.delete(`/comments/${commentId}/`);
+};
