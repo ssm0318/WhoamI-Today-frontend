@@ -40,7 +40,7 @@ function UserPage() {
           </button>
         }
       />
-      <UserMoreModal isVisible={showMore} setIsVisible={setShowMore} user={user} />
+      {user && <UserMoreModal isVisible={showMore} setIsVisible={setShowMore} user={user} />}
       {user ? (
         <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" pl={18} pr={18}>
           <ProfileImage imageUrl={user.profile_image} username={user.username} size={100} />
@@ -54,6 +54,7 @@ function UserPage() {
           {/* TODO: 오늘의 게시글 */}
         </Layout.FlexCol>
       ) : (
+        // TODO: 존재하지 않거나, 차단/신고된 유저인 경우
         <Layout.FlexRow w="100%">
           <Loader />
         </Layout.FlexRow>

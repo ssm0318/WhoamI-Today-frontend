@@ -163,3 +163,11 @@ export const getUserProfile = async (username: string) => {
   const { data } = await axios.get<UserProfile>(`/user/profile/${username}/`);
   return data;
 };
+
+export const reportUser = async (userId: number) => {
+  await axios.post('/user_reports/', { reported_user_id: userId });
+};
+
+export const breakFriend = async (friendId: number) => {
+  await axios.delete(`user/friend/${friendId}/`);
+};

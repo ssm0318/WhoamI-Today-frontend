@@ -111,7 +111,8 @@
     "accept": "Accept",
     "reject": "Reject",
     "requested": "Requested",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   },
   "settings":{
     "title": "Settings",

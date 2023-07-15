@@ -108,7 +108,8 @@
     "accept": "수락",
     "reject": "거절",
     "requested": "요청됨",
-    "cancel": "취소"
+    "cancel": "취소",
+    "confirm": "확인"
   },
   "settings":{
     "title": "설정",
