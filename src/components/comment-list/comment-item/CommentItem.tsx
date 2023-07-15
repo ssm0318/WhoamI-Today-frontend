@@ -13,9 +13,15 @@ interface CommentItemProps {
   comment: Comment;
   onClickReplyBtn?: () => void;
   onClickDeleteBtn: (comment: Comment) => void;
+  reloadComments?: () => void;
 }
 
-function CommentItem({ comment, onClickReplyBtn, onClickDeleteBtn }: CommentItemProps) {
+function CommentItem({
+  comment,
+  onClickReplyBtn,
+  onClickDeleteBtn,
+  reloadComments,
+}: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
 
   const { author_detail, replies, is_reply } = comment;
@@ -85,7 +91,14 @@ function CommentItem({ comment, onClickReplyBtn, onClickDeleteBtn }: CommentItem
           />
         ))}
       </Layout.FlexCol>
-      {!is_reply && showReplyInput && <CommentInputBox isReply />}
+      {!is_reply && showReplyInput && (
+        <CommentInputBox
+          isReply
+          post={comment}
+          postType="Comment"
+          reloadComments={reloadComments}
+        />
+      )}
     </Layout.FlexCol>
   );
 }

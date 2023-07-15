@@ -47,10 +47,11 @@ function CommentList({ postType, post }: CommentListProps) {
             key={comment.id}
             comment={comment}
             onClickDeleteBtn={onClickCommentDeleteBtn}
+            reloadComments={getComments}
           />
         ))}
       </Layout.FlexCol>
-      <CommentInputBox />
+      <CommentInputBox post={post} postType={postType} reloadComments={getComments} />
       <DeleteAlert
         visible={!!deleteTarget}
         close={closeDeleteAlert}

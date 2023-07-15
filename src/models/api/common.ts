@@ -14,3 +14,8 @@ export interface DateRequestParams {
   month: number;
   day: number;
 }
+
+export interface CommonTarget {
+  target_type: 'Moment' | 'Response' | 'Comment';
+  target_id: number;
+}
