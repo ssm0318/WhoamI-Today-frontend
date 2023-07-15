@@ -12,9 +12,9 @@ export const deleteResponse = async (responseId: number) => {
 };
 
 export const getCommentsOfResponse = async (responseId: number) => {
-  // TODO: response type 확인!
   const { data } = await axios.get<PaginationResponse<Comment[][]>>(
     `/feed/responses/comments/${responseId}/`,
   );
-  return data?.results?.[0] || [];
+  // TODO: 페이지네이션 작업시 수정
+  return data?.results || [[]];
 };

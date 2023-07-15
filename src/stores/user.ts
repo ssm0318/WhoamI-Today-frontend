@@ -12,6 +12,7 @@ interface UserAction {
   setMyProfile: (myProfile: MyProfile) => void;
   resetMyProfile: () => void;
   getFriendList: () => void;
+  isUserAuthor: (authorId: number) => boolean;
 }
 
 export type UserSlice = UserState & UserAction;
@@ -21,7 +22,7 @@ const initialState = {
   friendList: undefined,
 };
 
-export const createUserSlice: SliceStateCreator<UserSlice> = (set) => ({
+export const createUserSlice: SliceStateCreator<UserSlice> = (set, get) => ({
   ...initialState,
   setMyProfile: (myProfile) => set(() => ({ myProfile }), false, 'user/setMyProfile'),
   resetMyProfile: () => set(initialState),
@@ -29,6 +30,7 @@ export const createUserSlice: SliceStateCreator<UserSlice> = (set) => ({
     const friendList = await getFriendList();
     set(() => ({ friendList }), false, 'user/getFriendList');
   },
+  isUserAuthor: (authorId) => get().myProfile?.id === authorId,
 });
 
 export const UserSelector = (state: BoundState) => ({

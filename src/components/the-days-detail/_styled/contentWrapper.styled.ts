@@ -1,11 +1,6 @@
 import styled from 'styled-components';
 import { Layout } from '@design-system';
 
-export const PhotoWrapper = styled.div`
-  position: relative;
-  width: 100%;
-`;
-
 export const ContentWrapper = styled(Layout.FlexRow).attrs({
   w: '100%',
   justifyContent: 'space-between',
@@ -17,9 +12,4 @@ export const ContentWrapper = styled(Layout.FlexRow).attrs({
   button {
     padding: 6px 12px;
   }
-`;
-
-export const Photo = styled.img`
-  width: 100%;
-  object-fit: cover;
 `;

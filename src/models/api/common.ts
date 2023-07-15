@@ -19,3 +19,16 @@ export interface CommonTarget {
   target_type: 'Moment' | 'Response' | 'Comment';
   target_id: number;
 }
+
+export type FetchState<T> =
+  | {
+      state: 'loading';
+      data?: T;
+    }
+  | {
+      state: 'hasValue';
+      data: T;
+    }
+  | {
+      state: 'hasError';
+    };

@@ -6,8 +6,8 @@ import { Font, Layout } from '@design-system';
 import { DayQuestion, QuestionResponse } from '@models/post';
 import { deleteResponse } from '@utils/apis/responses';
 import DeleteAlert from '../../_common/alert-dialog/delete-alert/DeleteAlert';
+import { ContentWrapper } from '../_styled/contentWrapper.styled';
 import ReactionButtons from '../reaction-buttons/ReactionButtons';
-import { ContentWrapper } from '../the-days-moments/TheDaysMoments.styled';
 import TheDaysWrapper from '../the-days-wrapper/TheDaysWrapper';
 import * as S from './TheDaysQuestions.styled';
 
