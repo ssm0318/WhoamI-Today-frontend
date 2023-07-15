@@ -1,4 +1,6 @@
 import { TodayMoment } from '@models/moment';
+import { AdminAuthor } from '@models/post';
+import { User } from '@models/user';
 import { DateRequestParams } from './common';
 
 // GET today's moment
@@ -22,3 +24,8 @@ export interface PostMomentResponse extends TodayMoment {}
 export interface UpdateMomentRequest extends PostMomentRequest {}
 
 export interface UpdateMomentResponse extends TodayMoment {}
+
+export interface GetMomentDetailResponse extends GetMomentResponse {
+  author: string | null;
+  author_detail: User | AdminAuthor;
+}

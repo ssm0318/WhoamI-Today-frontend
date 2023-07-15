@@ -1,5 +1,10 @@
 import { DateRequestParams, PaginationResponse, Response } from '@models/api/common';
-import { GetMomentResponse, PostMomentResponse, UpdateMomentResponse } from '@models/api/moment';
+import {
+  GetMomentDetailResponse,
+  GetMomentResponse,
+  PostMomentResponse,
+  UpdateMomentResponse,
+} from '@models/api/moment';
 import { MomentType, TodayMoment } from '@models/moment';
 import { Comment } from '@models/post';
 import { objectFormDataSerializer } from '@utils/validateHelpers';
@@ -53,6 +58,11 @@ export const getMonthlyMoments = async ({ year, month }: Omit<DateRequestParams,
     `/moment/monthly/${year}/${month}/`,
   );
   return data?.results || [];
+};
+
+export const getMoment = async (momentId: number | string) => {
+  const { data } = await axios.get<GetMomentDetailResponse | null>(`/moment/${momentId}/`);
+  return data;
 };
 
 export const deleteMoment = async ({ id, type }: { id: number; type: MomentType }) => {
