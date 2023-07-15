@@ -1,13 +1,13 @@
 import { Layout, SvgIcon } from '@design-system';
 
-interface UserProfileProps {
+interface ProfileImageProps {
   imageUrl: string | null;
   size?: number;
   username?: string;
   className?: string;
 }
 
-function UserProfile({ imageUrl, username, className, size = 36 }: UserProfileProps) {
+function ProfileImage({ imageUrl, username, className, size = 36 }: ProfileImageProps) {
   return imageUrl ? (
     <Layout.LayoutBase w={size} h={size} rounded={size / 2} className={className}>
       <img src={imageUrl} width={size} height={size} alt={`${username ?? 'user'}-profile`} />
@@ -16,4 +16,4 @@ function UserProfile({ imageUrl, username, className, size = 36 }: UserProfilePr
     <SvgIcon name="my_profile" size={size} className={className} />
   );
 }
-export default UserProfile;
+export default ProfileImage;

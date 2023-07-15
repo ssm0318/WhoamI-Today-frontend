@@ -1,4 +1,4 @@
-import UserProfile from '@components/_common/user-profile/UserProfile';
+import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Font, Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 
@@ -10,7 +10,7 @@ function MyProfile() {
   const { username, profile_image } = myProfile;
   return (
     <Layout.FlexRow alignItems="center" h={36}>
-      <UserProfile imageUrl={profile_image} username={username} size={36} />
+      <ProfileImage imageUrl={profile_image} username={username} size={36} />
       <Layout.FlexRow alignItems="center" pl={8}>
         <Font.Body type="18_regular" color="GRAY_4">
           {username}

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ConfirmBottomModal from '@components/_common/bottom-modal/ConfirmBottomModal';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
-import UserProfile from '@components/_common/user-profile/UserProfile';
+import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import {
   AccountSettingButton,
   SettingsButton,
@@ -58,7 +58,7 @@ function Settings() {
         <Layout.FlexRow justifyContent="center" mb={8} ph={DEFAULT_MARGIN}>
           {myProfile && (
             <>
-              <UserProfile
+              <ProfileImage
                 imageUrl={myProfile.profile_image}
                 username={myProfile.username}
                 size={55}
