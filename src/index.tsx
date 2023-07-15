@@ -34,6 +34,7 @@ import ResearchIntro from './routes/sign-up/ResearchIntro';
 import UserName from './routes/sign-up/UserName';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
+import UserPage from './routes/UserPage';
 
 const router = createBrowserRouter([
   { path: '', element: <Intro /> },
@@ -88,6 +89,11 @@ const router = createBrowserRouter([
   {
     path: 'notifications',
     element: <Notifications />,
+  },
+  {
+    path: 'users/:username',
+    element: <UserPage />,
+    loader: checkIfSignIn,
   },
   {
     path: 'settings',

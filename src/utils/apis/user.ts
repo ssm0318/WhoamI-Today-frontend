@@ -11,7 +11,7 @@ import {
   SignUpParams,
   UsernameError,
 } from '@models/api/user';
-import { User } from '@models/user';
+import { User, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 
@@ -157,4 +157,9 @@ export const signUp = ({
 export const getFriendList = async () => {
   const { data } = await axios.get<PaginationResponse<User[]>>('/user/me/friends/');
   return data.results;
+};
+
+export const getUserProfile = async (username: string) => {
+  const { data } = await axios.get<UserProfile>(`/user/profile/${username}/`);
+  return data;
 };

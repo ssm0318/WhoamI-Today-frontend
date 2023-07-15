@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { MAX_WINDOW_WIDTH } from '@constants/layout';
+import { MAX_WINDOW_WIDTH, Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
 
 export const Background = styled(Layout.Absolute)<{
@@ -14,6 +14,7 @@ export const Background = styled(Layout.Absolute)<{
   background-color: ${(props) => props.backgroundColor};
   overflow: hidden;
   overscroll-behavior-y: none;
+  z-index: ${Z_INDEX.MODAL_CONTAINER};
 `;
 
 export const Container = styled(Layout.Absolute)<{
@@ -31,6 +32,7 @@ export const Container = styled(Layout.Absolute)<{
   position: fixed;
   align-self: center;
   max-width: ${MAX_WINDOW_WIDTH}px;
+  z-index: ${Z_INDEX.MODAL_CONTAINER};
 `;
 
 export const Body = styled(Layout.LayoutBase)`
