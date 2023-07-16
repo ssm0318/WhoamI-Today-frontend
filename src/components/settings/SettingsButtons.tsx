@@ -48,13 +48,6 @@ export function SettingsToggleButton() {
     updateMyProfile({ noti_on: !permissionAllowed });
   };
 
-  // useGetAppMessage({
-  //   cb: ({ value }) => {
-  //     setAppNotiPermission(value);
-  //   },
-  //   key: 'SET_NOTI_PERMISSION',
-  // });
-
   if (!isApp && Notification.permission !== 'granted') return null;
   return (
     <StyledToggleButton>

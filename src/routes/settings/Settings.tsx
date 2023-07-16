@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ConfirmBottomModal from '@components/_common/bottom-modal/ConfirmBottomModal';
@@ -21,9 +21,8 @@ import PushNotiSetting from '../../components/settings/push-noti-setting/PushNot
 function Settings() {
   const [t, i18n] = useTranslation('translation', { keyPrefix: 'settings' });
 
-  const { myProfile, appNotiPermission } = useBoundStore((state) => ({
+  const { myProfile } = useBoundStore((state) => ({
     myProfile: state.myProfile,
-    appNotiPermission: state.appNotiPermission,
   }));
 
   const navigate = useNavigate();
@@ -47,11 +46,6 @@ function Settings() {
   };
 
   const handleClickDeleteAccount = () => navigate('/settings/delete-account');
-
-  useEffect(() => {
-    console.log('appNotiPermission');
-    console.log(appNotiPermission);
-  }, [appNotiPermission]);
 
   return (
     <MainContainer>
