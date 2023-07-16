@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { PostMessageDataType, PostMessageKeyToData, PostMessageKeyType } from '@models/app';
+import { isApp } from '@utils/getUserAgent';
 
 type MessageDataType = Extract<PostMessageDataType, { key: PostMessageKeyType }>;
 
@@ -16,6 +17,7 @@ export const useGetAppMessage = <K extends PostMessageKeyType>({
   key: K;
 }) => {
   useEffect(() => {
+    if (!isApp) return;
     const handleMessage = (event: MessageEvent) => {
       const { data } = event;
       if (data.type) return;
