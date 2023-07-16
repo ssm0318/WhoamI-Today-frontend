@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 const useNotiPermission = () => {
   const [t] = useTranslation('translation', { keyPrefix: 'settings' });
 
-  const getBannerDescription = (permissionState: typeof Notification.permission): string[] => {
+  const getBannerDescription = (permissionState?: typeof Notification.permission): string[] => {
     switch (permissionState) {
       case 'default':
         return [
@@ -27,7 +27,7 @@ const useNotiPermission = () => {
     }
   };
 
-  const getSettingDescription = (permissionState: typeof Notification.permission): string[] => {
+  const getSettingDescription = (permissionState?: typeof Notification.permission): string[] => {
     switch (permissionState) {
       case 'default':
         return [t('click_here_to_check_your_system_preferences')];

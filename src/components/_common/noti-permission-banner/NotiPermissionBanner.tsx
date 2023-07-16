@@ -1,5 +1,6 @@
 import { Font } from '@design-system';
 import useNotiPermission from '@hooks/useNotiPermission';
+import { isApp } from '@utils/getUserAgent';
 import * as S from './NotiPermissionBanner.styled';
 
 interface NotiPermissionBannerProps {
@@ -9,7 +10,7 @@ interface NotiPermissionBannerProps {
 function NotiPermissionBanner({ onClick }: NotiPermissionBannerProps) {
   const { getBannerDescription } = useNotiPermission();
 
-  const descriptions = getBannerDescription(Notification.permission);
+  const descriptions = getBannerDescription(!isApp ? Notification.permission : undefined);
 
   if (Notification.permission !== 'default' || descriptions.length === 0) return null;
   return (
