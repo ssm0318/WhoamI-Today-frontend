@@ -98,4 +98,7 @@ export interface MyProfile extends User {
   question_history: number[] | null;
   research_agreement: boolean;
   signature: string | null;
+  url: string;
+  noti_on: boolean;
+  noti_time: string;
 }
