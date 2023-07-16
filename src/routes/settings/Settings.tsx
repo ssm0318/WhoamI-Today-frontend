@@ -1,15 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ConfirmBottomModal from '@components/_common/bottom-modal/ConfirmBottomModal';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import {
-  AccountSettingButton,
-  SettingsButton,
-  SettingsToggleButton,
-} from '@components/settings/SettingsButtons';
+import { AccountSettingButton, SettingsButton } from '@components/settings/SettingsButtons';
 import { StyledSettingsAnchor } from '@components/settings/SettingsButtons.styled';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
@@ -20,11 +16,15 @@ import {
 import { Font, Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 import { signOut } from '@utils/apis/user';
+import PushNotiSetting from '../../components/settings/push-noti-setting/PushNotiSetting';
 
 function Settings() {
   const [t, i18n] = useTranslation('translation', { keyPrefix: 'settings' });
 
-  const myProfile = useBoundStore((state) => state.myProfile);
+  const { myProfile, appNotiPermission } = useBoundStore((state) => ({
+    myProfile: state.myProfile,
+    appNotiPermission: state.appNotiPermission,
+  }));
 
   const navigate = useNavigate();
   const handleClickEditProfile = () => navigate('/settings/edit-profile');
@@ -45,7 +45,13 @@ function Settings() {
       navigate('/');
     });
   };
+
   const handleClickDeleteAccount = () => navigate('/settings/delete-account');
+
+  useEffect(() => {
+    console.log('appNotiPermission');
+    console.log(appNotiPermission);
+  }, [appNotiPermission]);
 
   return (
     <MainContainer>
@@ -82,11 +88,7 @@ function Settings() {
         {/* notification settings */}
         <Layout.FlexCol ph={DEFAULT_MARGIN} gap={10} w="100%">
           <Font.Display type="20_bold">{t('notification_settings')}</Font.Display>
-          <Layout.FlexRow w="100%" justifyContent="space-between">
-            {/* TODO(Gina): 웹의 경우 어떻게 보여야할지 확인중 */}
-            <Font.Body type="18_regular">{t('push_notifications')}</Font.Body>
-            <SettingsToggleButton />
-          </Layout.FlexRow>
+          <PushNotiSetting />
         </Layout.FlexCol>
         <Divider width={1} />
         {/* terms of uses */}

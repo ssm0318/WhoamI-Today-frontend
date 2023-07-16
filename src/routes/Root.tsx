@@ -30,10 +30,8 @@ function Root() {
         >
           <Outlet />
         </MainWrapper>
-        {/* 앱이거나 모바일 웹인 경우는 보여주지 않음 */}
-        {!isMobile && Notification.permission === 'default' && (
-          <NotiPermissionBanner onClick={requestNotiPermission} />
-        )}
+        {/* 데스크톱 웹만 노출 */}
+        {!isMobile && <NotiPermissionBanner onClick={requestNotiPermission} />}
         <Tab />
       </RootContainer>
     </Layout.FlexRow>

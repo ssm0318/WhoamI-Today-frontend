@@ -1,6 +1,7 @@
-import { useState } from 'react';
 import { Font, SvgIcon } from '@design-system';
-import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
+import { usePostAppMessage } from '@hooks/useAppMessage';
+import { useBoundStore } from '@stores/useBoundStore';
+import { isApp } from '@utils/getUserAgent';
 import {
   StyledAccountSettingsButton,
   StyledSettingsButton,
@@ -29,28 +30,35 @@ export function SettingsButton({ text, onClick }: SettingButtonProps) {
   );
 }
 
-// TODO(Gina): 앱에서만 노출 확정 필요
 export function SettingsToggleButton() {
   const postMessage = usePostAppMessage();
-  const [on, setOn] = useState(false);
+
+  const { appNotiPermission, myProfile, updateMyProfile } = useBoundStore((state) => ({
+    appNotiPermission: state.appNotiPermission,
+    myProfile: state.myProfile,
+    updateMyProfile: state.updateMyProfile,
+  }));
+
+  const permissionAllowed = isApp ? appNotiPermission : myProfile?.noti_on || false;
 
   const handleToggle = async () => {
-    if (!window?.ReactNativeWebView) return;
-    // 앱인 경우 설정창으로 보냄
-    return postMessage('OPEN_SETTING', {});
+    if (isApp) {
+      return postMessage('OPEN_SETTING', {});
+    }
+    updateMyProfile({ noti_on: !permissionAllowed });
   };
 
-  useGetAppMessage({
-    cb: ({ value }) => {
-      setOn(value);
-    },
-    key: 'SET_NOTI_PERMISSION',
-  });
+  // useGetAppMessage({
+  //   cb: ({ value }) => {
+  //     setAppNotiPermission(value);
+  //   },
+  //   key: 'SET_NOTI_PERMISSION',
+  // });
 
-  if (!window?.ReactNativeWebView) return null;
+  if (!isApp && Notification.permission !== 'granted') return null;
   return (
     <StyledToggleButton>
-      <input type="checkbox" checked={on} onChange={handleToggle} />
+      <input type="checkbox" checked={permissionAllowed} onChange={handleToggle} />
       <span className="slider round" />
     </StyledToggleButton>
   );
