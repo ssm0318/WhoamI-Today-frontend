@@ -13,6 +13,7 @@ type SendQuestionModalProps = {
   setIsVisible: (visible: boolean) => void;
   questionId: number;
   onSkip?: () => void;
+  onSend?: () => void;
 };
 
 function SendQuestionModal({
@@ -20,6 +21,7 @@ function SendQuestionModal({
   setIsVisible,
   questionId,
   onSkip,
+  onSend,
 }: SendQuestionModalProps) {
   const { myProfile: currentUser, friendList, getFriendList } = useBoundStore(UserSelector);
 
@@ -31,10 +33,7 @@ function SendQuestionModal({
 
     requestResponse(currentUser.id, questionId, selectedIdList);
     setIsVisible(false);
-  };
-
-  const handleOnClose = () => {
-    setIsVisible(false);
+    onSend?.();
   };
 
   const handleToggleItem = (userId: number, selected: boolean) => {
@@ -53,7 +52,6 @@ function SendQuestionModal({
   return (
     <BottomModal
       visible={isVisible}
-      onClose={handleOnClose}
       TopComponent={
         <Layout.FlexRow>
           <Button.Small type="white_fill" status="normal" text={t('skip')} onClick={onSkip} />

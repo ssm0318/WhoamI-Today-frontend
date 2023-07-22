@@ -19,6 +19,7 @@ function ShortAnswerResponse() {
   const [sendModalVisible, setSendModalVisible] = useState(false);
   const [question, setQuestion] = useState<ShortAnswerQuestion | null>(null);
   const navigate = useNavigate();
+  const [hasPosted, setHasPosted] = useState(false);
 
   const [t] = useTranslation('translation', { keyPrefix: 'question.response' });
 
@@ -33,6 +34,11 @@ function ShortAnswerResponse() {
     return navigate(`/response-history/${Number(questionId)}`);
   };
 
+  const handleConfirmSendQuestion = () => {
+    // 이미 답변을 보낸 상태라면 response history 페이지로 이동
+    if (hasPosted) return navigate(`/response-history/${Number(questionId)}`);
+  };
+
   const handlePost = async () => {
     // 1. 답변 제출
     if (!textareaRef.current) return;
@@ -41,7 +47,10 @@ function ShortAnswerResponse() {
       content: textareaRef.current.value,
     });
     // TODO(Gina): 작성 완료 모달 노출
-    if (res) return alert('작성 완료!');
+    if (res) {
+      alert('작성 완료!');
+      setHasPosted(true);
+    }
 
     // 2. 질문 보내기 모달 노출
     setSendModalVisible(true);
@@ -58,8 +67,10 @@ function ShortAnswerResponse() {
     <MainContainer>
       <TitleHeader
         RightComponent={
-          <button type="button" onClick={handlePost} disabled={!textareaRef.current}>
-            <Font.Display type="18_bold">{t('post')}</Font.Display>
+          <button type="button" onClick={handlePost}>
+            <Font.Display type="18_bold" color="BASIC_BLACK">
+              {t('post')}
+            </Font.Display>
           </button>
         }
       />
@@ -72,6 +83,7 @@ function ShortAnswerResponse() {
         isVisible={sendModalVisible}
         setIsVisible={setSendModalVisible}
         onSkip={handleSkipSendQuestion}
+        onSend={handleConfirmSendQuestion}
       />
     </MainContainer>
   );
