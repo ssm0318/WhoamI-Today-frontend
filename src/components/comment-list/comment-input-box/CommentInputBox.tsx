@@ -1,14 +1,14 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Layout, SvgIcon } from '@design-system';
-import { Comment, MomentPost, QuestionResponse } from '@models/post';
+import { Comment, MomentPost, QuestionResponse, Response } from '@models/post';
 import { postComment } from '@utils/apis/comments';
 import * as S from './CommentInputBox.styled';
 
 interface CommentInputBoxProps {
   isReply?: boolean;
   postType: 'Moment' | 'Response' | 'Comment';
-  post: MomentPost | QuestionResponse | Comment;
+  post: MomentPost | QuestionResponse | Response | Comment;
   reloadComments?: () => void;
 }
 

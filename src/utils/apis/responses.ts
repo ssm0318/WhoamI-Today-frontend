@@ -1,4 +1,5 @@
 import { DateRequestParams, PaginationResponse } from '@models/api/common';
+import { GetResponseDetailResponse } from '@models/api/response';
 import { Comment, DayQuestion } from '@models/post';
 import axios from './axios';
 
@@ -17,4 +18,9 @@ export const getCommentsOfResponse = async (responseId: number) => {
   );
   // TODO: 페이지네이션 작업시 수정
   return data?.results || [[]];
+};
+
+export const getResponse = async (responseId: number | string) => {
+  const { data } = await axios.get<GetResponseDetailResponse>(`/feed/responses/${responseId}/`);
+  return data;
 };
