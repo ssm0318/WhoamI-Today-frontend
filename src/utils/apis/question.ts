@@ -1,5 +1,5 @@
 import { PaginationResponse } from '@models/api/common';
-import { ResponseQuestionRequestParams } from '@models/api/question';
+import { GetResponseHistoriesResponse, ResponseQuestionRequestParams } from '@models/api/question';
 import { Response, ShortAnswerQuestion } from '@models/post';
 import axios from './axios';
 import { getDateRequestParams } from './common';
@@ -50,7 +50,7 @@ export const responseQuestion = async (params: ResponseQuestionRequestParams) =>
 
 // GET all question response histories
 export const getResponseHistories = async (questionId: number) => {
-  const { data } = await axios.get<PaginationResponse<Response[]>>(
+  const { data } = await axios.get<GetResponseHistoriesResponse>(
     `/feed/questions/${questionId}/responses/`,
   );
   return data;

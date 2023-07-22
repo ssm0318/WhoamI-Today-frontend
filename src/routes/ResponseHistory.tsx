@@ -9,7 +9,7 @@ import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { Response, ShortAnswerQuestion } from '@models/post';
-import { getQuestionDetail, getResponseHistories } from '@utils/apis/question';
+import { getResponseHistories } from '@utils/apis/question';
 
 function ResponseHistory() {
   const { questionId } = useParams();
@@ -33,11 +33,10 @@ function ResponseHistory() {
   };
 
   useAsyncEffect(async () => {
-    const questionDetail = await getQuestionDetail(Number(questionId));
-    const responseList = await getResponseHistories(Number(questionId));
+    const { response_set, ...questionDetail } = await getResponseHistories(Number(questionId));
 
     setQuestion(questionDetail);
-    setResponses(responseList.results || []);
+    setResponses(response_set || []);
   }, [questionId]);
 
   if (!question) return null;
