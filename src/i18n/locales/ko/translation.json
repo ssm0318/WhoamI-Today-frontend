@@ -1,4 +1,7 @@
 {
+  "common": {
+    "done": "완료"
+  },
   "intro": {
     "sign_in": "로그인",
     "sign_up": "회원가입"
@@ -133,6 +136,7 @@
     "account_settings": "계정 설정",
     "edit_profile": "프로필 수정",
     "change_picture": "사진 변경하기",
+    "crop_picture": "사진 자르기",
     "username": "닉네임",
     "email": "이메일",
     "update": "변경하기",
