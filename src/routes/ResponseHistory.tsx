@@ -8,9 +8,8 @@ import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { responseList } from '@mock/responses';
-import { ShortAnswerQuestion } from '@models/post';
-import { getQuestionDetail } from '@utils/apis/question';
+import { Response, ShortAnswerQuestion } from '@models/post';
+import { getQuestionDetail, getResponseHistories } from '@utils/apis/question';
 
 function ResponseHistory() {
   const { questionId } = useParams();
@@ -18,7 +17,7 @@ function ResponseHistory() {
   const navigate = useNavigate();
   const [question, setQuestion] = useState<ShortAnswerQuestion | null>(null);
 
-  const responses = responseList;
+  const [responses, setResponses] = useState<Response[]>([]);
 
   const handleClickResponse = () => {
     if (!question) return;
@@ -34,8 +33,11 @@ function ResponseHistory() {
   };
 
   useAsyncEffect(async () => {
-    const res = await getQuestionDetail(Number(questionId));
-    setQuestion(res);
+    const questionDetail = await getQuestionDetail(Number(questionId));
+    const responseList = await getResponseHistories(Number(questionId));
+
+    setQuestion(questionDetail);
+    setResponses(responseList.results || []);
   }, [questionId]);
 
   if (!question) return null;

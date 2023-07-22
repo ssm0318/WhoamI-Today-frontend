@@ -45,6 +45,13 @@ export const requestResponse = async (
 export const responseQuestion = async (params: ResponseQuestionRequestParams) => {
   const { year, month, day } = getDateRequestParams(new Date());
   const { data } = await axios.post<Response>(`/feed/responses/${year}/${month}/${day}/`, params);
+  return data;
+};
 
+// GET all question response histories
+export const getResponseHistories = async (questionId: number) => {
+  const { data } = await axios.get<PaginationResponse<Response[]>>(
+    `/feed/questions/${questionId}/responses`,
+  );
   return data;
 };
