@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Font, Layout, SvgIcon } from '@design-system';
-import { Comment, MomentPost, QuestionResponse } from '@models/post';
+import { Comment, MomentPost, QuestionResponse, Response } from '@models/post';
 import * as S from './LikeButton.styled';
 
 interface LikeButtonProps {
   postType: 'Moment' | 'Response' | 'Comment';
-  post: MomentPost | QuestionResponse | Comment;
+  post: MomentPost | QuestionResponse | Response | Comment;
   isAuthor?: boolean;
   m?: number;
   iconSize: number;

@@ -19,6 +19,7 @@ import My from './routes/My';
 import MyDetail from './routes/my-detail/MyDetail';
 import Notifications from './routes/Notifications';
 import ShortAnswerResponse from './routes/response/ShortAnswerResponse';
+import ResponseDetailContainer from './routes/response-detail/ResponseDetailContainer';
 import ResponseHistory from './routes/ResponseHistory';
 import Root from './routes/Root';
 import ConfirmPassword from './routes/settings/ConfirmPassword';
@@ -85,6 +86,7 @@ const router = createBrowserRouter([
   },
   { path: 'my/detail/:detailDate', element: <MyDetail />, loader: checkIfSignIn },
   { path: 'moments/:momentId', element: <MomentDetailContainer />, loader: checkIfSignIn },
+  { path: 'responses/:responseId', element: <ResponseDetailContainer />, loader: checkIfSignIn },
   {
     path: 'notifications',
     element: <Notifications />,

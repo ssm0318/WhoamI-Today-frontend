@@ -3,7 +3,7 @@ import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAle
 import { Divider } from '@components/_common/divider/Divider.styled';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { Comment, MomentPost, QuestionResponse } from '@models/post';
+import { Comment, MomentPost, QuestionResponse, Response } from '@models/post';
 import { deleteComment } from '@utils/apis/comments';
 import CommentInputBox from './comment-input-box/CommentInputBox';
 import CommentItem from './comment-item/CommentItem';
@@ -11,7 +11,7 @@ import { getCommentList } from './CommentList.helper';
 
 interface CommentListProps {
   postType: 'Moment' | 'Response';
-  post: MomentPost | QuestionResponse;
+  post: MomentPost | QuestionResponse | Response;
 }
 
 function CommentList({ postType, post }: CommentListProps) {
