@@ -18,6 +18,7 @@ export const StyledTab = styled.button.attrs({
   border-radius: 5px;
   margin: 1px;
   padding: 4px 8px;
+
   ${({ w }) => css`
     ${getStyle('width', w)}
   `}

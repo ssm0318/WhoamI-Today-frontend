@@ -12,8 +12,8 @@ function FriendList() {
   };
 
   return (
-    <Layout.FlexCol w="100%">
-      <Font.Body type="14_regular" color="GRAY_12" ml={15} mt={14} mb={12}>
+    <Layout.FlexCol w="100%" pl={10} pr={10} gap={8}>
+      <Font.Body type="14_regular" color="GRAY_12" ml={5} mt={14} mb={2}>
         {friendList.length} people
       </Font.Body>
       <Layout.FlexCol w="100%" gap={8}>
@@ -22,6 +22,7 @@ function FriendList() {
             w="100%"
             key={friend.id}
             justifyContent="space-between"
+            alignItems="center"
             pl={10}
             pt={4}
             pr={10}
