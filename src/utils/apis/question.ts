@@ -14,7 +14,7 @@ export const getTodayQuestions = async () => {
 export const getAllQuestions = async (page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<ShortAnswerQuestion[]>>(
-    `/feed/questions/${!requestPage ? '' : `?page=${requestPage}/`}`,
+    `/feed/questions/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
 };
