@@ -194,6 +194,27 @@ export const confirmPassword = ({
     });
 };
 
+export const changeProfileImage = ({
+  profileImage,
+  onSuccess,
+  onError,
+}: {
+  profileImage: File;
+  onSuccess?: () => void;
+  onError?: (error: string) => void;
+}) => {
+  const formData = new FormData();
+
+  formData.append('profile_image', profileImage);
+
+  axiosFormDataInstance
+    .patch('/user/me/', formData)
+    .then(() => onSuccess?.())
+    .catch((e) => {
+      onError?.(e);
+    });
+};
+
 export const resetPassword = ({
   userId,
   password,
