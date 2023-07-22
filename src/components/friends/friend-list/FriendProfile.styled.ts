@@ -10,7 +10,7 @@ export const StyledFriendListWrapper = styled.ul`
   padding: 8px 20px;
   width: 100%;
   flex-shrink: 0;
-  position: fixed;
+  position: absolute;
   z-index: ${Z_INDEX.FRIEND_FEED_FRIEND_LIST};
 `;
 

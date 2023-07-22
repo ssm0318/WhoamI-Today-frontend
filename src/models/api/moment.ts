@@ -7,7 +7,7 @@ import { DateRequestParams } from './common';
 export interface GetMomentResponse extends TodayMoment {
   id: number;
   type: 'Moment';
-  like_count: number;
+  like_count: number | null;
   current_user_liked: boolean;
   date: string;
   created_at: string;
