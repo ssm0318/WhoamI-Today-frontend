@@ -51,7 +51,7 @@ export const responseQuestion = async (params: ResponseQuestionRequestParams) =>
 // GET all question response histories
 export const getResponseHistories = async (questionId: number) => {
   const { data } = await axios.get<PaginationResponse<Response[]>>(
-    `/feed/questions/${questionId}/responses`,
+    `/feed/questions/${questionId}/responses/`,
   );
   return data;
 };
