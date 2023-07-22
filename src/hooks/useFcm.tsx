@@ -1,40 +1,37 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging } from 'firebase/messaging';
-import { useEffect } from 'react';
-import { addForegroundMessageEventListener, firebaseConfig } from '../utils/firebaseHelpers';
-import { getMobileDeviceInfo } from '../utils/getUserAgent';
+import { useBoundStore } from '@stores/useBoundStore';
+import {
+  addForegroundMessageEventListener,
+  firebaseConfig,
+  getFCMRegistrationToken,
+} from '../utils/firebaseHelpers';
 
-// TODO(Gina): 추후 로직 보완 필요
 const useFcm = () => {
-  const { isMobile } = getMobileDeviceInfo();
+  const { setFcmToken } = useBoundStore((state) => ({
+    setFcmToken: state.setFcmToken,
+  }));
 
-  const notiPermissionStatus = !isMobile ? Notification.permission : null;
+  const initializeFcm = async () => {
+    try {
+      const app = initializeApp(firebaseConfig);
+      const messaging = getMessaging(app);
 
-  useEffect(() => {
-    // if (!currentUser || isMobile) return;
-    if (isMobile) return;
+      if (Notification.permission !== 'granted') return;
+      addForegroundMessageEventListener(messaging);
 
-    // FCM 초기화
-    const initializeFcm = async () => {
-      try {
-        const app = initializeApp(firebaseConfig);
-        const messaging = getMessaging(app);
+      const token = await getFCMRegistrationToken(messaging);
+      setFcmToken(token);
 
-        if (notiPermissionStatus !== 'granted') return;
+      console.log(`[useFcm] Fcm initialized with token: ${token}`);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
-        // const token = await getFCMRegistrationToken(messaging);
-        addForegroundMessageEventListener(messaging);
-
-        // dispatch(setFcmToken(token));
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    initializeFcm();
-  }, [notiPermissionStatus, isMobile]);
-
-  return { notiPermissionStatus };
+  return {
+    initializeFcm,
+  };
 };
 
 export default useFcm;

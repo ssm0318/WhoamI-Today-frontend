@@ -1,5 +1,7 @@
-import { useState } from 'react';
 import { Font, SvgIcon } from '@design-system';
+import { usePostAppMessage } from '@hooks/useAppMessage';
+import { useBoundStore } from '@stores/useBoundStore';
+import { isApp } from '@utils/getUserAgent';
 import {
   StyledAccountSettingsButton,
   StyledSettingsButton,
@@ -28,27 +30,28 @@ export function SettingsButton({ text, onClick }: SettingButtonProps) {
   );
 }
 
-interface SettingsToggleButtonProps {
-  onToggleOn: () => void;
-  onToggleOff: () => void;
-}
+export function SettingsToggleButton() {
+  const postMessage = usePostAppMessage();
 
-export function SettingsToggleButton({ onToggleOn, onToggleOff }: SettingsToggleButtonProps) {
-  const [on, setOn] = useState(false);
+  const { appNotiPermission, myProfile, updateMyProfile } = useBoundStore((state) => ({
+    appNotiPermission: state.appNotiPermission,
+    myProfile: state.myProfile,
+    updateMyProfile: state.updateMyProfile,
+  }));
 
-  const handleToggle = () => {
-    setOn((prev) => !prev);
+  const permissionAllowed = isApp ? appNotiPermission : myProfile?.noti_on || false;
 
-    if (on) {
-      onToggleOff();
-      return;
+  const handleToggle = async () => {
+    if (isApp) {
+      return postMessage('OPEN_SETTING', {});
     }
-    onToggleOn();
+    updateMyProfile({ noti_on: !permissionAllowed });
   };
 
+  if (!isApp && Notification.permission !== 'granted') return null;
   return (
     <StyledToggleButton>
-      <input type="checkbox" checked={on} onChange={handleToggle} />
+      <input type="checkbox" checked={permissionAllowed} onChange={handleToggle} />
       <span className="slider round" />
     </StyledToggleButton>
   );

@@ -5,11 +5,7 @@ import ConfirmBottomModal from '@components/_common/bottom-modal/ConfirmBottomMo
 import { Divider } from '@components/_common/divider/Divider.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import {
-  AccountSettingButton,
-  SettingsButton,
-  SettingsToggleButton,
-} from '@components/settings/SettingsButtons';
+import { AccountSettingButton, SettingsButton } from '@components/settings/SettingsButtons';
 import { StyledSettingsAnchor } from '@components/settings/SettingsButtons.styled';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
@@ -20,18 +16,18 @@ import {
 import { Font, Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 import { signOut } from '@utils/apis/user';
+import PushNotiSetting from '../../components/settings/push-noti-setting/PushNotiSetting';
 
 function Settings() {
   const [t, i18n] = useTranslation('translation', { keyPrefix: 'settings' });
 
-  const myProfile = useBoundStore((state) => state.myProfile);
+  const { myProfile } = useBoundStore((state) => ({
+    myProfile: state.myProfile,
+  }));
 
   const navigate = useNavigate();
   const handleClickEditProfile = () => navigate('/settings/edit-profile');
   const handleClickChangePassword = () => navigate('/settings/confirm-password');
-
-  const handlePushNotiOn = () => console.log('todo: push on');
-  const handlePushNotiOff = () => console.log('todo: push off');
 
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const handleOnClose = () => {
@@ -48,6 +44,7 @@ function Settings() {
       navigate('/');
     });
   };
+
   const handleClickDeleteAccount = () => navigate('/settings/delete-account');
 
   return (
@@ -85,10 +82,7 @@ function Settings() {
         {/* notification settings */}
         <Layout.FlexCol ph={DEFAULT_MARGIN} gap={10} w="100%">
           <Font.Display type="20_bold">{t('notification_settings')}</Font.Display>
-          <Layout.FlexRow w="100%" justifyContent="space-between">
-            <Font.Body type="18_regular">{t('push_notifications')}</Font.Body>
-            <SettingsToggleButton onToggleOn={handlePushNotiOn} onToggleOff={handlePushNotiOff} />
-          </Layout.FlexRow>
+          <PushNotiSetting />
         </Layout.FlexCol>
         <Divider width={1} />
         {/* terms of uses */}

@@ -1,7 +1,12 @@
 import { useCallback, useEffect } from 'react';
 import { PostMessageDataType, PostMessageKeyToData, PostMessageKeyType } from '@models/app';
+import { isApp } from '@utils/getUserAgent';
 
 type MessageDataType = Extract<PostMessageDataType, { key: PostMessageKeyType }>;
+
+const isPostMessageData = (data: any): data is PostMessageDataType => {
+  return data;
+};
 
 // 앱 -> 웹 메시지 수신 (GET)
 export const useGetAppMessage = <K extends PostMessageKeyType>({
@@ -12,11 +17,15 @@ export const useGetAppMessage = <K extends PostMessageKeyType>({
   key: K;
 }) => {
   useEffect(() => {
+    if (!isApp) return;
     const handleMessage = (event: MessageEvent) => {
       const { data } = event;
-      if (typeof data !== 'string') return;
-      const messageData = JSON.parse(data) as PostMessageKeyToData[K];
-      if (messageData.key !== key) return;
+      if (data.type) return;
+      const parsedData = JSON.parse(data);
+      if (!parsedData.key || parsedData.key !== key) return;
+      if (!isPostMessageData(parsedData.data)) return;
+
+      const messageData = parsedData.data as PostMessageKeyToData[K];
       cb(messageData);
     };
 

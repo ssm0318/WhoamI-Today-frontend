@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { Colors } from '@design-system';
+import { useGetAppMessage } from '@hooks/useAppMessage';
+import useAsyncEffect from '@hooks/useAsyncEffect';
+import useFcm from '@hooks/useFcm';
+import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
 import { checkIfSignIn } from '@utils/apis/user';
+import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import ErrorPage from './components/error-page/ErrorPage';
 import './i18n';
 import reportWebVitals from './reportWebVitals';
@@ -110,17 +115,40 @@ const router = createBrowserRouter([
   },
 ]);
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-root.render(
-  <React.StrictMode>
-    <GlobalStyle />
-    <ThemeProvider theme={Colors}>
-      <RouterProvider router={router} />
-    </ThemeProvider>
-  </React.StrictMode>,
-);
+function App() {
+  const { initializeFcm } = useFcm();
+  const { isMobile } = getMobileDeviceInfo();
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+  const { setAppNotiPermission } = useBoundStore((state) => ({
+    setAppNotiPermission: state.setAppNotiPermission,
+  }));
+
+  useEffect(() => {
+    reportWebVitals();
+  }, []);
+
+  useAsyncEffect(async () => {
+    if (isMobile) return;
+    // 데스크톱인 경우에만 initializeFcm
+    await initializeFcm();
+  }, [isMobile]);
+
+  useGetAppMessage({
+    cb: ({ value }) => {
+      setAppNotiPermission(value);
+    },
+    key: 'SET_NOTI_PERMISSION',
+  });
+
+  return (
+    <React.StrictMode>
+      <GlobalStyle />
+      <ThemeProvider theme={Colors}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </React.StrictMode>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+root.render(<App />);
