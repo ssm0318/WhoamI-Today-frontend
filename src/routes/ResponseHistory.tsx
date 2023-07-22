@@ -49,11 +49,11 @@ function ResponseHistory() {
           </button>
         }
       />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" ph={DEFAULT_MARGIN} gap={20}>
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" ph={DEFAULT_MARGIN}>
         {/* 질문 아이템 */}
         <QuestionItem question={question} onSend={handleSend} disableClickQuestion />
         {/* 이전 답변들 */}
-        <Layout.FlexCol w="100%" gap={24}>
+        <Layout.FlexCol w="100%" gap={24} mt={64}>
           {responses.map((response) => (
             <ResponseItem response={response} key={response.id} />
           ))}
