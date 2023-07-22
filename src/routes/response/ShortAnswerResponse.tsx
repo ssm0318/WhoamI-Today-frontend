@@ -22,20 +22,29 @@ function ShortAnswerResponse() {
 
   const [t] = useTranslation('translation', { keyPrefix: 'question.response' });
 
+  // 질문 보내기 선택
   const handleSend = () => {
     setSendModalVisible(true);
   };
 
-  const handlePost = async () => {
-    setSendModalVisible(true);
-    if (!textareaRef.current) return;
-    await responseQuestion({ question_id: Number(questionId), content: textareaRef.current.value });
+  // 질문 보내기 skip
+  const handleSkipSendQuestion = async () => {
+    setSendModalVisible(false);
     return navigate(`/response-history/${Number(questionId)}`);
   };
 
-  const handleSkipSendQuestion = async () => {
-    setSendModalVisible(false);
-    await handlePost();
+  const handlePost = async () => {
+    // 1. 답변 제출
+    if (!textareaRef.current) return;
+    const res = await responseQuestion({
+      question_id: Number(questionId),
+      content: textareaRef.current.value,
+    });
+    // TODO(Gina): 작성 완료 모달 노출
+    if (res) return alert('작성 완료!');
+
+    // 2. 질문 보내기 모달 노출
+    setSendModalVisible(true);
   };
 
   useAsyncEffect(async () => {
@@ -49,7 +58,7 @@ function ShortAnswerResponse() {
     <MainContainer>
       <TitleHeader
         RightComponent={
-          <button type="button" onClick={handlePost}>
+          <button type="button" onClick={handlePost} disabled={!textareaRef.current}>
             <Font.Display type="18_bold">{t('post')}</Font.Display>
           </button>
         }
