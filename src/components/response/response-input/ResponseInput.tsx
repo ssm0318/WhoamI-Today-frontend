@@ -14,7 +14,6 @@ function ResponseInput({ inputRef }: ResponseInputProps) {
     <Layout.FlexRow pt={22} pb={20} w="100%" alignItems="flex-start">
       <SvgIcon name="my_profile" size={36} />
       <Layout.FlexRow pt={6} w="100%" ml={12}>
-        <Layout.FlexRow bgColor="RESPONSE_INPUT_DIVIDER" h={18} w={1} mr={12} />
         <S.ResponseTextInput ref={inputRef} placeholder={t('placeholder') || undefined} autoFocus />
       </Layout.FlexRow>
     </Layout.FlexRow>

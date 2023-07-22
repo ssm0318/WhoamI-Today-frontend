@@ -55,6 +55,10 @@
     "response": {
       "placeholder": "쓰고 싶은 내용을 쓰세요.",
       "post": "완료"
+    },
+    "send": {
+      "ask": "보내기",
+      "skip": "건너뛰기"
     }
   },
   "calendar": {

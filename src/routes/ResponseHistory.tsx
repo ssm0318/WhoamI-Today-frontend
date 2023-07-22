@@ -10,7 +10,7 @@ import { Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { responseList } from '@mock/responses';
 import { ShortAnswerQuestion } from '@models/post';
-import { getQuestionDetail } from '@utils/apis/questions';
+import { getQuestionDetail } from '@utils/apis/question';
 
 function ResponseHistory() {
   const { questionId } = useParams();
@@ -27,6 +27,10 @@ function ResponseHistory() {
 
   const handleSend = () => {
     setSendModalVisible(true);
+  };
+
+  const handleSkipSendQuestion = () => {
+    setSendModalVisible(false);
   };
 
   useAsyncEffect(async () => {
@@ -58,6 +62,7 @@ function ResponseHistory() {
         questionId={question.id}
         isVisible={sendModalVisible}
         setIsVisible={setSendModalVisible}
+        onSkip={handleSkipSendQuestion}
       />
     </MainContainer>
   );
