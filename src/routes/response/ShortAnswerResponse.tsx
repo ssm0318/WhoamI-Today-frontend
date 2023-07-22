@@ -31,12 +31,12 @@ function ShortAnswerResponse() {
   // 질문 보내기 skip
   const handleSkipSendQuestion = () => {
     setSendModalVisible(false);
-    return navigate(`/response-history/${Number(questionId)}`);
+    return navigate(`/response-history/${questionId}`);
   };
 
   const handleConfirmSendQuestion = () => {
     // 이미 답변을 보낸 상태라면 response history 페이지로 이동
-    if (hasPosted) return navigate(`/response-history/${Number(questionId)}`);
+    if (hasPosted) return navigate(`/response-history/${questionId}`);
   };
 
   const handlePost = async () => {
