@@ -1,9 +1,8 @@
-import { addDays, format, isAfter, isBefore, isEqual, isSameDay, subDays } from 'date-fns';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { TODAY_QUESTION_FIRST_DATE } from '@constants/question';
-import { Button, Font, Layout, SvgIcon } from '@design-system';
+import { Link, useNavigate } from 'react-router-dom';
+import SendQuestionModal from '@components/question/send-question-modal/SendQuestionModal';
+import { Font, Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { ShortAnswerQuestion } from '@models/post';
 import { BoundState, useBoundStore } from '@stores/useBoundStore';
@@ -16,30 +15,19 @@ const todaysQuestionsSelector = (state: BoundState) => ({
 function TodaysQuestions() {
   const { fetchTodaysQuestions, shortAnswerQuestions } = useBoundStore(todaysQuestionsSelector);
   const [t] = useTranslation('translation', { keyPrefix: 'home.question' });
-  // 오늘 날짜
-  const today = new Date();
   const navigate = useNavigate();
-  // TODAY_QUESTION_FIRST_DATE와 today를 비교 후, 더 나중 날짜를 currentDate로 set
-  // TODAY_QUESTION_FIRST_DATE보다 이전에 접속하면 항상 TODAY_QUESTION_FIRST_DATE로 유지
-  const [currentDate, setCurrentDate] = useState(
-    isBefore(today, TODAY_QUESTION_FIRST_DATE) ? TODAY_QUESTION_FIRST_DATE : today,
-  );
-
-  const moveToPrevDate = () => {
-    if (!isPrevButtonExists) return;
-    setCurrentDate(subDays(currentDate, 1));
-  };
-
-  const moveToNextDate = () => {
-    if (!isNextButtonExists) return;
-    setCurrentDate(addDays(currentDate, 1));
-  };
-
-  const isPrevButtonExists = isAfter(currentDate, TODAY_QUESTION_FIRST_DATE);
-  const isNextButtonExists = !(isAfter(currentDate, today) || isEqual(currentDate, today));
+  const [sendModalVisible, setSendModalVisible] = useState(false);
 
   const handleShortAnswer = (question: ShortAnswerQuestion) => {
     navigate(`/questions/${question.id}/short-answer`);
+  };
+
+  const handleResponse = (questionId: number) => {
+    navigate(`/questions/${questionId}/short-answer`);
+  };
+
+  const handleSend = () => {
+    setSendModalVisible(true);
   };
 
   useAsyncEffect(async () => {
@@ -48,44 +36,54 @@ function TodaysQuestions() {
 
   return (
     <Layout.FlexCol w="100%" bgColor="BACKGROUND_COLOR" ph="default" pt={22} pb={100}>
-      {/* 타이틀 */}
-      <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" h={38}>
-        <Layout.LayoutBase onClick={moveToPrevDate} w={36} h={36}>
-          {isPrevButtonExists && <SvgIcon name="arrow_left" size={36} color="BASIC_BLACK" />}
-        </Layout.LayoutBase>
-        <Font.Display type="18_bold">
-          {isSameDay(currentDate, today) || isBefore(today, TODAY_QUESTION_FIRST_DATE)
-            ? `${t('todays_questions')}`
-            : format(currentDate, 'yyyy/MM/dd')}
-        </Font.Display>
-        <Layout.LayoutBase onClick={moveToNextDate} w={36} h={36}>
-          {isNextButtonExists && <SvgIcon name="arrow_right" size={36} color="BASIC_BLACK" />}
-        </Layout.LayoutBase>
-      </Layout.FlexRow>
-      {/* Short Answer */}
-      <Layout.FlexRow mb={10} mt={32} justifyContent="space-between" w="100%" alignItems="center">
-        <Font.Display type="14_regular" color="GRAY_3">
-          {t('short_answer')}
-        </Font.Display>
-        <Button.Small text={t('see_all')} type="white_fill" status="normal" to="/questions" />
-      </Layout.FlexRow>
-      <Layout.FlexCol w="100%" gap={12}>
-        {shortAnswerQuestions.map((saq) => (
-          <Layout.FlexRow
-            bgColor="GRAY_2"
-            w="100%"
-            ph={16}
-            pv={14}
-            rounded={10}
-            justifyContent="center"
-            onClick={() => handleShortAnswer(saq)}
-            key={saq.id}
-          >
-            <Font.Body type="18_regular" textAlign="center">
-              {saq.content}
+      <Layout.FlexCol bgColor="GRAY_2" rounded={14} w="100%" ph={16} pv={24}>
+        {/* 제목 */}
+        <Layout.FlexRow w="100%" justifyContent="center" alignItems="center">
+          <Font.Display type="18_bold">{t('todays_questions')}</Font.Display>
+        </Layout.FlexRow>
+        {/* 질문 */}
+        <Layout.FlexCol w="100%" gap={12} alignItems="center" mt={12}>
+          {shortAnswerQuestions.map((saq) => (
+            <Layout.FlexCol w="100%">
+              <Layout.FlexRow
+                bgColor="GRAY_3"
+                w="100%"
+                ph={16}
+                pv={12}
+                rounded={14}
+                justifyContent="center"
+                onClick={() => handleShortAnswer(saq)}
+                key={saq.id}
+              >
+                <Font.Body type="18_regular" textAlign="center" color="GRAY_7">
+                  {saq.content}
+                </Font.Body>
+              </Layout.FlexRow>
+              {/* 버튼 */}
+              <Layout.FlexRow gap={32} w="100%" justifyContent="center" mt={24} mb={12}>
+                <button type="button" onClick={() => handleResponse(saq.id)}>
+                  <SvgIcon name="moment_description_normal" size={36} />
+                </button>
+                <button type="button" onClick={handleSend}>
+                  <SvgIcon name="question_send" size={36} />
+                </button>
+              </Layout.FlexRow>
+              <SendQuestionModal
+                questionId={saq.id}
+                isVisible={sendModalVisible}
+                setIsVisible={setSendModalVisible}
+              />
+            </Layout.FlexCol>
+          ))}
+        </Layout.FlexCol>
+        {/* 더 보기 */}
+        <Layout.FlexRow w="100%" justifyContent="center">
+          <Link to="/questions">
+            <Font.Body type="14_regular" color="GRAY_3" underline>
+              {t('see_all')}
             </Font.Body>
-          </Layout.FlexRow>
-        ))}
+          </Link>
+        </Layout.FlexRow>
       </Layout.FlexCol>
     </Layout.FlexCol>
   );

@@ -46,7 +46,7 @@ export const Container = styled(Layout.Absolute)<{
   visible: boolean;
   height: number;
 }>`
-  box-shadow: 0px -4px 44px rgba(0, 0, 0, 0.12);
+  box-shadow: ${(props) => (props.visible ? '0px -4px 44px rgba(0, 0, 0, 0.12)' : 'none')};
   border-radius: 17px 17px 0px 0px;
   width: 100%;
   height: ${(props) => props.height}px;
