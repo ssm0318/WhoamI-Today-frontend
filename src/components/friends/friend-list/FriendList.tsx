@@ -1,4 +1,4 @@
-import UserProfile from '@components/_common/user-profile/UserProfile';
+import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Font } from '@design-system';
 import { friendList } from '@mock/friends';
 import { User } from '@models/user';
@@ -15,7 +15,7 @@ function FriendList({ selectedFriend, selectFriend }: FriendListProps) {
         const { id, profile_image, username } = user;
         return (
           <StyledFriendProfile key={id} onClick={() => selectFriend(user)}>
-            <UserProfile
+            <ProfileImage
               imageUrl={profile_image}
               username={username}
               size={66}

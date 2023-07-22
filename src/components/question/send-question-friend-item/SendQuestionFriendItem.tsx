@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import UserProfile from '@components/_common/user-profile/UserProfile';
+import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { User } from '@models/user';
 
@@ -25,7 +25,7 @@ function SendQuestionFriendItem({ onToggle, user }: SendQuestionFriendItemProps)
       ph={4}
     >
       <Layout.FlexRow gap={7} alignItems="center">
-        <UserProfile imageUrl={user.profile_image} username={user.username} size={55} />
+        <ProfileImage imageUrl={user.profile_image} username={user.username} size={55} />
         <Font.Body type="14_semibold">{user.username}</Font.Body>
       </Layout.FlexRow>
       <SvgIcon name={isSelected ? 'circle_check_checked' : 'circle_check_unchecked'} size={24} />

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from 'styled-components';
-import UserProfile from '@components/_common/user-profile/UserProfile';
+import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Font, Layout } from '@design-system';
 import { Notification } from '@models/notification';
 import { readNotification } from '@utils/apis/notification';
@@ -29,7 +29,7 @@ function NotificationItem({ item }: NotificationItemProps) {
   return (
     <Layout.FlexRow w="100%" onClick={handleClickNotification}>
       <Layout.FlexRow w={50} h={50} mr={7} alignItems="center" justifyContent="center">
-        <UserProfile imageUrl={profile_image} size={40} />
+        <ProfileImage imageUrl={profile_image} size={40} />
       </Layout.FlexRow>
       <Layout.FlexRow flex={1}>
         <Font.Body type="14_regular">

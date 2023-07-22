@@ -41,6 +41,7 @@
     "no-shadow": "off",
     "no-use-before-define": "off",
     "import/prefer-default-export": "off",
+    "no-nested-ternary": "off",
     "react/prop-types": [0, { "ignore": ["ignore"], "customValidators": ["customValidators"], "skipUndeclared": true }],
     "@typescript-eslint/no-unused-vars": ["error"],
     "@typescript-eslint/no-shadow": ["error"],

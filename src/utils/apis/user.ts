@@ -11,7 +11,7 @@ import {
   SignUpParams,
   UsernameError,
 } from '@models/api/user';
-import { User } from '@models/user';
+import { User, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 
@@ -157,4 +157,39 @@ export const signUp = ({
 export const getFriendList = async () => {
   const { data } = await axios.get<PaginationResponse<User[]>>('/user/me/friends/');
   return data.results;
+};
+
+export const getUserProfile = async (username: string) => {
+  const { data } = await axios.get<UserProfile>(`/user/profile/${username}/`);
+  return data;
+};
+
+export const requestFriend = async (userId: number) => {
+  const currentUser = useBoundStore.getState().myProfile;
+  if (!currentUser) return;
+
+  await axios.post('user/friend-requests/', {
+    requester_id: currentUser.id,
+    requestee_id: userId,
+  });
+};
+
+export const cancelFriendRequest = async (userId: number) => {
+  await axios.delete(`user/friend-requests/${userId}/`);
+};
+
+export const acceptFriendRequest = async (userId: number) => {
+  await axios.patch(`user/friend-requests/${userId}/respond/`, { accepted: true });
+};
+
+export const rejectFriendRequest = async (userId: number) => {
+  await axios.patch(`user/friend-requests/${userId}/respond/`, { accepted: false });
+};
+
+export const reportUser = async (userId: number) => {
+  await axios.post('/user_reports/', { reported_user_id: userId });
+};
+
+export const breakFriend = async (friendId: number) => {
+  await axios.delete(`user/friend/${friendId}/`);
 };

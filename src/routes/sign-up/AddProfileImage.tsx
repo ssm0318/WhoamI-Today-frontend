@@ -1,15 +1,15 @@
 import { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
-import UserProfile from '@components/_common/user-profile/UserProfile';
 import { Button, Layout } from '@design-system';
 import { hasMandatorySignUpParams } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { signUp } from '@utils/apis/user';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 
-function ProfileImage() {
+function AddProfileImage() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_up' });
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -72,7 +72,7 @@ function ProfileImage() {
 
   return (
     <>
-      {profileImagePreview && <UserProfile imageUrl={profileImagePreview} size={400} />}
+      {profileImagePreview && <ProfileImage imageUrl={profileImagePreview} size={400} />}
       <input
         ref={inputRef}
         type="file"
@@ -110,4 +110,4 @@ function ProfileImage() {
   );
 }
 
-export default ProfileImage;
+export default AddProfileImage;

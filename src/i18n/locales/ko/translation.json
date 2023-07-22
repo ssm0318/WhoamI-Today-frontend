@@ -95,6 +95,22 @@
       "title": "그 날의 질문들"
     }
   },
+  "user_page": {
+    "this_user_do_not_exist": "존재하지 않는 사용자입니다 :(",
+    "block_this_user": "사용자 차단",
+    "report_this_user": "사용자 신고",
+    "do_you_want_to_block_this_user": "이 사용자를 차단하시겠습니까?",
+    "do_you_want_to_report_this_user": "이 사용자를 신고하시겠습니까?",
+    "request_a_friend": "친구 요청",
+    "break_friends": "친구 끊기",
+    "are_you_sure_you_want_to_delete_this_friend": "친구를 삭제하시겠습니까?",
+    "friend": "친구",
+    "accept": "수락",
+    "reject": "거절",
+    "requested": "요청됨",
+    "cancel": "취소",
+    "confirm": "확인"
+  },
   "settings":{
     "title": "설정",
     "account_settings": "계정 설정",
