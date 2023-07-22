@@ -7,4 +7,5 @@ export const Container = styled(Layout.FlexCol)`
   align-items: center;
   position: absolute;
   bottom: ${BOTTOM_TABBAR_HEIGHT}px;
+  cursor: pointer;
 `;
