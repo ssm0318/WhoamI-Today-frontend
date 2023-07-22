@@ -52,8 +52,8 @@
   },
   "home": {
     "moment": {
-      "todays_moments": "Today's Moments?"
-    },
+      "todays_moments": "Today's Moments"
+    }, 
     "question": {
       "todays_questions": "Today's Questions",
       "multiple_choice": "Multiple Choice",
@@ -94,6 +94,7 @@
     }
   },
   "moment_upload": {
+    "todays_moments": "Today's Moments",
     "mood_title": "Today's Moment",
     "mood_subtitle": "Mood",
     "mood_placeholder": "Feel free to express your mood with Emojis.",
