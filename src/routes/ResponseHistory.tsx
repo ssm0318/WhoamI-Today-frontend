@@ -8,9 +8,8 @@ import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { responseList } from '@mock/responses';
-import { ShortAnswerQuestion } from '@models/post';
-import { getQuestionDetail } from '@utils/apis/question';
+import { Response, ShortAnswerQuestion } from '@models/post';
+import { getResponseHistories } from '@utils/apis/question';
 
 function ResponseHistory() {
   const { questionId } = useParams();
@@ -18,7 +17,7 @@ function ResponseHistory() {
   const navigate = useNavigate();
   const [question, setQuestion] = useState<ShortAnswerQuestion | null>(null);
 
-  const responses = responseList;
+  const [responses, setResponses] = useState<Response[]>([]);
 
   const handleClickResponse = () => {
     if (!question) return;
@@ -34,8 +33,10 @@ function ResponseHistory() {
   };
 
   useAsyncEffect(async () => {
-    const res = await getQuestionDetail(Number(questionId));
-    setQuestion(res);
+    const { response_set, ...questionDetail } = await getResponseHistories(Number(questionId));
+
+    setQuestion(questionDetail);
+    setResponses(response_set || []);
   }, [questionId]);
 
   if (!question) return null;
@@ -48,11 +49,11 @@ function ResponseHistory() {
           </button>
         }
       />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" ph={DEFAULT_MARGIN} gap={20}>
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" ph={DEFAULT_MARGIN}>
         {/* 질문 아이템 */}
         <QuestionItem question={question} onSend={handleSend} disableClickQuestion />
         {/* 이전 답변들 */}
-        <Layout.FlexCol w="100%" gap={24}>
+        <Layout.FlexCol w="100%" gap={24} mt={64}>
           {responses.map((response) => (
             <ResponseItem response={response} key={response.id} />
           ))}
