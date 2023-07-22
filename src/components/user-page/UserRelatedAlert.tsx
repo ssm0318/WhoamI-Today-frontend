@@ -5,7 +5,7 @@ import { Button, Font, Layout } from '@design-system';
 export interface UserRelatedAlertProps {
   visible: boolean;
   close: () => void;
-  onClickConfirm: () => void;
+  onClickConfirm: (() => void) | (() => Promise<void>);
   confirmMsg: string;
 }
 

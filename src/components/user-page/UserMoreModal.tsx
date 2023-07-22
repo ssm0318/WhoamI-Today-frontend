@@ -10,11 +10,12 @@ interface UserMoreModalProps {
   isVisible: boolean;
   setIsVisible: Dispatch<SetStateAction<boolean>>;
   user: UserProfile;
+  callback?: () => Promise<void>;
 }
 
 type Alert = Pick<UserRelatedAlertProps, 'confirmMsg' | 'onClickConfirm'>;
 
-function UserMoreModal({ isVisible, setIsVisible, user }: UserMoreModalProps) {
+function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModalProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
   const [showAlert, setShowAlert] = useState<Alert>();
 
@@ -30,8 +31,9 @@ function UserMoreModal({ isVisible, setIsVisible, user }: UserMoreModalProps) {
 
   const handleOnClickReportUser = () => {
     setShowAlert({
-      onClickConfirm: () => {
-        reportUser(user.id);
+      onClickConfirm: async () => {
+        await reportUser(user.id);
+        callback?.();
         handleOnConfirmAlert();
       },
       confirmMsg: t('do_you_want_to_report_this_user'),
@@ -40,9 +42,10 @@ function UserMoreModal({ isVisible, setIsVisible, user }: UserMoreModalProps) {
 
   const handleOnClickBlockUser = () => {
     setShowAlert({
-      onClickConfirm: () => {
+      onClickConfirm: async () => {
         // NOTE: 현재는 차단이 신고와 동일함
-        reportUser(user.id);
+        await reportUser(user.id);
+        callback?.();
         handleOnConfirmAlert();
       },
       confirmMsg: t('do_you_want_to_block_this_user'),
@@ -51,8 +54,9 @@ function UserMoreModal({ isVisible, setIsVisible, user }: UserMoreModalProps) {
 
   const handleOnClickBreakFriends = () => {
     setShowAlert({
-      onClickConfirm: () => {
-        breakFriend(user.id);
+      onClickConfirm: async () => {
+        await breakFriend(user.id);
+        callback?.();
         handleOnConfirmAlert();
       },
       confirmMsg: t('are_you_sure_you_want_to_delete_this_friend'),

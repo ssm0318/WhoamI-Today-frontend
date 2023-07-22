@@ -164,6 +164,28 @@ export const getUserProfile = async (username: string) => {
   return data;
 };
 
+export const requestFriend = async (userId: number) => {
+  const currentUser = useBoundStore.getState().myProfile;
+  if (!currentUser) return;
+
+  await axios.post('user/friend-requests/', {
+    requester_id: currentUser.id,
+    requestee_id: userId,
+  });
+};
+
+export const cancelFriendRequest = async (userId: number) => {
+  await axios.delete(`user/friend-requests/${userId}/`);
+};
+
+export const acceptFriendRequest = async (userId: number) => {
+  await axios.patch(`user/friend-requests/${userId}/respond/`, { accepted: true });
+};
+
+export const rejectFriendRequest = async (userId: number) => {
+  await axios.patch(`user/friend-requests/${userId}/respond/`, { accepted: false });
+};
+
 export const reportUser = async (userId: number) => {
   await axios.post('/user_reports/', { reported_user_id: userId });
 };

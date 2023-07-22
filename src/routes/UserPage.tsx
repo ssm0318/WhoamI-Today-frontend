@@ -19,11 +19,13 @@ function UserPage() {
 
   const [showMore, setShowMore] = useState(false);
 
-  useAsyncEffect(async () => {
+  const updateUser = async () => {
     if (!username) return;
     const res = await getUserProfile(username);
     setUser(res);
-  }, []);
+  };
+
+  useAsyncEffect(updateUser, []);
 
   const handleOnClickMore = () => {
     setShowMore(true);
@@ -40,7 +42,14 @@ function UserPage() {
           </button>
         }
       />
-      {user && <UserMoreModal isVisible={showMore} setIsVisible={setShowMore} user={user} />}
+      {user && (
+        <UserMoreModal
+          isVisible={showMore}
+          setIsVisible={setShowMore}
+          user={user}
+          callback={updateUser}
+        />
+      )}
       {user ? (
         <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" pl={18} pr={18}>
           <ProfileImage imageUrl={user.profile_image} username={user.username} size={100} />
@@ -48,7 +57,7 @@ function UserPage() {
             <Font.Body type="20_semibold" mr={18}>
               {user.username}
             </Font.Body>
-            <FriendStatusButton user={user} />
+            <FriendStatusButton user={user} callback={updateUser} />
           </Layout.FlexRow>
           <Divider width={1} />
           {/* TODO: 오늘의 게시글 */}
