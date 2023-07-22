@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const useNotiPermission = () => {
+  const [notiPermission, setNotiPermission] = useState(Notification.permission);
   const [t] = useTranslation('translation', { keyPrefix: 'settings' });
 
   const getBannerDescription = (permissionState?: typeof Notification.permission): string[] => {
@@ -45,6 +47,8 @@ const useNotiPermission = () => {
   return {
     getBannerDescription,
     getSettingDescription,
+    notiPermission,
+    setNotiPermission,
   };
 };
 

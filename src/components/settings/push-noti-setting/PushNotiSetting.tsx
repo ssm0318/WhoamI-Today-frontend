@@ -8,12 +8,13 @@ import * as S from './PushNotiSetting.styled';
 
 function PushNotiSetting() {
   const [t] = useTranslation('translation', { keyPrefix: 'settings' });
-  const { getSettingDescription } = useNotiPermission();
+  const { getSettingDescription, notiPermission, setNotiPermission } = useNotiPermission();
   const descriptions = getSettingDescription(!isApp ? Notification.permission : undefined);
 
-  const handleRequestPermission = () => {
-    if (Notification.permission !== 'default') return;
-    requestPermission();
+  const handleRequestPermission = async () => {
+    if (notiPermission !== 'default') return;
+    const permission = await requestPermission();
+    setNotiPermission(permission);
   };
 
   return (

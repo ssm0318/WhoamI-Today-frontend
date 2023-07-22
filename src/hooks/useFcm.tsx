@@ -1,22 +1,16 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging } from 'firebase/messaging';
-import { useCallback } from 'react';
 import { useBoundStore } from '@stores/useBoundStore';
 import {
   addForegroundMessageEventListener,
   firebaseConfig,
   getFCMRegistrationToken,
-  requestPermission,
 } from '../utils/firebaseHelpers';
 
 const useFcm = () => {
   const { setFcmToken } = useBoundStore((state) => ({
     setFcmToken: state.setFcmToken,
   }));
-
-  const requestNotiPermission = useCallback(() => {
-    requestPermission();
-  }, []);
 
   const initializeFcm = async () => {
     try {
@@ -37,7 +31,6 @@ const useFcm = () => {
 
   return {
     initializeFcm,
-    requestNotiPermission,
   };
 };
 
