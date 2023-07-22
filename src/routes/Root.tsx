@@ -4,12 +4,10 @@ import Header from '@components/header/Header';
 import Tab from '@components/tab/Tab';
 import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
-import useFcm from '@hooks/useFcm';
 import { MainWrapper, RootContainer } from '@styles/wrappers';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 
 function Root() {
-  const { requestNotiPermission } = useFcm();
   const { isMobile } = getMobileDeviceInfo();
 
   return (
@@ -25,7 +23,7 @@ function Root() {
           <Outlet />
         </MainWrapper>
         {/* 데스크톱 웹만 노출 */}
-        {!isMobile && <NotiPermissionBanner onClick={requestNotiPermission} />}
+        {!isMobile && <NotiPermissionBanner />}
         <Tab />
       </RootContainer>
     </Layout.FlexRow>
