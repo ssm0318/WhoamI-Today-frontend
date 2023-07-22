@@ -32,6 +32,7 @@ const hide_password_eye = 'hide_password_eye';
 const search = 'search';
 const close = 'close';
 const link_share = 'link_share';
+const moment_add = 'moment_add';
 
 export {
   arrow_left,
@@ -51,6 +52,7 @@ export {
   home_active,
   home_inactive,
   link_share,
+  moment_add,
   moment_description_disabled,
   moment_description_normal,
   moment_emoji_disabled,

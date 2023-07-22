@@ -38,7 +38,7 @@ function TitleHeader({ title, type = 'MAIN', onGoBack, RightComponent }: TitleHe
             {title}
           </Font.Display>
         )}
-        <Layout.LayoutBase w={title ? 36 : undefined}>
+        <Layout.LayoutBase w={title && !RightComponent ? 36 : undefined}>
           {RightComponent && RightComponent}
         </Layout.LayoutBase>
       </Layout.FlexRow>
