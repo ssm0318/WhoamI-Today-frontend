@@ -42,7 +42,7 @@
   "home": {
     "moment": {
       "todays_moments": "Today's Moments?"
-    }, 
+    },
     "question": {
       "todays_questions": "Today's Questions",
       "multiple_choice": "Multiple Choice",
@@ -116,7 +116,7 @@
     "cancel": "Cancel",
     "confirm": "Confirm"
   },
-  "settings":{
+  "settings": {
     "title": "Settings",
     "account_settings": "Account Settings",
     "edit_profile": "Edit Profile",
@@ -147,7 +147,10 @@
     "password_invalid": "The password you entered is invalid.",
     "password": "Password",
     "continue": "Continue",
-    "are_you_sure": "Are you sure?\nThis cannot be done."
+    "are_you_sure": "Are you sure?\nThis cannot be done.",
+    "friends": {
+      "title": "Friends"
+    }
   },
   "time": {
     "just_a_moment_ago": "just a moment ago",
@@ -156,7 +159,7 @@
     "hour_ago_one": "{{hour}} hour ago",
     "hour_ago_other": "{{hour}} hours ago"
   },
-  "notifications" : {
+  "notifications": {
     "title": "Notifications"
   },
   "comment": {

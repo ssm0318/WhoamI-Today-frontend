@@ -42,7 +42,7 @@
   "home": {
     "moment": {
       "todays_moments": "오늘의 순간들"
-    }, 
+    },
     "question": {
       "todays_questions": "오늘의 질문",
       "see_all": "전체 보기",
@@ -113,7 +113,7 @@
     "cancel": "취소",
     "confirm": "확인"
   },
-  "settings":{
+  "settings": {
     "title": "설정",
     "account_settings": "계정 설정",
     "edit_profile": "프로필 수정",
@@ -144,14 +144,17 @@
     "password_invalid": "입력한 비밀번호가 맞지 않습니다.",
     "password": "비밀번호",
     "continue": "계속하기",
-    "are_you_sure": "정말로 계속하시겠습니까?\n한 번 계정을 삭제하면 다시 복구할 수 없습니다."
+    "are_you_sure": "정말로 계속하시겠습니까?\n한 번 계정을 삭제하면 다시 복구할 수 없습니다.",
+    "friends": {
+      "title": "Friends"
+    }
   },
   "time": {
     "just_a_moment_ago": "방금 전",
     "minute_ago": "{{minute}}분 전",
     "hour_ago": "{{hour}}시간 전"
   },
-  "notifications" : {
+  "notifications": {
     "title": "알림"
   },
   "comment": {
