@@ -5,7 +5,7 @@ import * as S from './BottomModal.styled';
 
 interface BottomModalProps {
   visible: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   children: React.ReactNode;
   bgColor?: string;
   maxHeight?: number; // 바텀 모달의 최대 높이
