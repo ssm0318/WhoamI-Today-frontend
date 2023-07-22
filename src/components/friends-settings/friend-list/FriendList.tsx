@@ -1,15 +1,9 @@
-import DeleteButton from '@components/_common/delete-button/DeleteButton';
-import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import FriendItem from '@components/friends-settings/friend-item/FriendItem';
 import { Font, Layout } from '@design-system';
 import { friendList } from '@mock/friends';
-import { User } from '@models/user';
 
 function FriendList() {
   // TODO: GET 친구 목록
-
-  const onClickDeleteFriend = (friend: User) => () => {
-    console.log('친구 삭제', friend.id);
-  };
 
   return (
     <Layout.FlexCol w="100%" pl={10} pr={10} gap={8}>
@@ -18,22 +12,7 @@ function FriendList() {
       </Font.Body>
       <Layout.FlexCol w="100%" gap={8}>
         {friendList.map((friend) => (
-          <Layout.FlexRow
-            w="100%"
-            key={friend.id}
-            justifyContent="space-between"
-            alignItems="center"
-            pl={10}
-            pt={4}
-            pr={10}
-            pb={4}
-          >
-            <Layout.FlexRow alignItems="center" gap={7}>
-              <ProfileImage imageUrl={friend.profile_image} username={friend.username} size={42} />
-              <Font.Body type="14_semibold">{friend.username}</Font.Body>
-            </Layout.FlexRow>
-            <DeleteButton onClick={onClickDeleteFriend(friend)} />
-          </Layout.FlexRow>
+          <FriendItem key={friend.id} type="friends" friend={friend} />
         ))}
       </Layout.FlexCol>
     </Layout.FlexCol>
