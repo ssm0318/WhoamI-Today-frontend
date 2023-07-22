@@ -49,6 +49,15 @@ export const checkIfSignIn = async () => {
   }
 };
 
+export const updateMyProfile = async () => {
+  axios
+    .get<MyProfile>('/user/me/')
+    .then((user) => {
+      useBoundStore.getState().setMyProfile(user.data);
+    })
+    .catch((e) => console.log(e));
+};
+
 export const signOut = async (onSuccess: () => void) => {
   axios.get('/user/logout/').then(() => {
     onSuccess();

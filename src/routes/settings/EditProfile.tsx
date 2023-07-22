@@ -10,7 +10,7 @@ import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Font, Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { changeProfileImage } from '@utils/apis/user';
+import { changeProfileImage, updateMyProfile } from '@utils/apis/user';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 
 function EditProfile() {
@@ -56,6 +56,7 @@ function EditProfile() {
   const handleChangeProfileImage = async () => {
     if (!croppedImg) return;
     await changeProfileImage({ profileImage: croppedImg.file });
+    await updateMyProfile();
   };
 
   if (!myProfile) return null;
