@@ -14,6 +14,7 @@ type SendQuestionModalProps = {
   questionId: number;
   onSkip?: () => void;
   onSend?: () => void;
+  closeOnBackdrop?: boolean;
 };
 
 function SendQuestionModal({
@@ -22,6 +23,7 @@ function SendQuestionModal({
   questionId,
   onSkip,
   onSend,
+  closeOnBackdrop = true,
 }: SendQuestionModalProps) {
   const { myProfile: currentUser, friendList, getFriendList } = useBoundStore(UserSelector);
 
@@ -46,7 +48,7 @@ function SendQuestionModal({
 
   useAsyncEffect(async () => {
     if (friendList) return;
-    await getFriendList();
+    getFriendList();
   }, []);
 
   return (
@@ -57,12 +59,13 @@ function SendQuestionModal({
           <Button.Small type="white_fill" status="normal" text={t('skip')} onClick={onSkip} />
         </Layout.FlexRow>
       }
+      onClose={closeOnBackdrop ? () => setIsVisible(false) : undefined}
     >
       <Layout.LayoutBase
         w="100%"
         bgColor="BASIC_WHITE"
         pt={12}
-        ph={10}
+        ph="default"
         pb={12 + BOTTOM_BUTTON_SECTION_HEIGHT}
       >
         {/* TODO: 친구가 없는 유저의 경우 대응 */}
@@ -79,6 +82,7 @@ function SendQuestionModal({
           w="100%"
           bgColor="BASIC_WHITE"
           h={BOTTOM_BUTTON_SECTION_HEIGHT}
+          cursor="pointer"
         >
           <Layout.FlexRow w="100%" pv={13} mh={45} bgColor="BASIC_WHITE">
             <Layout.FlexRow

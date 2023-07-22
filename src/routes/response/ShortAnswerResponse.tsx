@@ -29,7 +29,7 @@ function ShortAnswerResponse() {
   };
 
   // 질문 보내기 skip
-  const handleSkipSendQuestion = async () => {
+  const handleSkipSendQuestion = () => {
     setSendModalVisible(false);
     return navigate(`/response-history/${Number(questionId)}`);
   };
@@ -84,6 +84,7 @@ function ShortAnswerResponse() {
         setIsVisible={setSendModalVisible}
         onSkip={handleSkipSendQuestion}
         onSend={handleConfirmSendQuestion}
+        closeOnBackdrop={!hasPosted}
       />
     </MainContainer>
   );

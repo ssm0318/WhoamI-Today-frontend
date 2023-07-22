@@ -29,6 +29,10 @@ function ResponseHistory() {
     setSendModalVisible(true);
   };
 
+  const handleSkipSendQuestion = () => {
+    setSendModalVisible(false);
+  };
+
   useAsyncEffect(async () => {
     const res = await getQuestionDetail(Number(questionId));
     setQuestion(res);
@@ -58,6 +62,7 @@ function ResponseHistory() {
         questionId={question.id}
         isVisible={sendModalVisible}
         setIsVisible={setSendModalVisible}
+        onSkip={handleSkipSendQuestion}
       />
     </MainContainer>
   );
