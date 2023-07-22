@@ -1,13 +1,21 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Divider from '@components/_common/divider/Divider';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import Tabs from '@components/_common/tabs/Tabs';
 import FriendList from '@components/friends-settings/friend-list/FriendList';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 
+const TabList = [
+  { key: 'friends', text: 'Friends' },
+  { key: 'request', text: 'Requests' },
+];
+
 function FriendsSettings() {
   const [t] = useTranslation('translation', { keyPrefix: 'settings.friends' });
+  const [selectedTab, setSelectedTab] = useState('friends');
   return (
     <MainContainer>
       <TitleHeader title={t('title')} />
@@ -17,6 +25,16 @@ function FriendsSettings() {
         <Divider width={1} />
         <FriendList />
       </Layout.FlexCol>
+      <Layout.Fixed b={0} l="50%" tl={['-50%', '-50%']}>
+        <Tabs
+          tabList={TabList}
+          selectedKey={selectedTab}
+          onClick={setSelectedTab}
+          displayFontType="14_semibold"
+          bgColor="BACKGROUND_COLOR"
+          tabWidth={90}
+        />
+      </Layout.Fixed>
     </MainContainer>
   );
 }

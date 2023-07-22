@@ -24,6 +24,11 @@ export const DisplaySettings: { [key in DisplayType]: FontSettings } = {
     fontWeight: FontWeight.REGULAR,
     lineHeight: 1.4,
   },
+  '14_semibold': {
+    fontSize: 14,
+    fontWeight: FontWeight.SEMIBOLD,
+    lineHeight: 1.4,
+  },
 };
 
 /**
