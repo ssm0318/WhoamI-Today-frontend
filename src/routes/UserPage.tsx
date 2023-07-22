@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import { Loader } from '@components/_common/loader/Loader.styled';
@@ -10,19 +11,27 @@ import UserMoreModal from '@components/user-page/UserMoreModal';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { FetchState } from '@models/api/common';
 import { UserProfile } from '@models/user';
 import { getUserProfile } from '@utils/apis/user';
 
 function UserPage() {
+  const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
+
   const { username } = useParams();
-  const [user, setUser] = useState<UserProfile>();
+  const [user, setUser] = useState<FetchState<UserProfile>>({ state: 'loading' });
 
   const [showMore, setShowMore] = useState(false);
 
   const updateUser = async () => {
     if (!username) return;
-    const res = await getUserProfile(username);
-    setUser(res);
+
+    try {
+      const res = await getUserProfile(username);
+      setUser({ state: 'hasValue', data: res });
+    } catch (error) {
+      setUser({ state: 'hasError' });
+    }
   };
 
   useAsyncEffect(updateUser, []);
@@ -42,32 +51,37 @@ function UserPage() {
           </button>
         }
       />
-      {user && (
+      {user.state === 'hasValue' && (
         <UserMoreModal
           isVisible={showMore}
           setIsVisible={setShowMore}
-          user={user}
+          user={user.data}
           callback={updateUser}
         />
       )}
-      {user ? (
-        <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" pl={18} pr={18}>
-          <ProfileImage imageUrl={user.profile_image} username={user.username} size={100} />
-          <Layout.FlexRow ml={10} mb={12}>
-            <Font.Body type="20_semibold" mr={18}>
-              {user.username}
-            </Font.Body>
-            <FriendStatusButton user={user} callback={updateUser} />
-          </Layout.FlexRow>
-          <Divider width={1} />
-          {/* TODO: 오늘의 게시글 */}
-        </Layout.FlexCol>
-      ) : (
-        // TODO: 존재하지 않거나, 차단/신고된 유저인 경우
-        <Layout.FlexRow w="100%">
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" pl={18} pr={18}>
+        {user.state === 'hasValue' ? (
+          <>
+            <ProfileImage
+              imageUrl={user.data.profile_image}
+              username={user.data.username}
+              size={100}
+            />
+            <Layout.FlexRow ml={10} mb={12}>
+              <Font.Body type="20_semibold" mr={18}>
+                {user.data.username}
+              </Font.Body>
+              <FriendStatusButton user={user.data} callback={updateUser} />
+            </Layout.FlexRow>
+            <Divider width={1} />
+            {/* TODO: 오늘의 게시글 */}
+          </>
+        ) : user.state === 'hasError' ? (
+          <Font.Body type="20_regular">{t('this_user_do_not_exist')}</Font.Body>
+        ) : (
           <Loader />
-        </Layout.FlexRow>
-      )}
+        )}
+      </Layout.FlexCol>
     </MainContainer>
   );
 }
