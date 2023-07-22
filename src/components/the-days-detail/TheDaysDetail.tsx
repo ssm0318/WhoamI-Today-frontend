@@ -25,7 +25,13 @@ function TheDaysDetail({
   const hasQuestions = questions && questions.length > 0;
 
   // TODO: moment, questions 모두 없는 케이스
-  if (!moment && !hasQuestions) return <>NotFound</>;
+  if (!moment && !hasQuestions)
+    return (
+      <Layout.FlexCol w="100%" mt={mt}>
+        TODO: NotFound
+      </Layout.FlexCol>
+    );
+
   return (
     <Layout.FlexCol w="100%" mt={mt}>
       {moment && (
