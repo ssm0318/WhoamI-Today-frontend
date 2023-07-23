@@ -8,10 +8,11 @@ import FriendRequestList from '@components/friends-settings/friend-request-list/
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
+import i18n from '@i18n/index';
 
 const TabList = [
-  { key: 'friends', text: 'Friends' },
-  { key: 'request', text: 'Requests' },
+  { key: 'friends', text: i18n.t('settings.friends.tab.friends') },
+  { key: 'request', text: i18n.t('settings.friends.tab.request') },
 ];
 
 function FriendsSettings() {

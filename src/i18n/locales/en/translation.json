@@ -149,7 +149,21 @@
     "continue": "Continue",
     "are_you_sure": "Are you sure?\nThis cannot be done.",
     "friends": {
-      "title": "Friends"
+      "title": "Friends",
+      "tab": {
+        "friends": "Friends",
+        "request": "Requests"
+      },
+      "friend_list": {
+        "title": "{{number}} people"
+      },
+      "request_list": {
+        "title": "FRIEND REQUESTS ({{number}})",
+        "no_requests": {
+          "title": "No pending requests",
+          "text": "You don't have any pending requests"
+        }
+      }
     }
   },
   "time": {

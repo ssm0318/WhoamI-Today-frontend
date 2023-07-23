@@ -146,7 +146,21 @@
     "continue": "계속하기",
     "are_you_sure": "정말로 계속하시겠습니까?\n한 번 계정을 삭제하면 다시 복구할 수 없습니다.",
     "friends": {
-      "title": "Friends"
+      "title": "친구 관리",
+      "tab": {
+        "friends": "친구",
+        "request": "요청"
+      },
+      "friend_list": {
+        "title": "{{number}} 명"
+      },
+      "request_list": {
+        "title": "친구 요청 ({{number}})",
+        "no_requests": {
+          "title": "대기 요청 없음.",
+          "text": "수락하지 않은 친구 요청이 없습니다."
+        }
+      }
     }
   },
   "time": {
