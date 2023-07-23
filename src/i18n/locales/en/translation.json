@@ -47,6 +47,13 @@
       "todays_questions": "Today's Questions",
       "multiple_choice": "Multiple Choice",
       "all_questions": "Questions"
+    },
+    "header": {
+      "side_menu": {
+        "friends": "Friends",
+        "questions": "Questions",
+        "settings": "Settings"
+      }
     }
   },
   "question": {

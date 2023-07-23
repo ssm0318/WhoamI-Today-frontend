@@ -47,6 +47,13 @@
       "todays_questions": "오늘의 질문",
       "see_all": "전체 보기",
       "all_questions": "전체 질문"
+    },
+    "header": {
+      "side_menu": {
+        "friends": "친구 관리",
+        "questions": "전체 질문",
+        "settings": "설정"
+      }
     }
   },
   "question": {
@@ -148,8 +155,8 @@
     "friends": {
       "title": "친구 관리",
       "tab": {
-        "friends": "친구",
-        "request": "요청"
+        "friends": "친구 목록",
+        "request": "친구 요청"
       },
       "friend_list": {
         "title": "{{number}} 명"
