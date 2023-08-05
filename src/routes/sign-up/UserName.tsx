@@ -5,6 +5,7 @@ import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import { Button, Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 import { validateUsername } from '@utils/apis/user';
+import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 function UserName() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_up' });
@@ -40,15 +41,15 @@ function UserName() {
         onChange={handleChange}
         error={usernameError}
       />
-      <Layout.Absolute w="100%" b="50px" flexDirection="column">
+      <Layout.Fixed l={0} b="50px" w="100%" alignItems="center">
         <Button.Large
           type="filled"
           status={!usernameInput || usernameError ? 'disabled' : 'normal'}
-          sizing="stretch"
+          width={AUTH_BUTTON_WIDTH}
           text={t('next')}
           onClick={onClickNext}
         />
-      </Layout.Absolute>
+      </Layout.Fixed>
     </>
   );
 }
