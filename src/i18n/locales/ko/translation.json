@@ -52,11 +52,12 @@
   },
   "home": {
     "moment": {
-      "todays_moments": "오늘의 순간들"
+      "todays_moments": "오늘의 순간들",
+      "already_posted": "오늘의 순간을 이미 업로드하셨군요!"
     },
     "question": {
       "todays_questions": "오늘의 질문",
-      "see_all": "전체 보기",
+      "see_all": "질문 더 보기",
       "all_questions": "전체 질문"
     },
     "header": {

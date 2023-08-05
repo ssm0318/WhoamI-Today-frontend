@@ -44,7 +44,7 @@ function TodaysQuestions() {
         {/* 질문 */}
         <Layout.FlexCol w="100%" gap={12} alignItems="center" mt={12}>
           {shortAnswerQuestions.map((saq) => (
-            <Layout.FlexCol w="100%">
+            <Layout.FlexCol w="100%" key={saq.id}>
               <Layout.FlexRow
                 bgColor="GRAY_3"
                 w="100%"

@@ -52,11 +52,12 @@
   },
   "home": {
     "moment": {
-      "todays_moments": "Today's Moments"
+      "todays_moments": "Today's Moments",
+      "already_posted": "You’ve posted for today!"
     }, 
     "question": {
       "todays_questions": "Today's Questions",
-      "multiple_choice": "Multiple Choice",
+      "see_all": "See More Questions",
       "all_questions": "Questions"
     },
     "header": {

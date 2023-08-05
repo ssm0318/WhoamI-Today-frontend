@@ -33,6 +33,7 @@ const search = 'search';
 const close = 'close';
 const link_share = 'link_share';
 const moment_add = 'moment_add';
+const moment_add_disabled = 'moment_add_disabled';
 
 export {
   arrow_left,
@@ -53,6 +54,7 @@ export {
   home_inactive,
   link_share,
   moment_add,
+  moment_add_disabled,
   moment_description_disabled,
   moment_description_normal,
   moment_emoji_disabled,
