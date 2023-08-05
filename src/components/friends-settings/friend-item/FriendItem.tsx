@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Button, Font, Layout } from '@design-system';
@@ -9,6 +10,8 @@ interface Props {
 }
 
 function FriendItem({ type, friend }: Props) {
+  const [t] = useTranslation('translation', { keyPrefix: 'settings.friends' });
+
   const handleClickAccept = () => {
     console.log('친구 요청 수락', friend.id);
   };
@@ -42,7 +45,7 @@ function FriendItem({ type, friend }: Props) {
           <Button.Small
             type="gray_fill"
             status="normal"
-            text="ACCEPT"
+            text={t('request_list.accept')}
             onClick={handleClickAccept}
           />
         )}

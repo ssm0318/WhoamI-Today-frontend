@@ -169,7 +169,8 @@
         "no_requests": {
           "title": "No pending requests",
           "text": "You don't have any pending requests"
-        }
+        },
+        "accept": "ACCEPT"
       }
     }
   },
