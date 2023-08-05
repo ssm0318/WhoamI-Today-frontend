@@ -21,6 +21,7 @@
     "next": "다음",
     "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
     "password_constraints": "비밀번호는 알파벳 대/소문자, 숫자, 특수문자를 조합하여 8자 이상으로 입력해주세요.",
+    "research_participation_consent_form": "연구 참여 동의",
     "agree_to_research": "동의합니다(현재 워싱턴 대학 연구팀의 연구에 참여하지 않는 한 선택사항입니다.)",
     "learn_more_about_whoami_today": "WhoAmI Today에 대해 자세히 알아보기",
     "age": "나이",
@@ -37,7 +38,8 @@
     "i_agree_to_provide_consent_to_my_child’s_participation_in_the_research": "자녀의 연구 참여에 동의합니다.",
     "printing_your_name_below": "아래에 귀하의 이름을 입력하면 위의 정보에 동의하는 서명이 됩니다.",
     "date_of_signature": "서명 날짜",
-    "data_security_guide": "수집한 데이터는 기밀이며 사용자 이름으로 저장되지 않습니다. 모든 데이터, 오디오 및 녹음은 안전하게 저장됩니다."
+    "data_security_guide": "수집한 데이터는 기밀이며 사용자 이름으로 저장되지 않습니다. 모든 데이터, 오디오 및 녹음은 안전하게 저장됩니다.",
+    "add_a_profile_image": "프로필 사진 추가"
   },
   "home": {
     "moment": {
