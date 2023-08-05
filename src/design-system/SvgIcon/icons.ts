@@ -30,6 +30,7 @@ const error = 'error';
 const show_password_eye = 'show_password_eye';
 const hide_password_eye = 'hide_password_eye';
 const search = 'search';
+const close = 'close';
 
 export {
   arrow_left,
@@ -38,6 +39,7 @@ export {
   box_check_unchecked,
   circle_check_checked,
   circle_check_unchecked,
+  close,
   comment,
   delete_button,
   error,
