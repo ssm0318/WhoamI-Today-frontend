@@ -13,7 +13,7 @@ interface MomentAction {
 const initialState = {
   todayMoment: {
     mood: null,
-    photo: null,
+    photo: 'https://picsum.photos/200',
     description: null,
   },
 };

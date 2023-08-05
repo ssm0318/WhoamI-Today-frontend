@@ -27,6 +27,7 @@ function TodaysMoment() {
 
   const handlePhotoUpload = () => {
     if (!window?.ReactNativeWebView) return;
+    if (todayMoment.photo) return;
     postMessage('NAVIGATE', {
       screenName: 'MomentPhotoUploadScreen',
       params: {
@@ -73,8 +74,8 @@ function TodaysMoment() {
         {/* emoji */}
         <MomentUploadMoodInput mood={mood} setMood={setMood} />
         {/* photo */}
-        {/* 앱이 아닌 경우 disable, 앱인 경우 redirect */}
-        {!isApp ? (
+        {/* 업로드한 photo가 없고 앱이 아닌 경우 disable, 앱인 경우 redirect */}
+        {!todayMoment.photo && !isApp ? (
           <Layout.FlexRow
             w="100%"
             alignItems="center"
@@ -95,19 +96,46 @@ function TodaysMoment() {
             alignItems="center"
             rounded={14}
             bgColor="BASIC_WHITE"
-            ph={12}
-            pv={24}
+            ph={todayMoment.photo ? 0 : 12}
+            pv={todayMoment.photo ? 0 : 24}
             onClick={handlePhotoUpload}
           >
-            <SvgIcon name="moment_photo_normal" size={30} />
             {todayMoment.photo ? (
-              <Font.Body ml={8} type="18_regular">
-                {todayMoment.photo}
-              </Font.Body>
+              <Layout.FlexRow w="100%" h="100%" style={{ position: 'relative' }}>
+                <Layout.Absolute
+                  z={1}
+                  w="100%"
+                  h="100%"
+                  style={{
+                    backgroundPosition: 'center',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundColor: 'lightgray',
+                    backgroundBlendMode: 'normal',
+                    background:
+                      'linear-gradient(0deg, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.60) 100%)',
+                  }}
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Font.Display type="18_bold" color="BASIC_WHITE">
+                    {t('already_photo_uploaded')}
+                  </Font.Display>
+                </Layout.Absolute>
+                <img
+                  src={todayMoment.photo}
+                  width="100%"
+                  height="100%"
+                  alt={`${todayMoment.photo}-moment`}
+                />
+              </Layout.FlexRow>
             ) : (
-              <Font.Body ml={8} type="18_regular" color="GRAY_12">
-                {t('photo_placeholder')}
-              </Font.Body>
+              <>
+                <SvgIcon name="moment_photo_normal" size={30} />
+                <Font.Body ml={8} type="18_regular" color="GRAY_12">
+                  {t('photo_placeholder')}
+                </Font.Body>
+              </>
             )}
           </Layout.FlexRow>
         )}

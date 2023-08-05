@@ -99,6 +99,7 @@
     "mood_placeholder": "Express your mood with emojis",
     "photo_placeholder": "Show your day with a photo",
     "photo_disabled": "Use mobile to upload a photo",
+    "already_photo_uploaded": "You’ve uploaded a photo for today!",
     "description_placeholder": "Describe your day with words",
     "skip": "Skip",
     "post": "Post"

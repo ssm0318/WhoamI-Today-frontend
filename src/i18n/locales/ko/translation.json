@@ -96,6 +96,7 @@
     "mood_placeholder": "이모티콘으로 기분을 표현해 주세요.",
     "photo_placeholder": "사진을 업로드해 주세요.",
     "photo_disabled": "사진 업로드는 앱을 이용해주세요.",
+    "already_photo_uploaded": "이미 사진을 업로드하셨군요!",
     "description_placeholder": "자유롭게 생각을 적어주세요.",
     "skip": "건너뛰기",
     "post": "게시"
