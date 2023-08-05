@@ -84,7 +84,7 @@ function AddProfileImage() {
       <Layout.Fixed l={0} b="50px" w="100%" alignItems="center" gap={24} ph={24}>
         {!profileImagePreview && (
           <Button.Large
-            type="filled"
+            type="gray_fill"
             status="normal"
             sizing="stretch"
             text={t('add')}
@@ -92,7 +92,7 @@ function AddProfileImage() {
           />
         )}
         <Button.Large
-          type="filled"
+          type="gray_fill"
           status="normal"
           sizing="stretch"
           text={profileImagePreview ? t('next') : t('skip')}
