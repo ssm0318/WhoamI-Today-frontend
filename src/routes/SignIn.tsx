@@ -2,9 +2,12 @@ import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
-import { Button, CommonInput, Font, Layout } from '@design-system';
+import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
+import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
+import { Button, Font, Layout } from '@design-system';
 import { SignInParams } from '@models/api/user';
 import { signIn } from '@utils/apis/user';
+import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 function SignIn() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_in' });
@@ -34,48 +37,46 @@ function SignIn() {
 
   return (
     <MainContainer>
-      <CommonInput
-        name="username"
-        placeholder={t('username_or_email') || undefined}
-        value={signInInfo.username}
-        onChange={handleChange}
-        onKeyDown={onKeySubmit}
-      />
-      <CommonInput
-        name="password"
-        type="password"
-        placeholder={t('password') || undefined}
-        value={signInInfo.password}
-        onChange={handleChange}
-        onKeyDown={onKeySubmit}
-      />
-      <Layout.Absolute w="100%" b="50px" flexDirection="column" gap={24}>
+      <Layout.FlexCol w="100%" alignItems="center" mt={100}>
+        <img width="75px" src="/whoami-logo.svg" alt="who_am_i" />
+      </Layout.FlexCol>
+      <Layout.FlexCol w="100%" mt={80} mb={80} pl={24} pr={24}>
+        <ValidatedInput
+          label={t('username_or_email')}
+          name="username"
+          type="text"
+          value={signInInfo.username}
+          onChange={handleChange}
+        />
+        <ValidatedPasswordInput
+          label={t('password')}
+          name="password"
+          value={signInInfo.password}
+          onChange={handleChange}
+          onKeyDown={onKeySubmit}
+        />
+      </Layout.FlexCol>
+      <Layout.Absolute w="100%" b="50px" flexDirection="column" alignItems="center" gap={10}>
         {signInError && (
-          <Font.Body type="12_regular" color="ERROR">
+          <Font.Body type="18_regular" color="ERROR">
             {signInError}
           </Font.Body>
         )}
         <Button.Large
-          type="filled"
+          type="gray_fill"
           onClick={onSubmit}
           text={t('sign_in')}
           status={signInInfo.username === '' || signInInfo.password === '' ? 'disabled' : 'normal'}
-          sizing="stretch"
+          width={AUTH_BUTTON_WIDTH}
         />
-        <Button.Large
-          type="white_fill"
-          status="normal"
-          to="/forgot-password"
-          text={t('forgot_password')}
-          sizing="stretch"
-        />
-        <Button.Large
-          type="white_fill"
-          status="normal"
-          to="/signup/email"
-          text={t('sign_up')}
-          sizing="stretch"
-        />
+        <Layout.FlexRow w="100%" justifyContent="center" gap={20}>
+          <a href="/forgot-password">
+            <Font.Body type="18_regular">{t('forgot_password')}</Font.Body>
+          </a>
+          <a href="/signup/email">
+            <Font.Body type="18_regular">{t('sign_up')}</Font.Body>
+          </a>
+        </Layout.FlexRow>
       </Layout.Absolute>
     </MainContainer>
   );
