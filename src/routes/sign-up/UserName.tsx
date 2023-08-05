@@ -43,7 +43,7 @@ function UserName() {
       />
       <Layout.Fixed l={0} b="50px" w="100%" alignItems="center">
         <Button.Large
-          type="filled"
+          type="gray_fill"
           status={!usernameInput || usernameError ? 'disabled' : 'normal'}
           width={AUTH_BUTTON_WIDTH}
           text={t('next')}
