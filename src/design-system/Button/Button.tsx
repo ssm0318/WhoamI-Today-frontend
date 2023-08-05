@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import Font from '../Font/Font';
+import { Font } from '@design-system';
 import * as S from './Button.styled';
 import { ButtonProps, ButtonSetting } from './Button.types';
 import { useButton } from './useButton';
@@ -72,4 +72,4 @@ const buttons: ButtonSetting = {
   },
 };
 
-export default { Large, Medium, Small, Dialog };
+export { Dialog, Large, Medium, Small };

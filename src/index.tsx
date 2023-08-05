@@ -30,6 +30,7 @@ import Root from './routes/Root';
 import ConfirmPassword from './routes/settings/ConfirmPassword';
 import DeleteAccount from './routes/settings/DeleteAccount';
 import EditProfile from './routes/settings/EditProfile';
+import FriendsSettings from './routes/settings/FriendsSettings';
 import ResetPassword from './routes/settings/ResetPassword';
 import Settings from './routes/settings/Settings';
 import AddProfileImage from './routes/sign-up/AddProfileImage';
@@ -111,6 +112,7 @@ const router = createBrowserRouter([
       { path: 'confirm-password', element: <ConfirmPassword /> },
       { path: 'reset-password', element: <ResetPassword /> },
       { path: 'delete-account', element: <DeleteAccount /> },
+      { path: 'friends', element: <FriendsSettings /> },
     ],
   },
 ]);

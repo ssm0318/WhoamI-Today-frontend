@@ -1,13 +1,12 @@
 import { Font, Layout } from '@design-system';
 import { AdminAuthor } from '@models/post';
 import { User } from '@models/user';
-import { BodyType } from 'src/design-system/Font/Font.types';
 import ProfileImage from '../profile-image/ProfileImage';
 import { getAuthorProfileInfo } from './AuthorProfile.helper';
 
 interface AuthorProfileProps {
   authorDetail: User | AdminAuthor;
-  usernameFont?: BodyType;
+  usernameFont?: Font.BodyType;
   profileImgSize?: number;
 }
 

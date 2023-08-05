@@ -1,13 +1,14 @@
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import IconNudge from '@components/_common/icon-nudge/IconNudge';
+import SideMenu from '@components/header/side-menu/SideMenu';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { HeaderWrapper, Noti } from './Header.styled';
 
 function Header() {
-  const navigate = useNavigate();
+  const [showSideMenu, setShowSideMenu] = useState(false);
+
   const handleClickHamburger = () => {
-    // TODO: 메뉴 오픈
-    navigate('/settings');
+    setShowSideMenu(true);
   };
 
   return (
@@ -23,6 +24,7 @@ function Header() {
           <IconNudge />
         </Noti>
       </Layout.FlexRow>
+      {showSideMenu && <SideMenu closeSideMenu={() => setShowSideMenu(false)} />}
     </HeaderWrapper>
   );
 }

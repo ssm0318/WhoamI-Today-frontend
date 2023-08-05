@@ -3,12 +3,9 @@ import { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
-import { Button, Font } from '@design-system';
+import { Button, CheckBox, CommonInput, Font, Layout } from '@design-system';
 import { Gender } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
-import CheckBox from 'src/design-system/Inputs/CheckBox';
-import CommonInput from 'src/design-system/Inputs/Input.styled';
-import { LayoutBase } from 'src/design-system/layouts';
 
 const NEED_PARENTAL_PERMISSION_AGE = 18;
 const today = format(new Date(), 'yyyy-MM-dd');
@@ -69,7 +66,7 @@ function ResearchConsentForm() {
       (showParentalPermissionRef.current && parentalPermission));
 
   return (
-    <LayoutBase ml={24} mr={24}>
+    <Layout.LayoutBase ml={24} mr={24}>
       {/* Age */}
       <ValidatedInput
         label={t('age')}
@@ -81,7 +78,7 @@ function ResearchConsentForm() {
       />
       {/* Parental Permission */}
       {showParentalPermissionRef.current && (
-        <LayoutBase mb={45}>
+        <Layout.LayoutBase mb={45}>
           <Font.Body type="18_regular" mb={24}>
             {t('parental_permission')}
           </Font.Body>
@@ -100,10 +97,10 @@ function ResearchConsentForm() {
               {t('need_parental_permission_error')}
             </Font.Body>
           )}
-        </LayoutBase>
+        </Layout.LayoutBase>
       )}
       {/* Gender */}
-      <LayoutBase mb={45}>
+      <Layout.LayoutBase mb={45}>
         <Font.Body type="18_regular" mb={24}>
           {t('gender')}
         </Font.Body>
@@ -132,14 +129,14 @@ function ResearchConsentForm() {
           onChange={handleChangeGender(Gender.NO_RESPOND)}
           checked={gender === Gender.NO_RESPOND}
         />
-      </LayoutBase>
+      </Layout.LayoutBase>
       {/* Signature */}
-      <LayoutBase mb={45}>
+      <Layout.LayoutBase mb={45}>
         <Font.Body type="18_regular" mb={24}>
           {t('printing_your_name_below')}
         </Font.Body>
         <CommonInput type="name" value={signature} onChange={handleChangeSign} />
-      </LayoutBase>
+      </Layout.LayoutBase>
       {/* Date of Signature */}
       <ValidatedInput
         type="date"
@@ -148,9 +145,9 @@ function ResearchConsentForm() {
         label={t('date_of_signature')}
         disabled
       />
-      <LayoutBase mb={112}>
+      <Layout.LayoutBase mb={112}>
         <Font.Display type="14_regular">{t('data_security_guide')}</Font.Display>
-      </LayoutBase>
+      </Layout.LayoutBase>
       <Button.Large
         type="filled"
         status={canSubmit ? 'normal' : 'disabled'}
@@ -158,7 +155,7 @@ function ResearchConsentForm() {
         text={t('next')}
         onClick={handleClickNext}
       />
-    </LayoutBase>
+    </Layout.LayoutBase>
   );
 }
 

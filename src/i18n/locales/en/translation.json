@@ -42,11 +42,18 @@
   "home": {
     "moment": {
       "todays_moments": "Today's Moments?"
-    }, 
+    },
     "question": {
       "todays_questions": "Today's Questions",
       "multiple_choice": "Multiple Choice",
       "all_questions": "Questions"
+    },
+    "header": {
+      "side_menu": {
+        "friends": "Friends",
+        "questions": "Questions",
+        "settings": "Settings"
+      }
     }
   },
   "question": {
@@ -116,7 +123,7 @@
     "cancel": "Cancel",
     "confirm": "Confirm"
   },
-  "settings":{
+  "settings": {
     "title": "Settings",
     "account_settings": "Account Settings",
     "edit_profile": "Edit Profile",
@@ -147,7 +154,25 @@
     "password_invalid": "The password you entered is invalid.",
     "password": "Password",
     "continue": "Continue",
-    "are_you_sure": "Are you sure?\nThis cannot be done."
+    "are_you_sure": "Are you sure?\nThis cannot be done.",
+    "friends": {
+      "title": "Friends",
+      "tab": {
+        "friends": "Friends",
+        "request": "Requests"
+      },
+      "friend_list": {
+        "title": "{{number}} people"
+      },
+      "request_list": {
+        "title": "FRIEND REQUESTS ({{number}})",
+        "no_requests": {
+          "title": "No pending requests",
+          "text": "You don't have any pending requests"
+        },
+        "accept": "ACCEPT"
+      }
+    }
   },
   "time": {
     "just_a_moment_ago": "just a moment ago",
@@ -156,7 +181,7 @@
     "hour_ago_one": "{{hour}} hour ago",
     "hour_ago_other": "{{hour}} hours ago"
   },
-  "notifications" : {
+  "notifications": {
     "title": "Notifications"
   },
   "comment": {
