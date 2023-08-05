@@ -157,6 +157,9 @@
     "are_you_sure": "Are you sure?\nThis cannot be done.",
     "friends": {
       "title": "Friends",
+      "search": {
+        "placeholder": "Add or search friends."
+      },
       "tab": {
         "friends": "Friends",
         "request": "Requests"

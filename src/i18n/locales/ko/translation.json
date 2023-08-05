@@ -154,6 +154,9 @@
     "are_you_sure": "정말로 계속하시겠습니까?\n한 번 계정을 삭제하면 다시 복구할 수 없습니다.",
     "friends": {
       "title": "친구 관리",
+      "search": {
+        "placeholder": "친구를 추가하거나 검색하세요."
+      },
       "tab": {
         "friends": "친구 목록",
         "request": "친구 요청"

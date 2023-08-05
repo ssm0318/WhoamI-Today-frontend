@@ -5,6 +5,7 @@ import MainContainer from '@components/_common/main-container/MainContainer';
 import Tabs from '@components/_common/tabs/Tabs';
 import FriendList from '@components/friends-settings/friend-list/FriendList';
 import FriendRequestList from '@components/friends-settings/friend-request-list/FriendRequestList';
+import FriendSearch from '@components/friends-settings/friend-search/FriendSearch';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
@@ -21,8 +22,8 @@ function FriendsSettings() {
   return (
     <MainContainer>
       <TitleHeader title={t('title')} />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%">
-        {/* TODO: 친구 검색 */}
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" gap={14}>
+        <FriendSearch />
         {/* TODO: 친구 초대 */}
         <Divider width={1} />
         {selectedTab === 'friends' ? <FriendList /> : <FriendRequestList />}
