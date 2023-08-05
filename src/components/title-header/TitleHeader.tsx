@@ -34,7 +34,9 @@ function TitleHeader({ title, type = 'MAIN', onGoBack, RightComponent }: TitleHe
           </button>
         </Layout.LayoutBase>
         {title && (
-          <Font.Display type={type === 'MAIN' ? '24_bold' : '20_bold'}>{title}</Font.Display>
+          <Font.Display type={type === 'MAIN' ? '24_bold' : '20_bold'} textAlign="center">
+            {title}
+          </Font.Display>
         )}
         <Layout.LayoutBase w={title ? 36 : undefined}>
           {RightComponent && RightComponent}
