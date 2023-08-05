@@ -102,7 +102,7 @@ function ResearchConsentForm() {
         </Layout.LayoutBase>
       )}
       {/* Gender */}
-      <Layout.LayoutBase mb={45} gap={12}>
+      <Layout.LayoutBase mb={45} gap={12} w="100%">
         <Font.Body type="18_regular" mb={24}>
           {t('gender')}
         </Font.Body>

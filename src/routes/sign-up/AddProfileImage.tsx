@@ -72,7 +72,7 @@ function AddProfileImage() {
 
   return (
     <>
-      {profileImagePreview && <ProfileImage imageUrl={profileImagePreview} size={400} />}
+      <ProfileImage imageUrl={profileImagePreview} size={230} />
       <input
         ref={inputRef}
         type="file"
@@ -81,7 +81,7 @@ function AddProfileImage() {
         multiple={false}
         style={{ display: 'none' }}
       />
-      <Layout.Absolute w="100%" b="50px" flexDirection="column">
+      <Layout.Fixed l={0} b="50px" w="100%" alignItems="center" gap={24} ph={24}>
         {!profileImagePreview && (
           <Button.Large
             type="filled"
@@ -98,7 +98,7 @@ function AddProfileImage() {
           text={profileImagePreview ? t('next') : t('skip')}
           onClick={onClickNextOrSkip}
         />
-      </Layout.Absolute>
+      </Layout.Fixed>
       {isEditModalVisible && (
         <ProfileImageEdit
           setIsVisible={setIsEditModalVisible}
