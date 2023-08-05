@@ -14,7 +14,7 @@ export const shortAnswerQuestions: ShortAnswerQuestion[] = Array.from(
       username: 'johndoe',
     },
     like_count: 10,
-    current_user_liked: false,
+    current_user_like_id: null,
     created_at: '2023-05-26T10:30:00Z',
     type: QUESTION_TYPE.SHORT_ANSWER,
   }),

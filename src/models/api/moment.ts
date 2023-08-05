@@ -8,7 +8,7 @@ export interface GetMomentResponse extends TodayMoment {
   id: number;
   type: 'Moment';
   like_count: number | null;
-  current_user_liked: boolean;
+  current_user_like_id: number | null;
   date: string;
   created_at: string;
 }
