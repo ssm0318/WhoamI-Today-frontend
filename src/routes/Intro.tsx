@@ -6,16 +6,19 @@ function Intro() {
   const [t] = useTranslation('translation', { keyPrefix: 'intro' });
   return (
     <MainContainer>
-      <Layout.Absolute w="100%" b="50px" flexDirection="column">
+      <Layout.FlexCol w="100%" h="100%" justifyContent="center" alignItems="center" mb={100}>
+        <img src="/whoami-logo.svg" alt="who_am_i" />
+      </Layout.FlexCol>
+      <Layout.Absolute w="100%" b="0" flexDirection="column" p={24} mb={56} gap={24}>
         <Button.Large
-          type="filled"
+          type="gray_fill"
           status="normal"
           to="/signup/email"
           text={t('sign_up')}
           sizing="stretch"
         />
         <Button.Large
-          type="filled"
+          type="gray_fill"
           status="normal"
           to="/signin"
           text={t('sign_in')}
