@@ -168,6 +168,14 @@ export const signUp = ({
     });
 };
 
+export const deleteAccount = async (onSuccess: () => void) => {
+  axios
+    .delete('/user/me/delete/')
+    .then(() => onSuccess())
+    // TODO
+    .catch((e) => console.log('todo', e));
+};
+
 export const getFriendList = async () => {
   const { data } = await axios.get<PaginationResponse<User[]>>('/user/me/friends/');
   return data.results;

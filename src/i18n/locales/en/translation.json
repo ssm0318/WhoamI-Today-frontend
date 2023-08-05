@@ -155,6 +155,7 @@
     "delete_account": "Delete Account",
     "please_check_your_password": "Please enter your password for security to proceed.",
     "password_invalid": "The password you entered is invalid.",
+    "yes_delete": "Yes, delete",
     "password": "Password",
     "continue": "Continue",
     "are_you_sure": "Are you sure?\nThis cannot be done.",
