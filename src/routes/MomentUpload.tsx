@@ -17,6 +17,7 @@ const momentSelector = (state: BoundState) => ({
 const PHOTO_SIZE = SCREEN_WIDTH - DEFAULT_MARGIN * 2;
 
 function TodaysMoment() {
+  // TODO(Gina): 포토 이미지 url 존재 시, 이미지 렌더링
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
   const { todayMoment } = useBoundStore(momentSelector);
   const postMessage = usePostAppMessage();

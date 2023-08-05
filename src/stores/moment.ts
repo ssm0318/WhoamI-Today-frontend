@@ -13,8 +13,7 @@ interface MomentAction {
 const initialState = {
   todayMoment: {
     mood: null,
-    // TODO(Gina): change to real photo
-    photo: 'https://picsum.photos/200',
+    photo: null,
     description: null,
   },
 };
