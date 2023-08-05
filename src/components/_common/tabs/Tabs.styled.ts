@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components';
 import { Layout } from '@design-system';
-import { getStyle } from 'src/design-system/layouts';
 
 export const StyledTabs = styled(Layout.FlexRow)`
   box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.1);
@@ -20,7 +19,7 @@ export const StyledTab = styled.button.attrs({
   padding: 4px 8px;
 
   ${({ w }) => css`
-    ${getStyle('width', w)}
+    ${Layout.getStyle('width', w)}
   `}
 
   &.active {

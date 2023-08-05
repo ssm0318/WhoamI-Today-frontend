@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import { Button, Font, Layout } from '@design-system';
-import { RowButtonContainer } from 'src/design-system/Button/Button.styled';
 
 interface ConfirmBottomModalProps {
   isVisible: boolean;
@@ -35,7 +34,7 @@ function ConfirmBottomModal({
         </Font.Display>
         <Divider width={1} />
         {children}
-        <RowButtonContainer>
+        <Button.RowButtonContainer>
           <Button.Large
             type="filled"
             status="normal"
@@ -50,7 +49,7 @@ function ConfirmBottomModal({
             sizing="stretch"
             onClick={onConfirm}
           />
-        </RowButtonContainer>
+        </Button.RowButtonContainer>
       </Layout.LayoutBase>
     </BottomModal>
   );

@@ -49,7 +49,4 @@ export type BodyProps = {
  * @prop {'left' | 'center' | 'right'} textAlign (default: 'left')
  */
 
-export default {
-  Display,
-  Body,
-};
+export { Body, Display };

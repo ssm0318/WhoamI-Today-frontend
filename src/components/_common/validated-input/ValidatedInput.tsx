@@ -1,5 +1,4 @@
-import { Font, Layout, SvgIcon } from '@design-system';
-import Input from 'src/design-system/Inputs/Input';
+import { Font, Input, Layout, SvgIcon } from '@design-system';
 import { ValidatedInputProps } from './ValidatedInput.helper';
 import StyledValidatedInput from './ValidatedInput.styled';
 

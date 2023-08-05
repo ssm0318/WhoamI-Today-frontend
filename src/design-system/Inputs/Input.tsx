@@ -1,11 +1,10 @@
 import { InputHTMLAttributes } from 'react';
-import Font from '../Font/Font';
-import { BodyType } from '../Font/Font.types';
+import { Font } from '@design-system';
 import CommonInput, { CommonInputProps } from './Input.styled';
 
 export type InputProps = {
   label: string;
-  labelType?: BodyType;
+  labelType?: Font.BodyType;
 } & CommonInputProps &
   InputHTMLAttributes<HTMLInputElement>;
 
@@ -19,4 +18,4 @@ function Input(props: InputProps) {
   );
 }
 
-export default Input;
+export { Input };

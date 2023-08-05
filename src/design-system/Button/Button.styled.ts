@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { DEFAULT_MARGIN } from '@constants/layout';
-import { ColorKeys } from 'src/design-system/colors';
+import { ColorKeys } from '@design-system';
 import { FlexRow } from '../layouts';
 
 type ButtonProps = {

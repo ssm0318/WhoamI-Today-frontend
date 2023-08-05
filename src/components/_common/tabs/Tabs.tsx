@@ -1,6 +1,5 @@
 import { StyledTab, StyledTabs } from '@components/_common/tabs/Tabs.styled';
 import { ColorKeys, Font } from '@design-system';
-import { DisplayType } from 'src/design-system/Font/Font.types';
 
 interface Tab<T> {
   key: T;
@@ -10,7 +9,7 @@ interface Tab<T> {
 interface TabsProps<T> {
   tabList: Tab<T>[];
   selectedKey: T;
-  displayFontType: DisplayType;
+  displayFontType: Font.DisplayType;
   bgColor?: ColorKeys;
   tabWidth?: number;
   onClick: (key: T) => void;

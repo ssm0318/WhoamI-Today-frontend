@@ -1,4 +1,4 @@
-import { InputProps } from 'src/design-system/Inputs/Input';
+import { InputProps } from '@design-system';
 
 export type ValidatedInputProps = InputProps & {
   error?: string | null;

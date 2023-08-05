@@ -1,5 +1,4 @@
-import { ColorKeys } from 'src/design-system/colors';
-import { BodyType } from '../Font/Font.types';
+import { ColorKeys, Font } from '@design-system';
 import * as S from './Button.styled';
 
 export type ButtonSize = 'Large' | 'Medium' | 'Small' | 'Dialog';
@@ -7,7 +6,7 @@ export type ButtonSize = 'Large' | 'Medium' | 'Small' | 'Dialog';
 export type ButtonSetting = {
   [key in ButtonSize]: {
     ButtonComponent: typeof S.LargeButton | typeof S.SmallButton | typeof S.MediumButton;
-    fontType: BodyType;
+    fontType: Font.BodyType;
   };
 };
 

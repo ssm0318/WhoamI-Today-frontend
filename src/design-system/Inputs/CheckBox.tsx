@@ -2,7 +2,7 @@ import { InputHTMLAttributes } from 'react';
 import { Margin } from '../layouts';
 import { StyledCheckBox } from './CheckBox.styled';
 
-function CheckBox(props: InputHTMLAttributes<HTMLInputElement> & Margin) {
+export function CheckBox(props: InputHTMLAttributes<HTMLInputElement> & Margin) {
   const { name } = props;
   return (
     <StyledCheckBox>
@@ -15,5 +15,3 @@ function CheckBox(props: InputHTMLAttributes<HTMLInputElement> & Margin) {
     </StyledCheckBox>
   );
 }
-
-export default CheckBox;
