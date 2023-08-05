@@ -16,7 +16,7 @@ export default function FriendRequestList() {
       {friendList.length ? (
         <Layout.FlexCol w="100%" gap={8}>
           {friendList.map((friend) => (
-            <FriendItem key={friend.id} type="request" friend={friend} />
+            <FriendItem key={friend.id} type="request" user={friend} />
           ))}
         </Layout.FlexCol>
       ) : (

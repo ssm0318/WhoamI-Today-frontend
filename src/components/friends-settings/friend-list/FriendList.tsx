@@ -23,7 +23,7 @@ function FriendList() {
           </Font.Body>
           <Layout.FlexCol w="100%" gap={8}>
             {friendList.map((friend) => (
-              <FriendItem key={friend.id} type="friends" friend={friend} />
+              <FriendItem key={friend.id} type="friends" user={friend} />
             ))}
           </Layout.FlexCol>
         </>

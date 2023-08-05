@@ -193,3 +193,10 @@ export const reportUser = async (userId: number) => {
 export const breakFriend = async (friendId: number) => {
   await axios.delete(`user/friend/${friendId}/`);
 };
+
+export const searchUser = async (query: string) => {
+  const { data } = await axios.get<PaginationResponse<UserProfile[]>>(
+    `/user/search?query=${query}`,
+  );
+  return data;
+};

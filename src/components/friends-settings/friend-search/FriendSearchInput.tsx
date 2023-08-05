@@ -1,9 +1,24 @@
+import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
+import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import { Layout, SvgIcon } from '@design-system';
-import * as S from './FriendSearch.styled';
+import * as S from './FriendSearchInput.styled';
 
-export default function FriendSearch() {
+interface Props {
+  query: string;
+  setQuery: Dispatch<SetStateAction<string>>;
+}
+
+export default function FriendSearchInput({ query, setQuery }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'settings.friends.search' });
+  const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  };
+
+  const handleClickDeleteInput = () => {
+    setQuery('');
+  };
+
   return (
     <Layout.LayoutBase w="100%" pl={24} pt={4} pr={24}>
       <Layout.FlexRow
@@ -22,7 +37,10 @@ export default function FriendSearch() {
           placeholder={t('placeholder') || undefined}
           name="friend_search"
           autoComplete="off"
+          value={query}
+          onChange={handleChangeInput}
         />
+        {query && <DeleteButton onClick={handleClickDeleteInput} />}
       </Layout.FlexRow>
     </Layout.LayoutBase>
   );
