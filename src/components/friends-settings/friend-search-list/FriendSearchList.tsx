@@ -11,6 +11,7 @@ interface Props {
 
 export default function FriendSearchList({ query }: Props) {
   const [searchList, setSearchList] = useState<UserProfile[]>();
+
   useEffect(() => {
     if (!query) return;
     searchUser(query).then(({ results }) => {
