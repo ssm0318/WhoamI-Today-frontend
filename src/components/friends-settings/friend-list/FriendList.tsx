@@ -18,12 +18,12 @@ function FriendList() {
     <Layout.FlexCol w="100%" pl={10} pr={10} gap={8}>
       {friendList ? (
         <>
-          <Font.Body type="14_regular" color="GRAY_12" ml={5} mt={14} mb={2}>
+          <Font.Body type="14_regular" color="GRAY_12" ml={5} mb={2}>
             {t('title', { number: friendList.length })}
           </Font.Body>
           <Layout.FlexCol w="100%" gap={8}>
             {friendList.map((friend) => (
-              <FriendItem key={friend.id} type="friends" friend={friend} />
+              <FriendItem key={friend.id} type="friends" user={friend} />
             ))}
           </Layout.FlexCol>
         </>

@@ -29,6 +29,7 @@ const comment = 'comment';
 const error = 'error';
 const show_password_eye = 'show_password_eye';
 const hide_password_eye = 'hide_password_eye';
+const search = 'search';
 
 export {
   arrow_left,
@@ -58,6 +59,7 @@ export {
   my_inactive,
   my_profile,
   question_send,
+  search,
   show_password_eye,
   top_navigation_hamburger,
   top_navigation_noti,
