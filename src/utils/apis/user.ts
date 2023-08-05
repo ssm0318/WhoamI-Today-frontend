@@ -6,6 +6,7 @@ import {
   EmailError,
   MyProfile,
   PasswordError,
+  SignInError,
   SignInParams,
   SignInResponse,
   SignUpParams,
@@ -15,12 +16,25 @@ import { User, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 
-export const signIn = (signInInfo: SignInParams, onSuccess: () => void) => {
+export const signIn = ({
+  signInInfo,
+  onSuccess,
+  onError,
+}: {
+  signInInfo: SignInParams;
+  onSuccess: () => void;
+  onError: (errorMsg: string) => void;
+}) => {
   axios
     .post<SignInResponse>('/user/login/', signInInfo)
     .then(() => onSuccess())
-    // TODO
-    .catch((e) => console.log(e));
+    .catch((e: AxiosError<SignInError>) => {
+      if (e.response?.data.detail) {
+        onError(e.response?.data.detail);
+        return;
+      }
+      onError(i18n.t('sign_up.temporary_error'));
+    });
 };
 
 export const checkIfSignIn = async () => {
