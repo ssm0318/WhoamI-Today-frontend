@@ -1,17 +1,19 @@
 import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
-import { Font } from '@design-system';
+import TitleHeader from '@components/title-header/TitleHeader';
+import { TITLE_HEADER_HEIGHT } from '@constants/layout';
+import { Layout } from '@design-system';
 
 function SignUp() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_up' });
 
   return (
     <MainContainer>
-      <Font.Display type="24_bold" textAlign="center">
-        {t('create_an_account')}
-      </Font.Display>
-      <Outlet />
+      <TitleHeader title={t('create_an_account')} />
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 80} w="100%" pl={24} pr={24}>
+        <Outlet />
+      </Layout.FlexCol>
     </MainContainer>
   );
 }
