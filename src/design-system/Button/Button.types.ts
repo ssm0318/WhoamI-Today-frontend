@@ -29,4 +29,7 @@ export type ButtonProps = {
    * use axios Link component
    */
   to?: string;
+  width?: number;
 };
+
+export const AUTH_BUTTON_WIDTH = 186;
