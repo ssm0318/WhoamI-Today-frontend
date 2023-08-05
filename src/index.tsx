@@ -39,7 +39,6 @@ import ResearchIntro from './routes/sign-up/ResearchIntro';
 import UserName from './routes/sign-up/UserName';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
-import TodaysMoment from './routes/TodaysMoment';
 import UserPage from './routes/UserPage';
 
 const router = createBrowserRouter([
@@ -87,10 +86,6 @@ const router = createBrowserRouter([
       { path: '', element: <AllQuestions /> },
       { path: ':questionId/short-answer', element: <ShortAnswerResponse /> },
     ],
-  },
-  {
-    path: 'todays-moment',
-    element: <TodaysMoment />,
   },
   {
     path: 'moment-upload',

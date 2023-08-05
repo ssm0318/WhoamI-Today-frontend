@@ -22,7 +22,7 @@ function TodaysMoments() {
 
   const handleClickUploadMoment = () => {
     if (isTodaysMomentExist) return;
-    return navigate('/todays-moment');
+    return navigate('/moment-upload');
   };
 
   return (

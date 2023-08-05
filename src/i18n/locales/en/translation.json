@@ -96,11 +96,10 @@
   },
   "moment_upload": {
     "todays_moments": "Today's Moments",
-    "mood_title": "Today's Moment",
-    "mood_subtitle": "Mood",
-    "mood_placeholder": "Feel free to express your mood with Emojis.",
-    "description_title": "How would you describe\nyour day so far in 20 characters?",
-    "description_placeholder": "Feel free to write down your TMI.",
+    "mood_placeholder": "Express your mood with emojis",
+    "photo_placeholder": "Show your day with a photo",
+    "photo_disabled": "Use mobile to upload a photo",
+    "description_placeholder": "Describe your day with words",
     "skip": "Skip",
     "post": "Post"
   },

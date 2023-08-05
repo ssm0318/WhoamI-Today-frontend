@@ -93,10 +93,9 @@
   },
   "moment_upload": {
     "todays_moments": "오늘의 순간들",
-    "mood_title": "오늘의 순간",
-    "mood_subtitle": "기분",
     "mood_placeholder": "이모티콘으로 기분을 표현해 주세요.",
-    "description_title": "지금까지의 하루를\n20자로 설명해주세요.",
+    "photo_placeholder": "사진을 업로드해 주세요.",
+    "photo_disabled": "사진 업로드는 앱을 이용해주세요.",
     "description_placeholder": "자유롭게 생각을 적어주세요.",
     "skip": "건너뛰기",
     "post": "게시"
