@@ -27,7 +27,7 @@ export interface ContentsCommon {
   author: string | null;
   author_detail: User | AdminAuthor;
   like_count: number | null;
-  current_user_liked: boolean;
+  current_user_like_id: number | null;
   created_at: string;
 }
 
