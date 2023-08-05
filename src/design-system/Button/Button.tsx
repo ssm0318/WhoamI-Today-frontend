@@ -11,7 +11,7 @@ function Button(
     size: keyof typeof buttons;
   } & ButtonProps,
 ) {
-  const { size, to, ...buttonProps } = props;
+  const { size, to, width, ...buttonProps } = props;
   const { sizing } = buttonProps;
   const { text, color, outline, fill, status, ...handlers } = useButton(buttonProps);
   const { ButtonComponent, fontType } = buttons[size];
@@ -19,7 +19,7 @@ function Button(
   const buttonChildren = useMemo(() => {
     if (!text) return null;
     return (
-      <ButtonComponent sizing={sizing} outline={outline} fill={fill}>
+      <ButtonComponent sizing={sizing} outline={outline} fill={fill} width={width}>
         {isDisplayType(fontType) ? (
           <Font.Display type={fontType} color={color} textAlign="center">
             {text}
@@ -31,7 +31,7 @@ function Button(
         )}
       </ButtonComponent>
     );
-  }, [ButtonComponent, color, fill, fontType, outline, sizing, text]);
+  }, [ButtonComponent, color, fill, fontType, outline, sizing, text, width]);
 
   return (
     <S.Container sizing={sizing} disabled={status === 'completed' || status === 'disabled'}>
