@@ -6,6 +6,7 @@ import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import { Button, CheckBox, CommonInput, Font, Layout } from '@design-system';
 import { Gender } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 const NEED_PARENTAL_PERMISSION_AGE = 18;
 const today = format(new Date(), 'yyyy-MM-dd');
@@ -66,7 +67,7 @@ function ResearchConsentForm() {
       (showParentalPermissionRef.current && parentalPermission));
 
   return (
-    <Layout.LayoutBase ml={24} mr={24}>
+    <>
       {/* Age */}
       <ValidatedInput
         label={t('age')}
@@ -78,9 +79,10 @@ function ResearchConsentForm() {
       />
       {/* Parental Permission */}
       {showParentalPermissionRef.current && (
-        <Layout.LayoutBase mb={45}>
-          <Font.Body type="18_regular" mb={24}>
-            {t('parental_permission')}
+        <Layout.LayoutBase mb={45} gap={12}>
+          <Font.Body type="18_regular">{t('parental_permission')}</Font.Body>
+          <Font.Body type="14_regular" mb={24}>
+            {t('i_agree_to_provide_consent_to_my_child’s_participation_in_the_research')}
           </Font.Body>
           <CheckBox
             name={t('yes') || ''}
@@ -100,7 +102,7 @@ function ResearchConsentForm() {
         </Layout.LayoutBase>
       )}
       {/* Gender */}
-      <Layout.LayoutBase mb={45}>
+      <Layout.LayoutBase mb={45} gap={12}>
         <Font.Body type="18_regular" mb={24}>
           {t('gender')}
         </Font.Body>
@@ -148,14 +150,16 @@ function ResearchConsentForm() {
       <Layout.LayoutBase mb={112}>
         <Font.Display type="14_regular">{t('data_security_guide')}</Font.Display>
       </Layout.LayoutBase>
-      <Button.Large
-        type="filled"
-        status={canSubmit ? 'normal' : 'disabled'}
-        sizing="stretch"
-        text={t('next')}
-        onClick={handleClickNext}
-      />
-    </Layout.LayoutBase>
+      <Layout.FlexCol w="100%" alignItems="center" mb={80}>
+        <Button.Large
+          type="gray_fill"
+          status={canSubmit ? 'normal' : 'disabled'}
+          width={AUTH_BUTTON_WIDTH}
+          text={t('next')}
+          onClick={handleClickNext}
+        />
+      </Layout.FlexCol>
+    </>
   );
 }
 
