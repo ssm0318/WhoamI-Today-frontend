@@ -28,7 +28,7 @@ const Button = styled.div<ButtonProps>`
 `;
 
 export const BUTTON_HEIGHT = {
-  LARGE: 52,
+  LARGE: 60,
   MEDIUM: 37,
   SMALL: 25,
 };
