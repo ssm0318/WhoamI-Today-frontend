@@ -35,15 +35,15 @@ function ConfirmBottomModal({
         <Divider width={1} />
         {children}
         <Button.RowButtonContainer>
-          <Button.Large
-            type="filled"
+          <Button.Medium
+            type="gray_fill"
             status="normal"
             text={t('cancel')}
             sizing="stretch"
             onClick={handleOnClose}
           />
-          <Button.Large
-            type="filled"
+          <Button.Medium
+            type="gray_fill"
             status="normal"
             text={confirmText}
             sizing="stretch"
