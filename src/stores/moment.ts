@@ -6,7 +6,7 @@ interface MomentState {
   todayMoment: TodayMoment;
 }
 interface MomentAction {
-  fetchTodayMoment: () => Promise<void>;
+  fetchTodayMoment: () => Promise<TodayMoment>;
   setTodayMoment: (moment: Partial<TodayMoment>) => Promise<void>;
 }
 
@@ -24,7 +24,15 @@ export const createMomentSlice: SliceStateCreator<MomentSlice> = (set) => ({
   ...initialState,
   fetchTodayMoment: async () => {
     const moment = await getTodayMoment();
-    set(() => ({ todayMoment: moment || initialState }));
+    const todayMoment: TodayMoment = {
+      mood: moment?.mood || null,
+      photo: moment?.photo || null,
+      description: moment?.description || null,
+    };
+    set(() => ({
+      todayMoment: todayMoment || initialState,
+    }));
+    return todayMoment;
   },
   setTodayMoment: async (moment) => {
     set((state) => ({

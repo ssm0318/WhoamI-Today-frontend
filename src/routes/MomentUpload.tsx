@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import MomentUploadDescriptionInput from '@components/moment-upload/moment-upload-description-input/MomentUploadDescriptionInput';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, SCREEN_WIDTH, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
+import useAsyncEffect from '@hooks/useAsyncEffect';
 import { TodayMoment } from '@models/moment';
 import { BoundState, useBoundStore } from '@stores/useBoundStore';
 import { postTodayMoment, updateTodayMoment } from '@utils/apis/moment';
@@ -16,15 +18,16 @@ import MomentUploadMoodInput from '../components/moment-upload/moment-upload-moo
 
 const momentSelector = (state: BoundState) => ({
   todayMoment: state.todayMoment,
+  fetchTodayMoment: state.fetchTodayMoment,
 });
 
 const PHOTO_SIZE = SCREEN_WIDTH - DEFAULT_MARGIN * 2;
 
 function TodaysMoment() {
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
-  const { todayMoment } = useBoundStore(momentSelector);
+  const { todayMoment, fetchTodayMoment } = useBoundStore(momentSelector);
   const postMessage = usePostAppMessage();
-  const [draft, setDraft] = useState<TodayMoment>(todayMoment);
+  const [draft, setDraft] = useState<TodayMoment | null>(null);
   const navigate = useNavigate();
 
   const isPostable = !deepEqual(todayMoment, draft);
@@ -52,10 +55,20 @@ function TodaysMoment() {
 
     // TODO(Gina): 디자인 픽스 후 바텀 모달
     alert('🎉 Your photo and emoji have been posted!');
-
     navigate(`/home`);
   };
 
+  useAsyncEffect(async () => {
+    const moment = await fetchTodayMoment();
+    setDraft(moment);
+  }, []);
+
+  if (!draft)
+    return (
+      <Layout.FlexRow w="100%" h="100%">
+        <Loader />
+      </Layout.FlexRow>
+    );
   return (
     <MainContainer>
       <TitleHeader

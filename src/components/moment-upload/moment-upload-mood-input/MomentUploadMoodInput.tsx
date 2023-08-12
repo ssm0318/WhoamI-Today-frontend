@@ -12,7 +12,7 @@ interface MomentUploadMoodInputProps {
 }
 
 function MomentUploadMoodInput({ mood, setMood, disabled }: MomentUploadMoodInputProps) {
-  const [emojiContent, setEmojiContent] = useState<string | null>(mood || '');
+  const [emojiContent, setEmojiContent] = useState<string | null>(mood);
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
 
   const handleSelectEmoji = (emoji: EmojiClickData) => {
@@ -37,6 +37,11 @@ function MomentUploadMoodInput({ mood, setMood, disabled }: MomentUploadMoodInpu
     setMood(updatedEmoji);
   };
 
+  const toggleEmojiPicker = () => {
+    if (disabled) return;
+    setPickerVisible(!pickerVisible);
+  };
+
   return (
     <>
       <Layout.FlexRow
@@ -47,7 +52,7 @@ function MomentUploadMoodInput({ mood, setMood, disabled }: MomentUploadMoodInpu
         pl={12}
         pr={emojiContent ? 24 : 12}
         pv={24}
-        onClick={() => setPickerVisible(!pickerVisible)}
+        onClick={toggleEmojiPicker}
         style={{
           position: 'relative',
         }}
