@@ -5,6 +5,7 @@ import { PaginationResponse } from '@models/api/common';
 import {
   EmailError,
   MyProfile,
+  PasswordConfirmError,
   PasswordError,
   SignInError,
   SignInParams,
@@ -165,6 +166,25 @@ export const signUp = ({
     .then(() => onSuccess())
     .catch((e) => {
       onError(e);
+    });
+};
+
+export const confirmPassword = ({
+  password,
+  onSuccess,
+  onError,
+}: {
+  password: string;
+  onSuccess: () => void;
+  onError?: (error: string) => void;
+}) => {
+  axios
+    .post('/user/password-confirm/', { password })
+    .then(() => onSuccess())
+    .catch((e: AxiosError<PasswordConfirmError>) => {
+      if (e.response?.data.detail) {
+        onError?.(e.response?.data.detail);
+      }
     });
 };
 
