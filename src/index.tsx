@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { Colors } from '@design-system';
+import { useGetAppMessage } from '@hooks/useAppMessage';
+import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
 import { checkIfSignIn } from '@utils/apis/user';
 import ErrorPage from './components/error-page/ErrorPage';
@@ -119,6 +121,17 @@ function App() {
   useEffect(() => {
     reportWebVitals();
   }, []);
+
+  const { setAppNotiPermission } = useBoundStore((state) => ({
+    setAppNotiPermission: state.setAppNotiPermission,
+  }));
+
+  useGetAppMessage({
+    cb: ({ value }) => {
+      setAppNotiPermission(value);
+    },
+    key: 'SET_NOTI_PERMISSION',
+  });
 
   return (
     <React.StrictMode>

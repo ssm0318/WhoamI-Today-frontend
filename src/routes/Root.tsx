@@ -4,10 +4,8 @@ import Header from '@components/header/Header';
 import Tab from '@components/tab/Tab';
 import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
-import { useGetAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useFcm from '@hooks/useFcm';
-import { useBoundStore } from '@stores/useBoundStore';
 import { MainWrapper, RootContainer } from '@styles/wrappers';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 
@@ -15,22 +13,11 @@ function Root() {
   const { isMobile } = getMobileDeviceInfo();
   const { initializeFcm } = useFcm();
 
-  const { setAppNotiPermission } = useBoundStore((state) => ({
-    setAppNotiPermission: state.setAppNotiPermission,
-  }));
-
   useAsyncEffect(async () => {
     if (isMobile) return;
     // 데스크톱인 경우에만 initializeFcm
     await initializeFcm();
   }, [isMobile]);
-
-  useGetAppMessage({
-    cb: ({ value }) => {
-      setAppNotiPermission(value);
-    },
-    key: 'SET_NOTI_PERMISSION',
-  });
 
   return (
     <Layout.FlexRow justifyContent="center" bgColor="BASIC_BLACK" h="100vh" w="100%">
