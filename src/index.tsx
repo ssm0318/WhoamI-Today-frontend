@@ -35,6 +35,7 @@ import ResetPassword from './routes/settings/ResetPassword';
 import Settings from './routes/settings/Settings';
 import AddProfileImage from './routes/sign-up/AddProfileImage';
 import Email from './routes/sign-up/Email';
+import NotiSettings from './routes/sign-up/NotiSettings';
 import Password from './routes/sign-up/Password';
 import ResearchConsentForm from './routes/sign-up/ResearchConsentForm';
 import ResearchIntro from './routes/sign-up/ResearchIntro';
@@ -76,6 +77,7 @@ const router = createBrowserRouter([
       { path: 'research-consent-form', element: <ResearchConsentForm /> },
       { path: 'username', element: <UserName /> },
       { path: 'profile-image', element: <AddProfileImage /> },
+      { path: 'noti-settings', element: <NotiSettings /> },
     ],
   },
   { path: 'forgot-password', element: <ForgotPassword /> },

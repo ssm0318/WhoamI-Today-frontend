@@ -40,7 +40,12 @@
     "printing_your_name_below": "Printing your name below will act as a signature to consent to the information above.",
     "date_of_signature": "Date of Signature",
     "data_security_guide": "The data we collect will be confidential and will not be stored with your name. All data and audio and recordings will be stored securely.",
-    "add_a_profile_image": "Add a Profile Image"
+    "add_a_profile_image": "Add a Profile Image",
+    "noti_on_desc": "Would you like to get a notification from WhoAmI?",
+    "noti_time_setting_desc_1": "Once a day, you will write a new WhoAmI.",
+    "noti_time_setting_desc_2": "When do you want to get the notification?",
+    "noti_time_default_desc": "If you do not set a time, you will be notified at 4 p.m.",
+    "complete": "complete"
   },
   "home": {
     "moment": {

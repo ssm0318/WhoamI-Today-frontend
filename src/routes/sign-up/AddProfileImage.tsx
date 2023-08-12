@@ -4,9 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
 import { Button, Layout } from '@design-system';
-import { hasMandatorySignUpParams } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
-import { signUp } from '@utils/apis/user';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
@@ -17,11 +15,7 @@ function AddProfileImage() {
 
   const [originalImageFileUrl, setOriginalImageFileURL] = useState<string>();
   const [profileImagePreview, setProfileImagePreview] = useState<string>();
-  const [signUpInfo, setSignUpInfo, resetSignUpInfo] = useBoundStore((state) => [
-    state.signUpInfo,
-    state.setSignUpInfo,
-    state.resetSignUpInfo,
-  ]);
+  const setSignUpInfo = useBoundStore((state) => state.setSignUpInfo);
 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
@@ -56,19 +50,7 @@ function AddProfileImage() {
 
   const navigate = useNavigate();
   const onClickNextOrSkip = () => {
-    if (!hasMandatorySignUpParams(signUpInfo)) return;
-
-    signUp({
-      signUpInfo,
-      onSuccess: () => {
-        resetSignUpInfo();
-        navigate('/home');
-      },
-      onError: (e) => {
-        // TODO
-        console.log(e);
-      },
-    });
+    navigate('/signup/noti-settings');
   };
 
   return (
