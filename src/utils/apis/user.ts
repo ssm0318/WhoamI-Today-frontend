@@ -4,6 +4,7 @@ import i18n from '@i18n/index';
 import { PaginationResponse } from '@models/api/common';
 import {
   EmailError,
+  FriendRequest,
   MyProfile,
   PasswordConfirmError,
   PasswordError,
@@ -268,6 +269,14 @@ export const searchUser = async (query: string, next?: string | null) => {
   const queryParams = next?.split('?')[1] || `query=${query}`;
   const { data } = await axios.get<PaginationResponse<UserProfile[]>>(
     `/user/search/?${queryParams}`,
+  );
+  return data;
+};
+
+export const getFriendRequests = async (next?: string | null) => {
+  const requestPage = next ? next.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<FriendRequest[]>>(
+    `/user/friend-requests/${requestPage ? `?page=${requestPage}` : ''}`,
   );
   return data;
 };

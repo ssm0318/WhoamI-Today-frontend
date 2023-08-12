@@ -121,3 +121,10 @@ export interface MyProfile extends User {
   noti_on: boolean;
   noti_time: string;
 }
+
+export interface FriendRequest {
+  requestee_id: number;
+  requester_id: number;
+  requester_detail: User;
+  accepted: boolean;
+}
