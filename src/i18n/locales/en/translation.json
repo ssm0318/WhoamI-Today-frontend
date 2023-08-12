@@ -22,6 +22,7 @@
     "temporary_error": "An error has occurred temporarily. Please try again later.",
     "password_constraints": "The password must be at least 8 characters with a mix of upper and lowercase letters, numbers and symbols.",
     "research_participation_consent_form": "Research Participation Consent Form",
+    "research_desc": "<0>WhoAmI Today is a non-profit service developed by a group of researchers at the University of Washington to make social media more aligned with the needs of adolescents. If you agree to the<1>privacy policy/consent form</1>, you agree to participating in our research, which includes the (aggregated and deidentified) analysis of your data.</0>",
     "agree_to_research": "agree (optional, unless you are currently participating in the research led by Univ. of Washington research team).",
     "learn_more_about_whoami_today": "Learn more about WhoAmI Today",
     "age": "Age",
