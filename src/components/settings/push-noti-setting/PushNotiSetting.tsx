@@ -9,7 +9,7 @@ import * as S from './PushNotiSetting.styled';
 function PushNotiSetting() {
   const [t] = useTranslation('translation', { keyPrefix: 'settings' });
   const { getSettingDescription, notiPermission, setNotiPermission } = useNotiPermission();
-  const descriptions = getSettingDescription(!isApp ? Notification.permission : undefined);
+  const descriptions = getSettingDescription(notiPermission);
 
   const handleRequestPermission = async () => {
     if (notiPermission !== 'default') return;
@@ -29,7 +29,7 @@ function PushNotiSetting() {
         // 웹
         <Layout.FlexCol w="100%">
           {/* 알림 허용이 된 경우 toggle 버튼 노출 */}
-          {Notification.permission === 'granted' && (
+          {notiPermission === 'granted' && (
             <Layout.FlexRow w="100%" justifyContent="space-between" mb={8} alignItems="center">
               <Font.Body type="18_regular">{t('push_notifications')}</Font.Body>
               <SettingsToggleButton />
@@ -37,14 +37,10 @@ function PushNotiSetting() {
           )}
           <S.PermissionTextContainer
             onClick={handleRequestPermission}
-            cursor={Notification.permission === 'default' ? 'pointer' : 'default'}
+            cursor={notiPermission === 'default' ? 'pointer' : 'default'}
           >
             {descriptions.map((desc) => (
-              <Font.Body
-                type="14_regular"
-                key={desc}
-                underline={Notification.permission === 'default'}
-              >
+              <Font.Body type="14_regular" key={desc} underline={notiPermission === 'default'}>
                 {desc}
               </Font.Body>
             ))}

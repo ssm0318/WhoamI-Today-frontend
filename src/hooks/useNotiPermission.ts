@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { isApp } from '@utils/getUserAgent';
 
 const useNotiPermission = () => {
-  const [notiPermission, setNotiPermission] = useState(Notification.permission);
+  const [notiPermission, setNotiPermission] = useState(
+    !isApp ? Notification.permission : undefined,
+  );
   const [t] = useTranslation('translation', { keyPrefix: 'settings' });
 
   const getBannerDescription = (permissionState?: typeof Notification.permission): string[] => {
