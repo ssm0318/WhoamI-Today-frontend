@@ -4,14 +4,22 @@ import { SliceStateCreator } from './useBoundStore';
 
 interface MomentState {
   todayMoment: TodayMoment;
+  momentDraft: TodayMoment;
 }
 interface MomentAction {
   fetchTodayMoment: () => Promise<void>;
   setTodayMoment: (moment: Partial<TodayMoment>) => Promise<void>;
+  setMomentDraft: (moment: Partial<TodayMoment>) => Promise<void>;
+  resetMomentDraft: () => Promise<void>;
 }
 
 const initialState = {
   todayMoment: {
+    mood: null,
+    photo: null,
+    description: null,
+  },
+  momentDraft: {
     mood: null,
     photo: null,
     description: null,
@@ -31,6 +39,21 @@ export const createMomentSlice: SliceStateCreator<MomentSlice> = (set) => ({
       todayMoment: {
         ...state.todayMoment,
         ...moment,
+      },
+    }));
+  },
+  setMomentDraft: async (moment) => {
+    set((state) => ({
+      momentDraft: {
+        ...state.momentDraft,
+        ...moment,
+      },
+    }));
+  },
+  resetMomentDraft: async () => {
+    set((state) => ({
+      momentDraft: {
+        ...state.todayMoment,
       },
     }));
   },

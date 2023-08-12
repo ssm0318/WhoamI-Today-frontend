@@ -46,7 +46,7 @@ function MomentUploadMoodInput({ mood, setMood }: MomentUploadMoodInputProps) {
         }}
       >
         <SvgIcon name="moment_mood_normal" size={30} />
-        {!emojiContent ? (
+        {!emojiContent && !pickerVisible ? (
           <Font.Body type="18_regular" color="GRAY_12" ml={8}>
             {t('mood_placeholder')}
           </Font.Body>

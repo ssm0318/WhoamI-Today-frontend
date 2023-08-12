@@ -18,6 +18,7 @@ export const getTodayMoment = async () => {
 };
 
 // POST today's moment
+// todayMoment 없는 경우 POST
 export const postTodayMoment = async (moment: Partial<TodayMoment>) => {
   const { year, month, day } = getDateRequestParams(new Date());
   const momentFormData = objectFormDataSerializer(moment);
@@ -29,6 +30,7 @@ export const postTodayMoment = async (moment: Partial<TodayMoment>) => {
 };
 
 // PUT today's moment
+// todayMoment 있는 경우 PUT
 export const updateTodayMoment = async (moment: Partial<TodayMoment>) => {
   const { year, month, day } = getDateRequestParams(new Date());
   const momentFormData = objectFormDataSerializer(moment);

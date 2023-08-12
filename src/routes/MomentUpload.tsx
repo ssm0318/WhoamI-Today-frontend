@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import MomentUploadDescriptionInput from '@components/moment-upload/moment-upload-description-input/MomentUploadDescriptionInput';
@@ -7,11 +7,16 @@ import { DEFAULT_MARGIN, SCREEN_WIDTH, TITLE_HEADER_HEIGHT } from '@constants/la
 import { Font, Layout, SvgIcon } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import { BoundState, useBoundStore } from '@stores/useBoundStore';
+import { postTodayMoment, updateTodayMoment } from '@utils/apis/moment';
 import { isApp } from '@utils/getUserAgent';
+import { areAllValuesNull, deepEqual } from '@utils/validateHelpers';
 import MomentUploadMoodInput from '../components/moment-upload/moment-upload-mood-input/MomentUploadMoodInput';
 
 const momentSelector = (state: BoundState) => ({
   todayMoment: state.todayMoment,
+  momentDraft: state.momentDraft,
+  setMomentDraft: state.setMomentDraft,
+  resetMomentDraft: state.resetMomentDraft,
 });
 
 const PHOTO_SIZE = SCREEN_WIDTH - DEFAULT_MARGIN * 2;
@@ -19,27 +24,48 @@ const PHOTO_SIZE = SCREEN_WIDTH - DEFAULT_MARGIN * 2;
 function TodaysMoment() {
   // TODO(Gina): 포토 이미지 url 존재 시, 이미지 렌더링
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
-  const { todayMoment } = useBoundStore(momentSelector);
+  const { todayMoment, momentDraft, setMomentDraft, resetMomentDraft } =
+    useBoundStore(momentSelector);
   const postMessage = usePostAppMessage();
-  const [mood, setMood] = useState(todayMoment.mood);
-  const [description, setDescription] = useState(todayMoment.description);
 
-  const isPostable = false;
+  // draft와 todayMoment가 다를 경우 업로드 가능
+
+  const isPostable = !deepEqual(todayMoment, momentDraft);
+
+  console.log(momentDraft);
 
   const handlePhotoUpload = () => {
     if (!window?.ReactNativeWebView) return;
     if (todayMoment.photo) return;
     postMessage('NAVIGATE', {
       screenName: 'MomentPhotoUploadScreen',
-      params: {
-        state: todayMoment,
-      },
     });
   };
 
-  const handlePost = () => {
-    console.log('TODO POST');
+  const handlePost = async () => {
+    // moment 업로드
+    if (!areAllValuesNull(todayMoment)) {
+      await updateTodayMoment({
+        ...momentDraft,
+      });
+    } else {
+      await postTodayMoment({
+        ...momentDraft,
+      });
+    }
   };
+
+  useEffect(() => {
+    setMomentDraft({
+      ...todayMoment,
+    });
+  }, [setMomentDraft, todayMoment]);
+
+  useEffect(() => {
+    return () => {
+      resetMomentDraft();
+    };
+  }, [resetMomentDraft]);
 
   return (
     <MainContainer>
@@ -73,10 +99,13 @@ function TodaysMoment() {
         gap={16}
       >
         {/* emoji */}
-        <MomentUploadMoodInput mood={mood} setMood={setMood} />
+        <MomentUploadMoodInput
+          mood={momentDraft.mood}
+          setMood={(mood) => setMomentDraft({ mood })}
+        />
         {/* photo */}
         {/* 업로드한 photo가 없고 앱이 아닌 경우 disable, 앱인 경우 redirect */}
-        {!todayMoment.photo && !isApp ? (
+        {!isApp ? (
           <Layout.FlexRow
             w="100%"
             alignItems="center"
@@ -97,8 +126,8 @@ function TodaysMoment() {
             alignItems="center"
             rounded={14}
             bgColor="BASIC_WHITE"
-            ph={todayMoment.photo ? 0 : 12}
-            pv={todayMoment.photo ? 0 : 24}
+            ph={todayMoment.photo || momentDraft.photo ? 0 : 12}
+            pv={todayMoment.photo || momentDraft.photo ? 0 : 24}
             onClick={handlePhotoUpload}
           >
             {todayMoment.photo ? (
@@ -130,6 +159,15 @@ function TodaysMoment() {
                   alt={`${todayMoment.photo}-moment`}
                 />
               </Layout.FlexRow>
+            ) : momentDraft.photo ? (
+              <Layout.FlexRow w="100%" h="100%">
+                <img
+                  src={momentDraft.photo}
+                  width="100%"
+                  height="100%"
+                  alt={`${momentDraft.photo}-moment`}
+                />
+              </Layout.FlexRow>
             ) : (
               <>
                 <SvgIcon name="moment_photo_normal" size={30} />
@@ -141,7 +179,10 @@ function TodaysMoment() {
           </Layout.FlexRow>
         )}
         {/* description */}
-        <MomentUploadDescriptionInput description={description} setDescription={setDescription} />
+        <MomentUploadDescriptionInput
+          description={momentDraft.description}
+          setDescription={(description) => setMomentDraft({ description })}
+        />
       </Layout.FlexCol>
     </MainContainer>
   );
