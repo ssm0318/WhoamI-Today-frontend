@@ -5,6 +5,8 @@ import { Button, Font, Layout } from '@design-system';
 import { hasMandatorySignUpParams } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { signUp } from '@utils/apis/user';
+import { requestPermission } from '@utils/firebaseHelpers';
+import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 function NotiSettings() {
@@ -18,9 +20,16 @@ function NotiSettings() {
 
   const [notiTime, setNotiTime] = useState<string>('');
 
-  const onClickNotiOn = () => {
+  const { isMobile } = getMobileDeviceInfo();
+
+  const onClickNotiOn = async () => {
     setSignUpInfo({ noti_on: true });
-    // TODO: 실제 기기의 노티 켜기
+
+    if (isMobile) {
+      // TODO: 모바일 기기의 노티 켜기
+      return;
+    }
+    await requestPermission();
   };
 
   const onChangeNotiTime = (e: ChangeEvent<HTMLInputElement>) => {
