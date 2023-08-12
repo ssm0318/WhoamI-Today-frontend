@@ -42,17 +42,15 @@ function TodaysMoments() {
           </Font.Body>
         ) : (
           <Trans
+            i18nKey="home.moment.add_moment_description"
             defaults={t('add_moment_description') || ''}
-            components={{
-              icons: (
-                <>
-                  <SvgIcon name="moment_mood_normal" size={14} />
-                  <SvgIcon name="moment_photo_normal" size={14} />
-                  <SvgIcon name="moment_description_normal" size={14} />
-                </>
-              ),
-            }}
-          />
+          >
+            <>
+              <SvgIcon name="moment_mood_normal" size={14} />
+              <SvgIcon name="moment_photo_normal" size={14} />
+              <SvgIcon name="moment_description_normal" size={14} />
+            </>
+          </Trans>
         )}
       </Layout.FlexRow>
     </Layout.FlexCol>
