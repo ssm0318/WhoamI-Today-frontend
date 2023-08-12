@@ -161,6 +161,10 @@
       "search": {
         "placeholder": "친구를 추가하거나 검색하세요."
       },
+      "invite": {
+        "title": "WhoAmI Today 초대 링크",
+        "text": "WhoAmI Today에 친구를 초대해보세요."
+      },
       "tab": {
         "friends": "친구 목록",
         "request": "친구 요청"

@@ -31,6 +31,7 @@ const show_password_eye = 'show_password_eye';
 const hide_password_eye = 'hide_password_eye';
 const search = 'search';
 const close = 'close';
+const link_share = 'link_share';
 
 export {
   arrow_left,
@@ -49,6 +50,7 @@ export {
   hide_password_eye,
   home_active,
   home_inactive,
+  link_share,
   moment_description_disabled,
   moment_description_normal,
   moment_emoji_disabled,

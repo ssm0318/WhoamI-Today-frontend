@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Divider from '@components/_common/divider/Divider';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import Tabs from '@components/_common/tabs/Tabs';
+import FriendInvitation from '@components/friends-settings/friend-invitation/FriendInvitation';
 import FriendList from '@components/friends-settings/friend-list/FriendList';
 import FriendRequestList from '@components/friends-settings/friend-request-list/FriendRequestList';
 import FriendSearchInput from '@components/friends-settings/friend-search/FriendSearchInput';
@@ -27,7 +28,7 @@ function FriendsSettings() {
       <TitleHeader title={t('title')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" gap={14}>
         <FriendSearchInput query={query} setQuery={setQuery} />
-        {/* TODO: 친구 초대 */}
+        <FriendInvitation />
         <Divider width={1} />
         {query ? (
           <FriendSearchList query={query} />
