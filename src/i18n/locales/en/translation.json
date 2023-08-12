@@ -53,6 +53,7 @@
   "home": {
     "moment": {
       "todays_moments": "Today's Moments",
+      "add_moment_description": "Add <icons /> of the day",
       "already_posted": "You’ve posted for today!"
     }, 
     "question": {

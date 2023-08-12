@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Font, Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -41,17 +41,18 @@ function TodaysMoments() {
             {t('already_posted')}
           </Font.Body>
         ) : (
-          <>
-            <Font.Body type="12_regular" color="GRAY_6">
-              Add
-            </Font.Body>
-            <SvgIcon name="moment_mood_normal" size={14} />
-            <SvgIcon name="moment_photo_normal" size={14} />
-            <SvgIcon name="moment_description_normal" size={14} />
-            <Font.Body type="12_regular" color="GRAY_6">
-              of the day
-            </Font.Body>
-          </>
+          <Trans
+            defaults={t('add_moment_description') || ''}
+            components={{
+              icons: (
+                <>
+                  <SvgIcon name="moment_mood_normal" size={14} />
+                  <SvgIcon name="moment_photo_normal" size={14} />
+                  <SvgIcon name="moment_description_normal" size={14} />
+                </>
+              ),
+            }}
+          />
         )}
       </Layout.FlexRow>
     </Layout.FlexCol>

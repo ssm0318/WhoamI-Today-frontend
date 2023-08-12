@@ -53,6 +53,7 @@
   "home": {
     "moment": {
       "todays_moments": "오늘의 순간들",
+      "add_moment_description": "오늘의 <icons />를 기록해보세요!",
       "already_posted": "오늘의 순간을 이미 업로드하셨군요!"
     },
     "question": {
