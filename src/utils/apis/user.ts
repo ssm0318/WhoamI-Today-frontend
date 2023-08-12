@@ -188,6 +188,29 @@ export const confirmPassword = ({
     });
 };
 
+export const resetPassword = ({
+  userId,
+  password,
+  onSuccess,
+  onError,
+}: {
+  userId: number;
+  password: string;
+  onSuccess: () => void;
+  onError: (error: string) => void;
+}) => {
+  axios
+    .put(`/user/reset-password/${userId}/`, { password })
+    .then(() => onSuccess())
+    .catch((e: AxiosError<PasswordError>) => {
+      if (e.response?.data.password[0]) {
+        onError(e.response.data.password[0]);
+        return;
+      }
+      onError(i18n.t('sign_up.temporary_error'));
+    });
+};
+
 export const deleteAccount = async (onSuccess: () => void) => {
   axios
     .delete('/user/me/delete/')
