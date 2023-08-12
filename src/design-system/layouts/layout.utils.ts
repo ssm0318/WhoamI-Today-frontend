@@ -1,5 +1,5 @@
 import { DEFAULT_MARGIN } from '@constants/layout';
-import { DefaultOrNumber } from './layout.types';
+import { DefaultOrNumber, Translate } from './layout.types';
 
 export const toPx = (value: 'default' | number) => (value === 'default' ? DEFAULT_MARGIN : value);
 
@@ -18,4 +18,12 @@ export const getStyle = (key: string, value: number | undefined | string) => {
   if (key === 'z-index') return `${key}: ${value};`;
   if (typeof value === 'number') return `${key}: ${value}px;`;
   return `${key}: ${value};`;
+};
+
+export const toTranslateString = (translate?: Translate) => {
+  if (!translate) return '';
+  const [x, y] = translate;
+  const translateX = typeof x === 'number' ? `${x}px` : x;
+  const translateY = typeof y === 'number' ? `${y}px` : y;
+  return `transform: translate(${translateX}, ${translateY})`;
 };

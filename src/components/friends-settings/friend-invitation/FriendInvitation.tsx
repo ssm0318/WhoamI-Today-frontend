@@ -1,15 +1,21 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ToastMessage from '@components/_common/toast-message/ToastMessage';
 import { Font, Layout, SvgIcon } from '@design-system';
 import i18n from '@i18n/index';
+import { getMobileDeviceInfo } from '@utils/getUserAgent';
 
 const INVITATION_LINK = 'https://whoamitoday.page.link/invite';
 
 export default function FriendInvitation() {
   const [t] = useTranslation('translation', { keyPrefix: 'settings.friends.invite' });
+  const { isMobile } = getMobileDeviceInfo();
+  const [showToast, setShowToast] = useState(false);
 
   const handleClickLinkShare = () => {
-    if (!navigator.share) {
+    if (!isMobile || !navigator.share) {
       navigator.clipboard.writeText(INVITATION_LINK);
+      setShowToast(true);
       return;
     }
     navigator.share({
@@ -45,6 +51,7 @@ export default function FriendInvitation() {
         </Layout.FlexRow>
         <SvgIcon name="link_share" size={26} />
       </Layout.FlexRow>
+      {showToast && <ToastMessage text={t('copy')} closeToastMessage={() => setShowToast(false)} />}
     </Layout.LayoutBase>
   );
 }

@@ -163,7 +163,8 @@
       },
       "invite": {
         "title": "WhoAmI Today 초대 링크",
-        "text": "WhoAmI Today에 친구를 초대해보세요."
+        "text": "WhoAmI Today에 친구를 초대해보세요.",
+        "copy": "초대 링크를 클립보드에 복사했습니다."
       },
       "tab": {
         "friends": "친구 목록",

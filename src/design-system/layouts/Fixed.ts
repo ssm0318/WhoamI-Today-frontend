@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components';
 import { Layout } from '@design-system';
 import { LayoutBase } from './Flex';
-
-type Translate = (number | string)[];
+import { Translate } from './layout.types';
+import { toTranslateString } from './layout.utils';
 
 type FixedStyle = {
   b?: number | string;
@@ -22,11 +22,3 @@ export const Fixed = styled(LayoutBase)<FixedStyle>`
     ${toTranslateString(tl)}
   `}
 `;
-
-export const toTranslateString = (translate?: Translate) => {
-  if (!translate) return '';
-  const [x, y] = translate;
-  const translateX = typeof x === 'number' ? `${x}px` : x;
-  const translateY = typeof y === 'number' ? `${y}px` : y;
-  return `transform: translate(${translateX}, ${translateY})`;
-};
