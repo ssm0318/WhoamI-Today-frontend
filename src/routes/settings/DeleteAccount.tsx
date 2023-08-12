@@ -7,8 +7,7 @@ import ValidatedPasswordInput from '@components/_common/validated-input/Validate
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Font, Layout } from '@design-system';
-import { useBoundStore } from '@stores/useBoundStore';
-import { deleteAccount, signIn } from '@utils/apis/user';
+import { confirmPassword, deleteAccount } from '@utils/apis/user';
 
 function DeleteAccount() {
   const [t] = useTranslation('translation', { keyPrefix: 'settings' });
@@ -23,13 +22,9 @@ function DeleteAccount() {
     if (passwordError) setPasswordError(null);
   };
 
-  const myProfile = useBoundStore((state) => state.myProfile);
   const handleClickContinue = () => {
-    if (!myProfile) return;
-
-    const { username } = myProfile;
-    signIn({
-      signInInfo: { username, password: passwordInput },
+    confirmPassword({
+      password: passwordInput,
       onSuccess: () => setShowDeleteAccountModal(true),
       onError: () => setPasswordError(t('password_invalid')),
     });
