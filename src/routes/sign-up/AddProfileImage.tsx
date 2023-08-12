@@ -8,6 +8,7 @@ import { hasMandatorySignUpParams } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { signUp } from '@utils/apis/user';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
+import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 function AddProfileImage() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_up' });
@@ -86,7 +87,7 @@ function AddProfileImage() {
           <Button.Large
             type="gray_fill"
             status="normal"
-            sizing="stretch"
+            width={AUTH_BUTTON_WIDTH}
             text={t('add')}
             onClick={onClickAdd}
           />
@@ -94,7 +95,7 @@ function AddProfileImage() {
         <Button.Large
           type="gray_fill"
           status="normal"
-          sizing="stretch"
+          width={AUTH_BUTTON_WIDTH}
           text={profileImagePreview ? t('next') : t('skip')}
           onClick={onClickNextOrSkip}
         />
