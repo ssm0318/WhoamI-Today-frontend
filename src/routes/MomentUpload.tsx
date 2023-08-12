@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import MomentUploadDescriptionInput from '@components/moment-upload/moment-upload-description-input/MomentUploadDescriptionInput';
@@ -6,6 +6,7 @@ import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, SCREEN_WIDTH, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
+import { TodayMoment } from '@models/moment';
 import { BoundState, useBoundStore } from '@stores/useBoundStore';
 import { postTodayMoment, updateTodayMoment } from '@utils/apis/moment';
 import { isApp } from '@utils/getUserAgent';
@@ -14,19 +15,17 @@ import MomentUploadMoodInput from '../components/moment-upload/moment-upload-moo
 
 const momentSelector = (state: BoundState) => ({
   todayMoment: state.todayMoment,
-  momentDraft: state.momentDraft,
-  setMomentDraft: state.setMomentDraft,
-  resetMomentDraft: state.resetMomentDraft,
 });
 
 const PHOTO_SIZE = SCREEN_WIDTH - DEFAULT_MARGIN * 2;
 
 function TodaysMoment() {
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
-  const { todayMoment, momentDraft, setMomentDraft, resetMomentDraft } =
-    useBoundStore(momentSelector);
+  const { todayMoment } = useBoundStore(momentSelector);
   const postMessage = usePostAppMessage();
-  const isPostable = !deepEqual(todayMoment, momentDraft);
+  const [draft, setDraft] = useState<TodayMoment>(todayMoment);
+
+  const isPostable = !deepEqual(todayMoment, draft);
 
   const handlePhotoUpload = () => {
     // TODO(Gina): 현재 작성한 mood나 description이 있으면 같이 보내서 앱 화면에서도 보이게 처리 필요
@@ -41,26 +40,14 @@ function TodaysMoment() {
     // moment 업로드
     if (!areAllValuesNull(todayMoment)) {
       await updateTodayMoment({
-        ...momentDraft,
+        ...draft,
       });
     } else {
       await postTodayMoment({
-        ...momentDraft,
+        ...draft,
       });
     }
   };
-
-  // TODO(Gina) TodaysMoments에서 값 싱크 맞춰도 될듯
-  useEffect(() => {
-    setMomentDraft({
-      ...todayMoment,
-    });
-  }, [setMomentDraft, todayMoment]);
-
-  useEffect(() => {
-    // 해당 컴포넌트가 unmount되면 draft 초기화
-    return () => resetMomentDraft();
-  }, [resetMomentDraft]);
 
   return (
     <MainContainer>
@@ -94,10 +81,7 @@ function TodaysMoment() {
         gap={16}
       >
         {/* emoji */}
-        <MomentUploadMoodInput
-          mood={momentDraft.mood}
-          setMood={(mood) => setMomentDraft({ mood })}
-        />
+        <MomentUploadMoodInput mood={draft.mood} setMood={(mood) => setDraft({ ...draft, mood })} />
         {/* photo */}
         {/* 업로드한 photo가 없고 앱이 아닌 경우 disable, 앱인 경우 redirect */}
         {!isApp ? (
@@ -121,8 +105,8 @@ function TodaysMoment() {
             alignItems="center"
             rounded={14}
             bgColor="BASIC_WHITE"
-            ph={todayMoment.photo || momentDraft.photo ? 0 : 12}
-            pv={todayMoment.photo || momentDraft.photo ? 0 : 24}
+            ph={todayMoment.photo || draft.photo ? 0 : 12}
+            pv={todayMoment.photo || draft.photo ? 0 : 24}
             onClick={handlePhotoUpload}
           >
             {todayMoment.photo ? (
@@ -154,14 +138,9 @@ function TodaysMoment() {
                   alt={`${todayMoment.photo}-moment`}
                 />
               </Layout.FlexRow>
-            ) : momentDraft.photo ? (
+            ) : draft.photo ? (
               <Layout.FlexRow w="100%" h="100%">
-                <img
-                  src={momentDraft.photo}
-                  width="100%"
-                  height="100%"
-                  alt={`${momentDraft.photo}-moment`}
-                />
+                <img src={draft.photo} width="100%" height="100%" alt={`${draft.photo}-moment`} />
               </Layout.FlexRow>
             ) : (
               <>
@@ -175,8 +154,8 @@ function TodaysMoment() {
         )}
         {/* description */}
         <MomentUploadDescriptionInput
-          description={momentDraft.description}
-          setDescription={(description) => setMomentDraft({ description })}
+          description={draft.description}
+          setDescription={(description) => setDraft({ ...draft, description })}
         />
       </Layout.FlexCol>
     </MainContainer>
