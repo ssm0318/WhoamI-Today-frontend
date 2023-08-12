@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { MAX_WINDOW_WIDTH, Z_INDEX } from '@constants/layout';
+import { MAX_WINDOW_WIDTH, TITLE_HEADER_HEIGHT, Z_INDEX } from '@constants/layout';
 
 export const HeaderWrapper = styled.header`
   z-index: ${Z_INDEX.TITLE_HEADER};
@@ -9,4 +9,5 @@ export const HeaderWrapper = styled.header`
   max-width: ${MAX_WINDOW_WIDTH}px;
   background-color: white;
   width: 100%;
+  height: ${TITLE_HEADER_HEIGHT}px;
 `;
