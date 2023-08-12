@@ -22,19 +22,14 @@ const momentSelector = (state: BoundState) => ({
 const PHOTO_SIZE = SCREEN_WIDTH - DEFAULT_MARGIN * 2;
 
 function TodaysMoment() {
-  // TODO(Gina): 포토 이미지 url 존재 시, 이미지 렌더링
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
   const { todayMoment, momentDraft, setMomentDraft, resetMomentDraft } =
     useBoundStore(momentSelector);
   const postMessage = usePostAppMessage();
-
-  // draft와 todayMoment가 다를 경우 업로드 가능
-
   const isPostable = !deepEqual(todayMoment, momentDraft);
 
-  console.log(momentDraft);
-
   const handlePhotoUpload = () => {
+    // TODO(Gina): 현재 작성한 mood나 description이 있으면 같이 보내서 앱 화면에서도 보이게 처리 필요
     if (!window?.ReactNativeWebView) return;
     if (todayMoment.photo) return;
     postMessage('NAVIGATE', {
@@ -55,6 +50,7 @@ function TodaysMoment() {
     }
   };
 
+  // TODO(Gina) TodaysMoments에서 값 싱크 맞춰도 될듯
   useEffect(() => {
     setMomentDraft({
       ...todayMoment,
@@ -62,9 +58,8 @@ function TodaysMoment() {
   }, [setMomentDraft, todayMoment]);
 
   useEffect(() => {
-    return () => {
-      resetMomentDraft();
-    };
+    // 해당 컴포넌트가 unmount되면 draft 초기화
+    return () => resetMomentDraft();
   }, [resetMomentDraft]);
 
   return (

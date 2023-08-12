@@ -9,8 +9,8 @@ interface MomentState {
 interface MomentAction {
   fetchTodayMoment: () => Promise<void>;
   setTodayMoment: (moment: Partial<TodayMoment>) => Promise<void>;
-  setMomentDraft: (moment: Partial<TodayMoment>) => Promise<void>;
-  resetMomentDraft: () => Promise<void>;
+  setMomentDraft: (moment: Partial<TodayMoment>) => void;
+  resetMomentDraft: () => void;
 }
 
 const initialState = {
