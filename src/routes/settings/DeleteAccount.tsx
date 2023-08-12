@@ -34,7 +34,7 @@ function DeleteAccount() {
   return (
     <MainContainer>
       <TitleHeader type="SUB" title={t('delete_account')} />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" pl={24} pr={24}>
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" ph={24}>
         <Font.Display type="14_regular" mb={22}>
           {t('please_check_your_password')}
         </Font.Display>

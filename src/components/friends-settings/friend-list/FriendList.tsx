@@ -15,7 +15,7 @@ function FriendList() {
   }, [getFriendList]);
 
   return (
-    <Layout.FlexCol w="100%" pl={10} pr={10} gap={8}>
+    <Layout.FlexCol w="100%" ph={10} gap={8}>
       {friendList ? (
         <>
           <Font.Body type="14_regular" color="GRAY_12" ml={5} mb={2}>

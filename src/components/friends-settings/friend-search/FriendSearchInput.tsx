@@ -20,7 +20,7 @@ export default function FriendSearchInput({ query, setQuery }: Props) {
   };
 
   return (
-    <Layout.LayoutBase w="100%" pl={24} pt={4} pr={24}>
+    <Layout.LayoutBase w="100%" ph={24} pt={4}>
       <Layout.FlexRow
         w="100%"
         alignItems="center"

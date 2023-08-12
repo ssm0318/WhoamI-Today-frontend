@@ -40,7 +40,7 @@ function SignIn() {
       <Layout.FlexCol w="100%" alignItems="center" mt={100}>
         <img width="75px" src="/whoami-logo.svg" alt="who_am_i" />
       </Layout.FlexCol>
-      <Layout.FlexCol w="100%" mt={80} mb={80} pl={24} pr={24}>
+      <Layout.FlexCol w="100%" mv={80} ph={24}>
         <ValidatedInput
           label={t('username_or_email')}
           name="username"

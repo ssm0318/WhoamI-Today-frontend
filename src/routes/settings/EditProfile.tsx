@@ -19,14 +19,14 @@ function EditProfile() {
           <Font.Display type="14_regular">{t('change_picture')}</Font.Display>
         </Layout.FlexCol>
       </Layout.FlexCol>
-      <Layout.FlexCol pt={32} pl={24} pr={24} gap={24} w="100%">
+      <Layout.FlexCol pt={32} ph={24} gap={24} w="100%">
         <Font.Display type="14_regular">{t('username')}</Font.Display>
         <Font.Body type="18_regular">KNKN</Font.Body>
         <Divider width={1} />
         <Font.Display type="14_regular">{t('email')}</Font.Display>
         <Font.Body type="18_regular">whoamitoday@gmail.com</Font.Body>
       </Layout.FlexCol>
-      <Layout.Absolute w="100%" b="50px" pl={24} pr={24} flexDirection="column">
+      <Layout.Absolute w="100%" b="50px" ph={24} flexDirection="column">
         <Button.Large
           type="filled"
           status="disabled"

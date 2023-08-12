@@ -19,15 +19,7 @@ function ResponseDetail({ response }: ResponseDetailProps) {
   return (
     <>
       <AuthorProfile authorDetail={author_detail} usernameFont="18_semibold" />
-      <Layout.FlexCol
-        w="100%"
-        bgColor="BASIC_DISABLED_SOFT"
-        rounded={12}
-        pt={14}
-        pr={20}
-        pb={14}
-        pl={20}
-      >
+      <Layout.FlexCol w="100%" bgColor="BASIC_DISABLED_SOFT" rounded={12} pv={14} ph={20}>
         <Font.Display type="18_bold" color="GRAY_3">
           {response.question.content}
         </Font.Display>

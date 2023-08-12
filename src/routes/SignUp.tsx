@@ -20,7 +20,7 @@ function SignUp() {
   return (
     <MainContainer>
       <TitleHeader title={title} />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 80} w="100%" pl={24} pr={24} alignItems="center">
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 80} w="100%" ph={24} alignItems="center">
         <Outlet />
       </Layout.FlexCol>
     </MainContainer>

@@ -46,7 +46,7 @@ export default function TheDaysQuestions({
     <TheDaysWrapper type="questions">
       {questions.map((question) => (
         <S.QuestionWrapper key={question.id}>
-          <Layout.FlexCol w="100%" pl={12} pr={12}>
+          <Layout.FlexCol w="100%" ph={12}>
             <S.Question>
               <Font.Display type="18_bold" color="GRAY_3">
                 {question.content}

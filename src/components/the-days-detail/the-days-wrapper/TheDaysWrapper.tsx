@@ -11,7 +11,7 @@ function TheDaysWrapper({ type, children }: TheDaysWrapperProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'the_days_detail' });
 
   return (
-    <Layout.FlexCol w="100%" pt={28} pb={28} pl={24} pr={24}>
+    <Layout.FlexCol w="100%" pv={28} ph={24}>
       <Layout.FlexRow w="100%" justifyContent="center" alignItems="center" mb={14}>
         <Font.Display type="20_bold">{t(`${type}.title`)}</Font.Display>
       </Layout.FlexRow>
