@@ -1,4 +1,5 @@
-import { ColorKeys, Font } from '@design-system';
+import { ColorKeys } from '@design-system';
+import { BodyType, DisplayType } from '../Font/Font.types';
 import * as S from './Button.styled';
 
 export type ButtonSize = 'Large' | 'Medium' | 'Small' | 'Dialog';
@@ -6,7 +7,7 @@ export type ButtonSize = 'Large' | 'Medium' | 'Small' | 'Dialog';
 export type ButtonSetting = {
   [key in ButtonSize]: {
     ButtonComponent: typeof S.LargeButton | typeof S.SmallButton | typeof S.MediumButton;
-    fontType: Font.BodyType;
+    fontType: BodyType | DisplayType;
   };
 };
 
@@ -28,4 +29,7 @@ export type ButtonProps = {
    * use axios Link component
    */
   to?: string;
+  width?: number;
 };
+
+export const AUTH_BUTTON_WIDTH = 186;

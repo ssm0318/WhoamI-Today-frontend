@@ -1,7 +1,7 @@
 import { Layout, SvgIcon } from '@design-system';
 
 interface ProfileImageProps {
-  imageUrl: string | null;
+  imageUrl?: string | null;
   size?: number;
   username?: string;
   className?: string;

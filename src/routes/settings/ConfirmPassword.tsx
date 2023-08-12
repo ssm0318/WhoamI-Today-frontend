@@ -23,7 +23,7 @@ function ConfirmPassword() {
   return (
     <MainContainer>
       <TitleHeader title={t('confirm_password')} type="SUB" />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" gap={10} pl={24} pr={24}>
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" gap={10} ph={24}>
         <ValidatedPasswordInput
           label={t('enter_your_current_password')}
           labelType="14_regular"
@@ -32,7 +32,7 @@ function ConfirmPassword() {
           onChange={handleChange}
         />
       </Layout.FlexCol>
-      <Layout.Absolute w="100%" b="50px" pl={24} pr={24} flexDirection="column">
+      <Layout.Absolute w="100%" b="50px" ph={24} flexDirection="column">
         <Button.Large
           type="filled"
           status="normal"

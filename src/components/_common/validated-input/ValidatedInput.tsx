@@ -17,7 +17,7 @@ function ValidatedInput(props: ValidatedInputProps) {
         </Layout.FlexRow>
       )}
       {guide && !error && (
-        <Font.Display type="14_regular" color="GRAY_4">
+        <Font.Display type="14_regular" color="GRAY_4" mt={18}>
           {guide}
         </Font.Display>
       )}

@@ -16,6 +16,9 @@ export type FontSettings = {
 
 export type DisplayType = '24_bold' | '20_bold' | '18_bold' | '14_regular' | '14_semibold';
 
+export const isDisplayType = (font: unknown): font is DisplayType =>
+  font === '24_bold' || font === '20_bold' || font === '18_bold' || font === '14_regular';
+
 export type BodyType =
   | '20_regular'
   | '20_semibold'

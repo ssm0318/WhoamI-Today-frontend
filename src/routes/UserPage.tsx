@@ -59,7 +59,7 @@ function UserPage() {
           callback={updateUser}
         />
       )}
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" pl={18} pr={18}>
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" ph={18}>
         {user.state === 'hasValue' ? (
           <>
             <ProfileImage

@@ -41,10 +41,8 @@ function FriendItem({ type, user }: Props) {
       key={user.id}
       justifyContent="space-between"
       alignItems="center"
-      pl={10}
-      pt={4}
-      pr={10}
-      pb={4}
+      ph={10}
+      pv={4}
       onClick={handleClickItem}
     >
       <Layout.FlexRow alignItems="center" gap={7}>

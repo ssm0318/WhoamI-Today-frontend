@@ -7,6 +7,7 @@ type ButtonProps = {
   outline?: ColorKeys;
   fill: ColorKeys;
   sizing?: 'fit-content' | 'stretch';
+  width?: number;
 };
 const Button = styled.div<ButtonProps>`
   background-color: ${({ theme, fill }) => theme[fill]};
@@ -25,10 +26,14 @@ const Button = styled.div<ButtonProps>`
   align-items: center;
   justify-content: center;
   word-break: keep-all;
+  ${({ width }) =>
+    css`
+      width: ${width}px;
+    `}
 `;
 
 export const BUTTON_HEIGHT = {
-  LARGE: 52,
+  LARGE: 60,
   MEDIUM: 37,
   SMALL: 25,
 };

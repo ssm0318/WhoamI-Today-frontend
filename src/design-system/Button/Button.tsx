@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Font } from '@design-system';
+import { isDisplayType } from '../Font/Font.types';
 import * as S from './Button.styled';
 import { ButtonProps, ButtonSetting } from './Button.types';
 import { useButton } from './useButton';
@@ -10,23 +11,27 @@ function Button(
     size: keyof typeof buttons;
   } & ButtonProps,
 ) {
-  const { size, to, ...buttonProps } = props;
+  const { size, to, width, ...buttonProps } = props;
   const { sizing } = buttonProps;
   const { text, color, outline, fill, status, ...handlers } = useButton(buttonProps);
   const { ButtonComponent, fontType } = buttons[size];
 
-  const buttonChildren = useMemo(
-    () => (
-      <ButtonComponent sizing={sizing} outline={outline} fill={fill}>
-        {!!text && (
+  const buttonChildren = useMemo(() => {
+    if (!text) return null;
+    return (
+      <ButtonComponent sizing={sizing} outline={outline} fill={fill} width={width}>
+        {isDisplayType(fontType) ? (
+          <Font.Display type={fontType} color={color} textAlign="center">
+            {text}
+          </Font.Display>
+        ) : (
           <Font.Body type={fontType} color={color} textAlign="center">
             {text}
           </Font.Body>
         )}
       </ButtonComponent>
-    ),
-    [ButtonComponent, color, fill, fontType, outline, sizing, text],
-  );
+    );
+  }, [ButtonComponent, color, fill, fontType, outline, sizing, text, width]);
 
   return (
     <S.Container sizing={sizing} disabled={status === 'completed' || status === 'disabled'}>
@@ -56,7 +61,7 @@ const Dialog = React.memo((props: ButtonProps) => (
 const buttons: ButtonSetting = {
   Large: {
     ButtonComponent: S.LargeButton,
-    fontType: '12_regular',
+    fontType: '24_bold',
   },
   Medium: {
     ButtonComponent: S.MediumButton,

@@ -9,7 +9,7 @@ export default function FriendRequestList() {
   // TODO: GET 받은 친구 요청 목록
 
   return (
-    <Layout.FlexCol w="100%" pl={10} pr={10} gap={8}>
+    <Layout.FlexCol w="100%" ph={10} gap={8}>
       <Font.Body type="14_regular" color="GRAY_12" ml={5} mb={2}>
         {t('title', { number: friendList.length })}
       </Font.Body>

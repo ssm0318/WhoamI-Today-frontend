@@ -4,8 +4,8 @@
     "sign_up": "SIgn Up"
   },
   "sign_in": {
-    "username_or_email": "username or email",
-    "password": "password",
+    "username_or_email": "Username or Email",
+    "password": "Password",
     "sign_in": "Sign In",
     "forgot_password": "Forgot password",
     "sign_up": "Sign Up"
@@ -21,6 +21,8 @@
     "next": "Next",
     "temporary_error": "An error has occurred temporarily. Please try again later.",
     "password_constraints": "The password must be at least 8 characters with a mix of upper and lowercase letters, numbers and symbols.",
+    "research_participation_consent_form": "Research Participation Consent Form",
+    "research_desc": "<0>WhoAmI Today is a non-profit service developed by a group of researchers at the University of Washington to make social media more aligned with the needs of adolescents. If you agree to the<1>privacy policy/consent form</1>, you agree to participating in our research, which includes the (aggregated and deidentified) analysis of your data.</0>",
     "agree_to_research": "agree (optional, unless you are currently participating in the research led by Univ. of Washington research team).",
     "learn_more_about_whoami_today": "Learn more about WhoAmI Today",
     "age": "Age",
@@ -37,7 +39,8 @@
     "i_agree_to_provide_consent_to_my_child’s_participation_in_the_research": "I agree to provide consent to my child’s participation in the research.",
     "printing_your_name_below": "Printing your name below will act as a signature to consent to the information above.",
     "date_of_signature": "Date of Signature",
-    "data_security_guide": "The data we collect will be confidential and will not be stored with your name. All data and audio and recordings will be stored securely."
+    "data_security_guide": "The data we collect will be confidential and will not be stored with your name. All data and audio and recordings will be stored securely.",
+    "add_a_profile_image": "Add a Profile Image"
   },
   "home": {
     "moment": {
@@ -152,6 +155,7 @@
     "delete_account": "Delete Account",
     "please_check_your_password": "Please enter your password for security to proceed.",
     "password_invalid": "The password you entered is invalid.",
+    "yes_delete": "Yes, delete",
     "password": "Password",
     "continue": "Continue",
     "are_you_sure": "Are you sure?\nThis cannot be done.",

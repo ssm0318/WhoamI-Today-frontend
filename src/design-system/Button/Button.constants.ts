@@ -10,7 +10,7 @@ export const buttonColorSettings: { [key in ButtonType]: ButtonColorSetting } = 
   gray_fill: {
     normal: { background: 'GRAY_2', text: 'GRAY_13', outline: 'GRAY_2' },
     hovered: { background: 'GRAY_2', text: 'GRAY_13', outline: 'GRAY_2' },
-    disabled: { background: 'BASIC_DISABLED_SOFT', text: 'BASIC_DISABLED_DEEP', outline: 'GRAY_1' },
+    disabled: { background: 'BASIC_DISABLED_SOFT', text: 'BASIC_DISABLED_DEEP' },
     completed: { background: 'GRAY_2', text: 'GRAY_13', outline: 'GRAY_2' },
   },
   filled: {

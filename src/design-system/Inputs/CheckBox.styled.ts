@@ -14,6 +14,7 @@ export const StyledCheckBox = styled.div`
     height: 24px;
     border: 2px solid ${({ theme }) => theme.GRAY_2};
     position: relative;
+    flex-shrink: 0;
   }
 
   input:checked + label {

@@ -30,7 +30,7 @@ function MomentDetailContainer() {
   return (
     <MainContainer>
       <TitleHeader title="moment" />
-      <Layout.FlexCol w="100%" pt={28} pb={28} pl={24} pr={24} gap={14} mt={TITLE_HEADER_HEIGHT}>
+      <Layout.FlexCol w="100%" pv={28} ph={24} gap={14} mt={TITLE_HEADER_HEIGHT}>
         {/* TODO: not found page */}
         {momentState.state === 'hasError' ? (
           <>NotFound</>
