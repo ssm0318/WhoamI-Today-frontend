@@ -83,7 +83,11 @@ function TodaysMoment() {
         {/* emoji */}
         <MomentUploadMoodInput mood={draft.mood} setMood={(mood) => setDraft({ ...draft, mood })} />
         {/* photo */}
-        {/* 업로드한 photo가 없고 앱이 아닌 경우 disable, 앱인 경우 redirect */}
+        {/*
+         *  NOTE
+         *  업로드한 photo가 없고 앱이 아닌 경우 disable, 앱인 경우 redirect
+         *  웹의 경우 draft의 photo 여부를 볼 필요는 없음 (웹 사진 업로드 불가능)
+         */}
         {!isApp ? (
           <Layout.FlexRow
             w="100%"
@@ -105,8 +109,8 @@ function TodaysMoment() {
             alignItems="center"
             rounded={14}
             bgColor="BASIC_WHITE"
-            ph={todayMoment.photo || draft.photo ? 0 : 12}
-            pv={todayMoment.photo || draft.photo ? 0 : 24}
+            ph={todayMoment.photo ? 0 : 12}
+            pv={todayMoment.photo ? 0 : 24}
             onClick={handlePhotoUpload}
           >
             {todayMoment.photo ? (
@@ -137,10 +141,6 @@ function TodaysMoment() {
                   height="100%"
                   alt={`${todayMoment.photo}-moment`}
                 />
-              </Layout.FlexRow>
-            ) : draft.photo ? (
-              <Layout.FlexRow w="100%" h="100%">
-                <img src={draft.photo} width="100%" height="100%" alt={`${draft.photo}-moment`} />
               </Layout.FlexRow>
             ) : (
               <>
