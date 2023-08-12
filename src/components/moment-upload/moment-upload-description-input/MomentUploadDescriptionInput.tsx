@@ -6,11 +6,13 @@ import * as S from './MomentUploadDescriptionInput.styled';
 interface MomentUploadDescriptionInputProps {
   description: string | null;
   setDescription: (description: string | null) => void;
+  disabled: boolean;
 }
 
 function MomentUploadDescriptionInput({
   description,
   setDescription,
+  disabled,
 }: MomentUploadDescriptionInputProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
 
@@ -38,6 +40,7 @@ function MomentUploadDescriptionInput({
           onChange={handleChangeInput}
           placeholder={t('description_placeholder') || ''}
           value={description || ''}
+          disabled={disabled}
         />
       </Layout.FlexRow>
     </Layout.FlexRow>

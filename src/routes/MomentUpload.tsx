@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import MomentUploadDescriptionInput from '@components/moment-upload/moment-upload-description-input/MomentUploadDescriptionInput';
 import TitleHeader from '@components/title-header/TitleHeader';
@@ -24,6 +25,7 @@ function TodaysMoment() {
   const { todayMoment } = useBoundStore(momentSelector);
   const postMessage = usePostAppMessage();
   const [draft, setDraft] = useState<TodayMoment>(todayMoment);
+  const navigate = useNavigate();
 
   const isPostable = !deepEqual(todayMoment, draft);
 
@@ -47,6 +49,11 @@ function TodaysMoment() {
         ...draft,
       });
     }
+
+    // TODO(Gina): 디자인 픽스 후 바텀 모달
+    alert('🎉 Your photo and emoji have been posted!');
+
+    navigate(`/home`);
   };
 
   return (
@@ -81,7 +88,11 @@ function TodaysMoment() {
         gap={16}
       >
         {/* emoji */}
-        <MomentUploadMoodInput mood={draft.mood} setMood={(mood) => setDraft({ ...draft, mood })} />
+        <MomentUploadMoodInput
+          mood={draft.mood}
+          setMood={(mood) => setDraft({ ...draft, mood })}
+          disabled={!!todayMoment.mood}
+        />
         {/* photo */}
         {/*
          *  NOTE
@@ -156,6 +167,7 @@ function TodaysMoment() {
         <MomentUploadDescriptionInput
           description={draft.description}
           setDescription={(description) => setDraft({ ...draft, description })}
+          disabled={!!todayMoment.description}
         />
       </Layout.FlexCol>
     </MainContainer>

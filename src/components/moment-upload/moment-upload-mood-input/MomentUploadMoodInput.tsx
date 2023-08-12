@@ -8,9 +8,10 @@ import * as S from './MomentUploadMoodInput.styled';
 interface MomentUploadMoodInputProps {
   mood: string | null;
   setMood: (mood: string | null) => void;
+  disabled: boolean;
 }
 
-function MomentUploadMoodInput({ mood, setMood }: MomentUploadMoodInputProps) {
+function MomentUploadMoodInput({ mood, setMood, disabled }: MomentUploadMoodInputProps) {
   const [emojiContent, setEmojiContent] = useState<string | null>(mood || '');
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
 
@@ -55,9 +56,10 @@ function MomentUploadMoodInput({ mood, setMood }: MomentUploadMoodInputProps) {
         <S.InputContainer
           placeholder={t('mood_placeholder') || ''}
           value={emojiContent || ''}
-          disabled={pickerVisible}
+          disabled={disabled || pickerVisible}
         />
-        {emojiContent && (
+        {/* 삭제 버튼 */}
+        {!disabled && emojiContent && (
           <Layout.Absolute r={12} b={24}>
             <button type="button" onClick={handleDeleteEmoji}>
               <SvgIcon name="delete_button" size={20} />
