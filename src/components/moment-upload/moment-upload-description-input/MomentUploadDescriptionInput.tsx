@@ -5,10 +5,8 @@ import * as S from './MomentUploadDescriptionInput.styled';
 
 interface MomentUploadDescriptionInputProps {
   description: string | null;
-  setDescription: (description: string) => void;
+  setDescription: (description: string | null) => void;
 }
-
-const MAX_LENGTH = 20;
 
 function MomentUploadDescriptionInput({
   description,
@@ -17,9 +15,13 @@ function MomentUploadDescriptionInput({
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
 
   const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    if (MAX_LENGTH && e.target.value.length > MAX_LENGTH) return;
+    // value가 빈 문자열이면 null로 변경
+    if (e.target.value === '') {
+      return setDescription(null);
+    }
     setDescription(e.target.value);
   };
+
   return (
     <Layout.FlexRow
       w="100%"
@@ -36,7 +38,6 @@ function MomentUploadDescriptionInput({
           onChange={handleChangeInput}
           placeholder={t('description_placeholder') || ''}
           value={description || ''}
-          maxLength={MAX_LENGTH}
         />
       </Layout.FlexRow>
     </Layout.FlexRow>

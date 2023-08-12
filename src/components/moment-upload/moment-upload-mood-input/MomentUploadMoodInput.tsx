@@ -2,15 +2,16 @@ import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@constants/layout';
-import { Font, Layout, SvgIcon } from '@design-system';
+import { Layout, SvgIcon } from '@design-system';
+import * as S from './MomentUploadMoodInput.styled';
 
 interface MomentUploadMoodInputProps {
   mood: string | null;
-  setMood: (mood: string) => void;
+  setMood: (mood: string | null) => void;
 }
 
 function MomentUploadMoodInput({ mood, setMood }: MomentUploadMoodInputProps) {
-  const [emojiContent, setEmojiContent] = useState(mood || '');
+  const [emojiContent, setEmojiContent] = useState<string | null>(mood || '');
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
 
   const handleSelectEmoji = (emoji: EmojiClickData) => {
@@ -22,10 +23,15 @@ function MomentUploadMoodInput({ mood, setMood }: MomentUploadMoodInputProps) {
 
   const handleDeleteEmoji = (e: React.MouseEvent) => {
     // NOTE: 길이 2만큼 뒤에서 잘라줘야 제대로 하나의 emoji가 삭제됨
-    const updatedEmoji = emojiContent.slice(0, -2);
-
+    const updatedEmoji = emojiContent ? emojiContent.slice(0, -2) : '';
     e.stopPropagation();
 
+    // updatedEmoji가 빈 문자열이면 emojiContent, mood 모두 null로 변경
+    if (updatedEmoji === '') {
+      setEmojiContent(null);
+      setMood(null);
+      return;
+    }
     setEmojiContent(updatedEmoji);
     setMood(updatedEmoji);
   };
@@ -34,7 +40,7 @@ function MomentUploadMoodInput({ mood, setMood }: MomentUploadMoodInputProps) {
     <>
       <Layout.FlexRow
         w="100%"
-        alignItems="center"
+        alignItems="flex-start"
         rounded={14}
         bgColor="BASIC_WHITE"
         pl={12}
@@ -46,15 +52,11 @@ function MomentUploadMoodInput({ mood, setMood }: MomentUploadMoodInputProps) {
         }}
       >
         <SvgIcon name="moment_mood_normal" size={30} />
-        {!emojiContent && !pickerVisible ? (
-          <Font.Body type="18_regular" color="GRAY_12" ml={8}>
-            {t('mood_placeholder')}
-          </Font.Body>
-        ) : (
-          <Font.Body type="20_semibold" ml={8}>
-            {emojiContent}
-          </Font.Body>
-        )}
+        <S.InputContainer
+          placeholder={t('mood_placeholder') || ''}
+          value={emojiContent || ''}
+          disabled={pickerVisible}
+        />
         {emojiContent && (
           <Layout.Absolute r={12} b={24}>
             <button type="button" onClick={handleDeleteEmoji}>
