@@ -40,7 +40,12 @@ export default function FriendRequestList() {
       {friendRequests.length ? (
         <Layout.FlexCol w="100%" gap={8}>
           {friendRequests.map(({ requester_id, requester_detail }) => (
-            <FriendItem key={requester_id} type="request" user={requester_detail} />
+            <FriendItem
+              key={requester_id}
+              type="request"
+              user={requester_detail}
+              updateList={fetchRequests}
+            />
           ))}
           <div ref={targetRef} />
           {isLoading && <Loader />}
