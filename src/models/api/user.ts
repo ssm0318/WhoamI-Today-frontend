@@ -65,6 +65,11 @@ export interface PasswordError {
   password: PasswordValidateErrorType[];
 }
 
+export interface PasswordConfirmError {
+  code: 'wrong_password';
+  detail: 'Please check your password.' | '비밀번호를 다시 확인해주세요.';
+}
+
 export const PasswordValidateError = {
   MUST_INCLUDE_NUM_KO: '비밀번호는 숫자(0-9)를 한 개 이상 포함해야 합니다',
   MUST_INCLUDE_NUM_EN: 'Your password must contain at least 1 digit, 0-9.',
