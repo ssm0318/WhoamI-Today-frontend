@@ -27,7 +27,7 @@ function SideMenu({ closeSideMenu }: Props) {
   };
 
   return (
-    <Layout.Fixed t={0} l={0} r={0} b={0} z={Z_INDEX.MODAL_CONTAINER}>
+    <Layout.Absolute t={0} l={0} r={0} b={0} z={Z_INDEX.MODAL_CONTAINER}>
       <Layout.Absolute w="100%" h="100%" bgColor="DIM" onClick={handleClickDimmed} />
       <Layout.Absolute w={250} h="100%" bgColor="BASIC_WHITE">
         <Layout.FlexCol pt={56} pl={24}>
@@ -41,7 +41,7 @@ function SideMenu({ closeSideMenu }: Props) {
           </Layout.FlexCol>
         </Layout.FlexCol>
       </Layout.Absolute>
-    </Layout.Fixed>
+    </Layout.Absolute>
   );
 }
 

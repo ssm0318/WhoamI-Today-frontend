@@ -31,6 +31,9 @@ export interface SignUpParams {
   gender?: Gender;
   signature?: string;
   date_of_signature?: string;
+  noti_on?: boolean;
+  /** default: 16:00 */
+  noti_time?: string;
 }
 
 export const hasMandatorySignUpParams = (

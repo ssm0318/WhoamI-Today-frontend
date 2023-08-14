@@ -1,15 +1,12 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { Colors } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
-import useAsyncEffect from '@hooks/useAsyncEffect';
-import useFcm from '@hooks/useFcm';
 import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
 import { checkIfSignIn } from '@utils/apis/user';
-import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import ErrorPage from './components/error-page/ErrorPage';
 import './i18n';
 import reportWebVitals from './reportWebVitals';
@@ -35,6 +32,7 @@ import ResetPassword from './routes/settings/ResetPassword';
 import Settings from './routes/settings/Settings';
 import AddProfileImage from './routes/sign-up/AddProfileImage';
 import Email from './routes/sign-up/Email';
+import NotiSettings from './routes/sign-up/NotiSettings';
 import Password from './routes/sign-up/Password';
 import ResearchConsentForm from './routes/sign-up/ResearchConsentForm';
 import ResearchIntro from './routes/sign-up/ResearchIntro';
@@ -76,6 +74,8 @@ const router = createBrowserRouter([
       { path: 'research-consent-form', element: <ResearchConsentForm /> },
       { path: 'username', element: <UserName /> },
       { path: 'profile-image', element: <AddProfileImage /> },
+      { path: 'noti-settings', element: <NotiSettings /> },
+      { path: '', element: <Navigate replace to="email" /> },
     ],
   },
   { path: 'forgot-password', element: <ForgotPassword /> },
@@ -118,22 +118,13 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const { initializeFcm } = useFcm();
-  const { isMobile } = getMobileDeviceInfo();
-
-  const { setAppNotiPermission } = useBoundStore((state) => ({
-    setAppNotiPermission: state.setAppNotiPermission,
-  }));
-
   useEffect(() => {
     reportWebVitals();
   }, []);
 
-  useAsyncEffect(async () => {
-    if (isMobile) return;
-    // 데스크톱인 경우에만 initializeFcm
-    await initializeFcm();
-  }, [isMobile]);
+  const { setAppNotiPermission } = useBoundStore((state) => ({
+    setAppNotiPermission: state.setAppNotiPermission,
+  }));
 
   useGetAppMessage({
     cb: ({ value }) => {
