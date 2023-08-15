@@ -31,6 +31,7 @@ export type TextPropsBase = {
   underline?: boolean;
   numberOfLines?: number;
   pre?: boolean;
+  italic?: boolean;
 } & Margin;
 
 export type DisplayProps = {

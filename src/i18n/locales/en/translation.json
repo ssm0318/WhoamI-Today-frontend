@@ -52,11 +52,13 @@
   },
   "home": {
     "moment": {
-      "todays_moments": "Today's Moments?"
-    },
+      "todays_moments": "Today's Moments",
+      "add_moment_description": "Add <0/> of the day",
+      "already_posted": "You’ve posted for today!"
+    }, 
     "question": {
       "todays_questions": "Today's Questions",
-      "multiple_choice": "Multiple Choice",
+      "see_all": "See More Questions",
       "all_questions": "Questions"
     },
     "header": {
@@ -94,11 +96,12 @@
     }
   },
   "moment_upload": {
-    "mood_title": "Today's Moment",
-    "mood_subtitle": "Mood",
-    "mood_placeholder": "Feel free to express your mood with Emojis.",
-    "description_title": "How would you describe\nyour day so far in 20 characters?",
-    "description_placeholder": "Feel free to write down your TMI.",
+    "todays_moments": "Today's Moments",
+    "mood_placeholder": "Express your mood with emojis",
+    "photo_placeholder": "Show your day with a photo",
+    "photo_disabled": "Use mobile to upload a photo",
+    "already_photo_uploaded": "You’ve uploaded a photo for today!",
+    "description_placeholder": "Describe your day with words",
     "skip": "Skip",
     "post": "Post"
   },

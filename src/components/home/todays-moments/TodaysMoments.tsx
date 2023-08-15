@@ -1,11 +1,9 @@
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Font, Layout, SvgIcon } from '@design-system';
-import { usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { TodayMoment } from '@models/moment';
 import { BoundState, useBoundStore } from '@stores/useBoundStore';
-import { IconWrapper } from './TodaysMoments.styled';
+import { areAllValuesNotNull } from '@utils/validateHelpers';
 
 const momentSelector = (state: BoundState) => ({
   todayMoment: state.todayMoment,
@@ -14,58 +12,54 @@ const momentSelector = (state: BoundState) => ({
 
 function TodaysMoments() {
   const [t] = useTranslation('translation', { keyPrefix: 'home.moment' });
-  const { fetchTodayMoment } = useBoundStore(momentSelector);
+  const { todayMoment, fetchTodayMoment } = useBoundStore(momentSelector);
+  const navigate = useNavigate();
+  const isTodaysMomentExist = areAllValuesNotNull(todayMoment);
 
   useAsyncEffect(async () => {
     await fetchTodayMoment();
   }, []);
 
-  return (
-    <Layout.FlexCol w="100%" bgColor="BACKGROUND_COLOR" ph="default" pt={22} pb={43}>
-      {/* 타이틀 */}
-      <Layout.FlexRow w="100%" justifyContent="center" alignItems="center">
-        <Font.Display type="18_bold">{t('todays_moments')}</Font.Display>
-      </Layout.FlexRow>
-      {/* 컨텐츠 */}
-      <IconWrapper w="100%" justifyContent="center" mt={32}>
-        {/* TODO photo의 경우 데스크톱에서 disable 처리 */}
-        <MomentIcon name="photo" />
-        <MomentIcon name="mood" />
-        <MomentIcon name="description" />
-      </IconWrapper>
-    </Layout.FlexCol>
-  );
-}
-
-function MomentIcon({ name }: { name: keyof TodayMoment }) {
-  const { todayMoment } = useBoundStore(momentSelector);
-  const navigate = useNavigate();
-  const postMessage = usePostAppMessage();
-
   const handleClickUploadMoment = () => {
-    if (todayMoment[name]) return;
-    // 사진 업로드의 경우 앱 화면으로 이동
-    if (name === 'photo') {
-      // 사진 업로드의 경우 앱 화면으로 이동
-      if (!window?.ReactNativeWebView) return;
-      postMessage('NAVIGATE', {
-        screenName: 'MomentPhotoUploadScreen',
-        params: {
-          state: todayMoment,
-        },
-      });
-    } else {
-      navigate('/moment-upload', { state: name });
-    }
+    if (isTodaysMomentExist) return;
+    return navigate('/moment-upload');
   };
 
   return (
-    <button type="button" onClick={handleClickUploadMoment} disabled={!!todayMoment[name]}>
-      <SvgIcon
-        name={todayMoment[name] ? `moment_${name}_disabled` : `moment_${name}_normal`}
-        size={46}
-      />
-    </button>
+    <Layout.FlexCol w="100%" bgColor="BASIC_WHITE" ph="default" pt={24}>
+      <Layout.FlexCol bgColor="GRAY_14" rounded={14} w="100%" ph={16} pv={24}>
+        <Layout.FlexRow w="100%" justifyContent="center" alignItems="center">
+          <Font.Display type="18_bold">{t('todays_moments')}</Font.Display>
+        </Layout.FlexRow>
+        <Layout.FlexRow w="100%" justifyContent="center" mt={24}>
+          <button type="button" onClick={handleClickUploadMoment} disabled={isTodaysMomentExist}>
+            <SvgIcon
+              name={isTodaysMomentExist ? 'moment_add_disabled' : 'moment_add'}
+              size={56}
+              fill={isTodaysMomentExist ? 'GRAY_12' : 'PRIMARY'}
+            />
+          </button>
+        </Layout.FlexRow>
+        <Layout.FlexRow w="100%" justifyContent="center" mt={12} alignItems="center" gap={2}>
+          {isTodaysMomentExist ? (
+            <Font.Body type="12_regular" color="GRAY_6">
+              {t('already_posted')}
+            </Font.Body>
+          ) : (
+            <Trans
+              i18nKey="home.moment.add_moment_description"
+              defaults={t('add_moment_description') || ''}
+            >
+              <>
+                <SvgIcon name="moment_mood_normal" size={14} />
+                <SvgIcon name="moment_photo_normal" size={14} />
+                <SvgIcon name="moment_description_normal" size={14} />
+              </>
+            </Trans>
+          )}
+        </Layout.FlexRow>
+      </Layout.FlexCol>
+    </Layout.FlexCol>
   );
 }
 

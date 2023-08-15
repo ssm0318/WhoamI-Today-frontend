@@ -22,6 +22,7 @@ export const Colors = {
   GRAY_11: '#CDCDCD',
   GRAY_12: '#A0A0A0',
   GRAY_13: '#3F3F3F',
+  GRAY_14: '#F6F6F6',
 
   CALENDAR_TODAY: '#FF8754',
 
@@ -38,6 +39,7 @@ export const Colors = {
 
   NUDGE: '#FF2D3D',
 
+  PRIMARY: '#8700FF',
   SECONDARY: '#87DFFF',
 };
 

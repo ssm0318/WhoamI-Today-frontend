@@ -43,4 +43,10 @@ export const Font = styled.span<FontSettings & TextPropsBase>`
       -webkit-box-orient: vertical;
       max-height: ${fontSize * lineHeight * numberOfLines}px;
     `}
+
+  ${({ italic }) =>
+    italic &&
+    css`
+      font-style: italic;
+    `}
 `;
