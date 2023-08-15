@@ -11,8 +11,8 @@ export const TabWrapper = styled.nav`
   margin: 0 auto;
   background-color: white;
   height: ${BOTTOM_TABBAR_HEIGHT}px;
-  border: 1px solid ${({ theme }) => theme.GRAY_10};
-  border-radius: 14px 14px 0px 0px;
+  padding: 8px 36px 29px 36px;
+  box-shadow: 0px -4px 12px 0px rgba(0, 0, 0, 0.16);
 `;
 
 export const TabItem = styled(NavLink)`
@@ -21,4 +21,15 @@ export const TabItem = styled(NavLink)`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+export const MyTabItem = styled(TabItem)`
+  img {
+    border-radius: 50%;
+    border: 2px solid ${({ theme }) => theme.GRAY_2};
+  }
+
+  .active {
+    border: 2px solid ${({ theme }) => theme.PRIMARY};
+  }
 `;

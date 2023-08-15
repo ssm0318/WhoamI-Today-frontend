@@ -1,5 +1,16 @@
-<svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="14.4998" cy="9.3075" r="4.15385" fill="#EEEEEE"/>
-<path d="M14.5 1.00001C7.04411 1.00001 0.999954 7.04416 0.999954 14.5C0.999954 18.5116 2.74971 22.1145 5.52765 24.5872C7.91271 26.7102 11.0557 28 14.5 28C17.9442 28 21.0872 26.7102 23.4723 24.5872C26.2502 22.1145 28 18.5116 28 14.5C28 7.04416 21.9558 1.00001 14.5 1.00001Z" stroke="#EEEEEE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M4.35484 21.1463C2.76305 23.0554 9.42766 28.0001 14.4996 28.0001C19.5715 28.0001 26.2362 23.0554 24.6444 21.1463C22.3311 18.3717 18.648 16.577 14.4996 16.577C10.3512 16.577 6.66816 18.3717 4.35484 21.1463Z" fill="#EEEEEE"/>
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="My default_Button">
+<circle id="Ellipse 451" cx="24" cy="24" r="15.25" fill="#F5F5F5" stroke="#D9D9D9" stroke-width="1.5"/>
+<g id="Mask group">
+<mask id="mask0_2075_7838" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="11" y="13" width="27" height="27">
+<circle id="Ellipse 449" cx="24.185" cy="26.6518" r="13.1628" fill="#E3F6FF" stroke="#D9D9D9" stroke-width="0.044408"/>
+</mask>
+<g mask="url(#mask0_2075_7838)">
+<g id="Group 36708">
+<path id="Vector" d="M28.6397 21.9902C28.6397 24.296 26.7509 26.1664 24.4193 26.1664C22.0877 26.1664 20.1988 24.296 20.1988 21.9902C20.1988 19.6845 22.0877 17.8141 24.4193 17.8141C26.7509 17.8141 28.6397 19.6845 28.6397 21.9902Z" fill="#D9D9D9" stroke="#D9D9D9" stroke-width="0.147664"/>
+<path id="Vector_2" d="M18.8044 28.0431H29.4615C31.2212 28.0431 32.6477 29.4696 32.6477 31.2292V41.4954H15.6183V31.2292C15.6183 29.4696 17.0448 28.0431 18.8044 28.0431Z" fill="#D9D9D9" stroke="#D9D9D9" stroke-width="0.147664"/>
+</g>
+</g>
+</g>
+</g>
 </svg>

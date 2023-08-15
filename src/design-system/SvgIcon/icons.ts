@@ -30,6 +30,7 @@ const hide_password_eye = 'hide_password_eye';
 const search = 'search';
 const close = 'close';
 const link_share = 'link_share';
+const header_logo = 'header_logo';
 
 export {
   arrow_left,
@@ -44,6 +45,7 @@ export {
   error,
   friends_active,
   friends_inactive,
+  header_logo,
   heart,
   hide_password_eye,
   home_active,

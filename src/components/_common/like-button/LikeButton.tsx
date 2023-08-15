@@ -40,10 +40,10 @@ function LikeButton({ postType, post, isAuthor, iconSize, m = 6 }: LikeButtonPro
 
   return (
     <Layout.FlexRow alignItems="center">
-      {isAuthor && <Font.Body type="12_regular">{likeCount ?? 0}</Font.Body>}
       <S.IconButton type="button" m={m} onClick={toggleLike}>
-        <SvgIcon name="heart" size={iconSize} fill={likeId ? 'BASIC_BLACK' : null} />
+        <SvgIcon name="heart" size={iconSize} fill={likeId ? 'PRIMARY' : null} />
       </S.IconButton>
+      {isAuthor && <Font.Body type="14_regular">{likeCount ?? 0}</Font.Body>}
     </Layout.FlexRow>
   );
 }

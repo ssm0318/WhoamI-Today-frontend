@@ -12,11 +12,12 @@ interface ReactionButtonsProps {
 
 function ReactionButtons({ postType, post, isAuthor, onClickComments }: ReactionButtonsProps) {
   return (
-    <Layout.FlexRow alignItems="center">
-      <LikeButton postType={postType} post={post} isAuthor={isAuthor} iconSize={18} />
+    <Layout.FlexRow alignItems="center" gap={16}>
+      <LikeButton postType={postType} post={post} isAuthor={isAuthor} iconSize={24} />
       <S.IconButton type="button" onClick={onClickComments}>
-        <SvgIcon name="comment" size={18} />
+        <SvgIcon name="comment" size={36} />
       </S.IconButton>
+      {/* TODO: 코멘트 갯수 */}
     </Layout.FlexRow>
   );
 }
