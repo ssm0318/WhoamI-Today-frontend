@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import MomentUploadDescriptionInput from '@components/moment-upload/moment-upload-description-input/MomentUploadDescriptionInput';
 import TitleHeader from '@components/title-header/TitleHeader';
@@ -27,7 +26,7 @@ function MomentUpload() {
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
   const { todayMoment, fetchTodayMoment } = useBoundStore(momentSelector);
   const postMessage = usePostAppMessage();
-  const [draft, setDraft] = useState<TodayMoment | null>(null);
+  const [draft, setDraft] = useState<TodayMoment>(todayMoment);
   const navigate = useNavigate();
 
   const isPostable = !deepEqual(todayMoment, draft);
@@ -38,6 +37,9 @@ function MomentUpload() {
     if (todayMoment.photo) return;
     postMessage('NAVIGATE', {
       screenName: 'MomentPhotoUploadScreen',
+      params: {
+        state: todayMoment,
+      },
     });
   };
 
@@ -63,12 +65,7 @@ function MomentUpload() {
     setDraft(moment);
   }, []);
 
-  if (!draft)
-    return (
-      <Layout.FlexRow w="100%" h="100%">
-        <Loader />
-      </Layout.FlexRow>
-    );
+  if (!draft) return null;
   return (
     <MainContainer>
       <TitleHeader

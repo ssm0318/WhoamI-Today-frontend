@@ -9,4 +9,8 @@ export const InputContainer = styled(TextareaAutosize)`
   ::placeholder {
     color: #a0a0a0;
   }
+
+  :disabled {
+    background: ${({ theme }) => theme.BASIC_WHITE};
+  }
 `;

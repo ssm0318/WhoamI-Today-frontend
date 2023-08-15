@@ -12,12 +12,13 @@ interface MomentUploadMoodInputProps {
 }
 
 function MomentUploadMoodInput({ mood, setMood, disabled }: MomentUploadMoodInputProps) {
+  // 현재 emoji content
   const [emojiContent, setEmojiContent] = useState<string | null>(mood);
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
 
   const handleSelectEmoji = (emoji: EmojiClickData) => {
-    setEmojiContent(emojiContent + emoji.emoji);
-    setMood(emojiContent + emoji.emoji);
+    setEmojiContent((emojiContent || '') + emoji.emoji);
+    setMood((emojiContent || '') + emoji.emoji);
   };
 
   const [pickerVisible, setPickerVisible] = useState(false);
