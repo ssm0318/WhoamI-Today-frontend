@@ -65,7 +65,6 @@ function MomentUpload() {
     setDraft(moment);
   }, []);
 
-  if (!draft) return null;
   return (
     <MainContainer>
       <TitleHeader
