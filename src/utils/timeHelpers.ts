@@ -25,11 +25,11 @@ export const convertTimeDiffByString = (now: Date, day: Date, dateFormat?: DateF
   }
 
   if (diffHours < 1) {
-    return i18n.t('time.minute_ago', { minute: diffMins });
+    return i18n.t('time.minute_ago', { count: diffMins });
   }
 
   if (diffHours < 24) {
-    return i18n.t('time.hour_ago', { hour: diffHours });
+    return i18n.t('time.hour_ago', { count: diffHours });
   }
 
   return format(new Date(day), dateFormat ?? DEFAULT_FORMAT);
