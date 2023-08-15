@@ -213,6 +213,7 @@
   "no_contents": {
     "the_day_detail": "업로드한 모먼트나 답변이 없습니다.",
     "friends": "아직 친구가 없습니다.",
+    "friends_search": "검색 결과가 없습니다.",
     "moment_detail": "모먼트를 찾지 못했습니다.",
     "response_detail": "답변을 찾지 못했습니다.",
     "error": {

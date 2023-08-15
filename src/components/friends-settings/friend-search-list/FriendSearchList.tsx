@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
+import NoContents from '@components/_common/no-contents/NoContents';
 import FriendItem from '@components/friends-settings/friend-item/FriendItem';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
@@ -11,6 +13,8 @@ interface Props {
 }
 
 export default function FriendSearchList({ query }: Props) {
+  const [t] = useTranslation('translation', { keyPrefix: 'no_contents' });
+
   const [searchList, setSearchList] = useState<UserProfile[]>();
   const [nextUrl, setNextUrl] = useState<string | null>(null);
 
@@ -41,7 +45,7 @@ export default function FriendSearchList({ query }: Props) {
           {isLoading && <Loader />}
         </>
       ) : (
-        <>TODO: Not Found</>
+        <NoContents text={t('friends_search')} ph={10} />
       )}
     </Layout.FlexCol>
   );
