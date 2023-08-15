@@ -200,10 +200,10 @@
   },
   "time": {
     "just_a_moment_ago": "just a moment ago",
-    "minute_ago_one": "{{minute}} minute ago",
-    "minute_ago_other": "{{minute}} minutes ago",
-    "hour_ago_one": "{{hour}} hour ago",
-    "hour_ago_other": "{{hour}} hours ago"
+    "minute_ago_one": "{{count}} minute ago",
+    "minute_ago_other": "{{count}} minutes ago",
+    "hour_ago_one": "{{count}} hour ago",
+    "hour_ago_other": "{{count}} hours ago"
   },
   "notifications": {
     "title": "Notifications"
