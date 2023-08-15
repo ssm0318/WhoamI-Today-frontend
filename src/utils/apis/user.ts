@@ -4,6 +4,7 @@ import i18n from '@i18n/index';
 import { PaginationResponse } from '@models/api/common';
 import {
   EmailError,
+  FriendRequest,
   MyProfile,
   PasswordConfirmError,
   PasswordError,
@@ -224,9 +225,12 @@ export const deleteAccount = async (onSuccess: () => void) => {
     .catch((e) => console.log('todo', e));
 };
 
-export const getFriendList = async () => {
-  const { data } = await axios.get<PaginationResponse<User[]>>('/user/me/friends/');
-  return data.results;
+export const getFriendList = async (next?: string | null) => {
+  const requestPage = next ? next.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<User[]>>(
+    `/user/me/friends/${requestPage ? `?page=${requestPage}` : ''}`,
+  );
+  return data;
 };
 
 export const getUserProfile = async (username: string) => {
@@ -245,15 +249,15 @@ export const requestFriend = async (userId: number) => {
 };
 
 export const cancelFriendRequest = async (userId: number) => {
-  await axios.delete(`user/friend-requests/${userId}/`);
+  await axios.delete(`/user/friend-requests/${userId}/`);
 };
 
 export const acceptFriendRequest = async (userId: number) => {
-  await axios.patch(`user/friend-requests/${userId}/respond/`, { accepted: true });
+  await axios.patch(`/user/friend-requests/${userId}/respond/`, { accepted: true });
 };
 
 export const rejectFriendRequest = async (userId: number) => {
-  await axios.patch(`user/friend-requests/${userId}/respond/`, { accepted: false });
+  await axios.patch(`/user/friend-requests/${userId}/respond/`, { accepted: false });
 };
 
 export const reportUser = async (userId: number) => {
@@ -261,13 +265,21 @@ export const reportUser = async (userId: number) => {
 };
 
 export const breakFriend = async (friendId: number) => {
-  await axios.delete(`user/friend/${friendId}/`);
+  await axios.delete(`/user/friend/${friendId}/`);
 };
 
 export const searchUser = async (query: string, next?: string | null) => {
   const queryParams = next?.split('?')[1] || `query=${query}`;
   const { data } = await axios.get<PaginationResponse<UserProfile[]>>(
     `/user/search/?${queryParams}`,
+  );
+  return data;
+};
+
+export const getFriendRequests = async (next?: string | null) => {
+  const requestPage = next ? next.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<FriendRequest[]>>(
+    `/user/friend-requests/${requestPage ? `?page=${requestPage}` : ''}`,
   );
   return data;
 };

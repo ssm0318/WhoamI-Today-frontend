@@ -5,28 +5,36 @@ import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Button, Font, Layout } from '@design-system';
 import { User } from '@models/user';
+import { acceptFriendRequest, breakFriend, rejectFriendRequest } from '@utils/apis/user';
 
 interface Props {
   type: 'request' | 'friends' | 'search';
   user: User;
+  updateList?: () => void;
 }
 
-function FriendItem({ type, user }: Props) {
+function FriendItem({ type, user, updateList }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'settings.friends' });
 
-  const handleClickAccept = () => {
-    console.log('친구 요청 수락', user.id);
+  const handleClickAccept = async (e: MouseEvent) => {
+    e.stopPropagation();
+    await acceptFriendRequest(user.id);
+    updateList?.();
   };
 
-  const handleClickDelete = (e: MouseEvent) => {
+  const handleClickDelete = async (e: MouseEvent) => {
     e.stopPropagation();
-    if (type === 'search') return;
+
     if (type === 'request') {
-      console.log('친구 요청 거절', user.id);
+      await rejectFriendRequest(user.id);
+      updateList?.();
       return;
     }
 
-    console.log('친구 삭제', user.id);
+    if (type === 'friends') {
+      await breakFriend(user.id);
+      updateList?.();
+    }
   };
 
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { MouseEvent, useCallback, useState } from 'react';
 import { buttonColorSettings } from './Button.constants';
 import { ButtonProps } from './Button.types';
 
@@ -11,10 +11,13 @@ export const useButton = (props: ButtonProps) => {
   const onMouseLeave = useCallback(() => status === 'normal' && setHovered(false), [status]);
 
   const interactionDisabled = status === 'disabled' || status === 'completed';
-  const onClick = useCallback(() => {
-    if (interactionDisabled) return;
-    _onClick?.();
-  }, [interactionDisabled, _onClick]);
+  const onClick = useCallback(
+    (e: MouseEvent) => {
+      if (interactionDisabled) return;
+      _onClick?.(e);
+    },
+    [interactionDisabled, _onClick],
+  );
 
   const fill =
     !interactionDisabled && hovered

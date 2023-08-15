@@ -43,7 +43,7 @@ export const createUserSlice: SliceStateCreator<UserSlice> = (set, get) => ({
   resetMyProfile: () => set(initialState),
   getFriendList: async () => {
     const friendList = await getFriendList();
-    set(() => ({ friendList }), false, 'user/getFriendList');
+    set(() => ({ friendList: friendList.results }), false, 'user/getFriendList');
   },
   isUserAuthor: (authorId) => get().myProfile?.id === authorId,
   setFcmToken: (fcmToken) => set(() => ({ fcmToken }), false, 'user/setFcmToken'),

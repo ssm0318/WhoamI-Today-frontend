@@ -1,3 +1,4 @@
+import { MouseEvent } from 'react';
 import { ColorKeys } from '@design-system';
 import { BodyType, DisplayType } from '../Font/Font.types';
 import * as S from './Button.styled';
@@ -24,7 +25,7 @@ export type ButtonProps = {
   status: ButtonStatus;
   text: string;
   sizing?: 'fit-content' | 'stretch';
-  onClick?: () => void;
+  onClick?: (e: MouseEvent) => void;
   /**
    * use axios Link component
    */
