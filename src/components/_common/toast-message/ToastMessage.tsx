@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Z_INDEX } from '@constants/layout';
-import { Font } from '@design-system';
-import * as S from './ToastMessage.styled';
+import { Font, Layout } from '@design-system';
 
 interface ToastMessageProps {
   text: string;
@@ -22,17 +21,19 @@ export default function ToastMessage({ text, top = 50, closeToastMessage }: Toas
   }, [closeToastMessage]);
 
   return createPortal(
-    <S.ToastContainer
+    <Layout.Absolute
       z={Z_INDEX.TOAST_CONTAINER}
       t={top}
-      l={0}
+      l="50%"
       r={0}
-      bgColor="SECONDARY"
-      p={10}
-      rounded={12}
+      w="100%"
+      tl={['-50%', 0]}
+      justifyContent="center"
     >
-      <Font.Body type="12_regular">{text}</Font.Body>
-    </S.ToastContainer>,
+      <Layout.FlexRow justifyContent="center" bgColor="SECONDARY" p={10} rounded={12}>
+        <Font.Body type="12_regular">{text}</Font.Body>
+      </Layout.FlexRow>
+    </Layout.Absolute>,
     document.getElementById('toast-container') || document.body,
   );
 }
