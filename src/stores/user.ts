@@ -6,6 +6,7 @@ import { BoundState, SliceStateCreator } from './useBoundStore';
 interface UserState {
   myProfile: MyProfile | undefined;
   friendList: User[] | undefined;
+  isFriendListLoading: boolean;
   fcmToken: string | undefined;
 }
 
@@ -23,6 +24,7 @@ export type UserSlice = UserState & UserAction;
 const initialState = {
   myProfile: undefined,
   friendList: undefined,
+  isFriendListLoading: false,
   fcmToken: undefined,
 };
 
@@ -42,8 +44,10 @@ export const createUserSlice: SliceStateCreator<UserSlice> = (set, get) => ({
     ),
   resetMyProfile: () => set(initialState),
   getFriendList: async () => {
+    set(() => ({ isFriendListLoading: true }));
     const friendList = await getFriendList();
     set(() => ({ friendList: friendList.results }), false, 'user/getFriendList');
+    set(() => ({ isFriendListLoading: false }));
   },
   isUserAuthor: (authorId) => get().myProfile?.id === authorId,
   setFcmToken: (fcmToken) => set(() => ({ fcmToken }), false, 'user/setFcmToken'),
@@ -52,5 +56,6 @@ export const createUserSlice: SliceStateCreator<UserSlice> = (set, get) => ({
 export const UserSelector = (state: BoundState) => ({
   myProfile: state.myProfile,
   friendList: state.friendList,
+  isFriendListLoading: state.isFriendListLoading,
   getFriendList: state.getFriendList,
 });

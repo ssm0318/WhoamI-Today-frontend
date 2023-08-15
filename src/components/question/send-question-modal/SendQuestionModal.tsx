@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
+import NoContents from '@components/_common/no-contents/NoContents';
 import { Button, Font, Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -28,7 +29,7 @@ function SendQuestionModal({
   const { myProfile: currentUser, friendList, getFriendList } = useBoundStore(UserSelector);
 
   const [selectedIdList, setSelectedIdList] = useState<number[]>([]);
-  const [t] = useTranslation('translation', { keyPrefix: 'question.send' });
+  const [t] = useTranslation('translation');
 
   const handleConfirm = () => {
     if (!currentUser || !selectedIdList.length) return;
@@ -56,7 +57,12 @@ function SendQuestionModal({
       visible={isVisible}
       TopComponent={
         <Layout.FlexRow>
-          <Button.Small type="white_fill" status="normal" text={t('skip')} onClick={onSkip} />
+          <Button.Small
+            type="white_fill"
+            status="normal"
+            text={t('question.send.skip')}
+            onClick={onSkip}
+          />
         </Layout.FlexRow>
       }
       onClose={closeOnBackdrop ? () => setIsVisible(false) : undefined}
@@ -68,14 +74,19 @@ function SendQuestionModal({
         ph="default"
         pb={12 + BOTTOM_BUTTON_SECTION_HEIGHT}
       >
-        {/* TODO: 친구가 없는 유저의 경우 대응 */}
-        {friendList?.map((user) => (
-          <SendQuestionFriendItem
-            user={user}
-            onToggle={(selected) => handleToggleItem(user.id, selected)}
-            key={user.id}
-          />
-        ))}
+        {friendList && friendList.length > 0 ? (
+          <>
+            {friendList.map((user) => (
+              <SendQuestionFriendItem
+                user={user}
+                onToggle={(selected) => handleToggleItem(user.id, selected)}
+                key={user.id}
+              />
+            ))}
+          </>
+        ) : (
+          <NoContents title={t('no_contents.friends')} bgColor="BASIC_WHITE" />
+        )}
         <Layout.Absolute
           b={0}
           l={0}
@@ -93,7 +104,7 @@ function SendQuestionModal({
               rounded={14}
               pv={13}
             >
-              <Font.Display type="24_bold">{t('ask')}</Font.Display>
+              <Font.Display type="24_bold">{t('question.send.ask')}</Font.Display>
             </Layout.FlexRow>
           </Layout.FlexRow>
         </Layout.Absolute>

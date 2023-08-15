@@ -31,4 +31,5 @@ export type FetchState<T> =
     }
   | {
       state: 'hasError';
+      data?: undefined;
     };

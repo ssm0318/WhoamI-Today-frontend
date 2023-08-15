@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import CommonError from '@components/_common/common-error/CommonError';
 import { Loader } from '@components/_common/loader/Loader.styled';
+import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import {
   StyledFriendListWrapper,
@@ -15,7 +18,8 @@ import { UserSelector } from '@stores/user';
 import { getFriendsToday } from '@utils/apis/friends';
 
 function Friends() {
-  const { friendList, getFriendList } = useBoundStore(UserSelector);
+  const [t] = useTranslation('translation', { keyPrefix: 'no_contents' });
+  const { isFriendListLoading, friendList, getFriendList } = useBoundStore(UserSelector);
 
   const [selectedFriend, setSelectedFriend] = useState<FriendToday>();
   const [friendsTodayResponse, setFriendTodayResponse] = useState<
@@ -42,17 +46,22 @@ function Friends() {
     await getFriendList();
   }, []);
 
-  if (friendsTodayResponse.state === 'loading') return <Loader />;
-  if (friendsTodayResponse.state === 'hasError') return <div>TODO: error</div>;
+  const isLoading = friendsTodayResponse.state === 'loading' || isFriendListLoading;
+  if (isLoading) return <Loader />;
+
+  const hasFriends = friendList && friendList.length > 0;
+  if (!hasFriends) return <NoContents text={t('friends')} />;
+  if (hasFriends && friendsTodayResponse.state === 'hasError') return <CommonError />;
 
   const friendWithoutToday = friendList?.filter(
     (friend) =>
       !friendsTodayResponse.data?.find((friendWithToday) => friend.id === friendWithToday.id),
   );
+
   return (
     <>
       <StyledFriendListWrapper>
-        {friendsTodayResponse.data.map((friendToday) => {
+        {friendsTodayResponse?.data?.map((friendToday) => {
           const { id, profile_image, username } = friendToday;
           return (
             <StyledFriendProfile key={id} onClick={() => selectFriend(friendToday)}>

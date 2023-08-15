@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import NoContents from '@components/_common/no-contents/NoContents';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
@@ -11,6 +13,8 @@ import { getMoment } from '@utils/apis/moment';
 import MomentDetail from './MomentDetail';
 
 function MomentDetailContainer() {
+  const [t] = useTranslation('translation', { keyPrefix: 'no_contents' });
+
   const { momentId } = useParams();
   const [momentState, setMomentState] = useState<FetchState<GetMomentDetailResponse>>({
     state: 'loading',
@@ -31,9 +35,8 @@ function MomentDetailContainer() {
     <MainContainer>
       <TitleHeader title="moment" />
       <Layout.FlexCol w="100%" pv={28} ph={24} gap={14} mt={TITLE_HEADER_HEIGHT}>
-        {/* TODO: not found page */}
         {momentState.state === 'hasError' ? (
-          <>NotFound</>
+          <NoContents title={t('moment_detail')} mv={0} />
         ) : (
           <>
             {momentState.state === 'loading' && <Loader />}

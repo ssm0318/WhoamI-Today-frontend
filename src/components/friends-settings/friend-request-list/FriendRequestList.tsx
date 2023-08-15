@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
+import NoContents from '@components/_common/no-contents/NoContents';
 import FriendItem from '@components/friends-settings/friend-item/FriendItem';
 import { Font, Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
@@ -51,35 +52,8 @@ export default function FriendRequestList() {
           {isLoading && <Loader />}
         </Layout.FlexCol>
       ) : (
-        <NoRequests />
+        <NoContents title={t('no_requests.title')} text={t('no_requests.text')} ph={10} />
       )}
     </Layout.FlexCol>
-  );
-}
-
-function NoRequests() {
-  const [t] = useTranslation('translation', {
-    keyPrefix: 'settings.friends.request_list.no_requests',
-  });
-
-  return (
-    <Layout.FlexRow
-      w="100%"
-      alignSelf="center"
-      justifyContent="space-evenly"
-      bgColor="GRAY_7"
-      rounded={13}
-      pt={10}
-      pb={10}
-    >
-      <Layout.FlexCol w="100$" alignItems="center">
-        <Font.Body type="14_semibold" color="GRAY_12">
-          {t('title')}
-        </Font.Body>
-        <Font.Body type="14_semibold" color="GRAY_12">
-          {t('text')}
-        </Font.Body>
-      </Layout.FlexCol>
-    </Layout.FlexRow>
   );
 }
