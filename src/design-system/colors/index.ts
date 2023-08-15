@@ -37,7 +37,7 @@ export const Colors = {
 
   ANCHOR: '#0000FF',
 
-  NUDGE: '#FF2D3D',
+  NUDGE: '#FF6D00',
 
   PRIMARY: '#8700FF',
   SECONDARY: '#87DFFF',

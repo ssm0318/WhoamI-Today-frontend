@@ -9,8 +9,9 @@ export const HeaderWrapper = styled.header`
   max-width: ${MAX_WINDOW_WIDTH}px;
   background-color: white;
   height: ${TOP_NAVIGATION_HEIGHT}px;
+  padding: 16px 24px;
   width: 100%;
-  border-bottom: 2px solid ${({ theme }) => theme.GRAY_1};
+  border-bottom: 1.2px solid ${({ theme }) => theme.PRIMARY};
   z-index: ${Z_INDEX.TITLE_HEADER};
 `;
 
