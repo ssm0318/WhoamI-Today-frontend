@@ -209,5 +209,8 @@
     "post": "게시",
     "comment_place_holder": "댓글을 입력하세요.",
     "reply_place_holder": "답글을 입력하세요."
+  },
+  "no_contents": {
+    "the_day_detail": "업로드한 모먼트나 답변이 없습니다."
   }
 }

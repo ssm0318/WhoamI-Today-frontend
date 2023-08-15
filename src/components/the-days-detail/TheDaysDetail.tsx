@@ -1,4 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import Divider from '@components/_common/divider/Divider';
+import { Loader } from '@components/_common/loader/Loader.styled';
+import NoContents from '@components/_common/no-contents/NoContents';
 import { Layout } from '@design-system';
 import { GetMomentResponse } from '@models/api/moment';
 import { DayQuestion } from '@models/post';
@@ -7,7 +10,8 @@ import TheDaysQuestions from './the-days-questions/TheDaysQuestions';
 
 interface TheDaysDetailProps {
   mt?: number;
-  moment?: GetMomentResponse;
+  isLoading?: boolean;
+  moment?: GetMomentResponse | null;
   questions?: DayQuestion[];
   useDeleteButton?: boolean;
   reloadMoment?: () => void;
@@ -16,24 +20,20 @@ interface TheDaysDetailProps {
 
 function TheDaysDetail({
   mt,
+  isLoading = false,
   moment,
   questions,
   useDeleteButton,
   reloadMoment,
   reloadQuestions,
 }: TheDaysDetailProps) {
+  const [t] = useTranslation('translation', { keyPrefix: 'no_contents' });
   const hasQuestions = questions && questions.length > 0;
 
-  // TODO: moment, questions 모두 없는 케이스
-  if (!moment && !hasQuestions)
-    return (
-      <Layout.FlexCol w="100%" mt={mt}>
-        TODO: NotFound
-      </Layout.FlexCol>
-    );
-
+  if (isLoading) return <Loader />;
   return (
     <Layout.FlexCol w="100%" mt={mt}>
+      {!moment && !hasQuestions && <NoContents text={t('the_day_detail')} />}
       {moment && (
         <TheDaysMoments
           moment={moment}

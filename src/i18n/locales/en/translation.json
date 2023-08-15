@@ -214,5 +214,8 @@
     "post": "Post",
     "comment_place_holder": "Please enter a comment.",
     "reply_place_holder": "Please enter a reply."
+  },
+  "no_contents": {
+    "the_day_detail": "No moment or responses."
   }
 }

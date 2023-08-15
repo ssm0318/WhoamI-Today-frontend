@@ -8,6 +8,7 @@ import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { FetchState } from '@models/api/common';
 import { DayQuestion, MomentPost } from '@models/post';
 import { getDateRequestParams } from '@utils/apis/common';
 import { getDailyMoment } from '@utils/apis/moment';
@@ -30,26 +31,31 @@ function MyDetail() {
     return getDateRequestParams(currDate);
   }, [currDate]);
 
-  const [moment, setMoment] = useState<MomentPost>();
+  const [moment, setMoment] = useState<FetchState<MomentPost | null>>({ state: 'loading' });
 
   const getMoment = useCallback(async () => {
     if (!params) return;
     getDailyMoment(params)
       .then((data) => {
-        setMoment(data ?? undefined);
+        setMoment({ state: 'hasValue', data });
       })
       .catch(() => {
-        setMoment(undefined);
+        setMoment({ state: 'hasError' });
       });
   }, [params]);
   useAsyncEffect(getMoment, [getMoment]);
 
-  const [questions, setQuestions] = useState<DayQuestion[]>();
+  const [questions, setQuestions] = useState<FetchState<DayQuestion[]>>({ state: 'loading' });
 
   const getQuestions = useCallback(async () => {
     if (!params) return;
-    const data = await getDayQuestions(params);
-    setQuestions(data);
+    getDayQuestions(params)
+      .then((data) => {
+        setQuestions({ state: 'hasValue', data });
+      })
+      .catch(() => {
+        setQuestions({ state: 'hasError' });
+      });
   }, [params]);
   useAsyncEffect(getQuestions, [getQuestions]);
 
@@ -65,8 +71,9 @@ function MyDetail() {
         }
       />
       <TheDaysDetail
-        moment={moment}
-        questions={questions}
+        isLoading={moment.state === 'loading' || questions.state === 'loading'}
+        moment={moment.data}
+        questions={questions?.data}
         mt={TITLE_HEADER_HEIGHT}
         useDeleteButton
         reloadMoment={getMoment}
