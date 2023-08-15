@@ -54,8 +54,7 @@ export const addForegroundMessageEventListener = (messaging: Messaging) => {
     const options = {
       body: i18n.language === 'ko' ? message_ko : message_en,
       tag,
-      // TODO(Gina): icon 설정 필요
-      icon: 'https://diivers.world/assets/logo/full-logo.svg',
+      icon: 'https://diivers.world/whoami192.png',
       data: {
         url,
       },
