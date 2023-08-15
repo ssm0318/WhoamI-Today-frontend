@@ -12,5 +12,6 @@ export const InputContainer = styled(TextareaAutosize)`
 
   :disabled {
     background: ${({ theme }) => theme.BASIC_WHITE};
+    opacity: 1;
   }
 `;
