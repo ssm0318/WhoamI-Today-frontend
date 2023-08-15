@@ -120,6 +120,7 @@ export interface MyProfile extends User {
   url: string;
   noti_on: boolean;
   noti_time: string;
+  unread_noti: boolean;
 }
 
 export interface FriendRequest {
