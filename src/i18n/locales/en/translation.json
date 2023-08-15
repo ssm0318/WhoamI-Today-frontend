@@ -218,6 +218,8 @@
   "no_contents": {
     "the_day_detail": "No moment or responses.",
     "friends": "No friends yet.",
+    "moment_detail": "No moment found.",
+    "response_detail": "No response found.",
     "error": {
       "title": "Something's Wrong.",
       "text": "Please try again."
