@@ -23,12 +23,7 @@ function Root() {
     <Layout.FlexRow justifyContent="center" bgColor="BASIC_BLACK" h="100vh" w="100%">
       <RootContainer w="100%" h="100vh" bgColor="BASIC_WHITE">
         <Header />
-        <MainWrapper
-          alignItems="center"
-          pt={TOP_NAVIGATION_HEIGHT}
-          pb={BOTTOM_TABBAR_HEIGHT}
-          bgColor="BACKGROUND_COLOR"
-        >
+        <MainWrapper alignItems="center" pt={TOP_NAVIGATION_HEIGHT} pb={BOTTOM_TABBAR_HEIGHT}>
           <Outlet />
         </MainWrapper>
         {/* 데스크톱 웹만 노출 */}
