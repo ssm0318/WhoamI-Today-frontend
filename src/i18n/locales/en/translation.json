@@ -221,6 +221,7 @@
     "friends_search": "No search research.",
     "moment_detail": "No moment found.",
     "response_detail": "No response found.",
+    "all_questions": "No questions.",
     "error": {
       "title": "Something's Wrong.",
       "text": "Please try again."
