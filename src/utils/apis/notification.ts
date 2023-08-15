@@ -6,7 +6,7 @@ import axios from './axios';
 export const getNotifications = async (page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Notification[]>>(
-    `/notifications/${!requestPage ? '' : `?page=${requestPage}/`}`,
+    `/notifications/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
 };
