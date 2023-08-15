@@ -169,6 +169,11 @@
       "search": {
         "placeholder": "Add or search friends."
       },
+      "invite": {
+        "title": "WhoAmI Today Invitation Link",
+        "text": "Invite friends on WhoAmI Today",
+        "copy": "Invitation link copied to clipboard."
+      },
       "tab": {
         "friends": "Friends",
         "request": "Requests"

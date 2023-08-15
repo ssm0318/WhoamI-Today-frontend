@@ -47,3 +47,5 @@ export type Flex = {
   cursor?: 'pointer' | 'grab' | undefined;
   gap?: number;
 };
+
+export type Translate = (number | string)[];

@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components';
 import { SCREEN_WIDTH } from '@constants/layout';
 import { LayoutBase } from './Flex';
-import { BgColor, Flex } from './layout.types';
-import { getStyle } from './layout.utils';
+import { BgColor, Flex, Translate } from './layout.types';
+import { getStyle, toTranslateString } from './layout.utils';
 
 export const AbsoluteFill = styled.div<BgColor>`
   position: absolute;
@@ -32,15 +32,17 @@ type AbsoluteStyle = {
   t?: number | string;
   l?: number | string;
   r?: number | string;
+  tl?: Translate;
 };
 
 export const Absolute = styled(LayoutBase)<AbsoluteStyle>`
   position: absolute;
-  ${({ b, t, l, r, flexDirection }) => css`
+  ${({ b, t, l, r, flexDirection, tl }) => css`
     ${getStyle('flex-direction', flexDirection || 'row')}
     ${getStyle('bottom', b)}
     ${getStyle('top', t)}
     ${getStyle('left', l)}
     ${getStyle('right', r)}
+    ${toTranslateString(tl)}
   `}
 `;

@@ -37,6 +37,8 @@ export const Colors = {
   ANCHOR: '#0000FF',
 
   NUDGE: '#FF2D3D',
+
+  SECONDARY: '#87DFFF',
 };
 
 export type ColorType = typeof Colors;
