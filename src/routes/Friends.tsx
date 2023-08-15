@@ -50,13 +50,8 @@ function Friends() {
   if (isLoading) return <Loader />;
 
   const hasFriends = friendList && friendList.length > 0;
-  if (!hasFriends) {
-    return friendsTodayResponse.state === 'hasError' ? (
-      <CommonError />
-    ) : (
-      <NoContents text={t('friends')} />
-    );
-  }
+  if (!hasFriends) return <NoContents text={t('friends')} />;
+  if (hasFriends && friendsTodayResponse.state === 'hasError') return <CommonError />;
 
   const friendWithoutToday = friendList?.filter(
     (friend) =>
