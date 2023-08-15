@@ -32,7 +32,11 @@ function TodaysMoments() {
       </Layout.FlexRow>
       <Layout.FlexRow w="100%" justifyContent="center" mt={24}>
         <button type="button" onClick={handleClickUploadMoment} disabled={isTodaysMomentExist}>
-          <SvgIcon name={isTodaysMomentExist ? 'moment_add_disabled' : 'moment_add'} size={56} />
+          <SvgIcon
+            name={isTodaysMomentExist ? 'moment_add_disabled' : 'moment_add'}
+            size={56}
+            fill={isTodaysMomentExist ? 'GRAY_12' : 'PRIMARY'}
+          />
         </button>
       </Layout.FlexRow>
       <Layout.FlexRow w="100%" justifyContent="center" mt={12} alignItems="center" gap={2}>

@@ -46,7 +46,7 @@ function TodaysQuestions() {
           {shortAnswerQuestions.map((saq) => (
             <Layout.FlexCol w="100%" key={saq.id}>
               <Layout.FlexRow
-                bgColor="GRAY_3"
+                bgColor="SECONDARY"
                 w="100%"
                 ph={16}
                 pv={12}

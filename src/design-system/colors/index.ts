@@ -38,6 +38,7 @@ export const Colors = {
 
   NUDGE: '#FF2D3D',
 
+  PRIMARY: '#8700FF',
   SECONDARY: '#87DFFF',
 };
 
