@@ -23,7 +23,7 @@ const momentSelector = (state: BoundState) => ({
 
 const PHOTO_SIZE = SCREEN_WIDTH - DEFAULT_MARGIN * 2;
 
-function TodaysMoment() {
+function MomentUpload() {
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
   const { todayMoment, fetchTodayMoment } = useBoundStore(momentSelector);
   const postMessage = usePostAppMessage();
@@ -187,4 +187,4 @@ function TodaysMoment() {
   );
 }
 
-export default TodaysMoment;
+export default MomentUpload;
