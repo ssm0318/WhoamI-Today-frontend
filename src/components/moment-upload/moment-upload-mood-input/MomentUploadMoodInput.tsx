@@ -1,7 +1,7 @@
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@constants/layout';
+import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, SvgIcon } from '@design-system';
 import * as S from './MomentUploadMoodInput.styled';
 
@@ -12,7 +12,6 @@ interface MomentUploadMoodInputProps {
 }
 
 function MomentUploadMoodInput({ mood, setMood, disabled }: MomentUploadMoodInputProps) {
-  // 현재 emoji content
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
 
   const handleSelectEmoji = (emoji: EmojiClickData) => {
@@ -26,7 +25,6 @@ function MomentUploadMoodInput({ mood, setMood, disabled }: MomentUploadMoodInpu
     const updatedEmoji = mood ? mood.slice(0, -2) : '';
     e.stopPropagation();
 
-    // updatedEmoji가 빈 문자열이면 emojiContent, mood 모두 null로 변경
     if (updatedEmoji === '') {
       setMood(null);
       return;
@@ -55,11 +53,7 @@ function MomentUploadMoodInput({ mood, setMood, disabled }: MomentUploadMoodInpu
         }}
       >
         <SvgIcon name="moment_mood_normal" size={30} />
-        <S.InputContainer
-          placeholder={t('mood_placeholder') || ''}
-          value={mood || ''}
-          disabled={disabled || pickerVisible}
-        />
+        <S.InputContainer placeholder={t('mood_placeholder') || ''} value={mood || ''} disabled />
         {/* 삭제 버튼 */}
         {!disabled && mood && (
           <Layout.Absolute r={12} b={24}>
@@ -76,7 +70,6 @@ function MomentUploadMoodInput({ mood, setMood, disabled }: MomentUploadMoodInpu
             onEmojiClick={handleSelectEmoji}
             autoFocusSearch={false}
             searchDisabled
-            height={SCREEN_HEIGHT / 2}
             previewConfig={{
               showPreview: false,
             }}
