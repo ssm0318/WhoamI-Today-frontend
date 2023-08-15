@@ -1,4 +1,7 @@
 {
+  "common": {
+    "done": "Done"
+  },
   "intro": {
     "sign_in": "Sign In",
     "sign_up": "SIgn Up"
@@ -136,6 +139,7 @@
     "account_settings": "Account Settings",
     "edit_profile": "Edit Profile",
     "change_picture": "Change Picture",
+    "crop_picture": "Crop Picture",
     "username": "Username",
     "email": "Email",
     "update": "Update",

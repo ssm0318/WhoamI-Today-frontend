@@ -1,9 +1,12 @@
 import { useCallback, useState } from 'react';
 import Cropper, { Area } from 'react-easy-crop';
+import { useTranslation } from 'react-i18next';
+import TitleHeader from '@components/title-header/TitleHeader';
 import getCroppedImg, { CroppedImg } from '@utils/getCroppedImg';
 
 const cropContainerStyle = {
   width: '100%',
+  backgroundColor: 'white',
 };
 
 const cropAreaStyle = {
@@ -22,6 +25,7 @@ interface ProfileImageEditProps {
 }
 
 function ProfileImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileImageEditProps) {
+  const [t] = useTranslation('translation');
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedImage, setCroppedImage] = useState<CroppedImg>();
@@ -53,6 +57,16 @@ function ProfileImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileI
 
   return (
     <>
+      <TitleHeader
+        title={t('settings.crop_picture')}
+        RightComponent={
+          <button type="button" onClick={handleClickComplete}>
+            {t('common.done')}
+          </button>
+        }
+        type="SUB"
+        onGoBack={handleOnClose}
+      />
       <Cropper
         image={image}
         crop={crop}
@@ -68,33 +82,6 @@ function ProfileImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileI
           cropAreaStyle,
         }}
       />
-      {/* TODO: 임시 버튼 */}
-      <button
-        type="button"
-        onClick={handleClickComplete}
-        style={{
-          backgroundColor: 'red',
-          color: 'white',
-          width: '100px',
-          height: '50px',
-          zIndex: '100',
-        }}
-      >
-        완료
-      </button>
-      <button
-        type="button"
-        onClick={handleOnClose}
-        style={{
-          backgroundColor: 'red',
-          color: 'white',
-          width: '100px',
-          height: '50px',
-          zIndex: '100',
-        }}
-      >
-        취소
-      </button>
     </>
   );
 }

@@ -66,3 +66,9 @@ export const StyledToggleButton = styled.label`
     transform: translateX(22px);
   }
 `;
+
+export const StyledEditProfileButton = styled.button`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;

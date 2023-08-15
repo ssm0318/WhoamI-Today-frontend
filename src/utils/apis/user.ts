@@ -49,6 +49,15 @@ export const checkIfSignIn = async () => {
   }
 };
 
+export const updateMyProfile = async () => {
+  axios
+    .get<MyProfile>('/user/me/')
+    .then((user) => {
+      useBoundStore.getState().setMyProfile(user.data);
+    })
+    .catch((e) => console.log(e));
+};
+
 export const signOut = async (onSuccess: () => void) => {
   axios.get('/user/logout/').then(() => {
     onSuccess();
@@ -191,6 +200,27 @@ export const confirmPassword = ({
       if (e.response?.data.detail) {
         onError?.(e.response?.data.detail);
       }
+    });
+};
+
+export const changeProfileImage = ({
+  profileImage,
+  onSuccess,
+  onError,
+}: {
+  profileImage: File;
+  onSuccess?: () => void;
+  onError?: (error: string) => void;
+}) => {
+  const formData = new FormData();
+
+  formData.append('profile_image', profileImage);
+
+  axiosFormDataInstance
+    .patch('/user/me/', formData)
+    .then(() => onSuccess?.())
+    .catch((e) => {
+      onError?.(e);
     });
 };
 
