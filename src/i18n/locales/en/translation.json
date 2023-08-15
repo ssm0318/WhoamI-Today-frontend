@@ -55,7 +55,7 @@
       "todays_moments": "Today's Moments",
       "add_moment_description": "Add <0/> of the day",
       "already_posted": "You’ve posted for today!"
-    }, 
+    },
     "question": {
       "todays_questions": "Today's Questions",
       "see_all": "See More Questions",
@@ -216,6 +216,11 @@
     "reply_place_holder": "Please enter a reply."
   },
   "no_contents": {
-    "the_day_detail": "No moment or responses."
+    "the_day_detail": "No moment or responses.",
+    "friends": "No friends yet.",
+    "error": {
+      "title": "Something's Wrong.",
+      "text": "Please try again."
+    }
   }
 }
