@@ -38,7 +38,8 @@ function MomentUpload() {
     postMessage('NAVIGATE', {
       screenName: 'MomentPhotoUploadScreen',
       params: {
-        state: todayMoment,
+        todayMoment,
+        draft,
       },
     });
   };
