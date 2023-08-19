@@ -67,6 +67,7 @@ function Friends() {
           const { id, profile_image, username } = friendToday;
           return (
             <FriendProfile
+              key={username}
               imageUrl={profile_image}
               selected={id === selectedFriend?.id}
               username={username}
@@ -79,6 +80,7 @@ function Friends() {
           const { id, profile_image, username } = friend;
           return (
             <FriendProfile
+              key={username}
               imageUrl={profile_image}
               selected={id === selectedFriend?.id}
               username={username}
