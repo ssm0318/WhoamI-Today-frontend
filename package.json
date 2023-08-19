@@ -89,5 +89,6 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  }
+  },
+  "gcm_sender_id": "509287164539"
 }
