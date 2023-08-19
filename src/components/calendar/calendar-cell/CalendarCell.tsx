@@ -1,8 +1,7 @@
 import { format, isToday } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
-import { DETAIL_DATE_PARAM_FORMAT } from '@constants/url';
 import { Font } from '@design-system';
 import { DayMoment } from '@models/calendar';
+import { useBoundStore } from '@stores/useBoundStore';
 import { getFirstEmoji } from './CalendarCell.helper';
 import * as S from './CalendarCell.styled';
 
@@ -12,13 +11,11 @@ interface CalendarCellProps {
 
 function CalendarCell({ dayMoment }: CalendarCellProps) {
   const { date, moment } = dayMoment || {};
-  const navigate = useNavigate();
+  const { setDetailDate } = useBoundStore((state) => ({ setDetailDate: state.setDetailDate }));
 
   const handleClickCell = () => {
-    // TODO: Moment 또는 Questions가 없으면 클릭방지.
-    if (!date || !moment) return;
-
-    navigate(`/my/detail/${format(date, DETAIL_DATE_PARAM_FORMAT)}`);
+    if (!date) return;
+    setDetailDate(date);
   };
 
   return date ? (

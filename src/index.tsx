@@ -18,7 +18,6 @@ import Intro from './routes/Intro';
 import MomentDetailContainer from './routes/moment-detail/MomentDetailContainer';
 import MomentUpload from './routes/MomentUpload';
 import My from './routes/My';
-import MyDetail from './routes/my-detail/MyDetail';
 import Notifications from './routes/Notifications';
 import ShortAnswerResponse from './routes/response/ShortAnswerResponse';
 import ResponseDetailContainer from './routes/response-detail/ResponseDetailContainer';
@@ -91,7 +90,6 @@ const router = createBrowserRouter([
     path: 'moment-upload',
     element: <MomentUpload />,
   },
-  { path: 'my/detail/:detailDate', element: <MyDetail />, loader: checkIfSignIn },
   { path: 'moments/:momentId', element: <MomentDetailContainer />, loader: checkIfSignIn },
   { path: 'responses/:responseId', element: <ResponseDetailContainer />, loader: checkIfSignIn },
   {

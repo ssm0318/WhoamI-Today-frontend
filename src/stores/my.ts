@@ -5,6 +5,7 @@ import { SliceStateCreator } from '@stores/useBoundStore';
 interface MyPageState {
   calendarView: CALENDAR_VIEW;
   myPageCurrDate: Date;
+  detailDate?: Date;
 }
 
 interface MyPageAction {
@@ -14,11 +15,14 @@ interface MyPageAction {
   addWeekFromCurrDate: () => void;
   subMonthFromCurrDate: () => void;
   addMonthFromCurrDate: () => void;
+  setDetailDate: (date: Date) => void;
+  resetDetailDate: () => void;
 }
 
 const initialState = {
   calendarView: CALENDAR_VIEW.WEEKLY,
   myPageCurrDate: new Date(),
+  detailDate: undefined,
 };
 
 export type MyPageSlice = MyPageState & MyPageAction;
@@ -53,4 +57,6 @@ export const createMyPageSlice: SliceStateCreator<MyPageSlice> = (set) => ({
       false,
       'myPage/addMonthFromCurrDate',
     ),
+  setDetailDate: (detailDate: Date) => set(() => ({ detailDate }), false, 'myPage/setDetailDate'),
+  resetDetailDate: () => set(() => ({ detailDate: undefined }), false, 'myPage/resetDetailDate'),
 });
