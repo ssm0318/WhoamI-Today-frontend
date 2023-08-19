@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TheDaysDetail from '@components/the-days-detail/TheDaysDetail';
+import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
@@ -56,7 +57,7 @@ function MyDetail() {
 
   if (!detailDate) return null;
   return (
-    <Layout.FlexCol w="100%" mt={15}>
+    <Layout.FlexCol w="100%" pt={15} pb={BOTTOM_TABBAR_HEIGHT}>
       <Layout.FlexRow w="100%" alignItems="center" justifyContent="center">
         <Font.Display type="14_regular">{format(detailDate, t('title_format'))}</Font.Display>
       </Layout.FlexRow>
