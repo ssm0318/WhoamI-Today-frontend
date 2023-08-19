@@ -34,8 +34,14 @@ function Friends() {
 
   useAsyncEffect(async () => {
     try {
-      const res = await getFriendsToday();
-      setFriendTodayResponse({ state: 'hasValue', data: res });
+      const { results } = await getFriendsToday();
+
+      if (!results) {
+        setFriendTodayResponse({ state: 'hasError' });
+        return;
+      }
+
+      setFriendTodayResponse({ state: 'hasValue', data: results });
     } catch {
       setFriendTodayResponse({ state: 'hasError' });
     }
@@ -93,8 +99,8 @@ function Friends() {
       </StyledFriendListWrapper>
       {selectedFriend && (
         <TheDaysDetail
-          moment={selectedFriend?.moment}
-          questions={selectedFriend?.questions}
+          moments={selectedFriend.moments}
+          questions={selectedFriend.questions}
           mt={120}
         />
       )}

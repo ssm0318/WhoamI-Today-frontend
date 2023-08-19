@@ -5,6 +5,6 @@ import { GetMomentResponse } from './moment';
 export type GetFriendsTodayResponse = FriendToday[];
 
 export interface FriendToday extends User {
-  moment?: GetMomentResponse;
+  moments?: GetMomentResponse[];
   questions?: DayQuestion[];
 }

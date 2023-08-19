@@ -31,13 +31,13 @@ function MyDetail() {
     return getDateRequestParams(currDate);
   }, [currDate]);
 
-  const [moment, setMoment] = useState<FetchState<MomentPost | null>>({ state: 'loading' });
+  const [moment, setMoment] = useState<FetchState<MomentPost[] | null>>({ state: 'loading' });
 
   const getMoment = useCallback(async () => {
     if (!params) return;
     getDailyMoment(params)
       .then((data) => {
-        setMoment({ state: 'hasValue', data });
+        setMoment({ state: 'hasValue', data: data ? [data] : data });
       })
       .catch(() => {
         setMoment({ state: 'hasError' });
@@ -72,7 +72,7 @@ function MyDetail() {
       />
       <TheDaysDetail
         isLoading={moment.state === 'loading' || questions.state === 'loading'}
-        moment={moment.data}
+        moments={moment?.data}
         questions={questions?.data}
         mt={TITLE_HEADER_HEIGHT}
         useDeleteButton
