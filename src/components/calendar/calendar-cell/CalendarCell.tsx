@@ -1,4 +1,4 @@
-import { format, isToday } from 'date-fns';
+import { format, isSameDay, isToday } from 'date-fns';
 import { Font } from '@design-system';
 import { DayMoment } from '@models/calendar';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -11,7 +11,10 @@ interface CalendarCellProps {
 
 function CalendarCell({ dayMoment }: CalendarCellProps) {
   const { date, moment } = dayMoment || {};
-  const { setDetailDate } = useBoundStore((state) => ({ setDetailDate: state.setDetailDate }));
+  const { detailDate, setDetailDate } = useBoundStore((state) => ({
+    detailDate: state.detailDate,
+    setDetailDate: state.setDetailDate,
+  }));
 
   const handleClickCell = () => {
     if (!date) return;
@@ -19,9 +22,17 @@ function CalendarCell({ dayMoment }: CalendarCellProps) {
   };
 
   return date ? (
-    <S.DateCell isToday={isToday(date)} url={moment?.photo} onClick={handleClickCell}>
+    <S.DateCell
+      isSelected={detailDate && isSameDay(date, detailDate)}
+      url={moment?.photo}
+      onClick={handleClickCell}
+    >
       {moment?.mood && <p className="mood">{getFirstEmoji(moment.mood)}</p>}
-      <Font.Body type="14_semibold" color="BASIC_WHITE" textAlign="center">
+      <Font.Body
+        type="14_semibold"
+        color={isToday(date) ? 'PRIMARY' : 'BASIC_WHITE'}
+        textAlign="center"
+      >
         {format(date, 'dd')}
       </Font.Body>
     </S.DateCell>
