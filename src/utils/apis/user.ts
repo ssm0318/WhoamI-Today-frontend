@@ -159,7 +159,7 @@ export const signUp = ({
   } = signUpInfo;
 
   if (profileImage) {
-    formData.append('profile_image', profileImage);
+    formData.append('profile_image', profileImage, 'profile_image.png');
   }
   formData.append('email', email);
   formData.append('username', username);
@@ -214,7 +214,7 @@ export const changeProfileImage = ({
 }) => {
   const formData = new FormData();
 
-  formData.append('profile_image', profileImage);
+  formData.append('profile_image', profileImage, 'profile_image.png');
 
   axiosFormDataInstance
     .patch('/user/me/', formData)
