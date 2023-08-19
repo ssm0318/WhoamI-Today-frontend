@@ -4,7 +4,7 @@ import { Layout } from '@design-system';
 
 function Home() {
   return (
-    <Layout.FlexCol w="100%">
+    <Layout.FlexCol w="100%" justifyContent="flex-start" h="100vh" bgColor="BASIC_WHITE">
       <TodaysMoments />
       <TodaysQuestions />
     </Layout.FlexCol>

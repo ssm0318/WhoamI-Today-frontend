@@ -32,7 +32,6 @@ function MomentUpload() {
   const isPostable = !deepEqual(todayMoment, draft);
 
   const handlePhotoUpload = () => {
-    // TODO(Gina): 현재 작성한 mood나 description이 있으면 같이 보내서 앱 화면에서도 보이게 처리 필요
     if (!window?.ReactNativeWebView) return;
     if (todayMoment.photo) return;
     postMessage('NAVIGATE', {
