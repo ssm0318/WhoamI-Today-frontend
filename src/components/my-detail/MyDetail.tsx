@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TheDaysDetail from '@components/the-days-detail/TheDaysDetail';
 import { Font, Layout } from '@design-system';
@@ -20,6 +20,13 @@ function MyDetail() {
   }, [detailDate]);
 
   const [moment, setMoment] = useState<FetchState<MomentPost[] | null>>({ state: 'loading' });
+  const [questions, setQuestions] = useState<FetchState<DayQuestion[]>>({ state: 'loading' });
+
+  useEffect(() => {
+    if (detailDate) return;
+    setMoment({ state: 'loading' });
+    setQuestions({ state: 'loading' });
+  }, [detailDate]);
 
   const getMoment = useCallback(async () => {
     if (!params) return;
@@ -32,8 +39,6 @@ function MyDetail() {
       });
   }, [params]);
   useAsyncEffect(getMoment, [getMoment]);
-
-  const [questions, setQuestions] = useState<FetchState<DayQuestion[]>>({ state: 'loading' });
 
   const getQuestions = useCallback(async () => {
     if (!params) return;
