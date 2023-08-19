@@ -60,6 +60,10 @@ export const LayoutBase = styled.div<BgColor & Flex & BoxStyle & Border>`
     background-color: ${theme[bgColor]};
     cursor: ${cursor};
     gap: ${gap}px;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   `}
 `;
 
