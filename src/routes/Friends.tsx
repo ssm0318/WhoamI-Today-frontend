@@ -3,13 +3,9 @@ import { useTranslation } from 'react-i18next';
 import CommonError from '@components/_common/common-error/CommonError';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import NoContents from '@components/_common/no-contents/NoContents';
-import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import {
-  StyledFriendListWrapper,
-  StyledFriendProfile,
-} from '@components/friends/friend-list/FriendProfile.styled';
+import FriendProfile from '@components/_common/profile-image/FriendProfile';
+import { StyledFriendListWrapper } from '@components/friends/friend-list/FriendProfile.styled';
 import TheDaysDetail from '@components/the-days-detail/TheDaysDetail';
-import { Font } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { FriendToday, GetFriendsTodayResponse } from '@models/api/friends';
@@ -34,8 +30,14 @@ function Friends() {
 
   useAsyncEffect(async () => {
     try {
-      const res = await getFriendsToday();
-      setFriendTodayResponse({ state: 'hasValue', data: res });
+      const { results } = await getFriendsToday();
+
+      if (!results) {
+        setFriendTodayResponse({ state: 'hasError' });
+        return;
+      }
+
+      setFriendTodayResponse({ state: 'hasValue', data: results });
     } catch {
       setFriendTodayResponse({ state: 'hasError' });
     }
@@ -64,37 +66,33 @@ function Friends() {
         {friendsTodayResponse?.data?.map((friendToday) => {
           const { id, profile_image, username } = friendToday;
           return (
-            <StyledFriendProfile key={id} onClick={() => selectFriend(friendToday)}>
-              <ProfileImage
-                imageUrl={profile_image}
-                username={username}
-                size={66}
-                className={id === selectedFriend?.id ? 'selected' : ''}
-              />
-              {/* TODO: 파란점(읽음 표시) */}
-              <Font.Body type="12_regular">{username}</Font.Body>
-            </StyledFriendProfile>
+            <FriendProfile
+              key={username}
+              imageUrl={profile_image}
+              selected={id === selectedFriend?.id}
+              username={username}
+              selectFriend={() => selectFriend(friendToday)}
+            />
+            // TODO: 파란점(읽음 표시)
           );
         })}
         {friendWithoutToday?.map((friend) => {
           const { id, profile_image, username } = friend;
           return (
-            <StyledFriendProfile key={id} onClick={() => selectFriend(friend)}>
-              <ProfileImage
-                imageUrl={profile_image}
-                username={username}
-                size={66}
-                className={id === selectedFriend?.id ? 'selected' : ''}
-              />
-              <Font.Body type="12_regular">{username}</Font.Body>
-            </StyledFriendProfile>
+            <FriendProfile
+              key={username}
+              imageUrl={profile_image}
+              selected={id === selectedFriend?.id}
+              username={username}
+              selectFriend={() => selectFriend(friend)}
+            />
           );
         })}
       </StyledFriendListWrapper>
       {selectedFriend && (
         <TheDaysDetail
-          moment={selectedFriend?.moment}
-          questions={selectedFriend?.questions}
+          moments={selectedFriend.moments}
+          questions={selectedFriend.questions}
           mt={120}
         />
       )}

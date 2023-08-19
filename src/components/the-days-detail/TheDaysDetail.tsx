@@ -11,7 +11,7 @@ import TheDaysQuestions from './the-days-questions/TheDaysQuestions';
 interface TheDaysDetailProps {
   mt?: number;
   isLoading?: boolean;
-  moment?: GetMomentResponse | null;
+  moments?: GetMomentResponse[] | null;
   questions?: DayQuestion[];
   useDeleteButton?: boolean;
   reloadMoment?: () => void;
@@ -21,7 +21,7 @@ interface TheDaysDetailProps {
 function TheDaysDetail({
   mt,
   isLoading = false,
-  moment,
+  moments,
   questions,
   useDeleteButton,
   reloadMoment,
@@ -33,15 +33,16 @@ function TheDaysDetail({
   if (isLoading) return <Loader />;
   return (
     <Layout.FlexCol w="100%" mt={mt}>
-      {!moment && !hasQuestions && <NoContents text={t('the_day_detail')} />}
-      {moment && (
+      {!moments?.length && !hasQuestions && <NoContents text={t('the_day_detail')} />}
+      {moments?.map((moment) => (
         <TheDaysMoments
+          key={moment.id}
           moment={moment}
           useDeleteButton={useDeleteButton}
           reloadMoment={reloadMoment}
         />
-      )}
-      {moment && hasQuestions && <Divider width={2} />}
+      ))}
+      {!!moments?.length && hasQuestions && <Divider width={2} />}
       {hasQuestions && (
         <TheDaysQuestions
           questions={questions}
