@@ -45,7 +45,9 @@ const GlobalStyle = createGlobalStyle`
     }
 
     body {
-        background-color: #000000
+        background-color: #000000;
+        scrollbar-gutter: stable;
+
     }
 
     input {
@@ -62,7 +64,6 @@ const GlobalStyle = createGlobalStyle`
 
         resize: none; /*remove the resize handle on the bottom right*/
     }
-
 `;
 
 export default GlobalStyle;
