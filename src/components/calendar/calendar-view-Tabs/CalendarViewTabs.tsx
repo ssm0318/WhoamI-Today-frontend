@@ -8,13 +8,15 @@ const CALENDAR_VIEW_TAB_LIST = [
 ];
 
 function CalendarViewTabs() {
-  const [calendarView, setCalendarView] = useBoundStore((state) => [
-    state.calendarView,
-    state.setCalendarView,
-  ]);
+  const { calendarView, setCalendarView, resetDetailDate } = useBoundStore((state) => ({
+    calendarView: state.calendarView,
+    setCalendarView: state.setCalendarView,
+    resetDetailDate: state.resetDetailDate,
+  }));
 
   const onClickTab = (view: CALENDAR_VIEW) => {
     setCalendarView(view);
+    resetDetailDate();
   };
 
   return (

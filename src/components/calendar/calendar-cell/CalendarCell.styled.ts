@@ -26,7 +26,7 @@ const CommonCalendarCell = styled.td`
 
 interface DateCellProps {
   url?: string | null;
-  isToday?: boolean;
+  isSelected?: boolean;
 }
 
 export const DateCell = styled(CommonCalendarCell)<DateCellProps>`
@@ -45,8 +45,8 @@ export const DateCell = styled(CommonCalendarCell)<DateCellProps>`
         `
       : ''}
 
-  ${({ isToday }) =>
-    isToday
+  ${({ isSelected }) =>
+    isSelected
       ? css`
           &::before {
             box-shadow: 0 0 0 3px ${({ theme }) => theme.CALENDAR_TODAY} inset;
