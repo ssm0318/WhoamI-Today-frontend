@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import MomentUploadCompleteModal from '@components/moment-upload/complete-modal/MomentUploadCompleteModal';
 import MomentUploadDescriptionInput from '@components/moment-upload/moment-upload-description-input/MomentUploadDescriptionInput';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, SCREEN_WIDTH, TITLE_HEADER_HEIGHT } from '@constants/layout';
@@ -27,8 +27,8 @@ function MomentUpload() {
   const { todayMoment, fetchTodayMoment } = useBoundStore(momentSelector);
   const postMessage = usePostAppMessage();
   const [draft, setDraft] = useState<TodayMoment>(todayMoment);
-  const navigate = useNavigate();
 
+  const [showComplete, setShowComplete] = useState(false);
   const isPostable = !deepEqual(todayMoment, draft);
 
   const handlePhotoUpload = () => {
@@ -45,27 +45,27 @@ function MomentUpload() {
 
   const handlePost = async () => {
     // moment 업로드
-    if (!areAllValuesNull(todayMoment)) {
-      // updatedData = todayMoment의 이미 값이 있었던 키값은 제외한 객체
-      const updatedData: TodayMoment = draft;
-      Object.keys(todayMoment).forEach((key) => {
-        if (todayMoment[key as keyof TodayMoment] !== null) {
-          delete updatedData[key as keyof TodayMoment];
-        }
-      });
-
-      await updateTodayMoment({
-        ...updatedData,
-      });
-    } else {
-      await postTodayMoment({
-        ...draft,
-      });
+    try {
+      if (!areAllValuesNull(todayMoment)) {
+        // updatedData = todayMoment의 이미 값이 있었던 키값은 제외한 객체
+        const updatedData: TodayMoment = draft;
+        Object.keys(todayMoment).forEach((key) => {
+          if (todayMoment[key as keyof TodayMoment] !== null) {
+            delete updatedData[key as keyof TodayMoment];
+          }
+        });
+        await updateTodayMoment({
+          ...updatedData,
+        });
+      } else {
+        await postTodayMoment({
+          ...draft,
+        });
+      }
+      setShowComplete(true);
+    } catch (error) {
+      console.error(error);
     }
-
-    // TODO(Gina): 디자인 픽스 후 바텀 모달
-    alert('🎉 Your photo and emoji have been posted!');
-    navigate(`/home`);
   };
 
   useAsyncEffect(async () => {
@@ -187,6 +187,7 @@ function MomentUpload() {
           disabled={!!todayMoment.description}
         />
       </Layout.FlexCol>
+      <MomentUploadCompleteModal isVisible={showComplete} setIsVisible={setShowComplete} />
     </MainContainer>
   );
 }

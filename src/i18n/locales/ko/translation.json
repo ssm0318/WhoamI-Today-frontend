@@ -100,7 +100,9 @@
     "already_photo_uploaded": "이미 사진을 업로드하셨군요!",
     "description_placeholder": "자유롭게 생각을 적어주세요.",
     "skip": "건너뛰기",
-    "post": "게시"
+    "post": "게시",
+    "post_complete": "모먼트 업로드가 완료되었어요!",
+    "view_friends_moment": "친구들의 순간 보러가기"
   },
   "my_detail": {
     "title_format": "yy/M/d (E)",
