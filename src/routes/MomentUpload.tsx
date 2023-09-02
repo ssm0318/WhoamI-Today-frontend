@@ -45,24 +45,27 @@ function MomentUpload() {
 
   const handlePost = async () => {
     // moment 업로드
-    if (!areAllValuesNull(todayMoment)) {
-      // updatedData = todayMoment의 이미 값이 있었던 키값은 제외한 객체
-      const updatedData: TodayMoment = draft;
-      Object.keys(todayMoment).forEach((key) => {
-        if (todayMoment[key as keyof TodayMoment] !== null) {
-          delete updatedData[key as keyof TodayMoment];
-        }
-      });
-
-      await updateTodayMoment({
-        ...updatedData,
-      });
-    } else {
-      await postTodayMoment({
-        ...draft,
-      });
+    try {
+      if (!areAllValuesNull(todayMoment)) {
+        // updatedData = todayMoment의 이미 값이 있었던 키값은 제외한 객체
+        const updatedData: TodayMoment = draft;
+        Object.keys(todayMoment).forEach((key) => {
+          if (todayMoment[key as keyof TodayMoment] !== null) {
+            delete updatedData[key as keyof TodayMoment];
+          }
+        });
+        await updateTodayMoment({
+          ...updatedData,
+        });
+      } else {
+        await postTodayMoment({
+          ...draft,
+        });
+      }
+      setShowComplete(true);
+    } catch (error) {
+      console.error(error);
     }
-    setShowComplete(true);
   };
 
   useAsyncEffect(async () => {
