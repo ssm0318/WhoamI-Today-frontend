@@ -103,7 +103,9 @@
     "already_photo_uploaded": "You’ve uploaded a photo for today!",
     "description_placeholder": "Describe your day with words",
     "skip": "Skip",
-    "post": "Post"
+    "post": "Post",
+    "post_complete": "Your moment have been posted!",
+    "view_friends_moment": "View Friends' Moments"
   },
   "my_detail": {
     "title_format": "d/M/yy (E)"
