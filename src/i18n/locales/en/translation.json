@@ -72,7 +72,10 @@
   "question": {
     "response": {
       "placeholder": "Answer as your want.",
-      "post": "Post"
+      "post": "Post",
+      "complete": "Your answer has been posted!",
+      "send_question_to_friends_now": "Send the question to friends now?",
+      "send_question": "Send to Friends"
     },
     "send": {
       "ask": "ask",

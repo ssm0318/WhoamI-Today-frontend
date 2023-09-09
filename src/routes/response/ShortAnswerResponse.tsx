@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import SendQuestionModal from '@components/question/send-question-modal/SendQuestionModal';
 import QuestionItem from '@components/response/question-item/QuestionItem';
+import ResponseCompleteModal from '@components/response/response-complete-modal/ResponseCompleteModal';
 import ResponseInput from '@components/response/response-input/ResponseInput';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
@@ -20,6 +21,7 @@ function ShortAnswerResponse() {
   const [question, setQuestion] = useState<ShortAnswerQuestion | null>(null);
   const navigate = useNavigate();
   const [hasPosted, setHasPosted] = useState(false);
+  const [showComplete, setShowComplete] = useState(false);
 
   const [t] = useTranslation('translation', { keyPrefix: 'question.response' });
 
@@ -50,12 +52,13 @@ function ShortAnswerResponse() {
       question_id: Number(questionId),
       content: textareaRef.current.value,
     });
-    // TODO(Gina): 작성 완료 모달 노출
     if (res) {
-      alert('작성 완료!');
+      setShowComplete(true);
       setHasPosted(true);
     }
+  };
 
+  const handleSendQuestion = () => {
     // 2. 질문 보내기 모달 노출
     setSendModalVisible(true);
   };
@@ -89,6 +92,11 @@ function ShortAnswerResponse() {
         onSkip={handleSkipSendQuestion}
         onSend={handleConfirmSendQuestion}
         closeOnBackdrop={!hasPosted}
+      />
+      <ResponseCompleteModal
+        isVisible={showComplete}
+        setIsVisible={setShowComplete}
+        onSendQuestion={handleSendQuestion}
       />
     </MainContainer>
   );

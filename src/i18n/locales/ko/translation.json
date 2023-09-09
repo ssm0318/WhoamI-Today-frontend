@@ -72,7 +72,10 @@
   "question": {
     "response": {
       "placeholder": "쓰고 싶은 내용을 쓰세요.",
-      "post": "완료"
+      "post": "완료",
+      "complete": "답변이 완료되었습니다!",
+      "send_question_to_friends_now": "지금 친구들에게 질문을 보내볼까요?",
+      "send_question": "질문 보내기"
     },
     "send": {
       "ask": "보내기",
