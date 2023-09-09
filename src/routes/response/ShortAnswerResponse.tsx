@@ -1,7 +1,9 @@
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Loader } from '@components/_common/loader/Loader.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import NoContents from '@components/_common/no-contents/NoContents';
 import SendQuestionModal from '@components/question/send-question-modal/SendQuestionModal';
 import QuestionItem from '@components/response/question-item/QuestionItem';
 import ResponseCompleteModal from '@components/response/response-complete-modal/ResponseCompleteModal';
@@ -10,6 +12,7 @@ import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { FetchState } from '@models/api/common';
 import { ShortAnswerQuestion } from '@models/post';
 import { getQuestionDetail, responseQuestion } from '@utils/apis/question';
 
@@ -18,7 +21,7 @@ function ShortAnswerResponse() {
   const { questionId } = useParams();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [sendModalVisible, setSendModalVisible] = useState(false);
-  const [question, setQuestion] = useState<ShortAnswerQuestion | null>(null);
+  const [question, setQuestion] = useState<FetchState<ShortAnswerQuestion>>({ state: 'loading' });
   const navigate = useNavigate();
   const [hasPosted, setHasPosted] = useState(false);
   const [showComplete, setShowComplete] = useState(false);
@@ -62,11 +65,12 @@ function ShortAnswerResponse() {
   };
 
   useAsyncEffect(async () => {
-    const res = await getQuestionDetail(Number(questionId));
-    setQuestion(res);
+    getQuestionDetail(Number(questionId))
+      .then((data) => {
+        setQuestion({ state: 'hasValue', data });
+      })
+      .catch(() => setQuestion({ state: 'hasError' }));
   }, [questionId]);
-
-  if (!question) return null;
 
   return (
     <MainContainer>
@@ -79,25 +83,33 @@ function ShortAnswerResponse() {
           </button>
         }
       />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" ph={DEFAULT_MARGIN}>
-        <QuestionItem question={question} onSend={() => setSendModalVisible(true)} />
-        <ResponseInput inputRef={textareaRef} />
-      </Layout.FlexCol>
-      {/* 답변 완료 모달 */}
-      <ResponseCompleteModal
-        isVisible={showComplete}
-        setIsVisible={setShowComplete}
-        onSendQuestion={handleSendQuestion}
-        onSkipSendQuestion={handleSkipSendQuestion}
-      />
-      {/* 친구에게 질문 보내기 모달 */}
-      <SendQuestionModal
-        questionId={question.id}
-        isVisible={sendModalVisible}
-        setIsVisible={setSendModalVisible}
-        onSkip={handleSkipSendQuestion}
-        onSend={handleConfirmSendQuestion}
-      />
+      {question.state === 'loading' ? (
+        <Loader />
+      ) : question.state === 'hasError' ? (
+        <NoContents text={t('no_contents.all_questions')} mv={10} />
+      ) : (
+        <>
+          <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" ph={DEFAULT_MARGIN}>
+            <QuestionItem question={question.data} onSend={() => setSendModalVisible(true)} />
+            <ResponseInput inputRef={textareaRef} />
+          </Layout.FlexCol>
+          {/* 답변 완료 모달 */}
+          <ResponseCompleteModal
+            isVisible={showComplete}
+            setIsVisible={setShowComplete}
+            onSendQuestion={handleSendQuestion}
+            onSkipSendQuestion={handleSkipSendQuestion}
+          />
+          {/* 친구에게 질문 보내기 모달 */}
+          <SendQuestionModal
+            questionId={question.data.id}
+            isVisible={sendModalVisible}
+            setIsVisible={setSendModalVisible}
+            onSkip={handleSkipSendQuestion}
+            onSend={handleConfirmSendQuestion}
+          />
+        </>
+      )}
     </MainContainer>
   );
 }
