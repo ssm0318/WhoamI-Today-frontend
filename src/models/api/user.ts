@@ -121,6 +121,7 @@ export interface MyProfile extends User {
   noti_on: boolean;
   noti_time: string;
   unread_noti: boolean;
+  timezone?: string;
 }
 
 export interface FriendRequest {

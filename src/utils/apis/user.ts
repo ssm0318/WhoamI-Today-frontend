@@ -39,10 +39,24 @@ export const signIn = ({
     });
 };
 
+export const syncTimeZone = async (timezone?: string) => {
+  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  if (currentTimezone === timezone) return;
+
+  const formData = new FormData();
+
+  formData.append('timezone', currentTimezone);
+
+  await axiosFormDataInstance.patch('/user/me/', formData);
+
+  return currentTimezone;
+};
+
 export const checkIfSignIn = async () => {
   try {
     const user = await axios.get<MyProfile>('/user/me/');
-    useBoundStore.getState().setMyProfile(user.data);
+    const currentTimezone = await syncTimeZone(user.data?.timezone);
+    useBoundStore.getState().setMyProfile({ ...user.data, timezone: currentTimezone });
     return user;
   } catch {
     return redirect('/signin');
