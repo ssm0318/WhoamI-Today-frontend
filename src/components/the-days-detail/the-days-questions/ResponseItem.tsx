@@ -1,9 +1,9 @@
-import { format } from 'date-fns';
 import { useState } from 'react';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import CommentList from '@components/comment-list/CommentList';
 import { Font } from '@design-system';
 import { QuestionResponse } from '@models/post';
+import { convertTimeDiffByString } from '@utils/timeHelpers';
 import { ContentWrapper } from '../_styled/contentWrapper.styled';
 import ReactionButtons from '../reaction-buttons/ReactionButtons';
 import * as S from './ResponseItem.styled';
@@ -33,7 +33,7 @@ export function ResponseItem({ response, useDeleteButton, onClickDeleteBtn }: Re
       </ContentWrapper>
       <S.ResponseFooter>
         <Font.Body type="12_regular" color="GRAY_12">
-          {format(new Date(response.created_at), 'HH:mm')}
+          {convertTimeDiffByString(new Date(), new Date(response.created_at))}
         </Font.Body>
         <ReactionButtons
           postType="Response"
