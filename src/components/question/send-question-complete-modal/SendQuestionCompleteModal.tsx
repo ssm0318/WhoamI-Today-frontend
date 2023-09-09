@@ -10,8 +10,7 @@ interface SendQuestionCompleteModalProps {
 }
 
 function SendQuestionCompleteModal({ isVisible, setIsVisible }: SendQuestionCompleteModalProps) {
-  const [t] = useTranslation('translation', { keyPrefix: 'question' });
-
+  const [t] = useTranslation('translation', { keyPrefix: 'question.send' });
   const navigate = useNavigate();
 
   const handleOnViewAllQuestions = () => {
@@ -29,12 +28,12 @@ function SendQuestionCompleteModal({ isVisible, setIsVisible }: SendQuestionComp
       <Layout.FlexCol w="100%" alignItems="center" bgColor="BASIC_WHITE" pt={80} pb={60} gap={16}>
         <Font.Body type="18_regular">🎉</Font.Body>
         <Font.Body type="18_regular" mt={4}>
-          {t('send.complete')}
+          {t('complete')}
         </Font.Body>
         <Button.Medium
           type="filled"
           status="normal"
-          text={t('send.view_all_questions')}
+          text={t('view_all_questions')}
           onClick={handleOnViewAllQuestions}
         />
       </Layout.FlexCol>

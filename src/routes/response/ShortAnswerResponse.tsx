@@ -25,42 +25,41 @@ function ShortAnswerResponse() {
 
   const [t] = useTranslation('translation', { keyPrefix: 'question.response' });
 
-  // 질문 보내기 선택
-  const handleSend = () => {
-    setSendModalVisible(true);
-  };
-
-  const handleNavigateToResponseHistory = () => {
-    return navigate(`/response-history/${questionId}`, { replace: true });
-  };
-
-  // 질문 보내기 skip
-  const handleSkipSendQuestion = () => {
-    setSendModalVisible(false);
-    handleNavigateToResponseHistory();
-  };
-
-  const handleConfirmSendQuestion = () => {
-    // 이미 답변을 보낸 상태라면 response history 페이지로 이동
-    if (hasPosted) handleNavigateToResponseHistory();
-  };
-
+  // 답변 작성 완료
   const handlePost = async () => {
-    // 1. 답변 제출
     if (!textareaRef.current) return;
     const res = await responseQuestion({
       question_id: Number(questionId),
       content: textareaRef.current.value,
     });
+
     if (res) {
+      // 답변 작성 완료 모달 노출
       setShowComplete(true);
       setHasPosted(true);
     }
   };
 
+  // 질문 보내기
   const handleSendQuestion = () => {
-    // 2. 질문 보내기 모달 노출
     setSendModalVisible(true);
+  };
+
+  const handleNavigateToResponseHistory = () => {
+    navigate(`/response-history/${questionId}`, { replace: true });
+  };
+
+  // 질문 보내기 skip
+  const handleSkipSendQuestion = () => {
+    setSendModalVisible(false);
+    // 이미 답변을 보낸 상태라면 response history 페이지로 이동
+    if (hasPosted) handleNavigateToResponseHistory();
+  };
+
+  // 질문 보내기 confirm
+  const handleConfirmSendQuestion = () => {
+    // 이미 답변을 보낸 상태라면 response history 페이지로 이동
+    if (hasPosted) handleNavigateToResponseHistory();
   };
 
   useAsyncEffect(async () => {
@@ -82,21 +81,22 @@ function ShortAnswerResponse() {
         }
       />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" ph={DEFAULT_MARGIN}>
-        <QuestionItem question={question} onSend={handleSend} />
+        <QuestionItem question={question} onSend={() => setSendModalVisible(true)} />
         <ResponseInput inputRef={textareaRef} />
       </Layout.FlexCol>
+      {/* 답변 완료 모달 */}
+      <ResponseCompleteModal
+        isVisible={showComplete}
+        setIsVisible={setShowComplete}
+        onSendQuestion={handleSendQuestion}
+      />
+      {/* 친구에게 질문 보내기 모달 */}
       <SendQuestionModal
         questionId={question.id}
         isVisible={sendModalVisible}
         setIsVisible={setSendModalVisible}
         onSkip={handleSkipSendQuestion}
         onSend={handleConfirmSendQuestion}
-        closeOnBackdrop={!hasPosted}
-      />
-      <ResponseCompleteModal
-        isVisible={showComplete}
-        setIsVisible={setShowComplete}
-        onSendQuestion={handleSendQuestion}
       />
     </MainContainer>
   );

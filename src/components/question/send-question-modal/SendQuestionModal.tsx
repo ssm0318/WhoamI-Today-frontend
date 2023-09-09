@@ -16,7 +16,6 @@ type SendQuestionModalProps = {
   questionId: number;
   onSkip?: () => void;
   onSend?: () => void;
-  closeOnBackdrop?: boolean;
 };
 
 function SendQuestionModal({
@@ -25,7 +24,6 @@ function SendQuestionModal({
   questionId,
   onSkip,
   onSend,
-  closeOnBackdrop = true,
 }: SendQuestionModalProps) {
   const { myProfile: currentUser, friendList, getFriendList } = useBoundStore(UserSelector);
   const [showComplete, setShowComplete] = useState(false);
@@ -38,8 +36,8 @@ function SendQuestionModal({
 
     requestResponse(currentUser.id, questionId, selectedIdList);
     setIsVisible(false);
-    onSend?.();
     setShowComplete(true);
+    onSend?.();
   };
 
   const handleToggleItem = (userId: number, selected: boolean) => {
@@ -75,7 +73,7 @@ function SendQuestionModal({
             />
           </Layout.FlexRow>
         }
-        onClose={closeOnBackdrop ? () => setIsVisible(false) : undefined}
+        onClose={() => setIsVisible(false)}
       >
         <Layout.LayoutBase
           w="100%"
