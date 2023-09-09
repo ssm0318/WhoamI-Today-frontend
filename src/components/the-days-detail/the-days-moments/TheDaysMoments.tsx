@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import CommentList from '@components/comment-list/CommentList';
-import { Layout } from '@design-system';
+import { Font } from '@design-system';
 import { GetMomentResponse } from '@models/api/moment';
+import { convertTimeDiffByString } from '@utils/timeHelpers';
+import { PostFooter } from '../_styled/contentWrapper.styled';
 import ReactionButtons from '../reaction-buttons/ReactionButtons';
 import TheDaysWrapper from '../the-days-wrapper/TheDaysWrapper';
 import MomentContent from './MomentContent';
@@ -26,14 +28,17 @@ function TheDaysMoments({ moment, useDeleteButton, reloadMoment }: TheDaysMoment
         useDeleteButton={useDeleteButton}
         reloadMoment={reloadMoment}
       />
-      <Layout.FlexRow w="100%" justifyContent="flex-end" pt={6} pr={8} pb={6}>
+      <PostFooter>
+        <Font.Body type="12_regular" color="GRAY_12">
+          {convertTimeDiffByString(new Date(), new Date(moment.created_at))}
+        </Font.Body>
         <ReactionButtons
           postType="Moment"
           post={moment}
           isAuthor={useDeleteButton} // FIXME: 사용자 작성글인지 구분
           onClickComments={toggleComments}
         />
-      </Layout.FlexRow>
+      </PostFooter>
       {showComments && <CommentList postType="Moment" post={moment} />}
     </TheDaysWrapper>
   );
