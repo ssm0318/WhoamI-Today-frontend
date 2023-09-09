@@ -6,18 +6,16 @@ import * as S from './ReactionButtons.styled';
 interface ReactionButtonsProps {
   postType: 'Moment' | 'Response';
   post: MomentPost | QuestionResponse;
-  isAuthor?: boolean;
   onClickComments?: () => void;
 }
 
-function ReactionButtons({ postType, post, isAuthor, onClickComments }: ReactionButtonsProps) {
+function ReactionButtons({ postType, post, onClickComments }: ReactionButtonsProps) {
   return (
     <Layout.FlexRow alignItems="center" gap={16}>
-      <LikeButton postType={postType} post={post} isAuthor={isAuthor} iconSize={24} />
+      <LikeButton postType={postType} post={post} iconSize={24} />
       <S.IconButton type="button" onClick={onClickComments}>
         <SvgIcon name="comment" size={36} />
       </S.IconButton>
-      {/* TODO: 코멘트 갯수 */}
     </Layout.FlexRow>
   );
 }

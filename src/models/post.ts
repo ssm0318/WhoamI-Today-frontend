@@ -1,10 +1,6 @@
 import { GetMomentResponse } from './api/moment';
 import { User } from './user';
 
-export enum QUESTION_TYPE {
-  SHORT_ANSWER = 'SHORT_ANSWER',
-}
-
 export enum POST_TYPE {
   RESPONSE = 'Response',
 }
@@ -18,7 +14,7 @@ export interface ShareSettings {
 export type Question = ShortAnswerQuestion;
 
 export interface ShortAnswerQuestion extends ContentsCommon {
-  type: QUESTION_TYPE.SHORT_ANSWER;
+  type: 'Question';
 }
 
 export interface ContentsCommon {

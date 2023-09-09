@@ -13,3 +13,13 @@ export const ContentWrapper = styled(Layout.FlexRow).attrs({
     padding: 6px 12px;
   }
 `;
+
+export const PostFooter = styled(Layout.FlexRow).attrs({
+  w: '100%',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  pt: 6,
+  pr: 8,
+  pb: 6,
+  pl: 14,
+})``;
