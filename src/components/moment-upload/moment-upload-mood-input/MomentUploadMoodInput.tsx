@@ -1,7 +1,5 @@
-import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, SvgIcon } from '@design-system';
 import * as S from './MomentUploadMoodInput.styled';
 
@@ -9,16 +7,18 @@ interface MomentUploadMoodInputProps {
   mood: string | null;
   setMood: (mood: string | null) => void;
   disabled: boolean;
+  isEmojiPickerVisible: boolean;
+  setIsEmojiPickerVisible: (visible: boolean) => void;
 }
 
-function MomentUploadMoodInput({ mood, setMood, disabled }: MomentUploadMoodInputProps) {
+function MomentUploadMoodInput({
+  mood,
+  setMood,
+  disabled,
+  isEmojiPickerVisible,
+  setIsEmojiPickerVisible,
+}: MomentUploadMoodInputProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'moment_upload' });
-
-  const handleSelectEmoji = (emoji: EmojiClickData) => {
-    setMood((mood || '') + emoji.emoji);
-  };
-
-  const [pickerVisible, setPickerVisible] = useState(false);
 
   const handleDeleteEmoji = (e: React.MouseEvent) => {
     // NOTE: 길이 2만큼 뒤에서 잘라줘야 제대로 하나의 emoji가 삭제됨
@@ -34,49 +34,34 @@ function MomentUploadMoodInput({ mood, setMood, disabled }: MomentUploadMoodInpu
 
   const toggleEmojiPicker = () => {
     if (disabled) return;
-    setPickerVisible(!pickerVisible);
+    setIsEmojiPickerVisible(!isEmojiPickerVisible);
   };
 
   return (
-    <>
-      <Layout.FlexRow
-        w="100%"
-        alignItems="flex-start"
-        rounded={14}
-        bgColor="BASIC_WHITE"
-        pl={12}
-        pr={mood ? 24 : 12}
-        pv={24}
-        onClick={toggleEmojiPicker}
-        style={{
-          position: 'relative',
-        }}
-      >
-        <SvgIcon name="moment_mood_normal" size={30} />
-        <S.InputContainer placeholder={t('mood_placeholder') || ''} value={mood || ''} disabled />
-        {/* 삭제 버튼 */}
-        {!disabled && mood && (
-          <Layout.Absolute r={12} b={24}>
-            <button type="button" onClick={handleDeleteEmoji}>
-              <SvgIcon name="delete_button" size={20} />
-            </button>
-          </Layout.Absolute>
-        )}
-      </Layout.FlexRow>
-      {pickerVisible && (
-        <Layout.Absolute b={0} l={0} z={5}>
-          <EmojiPicker
-            width={SCREEN_WIDTH}
-            onEmojiClick={handleSelectEmoji}
-            autoFocusSearch={false}
-            searchDisabled
-            previewConfig={{
-              showPreview: false,
-            }}
-          />
+    <Layout.FlexRow
+      w="100%"
+      alignItems="flex-start"
+      rounded={14}
+      bgColor="BASIC_WHITE"
+      pl={12}
+      pr={mood ? 24 : 12}
+      pv={24}
+      onClick={toggleEmojiPicker}
+      style={{
+        position: 'relative',
+      }}
+    >
+      <SvgIcon name="moment_mood_normal" size={30} />
+      <S.InputContainer placeholder={t('mood_placeholder') || ''} value={mood || ''} disabled />
+      {/* 삭제 버튼 */}
+      {!disabled && mood && (
+        <Layout.Absolute r={12} b={24} p={4}>
+          <button type="button" onClick={handleDeleteEmoji}>
+            <SvgIcon name="delete_button" size={20} />
+          </button>
         </Layout.Absolute>
       )}
-    </>
+    </Layout.FlexRow>
   );
 }
 

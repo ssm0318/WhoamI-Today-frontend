@@ -1,3 +1,4 @@
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MainContainer from '@components/_common/main-container/MainContainer';
@@ -27,6 +28,7 @@ function MomentUpload() {
   const { todayMoment, fetchTodayMoment } = useBoundStore(momentSelector);
   const postMessage = usePostAppMessage();
   const [draft, setDraft] = useState<TodayMoment>(todayMoment);
+  const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
 
   const [showComplete, setShowComplete] = useState(false);
   const isPostable = !deepEqual(todayMoment, draft);
@@ -68,6 +70,10 @@ function MomentUpload() {
     }
   };
 
+  const handleSelectEmoji = (emoji: EmojiClickData) => {
+    setDraft({ ...draft, mood: (draft.mood || '') + emoji.emoji });
+  };
+
   useAsyncEffect(async () => {
     const moment = await fetchTodayMoment();
     setDraft(moment);
@@ -103,12 +109,17 @@ function MomentUpload() {
         h="100%"
         ph={DEFAULT_MARGIN}
         gap={16}
+        onClick={() => {
+          if (emojiPickerVisible) setEmojiPickerVisible(false);
+        }}
       >
         {/* emoji */}
         <MomentUploadMoodInput
           mood={draft.mood}
           setMood={(mood) => setDraft({ ...draft, mood })}
           disabled={!!todayMoment.mood}
+          isEmojiPickerVisible={emojiPickerVisible}
+          setIsEmojiPickerVisible={setEmojiPickerVisible}
         />
         {/* photo */}
         {/*
@@ -188,6 +199,19 @@ function MomentUpload() {
         />
       </Layout.FlexCol>
       <MomentUploadCompleteModal isVisible={showComplete} setIsVisible={setShowComplete} />
+      {emojiPickerVisible && (
+        <Layout.Absolute b={0} l={0} z={5}>
+          <EmojiPicker
+            width={SCREEN_WIDTH}
+            onEmojiClick={handleSelectEmoji}
+            autoFocusSearch={false}
+            searchDisabled
+            previewConfig={{
+              showPreview: false,
+            }}
+          />
+        </Layout.Absolute>
+      )}
     </MainContainer>
   );
 }
