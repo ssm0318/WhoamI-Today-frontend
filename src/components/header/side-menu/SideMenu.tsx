@@ -29,7 +29,7 @@ function SideMenu({ closeSideMenu }: Props) {
   return (
     <Layout.Absolute t={0} l={0} r={0} b={0} z={Z_INDEX.MODAL_CONTAINER}>
       <Layout.Absolute w="100%" h="100%" bgColor="DIM" onClick={handleClickDimmed} />
-      <Layout.Absolute w={250} h="100%" bgColor="BASIC_WHITE">
+      <Layout.Absolute r={0} w={250} h="100%" bgColor="BASIC_WHITE">
         <Layout.FlexCol pt={56} pl={24}>
           <SvgIcon name="close" color="BASIC_BLACK" size={24} onClick={handleClickDimmed} />
           <Layout.FlexCol gap={12} pt={30}>
