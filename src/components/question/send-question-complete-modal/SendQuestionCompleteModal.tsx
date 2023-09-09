@@ -23,6 +23,7 @@ function SendQuestionCompleteModal({ isVisible, setIsVisible }: SendQuestionComp
     setIsVisible(false);
   };
 
+  if (!isVisible) return null;
   return (
     <BottomModal visible={isVisible} onClose={handleOnClose}>
       <Layout.FlexCol w="100%" alignItems="center" bgColor="BASIC_WHITE" pt={80} pb={60} gap={16}>
