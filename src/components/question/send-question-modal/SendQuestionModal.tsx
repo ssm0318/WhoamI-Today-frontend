@@ -16,7 +16,6 @@ type SendQuestionModalProps = {
   questionId: number;
   onSkip?: () => void;
   onSend?: () => void;
-  closeOnBackdrop?: boolean;
 };
 
 function SendQuestionModal({
@@ -25,7 +24,6 @@ function SendQuestionModal({
   questionId,
   onSkip,
   onSend,
-  closeOnBackdrop = true,
 }: SendQuestionModalProps) {
   const { myProfile: currentUser, friendList, getFriendList } = useBoundStore(UserSelector);
   const [showComplete, setShowComplete] = useState(false);
@@ -35,10 +33,8 @@ function SendQuestionModal({
 
   const handleConfirm = () => {
     if (!currentUser || !selectedIdList.length) return;
-
     requestResponse(currentUser.id, questionId, selectedIdList);
     setIsVisible(false);
-    onSend?.();
     setShowComplete(true);
   };
 
@@ -75,7 +71,7 @@ function SendQuestionModal({
             />
           </Layout.FlexRow>
         }
-        onClose={closeOnBackdrop ? () => setIsVisible(false) : undefined}
+        onClose={() => setIsVisible(false)}
       >
         <Layout.LayoutBase
           w="100%"
@@ -121,7 +117,11 @@ function SendQuestionModal({
           </Layout.Absolute>
         </Layout.LayoutBase>
       </BottomModal>
-      <SendQuestionCompleteModal isVisible={showComplete} setIsVisible={setShowComplete} />
+      <SendQuestionCompleteModal
+        isVisible={showComplete}
+        setIsVisible={setShowComplete}
+        onComplete={() => onSend?.()}
+      />
     </>
   );
 }

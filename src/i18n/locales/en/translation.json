@@ -72,13 +72,16 @@
   "question": {
     "response": {
       "placeholder": "Answer as your want.",
-      "post": "Post"
+      "post": "Post",
+      "complete": "Your answer has been posted!",
+      "send_question_to_friends_now": "Send the question to friends now?",
+      "send_question": "Send to Friends"
     },
     "send": {
       "ask": "ask",
       "skip": "skip",
       "complete": "Question sent!",
-      "view_all_questions": "See All Questions"
+      "ok": "Ok"
     }
   },
   "calendar": {
