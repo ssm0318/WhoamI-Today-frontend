@@ -4,7 +4,7 @@ import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NotificationItem from '@components/notification/NotificationItem';
 import TitleHeader from '@components/title-header/TitleHeader';
-import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
+import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Notification } from '@models/notification';
@@ -31,7 +31,7 @@ function Notifications() {
   return (
     <MainContainer>
       <TitleHeader title={t('title')} />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 8} pv={14} w="100%" ph={DEFAULT_MARGIN} gap={20}>
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 8} w="100%">
         {notifications.map((noti) => (
           <NotificationItem item={noti} key={noti.id} />
         ))}
