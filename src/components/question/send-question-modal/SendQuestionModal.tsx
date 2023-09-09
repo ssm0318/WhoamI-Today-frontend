@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import NoContents from '@components/_common/no-contents/NoContents';
@@ -52,6 +52,12 @@ function SendQuestionModal({
     getFriendList();
   }, []);
 
+  useEffect(() => {
+    if (!isVisible) {
+      setSelectedIdList([]);
+    }
+  }, [isVisible]);
+
   return (
     <BottomModal
       visible={isVisible}
@@ -79,8 +85,9 @@ function SendQuestionModal({
             {friendList.map((user) => (
               <SendQuestionFriendItem
                 user={user}
-                onToggle={(selected) => handleToggleItem(user.id, selected)}
                 key={user.id}
+                isSelected={selectedIdList.includes(user.id)}
+                setIsSelected={(selected) => handleToggleItem(user.id, selected)}
               />
             ))}
           </>
