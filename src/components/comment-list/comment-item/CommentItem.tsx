@@ -75,7 +75,7 @@ function CommentItem({
             </Layout.FlexRow>
           </Layout.FlexRow>
         </Layout.FlexCol>
-        <LikeButton postType="Comment" post={comment} isAuthor={isCommentAuthor} iconSize={15} />
+        <LikeButton postType="Comment" post={comment} iconSize={15} />
       </Layout.FlexRow>
       <Layout.FlexCol w="100%" gap={2}>
         {replies.map((reply) => (

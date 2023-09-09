@@ -35,12 +35,7 @@ export function ResponseItem({ response, useDeleteButton, onClickDeleteBtn }: Re
         <Font.Body type="12_regular" color="GRAY_12">
           {convertTimeDiffByString(new Date(), new Date(response.created_at))}
         </Font.Body>
-        <ReactionButtons
-          postType="Response"
-          post={response}
-          isAuthor={useDeleteButton} // FIXME: 사용자 작성글인지 구분
-          onClickComments={toggleComments}
-        />
+        <ReactionButtons postType="Response" post={response} onClickComments={toggleComments} />
       </PostFooter>
       {showComments && <CommentList postType="Response" post={response} />}
     </S.Response>

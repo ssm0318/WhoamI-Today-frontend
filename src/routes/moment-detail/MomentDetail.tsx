@@ -4,8 +4,6 @@ import CommentList from '@components/comment-list/CommentList';
 import MomentContent from '@components/the-days-detail/the-days-moments/MomentContent';
 import { Font, Layout } from '@design-system';
 import { GetMomentDetailResponse } from '@models/api/moment';
-import { User } from '@models/user';
-import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 
 interface MomentDetailProps {
@@ -13,9 +11,7 @@ interface MomentDetailProps {
 }
 
 function MomentDetail({ moment }: MomentDetailProps) {
-  const isUserAuthor = useBoundStore((state) => state.isUserAuthor);
   const { author_detail, created_at } = moment;
-  const isMomentAuthor = isUserAuthor((author_detail as User).id);
 
   return (
     <>
@@ -25,7 +21,7 @@ function MomentDetail({ moment }: MomentDetailProps) {
         <Font.Body type="12_regular" color="GRAY_12">
           {convertTimeDiffByString(new Date(), new Date(created_at), 'yyyy.MM.dd HH:mm')}
         </Font.Body>
-        <LikeButton postType="Moment" post={moment} iconSize={18} isAuthor={isMomentAuthor} />
+        <LikeButton postType="Moment" post={moment} iconSize={18} />
       </Layout.FlexRow>
       <CommentList postType="Moment" post={moment} />
     </>

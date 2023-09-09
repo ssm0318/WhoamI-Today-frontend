@@ -32,12 +32,7 @@ function TheDaysMoments({ moment, useDeleteButton, reloadMoment }: TheDaysMoment
         <Font.Body type="12_regular" color="GRAY_12">
           {convertTimeDiffByString(new Date(), new Date(moment.created_at))}
         </Font.Body>
-        <ReactionButtons
-          postType="Moment"
-          post={moment}
-          isAuthor={useDeleteButton} // FIXME: 사용자 작성글인지 구분
-          onClickComments={toggleComments}
-        />
+        <ReactionButtons postType="Moment" post={moment} onClickComments={toggleComments} />
       </PostFooter>
       {showComments && <CommentList postType="Moment" post={moment} />}
     </TheDaysWrapper>
