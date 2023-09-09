@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from 'styled-components';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import { DEFAULT_MARGIN } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import { Notification } from '@models/notification';
 import { readNotification } from '@utils/apis/notification';
@@ -31,10 +32,8 @@ function NotificationItem({ item }: NotificationItemProps) {
       w="100%"
       onClick={handleClickNotification}
       pv={14}
-      mb={2}
-      ph={4}
-      outline="GRAY_10"
-      rounded={4}
+      bgColor={is_read ? 'BASIC_WHITE' : 'GRAY_10'}
+      ph={DEFAULT_MARGIN}
     >
       <Layout.FlexRow w={50} h={50} mr={7} alignItems="center" justifyContent="center">
         <ProfileImage imageUrl={profile_image} size={40} />
