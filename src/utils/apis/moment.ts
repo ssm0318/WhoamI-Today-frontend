@@ -42,10 +42,11 @@ export const updateTodayMoment = async (moment: Partial<TodayMoment>) => {
 };
 
 export const getDailyMoment = async ({ year, month, day }: DateRequestParams) => {
-  const { data } = await axios.get<GetMomentResponse | null>(
+  const { status, data } = await axios.get<GetMomentResponse | null>(
     `/moment/daily/${year}/${month}/${day}/`,
   );
-  return data;
+
+  return status === 204 ? null : data;
 };
 
 export const getWeeklyMoments = async ({ year, month, day }: DateRequestParams) => {

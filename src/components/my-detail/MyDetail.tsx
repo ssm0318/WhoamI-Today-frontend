@@ -5,14 +5,15 @@ import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { DayQuestion, MomentPost } from '@models/post';
-import { useBoundStore } from '@stores/useBoundStore';
 import { getDateRequestParams } from '@utils/apis/common';
 import { getDailyMoment } from '@utils/apis/moment';
 import { getDayQuestions } from '@utils/apis/responses';
 
-function MyDetail() {
-  const { detailDate } = useBoundStore((state) => ({ detailDate: state.detailDate }));
+interface MyDetailProps {
+  detailDate?: Date;
+}
 
+function MyDetail({ detailDate }: MyDetailProps) {
   const params = useMemo(() => {
     if (!detailDate) return;
     return getDateRequestParams(detailDate);

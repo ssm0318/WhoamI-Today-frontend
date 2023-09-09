@@ -7,6 +7,7 @@ import { Loader } from '@components/_common/loader/Loader.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import MyDetail from '@components/my-detail/MyDetail';
 import TheDaysDetail from '@components/the-days-detail/TheDaysDetail';
 import TitleHeader from '@components/title-header/TitleHeader';
 import FriendStatusButton from '@components/user-page/FriendStatusButton';
@@ -17,13 +18,19 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { GetFriendsTodayResponse } from '@models/api/friends';
 import { UserProfile } from '@models/user';
+import { useBoundStore } from '@stores/useBoundStore';
 import { getFriendToday } from '@utils/apis/friends';
 import { getUserProfile } from '@utils/apis/user';
+
+const today = new Date();
 
 function UserPage() {
   const [t] = useTranslation('translation');
 
   const { username } = useParams();
+
+  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+  const isMyPage = username === myProfile?.username;
 
   const [user, setUser] = useState<FetchState<UserProfile>>({ state: 'loading' });
   const [userToday, setUserToday] = useState<FetchState<GetFriendsTodayResponse>>({
@@ -49,7 +56,6 @@ function UserPage() {
     if (user.state !== 'hasValue') return;
     if (!user.data.are_friends) return;
 
-    // TODO: 로그인한 사용자의 페이지 대응
     getFriendToday(user.data.id)
       .then((data) => {
         setUserToday({ state: 'hasValue', data });
@@ -81,7 +87,18 @@ function UserPage() {
         />
       )}
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" ph={18}>
-        {user.state === 'hasValue' ? (
+        {isMyPage && myProfile ? (
+          // my page
+          <>
+            <ProfileImage
+              imageUrl={myProfile.profile_image}
+              username={myProfile.username}
+              size={100}
+            />
+            <MyDetail detailDate={today} />
+          </>
+        ) : // other user's page
+        user.state === 'hasValue' ? (
           <>
             <ProfileImage
               imageUrl={user.data.profile_image}
