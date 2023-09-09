@@ -31,7 +31,7 @@ function Notifications() {
   return (
     <MainContainer>
       <TitleHeader title={t('title')} />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 8} pv={14} w="100%" ph={DEFAULT_MARGIN} gap={20}>
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 8} w="100%" ph={DEFAULT_MARGIN}>
         {notifications.map((noti) => (
           <NotificationItem item={noti} key={noti.id} />
         ))}

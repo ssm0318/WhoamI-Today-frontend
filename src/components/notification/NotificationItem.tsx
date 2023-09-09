@@ -12,7 +12,7 @@ interface NotificationItemProps {
 }
 
 function NotificationItem({ item }: NotificationItemProps) {
-  const { message, created_at, actor_detail, redirect_url } = item;
+  const { message, created_at, actor_detail, redirect_url, is_read } = item;
   const { profile_image } = actor_detail;
   const theme = useTheme();
 
@@ -27,12 +27,21 @@ function NotificationItem({ item }: NotificationItemProps) {
   };
 
   return (
-    <Layout.FlexRow w="100%" onClick={handleClickNotification}>
+    <Layout.FlexRow
+      w="100%"
+      onClick={handleClickNotification}
+      pv={14}
+      mb={2}
+      ph={4}
+      outline="GRAY_10"
+      rounded={4}
+    >
       <Layout.FlexRow w={50} h={50} mr={7} alignItems="center" justifyContent="center">
         <ProfileImage imageUrl={profile_image} size={40} />
       </Layout.FlexRow>
+
       <Layout.FlexRow flex={1}>
-        <Font.Body type="14_regular">
+        <Font.Body type={is_read ? '14_regular' : '14_semibold'}>
           {message}
           <span
             style={{
@@ -44,6 +53,7 @@ function NotificationItem({ item }: NotificationItemProps) {
           </span>
         </Font.Body>
       </Layout.FlexRow>
+      {!is_read && <Layout.LayoutBase w={10} h={10} bgColor="NUDGE" rounded={5} mr={2} />}
     </Layout.FlexRow>
   );
 }
