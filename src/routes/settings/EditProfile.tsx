@@ -1,5 +1,6 @@
 import { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -53,10 +54,13 @@ function EditProfile() {
     setCroppedImg(img);
   };
 
+  const navigate = useNavigate();
   const handleChangeProfileImage = async () => {
     if (!croppedImg) return;
     await changeProfileImage({ profileImage: croppedImg.file });
-    await updateMyProfile();
+    updateMyProfile().then(() => {
+      navigate('/settings');
+    });
   };
 
   if (!myProfile) return null;
