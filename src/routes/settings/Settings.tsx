@@ -59,6 +59,7 @@ function Settings() {
                 imageUrl={myProfile.profile_image}
                 username={myProfile.username}
                 size={55}
+                ts={Date.now()}
               />
               <Layout.FlexCol ml={12}>
                 <Font.Body type="14_semibold" mt={4}>
