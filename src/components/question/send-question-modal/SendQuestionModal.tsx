@@ -7,6 +7,7 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { requestResponse } from '@utils/apis/question';
+import SendQuestionCompleteModal from '../send-question-complete-modal/SendQuestionCompleteModal';
 import SendQuestionFriendItem from '../send-question-friend-item/SendQuestionFriendItem';
 
 type SendQuestionModalProps = {
@@ -27,6 +28,7 @@ function SendQuestionModal({
   closeOnBackdrop = true,
 }: SendQuestionModalProps) {
   const { myProfile: currentUser, friendList, getFriendList } = useBoundStore(UserSelector);
+  const [showComplete, setShowComplete] = useState(false);
 
   const [selectedIdList, setSelectedIdList] = useState<number[]>([]);
   const [t] = useTranslation('translation');
@@ -37,6 +39,7 @@ function SendQuestionModal({
     requestResponse(currentUser.id, questionId, selectedIdList);
     setIsVisible(false);
     onSend?.();
+    setShowComplete(true);
   };
 
   const handleToggleItem = (userId: number, selected: boolean) => {
@@ -59,64 +62,67 @@ function SendQuestionModal({
   }, [isVisible]);
 
   return (
-    <BottomModal
-      visible={isVisible}
-      TopComponent={
-        <Layout.FlexRow>
-          <Button.Small
-            type="white_fill"
-            status="normal"
-            text={t('question.send.skip')}
-            onClick={onSkip}
-          />
-        </Layout.FlexRow>
-      }
-      onClose={closeOnBackdrop ? () => setIsVisible(false) : undefined}
-    >
-      <Layout.LayoutBase
-        w="100%"
-        bgColor="BASIC_WHITE"
-        pt={12}
-        ph="default"
-        pb={12 + BOTTOM_BUTTON_SECTION_HEIGHT}
+    <>
+      <BottomModal
+        visible={isVisible}
+        TopComponent={
+          <Layout.FlexRow>
+            <Button.Small
+              type="white_fill"
+              status="normal"
+              text={t('question.send.skip')}
+              onClick={onSkip}
+            />
+          </Layout.FlexRow>
+        }
+        onClose={closeOnBackdrop ? () => setIsVisible(false) : undefined}
       >
-        {friendList && friendList.length > 0 ? (
-          <>
-            {friendList.map((user) => (
-              <SendQuestionFriendItem
-                user={user}
-                key={user.id}
-                isSelected={selectedIdList.includes(user.id)}
-                setIsSelected={(selected) => handleToggleItem(user.id, selected)}
-              />
-            ))}
-          </>
-        ) : (
-          <NoContents title={t('no_contents.friends')} bgColor="BASIC_WHITE" />
-        )}
-        <Layout.Absolute
-          b={0}
-          l={0}
+        <Layout.LayoutBase
           w="100%"
           bgColor="BASIC_WHITE"
-          h={BOTTOM_BUTTON_SECTION_HEIGHT}
-          cursor="pointer"
+          pt={12}
+          ph="default"
+          pb={12 + BOTTOM_BUTTON_SECTION_HEIGHT}
         >
-          <Layout.FlexRow w="100%" pv={13} mh={45} bgColor="BASIC_WHITE">
-            <Layout.FlexRow
-              bgColor="GRAY_2"
-              onClick={handleConfirm}
-              w="100%"
-              justifyContent="center"
-              rounded={14}
-              pv={13}
-            >
-              <Font.Display type="24_bold">{t('question.send.ask')}</Font.Display>
+          {friendList && friendList.length > 0 ? (
+            <>
+              {friendList.map((user) => (
+                <SendQuestionFriendItem
+                  user={user}
+                  key={user.id}
+                  isSelected={selectedIdList.includes(user.id)}
+                  setIsSelected={(selected) => handleToggleItem(user.id, selected)}
+                />
+              ))}
+            </>
+          ) : (
+            <NoContents title={t('no_contents.friends')} bgColor="BASIC_WHITE" />
+          )}
+          <Layout.Absolute
+            b={0}
+            l={0}
+            w="100%"
+            bgColor="BASIC_WHITE"
+            h={BOTTOM_BUTTON_SECTION_HEIGHT}
+            cursor="pointer"
+          >
+            <Layout.FlexRow w="100%" pv={13} mh={45} bgColor="BASIC_WHITE">
+              <Layout.FlexRow
+                bgColor="GRAY_2"
+                onClick={handleConfirm}
+                w="100%"
+                justifyContent="center"
+                rounded={14}
+                pv={13}
+              >
+                <Font.Display type="24_bold">{t('question.send.ask')}</Font.Display>
+              </Layout.FlexRow>
             </Layout.FlexRow>
-          </Layout.FlexRow>
-        </Layout.Absolute>
-      </Layout.LayoutBase>
-    </BottomModal>
+          </Layout.Absolute>
+        </Layout.LayoutBase>
+      </BottomModal>
+      <SendQuestionCompleteModal isVisible={showComplete} setIsVisible={setShowComplete} />
+    </>
   );
 }
 
