@@ -28,15 +28,19 @@ function ShortAnswerResponse() {
     setSendModalVisible(true);
   };
 
+  const handleNavigateToResponseHistory = () => {
+    return navigate(`/response-history/${questionId}`, { replace: true });
+  };
+
   // 질문 보내기 skip
   const handleSkipSendQuestion = () => {
     setSendModalVisible(false);
-    return navigate(`/response-history/${questionId}`);
+    handleNavigateToResponseHistory();
   };
 
   const handleConfirmSendQuestion = () => {
     // 이미 답변을 보낸 상태라면 response history 페이지로 이동
-    if (hasPosted) return navigate(`/response-history/${questionId}`);
+    if (hasPosted) handleNavigateToResponseHistory();
   };
 
   const handlePost = async () => {
