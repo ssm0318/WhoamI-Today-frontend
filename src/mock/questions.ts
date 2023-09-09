@@ -1,4 +1,4 @@
-import { QUESTION_TYPE, ShortAnswerQuestion } from '@models/post';
+import { ShortAnswerQuestion } from '@models/post';
 
 export const shortAnswerQuestions: ShortAnswerQuestion[] = Array.from(
   { length: 15 },
@@ -16,6 +16,6 @@ export const shortAnswerQuestions: ShortAnswerQuestion[] = Array.from(
     like_count: 10,
     current_user_like_id: null,
     created_at: '2023-05-26T10:30:00Z',
-    type: QUESTION_TYPE.SHORT_ANSWER,
+    type: 'Question',
   }),
 );

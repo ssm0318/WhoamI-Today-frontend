@@ -1,4 +1,4 @@
-import { POST_TYPE, QUESTION_TYPE, Response } from '@models/post';
+import { POST_TYPE, Response } from '@models/post';
 
 export const responseList: Response[] = [
   {
@@ -102,7 +102,7 @@ export const responseList: Response[] = [
       like_count: null,
       current_user_like_id: null,
       created_at: '2023-05-31',
-      type: QUESTION_TYPE.SHORT_ANSWER,
+      type: 'Question',
     },
     question_id: 1,
   },
@@ -132,7 +132,7 @@ export const responseList: Response[] = [
       like_count: null,
       current_user_like_id: null,
       created_at: '2023-05-30',
-      type: QUESTION_TYPE.SHORT_ANSWER,
+      type: 'Question',
     },
     question_id: 2,
   },
