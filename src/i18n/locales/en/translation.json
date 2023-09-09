@@ -81,7 +81,7 @@
       "ask": "ask",
       "skip": "skip",
       "complete": "Question sent!",
-      "view_all_questions": "See All Questions"
+      "ok": "Ok"
     }
   },
   "calendar": {

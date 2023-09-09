@@ -1,25 +1,29 @@
 import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { Button, Font, Layout } from '@design-system';
 
 interface SendQuestionCompleteModalProps {
   isVisible: boolean;
   setIsVisible: Dispatch<SetStateAction<boolean>>;
+  onComplete?: () => void;
 }
 
-function SendQuestionCompleteModal({ isVisible, setIsVisible }: SendQuestionCompleteModalProps) {
+function SendQuestionCompleteModal({
+  isVisible,
+  setIsVisible,
+  onComplete,
+}: SendQuestionCompleteModalProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'question.send' });
-  const navigate = useNavigate();
 
-  const handleOnViewAllQuestions = () => {
+  const handleConfirm = () => {
     setIsVisible(false);
-    navigate('/questions', { replace: true });
+    onComplete?.();
   };
 
   const handleOnClose = () => {
     setIsVisible(false);
+    onComplete?.();
   };
 
   if (!isVisible) return null;
@@ -30,12 +34,7 @@ function SendQuestionCompleteModal({ isVisible, setIsVisible }: SendQuestionComp
         <Font.Body type="18_regular" mt={4}>
           {t('complete')}
         </Font.Body>
-        <Button.Medium
-          type="filled"
-          status="normal"
-          text={t('view_all_questions')}
-          onClick={handleOnViewAllQuestions}
-        />
+        <Button.Medium type="filled" status="normal" text={t('ok')} onClick={handleConfirm} />
       </Layout.FlexCol>
     </BottomModal>
   );

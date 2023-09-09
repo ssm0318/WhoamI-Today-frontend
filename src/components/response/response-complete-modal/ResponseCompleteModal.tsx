@@ -7,12 +7,14 @@ interface ResponseCompleteModalProps {
   isVisible: boolean;
   setIsVisible: Dispatch<SetStateAction<boolean>>;
   onSendQuestion?: () => void;
+  onSkipSendQuestion?: () => void;
 }
 
 function ResponseCompleteModal({
   isVisible,
   setIsVisible,
   onSendQuestion,
+  onSkipSendQuestion,
 }: ResponseCompleteModalProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'question.response' });
 
@@ -23,6 +25,7 @@ function ResponseCompleteModal({
 
   const handleOnClose = () => {
     setIsVisible(false);
+    onSkipSendQuestion?.();
   };
 
   return (

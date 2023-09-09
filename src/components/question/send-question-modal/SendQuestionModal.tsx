@@ -33,11 +33,9 @@ function SendQuestionModal({
 
   const handleConfirm = () => {
     if (!currentUser || !selectedIdList.length) return;
-
     requestResponse(currentUser.id, questionId, selectedIdList);
     setIsVisible(false);
     setShowComplete(true);
-    onSend?.();
   };
 
   const handleToggleItem = (userId: number, selected: boolean) => {
@@ -119,7 +117,11 @@ function SendQuestionModal({
           </Layout.Absolute>
         </Layout.LayoutBase>
       </BottomModal>
-      <SendQuestionCompleteModal isVisible={showComplete} setIsVisible={setShowComplete} />
+      <SendQuestionCompleteModal
+        isVisible={showComplete}
+        setIsVisible={setShowComplete}
+        onComplete={() => onSend?.()}
+      />
     </>
   );
 }

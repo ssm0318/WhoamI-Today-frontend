@@ -34,9 +34,8 @@ function ShortAnswerResponse() {
     });
 
     if (res) {
-      // 답변 작성 완료 모달 노출
-      setShowComplete(true);
       setHasPosted(true);
+      setShowComplete(true);
     }
   };
 
@@ -89,6 +88,7 @@ function ShortAnswerResponse() {
         isVisible={showComplete}
         setIsVisible={setShowComplete}
         onSendQuestion={handleSendQuestion}
+        onSkipSendQuestion={handleSkipSendQuestion}
       />
       {/* 친구에게 질문 보내기 모달 */}
       <SendQuestionModal

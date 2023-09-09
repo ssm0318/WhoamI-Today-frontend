@@ -81,7 +81,7 @@
       "ask": "보내기",
       "skip": "건너뛰기",
       "complete": "질문을 보냈습니다!",
-      "view_all_questions": "전체 질문 보기"
+      "ok": "확인"
     }
   },
   "calendar": {
