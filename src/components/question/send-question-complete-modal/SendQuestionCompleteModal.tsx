@@ -16,7 +16,7 @@ function SendQuestionCompleteModal({ isVisible, setIsVisible }: SendQuestionComp
 
   const handleOnViewAllQuestions = () => {
     setIsVisible(false);
-    navigate('/questions');
+    navigate('/questions', { replace: true });
   };
 
   const handleOnClose = () => {
