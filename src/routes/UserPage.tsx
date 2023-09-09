@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import CommonError from '@components/_common/common-error/CommonError';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import TheDaysDetail from '@components/the-days-detail/TheDaysDetail';
 import TitleHeader from '@components/title-header/TitleHeader';
 import FriendStatusButton from '@components/user-page/FriendStatusButton';
 import UserMoreModal from '@components/user-page/UserMoreModal';
@@ -12,14 +15,20 @@ import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
+import { GetFriendsTodayResponse } from '@models/api/friends';
 import { UserProfile } from '@models/user';
+import { getFriendToday } from '@utils/apis/friends';
 import { getUserProfile } from '@utils/apis/user';
 
 function UserPage() {
-  const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
+  const [t] = useTranslation('translation');
 
   const { username } = useParams();
+
   const [user, setUser] = useState<FetchState<UserProfile>>({ state: 'loading' });
+  const [userToday, setUserToday] = useState<FetchState<GetFriendsTodayResponse>>({
+    state: 'loading',
+  });
 
   const [showMore, setShowMore] = useState(false);
 
@@ -35,6 +44,18 @@ function UserPage() {
   };
 
   useAsyncEffect(updateUser, []);
+
+  useAsyncEffect(async () => {
+    if (user.state !== 'hasValue') return;
+    if (!user.data.are_friends) return;
+
+    // TODO: 로그인한 사용자의 페이지 대응
+    getFriendToday(user.data.id)
+      .then((data) => {
+        setUserToday({ state: 'hasValue', data });
+      })
+      .catch(() => setUserToday({ state: 'hasError' }));
+  }, [user]);
 
   const handleOnClickMore = () => {
     setShowMore(true);
@@ -74,10 +95,21 @@ function UserPage() {
               <FriendStatusButton user={user.data} callback={updateUser} />
             </Layout.FlexRow>
             <Divider width={1} />
-            {/* TODO: 오늘의 게시글 */}
+            {userToday.state === 'loading' ? (
+              <Loader />
+            ) : userToday.state === 'hasError' ? (
+              <CommonError />
+            ) : userToday.data.length === 0 ? (
+              <NoContents text={t('no_contents.the_day_detail')} />
+            ) : (
+              <TheDaysDetail
+                moments={userToday.data[0].moments}
+                questions={userToday.data[0].questions}
+              />
+            )}
           </>
         ) : user.state === 'hasError' ? (
-          <Font.Body type="20_regular">{t('this_user_do_not_exist')}</Font.Body>
+          <Font.Body type="20_regular">{t('user_page.this_user_do_not_exist')}</Font.Body>
         ) : (
           <Loader />
         )}
