@@ -8,3 +8,11 @@ export const getFriendsToday = async () => {
   );
   return data;
 };
+
+export const getFriendToday = async (userId: number) => {
+  const {
+    data: { results },
+  } = await axios.get<PaginationResponse<GetFriendsTodayResponse>>(`/user/friend/${userId}/today/`);
+
+  return results ?? [];
+};

@@ -7,8 +7,9 @@ import { Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 
 function My() {
-  const { resetDetailDate } = useBoundStore((state) => ({
+  const { resetDetailDate, detailDate } = useBoundStore((state) => ({
     resetDetailDate: state.resetDetailDate,
+    detailDate: state.detailDate,
   }));
 
   useEffect(() => {
@@ -22,7 +23,7 @@ function My() {
         <CalendarViewTabs />
       </Layout.FlexRow>
       <Calendar />
-      <MyDetail />
+      <MyDetail detailDate={detailDate} />
     </Layout.FlexCol>
   );
 }
