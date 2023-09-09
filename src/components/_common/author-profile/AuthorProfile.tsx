@@ -19,7 +19,9 @@ function AuthorProfile({
   return (
     <Layout.FlexRow alignItems="center" gap={5}>
       <ProfileImage imageUrl={imageUrl} username={username} size={profileImgSize} />
-      <Font.Body type={usernameFont}>{username}</Font.Body>
+      <Font.Body pre type={usernameFont}>
+        {username}
+      </Font.Body>
     </Layout.FlexRow>
   );
 }
