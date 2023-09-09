@@ -1,19 +1,16 @@
-import { useState } from 'react';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { User } from '@models/user';
 
 interface SendQuestionFriendItemProps {
-  onToggle: (selected: boolean) => void;
   user: User;
+  isSelected: boolean;
+  setIsSelected: (selected: boolean) => void;
 }
 
-function SendQuestionFriendItem({ onToggle, user }: SendQuestionFriendItemProps) {
-  const [isSelected, setIsSelected] = useState(false);
-
+function SendQuestionFriendItem({ user, isSelected, setIsSelected }: SendQuestionFriendItemProps) {
   const handleToggle = () => {
-    setIsSelected((prevSelected) => !prevSelected);
-    onToggle(!isSelected);
+    setIsSelected(!isSelected);
   };
 
   return (
