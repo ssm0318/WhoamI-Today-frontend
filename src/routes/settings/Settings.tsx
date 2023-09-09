@@ -96,6 +96,8 @@ function Settings() {
           <Font.Display type="20_bold">{t('terms_of_uses')}</Font.Display>
         </StyledSettingsAnchor>
         <Divider width={1} />
+        <SettingsButton text={t('delete_account')} onClick={handleClickDeleteAccount} />
+        <Divider width={1} />
         <SettingsButton text={t('logout')} onClick={handleClickLogout} />
         {logoutModalVisible && (
           <ConfirmBottomModal
@@ -110,8 +112,6 @@ function Settings() {
             </Font.Body>
           </ConfirmBottomModal>
         )}
-        <Divider width={1} />
-        <SettingsButton text={t('delete_account')} onClick={handleClickDeleteAccount} />
       </Layout.FlexCol>
     </MainContainer>
   );
