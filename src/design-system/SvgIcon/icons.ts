@@ -15,12 +15,12 @@ const circle_check_checked = 'circle_check_checked';
 const circle_check_unchecked = 'circle_check_unchecked';
 const box_check_unchecked = 'box_check_unchecked';
 const box_check_checked = 'box_check_checked';
-const home_active = 'home_active';
-const home_inactive = 'home_inactive';
 const friends_active = 'friends_active';
 const friends_inactive = 'friends_inactive';
 const my_active = 'my_active';
 const my_inactive = 'my_inactive';
+const chats_active = 'chats_active';
+const chats_inactive = 'chats_inactive';
 const delete_button = 'delete_button';
 const heart = 'heart';
 const comment = 'comment';
@@ -37,6 +37,8 @@ export {
   arrow_right,
   box_check_checked,
   box_check_unchecked,
+  chats_active,
+  chats_inactive,
   circle_check_checked,
   circle_check_unchecked,
   close,
@@ -48,8 +50,6 @@ export {
   header_logo,
   heart,
   hide_password_eye,
-  home_active,
-  home_inactive,
   link_share,
   moment_add,
   moment_add_disabled,

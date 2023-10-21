@@ -1,40 +1,38 @@
-import { SvgIcon } from '@design-system';
-import { useBoundStore } from '@stores/useBoundStore';
-import { MyTabItem, TabItem, TabWrapper } from './Tab.styled';
+import { useTranslation } from 'react-i18next';
+import { Font, Layout, SvgIcon } from '@design-system';
+import { NavTabItem, TabWrapper } from './Tab.styled';
 
-function Tab() {
-  const myProfile = useBoundStore((state) => state.myProfile);
+interface TabItemProps {
+  to: string;
+  type: 'friends' | 'my' | 'chats';
+  size?: number;
+}
+
+function TabItem({ to, type, size = 48 }: TabItemProps) {
+  const [t] = useTranslation('translation', { keyPrefix: 'nav_tab' });
 
   return (
-    <TabWrapper>
-      <TabItem to="/friends">
-        {({ isActive }) => (
-          <SvgIcon name={isActive ? 'friends_active' : 'friends_inactive'} size={48} />
-        )}
-      </TabItem>
-      <TabItem to="/home">
-        {({ isActive }) => <SvgIcon name={isActive ? 'home_active' : 'home_inactive'} size={48} />}
-      </TabItem>
-      {myProfile?.profile_image ? (
-        <MyTabItem to="/my">
-          {({ isActive }) => (
-            <img
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              src={myProfile.profile_image!}
-              width={32}
-              height={32}
-              alt={`${myProfile?.username ?? 'user'}-profile`}
-              className={`${isActive ? 'active' : ''}`}
-            />
-          )}
-        </MyTabItem>
-      ) : (
-        <TabItem to="/my">
-          {({ isActive }) => <SvgIcon name={isActive ? 'my_active' : 'my_inactive'} size={48} />}
-        </TabItem>
+    <NavTabItem to={to}>
+      {({ isActive }) => (
+        <Layout.FlexCol w="100%" alignItems="center">
+          <SvgIcon name={isActive ? `${type}_active` : `${type}_inactive`} size={size} />
+          <Font.Body type="14_regular" color={isActive ? 'PRIMARY' : 'GRAY_2'}>
+            {t(type)}
+          </Font.Body>
+        </Layout.FlexCol>
       )}
-    </TabWrapper>
+    </NavTabItem>
   );
 }
 
-export default Tab;
+export default function Tab() {
+  return (
+    <TabWrapper>
+      <Layout.FlexRow w="100%" justifyContent="center" alignItems="center" gap={80} pt={4}>
+        <TabItem to="/friends" type="friends" size={32} />
+        <TabItem to="/my" type="my" size={32} />
+        <TabItem to="/home" type="chats" size={32} />
+      </Layout.FlexRow>
+    </TabWrapper>
+  );
+}
