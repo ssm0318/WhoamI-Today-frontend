@@ -2,7 +2,7 @@ import { Notification } from '@models/notification';
 
 export const notificationList: Notification[] = Array.from({ length: 15 }, (_value, index) => ({
   id: index,
-  redirect_url: `/home`,
+  redirect_url: `/my`,
   is_read: false,
   actor_detail: {
     username: `User`,

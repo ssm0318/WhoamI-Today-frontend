@@ -26,7 +26,7 @@ function SignIn() {
 
   const navigate = useNavigate();
   const onSubmit = () => {
-    signIn({ signInInfo, onSuccess: () => navigate('/home'), onError: (e) => setSignInError(e) });
+    signIn({ signInInfo, onSuccess: () => navigate('/my'), onError: (e) => setSignInError(e) });
   };
 
   const onKeySubmit = (e: KeyboardEvent) => {

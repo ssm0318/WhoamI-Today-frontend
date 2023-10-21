@@ -31,7 +31,7 @@ export default function Tab() {
       <Layout.FlexRow w="100%" justifyContent="center" alignItems="center" gap={80} pt={4}>
         <TabItem to="/friends" type="friends" size={32} />
         <TabItem to="/my" type="my" size={32} />
-        <TabItem to="/home" type="chats" size={32} />
+        <TabItem to="/chats" type="chats" size={32} />
       </Layout.FlexRow>
     </TabWrapper>
   );

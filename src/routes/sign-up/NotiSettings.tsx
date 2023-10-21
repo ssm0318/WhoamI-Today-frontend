@@ -51,7 +51,7 @@ function NotiSettings() {
       },
       onSuccess: () => {
         resetSignUpInfo();
-        navigate('/home');
+        navigate('/my');
       },
       onError: (e) => {
         // TODO

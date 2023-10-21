@@ -8,7 +8,7 @@ const useRedirectGuard = () => {
   useEffect(() => {
     if (!location.state) {
       // 직접 접근을 막는 페이지에서는 home으로 redirect
-      navigate('/home');
+      navigate('/my');
     }
   }, [navigate, location]);
 };
