@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+import FriendGroup from '@components/friend-group/FriendGroup';
+import FriendGroupList from '@components/friend-group/FriendGroupList';
 import { Colors } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
 import SpotifyManager from '@libs/SpotifyManager';
@@ -124,6 +126,12 @@ const router = createBrowserRouter([
       { path: 'friends', element: <FriendsSettings /> },
     ],
   },
+  {
+    path: 'friend-groups',
+    loader: checkIfSignIn,
+    element: <FriendGroupList />,
+  },
+  { path: 'friend-groups/:id', loader: checkIfSignIn, element: <FriendGroup /> },
 ]);
 
 function App() {

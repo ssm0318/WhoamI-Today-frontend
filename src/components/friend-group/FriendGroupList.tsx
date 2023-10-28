@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import MainContainer from '@components/_common/main-container/MainContainer';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, CheckCircle, Font, Layout, SvgIcon } from '@design-system';
@@ -7,15 +9,11 @@ import { friendGroupList } from '@mock/friends';
 import { FriendGroup } from '@models/friendGroup';
 import { StyledGroup, StyledGroupList } from './FriendGroupList.styled';
 
-interface FriendGroupListProps {
-  onClose: () => void;
-}
-
 interface CheckFriendGroup extends FriendGroup {
   checked?: boolean;
 }
 
-function FriendGroupList({ onClose }: FriendGroupListProps) {
+function FriendGroupList() {
   const [t] = useTranslation('translation', { keyPrefix: 'friend_group' });
 
   const [mode, setMode] = useState<'list' | 'edit'>('list');
@@ -33,6 +31,11 @@ function FriendGroupList({ onClose }: FriendGroupListProps) {
     resetCheckGroupList();
   };
 
+  const navigate = useNavigate();
+  const handleGoToGroup = ({ id }: FriendGroup) => {
+    navigate(`${id}`);
+  };
+
   const handleToggleFriendGroup = (item: CheckFriendGroup) => {
     const selectedGroupIndex = checkedGroupList.findIndex((group) => group.id === item.id);
 
@@ -48,7 +51,7 @@ function FriendGroupList({ onClose }: FriendGroupListProps) {
   const showDeleteGroupButton = !!checkedGroupList.find((group) => !!group.checked);
 
   return (
-    <Layout.Absolute t={0} l={0} w="100%" h="100%" bgColor="BASIC_WHITE" flexDirection="column">
+    <MainContainer>
       <TitleHeader
         title={t('title')}
         RightComponent={
@@ -66,13 +69,12 @@ function FriendGroupList({ onClose }: FriendGroupListProps) {
             </button>
           )
         }
-        onClose={onClose}
       />
       <Layout.LayoutBase w="100%" pt={TITLE_HEADER_HEIGHT + 50} ph={24}>
         <StyledGroupList>
           {mode === 'list' &&
             checkedGroupList.map((group) => (
-              <StyledGroup key={group.id}>
+              <StyledGroup key={group.id} role="button" onClick={() => handleGoToGroup(group)}>
                 <Font.Display type="14_regular">{group.name}</Font.Display>
                 <SvgIcon name="more_arrow" color="BASIC_BLACK" size={16} />
               </StyledGroup>
@@ -106,7 +108,7 @@ function FriendGroupList({ onClose }: FriendGroupListProps) {
           />
         )}
       </Layout.LayoutBase>
-    </Layout.Absolute>
+    </MainContainer>
   );
 }
 

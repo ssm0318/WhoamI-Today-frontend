@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
-import FriendGroupList from '@components/friend-group/FriendGroupList';
 import SendQuestionModal from '@components/question/send-question-modal/SendQuestionModal';
 import QuestionItem from '@components/response/question-item/QuestionItem';
 import ResponseCompleteModal from '@components/response/response-complete-modal/ResponseCompleteModal';
@@ -26,9 +25,6 @@ function ShortAnswerResponse() {
   const navigate = useNavigate();
   const [hasPosted, setHasPosted] = useState(false);
   const [showComplete, setShowComplete] = useState(false);
-
-  // FIXME 임시 구현
-  const [showEditGroup, setShowEditGroup] = useState(false);
 
   const [t] = useTranslation('translation', { keyPrefix: 'question.response' });
 
@@ -112,11 +108,6 @@ function ShortAnswerResponse() {
             onSkip={handleSkipSendQuestion}
             onSend={handleConfirmSendQuestion}
           />
-          {/* FIXME: 임시 구현 */}
-          <button type="button" onClick={() => setShowEditGroup(true)}>
-            show edit group
-          </button>
-          {showEditGroup && <FriendGroupList onClose={() => setShowEditGroup(false)} />}
         </>
       )}
     </MainContainer>
