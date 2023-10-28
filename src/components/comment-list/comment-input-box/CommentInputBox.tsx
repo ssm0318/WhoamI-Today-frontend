@@ -38,6 +38,12 @@ function CommentInputBox({ isReply, postType, post, reloadComments }: CommentInp
     handleSubmitComment();
   };
 
+  const [isPrivate, setIsPrivate] = useState(false);
+
+  const togglePrivate = () => {
+    setIsPrivate((prev) => !prev);
+  };
+
   return (
     <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between" gap={5}>
       {/* FIXME: reply icon 교체 */}
@@ -48,6 +54,11 @@ function CommentInputBox({ isReply, postType, post, reloadComments }: CommentInp
         value={content}
         onKeyDown={handleKeyDown}
       />
+      <Layout.FlexRow>
+        <button type="button" onClick={togglePrivate}>
+          <SvgIcon name={isPrivate ? 'lock_on' : 'lock_off'} size={24} />
+        </button>
+      </Layout.FlexRow>
       <Button.Small
         text={t('post')}
         type="white_fill"

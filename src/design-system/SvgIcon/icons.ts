@@ -31,6 +31,8 @@ const search = 'search';
 const close = 'close';
 const link_share = 'link_share';
 const header_logo = 'header_logo';
+const lock_off = 'lock_off';
+const lock_on = 'lock_on';
 
 export {
   arrow_left,
@@ -51,6 +53,8 @@ export {
   heart,
   hide_password_eye,
   link_share,
+  lock_off,
+  lock_on,
   moment_add,
   moment_add_disabled,
   moment_description_normal,
