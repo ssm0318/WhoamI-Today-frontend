@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { DEFAULT_REDIRECTION_PATH } from '@constants/url';
 import { Button, Font, Layout } from '@design-system';
 import { hasMandatorySignUpParams } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -51,7 +52,7 @@ function NotiSettings() {
       },
       onSuccess: () => {
         resetSignUpInfo();
-        navigate('/my');
+        navigate(DEFAULT_REDIRECTION_PATH);
       },
       onError: (e) => {
         // TODO
