@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { DEFAULT_MARGIN, SCREEN_WIDTH } from '@constants/layout';
 import { Layout } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
+import { EMOJI_CATEGORIES } from './EmojiReactionPicker.constants';
 
 interface EmojiReactionPickerProps {
   selectedEmojis: string[];
@@ -20,6 +21,8 @@ function EmojiReactionPicker({
   pickerPosition,
 }: EmojiReactionPickerProps) {
   const emojiPickerWrapper = useRef<HTMLDivElement>(null);
+
+  // TODO(Gina) selectedEmojis 커스텀 스타일
   console.log(selectedEmojis);
 
   useClickOutside({ ref: emojiPickerWrapper, onClick: () => setIsVisible(false) });
@@ -27,10 +30,10 @@ function EmojiReactionPicker({
   if (!isVisible) return null;
   return (
     <Layout.Absolute
-      outline="CALENDAR_TODAY"
       t={pickerPosition.top}
       b={pickerPosition.bottom}
       ref={emojiPickerWrapper}
+      l={DEFAULT_MARGIN}
     >
       <EmojiPicker
         width={PICKER_WIDTH}
@@ -41,6 +44,7 @@ function EmojiReactionPicker({
         previewConfig={{
           showPreview: false,
         }}
+        categories={EMOJI_CATEGORIES}
       />
     </Layout.Absolute>
   );
