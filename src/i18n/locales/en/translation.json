@@ -242,7 +242,8 @@
   "chats": {
     "title": "Chats",
     "room_list": {
-      "search_placeholder": "Search"
+      "search_placeholder": "Search",
+      "title": "Messages"
     }
   }
 }

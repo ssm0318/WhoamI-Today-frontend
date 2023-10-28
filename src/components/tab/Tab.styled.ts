@@ -13,6 +13,7 @@ export const TabWrapper = styled.nav`
   height: ${BOTTOM_TABBAR_HEIGHT}px;
   padding: 8px 36px 29px 36px;
   box-shadow: 0px -4px 12px 0px rgba(0, 0, 0, 0.16);
+  z-index: 10;
 `;
 
 export const NavTabItem = styled(NavLink)`

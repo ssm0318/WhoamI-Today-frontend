@@ -1,5 +1,12 @@
 import styled from 'styled-components';
-import { CommonInput } from '@design-system';
+import { CommonInput, Layout } from '@design-system';
+
+export const StyledChatRoomSearchInputArea = styled(Layout.LayoutBase).attrs({
+  w: '100%',
+  p: 16,
+})`
+  border-bottom: 1px solid ${({ theme }) => theme.GRAY_2};
+`;
 
 export const StyledSearchInput = styled(CommonInput)`
   background: transparent;

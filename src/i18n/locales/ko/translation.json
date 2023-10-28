@@ -237,7 +237,8 @@
   "chats": {
     "title": "채팅",
     "room_list": {
-      "search_placeholder": "검색"
+      "search_placeholder": "검색",
+      "title": "메시지"
     }
   }
 }

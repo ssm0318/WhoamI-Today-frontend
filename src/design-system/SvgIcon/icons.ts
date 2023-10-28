@@ -36,6 +36,7 @@ const lock_off = 'lock_off';
 const lock_on = 'lock_on';
 const create_chats = 'create_chats';
 const menu_dots = 'menu_dots';
+const green_dot = 'green_dot';
 
 export {
   arrow_left,
@@ -54,6 +55,7 @@ export {
   error,
   friends_active,
   friends_inactive,
+  green_dot,
   header_logo,
   heart,
   hide_password_eye,
