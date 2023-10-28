@@ -1,17 +1,35 @@
 import { InputHTMLAttributes } from 'react';
 import { Margin } from '../layouts';
-import { StyledCheckBox } from './CheckBox.styled';
+import { StyledCheckBox, StyledCheckCircle } from './CheckBox.styled';
 
-export function CheckBox(props: InputHTMLAttributes<HTMLInputElement> & Margin) {
+type Props = InputHTMLAttributes<HTMLInputElement> & Margin;
+
+function CheckInput(props: Props) {
   const { name } = props;
   return (
-    <StyledCheckBox>
+    <>
       <input id={name} type="checkbox" {...props} />
       {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label htmlFor={name} />
       <label className="display-label" htmlFor={name}>
         {name}
       </label>
+    </>
+  );
+}
+
+export function CheckBox(props: Props) {
+  return (
+    <StyledCheckBox>
+      <CheckInput {...props} />
     </StyledCheckBox>
+  );
+}
+
+export function CheckCircle(props: Props) {
+  return (
+    <StyledCheckCircle>
+      <CheckInput {...props} />
+    </StyledCheckCircle>
   );
 }

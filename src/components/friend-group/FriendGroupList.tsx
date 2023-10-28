@@ -1,31 +1,40 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Font, Layout, SvgIcon } from '@design-system';
+import { Button, CheckCircle, Font, Layout, SvgIcon } from '@design-system';
 import { friendGroupList } from '@mock/friends';
 import { FriendGroup } from '@models/friendGroup';
-import { StyledCheckBox, StyledGroup, StyledGroupList } from './FriendGroupList.styled';
+import { StyledGroup, StyledGroupList } from './FriendGroupList.styled';
 
-function CheckBox({ name }: FriendGroup) {
-  return (
-    <StyledCheckBox>
-      <input id={name} type="checkbox" />
-      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-      <label htmlFor={name} />
-      <label className="display-label" htmlFor={name}>
-        {name}
-      </label>
-    </StyledCheckBox>
-  );
-}
 interface FriendGroupListProps {
   onClose: () => void;
 }
+
+interface CheckFriendGroup extends FriendGroup {
+  checked?: boolean;
+}
+
 function FriendGroupList({ onClose }: FriendGroupListProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'friend_group' });
+  const [checkedGroupList, setCheckedGroupList] = useState<CheckFriendGroup[]>(friendGroupList);
+
+  const handleToggleFriendGroup = (item: CheckFriendGroup) => {
+    const selectedGroupIndex = checkedGroupList.findIndex((group) => group.id === item.id);
+
+    if (selectedGroupIndex === -1) return;
+
+    setCheckedGroupList((list) => [
+      ...list.slice(0, selectedGroupIndex),
+      { ...list[selectedGroupIndex], checked: !list[selectedGroupIndex].checked },
+      ...list.slice(selectedGroupIndex + 1),
+    ]);
+  };
+
+  const showDeleteGroupButton = !!checkedGroupList.find((group) => !!group.checked);
 
   return (
-    <Layout.Absolute t={0} l={0} w="100%" h="100%" bgColor="BASIC_WHITE">
+    <Layout.Absolute t={0} l={0} w="100%" h="100%" bgColor="BASIC_WHITE" flexDirection="column">
       <TitleHeader
         title={t('title')}
         RightComponent={
@@ -37,11 +46,15 @@ function FriendGroupList({ onClose }: FriendGroupListProps) {
         }
         onClose={onClose}
       />
-      <Layout.LayoutBase w="100%" mt={TITLE_HEADER_HEIGHT + 50} mh={24}>
+      <Layout.LayoutBase w="100%" pt={TITLE_HEADER_HEIGHT + 50} ph={24}>
         <StyledGroupList>
-          {friendGroupList.map((group) => (
+          {checkedGroupList.map((group) => (
             <StyledGroup key={group.id}>
-              <CheckBox {...group} />
+              <CheckCircle
+                checked={!!group.checked}
+                name={group.name}
+                onChange={() => handleToggleFriendGroup(group)}
+              />
               <SvgIcon name="order_group" color="GRAY_6" size={16} />
             </StyledGroup>
           ))}
@@ -54,6 +67,14 @@ function FriendGroupList({ onClose }: FriendGroupListProps) {
             </Layout.FlexRow>
           </StyledGroup>
         </StyledGroupList>
+        {showDeleteGroupButton && (
+          <Button.Dialog
+            status="normal"
+            type="warning_fill"
+            text={t('delete_group')}
+            sizing="stretch"
+          />
+        )}
       </Layout.LayoutBase>
     </Layout.Absolute>
   );

@@ -4,6 +4,7 @@ export const StyledGroupList = styled.ul`
   border-radius: 5.74px;
   border: 1px solid ${({ theme }) => theme.GRAY_2};
   width: 100%;
+  margin-bottom: 24px;
 
   li:last-child {
     border: none;
