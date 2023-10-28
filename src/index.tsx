@@ -11,9 +11,9 @@ import ErrorPage from './components/error-page/ErrorPage';
 import './i18n';
 import reportWebVitals from './reportWebVitals';
 import AllQuestions from './routes/AllQuestions';
+import Chats from './routes/Chats';
 import ForgotPassword from './routes/ForgotPassword';
 import Friends from './routes/Friends';
-import Home from './routes/Home';
 import Intro from './routes/Intro';
 import MomentDetailContainer from './routes/moment-detail/MomentDetailContainer';
 import MomentUpload from './routes/MomentUpload';
@@ -49,8 +49,8 @@ const router = createBrowserRouter([
     loader: checkIfSignIn,
     children: [
       {
-        path: 'home',
-        element: <Home />,
+        path: 'chats',
+        element: <Chats />,
       },
       {
         path: 'my',

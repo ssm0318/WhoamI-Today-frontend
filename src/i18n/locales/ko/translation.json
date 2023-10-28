@@ -50,6 +50,11 @@
     "noti_time_default_desc": "알림 수신 시간을 설정하지 않으면, 오후 4시에 알림이 전송됩니다",
     "complete": "완료"
   },
+  "nav_tab": {
+    "friends": "친구",
+    "my": "나",
+    "chats": "채팅"
+  },
   "home": {
     "moment": {
       "todays_moments": "오늘의 순간들",

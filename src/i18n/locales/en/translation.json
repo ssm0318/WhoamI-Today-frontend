@@ -50,6 +50,11 @@
     "noti_time_default_desc": "If you do not set a time, you will be notified at 4 p.m.",
     "complete": "complete"
   },
+  "nav_tab": {
+    "friends": "Friends",
+    "my": "My",
+    "chats": "Chats"
+  },
   "home": {
     "moment": {
       "todays_moments": "Today's Moments",

@@ -19,7 +19,7 @@ function MomentUploadCompleteModal({ isVisible, setIsVisible }: MomentUploadComp
   };
 
   const handleOnClose = () => {
-    navigate('/home');
+    navigate('/my');
   };
 
   return (
