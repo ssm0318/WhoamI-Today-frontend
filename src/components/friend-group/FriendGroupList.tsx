@@ -17,7 +17,21 @@ interface CheckFriendGroup extends FriendGroup {
 
 function FriendGroupList({ onClose }: FriendGroupListProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'friend_group' });
+
+  const [mode, setMode] = useState<'list' | 'edit'>('list');
   const [checkedGroupList, setCheckedGroupList] = useState<CheckFriendGroup[]>(friendGroupList);
+
+  const resetCheckGroupList = () => {
+    const list = checkedGroupList.map((group) => ({ ...group, checked: false }));
+    setCheckedGroupList(list);
+  };
+
+  const handleClickEdit = () => setMode('edit');
+  const handleClickSave = () => {
+    // TODO
+    setMode('list');
+    resetCheckGroupList();
+  };
 
   const handleToggleFriendGroup = (item: CheckFriendGroup) => {
     const selectedGroupIndex = checkedGroupList.findIndex((group) => group.id === item.id);
@@ -38,26 +52,42 @@ function FriendGroupList({ onClose }: FriendGroupListProps) {
       <TitleHeader
         title={t('title')}
         RightComponent={
-          <button type="button">
-            <Font.Display type="18_bold" color="PRIMARY">
-              {t('save')}
-            </Font.Display>
-          </button>
+          mode === 'edit' ? (
+            <button type="button" onClick={handleClickSave}>
+              <Font.Display type="18_bold" color="PRIMARY">
+                {t('save')}
+              </Font.Display>
+            </button>
+          ) : (
+            <button type="button" onClick={handleClickEdit}>
+              <Font.Display type="18_bold" color="PRIMARY">
+                {t('edit')}
+              </Font.Display>
+            </button>
+          )
         }
         onClose={onClose}
       />
       <Layout.LayoutBase w="100%" pt={TITLE_HEADER_HEIGHT + 50} ph={24}>
         <StyledGroupList>
-          {checkedGroupList.map((group) => (
-            <StyledGroup key={group.id}>
-              <CheckCircle
-                checked={!!group.checked}
-                name={group.name}
-                onChange={() => handleToggleFriendGroup(group)}
-              />
-              <SvgIcon name="order_group" color="GRAY_6" size={16} />
-            </StyledGroup>
-          ))}
+          {mode === 'list' &&
+            checkedGroupList.map((group) => (
+              <StyledGroup key={group.id}>
+                <Font.Display type="14_regular">{group.name}</Font.Display>
+                <SvgIcon name="more_arrow" color="BASIC_BLACK" size={16} />
+              </StyledGroup>
+            ))}
+          {mode === 'edit' &&
+            checkedGroupList.map((group) => (
+              <StyledGroup key={group.id}>
+                <CheckCircle
+                  checked={!!group.checked}
+                  name={group.name}
+                  onChange={() => handleToggleFriendGroup(group)}
+                />
+                <SvgIcon name="order_group" color="GRAY_6" size={16} />
+              </StyledGroup>
+            ))}
           <StyledGroup>
             <Layout.FlexRow>
               <SvgIcon name="check_circle_add" size={20} />

@@ -116,6 +116,7 @@
   },
   "friend_group": {
     "title": "그룹 목록",
+    "edit": "수정하기",
     "save": "저장하기",
     "add_group": "새로운 그룹 만들기",
     "delete_group": "선택한 그룹 삭제하기"

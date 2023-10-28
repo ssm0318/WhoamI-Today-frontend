@@ -119,6 +119,7 @@
   },
   "friend_group": {
     "title": "Group List",
+    "edit": "Edit",
     "save": "Save",
     "add_group": "Add Group",
     "delete_group": "Delete Group"

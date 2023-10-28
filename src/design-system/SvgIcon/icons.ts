@@ -41,6 +41,7 @@ const check_circle_unchecked = 'check_circle_unchecked';
 const check_circle_checked = 'check_circle_checked';
 const check_circle_add = 'check_circle_add';
 const order_group = 'order_group';
+const more_arrow = 'more_arrow';
 
 export {
   arrow_left,
@@ -72,6 +73,7 @@ export {
   moment_mood_normal,
   moment_photo_disabled,
   moment_photo_normal,
+  more_arrow,
   my_active,
   my_inactive,
   my_profile,
