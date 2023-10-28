@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import Divider from '@components/_common/divider/Divider';
 import Calendar from '@components/calendar/Calendar';
 import CalendarViewTabs from '@components/calendar/calendar-view-Tabs/CalendarViewTabs';
 import MyDetail from '@components/my-detail/MyDetail';
@@ -19,7 +20,6 @@ function My() {
 
   return (
     <Layout.FlexCol w="100%" h="100vh" pt={20} bgColor="BACKGROUND_COLOR">
-      <ReactionSection emojis={['💡', '🙇‍♀️', '🤾', '🤪', '🤯', '🥺']} />
       <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between" ph={24} pb={14}>
         <MyProfile />
         <CalendarViewTabs />
@@ -27,6 +27,8 @@ function My() {
       <Calendar />
       <MyDetail detailDate={detailDate} />
       <ReactionSection emojis={['💪🏻', '😊', '😋']} />
+      <Divider width={500} />
+      <ReactionSection emojis={['💡', '🙇‍♀️', '🤾', '🤪', '🤯', '🥺']} />
     </Layout.FlexCol>
   );
 }
