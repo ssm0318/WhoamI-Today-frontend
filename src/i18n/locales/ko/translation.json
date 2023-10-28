@@ -235,6 +235,9 @@
     }
   },
   "chats": {
-    "title": "채팅"
+    "title": "채팅",
+    "room_list": {
+      "search_placeholder": "검색"
+    }
   }
 }

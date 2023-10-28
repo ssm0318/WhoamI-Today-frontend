@@ -240,6 +240,9 @@
     }
   },
   "chats": {
-    "title": "Chats"
+    "title": "Chats",
+    "room_list": {
+      "search_placeholder": "Search"
+    }
   }
 }
