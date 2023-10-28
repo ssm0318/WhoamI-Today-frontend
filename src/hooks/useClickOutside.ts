@@ -2,15 +2,19 @@ import { RefObject, useEffect } from 'react';
 
 interface useClickOutsideProps {
   ref: RefObject<HTMLElement>;
+  toggleButtonRef?: RefObject<HTMLElement>;
   onClick: () => void;
 }
 
-function useClickOutside({ ref, onClick }: useClickOutsideProps) {
+function useClickOutside({ ref, toggleButtonRef, onClick }: useClickOutsideProps) {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent | TouchEvent) {
-      console.log(11, event);
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        console.log(13);
+      if (
+        ref.current &&
+        !ref.current.contains(event.target as Node) &&
+        (!toggleButtonRef ||
+          (toggleButtonRef && !toggleButtonRef.current?.contains(event.target as Node)))
+      ) {
         onClick();
       }
     }
@@ -22,7 +26,7 @@ function useClickOutside({ ref, onClick }: useClickOutsideProps) {
       document.removeEventListener('mousedown', handleClickOutside);
       document.addEventListener('touchstart', handleClickOutside);
     };
-  }, [ref, onClick]);
+  }, [ref, onClick, toggleButtonRef]);
 }
 
 export default useClickOutside;

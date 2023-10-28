@@ -1,5 +1,5 @@
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
-import { useRef } from 'react';
+import { RefObject, useRef } from 'react';
 import { DEFAULT_MARGIN, SCREEN_WIDTH } from '@constants/layout';
 import { Layout } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
@@ -12,6 +12,7 @@ interface EmojiReactionPickerProps {
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
   pickerPosition: { top?: number; bottom?: number };
+  toggleButtonRef: RefObject<HTMLButtonElement>;
 }
 
 function EmojiReactionPicker({
@@ -20,11 +21,12 @@ function EmojiReactionPicker({
   isVisible,
   setIsVisible,
   pickerPosition,
+  toggleButtonRef,
 }: EmojiReactionPickerProps) {
   const emojiPickerWrapper = useRef<HTMLDivElement>(null);
   const unifiedEmojiList = selectedEmojis.map((e) => e.codePointAt(0)?.toString(16) || '');
 
-  useClickOutside({ ref: emojiPickerWrapper, onClick: () => setIsVisible(false) });
+  useClickOutside({ ref: emojiPickerWrapper, toggleButtonRef, onClick: () => setIsVisible(false) });
 
   if (!isVisible) return null;
   return (
