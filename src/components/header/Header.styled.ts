@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { MAX_WINDOW_WIDTH, TOP_NAVIGATION_HEIGHT, Z_INDEX } from '@constants/layout';
+import { Layout } from '@design-system';
 
 export const HeaderWrapper = styled.header`
   position: fixed;
@@ -27,5 +28,9 @@ export const Logo = styled.div`
 
 export const Noti = styled(Link)`
   text-decoration: none;
+  position: relative;
+`;
+
+export const RightIconArea = styled(Layout.FlexRow)`
   position: relative;
 `;

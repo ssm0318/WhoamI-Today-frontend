@@ -2,6 +2,7 @@
 const top_navigation_hamburger = 'top_navigation_hamburger';
 const top_navigation_noti = 'top_navigation_noti';
 const arrow_left = 'arrow_left';
+const arrow_left_bold = 'arrow_left_bold';
 const arrow_right = 'arrow_right';
 const moment_mood_normal = 'moment_mood_normal';
 const moment_description_normal = 'moment_description_normal';
@@ -33,9 +34,12 @@ const link_share = 'link_share';
 const header_logo = 'header_logo';
 const lock_off = 'lock_off';
 const lock_on = 'lock_on';
+const create_chats = 'create_chats';
+const menu_dots = 'menu_dots';
 
 export {
   arrow_left,
+  arrow_left_bold,
   arrow_right,
   box_check_checked,
   box_check_unchecked,
@@ -45,6 +49,7 @@ export {
   circle_check_unchecked,
   close,
   comment,
+  create_chats,
   delete_button,
   error,
   friends_active,
@@ -55,6 +60,7 @@ export {
   link_share,
   lock_off,
   lock_on,
+  menu_dots,
   moment_add,
   moment_add_disabled,
   moment_description_normal,
