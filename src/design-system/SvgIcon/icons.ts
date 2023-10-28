@@ -37,6 +37,10 @@ const spotify = 'spotify';
 const top_navigation_friend = 'top_navigation_friend';
 const top_navigation_edit = 'top_navigation_edit';
 const top_navigation_dots = 'top_navigation_dots';
+const check_circle_unchecked = 'check_circle_unchecked';
+const check_circle_checked = 'check_circle_checked';
+const check_circle_add = 'check_circle_add';
+const order_group = 'order_group';
 
 export {
   arrow_left,
@@ -45,6 +49,9 @@ export {
   box_check_unchecked,
   chats_active,
   chats_inactive,
+  check_circle_add,
+  check_circle_checked,
+  check_circle_unchecked,
   circle_check_checked,
   circle_check_unchecked,
   close,
@@ -68,6 +75,7 @@ export {
   my_active,
   my_inactive,
   my_profile,
+  order_group,
   question_send,
   search,
   show_password_eye,

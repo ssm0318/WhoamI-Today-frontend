@@ -119,7 +119,8 @@
   },
   "friend_group": {
     "title": "Group List",
-    "save": "Save"
+    "save": "Save",
+    "add_group": "Add Group"
   },
   "my_detail": {
     "title_format": "d/M/yy (E)"
