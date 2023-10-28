@@ -24,7 +24,7 @@ function useClickOutside({ ref, toggleButtonRef, onClick }: useClickOutsideProps
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      document.addEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
     };
   }, [ref, onClick, toggleButtonRef]);
 }
