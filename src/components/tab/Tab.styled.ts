@@ -25,9 +25,9 @@ export const NavTabItem = styled(NavLink)`
   img {
     border-radius: 50%;
     border: 2px solid ${({ theme }) => theme.GRAY_2};
+  }
 
-    .active {
-      border: 2px solid ${({ theme }) => theme.PRIMARY};
-    }
+  .active {
+    border: 2px solid ${({ theme }) => theme.PRIMARY};
   }
 `;

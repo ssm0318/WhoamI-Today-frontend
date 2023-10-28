@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
+import { DEFAULT_REDIRECTION_PATH } from '@constants/url';
 import { Button, Font, Layout } from '@design-system';
 import { SignInParams } from '@models/api/user';
 import { signIn } from '@utils/apis/user';
@@ -26,7 +27,11 @@ function SignIn() {
 
   const navigate = useNavigate();
   const onSubmit = () => {
-    signIn({ signInInfo, onSuccess: () => navigate('/my'), onError: (e) => setSignInError(e) });
+    signIn({
+      signInInfo,
+      onSuccess: () => navigate(DEFAULT_REDIRECTION_PATH),
+      onError: (e) => setSignInError(e),
+    });
   };
 
   const onKeySubmit = (e: KeyboardEvent) => {
