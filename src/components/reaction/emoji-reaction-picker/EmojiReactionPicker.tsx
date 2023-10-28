@@ -4,6 +4,7 @@ import { DEFAULT_MARGIN, SCREEN_WIDTH } from '@constants/layout';
 import { Layout } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
 import { EMOJI_CATEGORIES } from './EmojiReactionPicker.constants';
+import { EmojiPickerCustomStyle } from './EmojiReactionPicker.styled';
 
 interface EmojiReactionPickerProps {
   selectedEmojis: string[];
@@ -21,9 +22,7 @@ function EmojiReactionPicker({
   pickerPosition,
 }: EmojiReactionPickerProps) {
   const emojiPickerWrapper = useRef<HTMLDivElement>(null);
-
-  // TODO(Gina) selectedEmojis 커스텀 스타일
-  console.log(selectedEmojis);
+  const unifiedEmojiList = selectedEmojis.map((e) => e.codePointAt(0)?.toString(16) || '');
 
   useClickOutside({ ref: emojiPickerWrapper, onClick: () => setIsVisible(false) });
 
@@ -35,6 +34,7 @@ function EmojiReactionPicker({
       ref={emojiPickerWrapper}
       l={DEFAULT_MARGIN}
     >
+      <EmojiPickerCustomStyle unifiedList={unifiedEmojiList} />
       <EmojiPicker
         width={PICKER_WIDTH}
         height={PICKER_HEIGHT}
