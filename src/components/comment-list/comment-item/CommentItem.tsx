@@ -24,7 +24,7 @@ function CommentItem({
 }: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
 
-  const { author_detail, replies, is_reply } = comment;
+  const { author_detail, replies, is_reply, is_private } = comment;
 
   const isUserAuthor = useBoundStore((state) => state.isUserAuthor);
   const isCommentAuthor = isUserAuthor((author_detail as User).id);
@@ -47,6 +47,7 @@ function CommentItem({
           <Layout.FlexRow w="100%" alignItems="center" gap={8}>
             {/* FIXME: reply icon 교체 */}
             {is_reply && <SvgIcon name="arrow_right" color="BASIC_BLACK" size={20} />}
+            {is_private && <SvgIcon name="lock_on" size={20} />}
             <AuthorProfile authorDetail={author_detail} profileImgSize={24} />
             {/* TODO: 줄바꿈 표시 */}
             <Font.Body type="14_regular">{comment.content}</Font.Body>
@@ -90,6 +91,7 @@ function CommentItem({
       {!is_reply && showReplyInput && (
         <CommentInputBox
           isReply
+          forcePrivate={is_private}
           post={comment}
           postType="Comment"
           reloadComments={reloadComments}

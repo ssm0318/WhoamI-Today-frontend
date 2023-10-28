@@ -46,7 +46,6 @@ function CommentList({ postType, post }: CommentListProps) {
     <Layout.FlexCol w="100%" ph={8}>
       <Divider width={1} marginTrailing={10} />
       <Layout.FlexCol w="100%" gap={2}>
-        {/* TODO: private comments */}
         {comments.map((comment) => (
           <CommentItem
             key={comment.id}
