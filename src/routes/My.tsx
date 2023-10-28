@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
+import Divider from '@components/_common/divider/Divider';
 import Calendar from '@components/calendar/Calendar';
 import CalendarViewTabs from '@components/calendar/calendar-view-Tabs/CalendarViewTabs';
 import MyDetail from '@components/my-detail/MyDetail';
 import MyProfile from '@components/my-profile/MyProfile';
+import ReactionSection from '@components/reaction/reaction-section/ReactionSection';
 import { Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 
@@ -24,6 +26,9 @@ function My() {
       </Layout.FlexRow>
       <Calendar />
       <MyDetail detailDate={detailDate} />
+      <ReactionSection emojis={['💪🏻', '😊', '😋']} />
+      <Divider width={500} />
+      <ReactionSection emojis={['💡', '🙇‍♀️', '🤾', '🤪', '🤯', '🥺']} />
     </Layout.FlexCol>
   );
 }
