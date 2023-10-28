@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Font, Layout, SvgIcon } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
 import { NavTabItem, TabWrapper } from './Tab.styled';
 
 interface TabItemProps {
@@ -10,13 +11,25 @@ interface TabItemProps {
 
 function TabItem({ to, type, size = 48 }: TabItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'nav_tab' });
+  const myProfile = useBoundStore((state) => state.myProfile);
 
   return (
     <NavTabItem to={to}>
       {({ isActive }) => (
         <Layout.FlexCol w="100%" alignItems="center">
-          <SvgIcon name={isActive ? `${type}_active` : `${type}_inactive`} size={size} />
-          <Font.Body type="14_regular" color={isActive ? 'PRIMARY' : 'GRAY_2'}>
+          {type === 'my' && myProfile?.profile_image ? (
+            <img
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              src={myProfile.profile_image!}
+              width={32}
+              height={32}
+              alt={`${myProfile?.username ?? 'user'}-profile`}
+              className={`${isActive ? 'active' : ''}`}
+            />
+          ) : (
+            <SvgIcon name={isActive ? `${type}_active` : `${type}_inactive`} size={size} />
+          )}
+          <Font.Body type="14_semibold" color={isActive ? 'PRIMARY' : 'GRAY_2'}>
             {t(type)}
           </Font.Body>
         </Layout.FlexCol>

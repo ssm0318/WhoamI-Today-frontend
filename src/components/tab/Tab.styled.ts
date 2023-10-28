@@ -21,4 +21,13 @@ export const NavTabItem = styled(NavLink)`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  img {
+    border-radius: 50%;
+    border: 2px solid ${({ theme }) => theme.GRAY_2};
+
+    .active {
+      border: 2px solid ${({ theme }) => theme.PRIMARY};
+    }
+  }
 `;
