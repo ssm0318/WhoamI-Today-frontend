@@ -117,6 +117,10 @@
     "post_complete": "Your moment have been posted!",
     "view_friends_moment": "View Friends' Moments"
   },
+  "friend_group": {
+    "title": "Group List",
+    "save": "Save"
+  },
   "my_detail": {
     "title_format": "d/M/yy (E)"
   },

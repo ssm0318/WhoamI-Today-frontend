@@ -8,10 +8,17 @@ interface TitleHeaderProps {
   title?: string | null;
   type?: TitleHeaderType;
   onGoBack?: () => void;
+  onClose?: () => void;
   RightComponent?: React.ReactNode;
 }
 
-function TitleHeader({ title, type = 'MAIN', onGoBack, RightComponent }: TitleHeaderProps) {
+function TitleHeader({
+  title,
+  type = 'MAIN',
+  onGoBack,
+  onClose,
+  RightComponent,
+}: TitleHeaderProps) {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
@@ -28,11 +35,16 @@ function TitleHeader({ title, type = 'MAIN', onGoBack, RightComponent }: TitleHe
         ph="default"
         pv={10}
       >
-        <Layout.LayoutBase w={36} h={36}>
+        {onClose ? (
+          <button type="button" onClick={onClose}>
+            <SvgIcon name="close" size={24} color="BASIC_BLACK" />
+          </button>
+        ) : (
           <button type="button" onClick={handleGoBack}>
             <SvgIcon name="arrow_left" size={36} color="BASIC_BLACK" />
           </button>
-        </Layout.LayoutBase>
+        )}
+
         {title && (
           <Font.Display type={type === 'MAIN' ? '24_bold' : '20_bold'} textAlign="center">
             {title}
