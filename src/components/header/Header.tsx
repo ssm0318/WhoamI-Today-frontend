@@ -9,8 +9,8 @@ import MyHeader from './my-header/MyHeader';
 function Header() {
   const location = useLocation();
 
-  const renderHeaderComponent = useCallback((pathname: string) => {
-    switch (pathname) {
+  const renderHeaderComponent = useCallback(() => {
+    switch (location.pathname) {
       case '/friends':
         return <FriendsHeader />;
       case '/my':
@@ -20,12 +20,12 @@ function Header() {
       default:
         return null;
     }
-  }, []);
+  }, [location.pathname]);
 
   return (
     <HeaderWrapper>
       <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center">
-        {renderHeaderComponent(location.pathname)}
+        {renderHeaderComponent()}
       </Layout.FlexRow>
     </HeaderWrapper>
   );
