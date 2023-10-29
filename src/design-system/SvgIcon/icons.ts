@@ -33,6 +33,7 @@ const link_share = 'link_share';
 const header_logo = 'header_logo';
 const lock_off = 'lock_off';
 const lock_on = 'lock_on';
+const spotify = 'spotify';
 
 export {
   arrow_left,
@@ -67,6 +68,7 @@ export {
   question_send,
   search,
   show_password_eye,
+  spotify,
   top_navigation_hamburger,
   top_navigation_noti,
 };

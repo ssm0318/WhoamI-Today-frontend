@@ -35,7 +35,7 @@ function MyStatus() {
           </Font.Body>
         </Layout.FlexCol>
       </Layout.FlexRow>
-      <Layout.FlexCol gap={8} p={16} bgColor="GRAY_14" rounded={8}>
+      <Layout.FlexCol gap={8} p={16} bgColor="GRAY_14" rounded={8} justifyContent="center">
         <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
           {/* spotify */}
           {trackData && (
@@ -57,8 +57,9 @@ function MyStatus() {
                 }}
               />
               <Font.Body type="12_semibold">{trackData.name}</Font.Body>
-              {/* TODO(Gina): 스포티파이 아이콘 */}
-              <SvgIcon name="comment" size={16} />
+              <Layout.LayoutBase w={16} h={16}>
+                <SvgIcon name="spotify" size={16} />
+              </Layout.LayoutBase>
             </Layout.FlexRow>
           )}
           {/* check in time */}
