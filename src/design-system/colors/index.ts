@@ -41,6 +41,15 @@ export const Colors = {
 
   PRIMARY: '#8700FF',
   SECONDARY: '#87DFFF',
+
+  AVAILABLE_BG: '#7EC7FC33',
+  AVAILABLE_CHIP: '#4DB4FF',
+  NO_STATUS_BG: '#FFC700',
+  NO_STATUS_CHIP: '#FFC700',
+  MAYBE_SLOW_BG: '#FF8754',
+  MAYBE_SLOW_CHIP: '#FF8754',
+  NOT_AVAILABLE_BG: '#FF2D2D',
+  NOT_AVAILABLE_CHIP: '#FF2D2D',
 };
 
 export type ColorType = typeof Colors;
