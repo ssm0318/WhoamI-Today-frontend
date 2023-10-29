@@ -34,6 +34,9 @@ const header_logo = 'header_logo';
 const lock_off = 'lock_off';
 const lock_on = 'lock_on';
 const spotify = 'spotify';
+const top_navigation_friend = 'top_navigation_friend';
+const top_navigation_edit = 'top_navigation_edit';
+const top_navigation_dots = 'top_navigation_dots';
 
 export {
   arrow_left,
@@ -69,6 +72,9 @@ export {
   search,
   show_password_eye,
   spotify,
+  top_navigation_dots,
+  top_navigation_edit,
+  top_navigation_friend,
   top_navigation_hamburger,
   top_navigation_noti,
 };
