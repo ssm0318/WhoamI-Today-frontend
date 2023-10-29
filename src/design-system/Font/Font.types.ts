@@ -27,4 +27,6 @@ export type BodyType =
   | '14_regular'
   | '14_semibold'
   | '12_regular'
-  | '12_semibold';
+  | '12_semibold'
+  | '11_regular'
+  | '11_semibold';
