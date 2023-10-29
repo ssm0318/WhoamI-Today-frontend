@@ -4,6 +4,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components';
 import { Colors } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
+import SpotifyManager from '@libs/SpotifyManager';
 import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
 import { checkIfSignIn } from '@utils/apis/user';
@@ -116,9 +117,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  useEffect(() => {
-    reportWebVitals();
-  }, []);
+  const spotifyManager = SpotifyManager.getInstance();
 
   const { setAppNotiPermission } = useBoundStore((state) => ({
     setAppNotiPermission: state.setAppNotiPermission,
@@ -130,6 +129,11 @@ function App() {
     },
     key: 'SET_NOTI_PERMISSION',
   });
+
+  useEffect(() => {
+    reportWebVitals();
+    spotifyManager.initialize();
+  }, [spotifyManager]);
 
   return (
     <React.StrictMode>

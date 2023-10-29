@@ -50,6 +50,8 @@ export const Colors = {
   MAYBE_SLOW_CHIP: '#FF8754',
   NOT_AVAILABLE_BG: '#FF2D2D',
   NOT_AVAILABLE_CHIP: '#FF2D2D',
+
+  SPOTIFY_GREEN: '#4AD159',
 };
 
 export type ColorType = typeof Colors;

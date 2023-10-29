@@ -32,6 +32,7 @@
       "@utils/*": ["./src/utils/*"],
       "@design-system": ["./src/design-system/index"],
       "@mock/*": ["./src/mock/*"],
+      "@libs/*": ["./src/libs/*"],
     },
   },
   "include": [
