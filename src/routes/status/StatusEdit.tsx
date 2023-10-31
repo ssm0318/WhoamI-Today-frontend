@@ -132,7 +132,7 @@ function StatusEdit() {
         <Divider width={1} />
 
         {/* description */}
-        <Input label="Description" name="description" value={description} />
+        <Input label="Description" name="description" value={description} onChange={handleChange} />
       </Layout.FlexCol>
       <Layout.FlexRow w="100%" justifyContent="center" mv="default">
         <Button.Large text="save" onClick={handleConfirmSave} type="filled" status="normal" />
