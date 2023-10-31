@@ -3,7 +3,6 @@ import Divider from '@components/_common/divider/Divider';
 import Calendar from '@components/calendar/Calendar';
 import CalendarViewTabs from '@components/calendar/calendar-view-Tabs/CalendarViewTabs';
 import MyDetail from '@components/my-detail/MyDetail';
-import MyProfile from '@components/my-profile/MyProfile';
 import ReactionSection from '@components/reaction/reaction-section/ReactionSection';
 import MyStatus from '@components/status/my-status/MyStatus';
 import { DEFAULT_MARGIN } from '@constants/layout';
@@ -21,7 +20,7 @@ function My() {
   }, [resetDetailDate]);
 
   return (
-    <Layout.FlexCol w="100%" h="100vh" bgColor="BASIC_WHITE">
+    <Layout.FlexCol w="100%" bgColor="BASIC_WHITE">
       <Layout.FlexRow
         w="100%"
         alignItems="center"
@@ -35,11 +34,10 @@ function My() {
       <Layout.FlexRow
         w="100%"
         alignItems="center"
-        justifyContent="space-between"
+        justifyContent="flex-end"
         ph={DEFAULT_MARGIN}
         pv={12}
       >
-        <MyProfile />
         <CalendarViewTabs />
       </Layout.FlexRow>
       <Calendar />
