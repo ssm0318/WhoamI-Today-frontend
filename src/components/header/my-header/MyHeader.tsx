@@ -1,14 +1,16 @@
-import { useState } from 'react';
-import SideMenu from '@components/header/side-menu/SideMenu';
-import { Font, Layout, SvgIcon } from '@design-system';
+import { Font, Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
+import Icon from '../icon/Icon';
 
-function MyHeader() {
-  const [showSideMenu, setShowSideMenu] = useState(false);
+interface MyHeaderProps {
+  onClickHamburger: () => void;
+}
+
+function MyHeader({ onClickHamburger }: MyHeaderProps) {
   const myProfile = useBoundStore((state) => state.myProfile);
 
-  const handleClickHamburger = () => {
-    setShowSideMenu(true);
+  const handleEditStatus = () => {
+    // 수정 페이지로 이동
   };
 
   return (
@@ -16,13 +18,10 @@ function MyHeader() {
       <Layout.FlexRow>
         <Font.Display type="24_regular">{myProfile?.username}</Font.Display>
       </Layout.FlexRow>
-      <Layout.FlexRow gap={8}>
-        <SvgIcon name="top_navigation_edit" size={44} />
-        <button type="button" onClick={handleClickHamburger}>
-          <SvgIcon name="top_navigation_hamburger" size={44} />
-        </button>
+      <Layout.FlexRow gap={8} alignItems="center">
+        <Icon name="top_navigation_edit" size={44} onClick={handleEditStatus} />
+        <Icon name="top_navigation_hamburger" size={44} onClick={onClickHamburger} />
       </Layout.FlexRow>
-      {showSideMenu && <SideMenu closeSideMenu={() => setShowSideMenu(false)} />}
     </>
   );
 }

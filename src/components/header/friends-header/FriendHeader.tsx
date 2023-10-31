@@ -1,5 +1,6 @@
 import { Font, Layout, SvgIcon } from '@design-system';
 import { Noti } from '../Header.styled';
+import Icon from '../icon/Icon';
 
 function FriendsHeader() {
   return (
@@ -8,7 +9,7 @@ function FriendsHeader() {
         <Font.Display type="24_regular">Friends</Font.Display>
       </Layout.FlexRow>
       <Layout.FlexRow gap={8}>
-        <SvgIcon name="top_navigation_friend" size={44} />
+        <Icon name="top_navigation_friend" size={44} />
         <Noti to="/notifications">
           <SvgIcon name="top_navigation_noti" size={44} />
           {/* TODO 넛지 변경 */}

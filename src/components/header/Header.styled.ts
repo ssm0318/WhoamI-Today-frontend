@@ -14,7 +14,7 @@ export const HeaderWrapper = styled.header`
   max-width: ${MAX_WINDOW_WIDTH}px;
   background-color: white;
   height: ${TOP_NAVIGATION_HEIGHT}px;
-  padding: 6px ${DEFAULT_MARGIN}px;
+  padding: 0px ${DEFAULT_MARGIN}px;
   width: 100%;
   border-bottom: 1.2px solid ${({ theme }) => theme.GRAY_2};
   z-index: ${Z_INDEX.TITLE_HEADER};

@@ -103,6 +103,14 @@ const router = createBrowserRouter([
     loader: checkIfSignIn,
   },
   {
+    path: 'status',
+    loader: checkIfSignIn,
+    children: [
+      { path: 'edit', element: <Settings /> },
+      { path: 'music-search', element: <Settings /> },
+    ],
+  },
+  {
     path: 'settings',
     loader: checkIfSignIn,
     children: [
