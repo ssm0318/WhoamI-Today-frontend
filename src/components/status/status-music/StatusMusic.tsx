@@ -3,9 +3,10 @@ import { Font, Layout, SvgIcon } from '@design-system';
 
 interface StatusMusicProps {
   track: Track;
+  width?: number;
 }
 
-function StatusMusic({ track }: StatusMusicProps) {
+function StatusMusic({ track, width = 200 }: StatusMusicProps) {
   return (
     <Layout.FlexRow
       outline="SPOTIFY_GREEN"
@@ -15,7 +16,7 @@ function StatusMusic({ track }: StatusMusicProps) {
       rounded={12}
       alignItems="center"
       bgColor="BASIC_WHITE"
-      w={200}
+      w={width}
     >
       <img
         src={track.album.images[0].url}
@@ -29,7 +30,6 @@ function StatusMusic({ track }: StatusMusicProps) {
       <Font.Body type="12_semibold">
         {track.artists[0].name} - {track.name}
       </Font.Body>
-
       <Layout.LayoutBase w={16} h={16}>
         <SvgIcon name="spotify" size={16} />
       </Layout.LayoutBase>

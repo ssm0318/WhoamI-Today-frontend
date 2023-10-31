@@ -26,19 +26,22 @@ class SpotifyManager {
     }
   };
 
-  // searchMusic = async (query: string): Promise<Pick<PartialSearchResult, 'artists' | 'tracks'>> => {
-  //   if (!this.spotifyApi) {
-  //     throw new Error('SpotifyApi is not initialized.');
-  //   }
+  searchMusic = async (query: string, limit: number, offset: number): Promise<Track[]> => {
+    if (!this.spotifyApi) {
+      throw new Error('SpotifyApi is not initialized.');
+    }
 
-  //   try {
-  //     const results = await this.spotifyApi.search(query, ['track', 'artist']);
-  //     return results;
-  //   } catch (error) {
-  //     console.error('Error searching music:', error);
-  //     throw error;
-  //   }
-  // };
+    try {
+      const result = (await this.spotifyApi.makeRequest(
+        'GET',
+        `search?q=${query}&type=track&limit=${limit}&ffset=${offset}`,
+      )) as { tracks: { items: Track[] } };
+      return result.tracks.items;
+    } catch (error) {
+      console.error('Error searching music:', error);
+      throw error;
+    }
+  };
 
   getTrack = async (trackId: string): Promise<Track> => {
     if (!this.spotifyApi) {
@@ -50,7 +53,7 @@ class SpotifyManager {
       return res as Track;
     } catch (error) {
       console.error('Error searching music:', error);
-      throw error; // or handle it appropriately
+      throw error;
     }
   };
 }
