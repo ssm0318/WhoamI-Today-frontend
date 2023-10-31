@@ -39,6 +39,7 @@ import ResearchIntro from './routes/sign-up/ResearchIntro';
 import UserName from './routes/sign-up/UserName';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
+import StatusEdit from './routes/status/StatusEdit';
 import UserPage from './routes/UserPage';
 
 const router = createBrowserRouter([
@@ -106,7 +107,7 @@ const router = createBrowserRouter([
     path: 'status',
     loader: checkIfSignIn,
     children: [
-      { path: 'edit', element: <Settings /> },
+      { path: 'edit', element: <StatusEdit /> },
       { path: 'music-search', element: <Settings /> },
     ],
   },

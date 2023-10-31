@@ -2,11 +2,12 @@ import { Track } from '@spotify/web-api-ts-sdk';
 import { useEffect, useState } from 'react';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import EmojiItem from '@components/reaction/emoji-item/EmojiItem';
-import { Font, Layout, SvgIcon } from '@design-system';
+import { Font, Layout } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import StatusChip from '../status-chip/StatusChip';
+import StatusMusic from '../status-music/StatusMusic';
 
 // TODO(Gina): 실제 데이터로 바꾸기
 function MyStatus() {
@@ -38,34 +39,7 @@ function MyStatus() {
       <Layout.FlexCol gap={8} p={16} bgColor="GRAY_14" rounded={8} justifyContent="center">
         <Layout.FlexRow w="100%" alignItems="center" gap={8} justifyContent="space-between">
           {/* spotify */}
-          {trackData && (
-            <Layout.FlexRow
-              outline="SPOTIFY_GREEN"
-              ph={8}
-              pv={4}
-              gap={4}
-              rounded={12}
-              alignItems="center"
-              bgColor="BASIC_WHITE"
-            >
-              <img
-                src={trackData.album.images[0].url}
-                width={16}
-                height={16}
-                alt={`${trackData.name}-album`}
-                style={{
-                  borderRadius: 4,
-                }}
-              />
-              <Font.Body type="12_semibold">
-                {trackData.artists[0].name} - {trackData.name}
-              </Font.Body>
-
-              <Layout.LayoutBase w={16} h={16}>
-                <SvgIcon name="spotify" size={16} />
-              </Layout.LayoutBase>
-            </Layout.FlexRow>
-          )}
+          {trackData && <StatusMusic track={trackData} />}
           {/* check in time */}
           <Font.Body type="11_regular" numberOfLines={2}>
             Checked in {convertTimeDiffByString(currentDate, new Date('2023-10-28 12:00:00'))}

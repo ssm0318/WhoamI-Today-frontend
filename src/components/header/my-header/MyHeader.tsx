@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Font, Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 import Icon from '../icon/Icon';
@@ -8,9 +9,11 @@ interface MyHeaderProps {
 
 function MyHeader({ onClickHamburger }: MyHeaderProps) {
   const myProfile = useBoundStore((state) => state.myProfile);
+  const navigate = useNavigate();
 
   const handleEditStatus = () => {
     // 수정 페이지로 이동
+    navigate('/status/edit');
   };
 
   return (
