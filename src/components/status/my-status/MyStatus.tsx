@@ -36,7 +36,7 @@ function MyStatus() {
         </Layout.FlexCol>
       </Layout.FlexRow>
       <Layout.FlexCol gap={8} p={16} bgColor="GRAY_14" rounded={8} justifyContent="center">
-        <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
+        <Layout.FlexRow w="100%" alignItems="center" gap={8} justifyContent="space-between">
           {/* spotify */}
           {trackData && (
             <Layout.FlexRow
@@ -46,6 +46,7 @@ function MyStatus() {
               gap={4}
               rounded={12}
               alignItems="center"
+              bgColor="BASIC_WHITE"
             >
               <img
                 src={trackData.album.images[0].url}
@@ -56,7 +57,10 @@ function MyStatus() {
                   borderRadius: 4,
                 }}
               />
-              <Font.Body type="12_semibold">{trackData.name}</Font.Body>
+              <Font.Body type="12_semibold">
+                {trackData.artists[0].name} - {trackData.name}
+              </Font.Body>
+
               <Layout.LayoutBase w={16} h={16}>
                 <SvgIcon name="spotify" size={16} />
               </Layout.LayoutBase>
