@@ -14,6 +14,7 @@ module.exports = {
       '@utils': path.resolve(__dirname, 'src/utils'),
       '@design-system': path.resolve(__dirname, 'src/design-system/index'),
       '@mock': path.resolve(__dirname, 'src/mock'),
+      '@libs': path.resolve(__dirname, 'src/libs'),
     },
   },
 };

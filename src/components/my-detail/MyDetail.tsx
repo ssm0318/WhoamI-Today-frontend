@@ -54,7 +54,7 @@ function MyDetail({ detailDate }: MyDetailProps) {
 
   if (!detailDate) return null;
   return (
-    <Layout.FlexCol w="100%" pt={15} pb={BOTTOM_TABBAR_HEIGHT} bgColor="BACKGROUND_COLOR">
+    <Layout.FlexCol w="100%" pt={15} pb={BOTTOM_TABBAR_HEIGHT} bgColor="BASIC_WHITE" flex-1>
       <TheDaysDetail
         isLoading={moment.state === 'loading' || questions.state === 'loading'}
         moments={moment?.data}

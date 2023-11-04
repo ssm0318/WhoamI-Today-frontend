@@ -9,6 +9,11 @@ export const DisplaySettings: { [key in DisplayType]: FontSettings } = {
     fontWeight: FontWeight.BOLD,
     lineHeight: 1.4,
   },
+  '24_regular': {
+    fontSize: 24,
+    fontWeight: FontWeight.REGULAR,
+    lineHeight: 1.4,
+  },
   '20_bold': {
     fontSize: 20,
     fontWeight: FontWeight.BOLD,
@@ -72,6 +77,16 @@ export const BodySettings: { [key in BodyType]: FontSettings } = {
   },
   '12_semibold': {
     fontSize: 12,
+    fontWeight: FontWeight.SEMIBOLD,
+    lineHeight: 1.4,
+  },
+  '11_regular': {
+    fontSize: 11,
+    fontWeight: FontWeight.REGULAR,
+    lineHeight: 1.4,
+  },
+  '11_semibold': {
+    fontSize: 11,
     fontWeight: FontWeight.SEMIBOLD,
     lineHeight: 1.4,
   },

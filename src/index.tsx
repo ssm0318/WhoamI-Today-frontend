@@ -4,6 +4,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components';
 import { Colors } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
+import SpotifyManager from '@libs/SpotifyManager';
 import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
 import { checkIfSignIn } from '@utils/apis/user';
@@ -38,6 +39,8 @@ import ResearchIntro from './routes/sign-up/ResearchIntro';
 import UserName from './routes/sign-up/UserName';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
+import MusicSearch from './routes/status/MusicSearch';
+import StatusEdit from './routes/status/StatusEdit';
 import UserPage from './routes/UserPage';
 
 const router = createBrowserRouter([
@@ -102,6 +105,14 @@ const router = createBrowserRouter([
     loader: checkIfSignIn,
   },
   {
+    path: 'status',
+    loader: checkIfSignIn,
+    children: [
+      { path: 'edit', element: <StatusEdit /> },
+      { path: 'search-music', element: <MusicSearch /> },
+    ],
+  },
+  {
     path: 'settings',
     loader: checkIfSignIn,
     children: [
@@ -116,9 +127,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  useEffect(() => {
-    reportWebVitals();
-  }, []);
+  const spotifyManager = SpotifyManager.getInstance();
 
   const { setAppNotiPermission } = useBoundStore((state) => ({
     setAppNotiPermission: state.setAppNotiPermission,
@@ -130,6 +139,11 @@ function App() {
     },
     key: 'SET_NOTI_PERMISSION',
   });
+
+  useEffect(() => {
+    reportWebVitals();
+    spotifyManager.initialize();
+  }, [spotifyManager]);
 
   return (
     <React.StrictMode>
