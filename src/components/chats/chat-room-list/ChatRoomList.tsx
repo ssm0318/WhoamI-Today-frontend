@@ -7,8 +7,10 @@ export function ChatRoomList() {
   const [t] = useTranslation('translation', { keyPrefix: 'chats.room_list' });
 
   return (
-    <Layout.FlexCol w="100%" ph={16} pv={5} gap={5}>
-      <Font.Body type="16_semibold">{t('title')}</Font.Body>
+    <Layout.FlexCol w="100%" pv={5} gap={5}>
+      <Layout.LayoutBase ph={16}>
+        <Font.Body type="16_semibold">{t('title')}</Font.Body>
+      </Layout.LayoutBase>
       <Layout.FlexCol w="100%" gap={10}>
         {/* TODO: 실제 데이터로 변경 */}
         {MOCK_CHAT_ROOM_LIST.map(({ roomId, ...props }) => (
