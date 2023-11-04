@@ -1,6 +1,6 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Divider from '@components/_common/divider/Divider';
 import MainContainer from '@components/_common/main-container/MainContainer';
@@ -10,6 +10,7 @@ import StatusMusic from '@components/status/status-music/StatusMusic';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, SCREEN_WIDTH, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Font, Input, Layout } from '@design-system';
+import useClickOutside from '@hooks/useClickOutside';
 import SpotifyManager from '@libs/SpotifyManager';
 import { Availability, Status } from '@models/status';
 
@@ -31,11 +32,14 @@ function StatusEdit() {
   const { availability, bio, description, emoji, trackId } = status;
   const [isEmojiPickerVisible, setIsEmojiPickerVisible] = useState(false);
   const [trackData, setTrackData] = useState<Track | null>(null);
+  const emojiPickerWrapper = useRef<HTMLDivElement>(null);
+  const toggleButtonWrapper = useRef<HTMLDivElement>(null);
 
   const handleSelectEmoji = (e: EmojiClickData) => {
     setStatus((prev) => {
       return { ...prev, emoji: e.emoji };
     });
+    setIsEmojiPickerVisible(false);
   };
 
   const handleSearchMusic = () => {
@@ -55,6 +59,12 @@ function StatusEdit() {
   const handleConfirmSave = () => {
     // TODO(Gina) 저장 API
   };
+
+  useClickOutside({
+    ref: emojiPickerWrapper,
+    toggleButtonRef: toggleButtonWrapper,
+    onClick: () => setIsEmojiPickerVisible(false),
+  });
 
   useEffect(() => {
     spotifyManager.getTrack(trackId).then(setTrackData);
@@ -94,19 +104,19 @@ function StatusEdit() {
           />
         </Layout.FlexRow>
         <Divider width={1} />
-
         {/* emoji */}
-
         <Font.Body type="18_regular">Emoji</Font.Body>
         <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center">
           <EmojiItem emojiString={emoji} size={24} />
-          <Button.Small
-            type="filled"
-            status="normal"
-            sizing="fit-content"
-            onClick={toggleEmojiPicker}
-            text="change emoji"
-          />
+          <Layout.FlexRow ref={toggleButtonWrapper}>
+            <Button.Small
+              type="filled"
+              status="normal"
+              sizing="fit-content"
+              onClick={toggleEmojiPicker}
+              text="change emoji"
+            />
+          </Layout.FlexRow>
         </Layout.FlexRow>
 
         <Layout.FlexCol
@@ -115,7 +125,7 @@ function StatusEdit() {
           }}
         >
           {isEmojiPickerVisible && (
-            <Layout.Absolute t={0}>
+            <Layout.Absolute t={0} ref={emojiPickerWrapper}>
               <EmojiPicker
                 onEmojiClick={handleSelectEmoji}
                 autoFocusSearch={false}
