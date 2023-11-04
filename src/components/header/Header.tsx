@@ -1,36 +1,40 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useMatch, useNavigate } from 'react-router-dom';
-import IconNudge from '@components/_common/icon-nudge/IconNudge';
-import SideMenu from '@components/header/side-menu/SideMenu';
-import { Font, Layout, SvgIcon } from '@design-system';
-import { useBoundStore } from '@stores/useBoundStore';
-import { HeaderWrapper, Noti, RightIconArea } from './Header.styled';
+import React, { useCallback, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Layout } from '@design-system';
+import ChatsHeader from './chats-header/ChatsHeader';
+import FriendsHeader from './friends-header/FriendHeader';
+import { HeaderWrapper } from './Header.styled';
+import MyHeader from './my-header/MyHeader';
+import SideMenu from './side-menu/SideMenu';
 
 function Header() {
+  const location = useLocation();
   const [showSideMenu, setShowSideMenu] = useState(false);
-  const myProfile = useBoundStore((state) => state.myProfile);
-  const isChatsTab = useMatch('/chats/*');
 
-  const handleClickHamburger = () => {
-    setShowSideMenu(true);
-  };
+  const renderHeaderComponent = useCallback(() => {
+    switch (location.pathname) {
+      case '/friends':
+        return <FriendsHeader />;
+      case '/my':
+        return (
+          <MyHeader
+            onClickHamburger={() => {
+              setShowSideMenu(true);
+            }}
+          />
+        );
+      case '/chats':
+        return <ChatsHeader />;
+      default:
+        return null;
+    }
+  }, [location.pathname]);
 
-  if (isChatsTab) return <ChatsHeader />;
   return (
     <>
       <HeaderWrapper>
-        <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center">
-          <SvgIcon name="header_logo" size={71} />
-          <Layout.FlexRow gap={8}>
-            <button type="button" onClick={handleClickHamburger}>
-              <SvgIcon name="top_navigation_hamburger" size={36} />
-            </button>
-            <Noti to="/notifications">
-              <SvgIcon name="top_navigation_noti" size={36} />
-              {myProfile?.unread_noti && <IconNudge />}
-            </Noti>
-          </Layout.FlexRow>
+        <Layout.FlexRow justifyContent="space-between" w="100%" h="100%" alignItems="center">
+          {renderHeaderComponent()}
         </Layout.FlexRow>
       </HeaderWrapper>
       {showSideMenu && <SideMenu closeSideMenu={() => setShowSideMenu(false)} />}
@@ -38,42 +42,4 @@ function Header() {
   );
 }
 
-export default Header;
-
-function ChatsHeader() {
-  const [t] = useTranslation('translation', { keyPrefix: 'chats' });
-  const navigate = useNavigate();
-
-  const handleClickGoBack = () => {
-    navigate(-1);
-  };
-
-  const handleClickCreateChatRoom = () => {
-    // TODO: 채팅방 생성
-  };
-
-  const handleClickMenu = () => {
-    // TODO: 채팅탭 메뉴
-  };
-
-  return (
-    <HeaderWrapper>
-      <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
-        <button type="button" onClick={handleClickGoBack}>
-          <SvgIcon name="arrow_left_bold" size={20} color="BASIC_BLACK" />
-        </button>
-        <Font.Body type="20_semibold">{t('title')}</Font.Body>
-        <RightIconArea>
-          <button type="button" onClick={handleClickMenu}>
-            <SvgIcon name="menu_dots" size={20} />
-          </button>
-          <Layout.Absolute l={-34} onClick={handleClickCreateChatRoom}>
-            <button type="button">
-              <SvgIcon name="create_chats" size={20} />
-            </button>
-          </Layout.Absolute>
-        </RightIconArea>
-      </Layout.FlexRow>
-    </HeaderWrapper>
-  );
-}
+export default React.memo(Header);

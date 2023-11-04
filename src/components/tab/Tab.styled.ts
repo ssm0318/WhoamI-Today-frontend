@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { BOTTOM_TABBAR_HEIGHT, MAX_WINDOW_WIDTH } from '@constants/layout';
+import { BOTTOM_TABBAR_HEIGHT, MAX_WINDOW_WIDTH, Z_INDEX } from '@constants/layout';
 
 export const TabWrapper = styled.nav`
   position: fixed;
@@ -13,7 +13,7 @@ export const TabWrapper = styled.nav`
   height: ${BOTTOM_TABBAR_HEIGHT}px;
   padding: 8px 36px 29px 36px;
   box-shadow: 0px -4px 12px 0px rgba(0, 0, 0, 0.16);
-  z-index: 10;
+  z-index: ${Z_INDEX.BOTTOM_TAB};
 `;
 
 export const NavTabItem = styled(NavLink)`
