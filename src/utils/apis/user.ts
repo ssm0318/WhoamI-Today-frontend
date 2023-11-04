@@ -54,13 +54,18 @@ export const syncTimeZone = async (timezone?: string) => {
 
 export const checkIfSignIn = async () => {
   try {
-    const user = await axios.get<MyProfile>('/user/me/');
-    const currentTimezone = await syncTimeZone(user.data?.timezone);
-    useBoundStore.getState().setMyProfile({ ...user.data, timezone: currentTimezone });
+    const user = await getMyProfile();
+    const currentTimezone = await syncTimeZone(user.timezone);
+    useBoundStore.getState().setMyProfile({ ...user, timezone: currentTimezone });
     return user;
   } catch {
     return redirect('/signin');
   }
+};
+
+export const getMyProfile = async (): Promise<MyProfile> => {
+  const { data } = await axios.get<MyProfile>('/user/me/');
+  return data;
 };
 
 export const updateMyProfile = async () => {

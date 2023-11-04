@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, redirect, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { Colors } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
@@ -9,6 +9,7 @@ import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
 import { checkIfSignIn } from '@utils/apis/user';
 import ErrorPage from './components/error-page/ErrorPage';
+import { DEFAULT_REDIRECTION_PATH } from './constants';
 import './i18n';
 import reportWebVitals from './reportWebVitals';
 import AllQuestions from './routes/AllQuestions';
@@ -44,7 +45,19 @@ import StatusEdit from './routes/status/StatusEdit';
 import UserPage from './routes/UserPage';
 
 const router = createBrowserRouter([
-  { path: '', element: <Intro /> },
+  {
+    path: '',
+    loader: async () => {
+      const user = await checkIfSignIn();
+      if (user) return redirect(DEFAULT_REDIRECTION_PATH);
+      return null;
+    },
+    element: <Navigate replace to="intro" />,
+  },
+  {
+    path: '/intro',
+    element: <Intro />,
+  },
   {
     path: '/',
     element: <Root />,
