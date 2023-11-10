@@ -2,18 +2,23 @@ import { InputHTMLAttributes } from 'react';
 import { Margin } from '../layouts';
 import { StyledCheckBox, StyledCheckCircle } from './CheckBox.styled';
 
-type Props = InputHTMLAttributes<HTMLInputElement> & Margin;
+type Props = InputHTMLAttributes<HTMLInputElement> &
+  Margin & {
+    hideLabel?: boolean;
+  };
 
 function CheckInput(props: Props) {
-  const { name } = props;
+  const { name, hideLabel } = props;
   return (
     <>
       <input id={name} type="checkbox" {...props} />
       {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label htmlFor={name} />
-      <label className="display-label" htmlFor={name}>
-        {name}
-      </label>
+      {!hideLabel && (
+        <label className="display-label" htmlFor={name}>
+          {name}
+        </label>
+      )}
     </>
   );
 }

@@ -119,7 +119,9 @@
     "edit": "수정하기",
     "save": "저장하기",
     "add_group": "새로운 그룹 만들기",
-    "delete_group": "선택한 그룹 삭제하기"
+    "delete_group": "선택한 그룹 삭제하기",
+    "add_group_member": "그룹 멤버 추가하기",
+    "delete_group_member": "그룹 멤버 삭제하기"
   },
   "my_detail": {
     "title_format": "yy/M/d (E)",
