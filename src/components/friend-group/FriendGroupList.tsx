@@ -7,7 +7,7 @@ import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, CheckCircle, Font, Layout, SvgIcon } from '@design-system';
 import { friendGroupList } from '@mock/friends';
 import { FriendGroup } from '@models/friendGroup';
-import { StyledGroup, StyledGroupList } from './FriendGroupList.styled';
+import { StyledList, StyledListItem } from './FriendGroupList.styled';
 
 interface CheckFriendGroup extends FriendGroup {
   checked?: boolean;
@@ -71,34 +71,34 @@ function FriendGroupList() {
         }
       />
       <Layout.LayoutBase w="100%" pt={TITLE_HEADER_HEIGHT + 50} ph={24}>
-        <StyledGroupList>
+        <StyledList>
           {mode === 'list' &&
             checkedGroupList.map((group) => (
-              <StyledGroup key={group.id} role="button" onClick={() => handleGoToGroup(group)}>
+              <StyledListItem key={group.id} role="button" onClick={() => handleGoToGroup(group)}>
                 <Font.Display type="14_regular">{group.name}</Font.Display>
                 <SvgIcon name="more_arrow" color="BASIC_BLACK" size={16} />
-              </StyledGroup>
+              </StyledListItem>
             ))}
           {mode === 'edit' &&
             checkedGroupList.map((group) => (
-              <StyledGroup key={group.id}>
+              <StyledListItem key={group.id}>
                 <CheckCircle
                   checked={!!group.checked}
                   name={group.name}
                   onChange={() => handleToggleFriendGroup(group)}
                 />
                 <SvgIcon name="order_group" color="GRAY_6" size={16} />
-              </StyledGroup>
+              </StyledListItem>
             ))}
-          <StyledGroup>
+          <StyledListItem>
             <Layout.FlexRow>
               <SvgIcon name="check_circle_add" size={20} />
               <Font.Display type="14_semibold" color="PRIMARY" ml={12}>
                 {t('add_group')}
               </Font.Display>
             </Layout.FlexRow>
-          </StyledGroup>
-        </StyledGroupList>
+          </StyledListItem>
+        </StyledList>
         {showDeleteGroupButton && (
           <Button.Dialog
             status="normal"

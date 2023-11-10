@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const StyledGroupList = styled.ul`
+export const StyledList = styled.ul`
   border-radius: 5.74px;
   border: 1px solid ${({ theme }) => theme.GRAY_2};
   width: 100%;
@@ -11,7 +11,7 @@ export const StyledGroupList = styled.ul`
   }
 `;
 
-export const StyledGroup = styled.li`
+export const StyledListItem = styled.li`
   padding: 16px;
   width: 100%;
   border-bottom: 1px solid ${({ theme }) => theme.GRAY_2};
