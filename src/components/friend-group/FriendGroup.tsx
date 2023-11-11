@@ -85,6 +85,10 @@ export function FriendGroup({ addNewGroupMode = false }: FriendGroupProps) {
 
   const showDeleteMemberButton = !!checkFriends.find((user) => !!user.checked);
 
+  const handleClickAddGroupMember = () => {
+    navigate('new');
+  };
+
   return (
     <MainContainer>
       {/* Header */}
@@ -150,7 +154,7 @@ export function FriendGroup({ addNewGroupMode = false }: FriendGroupProps) {
               </StyledUserItem>
             ))}
           {mode === 'list' && (
-            <StyledListSettingItem>
+            <StyledListSettingItem onClick={handleClickAddGroupMember}>
               <Layout.FlexRow>
                 <SvgIcon name="check_circle_add" size={20} />
                 <Font.Display type="14_semibold" color="PRIMARY" ml={12}>
