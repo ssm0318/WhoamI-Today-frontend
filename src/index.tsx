@@ -131,6 +131,7 @@ const router = createBrowserRouter([
     loader: checkIfSignIn,
     element: <FriendGroupList />,
   },
+  { path: 'friend-groups/new', loader: checkIfSignIn, element: <FriendGroup addNewGroupMode /> },
   { path: 'friend-groups/:id', loader: checkIfSignIn, element: <FriendGroup /> },
 ]);
 

@@ -1,14 +1,19 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import TitleHeader from '@components/title-header/TitleHeader';
+import { HeaderWrapper } from '@components/title-header/TitleHeader.styled';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { CheckCircle, Font, Layout, SvgIcon } from '@design-system';
 import { friendList } from '@mock/friends';
 import { User } from '@models/user';
-import { StyledList, StyledListSettingItem, StyledUserItem } from './FriendGroupList.styled';
+import {
+  StyledEditGroupNameInput,
+  StyledList,
+  StyledListSettingItem,
+  StyledUserItem,
+} from './FriendGroupList.styled';
 
 interface CheckUser extends User {
   checked?: boolean;
@@ -24,11 +29,22 @@ export function Friend({ profile_image, username }: Pick<User, 'profile_image' |
     </Layout.FlexRow>
   );
 }
-export function FriendGroup() {
+
+interface FriendGroupProps {
+  addNewGroupMode?: boolean;
+}
+
+export function FriendGroup({ addNewGroupMode = false }: FriendGroupProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'friend_group' });
 
-  const [checkFriends, setCheckFriends] = useState<CheckUser[]>(friendList);
+  // FIXME: 실제 데이터
+  const [checkFriends, setCheckFriends] = useState<CheckUser[]>(addNewGroupMode ? [] : friendList);
   const [mode, setMode] = useState<'list' | 'edit'>('list');
+
+  const [newGroupName, setNewGroupName] = useState('New group'); // FIXME: 기존 그룹 이름
+  const handleChangeGroupName = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewGroupName(e.target.value);
+  };
 
   const resetCheckFriends = () => {
     const list = checkFriends.map((group) => ({ ...group, checked: false }));
@@ -37,12 +53,21 @@ export function FriendGroup() {
 
   const handleClickEdit = () => setMode('edit');
   const handleClickSave = () => {
+    if (addNewGroupMode) {
+      // TODO: update 요청
+      navigate(`/friend-groups/1`);
+      return;
+    }
     // TODO
     setMode('list');
     resetCheckFriends();
   };
 
   const navigate = useNavigate();
+
+  const handleGoBack = () => {
+    navigate(-1);
+  };
   const handleGoToUser = (username: string) => {
     navigate(`/users/${username}`);
   };
@@ -62,25 +87,47 @@ export function FriendGroup() {
 
   return (
     <MainContainer>
-      <TitleHeader
-        // FIXME: GROUP NAME
-        title={t('title')}
-        RightComponent={
-          mode === 'edit' ? (
-            <button type="button" onClick={handleClickSave}>
-              <Font.Display type="18_bold" color="PRIMARY">
-                {t('save')}
-              </Font.Display>
-            </button>
+      {/* Header */}
+      <HeaderWrapper>
+        <Layout.FlexRow
+          justifyContent="space-between"
+          w="100%"
+          alignItems="center"
+          ph="default"
+          pv={10}
+        >
+          <button type="button" onClick={handleGoBack}>
+            <SvgIcon name="arrow_left" size={36} color="BASIC_BLACK" />
+          </button>
+          {addNewGroupMode || mode === 'edit' ? (
+            <StyledEditGroupNameInput
+              type="text"
+              value={newGroupName}
+              onChange={handleChangeGroupName}
+            />
           ) : (
-            <button type="button" onClick={handleClickEdit}>
-              <Font.Display type="18_bold" color="PRIMARY">
-                {t('edit')}
-              </Font.Display>
-            </button>
-          )
-        }
-      />
+            <Font.Display type="24_bold" textAlign="center">
+              {/* 실제 그룹 이름 */}
+              {t('title')}
+            </Font.Display>
+          )}
+          <Layout.LayoutBase w={36}>
+            {mode === 'edit' || addNewGroupMode ? (
+              <button type="button" onClick={handleClickSave}>
+                <Font.Display type="18_bold" color="PRIMARY">
+                  {t('save')}
+                </Font.Display>
+              </button>
+            ) : checkFriends.length > 1 ? (
+              <button type="button" onClick={handleClickEdit}>
+                <Font.Display type="18_bold" color="PRIMARY">
+                  {t('edit')}
+                </Font.Display>
+              </button>
+            ) : null}
+          </Layout.LayoutBase>
+        </Layout.FlexRow>
+      </HeaderWrapper>
       <Layout.LayoutBase w="100%" pt={TITLE_HEADER_HEIGHT + 50} ph={24}>
         <StyledList>
           {mode === 'list' &&

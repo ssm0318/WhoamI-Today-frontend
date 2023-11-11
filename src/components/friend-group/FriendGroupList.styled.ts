@@ -52,44 +52,13 @@ export const StyledListSettingItem = styled(StyledCommonListItem)<StyledListSett
   background-color: ${({ disabled, theme }) =>
     disabled === undefined ? theme.BASIC_WHITE : disabled ? theme.GRAY_2 : theme.WARNING};
   padding: 15px;
+  ${({ disabled }) => disabled !== false && 'cursor: pointer'};
   ${({ disabled }) => disabled !== undefined && 'border: none'};
   border-radius: 0 0 5.74px 5.74px;
   ${({ textAlign }) => textAlign === 'center' && 'justify-content: center'}
 `;
 
-export const StyledCheckBox = styled.div`
-  display: flex;
-  align-items: center;
-
-  input {
-    display: none;
-  }
-
-  input + label {
-    display: inline-block;
-    width: 21px;
-    height: 20px;
-    background: url('/icons/check_circle_unchecked.svg');
-    position: relative;
-    padding: 0 0 0 0px;
-    flex-shrink: 0;
-  }
-
-  input:checked + label {
-    display: inline-block;
-    width: 21px;
-    height: 20px;
-    background: url('/icons/check_circle_checked.svg');
-    position: relative;
-    padding: 0 0 0 0px;
-    flex-shrink: 0;
-  }
-
-  .display-label {
-    margin-left: 12px;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 20px;
-  }
+export const StyledEditGroupNameInput = styled.input`
+  font-size: 24px;
+  font-weight: 700;
 `;

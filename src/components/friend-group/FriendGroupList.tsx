@@ -43,6 +43,8 @@ function FriendGroupList() {
     navigate(`${id}`);
   };
 
+  const handleClickAddGroup = () => navigate('new');
+
   const handleToggleFriendGroup = (item: CheckFriendGroup) => {
     const selectedGroupIndex = checkedGroupList.findIndex((group) => group.id === item.id);
 
@@ -102,11 +104,10 @@ function FriendGroupList() {
                   />
                   <Group group={group} ml={20} />
                 </Layout.FlexRow>
-                <SvgIcon name="edit" color="GRAY_6" size={14} />
               </StyledCommonListItem>
             ))}
           {mode === 'list' && (
-            <StyledListSettingItem>
+            <StyledListSettingItem onClick={handleClickAddGroup}>
               <Layout.FlexRow>
                 <SvgIcon name="check_circle_add" size={20} />
                 <Font.Display type="14_semibold" color="PRIMARY" ml={12}>
