@@ -1,37 +1,25 @@
 import styled from 'styled-components';
 
-export const StyledCheckBox = styled.div`
-  display: flex;
-  align-items: center;
+export const StyledList = styled.ul`
+  border-radius: 5.74px;
+  border: 1px solid ${({ theme }) => theme.GRAY_2};
+  width: 100%;
+  margin-bottom: 24px;
 
-  input {
-    display: none;
-  }
-
-  input + label {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    border: 2px solid ${({ theme }) => theme.GRAY_2};
-    position: relative;
-    flex-shrink: 0;
-  }
-
-  input:checked + label {
-    border: 2px solid ${({ theme }) => theme.GRAY_8};
-    background-color: ${({ theme }) => theme.BASIC_BLACK};
-  }
-
-  .display-label {
-    margin-left: 14px;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 140%;
+  li:last-child {
+    border: none;
   }
 `;
 
-export const StyledCheckCircle = styled.div`
+export const StyledListItem = styled.li`
+  padding: 16px;
+  width: 100%;
+  border-bottom: 1px solid ${({ theme }) => theme.GRAY_2};
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const StyledCheckBox = styled.div`
   display: flex;
   align-items: center;
 

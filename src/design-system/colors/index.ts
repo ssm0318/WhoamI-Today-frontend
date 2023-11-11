@@ -52,6 +52,7 @@ export const Colors = {
   NOT_AVAILABLE_CHIP: '#FF2D2D',
 
   SPOTIFY_GREEN: '#4AD159',
+  WARNING: '#FF3B30',
 };
 
 export type ColorType = typeof Colors;

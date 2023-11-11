@@ -28,11 +28,9 @@ function TitleHeader({ title, type = 'MAIN', onGoBack, RightComponent }: TitleHe
         ph="default"
         pv={10}
       >
-        <Layout.LayoutBase w={36} h={36}>
-          <button type="button" onClick={handleGoBack}>
-            <SvgIcon name="arrow_left" size={36} color="BASIC_BLACK" />
-          </button>
-        </Layout.LayoutBase>
+        <button type="button" onClick={handleGoBack}>
+          <SvgIcon name="arrow_left" size={36} color="BASIC_BLACK" />
+        </button>
         {title && (
           <Font.Display type={type === 'MAIN' ? '24_bold' : '20_bold'} textAlign="center">
             {title}
