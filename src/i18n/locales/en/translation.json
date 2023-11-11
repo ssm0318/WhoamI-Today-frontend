@@ -123,6 +123,7 @@
     "save": "Save",
     "add_group": "Add Group",
     "delete_group": "Delete Group",
+    "edit_group": "Edit Groups",
     "add_group_member": "Add Group Member",
     "delete_group_member": "Delete Group Member",
     "member_count_one": "{{count}} person",

@@ -102,7 +102,7 @@ function FriendGroupList() {
                   />
                   <Group group={group} ml={20} />
                 </Layout.FlexRow>
-                <SvgIcon name="order_group" color="GRAY_6" size={16} />
+                <SvgIcon name="edit" color="GRAY_6" size={14} />
               </StyledCommonListItem>
             ))}
           {mode === 'list' && (

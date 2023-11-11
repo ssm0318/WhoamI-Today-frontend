@@ -42,6 +42,7 @@ const check_circle_checked = 'check_circle_checked';
 const check_circle_add = 'check_circle_add';
 const order_group = 'order_group';
 const more_arrow = 'more_arrow';
+const edit = 'edit';
 
 export {
   arrow_left,
@@ -58,6 +59,7 @@ export {
   close,
   comment,
   delete_button,
+  edit,
   error,
   friends_active,
   friends_inactive,
