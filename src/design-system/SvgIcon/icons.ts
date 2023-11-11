@@ -34,6 +34,7 @@ const add_user = 'add_user';
 const chat_outline = 'chat_outline';
 const edit_outline = 'edit_outline';
 const arrow_left = 'arrow_left';
+const arrow_left_bold = 'arrow_left_bold';
 const arrow_right = 'arrow_right';
 const search = 'search';
 const logo = 'logo';
@@ -70,6 +71,8 @@ const camera = 'camera';
 const chat_media_image = 'chat_media_image';
 const chat_media_gif = 'chat_media_gif';
 
+const green_dot = 'green_dot';
+
 // FIXME: 하단 탭 아이콘 교체
 const my_profile = 'my_profile';
 const friends_active = 'friends_active';
@@ -83,6 +86,7 @@ export {
   add_default,
   add_user,
   arrow_left,
+  arrow_left_bold,
   arrow_right,
   camera,
   chat_filled,
@@ -110,6 +114,7 @@ export {
   friend_updates_profile,
   friends_active,
   friends_inactive,
+  green_dot,
   hamburger,
   heart,
   hide_false,

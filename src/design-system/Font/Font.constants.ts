@@ -125,6 +125,11 @@ export const BodySettings: { [key in BodyType]: FontSettings } = {
     fontWeight: FontWeight.SEMIBOLD,
     lineHeight: 1.4,
   },
+  '16_semibold': {
+    fontSize: 16,
+    fontWeight: FontWeight.SEMIBOLD,
+    lineHeight: 1.4,
+  },
   '14_regular': {
     fontSize: 14,
     fontWeight: FontWeight.REGULAR,
@@ -153,6 +158,11 @@ export const BodySettings: { [key in BodyType]: FontSettings } = {
   '11_semibold': {
     fontSize: 11,
     fontWeight: FontWeight.SEMIBOLD,
+    lineHeight: 1.4,
+  },
+  '10_regular': {
+    fontSize: 10,
+    fontWeight: FontWeight.REGULAR,
     lineHeight: 1.4,
   },
 };
