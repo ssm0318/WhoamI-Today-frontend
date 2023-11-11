@@ -5,7 +5,7 @@ import MainContainer from '@components/_common/main-container/MainContainer';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Button, CheckCircle, Font, Layout, SvgIcon } from '@design-system';
+import { CheckCircle, Font, Layout, SvgIcon } from '@design-system';
 import { friendList } from '@mock/friends';
 import { User } from '@models/user';
 import { StyledList, StyledListSettingItem, StyledUserItem } from './FriendGroupList.styled';
@@ -102,23 +102,26 @@ export function FriendGroup() {
                 />
               </StyledUserItem>
             ))}
-          <StyledListSettingItem>
-            <Layout.FlexRow>
-              <SvgIcon name="check_circle_add" size={20} />
-              <Font.Display type="14_semibold" color="PRIMARY" ml={12}>
-                {t('add_group_member')}
-              </Font.Display>
-            </Layout.FlexRow>
-          </StyledListSettingItem>
+          {mode === 'list' && (
+            <StyledListSettingItem>
+              <Layout.FlexRow>
+                <SvgIcon name="check_circle_add" size={20} />
+                <Font.Display type="14_semibold" color="PRIMARY" ml={12}>
+                  {t('add_group_member')}
+                </Font.Display>
+              </Layout.FlexRow>
+            </StyledListSettingItem>
+          )}
+          {mode === 'edit' && (
+            <StyledListSettingItem disabled={!showDeleteMemberButton} textAlign="center">
+              <Layout.FlexRow>
+                <Font.Display type="14_semibold" ml={12}>
+                  {t('delete_group_member')}
+                </Font.Display>
+              </Layout.FlexRow>
+            </StyledListSettingItem>
+          )}
         </StyledList>
-        {mode === 'edit' && (
-          <Button.Dialog
-            status={showDeleteMemberButton ? 'normal' : 'disabled'}
-            type="warning_fill"
-            text={t('delete_group_member')}
-            sizing="stretch"
-          />
-        )}
       </Layout.LayoutBase>
     </MainContainer>
   );
