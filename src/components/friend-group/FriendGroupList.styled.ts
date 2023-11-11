@@ -2,19 +2,24 @@ import styled, { css } from 'styled-components';
 import { getStyle, Margin, toMarginPaddingString } from 'src/design-system/layouts';
 
 export const StyledList = styled.ul`
-  border-radius: 5.74px;
-  border: 1px solid ${({ theme }) => theme.GRAY_2};
   width: 100%;
   margin-bottom: 24px;
 
+  li:first-child {
+    border-radius: 5.74px 5.74px 0 0;
+    border-top: 1px solid ${({ theme }) => theme.GRAY_2};
+  }
+
   li:last-child {
-    border: none;
+    border-radius: 0 0 5.74px 5.74px;
   }
 `;
 
 export const StyledCommonListItem = styled.li`
   padding: 0px 16px;
   width: 100%;
+  border-left: 1px solid ${({ theme }) => theme.GRAY_2};
+  border-right: 1px solid ${({ theme }) => theme.GRAY_2};
   border-bottom: 1px solid ${({ theme }) => theme.GRAY_2};
   display: flex;
   justify-content: space-between;
@@ -35,8 +40,21 @@ export const StyledUserItem = styled(StyledCommonListItem)`
   padding-bottom: 13px;
 `;
 
-export const StyledListSettingItem = styled(StyledCommonListItem)`
+interface StyledListSettingItemProps {
+  disabled?: boolean;
+  textAlign?: 'left' | 'center';
+}
+export const StyledListSettingItem = styled(StyledCommonListItem)<StyledListSettingItemProps>`
+  span {
+    color: ${({ disabled, theme }) => (disabled === undefined ? theme.PRIMARY : theme.BASIC_WHITE)};
+    text-align: ${({ textAlign = 'left' }) => textAlign};
+  }
+  background-color: ${({ disabled, theme }) =>
+    disabled === undefined ? theme.BASIC_WHITE : disabled ? theme.GRAY_2 : theme.WARNING};
   padding: 15px;
+  ${({ disabled }) => disabled !== undefined && 'border: none'};
+  border-radius: 0 0 5.74px 5.74px;
+  ${({ textAlign }) => textAlign === 'center' && 'justify-content: center'}
 `;
 
 export const StyledCheckBox = styled.div`

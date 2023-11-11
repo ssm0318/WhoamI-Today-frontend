@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Button, CheckCircle, Font, Layout, SvgIcon } from '@design-system';
+import { CheckCircle, Font, Layout, SvgIcon } from '@design-system';
 import { friendGroupList } from '@mock/friends';
 import { FriendGroup } from '@models/friendGroup';
 import { Margin } from 'src/design-system/layouts';
@@ -60,7 +60,7 @@ function FriendGroupList() {
   return (
     <MainContainer>
       <TitleHeader
-        title={t('title')}
+        title={t(mode === 'edit' ? 'edit_group' : 'title')}
         RightComponent={
           mode === 'edit' ? (
             <button type="button" onClick={handleClickSave}>
@@ -105,23 +105,26 @@ function FriendGroupList() {
                 <SvgIcon name="order_group" color="GRAY_6" size={16} />
               </StyledCommonListItem>
             ))}
-          <StyledListSettingItem>
-            <Layout.FlexRow>
-              <SvgIcon name="check_circle_add" size={20} />
-              <Font.Display type="14_semibold" color="PRIMARY" ml={12}>
-                {t('add_group')}
-              </Font.Display>
-            </Layout.FlexRow>
-          </StyledListSettingItem>
+          {mode === 'list' && (
+            <StyledListSettingItem>
+              <Layout.FlexRow>
+                <SvgIcon name="check_circle_add" size={20} />
+                <Font.Display type="14_semibold" color="PRIMARY" ml={12}>
+                  {t('add_group')}
+                </Font.Display>
+              </Layout.FlexRow>
+            </StyledListSettingItem>
+          )}
+          {mode === 'edit' && (
+            <StyledListSettingItem disabled={!showDeleteGroupButton} textAlign="center">
+              <Layout.FlexRow>
+                <Font.Display type="14_semibold" ml={12}>
+                  {t('delete_group')}
+                </Font.Display>
+              </Layout.FlexRow>
+            </StyledListSettingItem>
+          )}
         </StyledList>
-        {showDeleteGroupButton && (
-          <Button.Dialog
-            status="normal"
-            type="warning_fill"
-            text={t('delete_group')}
-            sizing="stretch"
-          />
-        )}
       </Layout.LayoutBase>
     </MainContainer>
   );
