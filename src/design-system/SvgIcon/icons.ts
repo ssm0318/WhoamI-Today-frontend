@@ -2,6 +2,7 @@
 const top_navigation_hamburger = 'top_navigation_hamburger';
 const top_navigation_noti = 'top_navigation_noti';
 const arrow_left = 'arrow_left';
+const arrow_left_bold = 'arrow_left_bold';
 const arrow_right = 'arrow_right';
 const moment_mood_normal = 'moment_mood_normal';
 const moment_description_normal = 'moment_description_normal';
@@ -33,6 +34,7 @@ const link_share = 'link_share';
 const header_logo = 'header_logo';
 const lock_off = 'lock_off';
 const lock_on = 'lock_on';
+const green_dot = 'green_dot';
 const spotify = 'spotify';
 const top_navigation_friend = 'top_navigation_friend';
 const top_navigation_edit = 'top_navigation_edit';
@@ -40,6 +42,7 @@ const top_navigation_dots = 'top_navigation_dots';
 
 export {
   arrow_left,
+  arrow_left_bold,
   arrow_right,
   box_check_checked,
   box_check_unchecked,
@@ -53,6 +56,7 @@ export {
   error,
   friends_active,
   friends_inactive,
+  green_dot,
   header_logo,
   heart,
   hide_password_eye,

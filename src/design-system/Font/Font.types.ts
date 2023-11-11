@@ -28,6 +28,7 @@ export const isDisplayType = (font: unknown): font is DisplayType =>
 export type BodyType =
   | '20_regular'
   | '20_semibold'
+  | '16_semibold'
   | '18_regular'
   | '18_semibold'
   | '14_regular'
@@ -35,4 +36,5 @@ export type BodyType =
   | '12_regular'
   | '12_semibold'
   | '11_regular'
-  | '11_semibold';
+  | '11_semibold'
+  | '10_regular';

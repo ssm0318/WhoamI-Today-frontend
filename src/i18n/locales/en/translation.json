@@ -238,5 +238,12 @@
       "title": "Something's Wrong.",
       "text": "Please try again."
     }
+  },
+  "chats": {
+    "title": "Chats",
+    "room_list": {
+      "search_placeholder": "Search",
+      "title": "Messages"
+    }
   }
 }
