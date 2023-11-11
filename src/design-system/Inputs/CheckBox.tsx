@@ -8,7 +8,7 @@ type Props = InputHTMLAttributes<HTMLInputElement> &
   };
 
 function CheckInput(props: Props) {
-  const { name, hideLabel } = props;
+  const { name, hideLabel, children } = props;
   return (
     <>
       <input id={name} type="checkbox" {...props} />
@@ -19,6 +19,7 @@ function CheckInput(props: Props) {
           {name}
         </label>
       )}
+      {children}
     </>
   );
 }

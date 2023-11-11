@@ -124,7 +124,9 @@
     "add_group": "Add Group",
     "delete_group": "Delete Group",
     "add_group_member": "Add Group Member",
-    "delete_group_member": "Delete Group Member"
+    "delete_group_member": "Delete Group Member",
+    "member_count_one": "{{count}} person",
+    "member_count_other": "{{count}} people"
   },
   "my_detail": {
     "title_format": "d/M/yy (E)"

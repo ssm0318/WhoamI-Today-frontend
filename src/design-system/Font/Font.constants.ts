@@ -90,4 +90,9 @@ export const BodySettings: { [key in BodyType]: FontSettings } = {
     fontWeight: FontWeight.SEMIBOLD,
     lineHeight: 1.4,
   },
+  '10_regular': {
+    fontSize: 10,
+    fontWeight: FontWeight.REGULAR,
+    lineHeight: 1.6,
+  },
 };

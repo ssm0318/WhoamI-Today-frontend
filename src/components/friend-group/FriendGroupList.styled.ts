@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { getStyle, Margin, toMarginPaddingString } from 'src/design-system/layouts';
 
 export const StyledList = styled.ul`
   border-radius: 5.74px;
@@ -11,12 +12,31 @@ export const StyledList = styled.ul`
   }
 `;
 
-export const StyledListItem = styled.li`
-  padding: 16px;
+export const StyledCommonListItem = styled.li`
+  padding: 0px 16px;
   width: 100%;
   border-bottom: 1px solid ${({ theme }) => theme.GRAY_2};
   display: flex;
   justify-content: space-between;
+  align-items: center;
+`;
+
+export const StyledGroupItem = styled.div<Margin>`
+  ${({ m, mh, mv, mt, mr, mb, ml }) => css`
+    ${getStyle('margin', toMarginPaddingString(m, mh, mv, mt, mr, mb, ml))}
+    padding: 7px 0 11px 0;
+    display: flex;
+    flex-direction: column;
+  `}
+`;
+
+export const StyledUserItem = styled(StyledCommonListItem)`
+  padding-top: 12px;
+  padding-bottom: 13px;
+`;
+
+export const StyledListSettingItem = styled(StyledCommonListItem)`
+  padding: 15px;
 `;
 
 export const StyledCheckBox = styled.div`

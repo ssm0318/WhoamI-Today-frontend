@@ -7,7 +7,13 @@ import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, CheckCircle, Font, Layout, SvgIcon } from '@design-system';
 import { friendGroupList } from '@mock/friends';
 import { FriendGroup } from '@models/friendGroup';
-import { StyledList, StyledListItem } from './FriendGroupList.styled';
+import { Margin } from 'src/design-system/layouts';
+import {
+  StyledCommonListItem,
+  StyledGroupItem,
+  StyledList,
+  StyledListSettingItem,
+} from './FriendGroupList.styled';
 
 interface CheckFriendGroup extends FriendGroup {
   checked?: boolean;
@@ -17,6 +23,7 @@ function FriendGroupList() {
   const [t] = useTranslation('translation', { keyPrefix: 'friend_group' });
 
   const [mode, setMode] = useState<'list' | 'edit'>('list');
+  // FIXME: 실제 데이터
   const [checkedGroupList, setCheckedGroupList] = useState<CheckFriendGroup[]>(friendGroupList);
 
   const resetCheckGroupList = () => {
@@ -74,30 +81,38 @@ function FriendGroupList() {
         <StyledList>
           {mode === 'list' &&
             checkedGroupList.map((group) => (
-              <StyledListItem key={group.id} role="button" onClick={() => handleGoToGroup(group)}>
-                <Font.Display type="14_regular">{group.name}</Font.Display>
+              <StyledCommonListItem
+                key={group.id}
+                role="button"
+                onClick={() => handleGoToGroup(group)}
+              >
+                <Group group={group} />
                 <SvgIcon name="more_arrow" color="BASIC_BLACK" size={16} />
-              </StyledListItem>
+              </StyledCommonListItem>
             ))}
           {mode === 'edit' &&
             checkedGroupList.map((group) => (
-              <StyledListItem key={group.id}>
-                <CheckCircle
-                  checked={!!group.checked}
-                  name={group.name}
-                  onChange={() => handleToggleFriendGroup(group)}
-                />
+              <StyledCommonListItem key={group.id}>
+                <Layout.FlexRow alignItems="center">
+                  <CheckCircle
+                    checked={!!group.checked}
+                    name={group.name}
+                    onChange={() => handleToggleFriendGroup(group)}
+                    hideLabel
+                  />
+                  <Group group={group} ml={20} />
+                </Layout.FlexRow>
                 <SvgIcon name="order_group" color="GRAY_6" size={16} />
-              </StyledListItem>
+              </StyledCommonListItem>
             ))}
-          <StyledListItem>
+          <StyledListSettingItem>
             <Layout.FlexRow>
               <SvgIcon name="check_circle_add" size={20} />
               <Font.Display type="14_semibold" color="PRIMARY" ml={12}>
                 {t('add_group')}
               </Font.Display>
             </Layout.FlexRow>
-          </StyledListItem>
+          </StyledListSettingItem>
         </StyledList>
         {showDeleteGroupButton && (
           <Button.Dialog
@@ -109,6 +124,20 @@ function FriendGroupList() {
         )}
       </Layout.LayoutBase>
     </MainContainer>
+  );
+}
+
+function Group({ group, ...props }: { group: FriendGroup } & Margin) {
+  const [t] = useTranslation('translation', { keyPrefix: 'friend_group' });
+  const { name, member_cnt } = group;
+
+  return (
+    <StyledGroupItem {...props}>
+      <Font.Display type="14_regular">{name}</Font.Display>
+      <Font.Body type="10_regular" color="GRAY_3">
+        {t('member_count', { count: member_cnt })}
+      </Font.Body>
+    </StyledGroupItem>
   );
 }
 

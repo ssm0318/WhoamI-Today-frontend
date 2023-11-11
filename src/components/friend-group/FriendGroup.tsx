@@ -8,7 +8,7 @@ import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, CheckCircle, Font, Layout, SvgIcon } from '@design-system';
 import { friendList } from '@mock/friends';
 import { User } from '@models/user';
-import { StyledList, StyledListItem } from './FriendGroupList.styled';
+import { StyledList, StyledListSettingItem, StyledUserItem } from './FriendGroupList.styled';
 
 interface CheckUser extends User {
   checked?: boolean;
@@ -85,14 +85,14 @@ export function FriendGroup() {
         <StyledList>
           {mode === 'list' &&
             checkFriends.map(({ id, username, profile_image }) => (
-              <StyledListItem key={id} role="button" onClick={() => handleGoToUser(username)}>
+              <StyledUserItem key={id} role="button" onClick={() => handleGoToUser(username)}>
                 <Friend profile_image={profile_image} username={username} />
                 <SvgIcon name="more_arrow" color="BASIC_BLACK" size={16} />
-              </StyledListItem>
+              </StyledUserItem>
             ))}
           {mode === 'edit' &&
             checkFriends.map(({ id, checked, username, profile_image }) => (
-              <StyledListItem key={id}>
+              <StyledUserItem key={id}>
                 <Friend profile_image={profile_image} username={username} />
                 <CheckCircle
                   name={username}
@@ -100,16 +100,16 @@ export function FriendGroup() {
                   onChange={() => handleToggleFriend(id)}
                   hideLabel
                 />
-              </StyledListItem>
+              </StyledUserItem>
             ))}
-          <StyledListItem>
+          <StyledListSettingItem>
             <Layout.FlexRow>
               <SvgIcon name="check_circle_add" size={20} />
               <Font.Display type="14_semibold" color="PRIMARY" ml={12}>
                 {t('add_group_member')}
               </Font.Display>
             </Layout.FlexRow>
-          </StyledListItem>
+          </StyledListSettingItem>
         </StyledList>
         {mode === 'edit' && (
           <Button.Dialog
