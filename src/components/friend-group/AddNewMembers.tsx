@@ -7,7 +7,7 @@ import NoContents from '@components/_common/no-contents/NoContents';
 import FriendSearchInput from '@components/friends-settings/friend-search/FriendSearchInput';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Font, Layout } from '@design-system';
+import { Button, Font, Layout } from '@design-system';
 import useFriendList from '@hooks/useFriendList';
 import { User } from '@models/user';
 import { StyledAddNewMemberItem } from './FriendGroupList.styled';
@@ -46,14 +46,14 @@ function AddNewMembers() {
         // FIXME: 실제 그룹 이름
         title={id}
       />
-      <Layout.LayoutBase w="100%" pt={TITLE_HEADER_HEIGHT}>
+      <Layout.LayoutBase w="100%" pt={TITLE_HEADER_HEIGHT} overflow="hidden">
         <Layout.FlexCol w="100%" p={10} alignItems="center">
           <Font.Body type="12_regular" color="GRAY_3" textAlign="center">
             {t('add_new_member_info')}
           </Font.Body>
         </Layout.FlexCol>
         <FriendSearchInput query={query} setQuery={setQuery} />
-        <Layout.LayoutBase w="100%" ph={18} pt={20}>
+        <Layout.LayoutBase w="100%" ph={18} pt={20} overflow="auto">
           {friendList ? (
             <Layout.FlexCol w="100%" gap={8}>
               {friendList.length > 0 ? (
@@ -80,6 +80,14 @@ function AddNewMembers() {
             <Loader />
           )}
         </Layout.LayoutBase>
+        <Layout.Absolute w="100%" b={0}>
+          <Button.Medium
+            sizing="stretch"
+            type="secondary_fill"
+            status={selectedFriends.length > 0 ? 'normal' : 'disabled'}
+            text={t('confirm')}
+          />
+        </Layout.Absolute>
       </Layout.LayoutBase>
     </MainContainer>
   );

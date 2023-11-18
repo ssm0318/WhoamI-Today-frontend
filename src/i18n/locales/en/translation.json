@@ -128,7 +128,8 @@
     "delete_group_member": "Delete Group Member",
     "member_count_one": "{{count}} person",
     "member_count_other": "{{count}} people",
-    "add_new_member_info": "We don’t send notifications when you edit your group list."
+    "add_new_member_info": "We don’t send notifications when you edit your group list.",
+    "confirm": "Confirm"
   },
   "my_detail": {
     "title_format": "d/M/yy (E)"
