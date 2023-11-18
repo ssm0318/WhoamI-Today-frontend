@@ -52,6 +52,14 @@ export const Colors = {
   NOT_AVAILABLE_CHIP: '#FF2D2D',
 
   SPOTIFY_GREEN: '#4AD159',
+
+  BLACK: '#000000',
+  DARK: '#303030',
+  DARK_GRAY: '#555555',
+  MEDIUM_GRAY: '#A0A0A0',
+  LIGHT_GRAY: '#D9D9D9',
+  LIGHT: '#ECEBEC',
+  WHITE: '#FFFFFF',
 };
 
 export type ColorType = typeof Colors;
