@@ -19,15 +19,11 @@ interface CheckUser extends User {
   checked?: boolean;
 }
 
-interface FriendGroupProps {
-  addNewGroupMode?: boolean;
-}
-
-export function FriendGroup({ addNewGroupMode = false }: FriendGroupProps) {
+export function FriendGroup() {
   const [t] = useTranslation('translation', { keyPrefix: 'friend_group' });
 
   // FIXME: 실제 데이터
-  const [checkFriends, setCheckFriends] = useState<CheckUser[]>(addNewGroupMode ? [] : friendList);
+  const [checkFriends, setCheckFriends] = useState<CheckUser[]>(friendList);
   const [mode, setMode] = useState<'list' | 'edit'>('list');
 
   const [newGroupName, setNewGroupName] = useState('New group'); // FIXME: 기존 그룹 이름
@@ -42,11 +38,6 @@ export function FriendGroup({ addNewGroupMode = false }: FriendGroupProps) {
 
   const handleClickEdit = () => setMode('edit');
   const handleClickSave = () => {
-    if (addNewGroupMode) {
-      // TODO: update 요청
-      navigate(`/friend-groups/1`);
-      return;
-    }
     // TODO
     setMode('list');
     resetCheckFriends();
@@ -92,7 +83,7 @@ export function FriendGroup({ addNewGroupMode = false }: FriendGroupProps) {
           <button type="button" onClick={handleGoBack}>
             <SvgIcon name="arrow_left" size={36} color="BASIC_BLACK" />
           </button>
-          {addNewGroupMode || mode === 'edit' ? (
+          {mode === 'edit' ? (
             <StyledEditGroupNameInput
               type="text"
               value={newGroupName}
@@ -105,7 +96,7 @@ export function FriendGroup({ addNewGroupMode = false }: FriendGroupProps) {
             </Font.Display>
           )}
           <Layout.LayoutBase w={36}>
-            {mode === 'edit' || addNewGroupMode ? (
+            {mode === 'edit' ? (
               <button type="button" onClick={handleClickSave}>
                 <Font.Display type="18_bold" color="PRIMARY">
                   {t('save')}

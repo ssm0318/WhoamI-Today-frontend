@@ -14,6 +14,7 @@ import {
   StyledList,
   StyledListSettingItem,
 } from './FriendGroupList.styled';
+import RenameFriendGroupDialog from './RenameFriendGroupDialog';
 
 interface CheckFriendGroup extends FriendGroup {
   checked?: boolean;
@@ -43,7 +44,9 @@ function FriendGroupList() {
     navigate(`${id}`);
   };
 
-  const handleClickAddGroup = () => navigate('new');
+  const [visibleNewGroupDialog, setVisibleNewGroupDialog] = useState(false);
+  const handleClickAddGroup = () => setVisibleNewGroupDialog(true);
+  const handleCloseNewGroupDialog = () => setVisibleNewGroupDialog(false);
 
   const handleToggleFriendGroup = (item: CheckFriendGroup) => {
     const selectedGroupIndex = checkedGroupList.findIndex((group) => group.id === item.id);
@@ -126,6 +129,10 @@ function FriendGroupList() {
             </StyledListSettingItem>
           )}
         </StyledList>
+        <RenameFriendGroupDialog
+          visible={visibleNewGroupDialog}
+          onClose={handleCloseNewGroupDialog}
+        />
       </Layout.LayoutBase>
     </MainContainer>
   );
