@@ -52,7 +52,7 @@ const SvgIcon = React.memo((props: SvgIconProps) => {
   );
 });
 
-type SvgIconProps = {
+export type SvgIconProps = {
   width?: number;
   height?: number;
   size: number;
