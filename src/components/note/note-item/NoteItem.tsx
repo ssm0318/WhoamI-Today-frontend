@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import IconButton from '@components/_common/icon-button/IconButton';
 import { Font, Layout } from '@design-system';
 import { Note } from '@models/note';
@@ -9,7 +10,8 @@ interface NoteItemProps {
 }
 
 function NoteItem({ note }: NoteItemProps) {
-  const { content, created_at } = note;
+  const { content, created_at, id } = note;
+  const navigate = useNavigate();
 
   const myProfile = useBoundStore((state) => state.myProfile);
 
@@ -19,6 +21,10 @@ function NoteItem({ note }: NoteItemProps) {
     //
   };
 
+  const handleClickNote = () => {
+    navigate(`/notes/${id}`);
+  };
+
   return (
     <Layout.FlexCol
       w={NOTE_WIDTH}
@@ -26,9 +32,7 @@ function NoteItem({ note }: NoteItemProps) {
       gap={8}
       outline="LIGHT"
       rounded={12}
-      style={{
-        display: 'inline-block',
-      }}
+      onClick={handleClickNote}
     >
       <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
         <Font.Body type="12_regular" color="MEDIUM_GRAY">

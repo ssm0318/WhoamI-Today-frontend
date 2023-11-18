@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import IconButton from '@components/_common/icon-button/IconButton';
 import { Font, Layout } from '@design-system';
 import { Note } from '@models/note';
@@ -25,13 +26,11 @@ const noteList: Note[] = [
 
 function NoteSection() {
   const myProfile = useBoundStore((state) => state.myProfile);
-
+  const navigate = useNavigate();
   if (!myProfile) return null;
 
-  // note fetch
-
   const handleClickMore = () => {
-    //
+    navigate(`/notes`);
   };
 
   return (
