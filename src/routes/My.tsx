@@ -1,47 +1,23 @@
-import { useEffect } from 'react';
 import Divider from '@components/_common/divider/Divider';
-import Calendar from '@components/calendar/Calendar';
-import CalendarViewTabs from '@components/calendar/calendar-view-Tabs/CalendarViewTabs';
-import MyDetail from '@components/my-detail/MyDetail';
+import NoteSection from '@components/note/note-section/NoteSection';
 import ReactionSection from '@components/reaction/reaction-section/ReactionSection';
 import MyStatus from '@components/status/my-status/MyStatus';
-import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout } from '@design-system';
-import { useBoundStore } from '@stores/useBoundStore';
 
 function My() {
-  const { resetDetailDate, detailDate } = useBoundStore((state) => ({
-    resetDetailDate: state.resetDetailDate,
-    detailDate: state.detailDate,
-  }));
-
-  useEffect(() => {
-    return () => resetDetailDate();
-  }, [resetDetailDate]);
-
   return (
     <Layout.FlexCol w="100%" bgColor="BASIC_WHITE">
-      <Layout.FlexRow
-        w="100%"
-        alignItems="center"
-        justifyContent="space-between"
-        ph={DEFAULT_MARGIN}
-        pv={12}
-      >
+      {/* Status (Check in) */}
+      <Layout.FlexRow w="100%" p={12}>
         <MyStatus />
       </Layout.FlexRow>
       <Divider width={1} />
-      <Layout.FlexRow
-        w="100%"
-        alignItems="center"
-        justifyContent="flex-end"
-        ph={DEFAULT_MARGIN}
-        pv={12}
-      >
-        <CalendarViewTabs />
-      </Layout.FlexRow>
-      <Calendar />
-      <MyDetail detailDate={detailDate} />
+      {/* Notes */}
+      <Layout.FlexCol p={12} w="100%">
+        <NoteSection />
+      </Layout.FlexCol>
+      <Divider width={1} />
+      {/* Responses */}
       <ReactionSection emojis={['💪🏻', '😊', '😋']} />
       <Divider width={500} />
       <ReactionSection emojis={['💡', '🙇‍♀️', '🤾', '🤪', '🤯', '🥺']} />
