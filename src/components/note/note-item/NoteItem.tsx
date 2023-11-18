@@ -1,5 +1,7 @@
+import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import IconButton from '@components/_common/icon-button/IconButton';
+import LikeButton from '@components/_common/like-button/LikeButton';
 import { Font, Layout } from '@design-system';
 import { Note } from '@models/note';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -22,7 +24,11 @@ function NoteItem({ note }: NoteItemProps) {
   };
 
   const handleClickNote = () => {
-    navigate(`/notes/${id}`);
+    return navigate(`/notes/${id}`);
+  };
+
+  const handleClickComment = (e: MouseEvent) => {
+    e.stopPropagation();
   };
 
   return (
@@ -46,8 +52,8 @@ function NoteItem({ note }: NoteItemProps) {
         </Font.Body>
       </Layout.FlexRow>
       <Layout.FlexRow gap={12}>
-        <IconButton name="heart" onClick={handleClickMore} />
-        <IconButton name="comment" onClick={handleClickMore} />
+        <LikeButton postType="Note" post={note} iconSize={24} m={0} />
+        <IconButton name="comment" onClick={handleClickComment} />
       </Layout.FlexRow>
     </Layout.FlexCol>
   );

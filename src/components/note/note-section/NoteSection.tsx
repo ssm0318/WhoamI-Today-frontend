@@ -11,16 +11,19 @@ const noteList: Note[] = [
     content:
       'Lorem ipsum dolor sit amet consectetur. Leo mauris consectetur morbi mauris pellentesque. Posuere eget nulla pretium amet interdum suspendisse ve... more',
     created_at: '2021-09-01T00:00:00.000Z',
+    current_user_like_id: null,
   },
   {
     id: 2,
     content: 'Lorem ipsum dolor sit amet consectetur. Diam mauris eget vitae ultrices amet.',
     created_at: '2021-09-01T00:00:00.000Z',
+    current_user_like_id: null,
   },
   {
     id: 3,
     content: 'Lorem ipsum dolor',
     created_at: '2021-09-01T00:00:00.000Z',
+    current_user_like_id: null,
   },
 ];
 
