@@ -127,7 +127,8 @@
     "add_group_member": "Add Group Member",
     "delete_group_member": "Delete Group Member",
     "member_count_one": "{{count}} person",
-    "member_count_other": "{{count}} people"
+    "member_count_other": "{{count}} people",
+    "add_new_member_info": "We don’t send notifications when you edit your group list."
   },
   "my_detail": {
     "title_format": "d/M/yy (E)"

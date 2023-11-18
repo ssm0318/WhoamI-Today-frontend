@@ -9,7 +9,7 @@ export const CommonInput = styled.input`
     `outline: none;
     width: ${props.width ? `${props.width}px` : '100%'};`}
   padding: 14px 0;
-  font-size: 18px;
+  font-size: 16px;
   border-width: 0 0 1px;
   border-color: ${({ theme }) => theme.GRAY_1};
 
