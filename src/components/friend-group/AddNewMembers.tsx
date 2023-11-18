@@ -80,7 +80,7 @@ function AddNewMembers() {
             <Loader />
           )}
         </Layout.LayoutBase>
-        <Layout.Absolute w="100%" b={0}>
+        <Layout.Absolute w="100%" b={0} ph={24} pv={20}>
           <Button.Medium
             sizing="stretch"
             type="secondary_fill"
