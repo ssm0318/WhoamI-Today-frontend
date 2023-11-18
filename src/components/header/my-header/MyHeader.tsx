@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
+import IconButton from '@components/_common/icon-button/IconButton';
 import { Font, Layout } from '@design-system';
-import Icon from '../icon/Icon';
 
 interface MyHeaderProps {
   onClickHamburger: () => void;
@@ -20,8 +20,8 @@ function MyHeader({ onClickHamburger }: MyHeaderProps) {
         <Font.Display type="24_regular">My Profile</Font.Display>
       </Layout.FlexRow>
       <Layout.FlexRow gap={8} alignItems="center">
-        <Icon name="add_post" size={44} onClick={handleEditStatus} />
-        <Icon name="top_navigation_hamburger" size={44} onClick={onClickHamburger} />
+        <IconButton name="add_post" size={44} onClick={handleEditStatus} />
+        <IconButton name="top_navigation_hamburger" size={44} onClick={onClickHamburger} />
       </Layout.FlexRow>
     </>
   );

@@ -5,7 +5,7 @@ import { ColorKeys, IconNames, SvgIcon } from '@design-system';
 interface IconButtonProps {
   size?: number;
   name: IconNames;
-  onClick: (e: MouseEvent) => void;
+  onClick?: (e: MouseEvent) => void;
   color?: ColorKeys;
 }
 
