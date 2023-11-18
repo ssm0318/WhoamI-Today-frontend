@@ -41,6 +41,7 @@ const top_navigation_chat = 'top_navigation_chat';
 const top_navigation_back = 'top_navigation_back';
 const dots_menu = 'dots_menu';
 const edit = 'edit';
+const new_add = 'new_add';
 
 export {
   arrow_left,
@@ -74,6 +75,7 @@ export {
   my_active,
   my_inactive,
   my_profile,
+  new_add,
   question_send,
   search,
   show_password_eye,

@@ -10,6 +10,7 @@ import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getFriendList } from '@utils/apis/user';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
+import AddNewStatus from './add-new-status/AddNewStatus';
 import FriendsInfo from './friends-info/FriendsInfo';
 import StatusChip from './status-chip/StatusChip';
 import StatusMusic from './status-music/StatusMusic';
@@ -50,13 +51,15 @@ function Status({ isMyProfile }: StatusProps) {
   };
 
   const handleClickViewMore = () => {
-    // 친구 페이지에서 check-in 더보기
-    //
+    // TODO 친구 페이지에서 check-in 더보기
   };
 
   useEffect(() => {
     fetchFriends();
   }, [fetchFriends]);
+
+  // FIXME 실제 데이터로
+  const isCheckInExists = true;
 
   return (
     <Layout.FlexCol gap={8}>
@@ -80,50 +83,56 @@ function Status({ isMyProfile }: StatusProps) {
       </Layout.FlexRow>
       {/* 친구 목록 */}
       <FriendsInfo friends={mockFriendList} />
-      <Layout.FlexCol gap={8} p={16} bgColor="GRAY_14" rounded={8} justifyContent="center">
-        <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
-          <Layout.FlexRow gap={8}>
-            {/* availability */}
-            <StatusChip availability="AVAILABLE" />
-            {/* spotify */}
-            {trackData && <StatusMusic track={trackData} />}
-          </Layout.FlexRow>
-          {/* more */}
-          {isMyProfile ? (
-            <button type="button" onClick={handleClickEditCheckIn}>
-              {/* 더보기 TODO(Gina): IconButton으로 변환 */}
-              <SvgIcon name="edit" size={24} />
-            </button>
-          ) : (
-            <button type="button" onClick={handleClickViewMore}>
-              {/* 수정 TODO(Gina): IconButton으로 변환  */}
-              <SvgIcon name="dots_menu" color="BASIC_BLACK" size={24} />
-            </button>
-          )}
-        </Layout.FlexRow>
-        <Layout.FlexRow
-          w="100%"
-          justifyContent="space-between"
-          gap={8}
-          bgColor="BASIC_WHITE"
-          outline="GRAY_1"
-          ph={8}
-          pv={4}
-          rounded={12}
-        >
-          {/* emoji */}
-          <EmojiItem emojiString="😋" size={24} bgColor="TRANSPARENT" outline="TRANSPARENT" />
-          {/* description */}
-          <Font.Body type="14_semibold" numberOfLines={2}>
-            Got free boba tea from the new shop at work today!!
-          </Font.Body>
-        </Layout.FlexRow>
-        {/* check in time */}
-        <Layout.FlexRow w="100%" justifyContent="flex-end">
-          <Font.Body type="12_regular" numberOfLines={2} color="GRAY_3">
-            Checked in {convertTimeDiffByString(currentDate, new Date('2023-10-28 12:00:00'))}
-          </Font.Body>
-        </Layout.FlexRow>
+      <Layout.FlexCol w="100%" gap={8} p={16} bgColor="GRAY_14" rounded={8} justifyContent="center">
+        {isCheckInExists ? (
+          <>
+            <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
+              <Layout.FlexRow gap={8}>
+                {/* availability */}
+                <StatusChip availability="AVAILABLE" />
+                {/* spotify */}
+                {trackData && <StatusMusic track={trackData} />}
+              </Layout.FlexRow>
+              {/* more */}
+              {isMyProfile ? (
+                <button type="button" onClick={handleClickEditCheckIn}>
+                  {/* 더보기 TODO(Gina): IconButton으로 변환 */}
+                  <SvgIcon name="edit" size={24} />
+                </button>
+              ) : (
+                <button type="button" onClick={handleClickViewMore}>
+                  {/* 수정 TODO(Gina): IconButton으로 변환  */}
+                  <SvgIcon name="dots_menu" color="BASIC_BLACK" size={24} />
+                </button>
+              )}
+            </Layout.FlexRow>
+            <Layout.FlexRow
+              w="100%"
+              justifyContent="space-between"
+              gap={8}
+              bgColor="BASIC_WHITE"
+              outline="GRAY_1"
+              ph={8}
+              pv={4}
+              rounded={12}
+            >
+              {/* emoji */}
+              <EmojiItem emojiString="😋" size={24} bgColor="TRANSPARENT" outline="TRANSPARENT" />
+              {/* description */}
+              <Font.Body type="14_semibold" numberOfLines={2}>
+                Got free boba tea from the new shop at work today!!
+              </Font.Body>
+            </Layout.FlexRow>
+            {/* check in time */}
+            <Layout.FlexRow w="100%" justifyContent="flex-end">
+              <Font.Body type="12_regular" numberOfLines={2} color="GRAY_3">
+                Checked in {convertTimeDiffByString(currentDate, new Date('2023-10-28 12:00:00'))}
+              </Font.Body>
+            </Layout.FlexRow>
+          </>
+        ) : (
+          <AddNewStatus />
+        )}
       </Layout.FlexCol>
     </Layout.FlexCol>
   );
