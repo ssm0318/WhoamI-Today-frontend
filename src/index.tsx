@@ -23,6 +23,8 @@ import ExploreFriends from './routes/friends/ExploreFriends';
 import Friends from './routes/friends/Friends';
 import Intro from './routes/Intro';
 import My from './routes/My';
+import AllNotes from './routes/notes/AllNotes';
+import NoteDetail from './routes/notes/NoteDetail';
 import Notifications from './routes/Notifications';
 import ShortAnswerResponse from './routes/response/ShortAnswerResponse';
 import ResponseDetailContainer from './routes/response-detail/ResponseDetailContainer';
@@ -110,6 +112,14 @@ const router = createBrowserRouter([
     children: [
       { path: 'edit', element: <CheckInEdit /> },
       { path: 'search-music', element: <MusicSearch /> },
+    ],
+  },
+  {
+    path: 'notes',
+    loader: checkIfSignIn,
+    children: [
+      { path: '', element: <AllNotes /> },
+      { path: ':noteId', element: <NoteDetail /> },
     ],
   },
   {

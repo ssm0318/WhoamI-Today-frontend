@@ -6,6 +6,7 @@ import NoContents from '@components/_common/no-contents/NoContents';
 import Calendar from '@components/calendar/Calendar';
 import CalendarViewTabs from '@components/calendar/calendar-view-Tabs/CalendarViewTabs';
 import MyDetail from '@components/my-detail/MyDetail';
+import NoteSection from '@components/note/note-section/NoteSection';
 import Profile from '@components/profile/Profile';
 import ReactionSection from '@components/reaction/reaction-section/ReactionSection';
 import { DEFAULT_MARGIN } from '@constants/layout';
@@ -67,6 +68,10 @@ function My() {
       </Layout.FlexRow>
       <Calendar />
       <MyDetail detailDate={detailDate} />
+
+      <Layout.FlexCol p={12} w="100%">
+        <NoteSection />
+      </Layout.FlexCol>
       <Divider width={1} />
       {/* TODO Responses List 추가 */}
       <Layout.FlexCol pt={12} w="100%">
