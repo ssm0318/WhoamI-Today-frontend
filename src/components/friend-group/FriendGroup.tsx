@@ -2,10 +2,9 @@ import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
-import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { HeaderWrapper } from '@components/title-header/TitleHeader.styled';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { CheckCircle, Font, Layout, SvgIcon } from '@design-system';
+import { Font, Layout, SvgIcon } from '@design-system';
 import { friendList } from '@mock/friends';
 import { User } from '@models/user';
 import {
@@ -14,20 +13,10 @@ import {
   StyledListSettingItem,
   StyledUserItem,
 } from './FriendGroupList.styled';
+import SelectableUserItem, { Friend } from './SelectableUserItem';
 
 interface CheckUser extends User {
   checked?: boolean;
-}
-
-export function Friend({ profile_image, username }: Pick<User, 'profile_image' | 'username'>) {
-  return (
-    <Layout.FlexRow>
-      <ProfileImage imageUrl={profile_image} username={username} size={20} />
-      <Font.Display type="14_regular" ml={16}>
-        {username}
-      </Font.Display>
-    </Layout.FlexRow>
-  );
 }
 
 interface FriendGroupProps {
@@ -72,7 +61,7 @@ export function FriendGroup({ addNewGroupMode = false }: FriendGroupProps) {
     navigate(`/users/${username}`);
   };
 
-  const handleToggleFriend = (userId: number) => {
+  const handleToggleFriend = ({ id: userId }: User) => {
     const selectedFriendIndex = checkFriends.findIndex((user) => user.id === userId);
     if (selectedFriendIndex === -1) return;
 
@@ -142,14 +131,12 @@ export function FriendGroup({ addNewGroupMode = false }: FriendGroupProps) {
               </StyledUserItem>
             ))}
           {mode === 'edit' &&
-            checkFriends.map(({ id, checked, username, profile_image }) => (
-              <StyledUserItem key={id}>
-                <Friend profile_image={profile_image} username={username} />
-                <CheckCircle
-                  name={username}
+            checkFriends.map(({ checked, ...user }) => (
+              <StyledUserItem key={user.id}>
+                <SelectableUserItem
+                  user={user}
                   checked={!!checked}
-                  onChange={() => handleToggleFriend(id)}
-                  hideLabel
+                  handleToggleFriend={handleToggleFriend}
                 />
               </StyledUserItem>
             ))}

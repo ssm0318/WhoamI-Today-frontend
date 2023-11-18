@@ -62,3 +62,10 @@ export const StyledEditGroupNameInput = styled.input`
   font-size: 24px;
   font-weight: 700;
 `;
+
+export const StyledAddNewMemberItem = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
