@@ -1,6 +1,8 @@
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
+import { SwipeLayoutListContext } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { formatLastMessageTime } from '@components/chats/chat-room-list/ChatRoomItem.helper';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import { Font, Layout, SvgIcon } from '@design-system';
@@ -24,7 +26,10 @@ export function ChatRoomItem({
 }: Props) {
   const navigate = useNavigate();
 
+  const { hasSwipedItem } = useContext(SwipeLayoutListContext);
+
   const handleClickItem = () => {
+    if (hasSwipedItem) return;
     navigate(`/chats/${roomId}`);
   };
 
@@ -51,7 +56,7 @@ export function ChatRoomItem({
         gap={10}
         alignItems="center"
         ph={16}
-        onClick={handleClickItem}
+        onMouseDown={handleClickItem}
       >
         <ProfileImage imageUrl={imageUrl} size={55} />
         <Layout.FlexCol w="100%" justifyContent="center" gap={5}>

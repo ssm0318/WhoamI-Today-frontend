@@ -1,32 +1,50 @@
-import { RefObject, useEffect } from 'react';
+import { RefObject, useCallback, useEffect } from 'react';
+
+type Handler = (event: MouseEvent | TouchEvent) => void;
 
 interface useClickOutsideProps {
   ref: RefObject<HTMLElement>;
   toggleButtonRef?: RefObject<HTMLElement>;
-  onClick: () => void;
+  onClick: Handler;
+  onTouch?: Handler;
 }
 
-function useClickOutside({ ref, toggleButtonRef, onClick }: useClickOutsideProps) {
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent | TouchEvent) {
+function useClickOutside({ ref, toggleButtonRef, onClick, onTouch }: useClickOutsideProps) {
+  const handleOutside = useCallback(
+    (event: MouseEvent | TouchEvent, handler: Handler) => {
       if (
         ref.current &&
         !ref.current.contains(event.target as Node) &&
         (!toggleButtonRef ||
           (toggleButtonRef && !toggleButtonRef.current?.contains(event.target as Node)))
       ) {
-        onClick();
+        handler?.(event);
       }
-    }
+    },
+    [ref, toggleButtonRef],
+  );
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      handleOutside(e, onClick);
+    };
     document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
     };
-  }, [ref, onClick, toggleButtonRef]);
+  }, [handleOutside, onClick]);
+
+  useEffect(() => {
+    const handleTouchOutside = (e: MouseEvent | TouchEvent) => {
+      handleOutside(e, onTouch ?? onClick);
+    };
+    document.addEventListener('touchstart', handleTouchOutside);
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchOutside);
+    };
+  }, [handleOutside, onClick, onTouch]);
 }
 
 export default useClickOutside;

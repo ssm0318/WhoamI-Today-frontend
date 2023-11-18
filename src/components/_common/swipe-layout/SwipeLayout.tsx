@@ -1,9 +1,10 @@
-import { ReactElement, TouchEvent, useRef, useState } from 'react';
+import { ReactElement, TouchEvent, useContext, useRef, useState } from 'react';
 import {
   StyledRightContent,
   StyledSwipeItem,
   StyledSwipeLayout,
 } from '@components/_common/swipe-layout/SwipeLayout.styled';
+import { SwipeLayoutListContext } from '@components/_common/swipe-layout/SwipeLayoutList';
 import useClickOutside from '@hooks/useClickOutside';
 
 const MIN_SWIPE_DISTANCE = 60;
@@ -22,6 +23,13 @@ export function SwipeLayout({ children, rightContent }: Props) {
   const [distance, setDistance] = useState<number>();
   const [isTouchMoved, setIsTouchMoved] = useState<boolean>(false);
   const [isSwiped, setIsSwiped] = useState<boolean>(false);
+
+  const { setHasSwipedItem } = useContext(SwipeLayoutListContext);
+
+  const clearSwipeState = () => {
+    setIsSwiped(false);
+    setDistance(undefined);
+  };
 
   const handleTouchStart = (e: TouchEvent) => {
     const { clientX, clientY } = e.targetTouches[0];
@@ -50,14 +58,14 @@ export function SwipeLayout({ children, rightContent }: Props) {
     if (distance === undefined) return;
 
     if (!isTouchMoved) {
-      setIsSwiped(false);
-      setDistance(undefined);
+      clearSwipeState();
       return;
     }
 
     const isLeftSwipe = distance > MIN_SWIPE_DISTANCE;
 
     setIsSwiped(isLeftSwipe);
+    setHasSwipedItem(isLeftSwipe);
     setDistance(isLeftSwipe ? SWIPE_DISTANCE : 0);
   };
 
@@ -65,15 +73,18 @@ export function SwipeLayout({ children, rightContent }: Props) {
 
   useClickOutside({
     ref: swipeLayoutRef,
+    onTouch: () => {
+      if (!isSwiped) return;
+      clearSwipeState();
+    },
     onClick: () => {
-      setIsSwiped(false);
-      setDistance(undefined);
+      setHasSwipedItem(false);
     },
   });
 
   const handleRightContentClick = () => {
-    setIsSwiped(false);
-    setDistance(undefined);
+    clearSwipeState();
+    setHasSwipedItem(false);
   };
 
   return (
