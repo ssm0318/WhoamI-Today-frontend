@@ -87,7 +87,7 @@ export function FriendGroup() {
             </Font.Display>
             <Icon name="edit" onClick={handleClickRenameGroup} size={20} />
           </Layout.FlexRow>
-          <Layout.LayoutBase w={36}>
+          <Layout.LayoutBase>
             {mode === 'edit' ? (
               <button type="button" onClick={handleClickSave}>
                 <Font.Display type="18_bold" color="PRIMARY">
@@ -95,11 +95,7 @@ export function FriendGroup() {
                 </Font.Display>
               </button>
             ) : checkFriends.length > 1 ? (
-              <button type="button" onClick={handleClickEdit}>
-                <Font.Display type="18_bold" color="PRIMARY">
-                  {t('edit')}
-                </Font.Display>
-              </button>
+              <Icon name="select_list" size={20} onClick={handleClickEdit} />
             ) : null}
           </Layout.LayoutBase>
         </Layout.FlexRow>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import Icon from '@components/header/icon/Icon';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { CheckCircle, Font, Layout, SvgIcon } from '@design-system';
@@ -74,11 +75,7 @@ function FriendGroupList() {
               </Font.Display>
             </button>
           ) : (
-            <button type="button" onClick={handleClickEdit}>
-              <Font.Display type="18_bold" color="PRIMARY">
-                {t('edit')}
-              </Font.Display>
-            </button>
+            <Icon name="select_list" onClick={handleClickEdit} size={20} />
           )
         }
       />
