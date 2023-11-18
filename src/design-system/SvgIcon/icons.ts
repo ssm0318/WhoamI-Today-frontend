@@ -39,6 +39,8 @@ const top_navigation_edit = 'top_navigation_edit';
 const top_navigation_dots = 'top_navigation_dots';
 const top_navigation_chat = 'top_navigation_chat';
 const top_navigation_back = 'top_navigation_back';
+const dots_menu = 'dots_menu';
+const edit = 'edit';
 
 export {
   arrow_left,
@@ -52,6 +54,8 @@ export {
   close,
   comment,
   delete_button,
+  dots_menu,
+  edit,
   error,
   friends_active,
   friends_inactive,

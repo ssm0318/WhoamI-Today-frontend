@@ -27,7 +27,7 @@ function StatusMusic({ track, width = 200 }: StatusMusicProps) {
           borderRadius: 4,
         }}
       />
-      <Font.Body type="12_semibold">
+      <Font.Body type="12_semibold" numberOfLines={1}>
         {track.artists[0].name} - {track.name}
       </Font.Body>
       <Layout.LayoutBase w={16} h={16}>

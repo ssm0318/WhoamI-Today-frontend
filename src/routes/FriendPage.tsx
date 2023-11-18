@@ -51,7 +51,7 @@ function FriendPage() {
           ph={DEFAULT_MARGIN}
           pv={12}
         >
-          <Status />
+          <Status isMyProfile={false} />
         </Layout.FlexRow>
         <ReactionSection emojis={['💪🏻', '😊', '😋']} />
         <Divider width={500} />

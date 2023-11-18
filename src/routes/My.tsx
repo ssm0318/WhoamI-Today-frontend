@@ -28,7 +28,7 @@ function My() {
         ph={DEFAULT_MARGIN}
         pv={12}
       >
-        <Status />
+        <Status isMyProfile />
       </Layout.FlexRow>
       <Divider width={1} />
       <Layout.FlexRow
