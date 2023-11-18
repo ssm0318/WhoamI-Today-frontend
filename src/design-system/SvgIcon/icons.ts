@@ -42,8 +42,10 @@ const top_navigation_back = 'top_navigation_back';
 const dots_menu = 'dots_menu';
 const edit = 'edit';
 const new_add = 'new_add';
+const add_reaction = 'add_reaction';
 
 export {
+  add_reaction,
   arrow_left,
   arrow_right,
   box_check_checked,

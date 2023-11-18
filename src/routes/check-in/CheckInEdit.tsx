@@ -2,14 +2,13 @@ import { Track } from '@spotify/web-api-ts-sdk';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Divider from '@components/_common/divider/Divider';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import AvailabilityChip from '@components/profile/availability-chip/AvailabilityChip';
 import SpotifyMusic from '@components/profile/spotify-music/SpotifyMusic';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, SCREEN_WIDTH, TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Button, Font, Input, Layout } from '@design-system';
+import { Button, Font, Input, Layout, SvgIcon } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
 import SpotifyManager from '@libs/SpotifyManager';
 import { checkIn as mockCheckIn } from '@mock/users';
@@ -29,7 +28,7 @@ function CheckInEdit() {
 
   const handleSelectEmoji = (e: EmojiClickData) => {
     setCheckIn((prev) => {
-      return { ...prev, emoji: e.emoji };
+      return { ...prev, mood: e.emoji };
     });
     setIsEmojiPickerVisible(false);
   };
@@ -64,60 +63,68 @@ function CheckInEdit() {
 
   return (
     <MainContainer>
-      <TitleHeader title="Check-in Edit" />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" gap={10} ph="default">
-        {/* availability */}
-        <Font.Body type="18_regular">Availability</Font.Body>
-        {Object.values(Availability).map((a) => (
-          <AvailabilityChip
-            availability={a}
-            key={a}
-            isSelected={availability === a}
-            onSelect={(av) => {
-              setCheckIn((prev) => ({ ...prev, availability: av }));
-            }}
-          />
-        ))}
-        <Divider width={1} />
-        {/* bio */}
-        <Input label="Bio" name="bio" value={bio} onChange={handleChange} />
-        <Divider width={1} />
-
-        {/* spotify */}
-        <Font.Body type="18_regular">Music</Font.Body>
-        <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center">
-          {trackData && <SpotifyMusic track={trackData} />}
-          <Button.Small
-            type="filled"
-            status="normal"
-            sizing="fit-content"
-            onClick={handleSearchMusic}
-            text="change music"
-          />
-        </Layout.FlexRow>
-        <Divider width={1} />
+      <TitleHeader
+        title="Edit Check-in"
+        RightComponent={
+          <button type="button" onClick={handleConfirmSave}>
+            <Font.Body type="20_semibold" color="PRIMARY">
+              Save
+            </Font.Body>
+          </button>
+        }
+      />
+      <Layout.FlexCol
+        mt={TITLE_HEADER_HEIGHT}
+        w="100%"
+        h="100%"
+        gap={16}
+        bgColor="BACKGROUND_COLOR"
+        p={12}
+      >
         {/* emoji */}
-        <Font.Body type="18_regular">Emoji</Font.Body>
-        <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center">
-          <EmojiItem emojiString={mood} size={24} />
-          <Layout.FlexRow ref={toggleButtonWrapper}>
-            <Button.Small
-              type="filled"
-              status="normal"
-              sizing="fit-content"
-              onClick={toggleEmojiPicker}
-              text="change emoji"
-            />
-          </Layout.FlexRow>
-        </Layout.FlexRow>
-
         <Layout.FlexCol
-          style={{
-            position: 'relative',
-          }}
+          justifyContent="space-between"
+          w="100%"
+          bgColor="BASIC_WHITE"
+          rounded={12}
+          p={12}
         >
-          {isEmojiPickerVisible && (
-            <Layout.Absolute t={0} ref={emojiPickerWrapper}>
+          <Font.Body type="20_semibold">Select an emoji</Font.Body>
+          <Font.Body type="12_semibold" color="GRAY_3">
+            What emoji describes you mood the best?
+          </Font.Body>
+          {mood ? (
+            <Layout.FlexRow gap={8} mt={8} alignItems="center">
+              <Layout.FlexRow p={8} rounded={12} outline="GRAY_7">
+                <EmojiItem emojiString={mood} size={24} outline="TRANSPARENT" />
+              </Layout.FlexRow>
+              {/* FIXME IconButton으로 변경 */}
+              <button
+                type="button"
+                onClick={() => {
+                  setCheckIn((prev) => ({ ...prev, mood: '' }));
+                }}
+              >
+                <SvgIcon name="delete_button" size={24} />
+              </button>
+            </Layout.FlexRow>
+          ) : (
+            <Layout.FlexRow ref={toggleButtonWrapper} mt={8} p={8} rounded={12} outline="GRAY_7">
+              {/* FIXME IconButton으로 변경 */}
+              <button type="button" onClick={toggleEmojiPicker}>
+                <SvgIcon name="add_reaction" size={24} />
+              </button>
+            </Layout.FlexRow>
+          )}
+        </Layout.FlexCol>
+        {/* emoji toggle popup */}
+        {isEmojiPickerVisible && (
+          <Layout.FlexCol
+            style={{
+              position: 'relative',
+            }}
+          >
+            <Layout.Absolute t={-16} ref={emojiPickerWrapper}>
               <EmojiPicker
                 onEmojiClick={handleSelectEmoji}
                 autoFocusSearch={false}
@@ -129,16 +136,83 @@ function CheckInEdit() {
                 width={SCREEN_WIDTH - 2 * DEFAULT_MARGIN}
               />
             </Layout.Absolute>
-          )}
-        </Layout.FlexCol>
-        <Divider width={1} />
-
+          </Layout.FlexCol>
+        )}
         {/* description */}
-        <Input label="Description" name="description" value={description} onChange={handleChange} />
+        <Layout.FlexCol
+          justifyContent="space-between"
+          w="100%"
+          bgColor="BASIC_WHITE"
+          rounded={12}
+          p={12}
+        >
+          <Font.Body type="20_semibold">Enter a short text</Font.Body>
+          <Font.Body type="12_semibold" color="GRAY_3">
+            Tell your friends more about your mood!
+          </Font.Body>
+          <Input label="" name="description" value={description} onChange={handleChange} />
+        </Layout.FlexCol>
+        {/* spotify */}
+        <Layout.FlexCol
+          justifyContent="space-between"
+          w="100%"
+          bgColor="BASIC_WHITE"
+          rounded={12}
+          p={12}
+        >
+          <Font.Body type="20_semibold">Choose a Spotify song</Font.Body>
+          <Font.Body type="12_semibold" color="GRAY_3">
+            What song describes your mood the best?
+          </Font.Body>
+          <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center" mt={8}>
+            {trackData && <SpotifyMusic track={trackData} />}
+            <Button.Small
+              type="filled"
+              status="normal"
+              sizing="fit-content"
+              onClick={handleSearchMusic}
+              text="change music"
+            />
+          </Layout.FlexRow>
+        </Layout.FlexCol>
+        {/* availability */}
+        <Layout.FlexCol
+          justifyContent="space-between"
+          w="100%"
+          bgColor="BASIC_WHITE"
+          rounded={12}
+          p={12}
+        >
+          <Font.Body type="20_semibold">Availability Availability Availability</Font.Body>
+          <Font.Body type="12_semibold" color="GRAY_3">
+            Availability Availability Availability
+          </Font.Body>
+          {Object.values(Availability).map((a) => (
+            <AvailabilityChip
+              availability={a}
+              key={a}
+              isSelected={availability === a}
+              onSelect={(av) => {
+                setCheckIn((prev) => ({ ...prev, availability: av }));
+              }}
+            />
+          ))}
+        </Layout.FlexCol>
+        {/* bio */}
+        <Layout.FlexCol
+          justifyContent="space-between"
+          w="100%"
+          bgColor="BASIC_WHITE"
+          rounded={12}
+          p={12}
+        >
+          <Font.Body type="20_semibold">BIO BIO BIO</Font.Body>
+          <Font.Body type="12_semibold" color="GRAY_3">
+            BIO BIO BIO
+          </Font.Body>
+          <Input label="" name="bio" value={bio} onChange={handleChange} />
+        </Layout.FlexCol>
       </Layout.FlexCol>
-      <Layout.FlexRow w="100%" justifyContent="center" mv="default">
-        <Button.Large text="save" onClick={handleConfirmSave} type="filled" status="normal" />
-      </Layout.FlexRow>
     </MainContainer>
   );
 }
