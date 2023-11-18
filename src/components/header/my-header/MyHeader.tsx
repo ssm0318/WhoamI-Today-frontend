@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import { useBoundStore } from '@stores/useBoundStore';
 import Icon from '../icon/Icon';
 import MainHeader from '../MainHeader';
@@ -9,6 +10,16 @@ function MyHeader() {
   const myProfile = useBoundStore((state) => state.myProfile);
 
   const [showSideMenu, setShowSideMenu] = useState(false);
+=======
+import IconButton from '@components/_common/icon-button/IconButton';
+import { Font, Layout } from '@design-system';
+
+interface MyHeaderProps {
+  onClickHamburger: () => void;
+}
+
+function MyHeader({ onClickHamburger }: MyHeaderProps) {
+>>>>>>> 5497610 ((#220) 노트 마크업 (#223))
   const navigate = useNavigate();
 
   const handleEditStatus = () => {
@@ -22,6 +33,7 @@ function MyHeader() {
 
   return (
     <>
+<<<<<<< HEAD
       <MainHeader
         title={myProfile?.username ?? ''}
         rightButtons={
@@ -32,6 +44,15 @@ function MyHeader() {
         }
       />
       {showSideMenu && <SideMenu closeSideMenu={() => setShowSideMenu(false)} />}
+=======
+      <Layout.FlexRow>
+        <Font.Display type="24_regular">My Profile</Font.Display>
+      </Layout.FlexRow>
+      <Layout.FlexRow gap={8} alignItems="center">
+        <IconButton name="add_post" size={44} onClick={handleEditStatus} />
+        <IconButton name="top_navigation_hamburger" size={44} onClick={onClickHamburger} />
+      </Layout.FlexRow>
+>>>>>>> 5497610 ((#220) 노트 마크업 (#223))
     </>
   );
 }

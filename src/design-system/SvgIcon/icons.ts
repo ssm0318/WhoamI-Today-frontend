@@ -75,7 +75,6 @@ const edit_list = 'edit_list';
 const camera = 'camera';
 const chat_media_image = 'chat_media_image';
 const chat_media_gif = 'chat_media_gif';
-
 const green_dot = 'green_dot';
 
 // FIXME: 하단 탭 아이콘 교체
