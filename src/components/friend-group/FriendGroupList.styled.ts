@@ -58,11 +58,6 @@ export const StyledListSettingItem = styled(StyledCommonListItem)<StyledListSett
   ${({ textAlign }) => textAlign === 'center' && 'justify-content: center'}
 `;
 
-export const StyledEditGroupNameInput = styled.input`
-  font-size: 24px;
-  font-weight: 700;
-`;
-
 export const StyledAddNewMemberItem = styled.div`
   width: 100%;
   display: flex;

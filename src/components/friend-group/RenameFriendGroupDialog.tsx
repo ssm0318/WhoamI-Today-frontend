@@ -19,10 +19,10 @@ function RenameFriendGroupDialog({
 
   const isNewGroup = !defaultGroupName;
 
-  const [newGroupNameInput, setNewGroupNameInput] = useState(defaultGroupName ?? '');
+  const [groupNameInput, setGroupNameInput] = useState(defaultGroupName ?? '');
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewGroupNameInput(e.target.value);
+    setGroupNameInput(e.target.value);
   };
 
   const handleClickSaveChanges = () => {
@@ -46,15 +46,15 @@ function RenameFriendGroupDialog({
         </Font.Body>
         <Input
           label={t('group_name')}
-          name="group"
-          value={newGroupNameInput}
+          name="group_name"
+          value={groupNameInput}
           onChange={handleChangeInput}
           labelType="14_regular"
         />
         <Layout.FlexCol w="100%" mt={37} gap={6}>
           <Button.Medium
             type="secondary_fill"
-            status="normal"
+            status={groupNameInput ? 'normal' : 'disabled'}
             text={t('save_changes')}
             sizing="stretch"
             onClick={handleClickSaveChanges}

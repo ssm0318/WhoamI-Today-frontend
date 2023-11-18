@@ -1,18 +1,15 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import Icon from '@components/header/icon/Icon';
 import { HeaderWrapper } from '@components/title-header/TitleHeader.styled';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { friendList } from '@mock/friends';
 import { User } from '@models/user';
-import {
-  StyledEditGroupNameInput,
-  StyledList,
-  StyledListSettingItem,
-  StyledUserItem,
-} from './FriendGroupList.styled';
+import { StyledList, StyledListSettingItem, StyledUserItem } from './FriendGroupList.styled';
+import RenameFriendGroupDialog from './RenameFriendGroupDialog';
 import SelectableUserItem, { Friend } from './SelectableUserItem';
 
 interface CheckUser extends User {
@@ -21,15 +18,12 @@ interface CheckUser extends User {
 
 export function FriendGroup() {
   const [t] = useTranslation('translation', { keyPrefix: 'friend_group' });
+  // FIXME: 실제 그룹 이름
+  const [groupName] = useState('WhoAmI Dev Team');
 
   // FIXME: 실제 데이터
   const [checkFriends, setCheckFriends] = useState<CheckUser[]>(friendList);
   const [mode, setMode] = useState<'list' | 'edit'>('list');
-
-  const [newGroupName, setNewGroupName] = useState('New group'); // FIXME: 기존 그룹 이름
-  const handleChangeGroupName = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewGroupName(e.target.value);
-  };
 
   const resetCheckFriends = () => {
     const list = checkFriends.map((group) => ({ ...group, checked: false }));
@@ -69,6 +63,10 @@ export function FriendGroup() {
     navigate('new');
   };
 
+  const [visibleRenameGroupDialog, setVisibleRenameGroupDialog] = useState(false);
+  const handleClickRenameGroup = () => setVisibleRenameGroupDialog(true);
+  const handleCloseRenameGroupDialog = () => setVisibleRenameGroupDialog(false);
+
   return (
     <MainContainer>
       {/* Header */}
@@ -83,18 +81,12 @@ export function FriendGroup() {
           <button type="button" onClick={handleGoBack}>
             <SvgIcon name="arrow_left" size={36} color="BASIC_BLACK" />
           </button>
-          {mode === 'edit' ? (
-            <StyledEditGroupNameInput
-              type="text"
-              value={newGroupName}
-              onChange={handleChangeGroupName}
-            />
-          ) : (
+          <Layout.FlexRow alignItems="center" gap={10}>
             <Font.Display type="24_bold" textAlign="center">
-              {/* 실제 그룹 이름 */}
-              {t('title')}
+              {groupName}
             </Font.Display>
-          )}
+            <Icon name="edit" onClick={handleClickRenameGroup} size={20} />
+          </Layout.FlexRow>
           <Layout.LayoutBase w={36}>
             {mode === 'edit' ? (
               <button type="button" onClick={handleClickSave}>
@@ -152,6 +144,11 @@ export function FriendGroup() {
           )}
         </StyledList>
       </Layout.LayoutBase>
+      <RenameFriendGroupDialog
+        visible={visibleRenameGroupDialog}
+        onClose={handleCloseRenameGroupDialog}
+        defaultGroupName={groupName}
+      />
     </MainContainer>
   );
 }
