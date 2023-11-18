@@ -1,12 +1,16 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import EmojiItem from '@components/reaction/emoji-item/EmojiItem';
 import { Font, Layout } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
+import { friendList as mockFriendList } from '@mock/friends';
+import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { getFriendList } from '@utils/apis/user';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
+import FriendsInfo from './friends-info/FriendsInfo';
 import StatusChip from './status-chip/StatusChip';
 import StatusMusic from './status-music/StatusMusic';
 
@@ -14,6 +18,8 @@ import StatusMusic from './status-music/StatusMusic';
 function Status() {
   const spotifyManager = SpotifyManager.getInstance();
   const myProfile = useBoundStore((state) => state.myProfile);
+  const [friendList, setFriendList] = useState<User[]>();
+  console.log(friendList);
 
   const { username } = useParams();
 
@@ -25,21 +31,33 @@ function Status() {
     spotifyManager.getTrack(trackId).then(setTrackData);
   }, [spotifyManager]);
 
+  const fetchFriends = useCallback(async (_next?: string | null) => {
+    const { results = [] } = await getFriendList(_next);
+    setFriendList((prev) => (_next ? (prev ? [...prev, ...results] : []) : results));
+  }, []);
+
+  useEffect(() => {
+    fetchFriends();
+  }, [fetchFriends]);
+
   return (
     <Layout.FlexCol gap={8}>
       <Layout.FlexRow gap={8}>
         <ProfileImage imageUrl={myProfile?.profile_image} username={username} size={80} />
         <Layout.FlexCol gap={8}>
-          {/* availability */}
-          <StatusChip availability="AVAILABLE" />
+          <Font.Body type="20_semibold">{username}</Font.Body>
           {/* bio */}
           <Font.Body type="14_regular" numberOfLines={2}>
             I’m a Bio! Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit ame.
           </Font.Body>
         </Layout.FlexCol>
       </Layout.FlexRow>
+      {/* 친구 목록 */}
+      <FriendsInfo friends={mockFriendList} />
       <Layout.FlexCol gap={8} p={16} bgColor="GRAY_14" rounded={8} justifyContent="center">
         <Layout.FlexRow w="100%" alignItems="center" gap={8} justifyContent="space-between">
+          {/* availability */}
+          <StatusChip availability="AVAILABLE" />
           {/* spotify */}
           {trackData && <StatusMusic track={trackData} />}
           {/* check in time */}
