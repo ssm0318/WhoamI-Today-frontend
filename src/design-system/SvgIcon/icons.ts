@@ -37,6 +37,8 @@ const spotify = 'spotify';
 const top_navigation_friend = 'top_navigation_friend';
 const top_navigation_edit = 'top_navigation_edit';
 const top_navigation_dots = 'top_navigation_dots';
+const top_navigation_chat = 'top_navigation_chat';
+const top_navigation_back = 'top_navigation_back';
 
 export {
   arrow_left,
@@ -72,6 +74,8 @@ export {
   search,
   show_password_eye,
   spotify,
+  top_navigation_back,
+  top_navigation_chat,
   top_navigation_dots,
   top_navigation_edit,
   top_navigation_friend,

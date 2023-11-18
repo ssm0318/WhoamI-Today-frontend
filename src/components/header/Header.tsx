@@ -1,15 +1,17 @@
 import React, { useCallback, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Layout } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
 import ChatsHeader from './chats-header/ChatsHeader';
 import FriendsHeader from './friends-header/FriendHeader';
 import { HeaderWrapper } from './Header.styled';
-import MyHeader from './my-header/MyHeader';
 import SideMenu from './side-menu/SideMenu';
+import UserHeader from './user-header/UserHeader';
 
 function Header() {
   const location = useLocation();
   const [showSideMenu, setShowSideMenu] = useState(false);
+  const myProfile = useBoundStore((state) => state.myProfile);
 
   const renderHeaderComponent = useCallback(() => {
     switch (location.pathname) {
@@ -17,10 +19,11 @@ function Header() {
         return <FriendsHeader />;
       case '/my':
         return (
-          <MyHeader
+          <UserHeader
             onClickHamburger={() => {
               setShowSideMenu(true);
             }}
+            user={myProfile}
           />
         );
       case '/chats':
@@ -28,7 +31,7 @@ function Header() {
       default:
         return null;
     }
-  }, [location.pathname]);
+  }, [location.pathname, myProfile]);
 
   return (
     <>

@@ -4,7 +4,7 @@ import Calendar from '@components/calendar/Calendar';
 import CalendarViewTabs from '@components/calendar/calendar-view-Tabs/CalendarViewTabs';
 import MyDetail from '@components/my-detail/MyDetail';
 import ReactionSection from '@components/reaction/reaction-section/ReactionSection';
-import MyStatus from '@components/status/my-status/MyStatus';
+import Status from '@components/status/Status';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -28,7 +28,7 @@ function My() {
         ph={DEFAULT_MARGIN}
         pv={12}
       >
-        <MyStatus />
+        <Status />
       </Layout.FlexRow>
       <Divider width={1} />
       <Layout.FlexRow

@@ -14,6 +14,7 @@ import reportWebVitals from './reportWebVitals';
 import AllQuestions from './routes/AllQuestions';
 import Chats from './routes/Chats';
 import ForgotPassword from './routes/ForgotPassword';
+import FriendPage from './routes/FriendPage';
 import Friends from './routes/Friends';
 import Intro from './routes/Intro';
 import MomentDetailContainer from './routes/moment-detail/MomentDetailContainer';
@@ -41,7 +42,6 @@ import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
 import MusicSearch from './routes/status/MusicSearch';
 import StatusEdit from './routes/status/StatusEdit';
-import UserPage from './routes/UserPage';
 
 const router = createBrowserRouter([
   { path: '', element: <Intro /> },
@@ -101,8 +101,7 @@ const router = createBrowserRouter([
   },
   {
     path: 'users/:username',
-    element: <UserPage />,
-    loader: checkIfSignIn,
+    element: <FriendPage />,
   },
   {
     path: 'status',
