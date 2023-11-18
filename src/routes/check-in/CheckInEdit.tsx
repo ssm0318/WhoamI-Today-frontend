@@ -3,40 +3,34 @@ import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Divider from '@components/_common/divider/Divider';
+import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import MainContainer from '@components/_common/main-container/MainContainer';
-import EmojiItem from '@components/reaction/emoji-item/EmojiItem';
-import StatusChip from '@components/status/status-chip/StatusChip';
-import StatusMusic from '@components/status/status-music/StatusMusic';
+import AvailabilityChip from '@components/profile/availability-chip/AvailabilityChip';
+import SpotifyMusic from '@components/profile/spotify-music/SpotifyMusic';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, SCREEN_WIDTH, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Font, Input, Layout } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
 import SpotifyManager from '@libs/SpotifyManager';
-import { Availability, Status } from '@models/status';
+import { checkIn as mockCheckIn } from '@mock/users';
+import { Availability, CheckIn } from '@models/status';
 
-const AVAILABILITIES: Availability[] = ['AVAILABLE', 'NO_STATUS', 'MAYBE_SLOW', 'NOT_AVAILABLE'];
+const AVAILABILITIES: Availability[] = ['no_status', 'not_available', 'may_be_slow', 'available'];
 
-function StatusEdit() {
+function CheckInEdit() {
   const spotifyManager = SpotifyManager.getInstance();
   const navigate = useNavigate();
 
   // TODO(Gina) 현재 status 불러오기
-  const [status, setStatus] = useState<Status>({
-    availability: 'AVAILABLE',
-    bio: 'I’m a Bio! Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit ame.',
-    description: 'Got free boba tea from the new shop at work today!!',
-    emoji: '😋',
-    trackId: '11dFghVXANMlKmJXsNCbNl',
-  });
-
-  const { availability, bio, description, emoji, trackId } = status;
+  const [checkIn, setCheckIn] = useState<CheckIn>(mockCheckIn);
+  const { availability, bio, description, mood, track_id } = checkIn;
   const [isEmojiPickerVisible, setIsEmojiPickerVisible] = useState(false);
   const [trackData, setTrackData] = useState<Track | null>(null);
   const emojiPickerWrapper = useRef<HTMLDivElement>(null);
   const toggleButtonWrapper = useRef<HTMLDivElement>(null);
 
   const handleSelectEmoji = (e: EmojiClickData) => {
-    setStatus((prev) => {
+    setCheckIn((prev) => {
       return { ...prev, emoji: e.emoji };
     });
     setIsEmojiPickerVisible(false);
@@ -51,7 +45,7 @@ function StatusEdit() {
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setStatus((prev) => {
+    setCheckIn((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
@@ -67,8 +61,8 @@ function StatusEdit() {
   });
 
   useEffect(() => {
-    spotifyManager.getTrack(trackId).then(setTrackData);
-  }, [spotifyManager, trackId]);
+    spotifyManager.getTrack(track_id).then(setTrackData);
+  }, [spotifyManager, track_id]);
 
   return (
     <MainContainer>
@@ -77,12 +71,12 @@ function StatusEdit() {
         {/* availability */}
         <Font.Body type="18_regular">Availability</Font.Body>
         {AVAILABILITIES.map((a) => (
-          <StatusChip
+          <AvailabilityChip
             availability={a}
             key={a}
             isSelected={availability === a}
             onSelect={(av) => {
-              setStatus((prev) => ({ ...prev, availability: av }));
+              setCheckIn((prev) => ({ ...prev, availability: av }));
             }}
           />
         ))}
@@ -94,7 +88,7 @@ function StatusEdit() {
         {/* spotify */}
         <Font.Body type="18_regular">Music</Font.Body>
         <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center">
-          {trackData && <StatusMusic track={trackData} />}
+          {trackData && <SpotifyMusic track={trackData} />}
           <Button.Small
             type="filled"
             status="normal"
@@ -107,7 +101,7 @@ function StatusEdit() {
         {/* emoji */}
         <Font.Body type="18_regular">Emoji</Font.Body>
         <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center">
-          <EmojiItem emojiString={emoji} size={24} />
+          <EmojiItem emojiString={mood} size={24} />
           <Layout.FlexRow ref={toggleButtonWrapper}>
             <Button.Small
               type="filled"
@@ -151,4 +145,4 @@ function StatusEdit() {
   );
 }
 
-export default StatusEdit;
+export default CheckInEdit;

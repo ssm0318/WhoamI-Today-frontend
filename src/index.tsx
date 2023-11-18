@@ -13,6 +13,8 @@ import './i18n';
 import reportWebVitals from './reportWebVitals';
 import AllQuestions from './routes/AllQuestions';
 import Chats from './routes/Chats';
+import StatusEdit from './routes/check-in/CheckInEdit';
+import MusicSearch from './routes/check-in/MusicSearch';
 import ForgotPassword from './routes/ForgotPassword';
 import FriendPage from './routes/FriendPage';
 import Friends from './routes/Friends';
@@ -40,8 +42,6 @@ import ResearchIntro from './routes/sign-up/ResearchIntro';
 import UserName from './routes/sign-up/UserName';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
-import MusicSearch from './routes/status/MusicSearch';
-import StatusEdit from './routes/status/StatusEdit';
 
 const router = createBrowserRouter([
   { path: '', element: <Intro /> },
@@ -101,10 +101,11 @@ const router = createBrowserRouter([
   },
   {
     path: 'users/:username',
+    loader: checkIfSignIn,
     element: <FriendPage />,
   },
   {
-    path: 'status',
+    path: 'check-in',
     loader: checkIfSignIn,
     children: [
       { path: 'edit', element: <StatusEdit /> },

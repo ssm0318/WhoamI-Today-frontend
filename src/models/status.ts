@@ -1,9 +1,13 @@
-export type Availability = 'AVAILABLE' | 'NO_STATUS' | 'MAYBE_SLOW' | 'NOT_AVAILABLE';
+export type Availability = 'no_status' | 'not_available' | 'may_be_slow' | 'available';
 
-export type Status = {
+export type CheckIn = {
+  id: number;
+  is_active: boolean;
+  created_at: string;
+  mood: string;
   availability: Availability;
-  bio: string;
   description: string;
-  emoji: string;
-  trackId: string;
+  bio: string;
+  track_id: string;
+  current_user_read: true;
 };

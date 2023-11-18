@@ -15,9 +15,9 @@ function UserHeader({ onClickHamburger, user }: UserHeaderProps) {
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const isMyPage = user?.id === myProfile?.id;
 
-  const handleEditStatus = () => {
+  const handleEditCheckIn = () => {
     // 수정 페이지로 이동
-    navigate('/status/edit');
+    navigate('/check-in/edit');
   };
 
   const handleClickChat = () => {
@@ -46,7 +46,7 @@ function UserHeader({ onClickHamburger, user }: UserHeaderProps) {
         <Layout.FlexRow gap={8} alignItems="center">
           {isMyPage ? (
             <>
-              <Icon name="top_navigation_edit" size={44} onClick={handleEditStatus} />
+              <Icon name="top_navigation_edit" size={44} onClick={handleEditCheckIn} />
               <Icon name="top_navigation_hamburger" size={44} onClick={onClickHamburger} />
             </>
           ) : (

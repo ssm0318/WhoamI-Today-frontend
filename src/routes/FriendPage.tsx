@@ -1,23 +1,26 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import UserHeader from '@components/header/user-header/UserHeader';
+import Status from '@components/profile/Profile';
 import ReactionSection from '@components/reaction/reaction-section/ReactionSection';
-import Status from '@components/status/Status';
 import UserMoreModal from '@components/user-page/UserMoreModal';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { UserProfile } from '@models/user';
+import { useBoundStore } from '@stores/useBoundStore';
 import { getUserProfile } from '@utils/apis/user';
 
 function FriendPage() {
   const { username } = useParams();
   const [user, setUser] = useState<FetchState<UserProfile>>({ state: 'loading' });
-
+  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+  const isMyPage = username === myProfile?.username;
   const [showMore, setShowMore] = useState(false);
+  const navigate = useNavigate();
 
   const updateUser = async () => {
     if (!username) return;
@@ -32,8 +35,12 @@ function FriendPage() {
 
   useAsyncEffect(updateUser, []);
 
-  if (!user.data) return null;
+  useEffect(() => {
+    if (!isMyPage) return;
+    return navigate('/my');
+  }, [isMyPage, navigate]);
 
+  if (!user.data) return null;
   return (
     <MainContainer>
       <UserHeader user={user.data} />
@@ -51,7 +58,7 @@ function FriendPage() {
           ph={DEFAULT_MARGIN}
           pv={12}
         >
-          <Status isMyProfile={false} />
+          <Status user={user.data} />
         </Layout.FlexRow>
         <ReactionSection emojis={['💪🏻', '😊', '😋']} />
         <Divider width={500} />

@@ -1,14 +1,14 @@
 import { Font, Layout, SvgIcon } from '@design-system';
 import { Availability } from '@models/status';
-import { AvailabilityChipColors, AvailabilityLabels } from './StatusChip.constants';
+import { AvailabilityChipColors, AvailabilityLabels } from './AvailabilityChip.contants';
 
-interface StatusChipProps {
+interface AvailabilityChipProps {
   availability: Availability;
   isSelected?: boolean;
   onSelect?: (a: Availability) => void;
 }
 
-function StatusChip({ availability, isSelected, onSelect }: StatusChipProps) {
+function AvailabilityChip({ availability, isSelected, onSelect }: AvailabilityChipProps) {
   const handleSelect = () => {
     onSelect?.(availability);
   };
@@ -31,4 +31,4 @@ function StatusChip({ availability, isSelected, onSelect }: StatusChipProps) {
   );
 }
 
-export default StatusChip;
+export default AvailabilityChip;

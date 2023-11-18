@@ -4,7 +4,7 @@ import { DEFAULT_MARGIN, SCREEN_WIDTH, Z_INDEX } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
 import { User } from '@models/user';
-import EmojiItem from '../emoji-item/EmojiItem';
+import EmojiItem from '../../_common/emoji-item/EmojiItem';
 
 interface EmojiData {
   id: number;

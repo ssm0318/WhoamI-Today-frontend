@@ -1,12 +1,12 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { Font, Layout, SvgIcon } from '@design-system';
 
-interface StatusMusicProps {
+interface SpotifyMusicProps {
   track: Track;
   width?: number;
 }
 
-function StatusMusic({ track, width = 200 }: StatusMusicProps) {
+function SpotifyMusic({ track, width = 200 }: SpotifyMusicProps) {
   return (
     <Layout.FlexRow
       outline="SPOTIFY_GREEN"
@@ -37,4 +37,4 @@ function StatusMusic({ track, width = 200 }: StatusMusicProps) {
   );
 }
 
-export default StatusMusic;
+export default SpotifyMusic;

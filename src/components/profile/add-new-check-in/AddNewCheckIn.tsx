@@ -1,6 +1,6 @@
 import { Font, Layout, SvgIcon } from '@design-system';
 
-function AddNewStatus() {
+function AddNewCheckIn() {
   return (
     <Layout.FlexRow gap={8} p={16} w="100%" alignItems="center" justifyContent="center">
       <SvgIcon name="new_add" size={24} />
@@ -9,4 +9,4 @@ function AddNewStatus() {
   );
 }
 
-export default AddNewStatus;
+export default AddNewCheckIn;

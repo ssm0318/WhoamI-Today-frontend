@@ -1,9 +1,12 @@
+import { CheckIn } from './status';
+
 export interface User {
   id: number;
   profile_image: string | null;
   profile_pic: string;
   url: string;
   username: string;
+  check_in?: CheckIn | null;
 }
 
 export interface UserProfile extends User {
