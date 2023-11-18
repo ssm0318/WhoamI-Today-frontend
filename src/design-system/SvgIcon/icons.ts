@@ -39,6 +39,8 @@ const spotify = 'spotify';
 const top_navigation_friend = 'top_navigation_friend';
 const top_navigation_edit = 'top_navigation_edit';
 const top_navigation_dots = 'top_navigation_dots';
+const gif = 'gif';
+const image = 'image';
 
 export {
   arrow_left,
@@ -56,10 +58,12 @@ export {
   error,
   friends_active,
   friends_inactive,
+  gif,
   green_dot,
   header_logo,
   heart,
   hide_password_eye,
+  image,
   link_share,
   lock_off,
   lock_on,

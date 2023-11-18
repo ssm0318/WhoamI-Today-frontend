@@ -9,8 +9,10 @@ export function MessageList() {
     return MOCK_MESSAGE_LIST;
   }, []);
 
+  // TODO: 처음 채팅방 진입시 스크롤 맨 아래로.
+
   return (
-    <Layout.FlexCol w="100%" h="100%" gap={48} pv={15}>
+    <Layout.FlexCol w="100%" gap={48} pv={15}>
       {/* TODO: 날짜 분기 */}
       {messageList.map((msg) => (
         <MessageItem key={msg.msgId} {...msg} />

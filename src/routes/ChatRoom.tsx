@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import { MessageInputBox } from '@components/chat-room/message-input-box/MessageInputBox';
 import { MessageList } from '@components/chat-room/message-list/MessageList';
 import { MOCK_CHAT_ROOM_LIST } from '@components/chats/chat-room-list/ChatRoomList.helper';
 import { HeaderWrapper } from '@components/header/Header.styled';
@@ -55,9 +56,14 @@ export function ChatRoom() {
           </Layout.FlexRow>
         </Layout.FlexRow>
       </HeaderWrapper>
-      <MainWrapper alignItems="center" pt={TOP_NAVIGATION_HEIGHT}>
-        {chatRoomData ? <MessageList /> : 'loading...'}
-      </MainWrapper>
+      <Layout.FlexCol w="100%" h="100%">
+        <MainWrapper alignItems="center" pt={TOP_NAVIGATION_HEIGHT}>
+          {chatRoomData ? <MessageList /> : 'loading...'}
+        </MainWrapper>
+        <Layout.LayoutBase w="100%" ph={17} pv={13}>
+          <MessageInputBox />
+        </Layout.LayoutBase>
+      </Layout.FlexCol>
     </Layout.Fixed>
   );
 }
