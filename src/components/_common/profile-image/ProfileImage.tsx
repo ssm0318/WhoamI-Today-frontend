@@ -14,12 +14,13 @@ interface ProfileImageProps {
 
 function ProfileImage({ imageUrl, username, className, ts, size = 36 }: ProfileImageProps) {
   return imageUrl ? (
-    <Layout.LayoutBase w={size} h={size} rounded={size / 2} className={className}>
+    <Layout.LayoutBase w={size} h={size} className={className}>
       <img
         src={ts ? `${imageUrl}?ts=${ts}` : imageUrl}
         width={size}
         height={size}
         alt={`${username ?? 'user'}-profile`}
+        style={{ borderRadius: '50%' }}
       />
     </Layout.LayoutBase>
   ) : (
