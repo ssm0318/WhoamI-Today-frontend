@@ -1,4 +1,4 @@
-import { CheckIn } from '@models/status';
+import { Availability, CheckIn } from '@models/user';
 
 export const userList = [
   { id: 1, profile_pic: '', name: 'gina' },
@@ -11,7 +11,7 @@ export const checkIn: CheckIn = {
   created_at: '2023-11-17T22:13:27.155202-08:00',
   is_active: true,
   mood: '🎀',
-  availability: 'available',
+  availability: Availability.Available,
   description: 'I am available',
   track_id: '11dFghVXANMlKmJXsNCbNl',
   current_user_read: true,

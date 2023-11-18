@@ -1,5 +1,5 @@
 import { Font, Layout, SvgIcon } from '@design-system';
-import { Availability } from '@models/status';
+import { Availability } from '@models/user';
 import { AvailabilityChipColors, AvailabilityLabels } from './AvailabilityChip.contants';
 
 interface AvailabilityChipProps {

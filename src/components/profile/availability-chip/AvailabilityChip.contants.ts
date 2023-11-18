@@ -1,5 +1,5 @@
 import { ColorKeys } from '@design-system';
-import { Availability } from '@models/status';
+import { Availability } from '@models/user';
 
 export const AvailabilityLabels: Record<Availability, string> = {
   available: 'Available',

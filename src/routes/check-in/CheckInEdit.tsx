@@ -13,9 +13,7 @@ import { Button, Font, Input, Layout } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
 import SpotifyManager from '@libs/SpotifyManager';
 import { checkIn as mockCheckIn } from '@mock/users';
-import { Availability, CheckIn } from '@models/status';
-
-const AVAILABILITIES: Availability[] = ['no_status', 'not_available', 'may_be_slow', 'available'];
+import { Availability, CheckIn } from '@models/user';
 
 function CheckInEdit() {
   const spotifyManager = SpotifyManager.getInstance();
@@ -70,7 +68,7 @@ function CheckInEdit() {
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" gap={10} ph="default">
         {/* availability */}
         <Font.Body type="18_regular">Availability</Font.Body>
-        {AVAILABILITIES.map((a) => (
+        {Object.values(Availability).map((a) => (
           <AvailabilityChip
             availability={a}
             key={a}
