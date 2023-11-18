@@ -19,7 +19,8 @@ function NoteItem({ note }: NoteItemProps) {
 
   if (!myProfile) return null;
 
-  const handleClickMore = () => {
+  const handleClickMore = (e: MouseEvent) => {
+    e.stopPropagation();
     //
   };
 

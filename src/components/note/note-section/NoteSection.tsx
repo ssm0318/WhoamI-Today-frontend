@@ -69,6 +69,4 @@ function NoteSection() {
   );
 }
 
-export const NOTE_WIDTH = 228;
-
 export default NoteSection;
