@@ -13,8 +13,8 @@ export function ChatRoomList() {
       </Layout.LayoutBase>
       <Layout.FlexCol w="100%" gap={10}>
         {/* TODO: 실제 데이터로 변경 */}
-        {MOCK_CHAT_ROOM_LIST.map(({ roomId, ...props }) => (
-          <ChatRoomItem key={roomId} {...props} />
+        {MOCK_CHAT_ROOM_LIST.map((props) => (
+          <ChatRoomItem key={props.roomId} {...props} />
         ))}
       </Layout.FlexCol>
     </Layout.FlexCol>
