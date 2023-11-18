@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { BgColor, Border, BoxStyle, Flex } from './layout.types';
+import { BgColor, Border, BoxStyle, Flex, Overflow } from './layout.types';
 import { getStyle, toMarginPaddingString } from './layout.utils';
 
 /**
@@ -14,7 +14,7 @@ import { getStyle, toMarginPaddingString } from './layout.utils';
  * @prop {'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-evenly'} `justifyContent` justify content
  * @prop {ColorKeys} `bgColor` background color
  */
-export const LayoutBase = styled.div<BgColor & Flex & BoxStyle & Border>`
+export const LayoutBase = styled.div<BgColor & Flex & BoxStyle & Border & Overflow>`
   ${({
     theme,
     p,
@@ -42,6 +42,7 @@ export const LayoutBase = styled.div<BgColor & Flex & BoxStyle & Border>`
     justifyContent = 'flex-start',
     cursor,
     gap = 0,
+    overflow = 'visible',
   }) => css`
     ${getStyle('padding', toMarginPaddingString(p, ph, pv, pt, pr, pb, pl))}
     ${getStyle('margin', toMarginPaddingString(m, mh, mv, mt, mr, mb, ml))}
@@ -60,6 +61,7 @@ export const LayoutBase = styled.div<BgColor & Flex & BoxStyle & Border>`
     background-color: ${theme[bgColor]};
     cursor: ${cursor};
     gap: ${gap}px;
+    overflow: ${overflow ?? 'auto'};
   `}
 `;
 

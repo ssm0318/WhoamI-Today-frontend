@@ -48,4 +48,8 @@ export type Flex = {
   gap?: number;
 };
 
+export type Overflow = {
+  overflow?: 'hidden' | 'auto' | 'visible' | 'scroll';
+};
+
 export type Translate = (number | string)[];
