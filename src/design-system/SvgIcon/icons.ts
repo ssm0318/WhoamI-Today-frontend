@@ -38,6 +38,7 @@ const top_navigation_friend = 'top_navigation_friend';
 const top_navigation_edit = 'top_navigation_edit';
 const top_navigation_dots = 'top_navigation_dots';
 const dots_menu = 'dots_menu';
+const new_add = 'new_add';
 
 export {
   arrow_left,
@@ -70,6 +71,7 @@ export {
   my_active,
   my_inactive,
   my_profile,
+  new_add,
   question_send,
   search,
   show_password_eye,

@@ -1,8 +1,9 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import IconButton from '@components/_common/icon-button/IconButton';
 import { Font, Layout } from '@design-system';
 import { Note } from '@models/note';
 import { useBoundStore } from '@stores/useBoundStore';
+import NewNoteButton from '../new-note-button/NewNoteButton';
 import NoteItem from '../note-item/NoteItem';
 
 const noteList: Note[] = [
@@ -28,7 +29,13 @@ const noteList: Note[] = [
 ];
 
 function NoteSection() {
+  const { username } = useParams();
+
   const myProfile = useBoundStore((state) => state.myProfile);
+
+  // username이 없거나 myProfile의 username과 같다면 내 페이지
+  const isMyPage = !username || username === myProfile?.username;
+
   const navigate = useNavigate();
   if (!myProfile) return null;
 
@@ -44,8 +51,15 @@ function NoteSection() {
         </Font.Body>
         <IconButton onClick={handleClickMore} name="arrow_right" />
       </Layout.FlexRow>
-      <Layout.FlexCol w="100%" style={{ overflowX: 'scroll', whiteSpace: 'nowrap' }}>
+      <Layout.FlexCol
+        w="100%"
+        style={{
+          overflowX: 'scroll',
+          whiteSpace: 'nowrap',
+        }}
+      >
         <Layout.FlexRow gap={16} mt={10}>
+          {isMyPage && <NewNoteButton />}
           {noteList.map((note) => (
             <NoteItem key={note.id} note={note} />
           ))}
