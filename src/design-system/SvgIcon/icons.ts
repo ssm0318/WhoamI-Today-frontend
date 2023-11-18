@@ -39,8 +39,10 @@ const top_navigation_edit = 'top_navigation_edit';
 const top_navigation_dots = 'top_navigation_dots';
 const dots_menu = 'dots_menu';
 const new_add = 'new_add';
+const add_post = 'add_post';
 
 export {
+  add_post,
   arrow_left,
   arrow_right,
   box_check_checked,
