@@ -37,6 +37,7 @@ const spotify = 'spotify';
 const top_navigation_friend = 'top_navigation_friend';
 const top_navigation_edit = 'top_navigation_edit';
 const top_navigation_dots = 'top_navigation_dots';
+const dots_menu = 'dots_menu';
 
 export {
   arrow_left,
@@ -50,6 +51,7 @@ export {
   close,
   comment,
   delete_button,
+  dots_menu,
   error,
   friends_active,
   friends_inactive,
