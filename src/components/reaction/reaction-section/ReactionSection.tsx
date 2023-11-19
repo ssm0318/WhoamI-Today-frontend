@@ -1,9 +1,9 @@
 import { EmojiClickData } from 'emoji-picker-react';
 import { RefObject, useRef, useState } from 'react';
+import EmojiPicker from '@components/emoji-picker/EmojiPicker';
 import { SCREEN_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import EmojiReactionList from '../emoji-reaction-list/EmojiReactionList';
-import EmojiReactionPicker from '../emoji-reaction-picker/EmojiReactionPicker';
 import EmojiViewPopup from '../emoji-view-popup/EmojiViewPopup';
 
 interface ReactionSectionProps {
@@ -22,7 +22,8 @@ function ReactionSection({ emojis }: ReactionSectionProps) {
   const [pickerPosition, setPickerPosition] = useState<Position>({});
   const [popupPosition, setPopupPosition] = useState<Position>({});
 
-  const toggleButtonRef = useRef<HTMLButtonElement>(null); // 토글 버튼의 Ref 생성
+  const toggleButtonRef = useRef<HTMLButtonElement>(null);
+  const seeAllButtonRef = useRef<HTMLButtonElement>(null);
 
   const handlePosition = (wrapper: RefObject<HTMLElement>): Position => {
     if (!wrapper.current) return {};
@@ -69,7 +70,7 @@ function ReactionSection({ emojis }: ReactionSectionProps) {
       {/* NOTE: author는 모든 리액션 리스트, viewer는 자기의 리액션 리스트 */}
       <Layout.FlexRow gap={4} alignItems="center">
         <EmojiReactionList emojis={emojis} />
-        <button type="button" onClick={handleClickViewAllEmoji}>
+        <button type="button" onClick={handleClickViewAllEmoji} ref={seeAllButtonRef}>
           <Font.Body type="14_semibold" underline>
             See All
           </Font.Body>
@@ -78,6 +79,7 @@ function ReactionSection({ emojis }: ReactionSectionProps) {
           isVisible={emojiViewPopupVisible}
           setIsVisible={setEmojiViewPopupVisible}
           popupPosition={popupPosition}
+          toggleButtonRef={seeAllButtonRef}
         />
       </Layout.FlexRow>
 
@@ -87,7 +89,7 @@ function ReactionSection({ emojis }: ReactionSectionProps) {
           <button type="button" onClick={handleClickReaction} ref={toggleButtonRef}>
             <Font.Body type="14_semibold">😊</Font.Body>
           </button>
-          <EmojiReactionPicker
+          <EmojiPicker
             selectedEmojis={emojis}
             onSelectEmoji={handleSelectEmoji}
             isVisible={emojiPickerVisible}

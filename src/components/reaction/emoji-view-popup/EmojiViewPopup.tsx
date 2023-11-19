@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { RefObject, useRef } from 'react';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { DEFAULT_MARGIN, SCREEN_WIDTH, Z_INDEX } from '@constants/layout';
 import { Font, Layout } from '@design-system';
@@ -42,12 +42,22 @@ interface EmojiViewPopupProps {
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
   popupPosition: { top?: number; bottom?: number };
+  toggleButtonRef?: RefObject<HTMLButtonElement>;
 }
 
-function EmojiViewPopup({ isVisible, setIsVisible, popupPosition }: EmojiViewPopupProps) {
+function EmojiViewPopup({
+  isVisible,
+  setIsVisible,
+  popupPosition,
+  toggleButtonRef,
+}: EmojiViewPopupProps) {
   const emojiPopupWrapper = useRef<HTMLDivElement>(null);
 
-  useClickOutside({ ref: emojiPopupWrapper, onClick: () => setIsVisible(false) });
+  useClickOutside({
+    ref: emojiPopupWrapper,
+    toggleButtonRef,
+    onClick: () => setIsVisible(false),
+  });
 
   if (!isVisible) return null;
   return (
