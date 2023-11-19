@@ -5,10 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import AvailabilityChip from '@components/profile/availability-chip/AvailabilityChip';
+import CheckInTextInput from '@components/profile/check-in-text-input/CheckInTextInput';
 import SpotifyMusic from '@components/profile/spotify-music/SpotifyMusic';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, SCREEN_WIDTH, TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Button, Font, Input, Layout, SvgIcon } from '@design-system';
+import { Button, Font, Layout, SvgIcon } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
 import SpotifyManager from '@libs/SpotifyManager';
 import { checkIn as mockCheckIn } from '@mock/users';
@@ -41,9 +42,15 @@ function CheckInEdit() {
     setIsEmojiPickerVisible((prev) => !prev);
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setCheckIn((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
+    });
+  };
+
+  const handleDelete = (name: string) => {
+    setCheckIn((prev) => {
+      return { ...prev, [name]: '' };
     });
   };
 
@@ -150,7 +157,19 @@ function CheckInEdit() {
           <Font.Body type="12_semibold" color="GRAY_3">
             Tell your friends more about your mood!
           </Font.Body>
-          <Input label="" name="description" value={description} onChange={handleChange} />
+          <Layout.FlexRow mt={8} w="100%" alignItems="center" gap={8}>
+            <CheckInTextInput
+              name="description"
+              value={description}
+              onChange={handleChange}
+              placeholder="I had amazing ramen for lunch..."
+            />
+            {description && (
+              <button type="button" name="description" onClick={() => handleDelete('description')}>
+                <SvgIcon name="delete_button" size={24} />
+              </button>
+            )}
+          </Layout.FlexRow>
         </Layout.FlexCol>
         {/* spotify */}
         <Layout.FlexCol
@@ -210,7 +229,14 @@ function CheckInEdit() {
           <Font.Body type="12_semibold" color="GRAY_3">
             BIO BIO BIO
           </Font.Body>
-          <Input label="" name="bio" value={bio} onChange={handleChange} />
+          <Layout.FlexRow mt={8} w="100%" alignItems="center" gap={8}>
+            <CheckInTextInput name="bio" value={bio} onChange={handleChange} />
+            {bio && (
+              <button type="button" name="bio" onClick={() => handleDelete('bio')}>
+                <SvgIcon name="delete_button" size={24} />
+              </button>
+            )}
+          </Layout.FlexRow>
         </Layout.FlexCol>
       </Layout.FlexCol>
     </MainContainer>
