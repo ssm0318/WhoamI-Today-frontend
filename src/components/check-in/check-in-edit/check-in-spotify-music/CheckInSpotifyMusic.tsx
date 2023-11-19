@@ -19,7 +19,7 @@ function CheckInSpotifyMusic({ trackData, onDelete, onSearchMusic }: CheckInSpot
           <DeleteButton onClick={onDelete} />
         </>
       ) : (
-        <Layout.FlexRow w="100%" onClick={onSearchMusic}>
+        <Layout.FlexRow w="100%" onClick={onSearchMusic} alignItems="center">
           <CheckInSpotifySearchInput />
         </Layout.FlexRow>
       )}

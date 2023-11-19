@@ -6,6 +6,7 @@ interface DeleteButtonProps {
   onClick: (e: MouseEvent) => void;
 }
 
+// FIXME(anyone): 가능하면 추후에 IconButton으로 통일
 function DeleteButton({ size = 24, onClick }: DeleteButtonProps) {
   return (
     <button type="button" onClick={onClick}>
