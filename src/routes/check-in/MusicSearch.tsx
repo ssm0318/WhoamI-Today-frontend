@@ -1,7 +1,7 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { ChangeEvent, useState } from 'react';
 import MainContainer from '@components/_common/main-container/MainContainer';
-import StatusMusic from '@components/profile/spotify-music/SpotifyMusic';
+import StatusMusic from '@components/check-in/spotify-music/SpotifyMusic';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Input, Layout } from '@design-system';

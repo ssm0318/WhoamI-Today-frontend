@@ -1,15 +1,16 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ButtonHTMLAttributes, ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import CheckInTextInput from '@components/check-in/check-in-text-input/CheckInTextInput';
+import SpotifyMusic from '@components/check-in/spotify-music/SpotifyMusic';
+import SpotifyMusicSearchInput from '@components/check-in/spotify-music-search-input/SpotifyMusicSearchInput';
 import AvailabilityChip from '@components/profile/availability-chip/AvailabilityChip';
-import CheckInTextInput from '@components/profile/check-in-text-input/CheckInTextInput';
-import SpotifyMusic from '@components/profile/spotify-music/SpotifyMusic';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, SCREEN_WIDTH, TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Button, Font, Layout, SvgIcon } from '@design-system';
+import { Font, Layout, SvgIcon } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
 import SpotifyManager from '@libs/SpotifyManager';
 import { checkIn as mockCheckIn } from '@mock/users';
@@ -35,7 +36,7 @@ function CheckInEdit() {
   };
 
   const handleSearchMusic = () => {
-    return navigate('/status/search-music');
+    return navigate('/check-in/search-music');
   };
 
   const toggleEmojiPicker = () => {
@@ -106,14 +107,7 @@ function CheckInEdit() {
                 <EmojiItem emojiString={mood} size={24} outline="TRANSPARENT" />
               </Layout.FlexRow>
               {/* FIXME IconButton으로 변경 */}
-              <button
-                type="button"
-                onClick={() => {
-                  setCheckIn((prev) => ({ ...prev, mood: '' }));
-                }}
-              >
-                <SvgIcon name="delete_button" size={24} />
-              </button>
+              <DeleteButton name="mood" onClick={() => handleDelete('mood')} />
             </Layout.FlexRow>
           ) : (
             <Layout.FlexRow ref={toggleButtonWrapper} mt={8} p={8} rounded={12} outline="GRAY_7">
@@ -165,9 +159,7 @@ function CheckInEdit() {
               placeholder="I had amazing ramen for lunch..."
             />
             {description && (
-              <button type="button" name="description" onClick={() => handleDelete('description')}>
-                <SvgIcon name="delete_button" size={24} />
-              </button>
+              <DeleteButton name="description" onClick={() => handleDelete('description')} />
             )}
           </Layout.FlexRow>
         </Layout.FlexCol>
@@ -183,15 +175,17 @@ function CheckInEdit() {
           <Font.Body type="12_semibold" color="GRAY_3">
             What song describes your mood the best?
           </Font.Body>
-          <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center" mt={8}>
-            {trackData && <SpotifyMusic track={trackData} />}
-            <Button.Small
-              type="filled"
-              status="normal"
-              sizing="fit-content"
-              onClick={handleSearchMusic}
-              text="change music"
-            />
+          <Layout.FlexRow w="100%" alignItems="center" mt={8} gap={8}>
+            {trackData ? (
+              <>
+                <SpotifyMusic track={trackData} />
+                <DeleteButton onClick={() => setTrackData(null)} />
+              </>
+            ) : (
+              <Layout.FlexRow w="100%" onClick={handleSearchMusic}>
+                <SpotifyMusicSearchInput />
+              </Layout.FlexRow>
+            )}
           </Layout.FlexRow>
         </Layout.FlexCol>
         {/* availability */}
@@ -231,15 +225,21 @@ function CheckInEdit() {
           </Font.Body>
           <Layout.FlexRow mt={8} w="100%" alignItems="center" gap={8}>
             <CheckInTextInput name="bio" value={bio} onChange={handleChange} />
-            {bio && (
-              <button type="button" name="bio" onClick={() => handleDelete('bio')}>
-                <SvgIcon name="delete_button" size={24} />
-              </button>
-            )}
+            {bio && <DeleteButton name="bio" onClick={() => handleDelete('bio')} />}
           </Layout.FlexRow>
         </Layout.FlexCol>
       </Layout.FlexCol>
     </MainContainer>
+  );
+}
+
+interface DeleteButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
+
+function DeleteButton(props: DeleteButtonProps) {
+  return (
+    <button type="button" {...props}>
+      <SvgIcon name="delete_button" size={16} />
+    </button>
   );
 }
 

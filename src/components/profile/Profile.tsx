@@ -6,7 +6,7 @@ import { friendList as mockFriendList } from '@mock/friends';
 import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getFriendList } from '@utils/apis/user';
-import CheckInSection from './check-in/CheckIn';
+import CheckInSection from '../check-in/CheckIn';
 import FriendsInfo from './friends-info/FriendsInfo';
 
 interface ProfileProps {

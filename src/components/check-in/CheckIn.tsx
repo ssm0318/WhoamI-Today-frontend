@@ -8,9 +8,9 @@ import { checkIn as mockCheckIn } from '@mock/users';
 import { CheckIn as CheckInType, User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
-import AddNewCheckIn from '../add-new-check-in/AddNewCheckIn';
-import AvailabilityChip from '../availability-chip/AvailabilityChip';
-import SpotifyMusic from '../spotify-music/SpotifyMusic';
+import AvailabilityChip from '../profile/availability-chip/AvailabilityChip';
+import AddNewCheckIn from './add-new-check-in/AddNewCheckIn';
+import SpotifyMusic from './spotify-music/SpotifyMusic';
 
 interface CheckInProps {
   user: User;
