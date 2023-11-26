@@ -18,7 +18,7 @@ function AddNewMembers() {
   const { id } = useParams();
   const [query, setQuery] = useState('');
 
-  const { friendList, isLoading, iniFiniteLoadingRef } = useFriendList();
+  const { friendList, isLoading, infiniteLoadingRef } = useFriendList();
   const [selectedFriends, setSelectedFriends] = useState<User[]>([]);
 
   const selected = (userId: number) =>
@@ -69,7 +69,7 @@ function AddNewMembers() {
                       />
                     </StyledAddNewMemberItem>
                   ))}
-                  <div ref={iniFiniteLoadingRef} />
+                  <div ref={infiniteLoadingRef} />
                   {isLoading && <Loader />}
                 </>
               ) : (

@@ -8,7 +8,7 @@ import useFriendList from '@hooks/useFriendList';
 function FriendList() {
   const [t] = useTranslation('translation');
 
-  const { friendList, isLoading, iniFiniteLoadingRef, fetchFriends } = useFriendList();
+  const { friendList, isLoading, infiniteLoadingRef, fetchFriends } = useFriendList();
 
   if (!friendList) return <Loader />;
   return (
@@ -22,7 +22,7 @@ function FriendList() {
             {friendList.map((friend) => (
               <FriendItem key={friend.id} type="friends" user={friend} updateList={fetchFriends} />
             ))}
-            <div ref={iniFiniteLoadingRef} />
+            <div ref={infiniteLoadingRef} />
             {isLoading && <Loader />}
           </>
         ) : (

@@ -25,7 +25,7 @@ const useFriendList = () => {
   return {
     friendList,
     isLoading,
-    iniFiniteLoadingRef: targetRef,
+    infiniteLoadingRef: targetRef,
     fetchFriends,
   };
 };
