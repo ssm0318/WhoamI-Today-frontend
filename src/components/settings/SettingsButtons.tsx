@@ -39,8 +39,7 @@ export function SettingsToggleButton() {
     appNotiPermission: state.appNotiPermission,
   }));
 
-  // FIXME: 웹의 경우 조건 수정
-  const permissionAllowed = isApp ? appNotiPermission : false;
+  const permissionAllowed = isApp ? appNotiPermission : notiPermission === 'granted' || false;
 
   const handleToggle = async () => {
     if (isApp) {
