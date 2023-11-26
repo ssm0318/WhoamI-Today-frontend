@@ -1,12 +1,14 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import styled from 'styled-components';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { MessageInputBox } from '@components/chat-room/message-input-box/MessageInputBox';
 import { MessageList } from '@components/chat-room/message-list/MessageList';
+import { MessageNotiSettings } from '@components/chat-room/message-noti-settings/MessageNotiSettings';
 import { MOCK_CHAT_ROOM_LIST } from '@components/chats/chat-room-list/ChatRoomList.helper';
 import { HeaderWrapper } from '@components/header/Header.styled';
 import Icon from '@components/header/icon/Icon';
-import { TOP_NAVIGATION_HEIGHT, Z_INDEX } from '@constants/layout';
+import { MAX_WINDOW_WIDTH, TOP_NAVIGATION_HEIGHT, Z_INDEX } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import { MainWrapper } from '@styles/wrappers';
 
@@ -28,18 +30,31 @@ export function ChatRoom() {
     return chatRoom;
   }, [roomIdStr]);
 
-  const handleClickNotiSettings = () => {
-    // TODO: notification setting modal
-  };
-
   const handleClickMsgSearch = () => {
     // TODO: notification setting modal
   };
 
+  const [settingsVisible, setSettingsVisible] = useState(false);
+
+  const handleClickNotiSettings = () => {
+    setSettingsVisible(true);
+  };
+
+  const handleOnCloseSettingsModal = () => {
+    setSettingsVisible(false);
+  };
+
   return (
-    <Layout.Fixed l={0} t={0} w="100%" h="100vh" z={Z_INDEX.MODAL_CONTAINER} bgColor="BASIC_WHITE">
+    <ChatRoomContainer
+      t={0}
+      w="100%"
+      h="100%"
+      z={Z_INDEX.MODAL_CONTAINER}
+      bgColor="BASIC_WHITE"
+      alignItems="center"
+    >
       <HeaderWrapper>
-        <Layout.FlexRow justifyContent="space-between" w="100%" h="100%" alignItems="center">
+        <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center">
           <Icon name="arrow_left" size={36} color="BASIC_BLACK" onClick={handleClickGoBack} />
           <Layout.FlexRow alignItems="center" gap={6.5}>
             <ProfileImage imageUrl={chatRoomData?.imageUrl} size={24} />
@@ -64,6 +79,11 @@ export function ChatRoom() {
           <MessageInputBox />
         </Layout.LayoutBase>
       </Layout.FlexCol>
-    </Layout.Fixed>
+      <MessageNotiSettings visible={settingsVisible} onClose={handleOnCloseSettingsModal} />
+    </ChatRoomContainer>
   );
 }
+
+const ChatRoomContainer = styled(Layout.Fixed)`
+  max-width: ${MAX_WINDOW_WIDTH}px;
+`;
