@@ -35,19 +35,17 @@ export function SettingsToggleButton() {
   const postMessage = usePostAppMessage();
   const { notiPermission } = useNotiPermission();
 
-  const { appNotiPermission, myProfile, updateMyProfile } = useBoundStore((state) => ({
+  const { appNotiPermission } = useBoundStore((state) => ({
     appNotiPermission: state.appNotiPermission,
-    myProfile: state.myProfile,
-    updateMyProfile: state.updateMyProfile,
   }));
 
-  const permissionAllowed = isApp ? appNotiPermission : myProfile?.noti_on || false;
+  // FIXME: 웹의 경우 조건 수정
+  const permissionAllowed = isApp ? appNotiPermission : false;
 
   const handleToggle = async () => {
     if (isApp) {
       return postMessage('OPEN_SETTING', {});
     }
-    updateMyProfile({ noti_on: !permissionAllowed });
   };
 
   if (!isApp && notiPermission !== 'granted') return null;

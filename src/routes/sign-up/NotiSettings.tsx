@@ -13,19 +13,18 @@ import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 function NotiSettings() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_up' });
 
-  const [signUpInfo, setSignUpInfo, resetSignUpInfo] = useBoundStore((state) => [
+  const [signUpInfo, resetSignUpInfo] = useBoundStore((state) => [
     state.signUpInfo,
-    state.setSignUpInfo,
     state.resetSignUpInfo,
   ]);
 
+  const [dailyNotiOn, setDailyNotiOn] = useState(false);
   const [notiTime, setNotiTime] = useState<string>('');
 
   const { isMobile } = getMobileDeviceInfo();
 
   const onClickNotiOn = async () => {
-    setSignUpInfo({ noti_on: true });
-
+    setDailyNotiOn(true);
     if (isMobile) {
       // TODO: 모바일 기기의 노티 켜기
       return;
@@ -63,7 +62,7 @@ function NotiSettings() {
 
   return (
     <>
-      {signUpInfo.noti_on ? (
+      {dailyNotiOn ? (
         <>
           <Font.Body type="18_regular" color="BASIC_BLACK">
             {t('noti_time_setting_desc_1')}
@@ -78,7 +77,7 @@ function NotiSettings() {
         </Font.Body>
       )}
       <Layout.Fixed l={0} b="50px" w="100%" alignItems="center" gap={24} ph={24}>
-        {signUpInfo.noti_on ? (
+        {dailyNotiOn ? (
           <>
             <Button.Large
               type="gray_fill"
