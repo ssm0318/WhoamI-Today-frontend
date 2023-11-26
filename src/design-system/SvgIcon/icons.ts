@@ -84,9 +84,25 @@ const my_active = 'my_active';
 const my_inactive = 'my_inactive';
 const chats_active = 'chats_active';
 const chats_inactive = 'chats_inactive';
+const delete_button = 'delete_button';
+const show_password_eye = 'show_password_eye';
+const hide_password_eye = 'hide_password_eye';
+const link_share = 'link_share';
+const header_logo = 'header_logo';
+const lock_off = 'lock_off';
+const lock_on = 'lock_on';
+const top_navigation_friend = 'top_navigation_friend';
+const top_navigation_edit = 'top_navigation_edit';
+const top_navigation_dots = 'top_navigation_dots';
+const top_navigation_chat = 'top_navigation_chat';
+const top_navigation_back = 'top_navigation_back';
+const edit = 'edit';
+const new_add = 'new_add';
+const add_reaction = 'add_reaction';
 
 export {
   add_default,
+  add_reaction,
   add_user,
   arrow_left,
   arrow_right,
@@ -103,8 +119,10 @@ export {
   circle_check_unchecked,
   close,
   comment,
+  delete_button,
   delete_default,
   dots_menu,
+  edit,
   edit_filled,
   edit_list,
   edit_outline,
@@ -133,6 +151,7 @@ export {
   my_active,
   my_inactive,
   my_profile,
+  new_add,
   new_chat,
   noti_icon_emoji,
   noti_icon_like,
@@ -147,4 +166,9 @@ export {
   spotify,
   star,
   star_outline,
+  top_navigation_back,
+  top_navigation_chat,
+  top_navigation_dots,
+  top_navigation_edit,
+  top_navigation_friend,
 };

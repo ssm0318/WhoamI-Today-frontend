@@ -1,12 +1,12 @@
-import { EmojiClickData } from 'emoji-picker-react';
-import { RefObject, useRef, useState } from 'react';
+import EmojiPicker from '@components/emoji-picker/EmojiPicker';
 import { SCREEN_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { ReactionPostType } from '@models/post';
 import { getReactionList, postReaction } from '@utils/apis/responses';
+import { EmojiClickData } from 'emoji-picker-react';
+import { RefObject, useRef, useState } from 'react';
 import EmojiReactionList from '../emoji-reaction-list/EmojiReactionList';
-import EmojiReactionPicker from '../emoji-reaction-picker/EmojiReactionPicker';
 import EmojiViewPopup from '../emoji-view-popup/EmojiViewPopup';
 
 interface ReactionSectionProps {
@@ -27,7 +27,8 @@ function ReactionSection({ postType, postId }: ReactionSectionProps) {
   const [popupPosition, setPopupPosition] = useState<Position>({});
   const [reactionEmojis, setReactionEmojis] = useState<string[]>([]);
 
-  const toggleButtonRef = useRef<HTMLButtonElement>(null); // 토글 버튼의 Ref 생성
+  const toggleButtonRef = useRef<HTMLButtonElement>(null);
+  const seeAllButtonRef = useRef<HTMLButtonElement>(null);
 
   const handlePosition = (wrapper: RefObject<HTMLElement>): Position => {
     if (!wrapper.current) return {};
@@ -78,7 +79,7 @@ function ReactionSection({ postType, postId }: ReactionSectionProps) {
       {/* NOTE: author는 모든 리액션 리스트, viewer는 자기의 리액션 리스트 */}
       <Layout.FlexRow gap={4} alignItems="center">
         <EmojiReactionList emojis={reactionEmojis} />
-        <button type="button" onClick={handleClickViewAllEmoji}>
+        <button type="button" onClick={handleClickViewAllEmoji} ref={seeAllButtonRef}>
           <Font.Body type="14_semibold" underline>
             See All
           </Font.Body>
@@ -89,6 +90,7 @@ function ReactionSection({ postType, postId }: ReactionSectionProps) {
           popupPosition={popupPosition}
           postType={postType}
           postId={postId}
+          toggleButtonRef={seeAllButtonRef}
         />
       </Layout.FlexRow>
 
@@ -98,7 +100,7 @@ function ReactionSection({ postType, postId }: ReactionSectionProps) {
           <button type="button" onClick={handleClickReaction} ref={toggleButtonRef}>
             <Font.Body type="14_semibold">😊</Font.Body>
           </button>
-          <EmojiReactionPicker
+          <EmojiPicker
             selectedEmojis={reactionEmojis}
             onSelectEmoji={handleSelectEmoji}
             isVisible={emojiPickerVisible}

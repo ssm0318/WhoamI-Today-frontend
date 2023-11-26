@@ -6,8 +6,8 @@ import NoContents from '@components/_common/no-contents/NoContents';
 import Calendar from '@components/calendar/Calendar';
 import CalendarViewTabs from '@components/calendar/calendar-view-Tabs/CalendarViewTabs';
 import MyDetail from '@components/my-detail/MyDetail';
+import Profile from '@components/profile/Profile';
 import ReactionSection from '@components/reaction/reaction-section/ReactionSection';
-import MyStatus from '@components/status/my-status/MyStatus';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -17,6 +17,8 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { getResponseHistories } from '@utils/apis/question';
 
 function My() {
+  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+
   const { resetDetailDate, detailDate } = useBoundStore((state) => ({
     resetDetailDate: state.resetDetailDate,
     detailDate: state.detailDate,
@@ -51,7 +53,7 @@ function My() {
         ph={DEFAULT_MARGIN}
         pv={12}
       >
-        <MyStatus />
+        <Profile user={myProfile} />
       </Layout.FlexRow>
       <Divider width={1} />
       <Layout.FlexRow

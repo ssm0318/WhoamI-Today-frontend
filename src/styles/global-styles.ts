@@ -54,7 +54,6 @@ const GlobalStyle = createGlobalStyle`
         outline: none;
     }
     textarea {
-        border: none;
         overflow: auto;
         outline: none;
 
