@@ -2,12 +2,20 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import Icon from '@components/header/icon/Icon';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Button, CheckCircle, Font, Layout, SvgIcon } from '@design-system';
+import { CheckCircle, Font, Layout, SvgIcon } from '@design-system';
 import { friendGroupList } from '@mock/friends';
 import { FriendGroup } from '@models/friendGroup';
-import { StyledList, StyledListItem } from './FriendGroupList.styled';
+import { Margin } from 'src/design-system/layouts';
+import {
+  StyledCommonListItem,
+  StyledGroupItem,
+  StyledList,
+  StyledListSettingItem,
+} from './FriendGroupList.styled';
+import RenameFriendGroupDialog from './RenameFriendGroupDialog';
 
 interface CheckFriendGroup extends FriendGroup {
   checked?: boolean;
@@ -17,6 +25,7 @@ function FriendGroupList() {
   const [t] = useTranslation('translation', { keyPrefix: 'friend_group' });
 
   const [mode, setMode] = useState<'list' | 'edit'>('list');
+  // FIXME: 실제 데이터
   const [checkedGroupList, setCheckedGroupList] = useState<CheckFriendGroup[]>(friendGroupList);
 
   const resetCheckGroupList = () => {
@@ -36,6 +45,10 @@ function FriendGroupList() {
     navigate(`${id}`);
   };
 
+  const [visibleNewGroupDialog, setVisibleNewGroupDialog] = useState(false);
+  const handleClickAddGroup = () => setVisibleNewGroupDialog(true);
+  const handleCloseNewGroupDialog = () => setVisibleNewGroupDialog(false);
+
   const handleToggleFriendGroup = (item: CheckFriendGroup) => {
     const selectedGroupIndex = checkedGroupList.findIndex((group) => group.id === item.id);
 
@@ -53,7 +66,7 @@ function FriendGroupList() {
   return (
     <MainContainer>
       <TitleHeader
-        title={t('title')}
+        title={t(mode === 'edit' ? 'edit_group' : 'title')}
         RightComponent={
           mode === 'edit' ? (
             <button type="button" onClick={handleClickSave}>
@@ -62,11 +75,7 @@ function FriendGroupList() {
               </Font.Display>
             </button>
           ) : (
-            <button type="button" onClick={handleClickEdit}>
-              <Font.Display type="18_bold" color="PRIMARY">
-                {t('edit')}
-              </Font.Display>
-            </button>
+            <Icon name="select_list" onClick={handleClickEdit} size={20} />
           )
         }
       />
@@ -74,41 +83,69 @@ function FriendGroupList() {
         <StyledList>
           {mode === 'list' &&
             checkedGroupList.map((group) => (
-              <StyledListItem key={group.id} role="button" onClick={() => handleGoToGroup(group)}>
-                <Font.Display type="14_regular">{group.name}</Font.Display>
+              <StyledCommonListItem
+                key={group.id}
+                role="button"
+                onClick={() => handleGoToGroup(group)}
+              >
+                <Group group={group} />
                 <SvgIcon name="more_arrow" color="BASIC_BLACK" size={16} />
-              </StyledListItem>
+              </StyledCommonListItem>
             ))}
           {mode === 'edit' &&
             checkedGroupList.map((group) => (
-              <StyledListItem key={group.id}>
-                <CheckCircle
-                  checked={!!group.checked}
-                  name={group.name}
-                  onChange={() => handleToggleFriendGroup(group)}
-                />
-                <SvgIcon name="order_group" color="GRAY_6" size={16} />
-              </StyledListItem>
+              <StyledCommonListItem key={group.id}>
+                <Layout.FlexRow alignItems="center">
+                  <CheckCircle
+                    checked={!!group.checked}
+                    name={group.name}
+                    onChange={() => handleToggleFriendGroup(group)}
+                    hideLabel
+                  />
+                  <Group group={group} ml={20} />
+                </Layout.FlexRow>
+              </StyledCommonListItem>
             ))}
-          <StyledListItem>
-            <Layout.FlexRow>
-              <SvgIcon name="check_circle_add" size={20} />
-              <Font.Display type="14_semibold" color="PRIMARY" ml={12}>
-                {t('add_group')}
-              </Font.Display>
-            </Layout.FlexRow>
-          </StyledListItem>
+          {mode === 'list' && (
+            <StyledListSettingItem onClick={handleClickAddGroup}>
+              <Layout.FlexRow>
+                <SvgIcon name="check_circle_add" size={20} />
+                <Font.Display type="14_semibold" color="PRIMARY" ml={12}>
+                  {t('add_group')}
+                </Font.Display>
+              </Layout.FlexRow>
+            </StyledListSettingItem>
+          )}
+          {mode === 'edit' && (
+            <StyledListSettingItem disabled={!showDeleteGroupButton} textAlign="center">
+              <Layout.FlexRow>
+                <Font.Display type="14_semibold" ml={12}>
+                  {t('delete_group')}
+                </Font.Display>
+              </Layout.FlexRow>
+            </StyledListSettingItem>
+          )}
         </StyledList>
-        {showDeleteGroupButton && (
-          <Button.Dialog
-            status="normal"
-            type="warning_fill"
-            text={t('delete_group')}
-            sizing="stretch"
-          />
-        )}
+        <RenameFriendGroupDialog
+          visible={visibleNewGroupDialog}
+          onClose={handleCloseNewGroupDialog}
+        />
       </Layout.LayoutBase>
     </MainContainer>
+  );
+}
+
+function Group({ group, ...props }: { group: FriendGroup } & Margin) {
+  const [t] = useTranslation('translation', { keyPrefix: 'friend_group' });
+  const { name, member_cnt } = group;
+
+  return (
+    <StyledGroupItem {...props}>
+      <Font.Display type="14_regular">{name}</Font.Display>
+      <Font.Body type="10_regular" color="GRAY_3">
+        {t('member_count', { count: member_cnt })}
+      </Font.Body>
+    </StyledGroupItem>
   );
 }
 

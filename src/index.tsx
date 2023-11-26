@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+import AddNewMembers from '@components/friend-group/AddNewMembers';
 import FriendGroup from '@components/friend-group/FriendGroup';
 import FriendGroupList from '@components/friend-group/FriendGroupList';
 import { Colors } from '@design-system';
@@ -132,6 +133,7 @@ const router = createBrowserRouter([
     element: <FriendGroupList />,
   },
   { path: 'friend-groups/:id', loader: checkIfSignIn, element: <FriendGroup /> },
+  { path: 'friend-groups/:id/new', loader: checkIfSignIn, element: <AddNewMembers /> },
 ]);
 
 function App() {

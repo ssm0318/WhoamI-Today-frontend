@@ -1,33 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import FriendItem from '@components/friends-settings/friend-item/FriendItem';
 import { Font, Layout } from '@design-system';
-import useInfiniteScroll from '@hooks/useInfiniteScroll';
-import { User } from '@models/user';
-import { getFriendList } from '@utils/apis/user';
+import useFriendList from '@hooks/useFriendList';
 
 function FriendList() {
   const [t] = useTranslation('translation');
 
-  const [friendList, setFriendList] = useState<User[]>();
-  const [nextUrl, setNextUrl] = useState<string | null>(null);
-
-  const fetchFriends = useCallback(async (_next?: string | null) => {
-    const { results = [], next } = await getFriendList(_next);
-    setFriendList((prev) => (_next ? (prev ? [...prev, ...results] : []) : results));
-    setNextUrl(next);
-  }, []);
-
-  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
-    if (nextUrl) await fetchFriends(nextUrl);
-    setIsLoading(false);
-  });
-
-  useEffect(() => {
-    fetchFriends();
-  }, [fetchFriends]);
+  const { friendList, isLoading, infiniteLoadingRef, fetchFriends } = useFriendList();
 
   if (!friendList) return <Loader />;
   return (
@@ -41,7 +22,7 @@ function FriendList() {
             {friendList.map((friend) => (
               <FriendItem key={friend.id} type="friends" user={friend} updateList={fetchFriends} />
             ))}
-            <div ref={targetRef} />
+            <div ref={infiniteLoadingRef} />
             {isLoading && <Loader />}
           </>
         ) : (

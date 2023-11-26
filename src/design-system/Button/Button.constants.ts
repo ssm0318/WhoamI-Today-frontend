@@ -28,6 +28,12 @@ export const buttonColorSettings: { [key in ButtonType]: ButtonColorSetting } = 
     disabled: { background: 'WARNING', text: 'BASIC_WHITE' },
     completed: { background: 'WARNING', text: 'BASIC_WHITE' },
   },
+  secondary_fill: {
+    normal: { background: 'SECONDARY', text: 'BASIC_BLACK' },
+    hovered: { background: 'SECONDARY', text: 'BASIC_BLACK' },
+    disabled: { background: 'BASIC_DISABLED_SOFT', text: 'BASIC_WHITE' },
+    completed: { background: 'SECONDARY', text: 'BASIC_WHITE' },
+  },
   outlined: {
     normal: { background: 'BASIC_WHITE', text: 'BASIC_BLACK', outline: 'BASIC_BLACK' },
     hovered: { background: 'BASIC_WHITE', text: 'BASIC_BLACK', outline: 'BASIC_BLACK' },

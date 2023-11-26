@@ -42,6 +42,8 @@ const check_circle_checked = 'check_circle_checked';
 const check_circle_add = 'check_circle_add';
 const order_group = 'order_group';
 const more_arrow = 'more_arrow';
+const edit = 'edit';
+const select_list = 'select_list';
 
 export {
   arrow_left,
@@ -58,6 +60,7 @@ export {
   close,
   comment,
   delete_button,
+  edit,
   error,
   friends_active,
   friends_inactive,
@@ -80,6 +83,7 @@ export {
   order_group,
   question_send,
   search,
+  select_list,
   show_password_eye,
   spotify,
   top_navigation_dots,

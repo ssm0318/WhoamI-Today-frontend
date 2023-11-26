@@ -12,7 +12,13 @@ export type ButtonSetting = {
   };
 };
 
-export type ButtonType = 'filled' | 'outlined' | 'white_fill' | 'gray_fill' | 'warning_fill';
+export type ButtonType =
+  | 'filled'
+  | 'outlined'
+  | 'white_fill'
+  | 'gray_fill'
+  | 'warning_fill'
+  | 'secondary_fill';
 
 export type ButtonStatus = 'normal' | 'hovered' | 'disabled' | 'completed';
 

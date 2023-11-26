@@ -30,8 +30,8 @@ export default function FriendSearchInput({ query, setQuery }: Props) {
         p={9}
         pr={9}
       >
-        <Layout.LayoutBase p={8}>
-          <SvgIcon name="search" size={20} />
+        <Layout.LayoutBase ph={8}>
+          <SvgIcon name="search" size={20} fill="GRAY_12" />
         </Layout.LayoutBase>
         <S.SearchInput
           placeholder={t('placeholder') || undefined}

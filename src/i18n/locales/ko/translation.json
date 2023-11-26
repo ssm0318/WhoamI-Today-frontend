@@ -120,8 +120,17 @@
     "save": "저장하기",
     "add_group": "새로운 그룹 만들기",
     "delete_group": "선택한 그룹 삭제하기",
+    "edit_group": "그룹 수정하기",
     "add_group_member": "그룹 멤버 추가하기",
-    "delete_group_member": "그룹 멤버 삭제하기"
+    "delete_group_member": "그룹 멤버 삭제하기",
+    "member_count": "{{cont}}명",
+    "add_new_member_info": "공개 그룹 목록을 편집해도 친구에게 알림을 보내지 않습니다.",
+    "confirm": "확인",
+    "rename_group": "그룹 이름 수정하기",
+    "rename_group_desc": "그룹 이름을 입력해주세요.",
+    "group_name": "그룹 이름",
+    "save_changes": "저장하기",
+    "dismiss": "취소하기"
   },
   "my_detail": {
     "title_format": "yy/M/d (E)",

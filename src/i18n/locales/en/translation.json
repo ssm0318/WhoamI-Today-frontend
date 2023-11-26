@@ -123,8 +123,18 @@
     "save": "Save",
     "add_group": "Add Group",
     "delete_group": "Delete Group",
+    "edit_group": "Edit Groups",
     "add_group_member": "Add Group Member",
-    "delete_group_member": "Delete Group Member"
+    "delete_group_member": "Delete Group Member",
+    "member_count_one": "{{count}} person",
+    "member_count_other": "{{count}} people",
+    "add_new_member_info": "We don’t send notifications when you edit your group list.",
+    "confirm": "Confirm",
+    "rename_group": "Rename Group",
+    "rename_group_desc": "Enter a name to use for this group.",
+    "group_name": "Group Name",
+    "save_changes": "Save Changes",
+    "dismiss": "Dismiss"
   },
   "my_detail": {
     "title_format": "d/M/yy (E)"
