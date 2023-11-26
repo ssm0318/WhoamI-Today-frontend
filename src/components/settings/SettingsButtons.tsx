@@ -1,7 +1,5 @@
 import { Font, SvgIcon } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
-import useNotiPermission from '@hooks/useNotiPermission';
-import { useBoundStore } from '@stores/useBoundStore';
 import { isApp } from '@utils/getUserAgent';
 import {
   StyledAccountSettingsButton,
@@ -31,15 +29,8 @@ export function SettingsButton({ text, onClick }: SettingButtonProps) {
   );
 }
 
-export function SettingsToggleButton() {
+export function SettingsToggleButton({ permissionAllowed }: { permissionAllowed: boolean }) {
   const postMessage = usePostAppMessage();
-  const { notiPermission } = useNotiPermission();
-
-  const { appNotiPermission } = useBoundStore((state) => ({
-    appNotiPermission: state.appNotiPermission,
-  }));
-
-  const permissionAllowed = isApp ? appNotiPermission : notiPermission === 'granted' || false;
 
   const handleToggle = async () => {
     if (isApp) {
@@ -47,7 +38,6 @@ export function SettingsToggleButton() {
     }
   };
 
-  if (!isApp && notiPermission !== 'granted') return null;
   return (
     <StyledToggleButton>
       <input type="checkbox" checked={permissionAllowed} onChange={handleToggle} />
