@@ -33,7 +33,9 @@ function NotiSettings() {
   };
 
   const onChangeNotiTime = (e: ChangeEvent<HTMLInputElement>) => {
-    setNotiTime(e.target.value);
+    const hour = e.target.value.split(':')[0];
+    // NOTE: 시간 단위로만 설정 https://github.com/GooJinSun/WhoAmI-Today-frontend/issues/86#issuecomment-1712446149
+    setNotiTime(`${hour}:00`);
   };
 
   const navigate = useNavigate();
@@ -69,7 +71,7 @@ function NotiSettings() {
             <br />
             {t('noti_time_setting_desc_2')}
           </Font.Body>
-          <input type="time" value={notiTime} onChange={onChangeNotiTime} />
+          <input type="time" value={notiTime} onChange={onChangeNotiTime} step={3600} />
         </>
       ) : (
         <Font.Body type="18_regular" color="BASIC_BLACK">
