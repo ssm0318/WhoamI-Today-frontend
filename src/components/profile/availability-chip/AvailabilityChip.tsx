@@ -1,25 +1,21 @@
 import { Font, Layout, SvgIcon } from '@design-system';
-import { Availability } from '@models/status';
-import {
-  AvailabilityBgColors,
-  AvailabilityChipColors,
-  AvailabilityLabels,
-} from './StatusChip.constants';
+import { Availability } from '@models/user';
+import { AvailabilityChipColors, AvailabilityLabels } from './AvailabilityChip.contants';
 
-interface StatusChipProps {
+interface AvailabilityChipProps {
   availability: Availability;
   isSelected?: boolean;
   onSelect?: (a: Availability) => void;
 }
 
-function StatusChip({ availability, isSelected, onSelect }: StatusChipProps) {
+function AvailabilityChip({ availability, isSelected, onSelect }: AvailabilityChipProps) {
   const handleSelect = () => {
     onSelect?.(availability);
   };
 
   return (
     <Layout.FlexRow
-      bgColor={AvailabilityBgColors[availability]}
+      bgColor="BASIC_WHITE"
       gap={4}
       pv={4}
       ph={8}
@@ -35,4 +31,4 @@ function StatusChip({ availability, isSelected, onSelect }: StatusChipProps) {
   );
 }
 
-export default StatusChip;
+export default AvailabilityChip;

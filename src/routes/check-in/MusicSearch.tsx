@@ -1,8 +1,13 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { ChangeEvent, useState } from 'react';
 import MainContainer from '@components/_common/main-container/MainContainer';
+<<<<<<< HEAD:src/routes/status/MusicSearch.tsx
 import StatusMusic from '@components/status/status-music/StatusMusic';
 import SubHeader from '@components/sub-header/SubHeader';
+=======
+import StatusMusic from '@components/check-in/spotify-music/SpotifyMusic';
+import TitleHeader from '@components/title-header/TitleHeader';
+>>>>>>> ae7be80 ((#212) 상태메시지 (check in) 디자인 수정 (#227)):src/routes/check-in/MusicSearch.tsx
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Input, Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';

@@ -5,6 +5,7 @@ import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Button, Font, Layout } from '@design-system';
 import { User } from '@models/user';
+import { useBoundStore } from '@stores/useBoundStore';
 import { acceptFriendRequest, breakFriend, rejectFriendRequest } from '@utils/apis/user';
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
 
 function FriendItem({ type, user, updateList }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'settings.friends' });
+  const myProfile = useBoundStore((state) => state.myProfile);
 
   const handleClickAccept = async (e: MouseEvent) => {
     e.stopPropagation();
@@ -40,6 +42,9 @@ function FriendItem({ type, user, updateList }: Props) {
   const navigate = useNavigate();
 
   const handleClickItem = () => {
+    if (myProfile?.username === user.username) {
+      return navigate('my');
+    }
     navigate(`/users/${user.username}`);
   };
 

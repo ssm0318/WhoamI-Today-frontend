@@ -1,5 +1,5 @@
 import { Font, Layout } from '@design-system';
-import EmojiItem from '../emoji-item/EmojiItem';
+import EmojiItem from '../../_common/emoji-item/EmojiItem';
 
 interface EmojiReactionListProps {
   emojis: string[];

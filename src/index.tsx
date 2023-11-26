@@ -14,10 +14,17 @@ import './i18n';
 import reportWebVitals from './reportWebVitals';
 import AllQuestions from './routes/AllQuestions';
 import Chats from './routes/Chats';
+import StatusEdit from './routes/check-in/CheckInEdit';
+import MusicSearch from './routes/check-in/MusicSearch';
 import ForgotPassword from './routes/ForgotPassword';
+<<<<<<< HEAD
 import EditFriends from './routes/friends/EditFriends';
 import ExploreFriends from './routes/friends/ExploreFriends';
 import Friends from './routes/friends/Friends';
+=======
+import FriendPage from './routes/FriendPage';
+import Friends from './routes/Friends';
+>>>>>>> ae7be80 ((#212) 상태메시지 (check in) 디자인 수정 (#227))
 import Intro from './routes/Intro';
 import My from './routes/My';
 import Notifications from './routes/Notifications';
@@ -40,9 +47,6 @@ import ResearchIntro from './routes/sign-up/ResearchIntro';
 import UserName from './routes/sign-up/UserName';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
-import MusicSearch from './routes/status/MusicSearch';
-import StatusEdit from './routes/status/StatusEdit';
-import UserPage from './routes/UserPage';
 
 const router = createBrowserRouter([
   { path: '', element: <Intro /> },
@@ -102,11 +106,11 @@ const router = createBrowserRouter([
   },
   {
     path: 'users/:username',
-    element: <UserPage />,
     loader: checkIfSignIn,
+    element: <FriendPage />,
   },
   {
-    path: 'status',
+    path: 'check-in',
     loader: checkIfSignIn,
     children: [
       { path: 'edit', element: <StatusEdit /> },
