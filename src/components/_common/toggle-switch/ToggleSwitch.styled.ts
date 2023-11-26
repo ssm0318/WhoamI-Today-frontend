@@ -1,10 +1,41 @@
 import styled from 'styled-components';
 
-export const StyledToggleButton = styled.label`
+interface Props {
+  type: ToggleSwitchSize;
+}
+
+export type ToggleSwitchSize = 'large' | 'small';
+
+const WIDTH = {
+  large: 51,
+  small: 41,
+};
+
+const HEIGHT = {
+  large: 27,
+  small: 20,
+};
+
+const CIRCLE_SIZE = {
+  large: 20,
+  small: 16,
+};
+
+const CIRCLE_POSITION = {
+  large: 4,
+  small: 2,
+};
+
+const TRANSLATE_X = {
+  large: 22,
+  small: 20,
+};
+
+export const StyledToggleButton = styled.label<Props>`
   position: relative;
   display: inline-block;
-  width: 51px;
-  height: 27px;
+  width: ${({ type }) => `${WIDTH[type]}px`};
+  height: ${({ type }) => `${HEIGHT[type]}px`};
 
   input {
     opacity: 0;
@@ -28,10 +59,10 @@ export const StyledToggleButton = styled.label`
   .slider:before {
     position: absolute;
     content: '';
-    height: 20px;
-    width: 20px;
-    left: 4px;
-    bottom: 4px;
+    width: ${({ type }) => `${CIRCLE_SIZE[type]}px`};
+    height: ${({ type }) => `${CIRCLE_SIZE[type]}px`};
+    left: ${({ type }) => `${CIRCLE_POSITION[type]}px`};
+    bottom: ${({ type }) => `${CIRCLE_POSITION[type]}px`};
     background-color: ${({ theme }) => theme.BASIC_WHITE};
     -webkit-transition: 0.4s;
     transition: 0.4s;
@@ -43,8 +74,8 @@ export const StyledToggleButton = styled.label`
   }
 
   input:checked + .slider:before {
-    -webkit-transform: translateX(22px);
-    -ms-transform: translateX(22px);
-    transform: translateX(22px);
+    -webkit-transform: ${({ type }) => `translateX(${TRANSLATE_X[type]}px)`};
+    -ms-transform: ${({ type }) => `translateX(${TRANSLATE_X[type]}px)`};
+    transform: ${({ type }) => `translateX(${TRANSLATE_X[type]}px)`};
   }
 `;

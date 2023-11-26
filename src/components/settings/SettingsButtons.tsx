@@ -48,5 +48,5 @@ export function SettingsToggleButton() {
   };
 
   if (!isApp && notiPermission !== 'granted') return null;
-  return <ToggleSwitch checked={permissionAllowed} onChange={handleToggle} />;
+  return <ToggleSwitch type="large" checked={permissionAllowed} onChange={handleToggle} />;
 }

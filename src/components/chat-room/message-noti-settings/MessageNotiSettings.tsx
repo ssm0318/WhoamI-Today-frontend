@@ -34,7 +34,7 @@ export function MessageNotiSettings({ visible, onClose }: Props) {
           alignItems="center"
         >
           <Font.Display type="14_regular">{t('mute')}</Font.Display>
-          <ToggleSwitch checked={isMuted} onChange={handleToggle} />
+          <ToggleSwitch type="small" checked={isMuted} onChange={handleToggle} />
         </Layout.FlexRow>
       </Layout.LayoutBase>
     </BottomModal>
