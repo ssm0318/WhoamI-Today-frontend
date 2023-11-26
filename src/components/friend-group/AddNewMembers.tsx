@@ -59,7 +59,7 @@ function AddNewMembers() {
               {friendList.length > 0 ? (
                 <>
                   {friendList.map((user) => (
-                    <StyledAddNewMemberItem>
+                    <StyledAddNewMemberItem key={user.id}>
                       <SelectableUserItem
                         user={user}
                         checked={selected(user.id)}
