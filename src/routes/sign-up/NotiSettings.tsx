@@ -65,7 +65,7 @@ function NotiSettings() {
     <>
       {signUpInfo.noti_on ? (
         <>
-          <Font.Body type="18_regular" color="BASIC_BLACK">
+          <Font.Body type="18_regular" color="BLACK">
             {t('noti_time_setting_desc_1')}
             <br />
             {t('noti_time_setting_desc_2')}
@@ -73,7 +73,7 @@ function NotiSettings() {
           <input type="time" value={notiTime} onChange={onChangeNotiTime} />
         </>
       ) : (
-        <Font.Body type="18_regular" color="BASIC_BLACK">
+        <Font.Body type="18_regular" color="BLACK">
           {t('noti_on_desc')}
         </Font.Body>
       )}

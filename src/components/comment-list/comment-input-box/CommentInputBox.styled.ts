@@ -8,6 +8,6 @@ export const CommentInput = styled(TextareaAutosize)`
   font-size: 14px;
 
   ::placeholder {
-    color: ${({ theme }) => theme.GRAY_12};
+    color: ${({ theme }) => theme.MEDIUM_GRAY};
   }
 `;

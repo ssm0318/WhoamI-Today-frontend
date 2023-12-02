@@ -46,14 +46,14 @@ function CommentItem({
         <Layout.FlexCol w="100%">
           <Layout.FlexRow w="100%" alignItems="center" gap={8}>
             {/* FIXME: reply icon 교체 */}
-            {is_reply && <SvgIcon name="arrow_right" color="BASIC_BLACK" size={20} />}
+            {is_reply && <SvgIcon name="arrow_right" color="BLACK" size={20} />}
             {is_private && <SvgIcon name="lock_on" size={20} />}
             <AuthorProfile authorDetail={author_detail} profileImgSize={24} />
             {/* TODO: 줄바꿈 표시 */}
             <Font.Body type="14_regular">{comment.content}</Font.Body>
           </Layout.FlexRow>
           <Layout.FlexRow w="100%" gap={10}>
-            <Font.Body type="12_regular" color="GRAY_12">
+            <Font.Body type="12_regular" color="MEDIUM_GRAY">
               {convertTimeDiffByString(
                 new Date(),
                 new Date(comment.created_at),
@@ -62,13 +62,13 @@ function CommentItem({
             </Font.Body>
             <Layout.FlexRow gap={5}>
               <button type="button" onClick={toggleReplyInput}>
-                <Font.Body type="12_semibold" color="GRAY_12">
+                <Font.Body type="12_semibold" color="MEDIUM_GRAY">
                   {t('reply')}
                 </Font.Body>
               </button>
               {isCommentAuthor && (
                 <button type="button" onClick={deleteComment}>
-                  <Font.Body type="12_semibold" color="GRAY_12">
+                  <Font.Body type="12_semibold" color="MEDIUM_GRAY">
                     {t('delete')}
                   </Font.Body>
                 </button>

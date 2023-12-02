@@ -89,11 +89,11 @@ function MomentUpload() {
             ph={12}
             pv={8}
             rounded={12}
-            bgColor={isPostable ? 'BASIC_BLACK' : 'GRAY_2'}
+            bgColor={isPostable ? 'BLACK' : 'LIGHT_GRAY'}
             justifyContent="center"
           >
             <button type="button" onClick={handlePost}>
-              <Font.Body type="14_regular" color={isPostable ? 'BASIC_WHITE' : 'GRAY_12'}>
+              <Font.Body type="14_regular" color={isPostable ? 'WHITE' : 'MEDIUM_GRAY'}>
                 {t('post')}
               </Font.Body>
             </button>
@@ -132,12 +132,12 @@ function MomentUpload() {
             w="100%"
             alignItems="center"
             rounded={14}
-            bgColor="GRAY_2"
+            bgColor="LIGHT_GRAY"
             ph={12}
             pv={24}
           >
             <SvgIcon name="moment_photo_disabled" size={30} />
-            <Font.Body ml={8} type="18_regular" color="GRAY_12" italic>
+            <Font.Body ml={8} type="18_regular" color="MEDIUM_GRAY" italic>
               {t('photo_disabled')}
             </Font.Body>
           </Layout.FlexRow>
@@ -147,7 +147,7 @@ function MomentUpload() {
             h={PHOTO_SIZE}
             alignItems="center"
             rounded={14}
-            bgColor="BASIC_WHITE"
+            bgColor="WHITE"
             ph={todayMoment.photo ? 0 : 12}
             pv={todayMoment.photo ? 0 : 24}
             onClick={handlePhotoUpload}
@@ -170,7 +170,7 @@ function MomentUpload() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Font.Display type="18_bold" color="BASIC_WHITE">
+                  <Font.Display type="18_bold" color="WHITE">
                     {t('already_photo_uploaded')}
                   </Font.Display>
                 </Layout.Absolute>
@@ -184,7 +184,7 @@ function MomentUpload() {
             ) : (
               <>
                 <SvgIcon name="moment_photo_normal" size={30} />
-                <Font.Body ml={8} type="18_regular" color="GRAY_12">
+                <Font.Body ml={8} type="18_regular" color="MEDIUM_GRAY">
                   {t('photo_placeholder')}
                 </Font.Body>
               </>

@@ -32,7 +32,7 @@ export function ResponseItem({ response, useDeleteButton, onClickDeleteBtn }: Re
         {useDeleteButton && <DeleteButton onClick={handleDeleteBtn(response.id)} />}
       </ContentWrapper>
       <PostFooter>
-        <Font.Body type="12_regular" color="GRAY_12">
+        <Font.Body type="12_regular" color="MEDIUM_GRAY">
           {convertTimeDiffByString(new Date(), new Date(response.created_at))}
         </Font.Body>
         <ReactionButtons postType="Response" post={response} onClickComments={toggleComments} />

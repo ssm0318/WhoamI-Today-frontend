@@ -12,11 +12,11 @@ function ResponseItem({ response }: ResponseItemProps) {
     <Layout.FlexRow w="100%">
       <SvgIcon name="my_profile" size={36} />
       <Layout.FlexCol ml={10} w="100%">
-        <Font.Body type="18_regular" color="GRAY_12">
+        <Font.Body type="18_regular" color="MEDIUM_GRAY">
           {content}
         </Font.Body>
         <Layout.FlexRow w="100%" justifyContent="flex-end">
-          <Font.Body type="12_regular" color="GRAY_12">
+          <Font.Body type="12_regular" color="MEDIUM_GRAY">
             {convertTimeDiffByString(new Date(), new Date(created_at))}
           </Font.Body>
         </Layout.FlexRow>

@@ -12,14 +12,14 @@ export const StyledCheckBox = styled.div`
     display: inline-block;
     width: 24px;
     height: 24px;
-    border: 2px solid ${({ theme }) => theme.GRAY_2};
+    border: 2px solid ${({ theme }) => theme.LIGHT_GRAY};
     position: relative;
     flex-shrink: 0;
   }
 
   input:checked + label {
     border: 2px solid ${({ theme }) => theme.GRAY_8};
-    background-color: ${({ theme }) => theme.BASIC_BLACK};
+    background-color: ${({ theme }) => theme.BLACK};
   }
 
   .display-label {

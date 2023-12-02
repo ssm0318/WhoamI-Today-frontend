@@ -41,10 +41,10 @@ export default function FriendInvitation() {
         <Layout.FlexRow w="100%" gap={13} alignItems="center">
           <SvgIcon name="my_profile" size={27} />
           <Layout.FlexCol>
-            <Font.Body type="14_semibold" color="GRAY_12">
+            <Font.Body type="14_semibold" color="MEDIUM_GRAY">
               {t('text')}
             </Font.Body>
-            <Font.Body type="14_regular" color="GRAY_12">
+            <Font.Body type="14_regular" color="MEDIUM_GRAY">
               {INVITATION_LINK}
             </Font.Body>
           </Layout.FlexCol>

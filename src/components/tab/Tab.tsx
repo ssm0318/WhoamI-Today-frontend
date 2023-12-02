@@ -29,7 +29,7 @@ function TabItem({ to, type, size = 48 }: TabItemProps) {
           ) : (
             <SvgIcon name={isActive ? `${type}_active` : `${type}_inactive`} size={size} />
           )}
-          <Font.Body type="14_semibold" color={isActive ? 'PRIMARY' : 'GRAY_2'}>
+          <Font.Body type="14_semibold" color={isActive ? 'PRIMARY' : 'LIGHT_GRAY'}>
             {t(type)}
           </Font.Body>
         </Layout.FlexCol>

@@ -27,7 +27,7 @@ export const Body = styled(Layout.Absolute)`
   padding: 32px 24.5px 31.62px 25px;
   transform: translate(-50%, -50%);
   border-radius: 12.195px;
-  background: ${({ theme }) => theme.BASIC_WHITE};
+  background: ${({ theme }) => theme.WHITE};
   width: 70%;
   max-width: ${MAX_WIDTH}px;
 `;

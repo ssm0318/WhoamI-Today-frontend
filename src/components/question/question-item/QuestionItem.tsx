@@ -32,7 +32,7 @@ function QuestionItem({ question }: QuestionItemProps) {
     <>
       <Layout.FlexRow
         p={16}
-        bgColor="GRAY_7"
+        bgColor="LIGHT"
         rounded={12}
         justifyContent="space-between"
         alignItems="center"

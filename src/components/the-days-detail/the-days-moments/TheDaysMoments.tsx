@@ -29,7 +29,7 @@ function TheDaysMoments({ moment, useDeleteButton, reloadMoment }: TheDaysMoment
         reloadMoment={reloadMoment}
       />
       <PostFooter>
-        <Font.Body type="12_regular" color="GRAY_12">
+        <Font.Body type="12_regular" color="MEDIUM_GRAY">
           {convertTimeDiffByString(new Date(), new Date(moment.created_at))}
         </Font.Body>
         <ReactionButtons postType="Moment" post={moment} onClickComments={toggleComments} />

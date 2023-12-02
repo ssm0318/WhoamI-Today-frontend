@@ -77,7 +77,7 @@ function ShortAnswerResponse() {
       <TitleHeader
         RightComponent={
           <button type="button" onClick={handlePost}>
-            <Font.Display type="18_bold" color="BASIC_BLACK">
+            <Font.Display type="18_bold" color="BLACK">
               {t('post')}
             </Font.Display>
           </button>

@@ -28,7 +28,7 @@ function ConfirmBottomModal({
 
   return (
     <BottomModal visible={isVisible} onClose={handleOnClose}>
-      <Layout.LayoutBase w="100%" bgColor="BASIC_WHITE" pt={16} ph={34} pb={45}>
+      <Layout.LayoutBase w="100%" bgColor="WHITE" pt={16} ph={34} pb={45}>
         <Font.Display type="20_bold" mb={16}>
           {title}
         </Font.Display>
