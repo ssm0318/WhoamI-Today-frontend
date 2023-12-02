@@ -18,7 +18,7 @@ export function AccountSettingButton({ text, onClick }: SettingButtonProps) {
   return (
     <StyledAccountSettingsButton onClick={onClick}>
       <Font.Body type="18_regular">{text}</Font.Body>
-      <SvgIcon name="arrow_right" color="BASIC_BLACK" size={24} />
+      <SvgIcon name="arrow_right" color="BLACK" size={24} />
     </StyledAccountSettingsButton>
   );
 }

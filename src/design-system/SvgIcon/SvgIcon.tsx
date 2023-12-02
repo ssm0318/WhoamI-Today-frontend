@@ -7,8 +7,8 @@ import { IconNames } from './SvgIcon.types';
 /**
  * [Foundation] Svg Icons
  * @props `name` icon name **(required)**
- * @props `color` "color_*" icons only (default: BASIC_BLACK)
- * @props `fill` "color_*" icons only (default: BASIC_BLACK)
+ * @props `color` "color_*" icons only (default: BLACK)
+ * @props `fill` "color_*" icons only (default: BLACK)
  * @props `size` for same width & height icons **(required)**
  * @props `width` icon width **(required)**
  * @props `height` icon height **(required)**

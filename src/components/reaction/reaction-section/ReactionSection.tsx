@@ -59,7 +59,7 @@ function ReactionSection({ emojis }: ReactionSectionProps) {
       alignItems="center"
       ph="default"
       pv={8}
-      outline="BASIC_BLACK"
+      outline="BLACK"
       ref={reactionSectionWrapper}
       style={{
         position: 'relative',

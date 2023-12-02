@@ -20,7 +20,7 @@ function My() {
   }, [resetDetailDate]);
 
   return (
-    <Layout.FlexCol w="100%" bgColor="BASIC_WHITE">
+    <Layout.FlexCol w="100%" bgColor="WHITE">
       <Layout.FlexRow
         w="100%"
         alignItems="center"

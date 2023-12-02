@@ -48,7 +48,7 @@ export default function TheDaysQuestions({
         <S.QuestionWrapper key={question.id}>
           <Layout.FlexCol w="100%" ph={12}>
             <S.Question>
-              <Font.Display type="18_bold" color="GRAY_3">
+              <Font.Display type="18_bold" color="DARK_GRAY">
                 {question.content}
               </Font.Display>
             </S.Question>

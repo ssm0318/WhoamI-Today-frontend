@@ -25,7 +25,7 @@ export const NavTabItem = styled(NavLink)`
 
   img {
     border-radius: 50%;
-    border: 2px solid ${({ theme }) => theme.GRAY_2};
+    border: 2px solid ${({ theme }) => theme.LIGHT_GRAY};
   }
 
   .active {

@@ -5,7 +5,7 @@ function ChatsHeader() {
   return (
     <>
       <Layout.FlexRow>
-        <SvgIcon name="arrow_left" size={36} color="BASIC_BLACK" />
+        <SvgIcon name="arrow_left" size={36} color="BLACK" />
       </Layout.FlexRow>
       <Layout.FlexRow>
         <Font.Display type="24_regular">Chats</Font.Display>

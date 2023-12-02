@@ -32,7 +32,7 @@ function NotificationItem({ item }: NotificationItemProps) {
       w="100%"
       onClick={handleClickNotification}
       pv={14}
-      bgColor={is_read ? 'BASIC_WHITE' : 'GRAY_10'}
+      bgColor={is_read ? 'WHITE' : 'GRAY_10'}
       ph={DEFAULT_MARGIN}
     >
       <Layout.FlexRow w={50} h={50} mr={7} alignItems="center" justifyContent="center">

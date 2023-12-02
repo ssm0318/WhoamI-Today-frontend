@@ -35,7 +35,7 @@ export default function FriendRequestList() {
   if (!friendRequests) return <Loader />;
   return (
     <Layout.FlexCol w="100%" ph={10} gap={8}>
-      <Font.Body type="14_regular" color="GRAY_12" ml={5} mb={2}>
+      <Font.Body type="14_regular" color="MEDIUM_GRAY" ml={5} mb={2}>
         {t('title', { number: friendRequests.length })}
       </Font.Body>
       {friendRequests.length ? (

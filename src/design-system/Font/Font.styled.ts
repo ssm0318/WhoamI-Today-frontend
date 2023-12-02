@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { getStyle, toMarginPaddingString } from '../layouts';
-import { TextPropsBase } from './Font';
-import { FontSettings } from './Font.types';
+import { TextPropsBase, TypoPropBase } from './Font';
+import { FontAttrs, FontSettings } from './Font.types';
 
 const getTextDecoration = ({
   lineThrough,
@@ -20,13 +20,16 @@ const getTextDecoration = ({
   return textDecoration;
 };
 
+/**
+ * @deprecated use StyledFont
+ */
 export const Font = styled.span<FontSettings & TextPropsBase>`
   display: block;
   max-width: 100%;
   font-size: ${({ fontSize }) => fontSize}px;
   font-weight: ${({ fontWeight }) => fontWeight};
   line-height: ${({ fontSize, lineHeight }) => fontSize * lineHeight}px;
-  color: ${({ color, theme }) => theme[color || 'BASIC_BLACK']};
+  color: ${({ color, theme }) => theme[color || 'BLACK']};
   text-align: ${({ textAlign = 'left' }) => textAlign};
   ${({ m, mh, mv, mt, mr, mb, ml }) =>
     getStyle('margin', toMarginPaddingString(m, mh, mv, mt, mr, mb, ml))}
@@ -49,4 +52,16 @@ export const Font = styled.span<FontSettings & TextPropsBase>`
     css`
       font-style: italic;
     `}
+`;
+
+export const StyledFont = styled.span<FontAttrs & TypoPropBase>`
+  font-size: ${({ fontSize }) => fontSize}px;
+  font-weight: ${({ fontWeight }) => fontWeight};
+  line-height: ${({ lineHeight }) => (lineHeight ? `${lineHeight}px` : '140%')};
+  color: ${({ color, theme }) => theme[color || 'BLACK']};
+  text-align: ${({ textAlign = 'left' }) => textAlign};
+  ${({ m, mh, mv, mt, mr, mb, ml }) =>
+    getStyle('margin', toMarginPaddingString(m, mh, mv, mt, mr, mb, ml))}
+  white-space: ${({ pre }) => (pre ? 'pre' : 'normal')};
+  text-decoration: ${({ lineThrough, underline }) => getTextDecoration({ lineThrough, underline })};
 `;

@@ -34,7 +34,7 @@ function ResearchIntro() {
     <>
       <Layout.FlexCol gap={28}>
         <Trans i18nKey="sign_up.research_desc">
-          <Font.Body type="18_regular" color="BASIC_BLACK">
+          <Font.Body type="18_regular" color="BLACK">
             text
             <ExternalAnchor link={PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_KO}>
               link

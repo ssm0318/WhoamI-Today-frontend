@@ -8,6 +8,6 @@ export const SearchInput = styled(CommonInput)`
   padding: 0;
 
   ::placeholder {
-    color: ${({ theme }) => theme.GRAY_12};
+    color: ${({ theme }) => theme.MEDIUM_GRAY};
   }
 `;

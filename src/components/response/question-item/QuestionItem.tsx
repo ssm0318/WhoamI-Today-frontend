@@ -29,12 +29,12 @@ function QuestionItem({ question, onSend, disableClickQuestion = false }: Questi
       pb={20}
       ph={20}
       rounded={14.5}
-      bgColor="GRAY_7"
+      bgColor="LIGHT"
       w="100%"
       alignItems="center"
       onClick={handleClickQuestion}
     >
-      <Font.Body type="20_regular" color="GRAY_6" textAlign="center">
+      <Font.Body type="20_regular" color="DARK" textAlign="center">
         {content}
       </Font.Body>
       <Layout.FlexRow w="100%" alignItems="center" justifyContent="flex-end" mt={5}>

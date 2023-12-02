@@ -58,7 +58,7 @@ function CommentInputBox({
   return (
     <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between" gap={5}>
       {/* FIXME: reply icon 교체 */}
-      {isReply && <SvgIcon name="arrow_right" color="BASIC_BLACK" size={20} />}
+      {isReply && <SvgIcon name="arrow_right" color="BLACK" size={20} />}
       {isReply && forcePrivate && <SvgIcon name="private_comment_active" size={20} />}
       <S.CommentInput
         placeholder={placeholder}

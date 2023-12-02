@@ -50,14 +50,14 @@ export const StyledToggleButton = styled.label`
     width: 20px;
     left: 4px;
     bottom: 4px;
-    background-color: ${({ theme }) => theme.BASIC_WHITE};
+    background-color: ${({ theme }) => theme.WHITE};
     -webkit-transition: 0.4s;
     transition: 0.4s;
     border-radius: 18px;
   }
 
   input:checked + .slider {
-    background-color: ${({ theme }) => theme.BASIC_BLACK};
+    background-color: ${({ theme }) => theme.BLACK};
   }
 
   input:checked + .slider:before {

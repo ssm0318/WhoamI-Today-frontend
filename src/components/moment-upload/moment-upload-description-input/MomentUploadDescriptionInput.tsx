@@ -29,7 +29,7 @@ function MomentUploadDescriptionInput({
       w="100%"
       rounded={14}
       alignItems="flex-start"
-      bgColor="BASIC_WHITE"
+      bgColor="WHITE"
       ph={12}
       pv={24}
       h={170}
