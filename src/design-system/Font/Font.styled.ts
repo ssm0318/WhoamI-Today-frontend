@@ -29,7 +29,7 @@ export const Font = styled.span<FontSettings & TextPropsBase>`
   font-size: ${({ fontSize }) => fontSize}px;
   font-weight: ${({ fontWeight }) => fontWeight};
   line-height: ${({ fontSize, lineHeight }) => fontSize * lineHeight}px;
-  color: ${({ color, theme }) => theme[color || 'BASIC_BLACK']};
+  color: ${({ color, theme }) => theme[color || 'BLACK']};
   text-align: ${({ textAlign = 'left' }) => textAlign};
   ${({ m, mh, mv, mt, mr, mb, ml }) =>
     getStyle('margin', toMarginPaddingString(m, mh, mv, mt, mr, mb, ml))}
@@ -58,7 +58,7 @@ export const StyledFont = styled.span<FontAttrs & TypoPropBase>`
   font-size: ${({ fontSize }) => fontSize}px;
   font-weight: ${({ fontWeight }) => fontWeight};
   line-height: ${({ lineHeight }) => (lineHeight ? `${lineHeight}px` : '140%')};
-  color: ${({ color, theme }) => theme[color || 'BASIC_BLACK']};
+  color: ${({ color, theme }) => theme[color || 'BLACK']};
   text-align: ${({ textAlign = 'left' }) => textAlign};
   ${({ m, mh, mv, mt, mr, mb, ml }) =>
     getStyle('margin', toMarginPaddingString(m, mh, mv, mt, mr, mb, ml))}

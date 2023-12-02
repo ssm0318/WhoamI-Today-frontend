@@ -6,10 +6,7 @@ export const Colors = {
   TERTIARY_BLUE: '#0047FF',
   TERTIARY_GREEN: '#04D100',
   WARNING: '#FF3B30',
-  /**
-   * @deprecated use BLACK
-   */
-  BASIC_BLACK: '#000000',
+  BLACK: '#000000',
   /**
    * @deprecated use WHITE
    */

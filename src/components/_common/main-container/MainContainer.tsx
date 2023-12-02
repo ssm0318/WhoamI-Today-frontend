@@ -7,7 +7,7 @@ interface MainContainerProps {
 }
 function MainContainer({ children }: MainContainerProps) {
   return (
-    <Layout.FlexRow justifyContent="center" bgColor="BASIC_BLACK" h="100vh" w="100%">
+    <Layout.FlexRow justifyContent="center" bgColor="BLACK" h="100vh" w="100%">
       <RootContainer w="100%" h="100vh" bgColor="BASIC_WHITE">
         {children}
       </RootContainer>

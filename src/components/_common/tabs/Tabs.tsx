@@ -37,7 +37,7 @@ function Tabs<T extends string>({
             <Font.Display
               type={displayFontType}
               textAlign="center"
-              color={isSelected ? 'BASIC_BLACK' : 'GRAY_5'}
+              color={isSelected ? 'BLACK' : 'GRAY_5'}
             >
               {text}
             </Font.Display>

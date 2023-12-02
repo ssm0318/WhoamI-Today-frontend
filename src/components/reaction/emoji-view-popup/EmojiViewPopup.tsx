@@ -57,7 +57,7 @@ function EmojiViewPopup({ isVisible, setIsVisible, popupPosition }: EmojiViewPop
       ref={emojiPopupWrapper}
       l={DEFAULT_MARGIN}
       z={Z_INDEX.MODAL_CONTAINER}
-      outline="BASIC_BLACK"
+      outline="BLACK"
       w={POPUP_WIDTH}
       p="default"
       bgColor="BACKGROUND_COLOR"

@@ -30,7 +30,7 @@ function TitleHeader({ title, type = 'MAIN', onGoBack, RightComponent }: TitleHe
       >
         <Layout.LayoutBase w={36} h={36}>
           <button type="button" onClick={handleGoBack}>
-            <SvgIcon name="arrow_left" size={36} color="BASIC_BLACK" />
+            <SvgIcon name="arrow_left" size={36} color="BLACK" />
           </button>
         </Layout.LayoutBase>
         {title && (

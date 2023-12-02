@@ -57,7 +57,7 @@ export const StyledToggleButton = styled.label`
   }
 
   input:checked + .slider {
-    background-color: ${({ theme }) => theme.BASIC_BLACK};
+    background-color: ${({ theme }) => theme.BLACK};
   }
 
   input:checked + .slider:before {

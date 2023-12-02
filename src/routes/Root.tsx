@@ -20,7 +20,7 @@ function Root() {
   }, [isMobile]);
 
   return (
-    <Layout.FlexRow justifyContent="center" bgColor="BASIC_BLACK" h="100vh" w="100%">
+    <Layout.FlexRow justifyContent="center" bgColor="BLACK" h="100vh" w="100%">
       <RootContainer w="100%" h="100vh" bgColor="BASIC_WHITE">
         <Header />
         <MainWrapper alignItems="center" pt={TOP_NAVIGATION_HEIGHT} pb={BOTTOM_TABBAR_HEIGHT}>

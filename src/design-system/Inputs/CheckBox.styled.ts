@@ -19,7 +19,7 @@ export const StyledCheckBox = styled.div`
 
   input:checked + label {
     border: 2px solid ${({ theme }) => theme.GRAY_8};
-    background-color: ${({ theme }) => theme.BASIC_BLACK};
+    background-color: ${({ theme }) => theme.BLACK};
   }
 
   .display-label {

@@ -46,7 +46,7 @@ function CommentItem({
         <Layout.FlexCol w="100%">
           <Layout.FlexRow w="100%" alignItems="center" gap={8}>
             {/* FIXME: reply icon 교체 */}
-            {is_reply && <SvgIcon name="arrow_right" color="BASIC_BLACK" size={20} />}
+            {is_reply && <SvgIcon name="arrow_right" color="BLACK" size={20} />}
             {is_private && <SvgIcon name="lock_on" size={20} />}
             <AuthorProfile authorDetail={author_detail} profileImgSize={24} />
             {/* TODO: 줄바꿈 표시 */}

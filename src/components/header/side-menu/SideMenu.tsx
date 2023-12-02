@@ -31,7 +31,7 @@ function SideMenu({ closeSideMenu }: Props) {
       <Layout.Absolute w="100%" h="100%" bgColor="DIM" onClick={handleClickDimmed} />
       <Layout.Absolute r={0} w={250} h="100%" bgColor="BASIC_WHITE">
         <Layout.FlexCol pt={56} pl={24}>
-          <SvgIcon name="close" color="BASIC_BLACK" size={24} onClick={handleClickDimmed} />
+          <SvgIcon name="close" color="BLACK" size={24} onClick={handleClickDimmed} />
           <Layout.FlexCol gap={12} pt={30}>
             {SIDE_MENU_LIST.map((menu) => (
               <button type="button" key={menu.key} onClick={handleClickMenu(menu.path)}>
