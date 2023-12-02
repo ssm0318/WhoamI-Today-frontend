@@ -34,7 +34,7 @@ function QuestionItem({ question, onSend, disableClickQuestion = false }: Questi
       alignItems="center"
       onClick={handleClickQuestion}
     >
-      <Font.Body type="20_regular" color="GRAY_6" textAlign="center">
+      <Font.Body type="20_regular" color="DARK" textAlign="center">
         {content}
       </Font.Body>
       <Layout.FlexRow w="100%" alignItems="center" justifyContent="flex-end" mt={5}>

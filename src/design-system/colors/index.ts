@@ -7,6 +7,7 @@ export const Colors = {
   TERTIARY_GREEN: '#04D100',
   WARNING: '#FF3B30',
   BLACK: '#000000',
+  DARK: '#303030',
   WHITE: '#FFFFFF',
   /**
    * @deprecated
@@ -39,15 +40,13 @@ export const Colors = {
   GRAY_3: '#555555',
   /**
    * @deprecated
-   */ GRAY_4: '#585858',
+   */
+  GRAY_4: '#585858',
   /**
    * @deprecated
    */
   GRAY_5: '#B5B5B5',
-  /**
-   * @deprecated use  DARK
-   */
-  GRAY_6: '#303030',
+
   /**
    * @deprecated use  LIGHT
    */

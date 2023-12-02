@@ -42,7 +42,7 @@ function TodaysMoments() {
         </Layout.FlexRow>
         <Layout.FlexRow w="100%" justifyContent="center" mt={12} alignItems="center" gap={2}>
           {isTodaysMomentExist ? (
-            <Font.Body type="12_regular" color="GRAY_6">
+            <Font.Body type="12_regular" color="DARK">
               {t('already_posted')}
             </Font.Body>
           ) : (
