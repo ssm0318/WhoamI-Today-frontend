@@ -29,8 +29,16 @@ export default function FriendSearchInput({ query, setQuery }: Props) {
   };
 
   return (
-    <Layout.LayoutBase w="100%" ph={24} pt={4}>
-      <Layout.FlexRow w="100%" alignItems="center" bgColor="INPUT_GRAY" rounded={12} ph={8} pv={6}>
+    <Layout.FlexRow w="100%" pl={16} pr={searchMode ? 4 : 24} pt={4} alignItems="center" gap={8}>
+      <Layout.FlexRow
+        w="100%"
+        alignItems="center"
+        bgColor="INPUT_GRAY"
+        rounded={12}
+        ph={8}
+        pv={6}
+        h={56}
+      >
         <Layout.LayoutBase p={12}>
           <SvgIcon name="search" size={20} fill="MEDIUM_GRAY" />
         </Layout.LayoutBase>
@@ -44,6 +52,6 @@ export default function FriendSearchInput({ query, setQuery }: Props) {
         {query && <DeleteButton onClick={handleClickDeleteInput} size={44} />}
       </Layout.FlexRow>
       {searchMode && <S.SearchCancel onClick={handleClickCancel}>{t('cancel')}</S.SearchCancel>}
-    </Layout.LayoutBase>
+    </Layout.FlexRow>
   );
 }
