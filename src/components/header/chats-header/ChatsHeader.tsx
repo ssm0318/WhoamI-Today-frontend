@@ -1,20 +1,19 @@
-import { Font, Layout, SvgIcon } from '@design-system';
+import { useTranslation } from 'react-i18next';
+import HeaderContainer from '../HeaderContainer';
 import Icon from '../icon/Icon';
 
 function ChatsHeader() {
+  const [t] = useTranslation('translation', { keyPrefix: 'nav_tab' });
   return (
-    <>
-      <Layout.FlexRow>
-        <SvgIcon name="arrow_left" size={36} color="BLACK" />
-      </Layout.FlexRow>
-      <Layout.FlexRow>
-        <Font.Display type="24_regular">Chats</Font.Display>
-      </Layout.FlexRow>
-      <Layout.FlexRow gap={8} alignItems="center">
-        <Icon name="new_chat" size={44} />
-        <Icon name="dots_menu" size={44} />
-      </Layout.FlexRow>
-    </>
+    <HeaderContainer
+      title={t('chats')}
+      rightButtons={
+        <>
+          <Icon name="new_chat" size={44} />
+          <Icon name="dots_menu" size={44} />
+        </>
+      }
+    />
   );
 }
 

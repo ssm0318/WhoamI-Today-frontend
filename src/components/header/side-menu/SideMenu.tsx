@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Z_INDEX } from '@constants/layout';
@@ -26,7 +27,7 @@ function SideMenu({ closeSideMenu }: Props) {
     closeSideMenu();
   };
 
-  return (
+  return createPortal(
     <Layout.Absolute t={0} l={0} r={0} b={0} z={Z_INDEX.MODAL_CONTAINER}>
       <Layout.Absolute w="100%" h="100%" bgColor="DIM" onClick={handleClickDimmed} />
       <Layout.Absolute r={0} w={250} h="100%" bgColor="WHITE">
@@ -41,7 +42,8 @@ function SideMenu({ closeSideMenu }: Props) {
           </Layout.FlexCol>
         </Layout.FlexCol>
       </Layout.Absolute>
-    </Layout.Absolute>
+    </Layout.Absolute>,
+    document.getElementById('root-container') || document.body,
   );
 }
 
