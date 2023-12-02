@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import styled from 'styled-components';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { MessageInputBox } from '@components/chat-room/message-input-box/MessageInputBox';
 import { MessageList } from '@components/chat-room/message-list/MessageList';
@@ -8,9 +7,10 @@ import { MessageNotiSettings } from '@components/chat-room/message-noti-settings
 import { MOCK_CHAT_ROOM_LIST } from '@components/chats/chat-room-list/ChatRoomList.helper';
 import { HeaderWrapper } from '@components/header/Header.styled';
 import Icon from '@components/header/icon/Icon';
-import { MAX_WINDOW_WIDTH, TOP_NAVIGATION_HEIGHT, Z_INDEX } from '@constants/layout';
+import { TOP_NAVIGATION_HEIGHT, Z_INDEX } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import { MainWrapper } from '@styles/wrappers';
+import { ChatRoomContainer } from 'src/routes/chat-room/ChatRoom.styled';
 
 export function ChatRoom() {
   const { roomId: roomIdStr } = useParams();
@@ -83,7 +83,3 @@ export function ChatRoom() {
     </ChatRoomContainer>
   );
 }
-
-const ChatRoomContainer = styled(Layout.Fixed)`
-  max-width: ${MAX_WINDOW_WIDTH}px;
-`;
