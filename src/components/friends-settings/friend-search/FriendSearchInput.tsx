@@ -21,17 +21,9 @@ export default function FriendSearchInput({ query, setQuery }: Props) {
 
   return (
     <Layout.LayoutBase w="100%" ph={24} pt={4}>
-      <Layout.FlexRow
-        w="100%"
-        alignItems="center"
-        bgColor="GRAY_10"
-        gap={12}
-        rounded={12}
-        p={9}
-        pr={9}
-      >
-        <Layout.LayoutBase p={8}>
-          <SvgIcon name="search" size={20} />
+      <Layout.FlexRow w="100%" alignItems="center" bgColor="INPUT_GRAY" rounded={12} ph={8} pv={6}>
+        <Layout.LayoutBase p={12}>
+          <SvgIcon name="search" size={20} fill="MEDIUM_GRAY" />
         </Layout.LayoutBase>
         <S.SearchInput
           placeholder={t('placeholder') || undefined}
@@ -40,7 +32,7 @@ export default function FriendSearchInput({ query, setQuery }: Props) {
           value={query}
           onChange={handleChangeInput}
         />
-        {query && <DeleteButton onClick={handleClickDeleteInput} />}
+        {query && <DeleteButton onClick={handleClickDeleteInput} size={44} />}
       </Layout.FlexRow>
     </Layout.LayoutBase>
   );
