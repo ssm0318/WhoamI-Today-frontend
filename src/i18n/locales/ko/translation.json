@@ -184,7 +184,8 @@
     "friends": {
       "title": "친구 관리",
       "search": {
-        "placeholder": "친구를 추가하거나 검색하세요."
+        "placeholder": "친구를 추가하거나 검색하세요.",
+        "cancel": "취소"
       },
       "invite": {
         "title": "WhoAmI Today 초대 링크",
