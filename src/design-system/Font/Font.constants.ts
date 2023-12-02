@@ -1,15 +1,15 @@
 import {
   BodyType,
   DisplayType,
+  FontProps,
   FontSettings,
+  FontType,
   FontWeight,
-  Typo,
-  TypoSettings,
   TypoWeight,
 } from './Font.types';
 
-export const TypoStyle: { [key in Typo]: TypoSettings } = {
-  headline: {
+export const FontStyle: { [key in FontType]: FontProps } = {
+  'head-line': {
     fontSize: 24,
     fontWeight: TypoWeight.MEDIUM,
   },
@@ -35,6 +35,18 @@ export const TypoStyle: { [key in Typo]: TypoSettings } = {
   },
   'body-small': {
     fontSize: 12,
+    fontWeight: TypoWeight.REGULAR,
+  },
+  'label-large': {
+    fontSize: 14,
+    fontWeight: TypoWeight.MEDIUM,
+  },
+  'label-medium': {
+    fontSize: 12,
+    fontWeight: TypoWeight.MEDIUM,
+  },
+  'label-small': {
+    fontSize: 10,
     fontWeight: TypoWeight.REGULAR,
   },
 };

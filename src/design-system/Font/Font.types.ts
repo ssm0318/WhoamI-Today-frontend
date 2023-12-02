@@ -24,9 +24,10 @@ export type FontSettings = {
   textAlign?: 'left' | 'right' | 'center';
 };
 
-export type TypoSettings = {
+export type FontProps = {
   fontSize: number;
   fontWeight: TypoWeight;
+  lineHeight?: string;
 };
 
 /**
@@ -63,11 +64,14 @@ export type BodyType =
   | '11_regular'
   | '11_semibold';
 
-export type Typo =
-  | 'headline'
+export type FontType =
+  | 'head-line'
   | 'title-large'
   | 'title-medium'
   | 'title-small'
   | 'body-large'
   | 'body-medium'
-  | 'body-small';
+  | 'body-small'
+  | 'label-large'
+  | 'label-medium'
+  | 'label-small';

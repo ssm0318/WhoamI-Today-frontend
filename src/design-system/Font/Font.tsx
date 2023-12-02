@@ -1,12 +1,12 @@
 import React, { PropsWithChildren } from 'react';
 import { ColorKeys } from '../colors';
 import { Margin } from '../layouts';
-import { BodySettings, DisplaySettings, TypoStyle } from './Font.constants';
+import { BodySettings, DisplaySettings, FontStyle } from './Font.constants';
 import * as S from './Font.styled';
-import { BodyType, DisplayType, Typo } from './Font.types';
+import { BodyType, DisplayType, FontType } from './Font.types';
 
 /**
- * @deprecated use (default exported) Font
+ * @deprecated use Typo
  */
 const Display: React.FC<PropsWithChildren<DisplayProps>> = React.memo((props) => {
   const { type, children, ...textProps } = props;
@@ -18,7 +18,7 @@ const Display: React.FC<PropsWithChildren<DisplayProps>> = React.memo((props) =>
 });
 
 /**
- * @deprecated use (default exported) Font
+ * @deprecated use Typo
  */
 const Body: React.FC<PropsWithChildren<BodyProps>> = React.memo((props) => {
   const { type, children, ...textProps } = props;
@@ -30,9 +30,9 @@ const Body: React.FC<PropsWithChildren<BodyProps>> = React.memo((props) => {
   );
 });
 
-export default function Font({ type, children, ...props }: PropsWithChildren<FontProps>) {
+export default function Typo({ type, children, ...props }: PropsWithChildren<FontProps>) {
   return (
-    <S.StyledFont {...TypoStyle[type]} {...props}>
+    <S.StyledFont {...FontStyle[type]} {...props}>
       {children}
     </S.StyledFont>
   );
@@ -49,7 +49,7 @@ export type TextPropsBase = {
 } & Margin;
 
 export type FontProps = {
-  type: Typo;
+  type: FontType;
 } & TextPropsBase;
 
 /**
@@ -74,4 +74,4 @@ export type BodyProps = {
  * @prop {'left' | 'center' | 'right'} textAlign (default: 'left')
  */
 
-export { Body, Display };
+export { Body, Display, Typo };
