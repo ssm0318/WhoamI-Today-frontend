@@ -1,10 +1,13 @@
 import React, { PropsWithChildren } from 'react';
 import { ColorKeys } from '../colors';
 import { Margin } from '../layouts';
-import { BodySettings, DisplaySettings } from './Font.constants';
+import { BodySettings, DisplaySettings, FontStyle } from './Font.constants';
 import * as S from './Font.styled';
-import { BodyType, DisplayType } from './Font.types';
+import { BodyType, DisplayType, FontType } from './Font.types';
 
+/**
+ * @deprecated use Typo
+ */
 const Display: React.FC<PropsWithChildren<DisplayProps>> = React.memo((props) => {
   const { type, children, ...textProps } = props;
   return (
@@ -14,6 +17,9 @@ const Display: React.FC<PropsWithChildren<DisplayProps>> = React.memo((props) =>
   );
 });
 
+/**
+ * @deprecated use Typo
+ */
 const Body: React.FC<PropsWithChildren<BodyProps>> = React.memo((props) => {
   const { type, children, ...textProps } = props;
 
@@ -23,6 +29,14 @@ const Body: React.FC<PropsWithChildren<BodyProps>> = React.memo((props) => {
     </S.Font>
   );
 });
+
+export default function Typo({ type, children, ...props }: PropsWithChildren<TypoProps>) {
+  return (
+    <S.StyledFont {...FontStyle[type]} {...props}>
+      {children}
+    </S.StyledFont>
+  );
+}
 
 export type TextPropsBase = {
   color?: ColorKeys;
@@ -34,10 +48,28 @@ export type TextPropsBase = {
   italic?: boolean;
 } & Margin;
 
+export type TypoProps = {
+  type: FontType;
+} & TypoPropBase;
+
+export type TypoPropBase = TextPropsBase & {
+  /**
+   * default: 140%
+   * 단위: px
+   */
+  lineHeight?: number;
+};
+
+/**
+ * @deprecated use FontProps
+ */
 export type DisplayProps = {
   type: DisplayType;
 } & TextPropsBase;
 
+/**
+ * @deprecated use FontProps
+ */
 export type BodyProps = {
   type: BodyType;
 } & TextPropsBase;
@@ -50,4 +82,4 @@ export type BodyProps = {
  * @prop {'left' | 'center' | 'right'} textAlign (default: 'left')
  */
 
-export { Body, Display };
+export { Body, Display, Typo };
