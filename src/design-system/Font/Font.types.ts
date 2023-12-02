@@ -71,6 +71,9 @@ export type FontType =
   | 'body-large'
   | 'body-medium'
   | 'body-small'
+  | 'button-large'
+  | 'button-medium'
+  | 'button-small'
   | 'label-large'
   | 'label-medium'
   | 'label-small';

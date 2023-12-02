@@ -37,6 +37,18 @@ export const FontStyle: { [key in FontType]: FontAttrs } = {
     fontSize: 12,
     fontWeight: TypoWeight.REGULAR,
   },
+  'button-large': {
+    fontSize: 20,
+    fontWeight: TypoWeight.REGULAR,
+  },
+  'button-medium': {
+    fontSize: 16,
+    fontWeight: TypoWeight.REGULAR,
+  },
+  'button-small': {
+    fontSize: 14,
+    fontWeight: TypoWeight.MEDIUM,
+  },
   'label-large': {
     fontSize: 14,
     fontWeight: TypoWeight.MEDIUM,
