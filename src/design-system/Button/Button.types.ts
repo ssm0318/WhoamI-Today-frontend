@@ -32,7 +32,7 @@ type Colors = { background?: ColorKeys; outline?: ColorKeys; text: ColorKeys };
 export type ButtonColorSetting = { [key in ButtonStatus]: Colors };
 
 /** @deprecated */
-export type DeprecatedButtonProps = {
+export type DeprecatedButtonComponentProps = {
   type: DeprecatedButtonType;
   status: ButtonStatus;
   text: string;
@@ -45,7 +45,7 @@ export type DeprecatedButtonProps = {
   width?: number;
 };
 
-export type ButtonProps = {
+export type ButtonComponentProps = {
   type: ButtonType;
   status: ButtonStatus;
   text: string;

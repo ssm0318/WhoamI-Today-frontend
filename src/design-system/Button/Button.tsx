@@ -1,12 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Font, Typo } from '@design-system';
+import { Font, Layout, Typo } from '@design-system';
 import { FontType, isDisplayType } from '../Font/Font.types';
 import * as S from './Button.styled';
 import {
-  ButtonProps,
+  ButtonComponentProps,
   ButtonSetting,
-  DeprecatedButtonProps,
+  DeprecatedButtonComponentProps,
   DeprecatedButtonSetting,
 } from './Button.types';
 import { useButton } from './useButton';
@@ -15,7 +15,7 @@ import { useButton } from './useButton';
 function DeprecatedButton(
   props: {
     size: keyof typeof deprecatedButtons;
-  } & DeprecatedButtonProps,
+  } & DeprecatedButtonComponentProps,
 ) {
   const { size, to, width, ...buttonProps } = props;
   const { sizing } = buttonProps;
@@ -55,22 +55,22 @@ function DeprecatedButton(
 }
 
 /** @deprecated */
-const Large = React.memo((props: DeprecatedButtonProps) => (
+const Large = React.memo((props: DeprecatedButtonComponentProps) => (
   <DeprecatedButton {...props} size="Large" />
 ));
 
 /** @deprecated */
-const Small = React.memo((props: DeprecatedButtonProps) => (
+const Small = React.memo((props: DeprecatedButtonComponentProps) => (
   <DeprecatedButton {...props} size="Small" />
 ));
 
 /** @deprecated */
-const Medium = React.memo((props: DeprecatedButtonProps) => (
+const Medium = React.memo((props: DeprecatedButtonComponentProps) => (
   <DeprecatedButton {...props} size="Medium" />
 ));
 
 /** @deprecated */
-const Dialog = React.memo((props: DeprecatedButtonProps) => (
+const Dialog = React.memo((props: DeprecatedButtonComponentProps) => (
   <DeprecatedButton {...props} size="Dialog" sizing="stretch" />
 ));
 
@@ -94,12 +94,17 @@ const deprecatedButtons: DeprecatedButtonSetting = {
   },
 };
 
-function Button(
-  props: {
-    fontType?: FontType;
-  } & ButtonProps,
-) {
-  const { to, width, fontType, ...buttonProps } = props;
+type ButtonProps = {
+  fontType?: FontType;
+  iconPosition?: 'left' | 'right';
+  /**
+   * SVGIcon 컴포넌트
+   */
+  icon?: ReactElement;
+} & ButtonComponentProps;
+
+function Button(props: ButtonProps) {
+  const { to, width, fontType, iconPosition = 'right', icon, ...buttonProps } = props;
   const { sizing } = buttonProps;
   const { text, color, outline, fill, status, ...handlers } = useButton(buttonProps);
   const { ButtonComponent, fontType: defaultFontType } = buttons[buttonProps.type];
@@ -108,12 +113,30 @@ function Button(
     if (!text) return null;
     return (
       <ButtonComponent sizing={sizing} outline={outline} fill={fill} width={width}>
-        <Typo type={fontType ?? defaultFontType} color={color} textAlign="center">
-          {text}
-        </Typo>
+        <Layout.FlexRow gap={4} alignItems="center">
+          <>
+            {iconPosition === 'left' && icon}
+            <Typo type={fontType ?? defaultFontType} color={color} textAlign="center">
+              {text}
+            </Typo>
+            {iconPosition === 'right' && icon}
+          </>
+        </Layout.FlexRow>
       </ButtonComponent>
     );
-  }, [ButtonComponent, color, defaultFontType, fill, fontType, outline, sizing, text, width]);
+  }, [
+    ButtonComponent,
+    color,
+    defaultFontType,
+    fill,
+    fontType,
+    icon,
+    iconPosition,
+    outline,
+    sizing,
+    text,
+    width,
+  ]);
 
   return (
     <S.Container sizing={sizing} disabled={status === 'completed' || status === 'disabled'}>
