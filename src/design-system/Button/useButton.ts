@@ -1,8 +1,8 @@
 import { MouseEvent, useCallback, useState } from 'react';
 import { buttonColorSettings } from './Button.constants';
-import { ButtonProps } from './Button.types';
+import { ButtonProps, DeprecatedButtonProps } from './Button.types';
 
-export const useButton = (props: ButtonProps) => {
+export const useButton = (props: DeprecatedButtonProps | ButtonProps) => {
   const { type, status, text, onClick: _onClick } = props;
   const colorSetting = buttonColorSettings[type];
 
