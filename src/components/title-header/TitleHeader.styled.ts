@@ -10,4 +10,5 @@ export const HeaderWrapper = styled.header`
   background-color: white;
   width: 100%;
   height: ${TITLE_HEADER_HEIGHT}px;
+  border-bottom: 1.2px solid ${({ theme }) => theme.PRIMARY};
 `;

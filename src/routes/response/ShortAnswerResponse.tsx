@@ -10,7 +10,7 @@ import ResponseCompleteModal from '@components/response/response-complete-modal/
 import ResponseInput from '@components/response/response-input/ResponseInput';
 import TitleHeader from '@components/title-header/TitleHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Font, Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { ShortAnswerQuestion } from '@models/post';
@@ -77,9 +77,9 @@ function ShortAnswerResponse() {
       <TitleHeader
         RightComponent={
           <button type="button" onClick={handlePost}>
-            <Font.Display type="18_bold" color="BLACK">
+            <Typo type="title-large" color="PRIMARY">
               {t('post')}
-            </Font.Display>
+            </Typo>
           </button>
         }
       />

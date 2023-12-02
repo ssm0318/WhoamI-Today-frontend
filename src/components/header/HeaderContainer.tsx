@@ -6,6 +6,9 @@ interface HeaderContainerProps {
   title: string;
   rightButtons: ReactElement;
 }
+/**
+ * 좌측에 title, 우측에 버튼(들)이 있는 헤더
+ */
 function HeaderContainer({ title, rightButtons }: HeaderContainerProps) {
   return (
     <HeaderWrapper>

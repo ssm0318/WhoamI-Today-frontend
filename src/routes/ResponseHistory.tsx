@@ -52,7 +52,7 @@ function ResponseHistory() {
       <TitleHeader
         RightComponent={
           <button type="button" onClick={handleClickResponse}>
-            <SvgIcon name="moment_description_normal" size={36} />
+            <SvgIcon name="moment_description_normal" size={44} />
           </button>
         }
       />

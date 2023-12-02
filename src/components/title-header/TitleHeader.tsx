@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Font, Layout, SvgIcon } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import { HeaderWrapper } from './TitleHeader.styled';
 
 type TitleHeaderType = 'MAIN' | 'SUB';
@@ -10,7 +10,10 @@ interface TitleHeaderProps {
   onGoBack?: () => void;
   RightComponent?: React.ReactNode;
 }
-
+/**
+ *
+ * 중앙에 title이 있는 헤더
+ */
 function TitleHeader({ title, type = 'MAIN', onGoBack, RightComponent }: TitleHeaderProps) {
   const navigate = useNavigate();
 
@@ -26,7 +29,7 @@ function TitleHeader({ title, type = 'MAIN', onGoBack, RightComponent }: TitleHe
         w="100%"
         alignItems="center"
         ph="default"
-        pv={10}
+        pv={4}
       >
         <Layout.LayoutBase w={36} h={36}>
           <button type="button" onClick={handleGoBack}>
@@ -34,9 +37,9 @@ function TitleHeader({ title, type = 'MAIN', onGoBack, RightComponent }: TitleHe
           </button>
         </Layout.LayoutBase>
         {title && (
-          <Font.Display type={type === 'MAIN' ? '24_bold' : '20_bold'} textAlign="center">
+          <Typo type={type === 'MAIN' ? 'head-line' : 'title-large'} textAlign="center">
             {title}
-          </Font.Display>
+          </Typo>
         )}
         <Layout.LayoutBase w={title && !RightComponent ? 36 : undefined}>
           {RightComponent && RightComponent}
