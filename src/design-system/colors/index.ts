@@ -11,6 +11,7 @@ export const Colors = {
   DARK_GRAY: '#555555',
   MEDIUM_GRAY: '#A0A0A0',
   LIGHT_GRAY: '#D9D9D9',
+  LIGHT: '#ECEBEC',
   WHITE: '#FFFFFF',
   /**
    * @deprecated
@@ -40,10 +41,6 @@ export const Colors = {
    * @deprecated
    */
   GRAY_5: '#B5B5B5',
-  /**
-   * @deprecated use  LIGHT
-   */
-  GRAY_7: '#ECEBEC',
   /**
    * @deprecated
    */
