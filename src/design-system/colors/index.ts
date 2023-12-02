@@ -8,6 +8,7 @@ export const Colors = {
   WARNING: '#FF3B30',
   BLACK: '#000000',
   DARK: '#303030',
+  DARK_GRAY: '#555555',
   WHITE: '#FFFFFF',
   /**
    * @deprecated
@@ -34,10 +35,6 @@ export const Colors = {
    * @deprecated use  LIGHT_GRAY
    */
   GRAY_2: '#D9D9D9',
-  /**
-   * @deprecated use DARK_GRAY
-   */
-  GRAY_3: '#555555',
   /**
    * @deprecated
    */

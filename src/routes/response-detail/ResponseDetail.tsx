@@ -16,7 +16,7 @@ function ResponseDetail({ response }: ResponseDetailProps) {
     <>
       <AuthorProfile authorDetail={author_detail} usernameFont="18_semibold" />
       <Layout.FlexCol w="100%" bgColor="BASIC_DISABLED_SOFT" rounded={12} pv={14} ph={20}>
-        <Font.Display type="18_bold" color="GRAY_3">
+        <Font.Display type="18_bold" color="DARK_GRAY">
           {response.question.content}
         </Font.Display>
       </Layout.FlexCol>

@@ -79,7 +79,7 @@ function TodaysQuestions() {
         {/* 더 보기 */}
         <Layout.FlexRow w="100%" justifyContent="center">
           <Link to="/questions">
-            <Font.Body type="14_regular" color="GRAY_3" underline>
+            <Font.Body type="14_regular" color="DARK_GRAY" underline>
               {t('see_all')}
             </Font.Body>
           </Link>
