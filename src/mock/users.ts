@@ -1,4 +1,4 @@
-import { Availability, CheckIn } from '@models/user';
+import { Availability, CheckInBase } from '@models/checkIn';
 
 export const userList = [
   { id: 1, profile_pic: '', name: 'gina' },
@@ -6,7 +6,7 @@ export const userList = [
   { id: 3, profile_pic: '', name: 'gina3' },
 ];
 
-export const checkIn: CheckIn = {
+export const checkIn: CheckInBase = {
   id: 4,
   created_at: '2023-11-17T22:13:27.155202-08:00',
   is_active: true,

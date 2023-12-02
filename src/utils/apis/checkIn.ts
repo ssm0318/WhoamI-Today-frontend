@@ -3,7 +3,7 @@ import { PaginationResponse } from '@models/api/common';
 import { CheckInBase, CheckInForm, MyCheckIn } from '@models/checkIn';
 
 // GET check-in list
-export const getCheckIn = async () => {
+export const getCheckInList = async () => {
   const { data } = await axios.get<PaginationResponse<MyCheckIn[]>>(`/check_in/`);
   return data;
 };

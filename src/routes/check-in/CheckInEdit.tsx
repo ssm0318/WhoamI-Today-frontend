@@ -14,16 +14,17 @@ import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
-import { checkIn as mockCheckIn } from '@mock/users';
-import { Availability, CheckIn } from '@models/user';
+import { Availability, MyCheckIn } from '@models/checkIn';
+import { useBoundStore } from '@stores/useBoundStore';
 
 function CheckInEdit() {
   const spotifyManager = SpotifyManager.getInstance();
   const navigate = useNavigate();
+  const { checkIn: initialCheckIn } = useBoundStore((state) => ({
+    checkIn: state.checkIn,
+  }));
 
-  // TODO(Gina) 현재 status 불러오기
-  const [checkIn, setCheckIn] = useState<CheckIn>(mockCheckIn);
-  const { availability, bio, description, mood, track_id } = checkIn;
+  const [checkIn, setCheckIn] = useState<MyCheckIn | null>(initialCheckIn);
   const [trackData, setTrackData] = useState<Track | null>(null);
 
   const handleSearchMusic = () => {
@@ -32,12 +33,14 @@ function CheckInEdit() {
 
   const handleChange = (name: string, value: string) => {
     setCheckIn((prev) => {
+      if (!prev) return prev;
       return { ...prev, [name]: value };
     });
   };
 
   const handleDelete = (name: string) => {
     setCheckIn((prev) => {
+      if (!prev) return prev;
       return { ...prev, [name]: '' };
     });
   };
@@ -47,9 +50,11 @@ function CheckInEdit() {
   };
 
   useEffect(() => {
-    spotifyManager.getTrack(track_id).then(setTrackData);
-  }, [spotifyManager, track_id]);
+    if (!checkIn?.track_id) return;
+    spotifyManager.getTrack(checkIn.track_id).then(setTrackData);
+  }, [spotifyManager, checkIn]);
 
+  if (!checkIn) return null;
   return (
     <MainContainer>
       <SubHeader
@@ -76,7 +81,7 @@ function CheckInEdit() {
           description="What emoji describes you mood the best?"
         >
           <CheckInEmoji
-            mood={mood}
+            mood={checkIn.mood}
             onDelete={() => handleDelete('mood')}
             onSelectEmoji={(e: EmojiClickData) => {
               handleChange('mood', e.emoji);
@@ -89,7 +94,7 @@ function CheckInEdit() {
           description=" Tell your friends more about your mood!"
         >
           <CheckInDescription
-            description={description}
+            description={checkIn.description}
             onDelete={() => handleDelete('description')}
             onChange={(e) => handleChange('description', e.target.value)}
           />
@@ -111,7 +116,7 @@ function CheckInEdit() {
             <AvailabilityChip
               availability={a}
               key={a}
-              isSelected={availability === a}
+              isSelected={checkIn.availability === a}
               onSelect={(av) => {
                 handleChange('availability', av);
               }}
@@ -122,12 +127,12 @@ function CheckInEdit() {
         <SectionContainer title="Bio" description="Bio">
           <Layout.FlexRow mt={8} w="100%" alignItems="center" gap={8}>
             <CheckInTextInput
-              value={bio}
+              value={checkIn.bio}
               onChange={(e) => {
                 handleChange('bio', e.target.value);
               }}
             />
-            {bio && <DeleteButton onClick={() => handleDelete('bio')} />}
+            {checkIn.bio && <DeleteButton onClick={() => handleDelete('bio')} />}
           </Layout.FlexRow>
         </SectionContainer>
       </Layout.FlexCol>
