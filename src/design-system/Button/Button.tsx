@@ -96,6 +96,9 @@ const deprecatedButtons: DeprecatedButtonSetting = {
 
 type ButtonProps = {
   fontType?: FontType;
+  /**
+   * icon 컴포넌트 위치
+   */
   iconPosition?: 'left' | 'right';
   /**
    * SVGIcon 컴포넌트
