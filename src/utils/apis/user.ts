@@ -168,7 +168,6 @@ export const signUp = ({
     gender,
     signature,
     date_of_signature,
-    noti_on,
     noti_time,
   } = signUpInfo;
 
@@ -179,7 +178,6 @@ export const signUp = ({
   formData.append('username', username);
   formData.append('password', password);
 
-  if (noti_on) formData.append('noti_on', `${noti_on}`);
   if (noti_time) formData.append('noti_time', noti_time);
 
   if (research_agreement) {

@@ -34,3 +34,12 @@ export const convertTimeDiffByString = (now: Date, day: Date, dateFormat?: DateF
 
   return format(new Date(day), dateFormat ?? DEFAULT_FORMAT);
 };
+
+/**
+ *
+ * @param time HH:MM:ss
+ */
+export const getDailyNotiTime = (time: string) => {
+  const timeSplit = time.split(':');
+  return [timeSplit[0], timeSplit[1]].join(':');
+};

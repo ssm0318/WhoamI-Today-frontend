@@ -163,6 +163,7 @@
     "confirm": "확인",
     "notification_settings": "알림 설정",
     "push_notifications": "푸시 알림 설정",
+    "daily_noti_time": "데일리 노티 설정",
     "allow_notification_to_receive_updates_from_friends_as_push_notifications": "알림을 허용해 친구들의 새로운 소식을 푸시 알림으로 받아보세요!",
     "click_here_to_check_your_system_preferences": "여기를 눌러 시스템 알림 설정을 허용해주세요!",
     "push_notifications_are_currently_enabled": "현재 푸시 알림이 허용된 상태입니다.",

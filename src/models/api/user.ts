@@ -31,7 +31,6 @@ export interface SignUpParams {
   gender?: Gender;
   signature?: string;
   date_of_signature?: string;
-  noti_on?: boolean;
   /** default: 16:00 */
   noti_time?: string;
 }
@@ -118,7 +117,6 @@ export interface MyProfile extends User {
   research_agreement: boolean;
   signature: string | null;
   url: string;
-  noti_on: boolean;
   noti_time: string;
   unread_noti: boolean;
   timezone?: string;
