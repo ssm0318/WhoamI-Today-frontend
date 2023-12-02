@@ -20,12 +20,18 @@ export interface SetMomentDraftData {
   };
 }
 
+export interface SetCookieData {
+  key: 'SET_COOKIE';
+  value: string;
+}
+
 // 앱, 웹 서로 약속한 키값에 따른 메시지 타입
 export type PostMessageDataType =
   | ScreenNavigateData
   | SetNotiPermissionData
   | OpenSettingData
-  | SetMomentDraftData;
+  | SetMomentDraftData
+  | SetCookieData;
 // 앱, 웹 서로 약속한 키값
 export type PostMessageKeyType = PostMessageDataType['key'];
 
@@ -35,4 +41,5 @@ export type PostMessageKeyToData = {
   SET_NOTI_PERMISSION: SetNotiPermissionData;
   OPEN_SETTING: OpenSettingData;
   SET_MOMENT_DRAFT: SetMomentDraftData;
+  SET_COOKIE: SetCookieData;
 };
