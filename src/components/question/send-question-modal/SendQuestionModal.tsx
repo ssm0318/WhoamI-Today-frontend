@@ -104,7 +104,7 @@ function SendQuestionModal({
           >
             <Layout.FlexRow w="100%" pv={13} mh={45} bgColor="WHITE">
               <Layout.FlexRow
-                bgColor="GRAY_2"
+                bgColor="LIGHT_GRAY"
                 onClick={handleConfirm}
                 w="100%"
                 justifyContent="center"

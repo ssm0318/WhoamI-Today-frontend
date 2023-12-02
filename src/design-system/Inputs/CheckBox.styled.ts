@@ -12,7 +12,7 @@ export const StyledCheckBox = styled.div`
     display: inline-block;
     width: 24px;
     height: 24px;
-    border: 2px solid ${({ theme }) => theme.GRAY_2};
+    border: 2px solid ${({ theme }) => theme.LIGHT_GRAY};
     position: relative;
     flex-shrink: 0;
   }

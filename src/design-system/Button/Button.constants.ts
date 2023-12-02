@@ -8,10 +8,10 @@ export const buttonColorSettings: { [key in ButtonType]: ButtonColorSetting } = 
     completed: { background: 'WHITE', text: 'BLACK', outline: 'GRAY_1' },
   },
   gray_fill: {
-    normal: { background: 'GRAY_2', text: 'GRAY_13', outline: 'GRAY_2' },
-    hovered: { background: 'GRAY_2', text: 'GRAY_13', outline: 'GRAY_2' },
+    normal: { background: 'LIGHT_GRAY', text: 'GRAY_13', outline: 'LIGHT_GRAY' },
+    hovered: { background: 'LIGHT_GRAY', text: 'GRAY_13', outline: 'LIGHT_GRAY' },
     disabled: { background: 'BASIC_DISABLED_SOFT', text: 'BASIC_DISABLED_DEEP' },
-    completed: { background: 'GRAY_2', text: 'GRAY_13', outline: 'GRAY_2' },
+    completed: { background: 'LIGHT_GRAY', text: 'GRAY_13', outline: 'LIGHT_GRAY' },
   },
   filled: {
     normal: { background: 'BLACK', text: 'WHITE' },

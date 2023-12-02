@@ -9,7 +9,7 @@ interface DeleteButtonProps {
 function DeleteButton({ size = 24, onClick }: DeleteButtonProps) {
   return (
     <button type="button" onClick={onClick}>
-      <SvgIcon name="delete_button" size={size} color="GRAY_2" />
+      <SvgIcon name="delete_button" size={size} color="LIGHT_GRAY" />
     </button>
   );
 }

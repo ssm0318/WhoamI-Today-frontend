@@ -10,6 +10,7 @@ export const Colors = {
   DARK: '#303030',
   DARK_GRAY: '#555555',
   MEDIUM_GRAY: '#A0A0A0',
+  LIGHT_GRAY: '#D9D9D9',
   WHITE: '#FFFFFF',
   /**
    * @deprecated
@@ -19,7 +20,6 @@ export const Colors = {
    * @deprecated
    */
   BASIC_DISABLED_DEEP: '#DDDDDD',
-
   /**
    * @deprecated
    */
@@ -33,10 +33,6 @@ export const Colors = {
    */
   GRAY_1: '#D6D6D6',
   /**
-   * @deprecated use  LIGHT_GRAY
-   */
-  GRAY_2: '#D9D9D9',
-  /**
    * @deprecated
    */
   GRAY_4: '#585858',
@@ -44,7 +40,6 @@ export const Colors = {
    * @deprecated
    */
   GRAY_5: '#B5B5B5',
-
   /**
    * @deprecated use  LIGHT
    */
@@ -65,7 +60,6 @@ export const Colors = {
    * @deprecated
    */
   GRAY_11: '#CDCDCD',
-
   /**
    * @deprecated
    */
@@ -106,7 +100,6 @@ export const Colors = {
    * @deprecated
    */
   NUDGE: '#FF6D00',
-
   /**
    * @deprecated
    */

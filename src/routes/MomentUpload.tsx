@@ -89,7 +89,7 @@ function MomentUpload() {
             ph={12}
             pv={8}
             rounded={12}
-            bgColor={isPostable ? 'BLACK' : 'GRAY_2'}
+            bgColor={isPostable ? 'BLACK' : 'LIGHT_GRAY'}
             justifyContent="center"
           >
             <button type="button" onClick={handlePost}>
@@ -132,7 +132,7 @@ function MomentUpload() {
             w="100%"
             alignItems="center"
             rounded={14}
-            bgColor="GRAY_2"
+            bgColor="LIGHT_GRAY"
             ph={12}
             pv={24}
           >
