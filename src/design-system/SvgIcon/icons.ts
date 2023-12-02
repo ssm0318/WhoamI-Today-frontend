@@ -26,16 +26,53 @@ const comment = 'comment';
 const error = 'error';
 /** @deprecated ver1 icon */
 const top_navigation_friend = 'top_navigation_friend';
-/** @deprecated ver1 icon */
-const top_navigation_edit = 'top_navigation_edit';
-/** @deprecated ver1 icon */
-const top_navigation_dots = 'top_navigation_dots';
 
-/** <--아이콘 교체-- */
-const top_navigation_hamburger = 'top_navigation_hamburger';
-const top_navigation_noti = 'top_navigation_noti';
+// Universal
+const notification = 'notification';
+const hamburger = 'hamburger';
+const close = 'close';
+const dots_menu = 'dots_menu';
+const add_user = 'add_user';
+const chat_outline = 'chat_outline';
+const edit_outline = 'edit_outline';
 const arrow_left = 'arrow_left';
 const arrow_right = 'arrow_right';
+const search = 'search';
+const logo = 'logo';
+
+// Friends
+const hide_true = 'hide_true';
+const hide_false = 'hide_false';
+const favorite_true = 'favorite_true';
+const favorite_false = 'favorite_false';
+const expand_open = 'expand_open';
+const expand_close = 'expand_close';
+const delete_default = 'delete_default';
+const friend_updates_profile = 'friend_updates_profile';
+const chat_filled = 'chat_filled';
+const edit_filled = 'edit_filled';
+const share_default = 'share_default';
+const private_comment_inactive = 'private_comment_inactive';
+const private_comment_active = 'private_comment_active';
+const noti_icon_like = 'noti_icon_like';
+const noti_icon_emoji = 'noti_icon_emoji';
+const noti_icon_public_comment = 'noti_icon_public_comment';
+const noti_icon_private_comment = 'noti_icon_private_comment';
+const add_default = 'add_default';
+
+// My
+const checkbox_default = 'checkbox_default';
+const checkbox_checked = 'checkbox_checked';
+const spotify = 'spotify';
+
+// Chats
+const new_chat = 'new_chat';
+const edit_list = 'edit_list';
+const camera = 'camera';
+const chat_media_image = 'chat_media_image';
+const chat_media_gif = 'chat_media_gif';
+
+// FIXME: 하단 탭 아이콘 교체
 const my_profile = 'my_profile';
 const friends_active = 'friends_active';
 const friends_inactive = 'friends_inactive';
@@ -43,37 +80,43 @@ const my_active = 'my_active';
 const my_inactive = 'my_inactive';
 const chats_active = 'chats_active';
 const chats_inactive = 'chats_inactive';
-const delete_button = 'delete_button';
-const show_password_eye = 'show_password_eye';
-const hide_password_eye = 'hide_password_eye';
-const search = 'search';
-const close = 'close';
-const link_share = 'link_share';
-const header_logo = 'header_logo';
-const lock_off = 'lock_off';
-const lock_on = 'lock_on';
-/** --아이콘 교체--> */
-const spotify = 'spotify';
 
 export {
+  add_default,
+  add_user,
   arrow_left,
   arrow_right,
+  camera,
+  chat_filled,
+  chat_media_gif,
+  chat_media_image,
+  chat_outline,
   chats_active,
   chats_inactive,
+  checkbox_checked,
+  checkbox_default,
   circle_check_checked,
   circle_check_unchecked,
   close,
   comment,
-  delete_button,
+  delete_default,
+  dots_menu,
+  edit_filled,
+  edit_list,
+  edit_outline,
   error,
+  expand_close,
+  expand_open,
+  favorite_false,
+  favorite_true,
+  friend_updates_profile,
   friends_active,
   friends_inactive,
-  header_logo,
+  hamburger,
   heart,
-  hide_password_eye,
-  link_share,
-  lock_off,
-  lock_on,
+  hide_false,
+  hide_true,
+  logo,
   moment_add,
   moment_add_disabled,
   moment_description_normal,
@@ -83,13 +126,17 @@ export {
   my_active,
   my_inactive,
   my_profile,
+  new_chat,
+  noti_icon_emoji,
+  noti_icon_like,
+  noti_icon_private_comment,
+  noti_icon_public_comment,
+  notification,
+  private_comment_active,
+  private_comment_inactive,
   question_send,
   search,
-  show_password_eye,
+  share_default,
   spotify,
-  top_navigation_dots,
-  top_navigation_edit,
   top_navigation_friend,
-  top_navigation_hamburger,
-  top_navigation_noti,
 };

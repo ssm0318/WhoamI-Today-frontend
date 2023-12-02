@@ -15,7 +15,7 @@ function ValidatedPasswordInput(props: ValidatedInputProps) {
     <StyledValidatedInput>
       <Input type={showPassword ? 'text' : 'password'} {...inputProps} />
       <button type="button" onClick={handleToggleShowPassword} name="password-toggle">
-        <SvgIcon name={showPassword ? 'show_password_eye' : 'hide_password_eye'} size={20} />
+        <SvgIcon name={showPassword ? 'hide_false' : 'hide_true'} size={20} />
       </button>
       {error && (
         <Layout.FlexRow alignItems="center" mt={14}>

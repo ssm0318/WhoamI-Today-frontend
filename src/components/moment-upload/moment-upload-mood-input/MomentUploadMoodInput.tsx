@@ -57,7 +57,7 @@ function MomentUploadMoodInput({
       {!disabled && mood && (
         <Layout.Absolute r={12} b={24} p={4}>
           <button type="button" onClick={handleDeleteEmoji}>
-            <SvgIcon name="delete_button" size={20} />
+            <SvgIcon name="delete_default" size={20} />
           </button>
         </Layout.Absolute>
       )}

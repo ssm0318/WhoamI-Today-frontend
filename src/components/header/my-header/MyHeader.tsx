@@ -22,8 +22,8 @@ function MyHeader({ onClickHamburger }: MyHeaderProps) {
         <Font.Display type="24_regular">{myProfile?.username}</Font.Display>
       </Layout.FlexRow>
       <Layout.FlexRow gap={8} alignItems="center">
-        <Icon name="top_navigation_edit" size={44} onClick={handleEditStatus} />
-        <Icon name="top_navigation_hamburger" size={44} onClick={onClickHamburger} />
+        <Icon name="new_chat" size={44} onClick={handleEditStatus} />
+        <Icon name="hamburger" size={44} onClick={onClickHamburger} />
       </Layout.FlexRow>
     </>
   );

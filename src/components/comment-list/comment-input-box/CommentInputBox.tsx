@@ -59,7 +59,7 @@ function CommentInputBox({
     <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between" gap={5}>
       {/* FIXME: reply icon 교체 */}
       {isReply && <SvgIcon name="arrow_right" color="BASIC_BLACK" size={20} />}
-      {isReply && forcePrivate && <SvgIcon name="lock_on" size={20} />}
+      {isReply && forcePrivate && <SvgIcon name="private_comment_active" size={20} />}
       <S.CommentInput
         placeholder={placeholder}
         onChange={handleChangeInput}
@@ -69,7 +69,10 @@ function CommentInputBox({
       {!isReply && (
         <Layout.FlexRow>
           <button type="button" onClick={togglePrivate}>
-            <SvgIcon name={isPrivate ? 'lock_on' : 'lock_off'} size={24} />
+            <SvgIcon
+              name={isPrivate ? 'private_comment_active' : 'private_comment_inactive'}
+              size={24}
+            />
           </button>
         </Layout.FlexRow>
       )}
