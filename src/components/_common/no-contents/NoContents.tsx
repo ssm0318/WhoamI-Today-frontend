@@ -15,7 +15,7 @@ export default function NoContents({
   ph = 20,
   mv = 10,
   bgColor = 'GRAY_7',
-  fontColor = 'GRAY_12',
+  fontColor = 'MEDIUM_GRAY',
 }: Props) {
   return (
     <Layout.LayoutBase w="100%" alignItems="center" ph={ph} mv={mv}>

@@ -36,7 +36,7 @@ function TodaysMoments() {
             <SvgIcon
               name={isTodaysMomentExist ? 'moment_add_disabled' : 'moment_add'}
               size={56}
-              fill={isTodaysMomentExist ? 'GRAY_12' : 'PRIMARY'}
+              fill={isTodaysMomentExist ? 'MEDIUM_GRAY' : 'PRIMARY'}
             />
           </button>
         </Layout.FlexRow>

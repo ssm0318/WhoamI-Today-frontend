@@ -9,6 +9,7 @@ export const Colors = {
   BLACK: '#000000',
   DARK: '#303030',
   DARK_GRAY: '#555555',
+  MEDIUM_GRAY: '#A0A0A0',
   WHITE: '#FFFFFF',
   /**
    * @deprecated
@@ -64,10 +65,7 @@ export const Colors = {
    * @deprecated
    */
   GRAY_11: '#CDCDCD',
-  /**
-   * @deprecated use MEDIUM_GRAY
-   */
-  GRAY_12: '#A0A0A0',
+
   /**
    * @deprecated
    */

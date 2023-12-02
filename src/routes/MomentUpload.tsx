@@ -93,7 +93,7 @@ function MomentUpload() {
             justifyContent="center"
           >
             <button type="button" onClick={handlePost}>
-              <Font.Body type="14_regular" color={isPostable ? 'WHITE' : 'GRAY_12'}>
+              <Font.Body type="14_regular" color={isPostable ? 'WHITE' : 'MEDIUM_GRAY'}>
                 {t('post')}
               </Font.Body>
             </button>
@@ -137,7 +137,7 @@ function MomentUpload() {
             pv={24}
           >
             <SvgIcon name="moment_photo_disabled" size={30} />
-            <Font.Body ml={8} type="18_regular" color="GRAY_12" italic>
+            <Font.Body ml={8} type="18_regular" color="MEDIUM_GRAY" italic>
               {t('photo_disabled')}
             </Font.Body>
           </Layout.FlexRow>
@@ -184,7 +184,7 @@ function MomentUpload() {
             ) : (
               <>
                 <SvgIcon name="moment_photo_normal" size={30} />
-                <Font.Body ml={8} type="18_regular" color="GRAY_12">
+                <Font.Body ml={8} type="18_regular" color="MEDIUM_GRAY">
                   {t('photo_placeholder')}
                 </Font.Body>
               </>
