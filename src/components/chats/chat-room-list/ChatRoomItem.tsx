@@ -1,18 +1,37 @@
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
+import { SwipeLayoutListContext } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { formatLastMessageTime } from '@components/chats/chat-room-list/ChatRoomItem.helper';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import { Font, Layout, SvgIcon } from '@design-system';
 
 interface Props {
+  roomId: number;
   username: string;
   imageUrl: string;
+  lastMessage: string;
   lastMessageTime: string;
   hasUnreadMessages: boolean;
 }
 
-export function ChatRoomItem({ username, imageUrl, lastMessageTime, hasUnreadMessages }: Props) {
-  const lastMessage = 'This is a last message.';
+export function ChatRoomItem({
+  roomId,
+  username,
+  imageUrl,
+  lastMessage,
+  lastMessageTime,
+  hasUnreadMessages,
+}: Props) {
+  const navigate = useNavigate();
+
+  const { hasSwipedItem } = useContext(SwipeLayoutListContext);
+
+  const handleClickItem = () => {
+    if (hasSwipedItem) return;
+    navigate(`/chats/${roomId}`);
+  };
 
   return (
     <SwipeLayout
@@ -31,7 +50,14 @@ export function ChatRoomItem({ username, imageUrl, lastMessageTime, hasUnreadMes
         </Layout.FlexRow>
       }
     >
-      <Layout.FlexRow w="100%" justifyContent="space-between" gap={10} alignItems="center" ph={16}>
+      <Layout.FlexRow
+        w="100%"
+        justifyContent="space-between"
+        gap={10}
+        alignItems="center"
+        ph={16}
+        onMouseDown={handleClickItem}
+      >
         <ProfileImage imageUrl={imageUrl} size={55} />
         <Layout.FlexCol w="100%" justifyContent="center" gap={5}>
           <Layout.FlexRow w="100%" justifyContent="space-between">

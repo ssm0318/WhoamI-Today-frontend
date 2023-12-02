@@ -1,11 +1,8 @@
+import { ToggleSwitch } from '@components/_common/toggle-switch/ToggleSwitch';
 import { Font, SvgIcon } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import { isApp } from '@utils/getUserAgent';
-import {
-  StyledAccountSettingsButton,
-  StyledSettingsButton,
-  StyledToggleButton,
-} from './SettingsButtons.styled';
+import { StyledAccountSettingsButton, StyledSettingsButton } from './SettingsButtons.styled';
 
 interface SettingButtonProps {
   text: string;
@@ -38,10 +35,5 @@ export function SettingsToggleButton({ permissionAllowed }: { permissionAllowed:
     }
   };
 
-  return (
-    <StyledToggleButton>
-      <input type="checkbox" checked={permissionAllowed} onChange={handleToggle} />
-      <span className="slider round" />
-    </StyledToggleButton>
-  );
+  return <ToggleSwitch type="large" checked={permissionAllowed} onChange={handleToggle} />;
 }

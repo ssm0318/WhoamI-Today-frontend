@@ -247,5 +247,11 @@
       "search_placeholder": "Search",
       "title": "Messages"
     }
+  },
+  "chat_room": {
+    "noti_settings": {
+      "title": "Notification",
+      "mute": "Mute conversation"
+    }
   }
 }

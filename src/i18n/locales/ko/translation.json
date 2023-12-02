@@ -242,5 +242,11 @@
       "search_placeholder": "검색",
       "title": "메시지"
     }
+  },
+  "chat_room": {
+    "noti_settings": {
+      "title": "설정",
+      "mute": "대화방 알림 끄기"
+    }
   }
 }
