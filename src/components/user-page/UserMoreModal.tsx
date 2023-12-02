@@ -66,7 +66,7 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
   return (
     <>
       <BottomModal visible={isVisible} onClose={handleOnCloseMore}>
-        <Layout.FlexCol w="100%" alignItems="center" bgColor="BASIC_WHITE" pt={12} pb={12} gap={16}>
+        <Layout.FlexCol w="100%" alignItems="center" bgColor="WHITE" pt={12} pb={12} gap={16}>
           {/* NOTE: 현재는 차단이 신고와 동일함 */}
           <button type="button" onClick={handleOnClickBlockUser}>
             <Font.Body type="20_regular">{t('block_this_user')}</Font.Body>

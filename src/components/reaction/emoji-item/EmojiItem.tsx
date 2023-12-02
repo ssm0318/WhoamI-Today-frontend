@@ -15,7 +15,7 @@ function EmojiItem({
   emojiString,
   size,
   ml,
-  bgColor = 'BASIC_WHITE',
+  bgColor = 'WHITE',
   outline = 'BACKGROUND_COLOR',
 }: EmojiItemProps) {
   return (

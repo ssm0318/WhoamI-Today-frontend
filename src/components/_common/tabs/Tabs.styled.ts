@@ -24,6 +24,6 @@ export const StyledTab = styled.button.attrs({
 
   &.active {
     box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.1);
-    background-color: ${({ theme }) => theme.BASIC_WHITE};
+    background-color: ${({ theme }) => theme.WHITE};
   }
 `;

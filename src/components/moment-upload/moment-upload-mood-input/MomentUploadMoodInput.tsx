@@ -42,7 +42,7 @@ function MomentUploadMoodInput({
       w="100%"
       alignItems="flex-start"
       rounded={14}
-      bgColor="BASIC_WHITE"
+      bgColor="WHITE"
       pl={12}
       pr={mood ? 24 : 12}
       pv={24}

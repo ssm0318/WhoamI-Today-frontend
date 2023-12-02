@@ -26,7 +26,7 @@ function TodaysMoments() {
   };
 
   return (
-    <Layout.FlexCol w="100%" bgColor="BASIC_WHITE" ph="default" pt={24}>
+    <Layout.FlexCol w="100%" bgColor="WHITE" ph="default" pt={24}>
       <Layout.FlexCol bgColor="GRAY_14" rounded={14} w="100%" ph={16} pv={24}>
         <Layout.FlexRow w="100%" justifyContent="center" alignItems="center">
           <Font.Display type="18_bold">{t('todays_moments')}</Font.Display>

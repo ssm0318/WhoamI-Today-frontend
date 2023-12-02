@@ -35,7 +35,7 @@ function TodaysQuestions() {
   }, []);
 
   return (
-    <Layout.FlexCol w="100%" bgColor="BASIC_WHITE" ph="default" pt={22} pb={100}>
+    <Layout.FlexCol w="100%" bgColor="WHITE" ph="default" pt={22} pb={100}>
       <Layout.FlexCol bgColor="GRAY_14" rounded={14} w="100%" ph={16} pv={24}>
         {/* 제목 */}
         <Layout.FlexRow w="100%" justifyContent="center" alignItems="center">

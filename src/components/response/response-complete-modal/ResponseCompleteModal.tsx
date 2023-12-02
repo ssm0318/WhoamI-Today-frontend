@@ -30,7 +30,7 @@ function ResponseCompleteModal({
 
   return (
     <BottomModal visible={isVisible} onClose={handleOnClose}>
-      <Layout.FlexCol w="100%" alignItems="center" bgColor="BASIC_WHITE" pt={80} pb={60}>
+      <Layout.FlexCol w="100%" alignItems="center" bgColor="WHITE" pt={80} pb={60}>
         <Font.Body type="18_regular">🥳</Font.Body>
         <Font.Body type="18_regular" mt={4}>
           {t('complete')}

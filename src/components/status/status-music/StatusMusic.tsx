@@ -15,7 +15,7 @@ function StatusMusic({ track, width = 200 }: StatusMusicProps) {
       gap={4}
       rounded={12}
       alignItems="center"
-      bgColor="BASIC_WHITE"
+      bgColor="WHITE"
       w={width}
     >
       <img

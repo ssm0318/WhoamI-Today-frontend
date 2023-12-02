@@ -28,11 +28,7 @@ function CalendarCell({ dayMoment }: CalendarCellProps) {
       onClick={handleClickCell}
     >
       {moment?.mood && <p className="mood">{getFirstEmoji(moment.mood)}</p>}
-      <Font.Body
-        type="14_semibold"
-        color={isToday(date) ? 'PRIMARY' : 'BASIC_WHITE'}
-        textAlign="center"
-      >
+      <Font.Body type="14_semibold" color={isToday(date) ? 'PRIMARY' : 'WHITE'} textAlign="center">
         {format(date, 'dd')}
       </Font.Body>
     </S.DateCell>

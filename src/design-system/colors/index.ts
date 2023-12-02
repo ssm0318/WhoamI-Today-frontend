@@ -7,10 +7,7 @@ export const Colors = {
   TERTIARY_GREEN: '#04D100',
   WARNING: '#FF3B30',
   BLACK: '#000000',
-  /**
-   * @deprecated use WHITE
-   */
-  BASIC_WHITE: '#FFFFFF',
+  WHITE: '#FFFFFF',
   /**
    * @deprecated
    */

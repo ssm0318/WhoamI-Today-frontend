@@ -93,7 +93,7 @@ function MomentUpload() {
             justifyContent="center"
           >
             <button type="button" onClick={handlePost}>
-              <Font.Body type="14_regular" color={isPostable ? 'BASIC_WHITE' : 'GRAY_12'}>
+              <Font.Body type="14_regular" color={isPostable ? 'WHITE' : 'GRAY_12'}>
                 {t('post')}
               </Font.Body>
             </button>
@@ -147,7 +147,7 @@ function MomentUpload() {
             h={PHOTO_SIZE}
             alignItems="center"
             rounded={14}
-            bgColor="BASIC_WHITE"
+            bgColor="WHITE"
             ph={todayMoment.photo ? 0 : 12}
             pv={todayMoment.photo ? 0 : 24}
             onClick={handlePhotoUpload}
@@ -170,7 +170,7 @@ function MomentUpload() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Font.Display type="18_bold" color="BASIC_WHITE">
+                  <Font.Display type="18_bold" color="WHITE">
                     {t('already_photo_uploaded')}
                   </Font.Display>
                 </Layout.Absolute>

@@ -75,7 +75,7 @@ function SendQuestionModal({
       >
         <Layout.LayoutBase
           w="100%"
-          bgColor="BASIC_WHITE"
+          bgColor="WHITE"
           pt={12}
           ph="default"
           pb={12 + BOTTOM_BUTTON_SECTION_HEIGHT}
@@ -92,17 +92,17 @@ function SendQuestionModal({
               ))}
             </>
           ) : (
-            <NoContents title={t('no_contents.friends')} bgColor="BASIC_WHITE" />
+            <NoContents title={t('no_contents.friends')} bgColor="WHITE" />
           )}
           <Layout.Absolute
             b={0}
             l={0}
             w="100%"
-            bgColor="BASIC_WHITE"
+            bgColor="WHITE"
             h={BOTTOM_BUTTON_SECTION_HEIGHT}
             cursor="pointer"
           >
-            <Layout.FlexRow w="100%" pv={13} mh={45} bgColor="BASIC_WHITE">
+            <Layout.FlexRow w="100%" pv={13} mh={45} bgColor="WHITE">
               <Layout.FlexRow
                 bgColor="GRAY_2"
                 onClick={handleConfirm}
