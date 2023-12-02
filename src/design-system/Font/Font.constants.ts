@@ -1,6 +1,46 @@
-import { BodyType, DisplayType, FontSettings, FontWeight } from './Font.types';
+import {
+  BodyType,
+  DisplayType,
+  FontSettings,
+  FontWeight,
+  Typo,
+  TypoSettings,
+  TypoWeight,
+} from './Font.types';
+
+export const TypoStyle: { [key in Typo]: TypoSettings } = {
+  headline: {
+    fontSize: 24,
+    fontWeight: TypoWeight.MEDIUM,
+  },
+  'title-large': {
+    fontSize: 20,
+    fontWeight: TypoWeight.MEDIUM,
+  },
+  'title-medium': {
+    fontSize: 16,
+    fontWeight: TypoWeight.MEDIUM,
+  },
+  'title-small': {
+    fontSize: 14,
+    fontWeight: TypoWeight.MEDIUM,
+  },
+  'body-large': {
+    fontSize: 16,
+    fontWeight: TypoWeight.REGULAR,
+  },
+  'body-medium': {
+    fontSize: 14,
+    fontWeight: TypoWeight.REGULAR,
+  },
+  'body-small': {
+    fontSize: 12,
+    fontWeight: TypoWeight.REGULAR,
+  },
+};
 
 /**
+ * @deprecated use TypoSettings
  * Display type의 font 값 setting
  */
 export const DisplaySettings: { [key in DisplayType]: FontSettings } = {
@@ -37,6 +77,7 @@ export const DisplaySettings: { [key in DisplayType]: FontSettings } = {
 };
 
 /**
+ * @deprecated use TypoSettings
  * Body type의 font 값 setting
  */
 export const BodySettings: { [key in BodyType]: FontSettings } = {

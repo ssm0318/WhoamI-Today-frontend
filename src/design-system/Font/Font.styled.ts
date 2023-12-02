@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { getStyle, toMarginPaddingString } from '../layouts';
 import { TextPropsBase } from './Font';
-import { FontSettings } from './Font.types';
+import { FontSettings, TypoSettings } from './Font.types';
 
 const getTextDecoration = ({
   lineThrough,
@@ -20,6 +20,9 @@ const getTextDecoration = ({
   return textDecoration;
 };
 
+/**
+ * @deprecated use StyledFont
+ */
 export const Font = styled.span<FontSettings & TextPropsBase>`
   display: block;
   max-width: 100%;
@@ -49,4 +52,16 @@ export const Font = styled.span<FontSettings & TextPropsBase>`
     css`
       font-style: italic;
     `}
+`;
+
+export const StyledFont = styled.span<TypoSettings & TextPropsBase>`
+  font-size: ${({ fontSize }) => fontSize}px;
+  font-weight: ${({ fontWeight }) => fontWeight};
+  line-height: 140%;
+  color: ${({ color, theme }) => theme[color || 'BASIC_BLACK']};
+  text-align: ${({ textAlign = 'left' }) => textAlign};
+  ${({ m, mh, mv, mt, mr, mb, ml }) =>
+    getStyle('margin', toMarginPaddingString(m, mh, mv, mt, mr, mb, ml))}
+  white-space: ${({ pre }) => (pre ? 'pre' : 'normal')};
+  text-decoration: ${({ lineThrough, underline }) => getTextDecoration({ lineThrough, underline })};
 `;

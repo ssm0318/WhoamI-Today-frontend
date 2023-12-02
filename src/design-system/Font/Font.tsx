@@ -1,10 +1,13 @@
 import React, { PropsWithChildren } from 'react';
 import { ColorKeys } from '../colors';
 import { Margin } from '../layouts';
-import { BodySettings, DisplaySettings } from './Font.constants';
+import { BodySettings, DisplaySettings, TypoStyle } from './Font.constants';
 import * as S from './Font.styled';
-import { BodyType, DisplayType } from './Font.types';
+import { BodyType, DisplayType, Typo } from './Font.types';
 
+/**
+ * @deprecated use (default exported) Font
+ */
 const Display: React.FC<PropsWithChildren<DisplayProps>> = React.memo((props) => {
   const { type, children, ...textProps } = props;
   return (
@@ -14,6 +17,9 @@ const Display: React.FC<PropsWithChildren<DisplayProps>> = React.memo((props) =>
   );
 });
 
+/**
+ * @deprecated use (default exported) Font
+ */
 const Body: React.FC<PropsWithChildren<BodyProps>> = React.memo((props) => {
   const { type, children, ...textProps } = props;
 
@@ -23,6 +29,14 @@ const Body: React.FC<PropsWithChildren<BodyProps>> = React.memo((props) => {
     </S.Font>
   );
 });
+
+export default function Font({ type, children, ...props }: PropsWithChildren<FontProps>) {
+  return (
+    <S.StyledFont {...TypoStyle[type]} {...props}>
+      {children}
+    </S.StyledFont>
+  );
+}
 
 export type TextPropsBase = {
   color?: ColorKeys;
@@ -34,10 +48,20 @@ export type TextPropsBase = {
   italic?: boolean;
 } & Margin;
 
+export type FontProps = {
+  type: Typo;
+} & TextPropsBase;
+
+/**
+ * @deprecated use FontProps
+ */
 export type DisplayProps = {
   type: DisplayType;
 } & TextPropsBase;
 
+/**
+ * @deprecated use FontProps
+ */
 export type BodyProps = {
   type: BodyType;
 } & TextPropsBase;
