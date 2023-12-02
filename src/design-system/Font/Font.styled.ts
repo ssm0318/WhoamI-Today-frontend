@@ -57,7 +57,7 @@ export const Font = styled.span<FontSettings & TextPropsBase>`
 export const StyledFont = styled.span<FontProps & TextPropsBase>`
   font-size: ${({ fontSize }) => fontSize}px;
   font-weight: ${({ fontWeight }) => fontWeight};
-  line-height: 140%;
+  line-height: ${({ lineHeight }) => (lineHeight ? `${lineHeight}px` : '140%')};
   color: ${({ color, theme }) => theme[color || 'BASIC_BLACK']};
   text-align: ${({ textAlign = 'left' }) => textAlign};
   ${({ m, mh, mv, mt, mr, mb, ml }) =>

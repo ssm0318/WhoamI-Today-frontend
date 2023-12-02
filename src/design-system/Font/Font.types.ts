@@ -27,7 +27,10 @@ export type FontSettings = {
 export type FontProps = {
   fontSize: number;
   fontWeight: TypoWeight;
-  lineHeight?: string;
+  /**
+   * 단위: px
+   */
+  lineHeight?: number;
 };
 
 /**
