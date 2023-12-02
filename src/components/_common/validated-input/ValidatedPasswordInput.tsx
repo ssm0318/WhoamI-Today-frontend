@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Icon from '@components/header/icon/Icon';
 import { Font, Input, Layout, SvgIcon } from '@design-system';
 import { ValidatedInputProps } from './ValidatedInput.helper';
 import StyledValidatedInput from './ValidatedInput.styled';
@@ -14,9 +15,11 @@ function ValidatedPasswordInput(props: ValidatedInputProps) {
   return (
     <StyledValidatedInput>
       <Input type={showPassword ? 'text' : 'password'} {...inputProps} />
-      <button type="button" onClick={handleToggleShowPassword} name="password-toggle">
-        <SvgIcon name={showPassword ? 'hide_false' : 'hide_true'} size={20} />
-      </button>
+      <Icon
+        onClick={handleToggleShowPassword}
+        name={showPassword ? 'hide_false' : 'hide_true'}
+        size={36}
+      />
       {error && (
         <Layout.FlexRow alignItems="center" mt={14}>
           <SvgIcon name="error" size={14} />
