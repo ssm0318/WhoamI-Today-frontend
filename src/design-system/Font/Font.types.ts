@@ -24,13 +24,9 @@ export type FontSettings = {
   textAlign?: 'left' | 'right' | 'center';
 };
 
-export type FontProps = {
+export type FontAttrs = {
   fontSize: number;
   fontWeight: TypoWeight;
-  /**
-   * 단위: px
-   */
-  lineHeight?: number;
 };
 
 /**

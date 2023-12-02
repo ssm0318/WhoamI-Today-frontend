@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { getStyle, toMarginPaddingString } from '../layouts';
-import { TextPropsBase } from './Font';
-import { FontProps, FontSettings } from './Font.types';
+import { TextPropsBase, TypoPropBase } from './Font';
+import { FontAttrs, FontSettings } from './Font.types';
 
 const getTextDecoration = ({
   lineThrough,
@@ -54,7 +54,7 @@ export const Font = styled.span<FontSettings & TextPropsBase>`
     `}
 `;
 
-export const StyledFont = styled.span<FontProps & TextPropsBase>`
+export const StyledFont = styled.span<FontAttrs & TypoPropBase>`
   font-size: ${({ fontSize }) => fontSize}px;
   font-weight: ${({ fontWeight }) => fontWeight};
   line-height: ${({ lineHeight }) => (lineHeight ? `${lineHeight}px` : '140%')};

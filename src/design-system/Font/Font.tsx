@@ -30,7 +30,7 @@ const Body: React.FC<PropsWithChildren<BodyProps>> = React.memo((props) => {
   );
 });
 
-export default function Typo({ type, children, ...props }: PropsWithChildren<FontProps>) {
+export default function Typo({ type, children, ...props }: PropsWithChildren<TypoProps>) {
   return (
     <S.StyledFont {...FontStyle[type]} {...props}>
       {children}
@@ -48,9 +48,17 @@ export type TextPropsBase = {
   italic?: boolean;
 } & Margin;
 
-export type FontProps = {
+export type TypoProps = {
   type: FontType;
-} & TextPropsBase;
+} & TypoPropBase;
+
+export type TypoPropBase = TextPropsBase & {
+  /**
+   * default: 140%
+   * 단위: px
+   */
+  lineHeight?: number;
+};
 
 /**
  * @deprecated use FontProps

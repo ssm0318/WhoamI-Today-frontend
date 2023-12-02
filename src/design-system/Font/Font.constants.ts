@@ -1,14 +1,14 @@
 import {
   BodyType,
   DisplayType,
-  FontProps,
+  FontAttrs,
   FontSettings,
   FontType,
   FontWeight,
   TypoWeight,
 } from './Font.types';
 
-export const FontStyle: { [key in FontType]: FontProps } = {
+export const FontStyle: { [key in FontType]: FontAttrs } = {
   'head-line': {
     fontSize: 24,
     fontWeight: TypoWeight.MEDIUM,
