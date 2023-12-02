@@ -14,8 +14,9 @@ const StyledValidatedInput = styled.div`
 
   button {
     position: absolute;
-    right: 32px;
-    margin-top: 12px;
+    right: 0;
+    margin-top: 6px;
+    margin-right: 20px;
   }
 `;
 

@@ -74,7 +74,7 @@ function UserPage() {
         RightComponent={
           <button type="button" onClick={handleOnClickMore}>
             {/* TODO: ... 아이콘으로 업데이트 필요 */}
-            <SvgIcon name="top_navigation_hamburger" size={36} />
+            <SvgIcon name="hamburger" size={36} />
           </button>
         }
       />

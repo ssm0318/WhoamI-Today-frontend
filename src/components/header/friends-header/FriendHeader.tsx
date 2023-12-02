@@ -11,7 +11,7 @@ function FriendsHeader() {
       <Layout.FlexRow gap={8}>
         <Icon name="top_navigation_friend" size={44} />
         <Noti to="/notifications">
-          <SvgIcon name="top_navigation_noti" size={44} />
+          <SvgIcon name="notification" size={44} />
           {/* TODO 넛지 변경 */}
           {/* {myProfile?.unread_noti && <IconNudge />} */}
         </Noti>

@@ -49,7 +49,7 @@ export default function FriendInvitation() {
             </Font.Body>
           </Layout.FlexCol>
         </Layout.FlexRow>
-        <SvgIcon name="link_share" size={26} />
+        <SvgIcon name="share_default" size={26} />
       </Layout.FlexRow>
       {showToast && <ToastMessage text={t('copy')} closeToastMessage={() => setShowToast(false)} />}
     </Layout.LayoutBase>
