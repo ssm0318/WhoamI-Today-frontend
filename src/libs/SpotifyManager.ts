@@ -1,4 +1,5 @@
 import { SpotifyApi, Track } from '@spotify/web-api-ts-sdk';
+import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from 'src/key';
 
 class SpotifyManager {
   private static instance: SpotifyManager | null = null;
@@ -13,8 +14,8 @@ class SpotifyManager {
   }
 
   initialize = async () => {
-    const clientId = '25e0c6948c6a46c583bfd392d57d17ac';
-    const clientSecret = '2a6ec670393a45a7b0ebd6fc8c6b3c88';
+    const clientId = SPOTIFY_CLIENT_ID;
+    const clientSecret = SPOTIFY_CLIENT_SECRET;
     const scopes = ['user-read-private'];
 
     try {
