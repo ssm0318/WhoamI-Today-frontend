@@ -11,7 +11,7 @@ function FriendsHeader() {
       title={t('friends')}
       rightButtons={
         <>
-          <Icon name="top_navigation_friend" size={44} />
+          <Icon name="add_user" size={44} />
           <Noti to="/notifications">
             <SvgIcon name="notification" size={44} />
             {/* TODO 넛지 변경 */}
