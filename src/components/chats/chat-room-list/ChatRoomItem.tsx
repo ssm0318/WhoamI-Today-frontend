@@ -35,20 +35,18 @@ export function ChatRoomItem({
 
   return (
     <SwipeLayout
-      rightContent={
-        <Layout.FlexRow w="100%" h="100%" alignItems="center">
-          <StyledSwipeButton backgroundColor="MEDIUM_GRAY">
-            <Typo type="body-medium" color="WHITE" textAlign="center">
-              Mute
-            </Typo>
-          </StyledSwipeButton>
-          <StyledSwipeButton backgroundColor="ERROR">
-            <Typo type="body-medium" color="WHITE" textAlign="center">
-              Delete
-            </Typo>
-          </StyledSwipeButton>
-        </Layout.FlexRow>
-      }
+      rightContent={[
+        <StyledSwipeButton key="mute" backgroundColor="MEDIUM_GRAY">
+          <Typo type="body-medium" color="WHITE" textAlign="center">
+            Mute
+          </Typo>
+        </StyledSwipeButton>,
+        <StyledSwipeButton key="delete" backgroundColor="ERROR">
+          <Typo type="body-medium" color="WHITE" textAlign="center">
+            Delete
+          </Typo>
+        </StyledSwipeButton>,
+      ]}
     >
       <Layout.FlexRow
         w="100%"

@@ -6,28 +6,40 @@ import {
   StyledSwipeLayout,
 } from '@components/_common/swipe-layout/SwipeLayout.styled';
 import { SwipeLayoutListContext } from '@components/_common/swipe-layout/SwipeLayoutList';
+import { Layout } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
 
-const MIN_SWIPE_DISTANCE = 60;
-const SWIPE_DISTANCE = 130;
-const MAX_SWIPE_DISTANCE = 200;
+const DEFAULT_ITEM_WIDTH = 65;
 
 interface Props {
   children: ReactElement;
-  rightContent?: ReactElement;
-  leftContent?: ReactElement;
+  rightContent?: ReactElement[];
+  leftContent?: ReactElement[];
+  itemWidth?: number;
 }
 
 type SwipingDirection = 'left' | 'right' | 'none';
 
 /* TODO: animation 추가 */
-export function SwipeLayout({ children, rightContent, leftContent }: Props) {
+export function SwipeLayout({
+  children,
+  rightContent,
+  leftContent,
+  itemWidth = DEFAULT_ITEM_WIDTH,
+}: Props) {
   const [touchStartX, setTouchStartX] = useState<number>();
   const [touchStartY, setTouchStartY] = useState<number>();
   const [distance, setDistance] = useState<number>();
   const [isTouchMoved, setIsTouchMoved] = useState<boolean>(false);
   const [isSwiped, setIsSwiped] = useState<boolean>(false);
   const [swipingDirection, setSwipingDirection] = useState<SwipingDirection>('none');
+
+  const leftContentWidth = leftContent ? leftContent.length * itemWidth : 0;
+  const minLeftContentWidth = leftContentWidth * 0.5;
+  const maxLeftContentWidth = leftContentWidth * 1.5;
+  const rightContentWidth = rightContent ? rightContent.length * itemWidth : 0;
+  const minRightContentWidth = rightContentWidth * 0.5;
+  const maxRightContentWidth = rightContentWidth * 1.5;
 
   const { setHasSwipedItem } = useContext(SwipeLayoutListContext);
 
@@ -58,12 +70,15 @@ export function SwipeLayout({ children, rightContent, leftContent }: Props) {
       swipingDirection === 'none' ? (dist < 0 ? 'left' : 'right') : swipingDirection;
     const dResult = isSwiped
       ? currDirection === 'left'
-        ? dist - SWIPE_DISTANCE
-        : SWIPE_DISTANCE + dist
+        ? dist - leftContentWidth
+        : rightContentWidth + dist
       : dist;
 
     if ((dResult < 0 && !leftContent) || (dResult > 0 && !rightContent)) return;
-    if (Math.abs(dResult) > MAX_SWIPE_DISTANCE) return;
+
+    const maxDistance = swipingDirection === 'left' ? maxLeftContentWidth : maxRightContentWidth;
+
+    if (Math.abs(dResult) > maxDistance) return;
     setSwipingDirection(currDirection);
 
     if ((currDirection === 'left' && dResult > 0) || (currDirection === 'right' && dResult < 0)) {
@@ -75,7 +90,6 @@ export function SwipeLayout({ children, rightContent, leftContent }: Props) {
   };
 
   const handleTouchEnd = () => {
-    console.log('swipingDirection', swipingDirection);
     if (distance === undefined || swipingDirection === 'none') return;
 
     if (!isTouchMoved) {
@@ -83,8 +97,9 @@ export function SwipeLayout({ children, rightContent, leftContent }: Props) {
       return;
     }
 
-    const isSwipeCompleted = Math.abs(distance) > MIN_SWIPE_DISTANCE;
-    const dist = swipingDirection === 'left' ? -SWIPE_DISTANCE : SWIPE_DISTANCE;
+    const minDistance = swipingDirection === 'left' ? minLeftContentWidth : minRightContentWidth;
+    const isSwipeCompleted = Math.abs(distance) > minDistance;
+    const dist = swipingDirection === 'left' ? -leftContentWidth : rightContentWidth;
 
     setIsSwiped(isSwipeCompleted);
     setHasSwipedItem(isSwipeCompleted);
@@ -122,12 +137,16 @@ export function SwipeLayout({ children, rightContent, leftContent }: Props) {
       </StyledSwipeItem>
       {!!distance && distance <= 0 && leftContent && (
         <StyledLeftContent distance={distance} onClick={handleContentClick}>
-          {leftContent}
+          <Layout.FlexRow w="100%" h="100%" alignItems="center">
+            {leftContent}
+          </Layout.FlexRow>
         </StyledLeftContent>
       )}
       {!!distance && distance >= 0 && rightContent && (
         <StyledRightContent distance={distance} onClick={handleContentClick}>
-          {rightContent}
+          <Layout.FlexRow w="100%" h="100%" alignItems="center">
+            {rightContent}
+          </Layout.FlexRow>
         </StyledRightContent>
       )}
     </StyledSwipeLayout>
