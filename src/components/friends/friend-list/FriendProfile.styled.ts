@@ -16,7 +16,7 @@ interface StyledFriendImageProfileProps {
   imageUrl?: string | null;
 }
 
-export const StyledFriendProfileImage = styled(Layout.LayoutBase)<StyledFriendImageProfileProps>`
+export const StyledUserProfile = styled(Layout.LayoutBase)<StyledFriendImageProfileProps>`
   background-image: url(${(props) =>
     props.imageUrl ? props.imageUrl : '/icons/friend_profile.png'});
   width: 44px;
@@ -28,7 +28,7 @@ export const StyledFriendProfileImage = styled(Layout.LayoutBase)<StyledFriendIm
   background-origin: border-box;
 `;
 
-export const StyledFriendProfile = styled.li`
+export const UpdatedProfileWrapper = styled.li`
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -5,7 +5,7 @@ import CommonError from '@components/_common/common-error/CommonError';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import NoContents from '@components/_common/no-contents/NoContents';
-import FriendProfile from '@components/_common/profile-image/FriendProfile';
+import UpdatedProfile from '@components/_common/profile-image/UpdatedProfile';
 import { StyledFriendListWrapper } from '@components/friends/friend-list/FriendProfile.styled';
 import { Button, Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -47,7 +47,7 @@ function Friends() {
         collapsedItem={
           <StyledFriendListWrapper>
             {friendList.data.map(({ username, profile_image }) => (
-              <FriendProfile username={username} imageUrl={profile_image} />
+              <UpdatedProfile username={username} imageUrl={profile_image} />
             ))}
           </StyledFriendListWrapper>
         }
