@@ -117,13 +117,11 @@ function Button(props: ButtonProps) {
     return (
       <ButtonComponent sizing={sizing} outline={outline} fill={fill} width={width}>
         <Layout.FlexRow gap={4} alignItems="center">
-          <>
-            {iconPosition === 'left' && icon}
-            <Typo type={fontType ?? defaultFontType} color={color} textAlign="center">
-              {text}
-            </Typo>
-            {iconPosition === 'right' && icon}
-          </>
+          {iconPosition === 'left' && icon}
+          <Typo type={fontType ?? defaultFontType} color={color} textAlign="center">
+            {text}
+          </Typo>
+          {iconPosition === 'right' && icon}
         </Layout.FlexRow>
       </ButtonComponent>
     );
