@@ -15,7 +15,8 @@ import reportWebVitals from './reportWebVitals';
 import AllQuestions from './routes/AllQuestions';
 import Chats from './routes/Chats';
 import ForgotPassword from './routes/ForgotPassword';
-import Friends from './routes/Friends';
+import ExploreFriends from './routes/friends/ExploreFriends';
+import Friends from './routes/friends/Friends';
 import Intro from './routes/Intro';
 import My from './routes/My';
 import Notifications from './routes/Notifications';
@@ -61,7 +62,10 @@ const router = createBrowserRouter([
       },
       {
         path: 'friends',
-        element: <Friends />,
+        children: [
+          { path: '', element: <Friends /> },
+          { path: 'explore', element: <ExploreFriends /> },
+        ],
       },
     ],
   },
