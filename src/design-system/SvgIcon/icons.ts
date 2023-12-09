@@ -34,7 +34,6 @@ const add_user = 'add_user';
 const chat_outline = 'chat_outline';
 const edit_outline = 'edit_outline';
 const arrow_left = 'arrow_left';
-const arrow_left_bold = 'arrow_left_bold';
 const arrow_right = 'arrow_right';
 const search = 'search';
 const logo = 'logo';
@@ -86,7 +85,6 @@ export {
   add_default,
   add_user,
   arrow_left,
-  arrow_left_bold,
   arrow_right,
   camera,
   chat_filled,
