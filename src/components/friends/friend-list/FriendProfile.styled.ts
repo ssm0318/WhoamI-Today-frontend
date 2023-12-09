@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 
 export const StyledFriendListWrapper = styled.ul`
   display: flex;
@@ -38,12 +38,8 @@ export const UpdatedProfileWrapper = styled.li`
   position: relative;
 `;
 
-export const UpdatedDot = styled.div`
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background-color: ${({ theme }) => theme.PRIMARY};
+export const UpdatedChatNumber = styled(Typo)`
   position: absolute;
-  left: 8px;
-  top: 0;
+  top: -8px;
+  right: -7px;
 `;

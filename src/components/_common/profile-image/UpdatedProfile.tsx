@@ -1,6 +1,6 @@
+import { UpdatedDot } from '@common-components/updated-dot/UpdatedDot.styled';
 import {
   StyledUserProfile,
-  UpdatedDot,
   UpdatedProfileWrapper,
 } from '@components/friends/friend-list/FriendProfile.styled';
 import { Typo } from '@design-system';
@@ -13,7 +13,7 @@ interface UpdatedProfileProps {
 function UpdatedProfile({ imageUrl, username }: UpdatedProfileProps) {
   return (
     <UpdatedProfileWrapper>
-      <UpdatedDot />
+      <UpdatedDot top={0} left={8} />
       <StyledUserProfile imageUrl={imageUrl} />
       <Typo type="label-small">{username}</Typo>
     </UpdatedProfileWrapper>

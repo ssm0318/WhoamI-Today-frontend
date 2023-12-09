@@ -7,10 +7,12 @@ import { Loader } from '@components/_common/loader/Loader.styled';
 import NoContents from '@components/_common/no-contents/NoContents';
 import UpdatedProfile from '@components/_common/profile-image/UpdatedProfile';
 import { StyledFriendListWrapper } from '@components/friends/friend-list/FriendProfile.styled';
+import UpdatedFriendItem from '@components/friends/updated-friend-item/UpdatedFriendItem';
 import { Button, Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
+import { LayoutBase } from 'src/design-system/layouts';
 
 function Friends() {
   const [t] = useTranslation('translation');
@@ -42,6 +44,7 @@ function Friends() {
           fontType="body-medium"
         />
       </Layout.FlexRow>
+      {/* Updated Profiles */}
       <Collapse
         title={t('friends.updated_profiles')}
         collapsedItem={
@@ -53,6 +56,22 @@ function Friends() {
         }
       />
       <Divider marginLeading={12} width={1} />
+      {/* All Friends */}
+      <Collapse
+        title={t('friends.all_friends')}
+        collapsedItem={
+          <LayoutBase ph={17} w="100%">
+            {friendList.data.map(({ username, profile_image }) => (
+              <UpdatedFriendItem
+                username={username}
+                profile_image={profile_image}
+                updated
+                new_chat={23}
+              />
+            ))}
+          </LayoutBase>
+        }
+      />
     </>
   );
 }

@@ -16,7 +16,14 @@ function Collapse({ title, collapsedItem }: CollapseProps) {
 
   return (
     <>
-      <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" ph={16}>
+      <Layout.FlexRow
+        w="100%"
+        justifyContent="space-between"
+        alignItems="center"
+        pt={12}
+        pl={16}
+        pr={10}
+      >
         <Typo type="title-medium">{title}</Typo>
         {open ? (
           <Icon name="expand_close" size={28} onClick={toggleCollapse} />
