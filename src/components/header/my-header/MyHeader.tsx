@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBoundStore } from '@stores/useBoundStore';
-import HeaderContainer from '../HeaderContainer';
 import Icon from '../icon/Icon';
+import MainHeader from '../MainHeader';
 import SideMenu from '../side-menu/SideMenu';
 
 function MyHeader() {
@@ -22,7 +22,7 @@ function MyHeader() {
 
   return (
     <>
-      <HeaderContainer
+      <MainHeader
         title={myProfile?.username ?? ''}
         rightButtons={
           <>

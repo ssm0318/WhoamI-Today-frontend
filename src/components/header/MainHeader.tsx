@@ -2,14 +2,14 @@ import { ReactElement } from 'react';
 import { Layout, Typo } from '@design-system';
 import { HeaderWrapper } from './Header.styled';
 
-interface HeaderContainerProps {
+interface MainHeaderProps {
   title: string;
   rightButtons: ReactElement;
 }
 /**
  * 좌측에 title, 우측에 버튼(들)이 있는 헤더
  */
-function HeaderContainer({ title, rightButtons }: HeaderContainerProps) {
+function MainHeader({ title, rightButtons }: MainHeaderProps) {
   return (
     <HeaderWrapper>
       <Layout.FlexRow justifyContent="space-between" w="100%" h="100%" alignItems="center">
@@ -24,4 +24,4 @@ function HeaderContainer({ title, rightButtons }: HeaderContainerProps) {
   );
 }
 
-export default HeaderContainer;
+export default MainHeader;

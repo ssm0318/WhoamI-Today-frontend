@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import HeaderContainer from '../HeaderContainer';
 import Icon from '../icon/Icon';
+import MainHeader from '../MainHeader';
 
 function ChatsHeader() {
   const [t] = useTranslation('translation', { keyPrefix: 'nav_tab' });
   return (
-    <HeaderContainer
+    <MainHeader
       title={t('chats')}
       rightButtons={
         <>
