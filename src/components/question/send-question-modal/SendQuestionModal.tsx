@@ -47,7 +47,7 @@ function SendQuestionModal({
   };
 
   useAsyncEffect(async () => {
-    if (friendList) return;
+    if (!friendList.data) return;
     getFriendList();
   }, []);
 
@@ -80,9 +80,9 @@ function SendQuestionModal({
           ph="default"
           pb={12 + BOTTOM_BUTTON_SECTION_HEIGHT}
         >
-          {friendList && friendList.length > 0 ? (
+          {friendList.state === 'hasValue' && friendList.data.length > 0 ? (
             <>
-              {friendList.map((user) => (
+              {friendList.data.map((user) => (
                 <SendQuestionFriendItem
                   user={user}
                   key={user.id}
