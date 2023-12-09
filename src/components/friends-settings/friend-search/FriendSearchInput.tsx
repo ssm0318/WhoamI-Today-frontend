@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import { Layout, SvgIcon } from '@design-system';
@@ -11,27 +11,36 @@ interface Props {
 
 export default function FriendSearchInput({ query, setQuery }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'settings.friends.search' });
+  const [searchMode, setSearchMode] = useState(false);
+
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
+    setSearchMode(true);
   };
 
   const handleClickDeleteInput = () => {
     setQuery('');
   };
 
+  const handleClickCancel = () => {
+    // TODO: 검색 모드 전환
+    setSearchMode(false);
+    setQuery('');
+  };
+
   return (
-    <Layout.LayoutBase w="100%" ph={24} pt={4}>
+    <Layout.FlexRow w="100%" pl={16} pr={searchMode ? 4 : 24} pt={4} alignItems="center" gap={8}>
       <Layout.FlexRow
         w="100%"
         alignItems="center"
-        bgColor="GRAY_10"
-        gap={12}
+        bgColor="INPUT_GRAY"
         rounded={12}
-        p={9}
-        pr={9}
+        ph={8}
+        pv={6}
+        h={56}
       >
-        <Layout.LayoutBase p={8}>
-          <SvgIcon name="search" size={20} />
+        <Layout.LayoutBase p={12}>
+          <SvgIcon name="search" size={20} fill="MEDIUM_GRAY" />
         </Layout.LayoutBase>
         <S.SearchInput
           placeholder={t('placeholder') || undefined}
@@ -40,8 +49,9 @@ export default function FriendSearchInput({ query, setQuery }: Props) {
           value={query}
           onChange={handleChangeInput}
         />
-        {query && <DeleteButton onClick={handleClickDeleteInput} />}
+        {query && <DeleteButton onClick={handleClickDeleteInput} size={44} />}
       </Layout.FlexRow>
-    </Layout.LayoutBase>
+      {searchMode && <S.SearchCancel onClick={handleClickCancel}>{t('cancel')}</S.SearchCancel>}
+    </Layout.FlexRow>
   );
 }

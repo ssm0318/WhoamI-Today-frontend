@@ -26,7 +26,7 @@ export default function FriendInvitation() {
   };
 
   return (
-    <Layout.LayoutBase w="100%" ph={24}>
+    <Layout.LayoutBase w="100%" ph={16}>
       <Layout.FlexRow
         w="100%"
         alignItems="center"

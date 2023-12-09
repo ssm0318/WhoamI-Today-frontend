@@ -66,7 +66,7 @@ function PushNotiSetting() {
       {permissionAllowed && dailyNotiTime && (
         <Layout.FlexRow ph={DEFAULT_MARGIN} gap={10} w="100%">
           <Font.Display type="20_bold">{t('daily_noti_time')}</Font.Display>
-          <Font.Body type="18_regular" color="BASIC_BLACK">
+          <Font.Body type="18_regular" color="BLACK">
             {getDailyNotiTime(dailyNotiTime)}
           </Font.Body>
         </Layout.FlexRow>

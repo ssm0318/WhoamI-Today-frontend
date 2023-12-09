@@ -13,6 +13,7 @@ export const Colors = {
   LIGHT_GRAY: '#D9D9D9',
   LIGHT: '#ECEBEC',
   WHITE: '#FFFFFF',
+  INPUT_GRAY: '#EFEFEF',
   /**
    * @deprecated
    */

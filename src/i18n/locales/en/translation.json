@@ -187,7 +187,8 @@
     "friends": {
       "title": "Friends",
       "search": {
-        "placeholder": "Add or search friends."
+        "placeholder": "Add or search friends.",
+        "cancel": "Cancel"
       },
       "invite": {
         "title": "WhoAmI Today Invitation Link",
