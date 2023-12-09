@@ -4,27 +4,41 @@ import { Layout } from '@design-system';
 export const StyledSwipeLayout = styled(Layout.FlexRow)`
   position: relative;
   width: 100%;
+  overflow: hidden;
 `;
 
-interface StyledSwipeProps {
+interface StyledSwipedItemProps {
   distance?: number;
 }
 
-export const StyledSwipeItem = styled.div.attrs<StyledSwipeProps>(({ distance }) => ({
+export const StyledSwipedItem = styled.div.attrs<StyledSwipedItemProps>(({ distance }) => ({
   style: {
-    transform: distance && distance > 0 ? `translateX(${-distance}px)` : '',
+    transform: distance ? `translateX(${-distance}px)` : '',
   },
-}))<StyledSwipeProps>`
+}))<StyledSwipedItemProps>`
   width: 100%;
   z-index: 1;
   background-color: ${({ theme }) => theme.WHITE};
 `;
 
-export const StyledRightContent = styled.div.attrs<StyledSwipeProps>(({ distance }) => ({
+type StyledSwipeContentProps = Required<StyledSwipedItemProps>;
+
+export const StyledLeftContent = styled.div.attrs<StyledSwipeContentProps>(({ distance }) => ({
   style: {
-    width: distance && distance > 0 ? `${distance}px` : '',
+    width: distance <= 0 ? `${-distance}px` : '',
   },
-}))<StyledSwipeProps>`
+}))<StyledSwipeContentProps>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+`;
+
+export const StyledRightContent = styled.div.attrs<StyledSwipeContentProps>(({ distance }) => ({
+  style: {
+    width: distance >= 0 ? `${distance}px` : '',
+  },
+}))<StyledSwipeContentProps>`
   position: absolute;
   top: 0;
   right: 0;
