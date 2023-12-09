@@ -1,14 +1,13 @@
 import { TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { SvgIcon } from '@design-system';
-import { IconNames } from 'src/design-system/SvgIcon/SvgIcon.types';
+import { SvgIconProps } from 'src/design-system/SvgIcon/SvgIcon';
 
-interface IconProps {
-  name: IconNames;
+interface IconProps extends Omit<SvgIconProps, 'size'> {
   onClick?: () => void;
   size?: number;
 }
 
-function Icon({ name, onClick, size = TOP_NAVIGATION_HEIGHT }: IconProps) {
+function Icon({ onClick, size = TOP_NAVIGATION_HEIGHT, ...iconProps }: IconProps) {
   return (
     <button
       type="button"
@@ -18,7 +17,7 @@ function Icon({ name, onClick, size = TOP_NAVIGATION_HEIGHT }: IconProps) {
         height: size,
       }}
     >
-      <SvgIcon name={name} size={size} />
+      <SvgIcon size={size} {...iconProps} />
     </button>
   );
 }

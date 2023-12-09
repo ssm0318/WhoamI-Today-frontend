@@ -70,6 +70,8 @@ const camera = 'camera';
 const chat_media_image = 'chat_media_image';
 const chat_media_gif = 'chat_media_gif';
 
+const green_dot = 'green_dot';
+
 // FIXME: 하단 탭 아이콘 교체
 const my_profile = 'my_profile';
 const friends_active = 'friends_active';
@@ -110,6 +112,7 @@ export {
   friend_updates_profile,
   friends_active,
   friends_inactive,
+  green_dot,
   hamburger,
   heart,
   hide_false,
