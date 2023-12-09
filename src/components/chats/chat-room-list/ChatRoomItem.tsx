@@ -5,7 +5,7 @@ import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { SwipeLayoutListContext } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { formatLastMessageTime } from '@components/chats/chat-room-list/ChatRoomItem.helper';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
-import { Font, Layout, SvgIcon, Typo } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 
 interface Props {
   roomId: number;
@@ -59,18 +59,19 @@ export function ChatRoomItem({
         <ProfileImage imageUrl={imageUrl} size={55} />
         <Layout.FlexCol w="100%" justifyContent="center" gap={5}>
           <Layout.FlexRow w="100%" justifyContent="space-between">
-            <Font.Body type="12_semibold">{username}</Font.Body>
-            <Font.Body type="12_semibold" color="MEDIUM_GRAY">
+            <Typo type="label-large">{username}</Typo>
+            <Typo type="label-small" color="MEDIUM_GRAY">
               {formatLastMessageTime(lastMessageTime)}
-            </Font.Body>
+            </Typo>
           </Layout.FlexRow>
           <Layout.FlexRow w="100%" justifyContent="space-between">
-            <Font.Body
-              type={hasUnreadMessages ? '12_semibold' : '12_regular'}
+            <Typo
+              type={hasUnreadMessages ? 'label-medium' : 'body-small'}
               color={hasUnreadMessages ? 'BLACK' : 'MEDIUM_GRAY'}
             >
               {lastMessage}
-            </Font.Body>
+            </Typo>
+
             {hasUnreadMessages && <SvgIcon name="green_dot" size={10} />}
           </Layout.FlexRow>
         </Layout.FlexCol>
