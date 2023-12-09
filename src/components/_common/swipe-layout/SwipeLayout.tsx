@@ -2,7 +2,7 @@ import { ReactElement, TouchEvent, useContext, useRef, useState } from 'react';
 import {
   StyledLeftContent,
   StyledRightContent,
-  StyledSwipeItem,
+  StyledSwipedItem,
   StyledSwipeLayout,
 } from '@components/_common/swipe-layout/SwipeLayout.styled';
 import { SwipeLayoutListContext } from '@components/_common/swipe-layout/SwipeLayoutList';
@@ -127,14 +127,14 @@ export function SwipeLayout({
 
   return (
     <StyledSwipeLayout ref={swipeLayoutRef}>
-      <StyledSwipeItem
+      <StyledSwipedItem
         distance={distance}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
         {children}
-      </StyledSwipeItem>
+      </StyledSwipedItem>
       {!!distance && distance <= 0 && leftContent && (
         <StyledLeftContent distance={distance} onClick={handleContentClick}>
           <Layout.FlexRow w="100%" h="100%" alignItems="center">
