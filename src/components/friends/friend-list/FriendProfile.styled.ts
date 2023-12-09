@@ -7,7 +7,7 @@ export const StyledFriendListWrapper = styled.ul`
   align-items: stretch;
   gap: 9px;
   background: white;
-  padding: 16px 16px 0px 16px;
+  padding: 0 16px 16px 16px;
   width: 100%;
   flex-shrink: 0;
 `;

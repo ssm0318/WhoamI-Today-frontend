@@ -20,7 +20,7 @@ function Collapse({ title, collapsedItem }: CollapseProps) {
         w="100%"
         justifyContent="space-between"
         alignItems="center"
-        pt={12}
+        pv={12}
         pl={16}
         pr={10}
       >

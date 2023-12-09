@@ -55,7 +55,25 @@ function Friends() {
           </StyledFriendListWrapper>
         }
       />
-      <Divider marginLeading={12} width={1} />
+      <Divider width={1} />
+      {/* Favorites */}
+      <Collapse
+        title={t('friends.favorites')}
+        collapsedItem={
+          <LayoutBase ph={17} w="100%">
+            {friendList.data.map(({ username, profile_image }) => (
+              <UpdatedFriendItem
+                username={username}
+                profile_image={profile_image}
+                updated
+                new_chat={23}
+              />
+            ))}
+          </LayoutBase>
+        }
+      />
+      <Divider width={1} />
+      {/* TODO: Friend Request */}
       {/* All Friends */}
       <Collapse
         title={t('friends.all_friends')}
