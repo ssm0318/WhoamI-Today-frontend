@@ -1,20 +1,26 @@
-import React, { useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Font } from '@design-system';
-import { isDisplayType } from '../Font/Font.types';
+import { Font, Layout, Typo } from '@design-system';
+import { FontType, isDisplayType } from '../Font/Font.types';
 import * as S from './Button.styled';
-import { ButtonProps, ButtonSetting } from './Button.types';
+import {
+  ButtonComponentProps,
+  ButtonSetting,
+  DeprecatedButtonComponentProps,
+  DeprecatedButtonSetting,
+} from './Button.types';
 import { useButton } from './useButton';
 
-function Button(
+/** @deprecated use <Button /> */
+function DeprecatedButton(
   props: {
-    size: keyof typeof buttons;
-  } & ButtonProps,
+    size: keyof typeof deprecatedButtons;
+  } & DeprecatedButtonComponentProps,
 ) {
   const { size, to, width, ...buttonProps } = props;
   const { sizing } = buttonProps;
   const { text, color, outline, fill, status, ...handlers } = useButton(buttonProps);
-  const { ButtonComponent, fontType } = buttons[size];
+  const { ButtonComponent, fontType } = deprecatedButtons[size];
 
   const buttonChildren = useMemo(() => {
     if (!text) return null;
@@ -48,17 +54,28 @@ function Button(
   );
 }
 
-const Large = React.memo((props: ButtonProps) => <Button {...props} size="Large" />);
-
-const Small = React.memo((props: ButtonProps) => <Button {...props} size="Small" />);
-
-const Medium = React.memo((props: ButtonProps) => <Button {...props} size="Medium" />);
-
-const Dialog = React.memo((props: ButtonProps) => (
-  <Button {...props} size="Dialog" sizing="stretch" />
+/** @deprecated */
+const Large = React.memo((props: DeprecatedButtonComponentProps) => (
+  <DeprecatedButton {...props} size="Large" />
 ));
 
-const buttons: ButtonSetting = {
+/** @deprecated */
+const Small = React.memo((props: DeprecatedButtonComponentProps) => (
+  <DeprecatedButton {...props} size="Small" />
+));
+
+/** @deprecated */
+const Medium = React.memo((props: DeprecatedButtonComponentProps) => (
+  <DeprecatedButton {...props} size="Medium" />
+));
+
+/** @deprecated */
+const Dialog = React.memo((props: DeprecatedButtonComponentProps) => (
+  <DeprecatedButton {...props} size="Dialog" sizing="stretch" />
+));
+
+/** @deprecated */
+const deprecatedButtons: DeprecatedButtonSetting = {
   Large: {
     ButtonComponent: S.LargeButton,
     fontType: '24_bold',
@@ -77,4 +94,93 @@ const buttons: ButtonSetting = {
   },
 };
 
-export { Dialog, Large, Medium, Small };
+type ButtonProps = {
+  fontType?: FontType;
+  /**
+   * icon 컴포넌트 위치
+   */
+  iconPosition?: 'left' | 'right';
+  /**
+   * SVGIcon 컴포넌트
+   */
+  icon?: ReactElement;
+} & ButtonComponentProps;
+
+function Button(props: ButtonProps) {
+  const { to, width, fontType, iconPosition = 'right', icon, ...buttonProps } = props;
+  const { sizing } = buttonProps;
+  const { text, color, outline, fill, status, ...handlers } = useButton(buttonProps);
+  const { ButtonComponent, fontType: defaultFontType } = buttons[buttonProps.type];
+
+  const buttonChildren = useMemo(() => {
+    if (!text) return null;
+    return (
+      <ButtonComponent sizing={sizing} outline={outline} fill={fill} width={width}>
+        <Layout.FlexRow gap={4} alignItems="center">
+          <>
+            {iconPosition === 'left' && icon}
+            <Typo type={fontType ?? defaultFontType} color={color} textAlign="center">
+              {text}
+            </Typo>
+            {iconPosition === 'right' && icon}
+          </>
+        </Layout.FlexRow>
+      </ButtonComponent>
+    );
+  }, [
+    ButtonComponent,
+    color,
+    defaultFontType,
+    fill,
+    fontType,
+    icon,
+    iconPosition,
+    outline,
+    sizing,
+    text,
+    width,
+  ]);
+
+  return (
+    <S.Container sizing={sizing} disabled={status === 'completed' || status === 'disabled'}>
+      {to ? (
+        <Link to={to} {...handlers}>
+          {buttonChildren}
+        </Link>
+      ) : (
+        <button type="button" {...handlers}>
+          {buttonChildren}
+        </button>
+      )}
+    </S.Container>
+  );
+}
+
+const Primary = React.memo((props: Omit<ButtonProps, 'type'>) => (
+  <Button {...props} type="primary" />
+));
+
+const Secondary = React.memo((props: Omit<ButtonProps, 'type'>) => (
+  <Button {...props} type="secondary" />
+));
+
+const Tertiary = React.memo((props: Omit<ButtonProps, 'type'>) => (
+  <Button {...props} type="tertiary" />
+));
+
+const buttons: ButtonSetting = {
+  primary: {
+    ButtonComponent: S.RoundButton,
+    fontType: 'button-medium',
+  },
+  secondary: {
+    ButtonComponent: S.RoundButton,
+    fontType: 'button-medium',
+  },
+  tertiary: {
+    ButtonComponent: S.UnderlineButton,
+    fontType: 'button-small',
+  },
+};
+
+export { Dialog, Large, Medium, Primary, Secondary, Small, Tertiary };

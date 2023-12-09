@@ -3,14 +3,18 @@ import { DEFAULT_MARGIN } from '@constants/layout';
 import { ColorKeys } from '@design-system';
 import { FlexRow } from '../layouts';
 
-type ButtonProps = {
+type StyledButtonProps = {
   outline?: ColorKeys;
-  fill: ColorKeys;
+  fill?: ColorKeys;
   sizing?: 'fit-content' | 'stretch';
   width?: number;
 };
-const Button = styled.div<ButtonProps>`
-  background-color: ${({ theme, fill }) => theme[fill]};
+const Button = styled.div<StyledButtonProps>`
+  ${({ theme, fill }) =>
+    !!fill &&
+    css`
+      background-color: ${theme[fill]};
+    `}
   ${({ theme, outline }) =>
     !!outline &&
     css`
@@ -32,28 +36,42 @@ const Button = styled.div<ButtonProps>`
     `}
 `;
 
+/** @deprecated */
 export const BUTTON_HEIGHT = {
   LARGE: 60,
   MEDIUM: 37,
   SMALL: 25,
 };
 
+/** @deprecated */
 export const LargeButton = styled(Button)`
   height: ${BUTTON_HEIGHT.LARGE}px;
   padding: 0 20px;
   border-radius: 12px;
 `;
 
+/** @deprecated */
 export const MediumButton = styled(Button)`
   height: ${BUTTON_HEIGHT.MEDIUM}px;
   padding: 6px 20px;
   border-radius: 8px;
 `;
 
+/** @deprecated */
 export const SmallButton = styled(Button)`
   height: ${BUTTON_HEIGHT.SMALL}px;
   padding: 4px 18px;
   border-radius: 12px;
+`;
+
+export const RoundButton = styled(Button)`
+  padding: 8px 12px;
+  border-radius: 12px;
+`;
+
+export const UnderlineButton = styled(Button)`
+  padding: 8px 12px;
+  text-decoration-line: underline;
 `;
 
 export const Container = styled.div<{ sizing?: 'fit-content' | 'stretch'; disabled: boolean }>`
