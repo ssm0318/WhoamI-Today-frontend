@@ -256,6 +256,7 @@
         "request": "요청"
       }
     },
-    "edit_friends": "친구 목록 편집"
+    "edit_friends": "친구 목록 편집",
+    "updated_profiles": "업데이트한 프로필"
   }
 }
