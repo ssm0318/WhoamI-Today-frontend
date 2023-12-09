@@ -89,13 +89,7 @@ function Friends() {
           );
         })}
       </StyledFriendListWrapper>
-      {selectedFriend && (
-        <TheDaysDetail
-          moments={selectedFriend.moments}
-          questions={selectedFriend.questions}
-          mt={120}
-        />
-      )}
+      {selectedFriend && <TheDaysDetail questions={selectedFriend.questions} mt={120} />}
     </>
   );
 }

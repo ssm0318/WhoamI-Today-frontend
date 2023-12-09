@@ -118,10 +118,7 @@ function UserPage() {
             ) : userToday.data.length === 0 ? (
               <NoContents text={t('no_contents.the_day_detail')} />
             ) : (
-              <TheDaysDetail
-                moments={userToday.data[0].moments}
-                questions={userToday.data[0].questions}
-              />
+              <TheDaysDetail questions={userToday.data[0].questions} />
             )}
           </>
         ) : user.state === 'hasError' ? (

@@ -57,10 +57,8 @@ function MyDetail({ detailDate }: MyDetailProps) {
     <Layout.FlexCol w="100%" pt={15} pb={BOTTOM_TABBAR_HEIGHT} bgColor="WHITE" flex-1>
       <TheDaysDetail
         isLoading={moment.state === 'loading' || questions.state === 'loading'}
-        moments={moment?.data}
         questions={questions?.data}
         useDeleteButton
-        reloadMoment={getMoment}
         reloadQuestions={getQuestions}
       />
     </Layout.FlexCol>
