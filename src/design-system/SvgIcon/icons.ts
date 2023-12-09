@@ -24,8 +24,6 @@ const heart = 'heart';
 const comment = 'comment';
 /** @deprecated ver1 icon */
 const error = 'error';
-/** @deprecated ver1 icon */
-const top_navigation_friend = 'top_navigation_friend';
 
 // Universal
 const notification = 'notification';
@@ -138,5 +136,4 @@ export {
   search,
   share_default,
   spotify,
-  top_navigation_friend,
 };

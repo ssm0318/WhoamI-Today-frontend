@@ -7,7 +7,7 @@ import MainContainer from '@components/_common/main-container/MainContainer';
 import EmojiItem from '@components/reaction/emoji-item/EmojiItem';
 import StatusChip from '@components/status/status-chip/StatusChip';
 import StatusMusic from '@components/status/status-music/StatusMusic';
-import TitleHeader from '@components/title-header/TitleHeader';
+import SubHeader from '@components/sub-header/SubHeader';
 import { DEFAULT_MARGIN, SCREEN_WIDTH, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Font, Input, Layout } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
@@ -72,7 +72,7 @@ function StatusEdit() {
 
   return (
     <MainContainer>
-      <TitleHeader title="Check-in Edit" />
+      <SubHeader title="Check-in Edit" />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" gap={10} ph="default">
         {/* availability */}
         <Font.Body type="18_regular">Availability</Font.Body>

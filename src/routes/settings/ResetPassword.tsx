@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
-import TitleHeader from '@components/title-header/TitleHeader';
+import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -34,7 +34,7 @@ function ResetPassword() {
 
   return (
     <MainContainer>
-      <TitleHeader title={t('settings.reset_password')} type="SUB" />
+      <SubHeader typo="title-large" title={t('settings.reset_password')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" gap={10} ph={24}>
         <ValidatedPasswordInput
           label={t('settings.enter_your_new_password')}

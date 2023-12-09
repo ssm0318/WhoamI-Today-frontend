@@ -1,14 +1,14 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Font, Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 import Icon from '../icon/Icon';
+import MainHeader from '../MainHeader';
+import SideMenu from '../side-menu/SideMenu';
 
-interface MyHeaderProps {
-  onClickHamburger: () => void;
-}
-
-function MyHeader({ onClickHamburger }: MyHeaderProps) {
+function MyHeader() {
   const myProfile = useBoundStore((state) => state.myProfile);
+
+  const [showSideMenu, setShowSideMenu] = useState(false);
   const navigate = useNavigate();
 
   const handleEditStatus = () => {
@@ -16,15 +16,22 @@ function MyHeader({ onClickHamburger }: MyHeaderProps) {
     navigate('/status/edit');
   };
 
+  const handleClickHamburger = () => {
+    setShowSideMenu(true);
+  };
+
   return (
     <>
-      <Layout.FlexRow>
-        <Font.Display type="24_regular">{myProfile?.username}</Font.Display>
-      </Layout.FlexRow>
-      <Layout.FlexRow gap={8} alignItems="center">
-        <Icon name="new_chat" size={44} onClick={handleEditStatus} />
-        <Icon name="hamburger" size={44} onClick={onClickHamburger} />
-      </Layout.FlexRow>
+      <MainHeader
+        title={myProfile?.username ?? ''}
+        rightButtons={
+          <>
+            <Icon name="new_chat" size={44} onClick={handleEditStatus} />
+            <Icon name="hamburger" size={44} onClick={handleClickHamburger} />
+          </>
+        }
+      />
+      {showSideMenu && <SideMenu closeSideMenu={() => setShowSideMenu(false)} />}
     </>
   );
 }

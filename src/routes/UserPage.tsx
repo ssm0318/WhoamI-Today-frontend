@@ -8,8 +8,8 @@ import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import MyDetail from '@components/my-detail/MyDetail';
+import SubHeader from '@components/sub-header/SubHeader';
 import TheDaysDetail from '@components/the-days-detail/TheDaysDetail';
-import TitleHeader from '@components/title-header/TitleHeader';
 import FriendStatusButton from '@components/user-page/FriendStatusButton';
 import UserMoreModal from '@components/user-page/UserMoreModal';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
@@ -69,12 +69,11 @@ function UserPage() {
 
   return (
     <MainContainer>
-      <TitleHeader
+      <SubHeader
         title={username}
         RightComponent={
           <button type="button" onClick={handleOnClickMore}>
-            {/* TODO: ... 아이콘으로 업데이트 필요 */}
-            <SvgIcon name="hamburger" size={36} />
+            <SvgIcon name="dots_menu" size={44} />
           </button>
         }
       />

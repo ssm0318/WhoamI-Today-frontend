@@ -8,7 +8,7 @@ import FriendList from '@components/friends-settings/friend-list/FriendList';
 import FriendRequestList from '@components/friends-settings/friend-request-list/FriendRequestList';
 import FriendSearchInput from '@components/friends-settings/friend-search/FriendSearchInput';
 import FriendSearchList from '@components/friends-settings/friend-search-list/FriendSearchList';
-import TitleHeader from '@components/title-header/TitleHeader';
+import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import i18n from '@i18n/index';
@@ -25,7 +25,7 @@ function FriendsSettings() {
 
   return (
     <MainContainer>
-      <TitleHeader title={t('title')} />
+      <SubHeader title={t('title')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" gap={14}>
         <FriendSearchInput query={query} setQuery={setQuery} />
         <FriendInvitation />

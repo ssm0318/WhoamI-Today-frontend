@@ -8,9 +8,9 @@ import SendQuestionModal from '@components/question/send-question-modal/SendQues
 import QuestionItem from '@components/response/question-item/QuestionItem';
 import ResponseCompleteModal from '@components/response/response-complete-modal/ResponseCompleteModal';
 import ResponseInput from '@components/response/response-input/ResponseInput';
-import TitleHeader from '@components/title-header/TitleHeader';
+import SubHeader from '@components/sub-header/SubHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Font, Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { ShortAnswerQuestion } from '@models/post';
@@ -74,12 +74,12 @@ function ShortAnswerResponse() {
 
   return (
     <MainContainer>
-      <TitleHeader
+      <SubHeader
         RightComponent={
           <button type="button" onClick={handlePost}>
-            <Font.Display type="18_bold" color="BLACK">
+            <Typo type="title-large" color="PRIMARY">
               {t('post')}
-            </Font.Display>
+            </Typo>
           </button>
         }
       />

@@ -2,7 +2,7 @@ import { Track } from '@spotify/web-api-ts-sdk';
 import { ChangeEvent, useState } from 'react';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import StatusMusic from '@components/status/status-music/StatusMusic';
-import TitleHeader from '@components/title-header/TitleHeader';
+import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Input, Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -32,7 +32,7 @@ function MusicSearch() {
 
   return (
     <MainContainer>
-      <TitleHeader title="Search Music" />
+      <SubHeader title="Search Music" />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} pb="default" w="100%" gap={10} ph="default">
         <Input label="music search" value={query} onChange={handleChangeQuery} />
         {trackList.map((track) => (

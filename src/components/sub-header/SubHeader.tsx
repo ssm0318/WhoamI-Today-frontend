@@ -1,17 +1,20 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Font, Layout, SvgIcon } from '@design-system';
-import { HeaderWrapper } from './TitleHeader.styled';
+import { Layout, SvgIcon, Typo } from '@design-system';
+import { FontType } from 'src/design-system/Font/Font.types';
+import { SubHeaderWrapper } from './SubHeader.styled';
 
-type TitleHeaderType = 'MAIN' | 'SUB';
-interface TitleHeaderProps {
+interface SubHeaderProps {
   title?: string | null;
-  type?: TitleHeaderType;
+  typo?: FontType;
   onGoBack?: () => void;
   RightComponent?: React.ReactNode;
 }
-
-function TitleHeader({ title, type = 'MAIN', onGoBack, RightComponent }: TitleHeaderProps) {
+/**
+ *
+ * 중앙에 title이 있는 헤더
+ */
+function SubHeader({ title, typo = 'head-line', onGoBack, RightComponent }: SubHeaderProps) {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
@@ -20,13 +23,13 @@ function TitleHeader({ title, type = 'MAIN', onGoBack, RightComponent }: TitleHe
   };
 
   return (
-    <HeaderWrapper>
+    <SubHeaderWrapper>
       <Layout.FlexRow
         justifyContent="space-between"
         w="100%"
         alignItems="center"
         ph="default"
-        pv={10}
+        pv={4}
       >
         <Layout.LayoutBase w={36} h={36}>
           <button type="button" onClick={handleGoBack}>
@@ -34,16 +37,16 @@ function TitleHeader({ title, type = 'MAIN', onGoBack, RightComponent }: TitleHe
           </button>
         </Layout.LayoutBase>
         {title && (
-          <Font.Display type={type === 'MAIN' ? '24_bold' : '20_bold'} textAlign="center">
+          <Typo type={typo} textAlign="center">
             {title}
-          </Font.Display>
+          </Typo>
         )}
         <Layout.LayoutBase w={title && !RightComponent ? 36 : undefined}>
           {RightComponent && RightComponent}
         </Layout.LayoutBase>
       </Layout.FlexRow>
-    </HeaderWrapper>
+    </SubHeaderWrapper>
   );
 }
 
-export default TitleHeader;
+export default SubHeader;

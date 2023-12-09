@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NotificationItem from '@components/notification/NotificationItem';
-import TitleHeader from '@components/title-header/TitleHeader';
+import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
@@ -30,7 +30,7 @@ function Notifications() {
 
   return (
     <MainContainer>
-      <TitleHeader title={t('title')} />
+      <SubHeader title={t('title')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 8} w="100%">
         {notifications.map((noti) => (
           <NotificationItem item={noti} key={noti.id} />

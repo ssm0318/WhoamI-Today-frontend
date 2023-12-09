@@ -7,7 +7,7 @@ import MainContainer from '@components/_common/main-container/MainContainer';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { AccountSettingButton, SettingsButton } from '@components/settings/SettingsButtons';
 import { StyledSettingsAnchor } from '@components/settings/SettingsButtons.styled';
-import TitleHeader from '@components/title-header/TitleHeader';
+import SubHeader from '@components/sub-header/SubHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import {
   PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_EN,
@@ -49,7 +49,7 @@ function Settings() {
 
   return (
     <MainContainer>
-      <TitleHeader title={t('title')} />
+      <SubHeader title={t('title')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" gap={10}>
         {/* profile */}
         <Layout.FlexRow justifyContent="center" mb={8} ph={DEFAULT_MARGIN}>
