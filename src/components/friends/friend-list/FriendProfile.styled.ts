@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
 
 export const StyledFriendListWrapper = styled.ul`
@@ -11,8 +10,6 @@ export const StyledFriendListWrapper = styled.ul`
   padding: 8px 20px;
   width: 100%;
   flex-shrink: 0;
-  position: absolute;
-  z-index: ${Z_INDEX.FRIEND_FEED_FRIEND_LIST};
 `;
 
 interface StyledFriendImageProfileProps {

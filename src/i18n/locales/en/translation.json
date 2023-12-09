@@ -255,6 +255,7 @@
     }
   },
   "friends": {
-    "explore_friends": "Explore Friends"
+    "explore_friends": "Explore Friends",
+    "edit_friends": "Edit Friends"
   }
 }

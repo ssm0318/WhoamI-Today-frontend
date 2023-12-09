@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import CommonError from '@components/_common/common-error/CommonError';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import NoContents from '@components/_common/no-contents/NoContents';
 import FriendProfile from '@components/_common/profile-image/FriendProfile';
 import { StyledFriendListWrapper } from '@components/friends/friend-list/FriendProfile.styled';
-import TheDaysDetail from '@components/the-days-detail/TheDaysDetail';
+import { Button } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { FriendToday, GetFriendsTodayResponse } from '@models/api/friends';
@@ -14,7 +15,7 @@ import { UserSelector } from '@stores/user';
 import { getFriendsToday } from '@utils/apis/friends';
 
 function Friends() {
-  const [t] = useTranslation('translation', { keyPrefix: 'no_contents' });
+  const [t] = useTranslation('translation');
   const { isFriendListLoading, friendList, getFriendList } = useBoundStore(UserSelector);
 
   const [selectedFriend, setSelectedFriend] = useState<FriendToday>();
@@ -48,11 +49,16 @@ function Friends() {
     await getFriendList();
   }, []);
 
+  const navigate = useNavigate();
+  const handleClickEditFriends = () => {
+    navigate('edit');
+  };
+
   const isLoading = friendsTodayResponse.state === 'loading' || isFriendListLoading;
   if (isLoading) return <Loader />;
 
   const hasFriends = friendList && friendList.length > 0;
-  if (!hasFriends) return <NoContents text={t('friends')} />;
+  if (!hasFriends) return <NoContents text={t('no_contents.friends')} />;
   if (hasFriends && friendsTodayResponse.state === 'hasError') return <CommonError />;
 
   const friendWithoutToday = friendList?.filter(
@@ -62,6 +68,11 @@ function Friends() {
 
   return (
     <>
+      <Button.Tertiary
+        status="normal"
+        text={t('friends.edit_friends')}
+        onClick={handleClickEditFriends}
+      />
       <StyledFriendListWrapper>
         {friendsTodayResponse?.data?.map((friendToday) => {
           const { id, profile_image, username } = friendToday;
@@ -89,7 +100,6 @@ function Friends() {
           );
         })}
       </StyledFriendListWrapper>
-      {selectedFriend && <TheDaysDetail questions={selectedFriend.questions} mt={120} />}
     </>
   );
 }

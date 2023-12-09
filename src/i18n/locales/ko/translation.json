@@ -250,7 +250,8 @@
     }
   },
   "friends": {
-    "explore_friends": "친구 추가"
+    "explore_friends": "친구 추가",
+    "edit_friends": "친구 목록 편집"
   }
 
 }
