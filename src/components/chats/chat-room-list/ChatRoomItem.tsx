@@ -5,7 +5,7 @@ import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { SwipeLayoutListContext } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { formatLastMessageTime } from '@components/chats/chat-room-list/ChatRoomItem.helper';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
-import { Font, Layout, SvgIcon } from '@design-system';
+import { Font, Layout, SvgIcon, Typo } from '@design-system';
 
 interface Props {
   roomId: number;
@@ -38,14 +38,14 @@ export function ChatRoomItem({
       rightContent={
         <Layout.FlexRow w="100%" h="100%" alignItems="center">
           <StyledSwipeButton backgroundColor="MEDIUM_GRAY">
-            <Font.Body type="12_regular" color="WHITE" textAlign="center">
+            <Typo type="body-medium" color="WHITE" textAlign="center">
               Mute
-            </Font.Body>
+            </Typo>
           </StyledSwipeButton>
           <StyledSwipeButton backgroundColor="ERROR">
-            <Font.Body type="12_regular" color="WHITE" textAlign="center">
+            <Typo type="body-medium" color="WHITE" textAlign="center">
               Delete
-            </Font.Body>
+            </Typo>
           </StyledSwipeButton>
         </Layout.FlexRow>
       }

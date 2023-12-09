@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { ChatRoomItem } from '@components/chats/chat-room-list/ChatRoomItem';
 import { MOCK_CHAT_ROOM_LIST } from '@components/chats/chat-room-list/ChatRoomList.helper';
-import { Font, Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 
 export function ChatRoomList() {
   const [t] = useTranslation('translation', { keyPrefix: 'chats.room_list' });
@@ -10,7 +10,7 @@ export function ChatRoomList() {
   return (
     <Layout.FlexCol w="100%" pv={5} gap={5}>
       <Layout.LayoutBase ph={16}>
-        <Font.Body type="16_semibold">{t('title')}</Font.Body>
+        <Typo type="title-medium">{t('title')}</Typo>
       </Layout.LayoutBase>
       <Layout.FlexCol w="100%" gap={10}>
         <SwipeLayoutList>

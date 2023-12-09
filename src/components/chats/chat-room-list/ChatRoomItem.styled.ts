@@ -10,5 +10,6 @@ export const StyledSwipeButton = styled.button.attrs<StyledSwipeButtonProps>({
 })<StyledSwipeButtonProps>`
   background-color: ${({ theme, backgroundColor }) => theme[backgroundColor]};
   width: 100%;
-  height: 100%;
+  min-width: 65px;
+  height: 44px;
 `;

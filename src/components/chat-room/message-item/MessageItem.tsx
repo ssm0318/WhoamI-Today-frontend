@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { MOCK_MESSAGE_LIST } from '@components/chat-room/message-list/MessageList.helper';
-import { Font, Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import { getTime } from './MessageItem.helper';
 import {
   LeftMessageContent,
@@ -31,7 +31,7 @@ export function MessageItem({ content, author, created_at }: Props) {
       <Layout.FlexRow gap={10}>
         <ProfileImage imageUrl={author.imageUrl} size={40} />
         <LeftMessageContent>
-          <Font.Body type="14_regular">{content}</Font.Body>
+          <Typo type="body-medium">{content}</Typo>
         </LeftMessageContent>
       </Layout.FlexRow>
       <StyledTime>{formattedTime}</StyledTime>
@@ -40,7 +40,7 @@ export function MessageItem({ content, author, created_at }: Props) {
     <RightMessageWrapper>
       <StyledTime>{formattedTime}</StyledTime>
       <RightMessageContent>
-        <Font.Body type="14_regular">{content}</Font.Body>
+        <Typo type="body-medium">{content}</Typo>
       </RightMessageContent>
     </RightMessageWrapper>
   );

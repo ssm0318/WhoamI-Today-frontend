@@ -29,6 +29,4 @@ export const StyledRightContent = styled.div.attrs<StyledSwipeProps>(({ distance
   top: 0;
   right: 0;
   z-index: 0;
-  margin-top: 1px;
-  height: 44px;
 `;

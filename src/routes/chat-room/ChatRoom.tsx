@@ -5,12 +5,11 @@ import { MessageInputBox } from '@components/chat-room/message-input-box/Message
 import { MessageList } from '@components/chat-room/message-list/MessageList';
 import { MessageNotiSettings } from '@components/chat-room/message-noti-settings/MessageNotiSettings';
 import { MOCK_CHAT_ROOM_LIST } from '@components/chats/chat-room-list/ChatRoomList.helper';
-import { HeaderWrapper } from '@components/header/Header.styled';
 import Icon from '@components/header/icon/Icon';
 import { TOP_NAVIGATION_HEIGHT, Z_INDEX } from '@constants/layout';
-import { Font, Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import { MainWrapper } from '@styles/wrappers';
-import { ChatRoomContainer } from 'src/routes/chat-room/ChatRoom.styled';
+import { ChatRoomContainer, ChatRoomHeaderWrapper } from './ChatRoom.styled';
 
 export function ChatRoom() {
   const { roomId: roomIdStr } = useParams();
@@ -53,19 +52,19 @@ export function ChatRoom() {
       bgColor="WHITE"
       alignItems="center"
     >
-      <HeaderWrapper>
+      <ChatRoomHeaderWrapper>
         <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center">
           <Icon name="arrow_left" size={36} color="BLACK" onClick={handleClickGoBack} />
           <Layout.FlexRow alignItems="center" gap={6.5}>
             <ProfileImage imageUrl={chatRoomData?.imageUrl} size={24} />
-            <Font.Body type="20_semibold">{chatRoomData?.username}</Font.Body>
+            <Typo type="title-large">{chatRoomData?.username}</Typo>
           </Layout.FlexRow>
           <Layout.FlexRow alignItems="center" gap={10}>
             <Icon name="search" size={18} fill="BLACK" onClick={handleClickMsgSearch} />
             <Icon name="notification" size={36} color="BLACK" onClick={handleClickNotiSettings} />
           </Layout.FlexRow>
         </Layout.FlexRow>
-      </HeaderWrapper>
+      </ChatRoomHeaderWrapper>
       <Layout.FlexCol w="100%" h="100%">
         <MainWrapper alignItems="center" pt={TOP_NAVIGATION_HEIGHT}>
           {chatRoomData ? <MessageList /> : 'loading...'}
