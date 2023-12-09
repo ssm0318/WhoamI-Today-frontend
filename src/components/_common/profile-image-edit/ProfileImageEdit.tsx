@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import Cropper, { Area } from 'react-easy-crop';
 import { useTranslation } from 'react-i18next';
-import TitleHeader from '@components/title-header/TitleHeader';
+import SubHeader from '@components/sub-header/SubHeader';
 import { Typo } from '@design-system';
 import getCroppedImg, { CroppedImg } from '@utils/getCroppedImg';
 
@@ -58,7 +58,7 @@ function ProfileImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileI
 
   return (
     <>
-      <TitleHeader
+      <SubHeader
         title={t('settings.crop_picture')}
         RightComponent={
           <button type="button" onClick={handleClickComplete}>
@@ -67,7 +67,7 @@ function ProfileImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileI
             </Typo>
           </button>
         }
-        type="SUB"
+        typo="title-large"
         onGoBack={handleOnClose}
       />
       <Cropper

@@ -6,7 +6,7 @@ import MainContainer from '@components/_common/main-container/MainContainer';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
 import { StyledEditProfileButton } from '@components/settings/SettingsButtons.styled';
-import TitleHeader from '@components/title-header/TitleHeader';
+import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Font, Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -67,7 +67,7 @@ function EditProfile() {
 
   return (
     <MainContainer>
-      <TitleHeader title={t('edit_profile')} type="SUB" />
+      <SubHeader typo="title-large" title={t('edit_profile')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" gap={10}>
         <Layout.FlexCol pt={12} pb={19} bgColor="GRAY_10" w="100%" alignItems="center">
           <StyledEditProfileButton type="button" onClick={handleClickUpdate}>

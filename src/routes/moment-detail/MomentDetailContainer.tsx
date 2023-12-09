@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
-import TitleHeader from '@components/title-header/TitleHeader';
+import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import { FetchState } from '@models/api/common';
@@ -33,7 +33,7 @@ function MomentDetailContainer() {
 
   return (
     <MainContainer>
-      <TitleHeader title="moment" />
+      <SubHeader title="moment" />
       <Layout.FlexCol w="100%" pv={28} ph={24} gap={14} mt={TITLE_HEADER_HEIGHT}>
         {momentState.state === 'hasError' ? (
           <NoContents title={t('moment_detail')} mv={0} />

@@ -4,7 +4,7 @@ import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import QuestionItem from '@components/question/question-item/QuestionItem';
-import TitleHeader from '@components/title-header/TitleHeader';
+import SubHeader from '@components/sub-header/SubHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
@@ -31,7 +31,7 @@ function AllQuestions() {
 
   return (
     <MainContainer>
-      <TitleHeader title={t('home.question.all_questions')} />
+      <SubHeader title={t('home.question.all_questions')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} pv={14} w="100%" ph={DEFAULT_MARGIN} gap={20}>
         {questions.map((question) => (
           <QuestionItem question={question} key={question.id} />

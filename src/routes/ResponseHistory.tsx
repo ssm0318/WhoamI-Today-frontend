@@ -7,7 +7,7 @@ import NoContents from '@components/_common/no-contents/NoContents';
 import SendQuestionModal from '@components/question/send-question-modal/SendQuestionModal';
 import QuestionItem from '@components/response/question-item/QuestionItem';
 import ResponseItem from '@components/response/response-item/ResponseItem';
-import TitleHeader from '@components/title-header/TitleHeader';
+import SubHeader from '@components/sub-header/SubHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -49,7 +49,7 @@ function ResponseHistory() {
 
   return (
     <MainContainer>
-      <TitleHeader
+      <SubHeader
         RightComponent={
           <button type="button" onClick={handleClickResponse}>
             <SvgIcon name="moment_description_normal" size={44} />

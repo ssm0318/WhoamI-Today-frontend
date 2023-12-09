@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import MomentUploadCompleteModal from '@components/moment-upload/complete-modal/MomentUploadCompleteModal';
 import MomentUploadDescriptionInput from '@components/moment-upload/moment-upload-description-input/MomentUploadDescriptionInput';
-import TitleHeader from '@components/title-header/TitleHeader';
+import SubHeader from '@components/sub-header/SubHeader';
 import { DEFAULT_MARGIN, SCREEN_WIDTH, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
@@ -81,9 +81,9 @@ function MomentUpload() {
 
   return (
     <MainContainer>
-      <TitleHeader
+      <SubHeader
         title={t('todays_moments')}
-        type="SUB"
+        typo="title-large"
         RightComponent={
           <Layout.FlexRow
             ph={12}
