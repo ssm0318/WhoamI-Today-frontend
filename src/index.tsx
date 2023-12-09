@@ -15,10 +15,10 @@ import reportWebVitals from './reportWebVitals';
 import AllQuestions from './routes/AllQuestions';
 import Chats from './routes/Chats';
 import ForgotPassword from './routes/ForgotPassword';
-import Friends from './routes/Friends';
+import EditFriends from './routes/friends/EditFriends';
+import ExploreFriends from './routes/friends/ExploreFriends';
+import Friends from './routes/friends/Friends';
 import Intro from './routes/Intro';
-import MomentDetailContainer from './routes/moment-detail/MomentDetailContainer';
-import MomentUpload from './routes/MomentUpload';
 import My from './routes/My';
 import Notifications from './routes/Notifications';
 import ShortAnswerResponse from './routes/response/ShortAnswerResponse';
@@ -63,7 +63,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'friends',
-        element: <Friends />,
+        children: [
+          { path: '', element: <Friends /> },
+          { path: 'explore', element: <ExploreFriends /> },
+          { path: 'edit', element: <EditFriends /> },
+        ],
       },
     ],
   },
@@ -91,11 +95,6 @@ const router = createBrowserRouter([
       { path: ':questionId/short-answer', element: <ShortAnswerResponse /> },
     ],
   },
-  {
-    path: 'moment-upload',
-    element: <MomentUpload />,
-  },
-  { path: 'moments/:momentId', element: <MomentDetailContainer />, loader: checkIfSignIn },
   { path: 'responses/:responseId', element: <ResponseDetailContainer />, loader: checkIfSignIn },
   {
     path: 'notifications',

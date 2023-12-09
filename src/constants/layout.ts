@@ -7,7 +7,6 @@ const SCREEN_HEIGHT = typeof window !== 'undefined' ? window.innerHeight : 0;
 const TITLE_HEADER_HEIGHT = 44;
 
 const Z_INDEX = {
-  FRIEND_FEED_FRIEND_LIST: 10,
   TITLE_HEADER: 100,
   MODAL_CONTAINER: 1000,
   TOAST_CONTAINER: 2000,

@@ -253,5 +253,9 @@
       "title": "Notification",
       "mute": "Mute conversation"
     }
+  },
+  "friends": {
+    "explore_friends": "Explore Friends",
+    "edit_friends": "Edit Friends"
   }
 }
