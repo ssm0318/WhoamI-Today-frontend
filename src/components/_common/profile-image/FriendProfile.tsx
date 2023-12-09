@@ -1,6 +1,7 @@
 import {
   StyledFriendProfile,
   StyledFriendProfileImage,
+  UpdatedDot,
 } from '@components/friends/friend-list/FriendProfile.styled';
 import { Typo } from '@design-system';
 
@@ -12,6 +13,7 @@ interface FriendProfileProps {
 function FriendProfile({ imageUrl, username }: FriendProfileProps) {
   return (
     <StyledFriendProfile>
+      <UpdatedDot />
       <StyledFriendProfileImage imageUrl={imageUrl} />
       <Typo type="label-small">{username}</Typo>
     </StyledFriendProfile>

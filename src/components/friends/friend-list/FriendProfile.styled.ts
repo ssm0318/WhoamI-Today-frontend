@@ -35,4 +35,15 @@ export const StyledFriendProfile = styled.li`
   gap: 4px;
   cursor: pointer;
   width: 61px;
+  position: relative;
+`;
+
+export const UpdatedDot = styled.div`
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.PRIMARY};
+  position: absolute;
+  left: 8px;
+  top: 0;
 `;
