@@ -39,7 +39,7 @@ export default function RequestList() {
   if (!friendRequests) return <Loader />;
   return (
     <Layout.FlexCol w="100%" pv={12} ph={16} gap={4}>
-      <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
+      <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" pv={5}>
         <Typo type="body-medium" color="MEDIUM_GRAY" ml={5} mb={2}>
           {t('title', { number: friendRequests.length })}
         </Typo>
