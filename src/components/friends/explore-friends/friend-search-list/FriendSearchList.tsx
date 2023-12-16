@@ -39,7 +39,7 @@ export default function FriendSearchList({ query }: Props) {
       {searchList.length > 0 ? (
         <>
           {searchList.map((user) => (
-            <FriendItem key={user.id} type="search" user={user} />
+            <FriendItem key={user.id} type="search" user={user} areFriends={user.are_friends} />
           ))}
           <div ref={targetRef} />
           {isLoading && <Loader />}

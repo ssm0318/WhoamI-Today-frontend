@@ -16,11 +16,12 @@ import {
 interface Props {
   type: 'requests' | 'recommended' | 'search';
   user: User;
+  areFriends?: boolean;
   updateList?: () => void;
 }
 
 // FIXME: 각 버튼 클릭시 동작 정리 필요
-function FriendItem({ type, user, updateList }: Props) {
+function FriendItem({ type, user, areFriends, updateList }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.friend_item' });
 
   const handleClickConfirm = async (e: MouseEvent) => {
@@ -78,7 +79,11 @@ function FriendItem({ type, user, updateList }: Props) {
       )}
       {(type === 'recommended' || type === 'search') && (
         <Layout.FlexRow gap={16} alignItems="center">
-          <Button.Primary status="normal" text={t('request')} onClick={handleClickRequest} />
+          <Button.Primary
+            status={areFriends ? 'disabled' : 'normal'}
+            text={t('request')}
+            onClick={handleClickRequest}
+          />
           <Icon name="close" size={16} onClick={handleClickDelete} />
         </Layout.FlexRow>
       )}
