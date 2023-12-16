@@ -40,9 +40,7 @@ function ExploreFriends() {
                 tabList={TabList}
                 selectedKey={selectedTab}
                 onClick={setSelectedTab}
-                displayFontType="14_semibold"
-                bgColor="BACKGROUND_COLOR"
-                tabWidth={90}
+                tabWidth={111}
               />
             </Layout.Fixed>
           </>

@@ -19,14 +19,7 @@ function CalendarViewTabs() {
     resetDetailDate();
   };
 
-  return (
-    <Tabs
-      tabList={CALENDAR_VIEW_TAB_LIST}
-      displayFontType="18_bold"
-      onClick={onClickTab}
-      selectedKey={calendarView}
-    />
-  );
+  return <Tabs tabList={CALENDAR_VIEW_TAB_LIST} onClick={onClickTab} selectedKey={calendarView} />;
 }
 
 export default CalendarViewTabs;
