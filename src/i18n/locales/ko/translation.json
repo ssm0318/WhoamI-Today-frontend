@@ -180,34 +180,7 @@
     "yes_delete": "확인",
     "password": "비밀번호",
     "continue": "계속하기",
-    "are_you_sure": "정말로 계속하시겠습니까?\n한 번 계정을 삭제하면 다시 복구할 수 없습니다.",
-    "friends": {
-      "title": "친구 관리",
-      "search": {
-        "placeholder": "친구를 추가하거나 검색하세요.",
-        "cancel": "취소"
-      },
-      "invite": {
-        "title": "WhoAmI Today 초대 링크",
-        "text": "WhoAmI Today에 친구를 초대해보세요.",
-        "copy": "초대 링크를 클립보드에 복사했습니다."
-      },
-      "tab": {
-        "friends": "친구 목록",
-        "request": "친구 요청"
-      },
-      "friend_list": {
-        "title": "{{number}} 명"
-      },
-      "request_list": {
-        "title": "친구 요청 ({{number}})",
-        "no_requests": {
-          "title": "대기 요청 없음.",
-          "text": "수락하지 않은 친구 요청이 없습니다."
-        },
-        "accept": "수락"
-      }
-    }
+    "are_you_sure": "정말로 계속하시겠습니까?\n한 번 계정을 삭제하면 다시 복구할 수 없습니다."
   },
   "time": {
     "just_a_moment_ago": "방금 전",
@@ -250,8 +223,33 @@
     }
   },
   "friends": {
-    "explore_friends": "친구 추가",
+    "explore_friends": {
+      "title": "친구 탐색",
+      "search": {
+        "placeholder": "친구를 추가하거나 검색하세요.",
+        "cancel": "취소"
+      },
+      "invite": {
+        "title": "WhoAmI Today 초대 링크",
+        "text": "WhoAmI Today에 친구를 초대해보세요.",
+        "copy": "초대 링크를 클립보드에 복사했습니다."
+      },
+      "tab": {
+        "requests": "친구 요청",
+        "recommended": "추천 친구"
+      },
+      "request_list": {
+        "title": "친구 요청 ({{number}})",
+        "no_requests": {
+          "title": "대기 요청 없음.",
+          "text": "수락하지 않은 친구 요청이 없습니다."
+        },
+        "accept": "수락"
+      },
+      "recommended_list": {
+        "title": "추천 친구 ({{number}})"
+      }
+    },
     "edit_friends": "친구 목록 편집"
   }
-
 }

@@ -4,39 +4,39 @@ import { Divider } from '@components/_common/divider/Divider.styled';
 import Tabs from '@components/_common/tabs/Tabs';
 import FriendInvitation from '@components/friends/explore-friends/friend-invitation/FriendInvitation';
 import FriendSearchInput from '@components/friends/explore-friends/friend-search/FriendSearchInput';
-import FriendList from '@components/friends-settings/friend-list/FriendList';
-import FriendRequestList from '@components/friends-settings/friend-request-list/FriendRequestList';
-import FriendSearchList from '@components/friends-settings/friend-search-list/FriendSearchList';
+import FriendSearchList from '@components/friends/explore-friends/friend-search-list/FriendSearchList';
+import RecommendedList from '@components/friends/explore-friends/recommended-list/RecommendedList';
+import RequestList from '@components/friends/explore-friends/request-list/RequestList';
 import SubHeader from '@components/sub-header/SubHeader';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import i18n from '@i18n/index';
 
 const TabList = [
-  { key: 'friends', text: i18n.t('settings.friends.tab.friends') },
-  { key: 'request', text: i18n.t('settings.friends.tab.request') },
+  { key: 'requests', text: i18n.t('friends.explore_friends.tab.requests') },
+  { key: 'recommended', text: i18n.t('friends.explore_friends.tab.recommended') },
 ];
 
 function ExploreFriends() {
-  const [t] = useTranslation('translation', { keyPrefix: 'friends' });
+  const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends' });
 
-  const [selectedTab, setSelectedTab] = useState('friends');
+  const [selectedTab, setSelectedTab] = useState('requests');
   const [query, setQuery] = useState('');
 
   return (
     <>
-      <SubHeader title={t('explore_friends')} />
+      <SubHeader title={t('title')} />
       <Layout.FlexCol w="100%">
         <Layout.FlexCol w="100%" gap={16} p={16}>
           <FriendSearchInput query={query} setQuery={setQuery} />
-          <FriendInvitation />
+          {!query && <FriendInvitation />}
         </Layout.FlexCol>
-        <Divider width={1} />
         {query ? (
           <FriendSearchList query={query} />
         ) : (
           <>
-            {selectedTab === 'friends' ? <FriendList /> : <FriendRequestList />}
+            <Divider width={1} />
+            {selectedTab === 'requests' ? <RequestList /> : <RecommendedList />}
             <Layout.Fixed b={BOTTOM_TABBAR_HEIGHT} l="50%" tl={['-50%', '-50%']}>
               <Tabs
                 tabList={TabList}

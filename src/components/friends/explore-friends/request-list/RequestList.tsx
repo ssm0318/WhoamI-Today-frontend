@@ -2,14 +2,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
-import FriendItem from '@components/friends-settings/friend-item/FriendItem';
+import FriendItem from '@components/friends/explore-friends/friend-item/FriendItem';
 import { Font, Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { FriendRequest } from '@models/api/user';
 import { getFriendRequests } from '@utils/apis/user';
 
-export default function FriendRequestList() {
-  const [t] = useTranslation('translation', { keyPrefix: 'settings.friends.request_list' });
+export default function RequestList() {
+  const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.request_list' });
 
   const [friendRequests, setFriendRequests] = useState<FriendRequest[]>();
   const [nextUrl, setNextUrl] = useState<string | null>(null);
@@ -34,7 +34,7 @@ export default function FriendRequestList() {
 
   if (!friendRequests) return <Loader />;
   return (
-    <Layout.FlexCol w="100%" ph={10} gap={8}>
+    <Layout.FlexCol w="100%" pv={12} ph={16} gap={4}>
       <Font.Body type="14_regular" color="MEDIUM_GRAY" ml={5} mb={2}>
         {t('title', { number: friendRequests.length })}
       </Font.Body>

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
-import FriendItem from '@components/friends-settings/friend-item/FriendItem';
+import FriendItem from '@components/friends/explore-friends/friend-item/FriendItem';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { UserProfile } from '@models/user';

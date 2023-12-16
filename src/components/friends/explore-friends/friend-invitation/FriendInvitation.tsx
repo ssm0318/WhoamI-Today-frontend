@@ -8,7 +8,7 @@ import { getMobileDeviceInfo } from '@utils/getUserAgent';
 const INVITATION_LINK = 'https://whoamitoday.page.link/invite';
 
 export default function FriendInvitation() {
-  const [t] = useTranslation('translation', { keyPrefix: 'settings.friends.invite' });
+  const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.invite' });
   const { isMobile } = getMobileDeviceInfo();
   const [showToast, setShowToast] = useState(false);
 
@@ -19,8 +19,8 @@ export default function FriendInvitation() {
       return;
     }
     navigator.share({
-      title: i18n.t('settings.friends.invite.title') ?? '',
-      text: i18n.t('settings.friends.invite.text') ?? '',
+      title: i18n.t('friends.explore_friends.invite.title') ?? '',
+      text: i18n.t('friends.explore_friends.invite.text') ?? '',
       url: INVITATION_LINK,
     });
   };

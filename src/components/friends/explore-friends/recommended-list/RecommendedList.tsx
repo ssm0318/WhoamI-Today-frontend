@@ -2,14 +2,16 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
-import FriendItem from '@components/friends-settings/friend-item/FriendItem';
+import FriendItem from '@components/friends/explore-friends/friend-item/FriendItem';
 import { Font, Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { User } from '@models/user';
 import { getFriendList } from '@utils/apis/user';
 
-function FriendList() {
-  const [t] = useTranslation('translation');
+export default function RecommendedList() {
+  const [t] = useTranslation('translation', {
+    keyPrefix: 'friends.explore_friends.recommended_list',
+  });
 
   const [friendList, setFriendList] = useState<User[]>();
   const [nextUrl, setNextUrl] = useState<string | null>(null);
@@ -31,9 +33,9 @@ function FriendList() {
 
   if (!friendList) return <Loader />;
   return (
-    <Layout.FlexCol w="100%" ph={10} gap={8}>
+    <Layout.FlexCol w="100%" pv={12} ph={16} gap={4}>
       <Font.Body type="14_regular" color="MEDIUM_GRAY" ml={5} mb={2}>
-        {t('settings.friends.friend_list.title', { number: friendList.length })}
+        {t('title', { number: friendList.length })}
       </Font.Body>
       <Layout.FlexCol w="100%" gap={8}>
         {friendList.length > 0 ? (
@@ -51,5 +53,3 @@ function FriendList() {
     </Layout.FlexCol>
   );
 }
-
-export default FriendList;
