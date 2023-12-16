@@ -31,7 +31,7 @@ export default function FriendSearchInput({ query, setQuery }: Props) {
   };
 
   return (
-    <Layout.FlexRow w="100%" pr={searchMode ? 4 : 0} alignItems="center">
+    <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
       <Layout.FlexRow
         w="100%"
         alignItems="center"
