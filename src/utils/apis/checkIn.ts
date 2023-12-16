@@ -1,6 +1,6 @@
-import axios from 'axios';
 import { PaginationResponse } from '@models/api/common';
 import { CheckInBase, CheckInForm, MyCheckIn } from '@models/checkIn';
+import axios from './axios';
 
 // GET check-in list
 export const getCheckInList = async () => {
