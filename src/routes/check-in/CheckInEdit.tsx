@@ -91,7 +91,6 @@ function CheckInEdit() {
             mood={checkIn?.mood || ''}
             onDelete={() => handleDelete('mood')}
             onSelectEmoji={(e: EmojiClickData) => {
-              console.log(e.emoji);
               handleChange('mood', e.emoji);
             }}
           />
