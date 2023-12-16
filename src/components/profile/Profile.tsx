@@ -44,12 +44,7 @@ function Profile({ user }: ProfileProps) {
         <Layout.FlexCol gap={8}>
           <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
             <Font.Body type="20_semibold">{isMyPage ? myProfile?.username : username}</Font.Body>
-            {/* 더보기 TODO(Gina): IconButton으로 변환 */}
-            {isMyPage && (
-              <button type="button" onClick={handleClickEditProfile}>
-                <SvgIcon name="edit" size={24} />
-              </button>
-            )}
+            {isMyPage && <SvgIcon name="edit_outline" size={24} onClick={handleClickEditProfile} />}
           </Layout.FlexRow>
           {/* bio */}
           <Font.Body type="14_regular" numberOfLines={2}>

@@ -10,7 +10,7 @@ function CheckInSpotifySearchInput(props: CheckInSpotifySearchInputProps) {
       w="100%"
       alignItems="center"
       rounded={12}
-      bgColor="BASIC_WHITE"
+      bgColor="WHITE"
       style={{
         position: 'relative',
       }}

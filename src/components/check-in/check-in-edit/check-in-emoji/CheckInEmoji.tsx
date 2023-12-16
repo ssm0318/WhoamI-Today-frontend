@@ -36,7 +36,7 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
         alignItems="center"
         justifyContent="center"
         rounded={12}
-        outline="GRAY_7"
+        outline="GRAY_8"
         w={EMOJI_ICON_SIZE}
         h={EMOJI_ICON_SIZE}
       >
@@ -46,7 +46,7 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
           <>
             {/* FIXME IconButton으로 변경 */}
             <button type="button" onClick={handleClickEmoji} ref={toggleButtonWrapper}>
-              <SvgIcon name="add_reaction" size={24} />
+              <SvgIcon name="add_default" size={24} />
             </button>
           </>
         )}

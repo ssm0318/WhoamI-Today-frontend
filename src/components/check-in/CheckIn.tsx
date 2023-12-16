@@ -59,22 +59,16 @@ function CheckIn({ user }: CheckInProps) {
             </Layout.FlexRow>
             {/* more */}
             {isMyPage ? (
-              <button type="button" onClick={handleClickEditCheckIn}>
-                {/* 더보기 TODO(Gina): IconButton으로 변환 */}
-                <SvgIcon name="edit" size={24} />
-              </button>
+              <SvgIcon name="edit_outline" size={24} onClick={handleClickEditCheckIn} />
             ) : (
-              <button type="button" onClick={handleClickViewMore}>
-                {/* 수정 TODO(Gina): IconButton으로 변환  */}
-                <SvgIcon name="dots_menu" color="BASIC_BLACK" size={24} />
-              </button>
+              <SvgIcon name="dots_menu" color="BLACK" size={24} onClick={handleClickViewMore} />
             )}
           </Layout.FlexRow>
           <Layout.FlexRow
             w="100%"
             justifyContent="space-between"
             gap={8}
-            bgColor="BASIC_WHITE"
+            bgColor="WHITE"
             outline="GRAY_1"
             ph={8}
             pv={4}
@@ -89,7 +83,7 @@ function CheckIn({ user }: CheckInProps) {
           </Layout.FlexRow>
           {/* check in time */}
           <Layout.FlexRow w="100%" justifyContent="flex-end">
-            <Font.Body type="12_regular" numberOfLines={2} color="GRAY_3">
+            <Font.Body type="12_regular" numberOfLines={2} color="GRAY_4">
               Checked in {convertTimeDiffByString(currentDate, new Date('2023-10-28 12:00:00'))}
             </Font.Body>
           </Layout.FlexRow>

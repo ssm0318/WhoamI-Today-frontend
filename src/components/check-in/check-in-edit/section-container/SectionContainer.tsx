@@ -8,15 +8,9 @@ interface SectionContainerProps extends PropsWithChildren {
 
 function SectionContainer({ children, title, description }: SectionContainerProps) {
   return (
-    <Layout.FlexCol
-      justifyContent="space-between"
-      w="100%"
-      bgColor="BASIC_WHITE"
-      rounded={12}
-      p={12}
-    >
+    <Layout.FlexCol justifyContent="space-between" w="100%" bgColor="WHITE" rounded={12} p={12}>
       <Font.Body type="20_semibold">{title}</Font.Body>
-      <Font.Body type="12_semibold" color="GRAY_3">
+      <Font.Body type="12_semibold" color="GRAY_4">
         {description}
       </Font.Body>
       {children}

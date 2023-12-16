@@ -40,19 +40,19 @@ function UserHeader({ onClickHamburger, user }: UserHeaderProps) {
           {isMyPage ? (
             <Font.Display type="24_regular">My Profile</Font.Display>
           ) : (
-            <Icon name="top_navigation_back" size={44} onClick={handleGoBack} />
+            <Icon name="arrow_left" size={44} onClick={handleGoBack} />
           )}
         </Layout.FlexRow>
         <Layout.FlexRow gap={8} alignItems="center">
           {isMyPage ? (
             <>
-              <Icon name="top_navigation_edit" size={44} onClick={handleEditCheckIn} />
-              <Icon name="top_navigation_hamburger" size={44} onClick={onClickHamburger} />
+              <Icon name="edit_outline" size={44} onClick={handleEditCheckIn} />
+              <Icon name="hamburger" size={44} onClick={onClickHamburger} />
             </>
           ) : (
             <>
-              <Icon name="top_navigation_dots" size={44} onClick={handleClickMore} />
-              <Icon name="top_navigation_chat" size={44} onClick={handleClickChat} />
+              <Icon name="dots_menu" size={44} onClick={handleClickMore} />
+              <Icon name="chat_outline" size={44} onClick={handleClickChat} />
             </>
           )}
         </Layout.FlexRow>
