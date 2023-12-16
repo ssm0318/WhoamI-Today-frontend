@@ -1,9 +1,10 @@
-import { ColorKeys, Font, Layout } from '@design-system';
+import { ColorKeys, Font, Layout, Typo } from '@design-system';
 
 interface Props {
   title?: string | null;
   text?: string | null;
   ph?: number;
+  pv?: number;
   mv?: number;
   bgColor?: ColorKeys;
   fontColor?: ColorKeys;
@@ -12,25 +13,33 @@ interface Props {
 export default function NoContents({
   title,
   text,
-  ph = 20,
-  mv = 10,
+  mv,
+  ph = 10,
+  pv = 10,
   bgColor = 'LIGHT',
   fontColor = 'MEDIUM_GRAY',
 }: Props) {
   return (
-    <Layout.LayoutBase w="100%" alignItems="center" ph={ph} mv={mv}>
-      <Layout.FlexCol w="100%" alignItems="center" bgColor={bgColor} rounded={13} ph={10} pv={20}>
-        {title && (
-          <Font.Body type="14_semibold" color={fontColor}>
-            {title}
-          </Font.Body>
-        )}
-        {text && (
-          <Font.Body type="14_regular" color={fontColor}>
-            {text}
-          </Font.Body>
-        )}
-      </Layout.FlexCol>
-    </Layout.LayoutBase>
+    <Layout.FlexCol
+      w="100%"
+      alignItems="center"
+      bgColor={bgColor}
+      rounded={12}
+      ph={ph}
+      pv={pv}
+      mv={mv}
+    >
+      {/** FIXME: 대응되는 Typo 타입이 없음. */}
+      {title && (
+        <Font.Body type="14_semibold" color={fontColor}>
+          {title}
+        </Font.Body>
+      )}
+      {text && (
+        <Typo type="body-medium" color={fontColor}>
+          {text}
+        </Typo>
+      )}
+    </Layout.FlexCol>
   );
 }

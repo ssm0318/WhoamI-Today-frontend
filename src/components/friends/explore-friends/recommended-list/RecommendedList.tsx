@@ -41,13 +41,18 @@ export default function RecommendedList() {
         {friendList.length > 0 ? (
           <>
             {friendList.map((friend) => (
-              <FriendItem key={friend.id} type="friends" user={friend} updateList={fetchFriends} />
+              <FriendItem
+                key={friend.id}
+                type="recommended"
+                user={friend}
+                updateList={fetchFriends}
+              />
             ))}
             <div ref={targetRef} />
             {isLoading && <Loader />}
           </>
         ) : (
-          <NoContents text={t('no_contents.friends')} ph={10} />
+          <NoContents text={t('no_contents.friends')} />
         )}
       </Layout.FlexCol>
     </Layout.FlexCol>

@@ -240,14 +240,19 @@
       },
       "request_list": {
         "title": "친구 요청 ({{number}})",
+        "sent_requests": "보낸 요청",
         "no_requests": {
           "title": "대기 요청 없음.",
           "text": "수락하지 않은 친구 요청이 없습니다."
-        },
-        "accept": "수락"
+        }
       },
       "recommended_list": {
         "title": "추천 친구 ({{number}})"
+      },
+      "friend_item": {
+        "confirm": "수락",
+        "delete": "삭제",
+        "request": "요청"
       }
     },
     "edit_friends": "친구 목록 편집"

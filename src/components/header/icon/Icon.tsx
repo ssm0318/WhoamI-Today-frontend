@@ -1,9 +1,10 @@
+import { MouseEvent } from 'react';
 import { TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { SvgIcon } from '@design-system';
 import { SvgIconProps } from 'src/design-system/SvgIcon/SvgIcon';
 
 interface IconProps extends Omit<SvgIconProps, 'size'> {
-  onClick?: () => void;
+  onClick?: (e: MouseEvent) => void;
   size?: number;
 }
 

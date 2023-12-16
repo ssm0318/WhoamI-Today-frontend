@@ -45,7 +45,7 @@ export default function FriendSearchList({ query }: Props) {
           {isLoading && <Loader />}
         </>
       ) : (
-        <NoContents text={t('friends_search')} ph={10} />
+        <NoContents text={t('friends_search')} />
       )}
     </Layout.FlexCol>
   );

@@ -245,14 +245,19 @@
       },
       "request_list": {
         "title": "FRIEND REQUESTS ({{number}})",
+        "sent_requests": "Sent Requests",
         "no_requests": {
           "title": "No pending requests",
           "text": "You don't have any pending requests"
-        },
-        "accept": "ACCEPT"
+        }
       },
       "recommended_list": {
         "title": "RECOMMENDED FRIENDS ({{number}})"
+      },
+      "friend_item": {
+        "confirm": "Confirm",
+        "delete": "Delete",
+        "request": "Request"
       }
     },
     "edit_friends": "Edit Friends"
