@@ -48,7 +48,7 @@ function StatusEdit() {
   };
 
   const handleSearchMusic = () => {
-    return navigate('/status/search-music');
+    return navigate('/check-in/search-music');
   };
 
   const toggleEmojiPicker = () => {

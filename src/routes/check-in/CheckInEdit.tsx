@@ -54,7 +54,6 @@ function CheckInEdit() {
     spotifyManager.getTrack(checkIn.track_id).then(setTrackData);
   }, [spotifyManager, checkIn]);
 
-  if (!checkIn) return null;
   return (
     <MainContainer>
       <SubHeader
@@ -81,7 +80,7 @@ function CheckInEdit() {
           description="What emoji describes you mood the best?"
         >
           <CheckInEmoji
-            mood={checkIn.mood}
+            mood={checkIn?.mood || ''}
             onDelete={() => handleDelete('mood')}
             onSelectEmoji={(e: EmojiClickData) => {
               handleChange('mood', e.emoji);
@@ -94,7 +93,7 @@ function CheckInEdit() {
           description=" Tell your friends more about your mood!"
         >
           <CheckInDescription
-            description={checkIn.description}
+            description={checkIn?.description || ''}
             onDelete={() => handleDelete('description')}
             onChange={(e) => handleChange('description', e.target.value)}
           />
@@ -116,7 +115,7 @@ function CheckInEdit() {
             <AvailabilityChip
               availability={a}
               key={a}
-              isSelected={checkIn.availability === a}
+              isSelected={checkIn?.availability === a}
               onSelect={(av) => {
                 handleChange('availability', av);
               }}
@@ -127,12 +126,12 @@ function CheckInEdit() {
         <SectionContainer title="Bio" description="Bio">
           <Layout.FlexRow mt={8} w="100%" alignItems="center" gap={8}>
             <CheckInTextInput
-              value={checkIn.bio}
+              value={checkIn?.bio || ''}
               onChange={(e) => {
                 handleChange('bio', e.target.value);
               }}
             />
-            {checkIn.bio && <DeleteButton onClick={() => handleDelete('bio')} />}
+            {!!checkIn?.bio && <DeleteButton onClick={() => handleDelete('bio')} />}
           </Layout.FlexRow>
         </SectionContainer>
       </Layout.FlexCol>

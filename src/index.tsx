@@ -14,7 +14,7 @@ import './i18n';
 import reportWebVitals from './reportWebVitals';
 import AllQuestions from './routes/AllQuestions';
 import Chats from './routes/Chats';
-import StatusEdit from './routes/check-in/CheckInEdit';
+import CheckInEdit from './routes/check-in/CheckInEdit';
 import MusicSearch from './routes/check-in/MusicSearch';
 import ForgotPassword from './routes/ForgotPassword';
 import FriendPage from './routes/FriendPage';
@@ -109,7 +109,7 @@ const router = createBrowserRouter([
     path: 'check-in',
     loader: checkIfSignIn,
     children: [
-      { path: 'edit', element: <StatusEdit /> },
+      { path: 'edit', element: <CheckInEdit /> },
       { path: 'search-music', element: <MusicSearch /> },
     ],
   },

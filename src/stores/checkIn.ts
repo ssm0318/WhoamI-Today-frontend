@@ -19,7 +19,7 @@ export const createCheckInSlice: SliceStateCreator<CheckInSlice> = (set) => ({
   ...initialState,
   fetchCheckIn: async () => {
     const { results: checkInList } = await getCheckInList();
-    if (!checkInList) return null;
+    if (!checkInList || checkInList.length === 0) return null;
     const currentCheckIn = checkInList[0];
     set(() => ({
       checkIn: currentCheckIn,
