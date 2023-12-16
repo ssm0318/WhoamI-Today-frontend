@@ -80,38 +80,10 @@ const my_active = 'my_active';
 const my_inactive = 'my_inactive';
 const chats_active = 'chats_active';
 const chats_inactive = 'chats_inactive';
-<<<<<<< HEAD
 
 export {
   add_default,
   add_user,
-=======
-const delete_button = 'delete_button';
-const heart = 'heart';
-const comment = 'comment';
-const error = 'error';
-const show_password_eye = 'show_password_eye';
-const hide_password_eye = 'hide_password_eye';
-const search = 'search';
-const close = 'close';
-const link_share = 'link_share';
-const header_logo = 'header_logo';
-const lock_off = 'lock_off';
-const lock_on = 'lock_on';
-const spotify = 'spotify';
-const top_navigation_friend = 'top_navigation_friend';
-const top_navigation_edit = 'top_navigation_edit';
-const top_navigation_dots = 'top_navigation_dots';
-const top_navigation_chat = 'top_navigation_chat';
-const top_navigation_back = 'top_navigation_back';
-const dots_menu = 'dots_menu';
-const edit = 'edit';
-const new_add = 'new_add';
-const add_reaction = 'add_reaction';
-
-export {
-  add_reaction,
->>>>>>> ae7be80 ((#212) 상태메시지 (check in) 디자인 수정 (#227))
   arrow_left,
   arrow_right,
   camera,
@@ -127,17 +99,11 @@ export {
   circle_check_unchecked,
   close,
   comment,
-<<<<<<< HEAD
   delete_default,
   dots_menu,
   edit_filled,
   edit_list,
   edit_outline,
-=======
-  delete_button,
-  dots_menu,
-  edit,
->>>>>>> ae7be80 ((#212) 상태메시지 (check in) 디자인 수정 (#227))
   error,
   expand_close,
   expand_open,
@@ -161,7 +127,6 @@ export {
   my_active,
   my_inactive,
   my_profile,
-<<<<<<< HEAD
   new_chat,
   noti_icon_emoji,
   noti_icon_like,
@@ -170,21 +135,8 @@ export {
   notification,
   private_comment_active,
   private_comment_inactive,
-=======
-  new_add,
->>>>>>> ae7be80 ((#212) 상태메시지 (check in) 디자인 수정 (#227))
   question_send,
   search,
   share_default,
   spotify,
-<<<<<<< HEAD
-=======
-  top_navigation_back,
-  top_navigation_chat,
-  top_navigation_dots,
-  top_navigation_edit,
-  top_navigation_friend,
-  top_navigation_hamburger,
-  top_navigation_noti,
->>>>>>> ae7be80 ((#212) 상태메시지 (check in) 디자인 수정 (#227))
 };

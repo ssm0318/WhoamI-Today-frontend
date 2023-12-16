@@ -15,7 +15,7 @@ function AvailabilityChip({ availability, isSelected, onSelect }: AvailabilityCh
 
   return (
     <Layout.FlexRow
-      bgColor="BASIC_WHITE"
+      bgColor="WHITE"
       gap={4}
       pv={4}
       ph={8}

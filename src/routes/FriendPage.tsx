@@ -44,7 +44,7 @@ function FriendPage() {
   return (
     <MainContainer>
       <UserHeader user={user.data} />
-      <Layout.FlexCol w="100%" bgColor="BASIC_WHITE" mt={TITLE_HEADER_HEIGHT}>
+      <Layout.FlexCol w="100%" bgColor="WHITE" mt={TITLE_HEADER_HEIGHT}>
         <UserMoreModal
           isVisible={showMore}
           setIsVisible={setShowMore}

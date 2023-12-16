@@ -17,14 +17,10 @@ import Chats from './routes/Chats';
 import StatusEdit from './routes/check-in/CheckInEdit';
 import MusicSearch from './routes/check-in/MusicSearch';
 import ForgotPassword from './routes/ForgotPassword';
-<<<<<<< HEAD
+import FriendPage from './routes/FriendPage';
 import EditFriends from './routes/friends/EditFriends';
 import ExploreFriends from './routes/friends/ExploreFriends';
 import Friends from './routes/friends/Friends';
-=======
-import FriendPage from './routes/FriendPage';
-import Friends from './routes/Friends';
->>>>>>> ae7be80 ((#212) 상태메시지 (check in) 디자인 수정 (#227))
 import Intro from './routes/Intro';
 import My from './routes/My';
 import Notifications from './routes/Notifications';
