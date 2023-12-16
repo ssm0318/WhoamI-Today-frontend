@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import { Layout, SvgIcon } from '@design-system';
@@ -11,6 +11,7 @@ interface Props {
 
 export default function FriendSearchInput({ query, setQuery }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'settings.friends.search' });
+  const inputRef = useRef<HTMLInputElement>(null);
   const [searchMode, setSearchMode] = useState(false);
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -20,6 +21,7 @@ export default function FriendSearchInput({ query, setQuery }: Props) {
 
   const handleClickDeleteInput = () => {
     setQuery('');
+    inputRef.current?.focus();
   };
 
   const handleClickCancel = () => {
@@ -29,7 +31,7 @@ export default function FriendSearchInput({ query, setQuery }: Props) {
   };
 
   return (
-    <Layout.FlexRow w="100%" pl={16} pr={searchMode ? 4 : 24} pt={4} alignItems="center" gap={8}>
+    <Layout.FlexRow w="100%" pr={searchMode ? 4 : 0} alignItems="center">
       <Layout.FlexRow
         w="100%"
         alignItems="center"
@@ -43,6 +45,7 @@ export default function FriendSearchInput({ query, setQuery }: Props) {
           <SvgIcon name="search" size={20} fill="MEDIUM_GRAY" />
         </Layout.LayoutBase>
         <S.SearchInput
+          ref={inputRef}
           placeholder={t('placeholder') || undefined}
           name="friend_search"
           autoComplete="off"

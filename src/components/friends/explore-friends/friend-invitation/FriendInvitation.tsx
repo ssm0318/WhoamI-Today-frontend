@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ToastMessage from '@components/_common/toast-message/ToastMessage';
-import { Font, Layout, SvgIcon } from '@design-system';
+import { Font, Layout, SvgIcon, Typo } from '@design-system';
 import i18n from '@i18n/index';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 
@@ -26,32 +26,30 @@ export default function FriendInvitation() {
   };
 
   return (
-    <Layout.LayoutBase w="100%" ph={16}>
+    <>
       <Layout.FlexRow
         w="100%"
         alignItems="center"
-        justifyContent="space-evenly"
-        bgColor="GRAY_10"
+        bgColor="INPUT_GRAY"
         rounded={12}
         gap={13}
         ph={11}
-        pv={10}
+        pv={8}
         onClick={handleClickLinkShare}
       >
-        <Layout.FlexRow w="100%" gap={13} alignItems="center">
-          <SvgIcon name="my_profile" size={27} />
-          <Layout.FlexCol>
-            <Font.Body type="14_semibold" color="MEDIUM_GRAY">
-              {t('text')}
-            </Font.Body>
-            <Font.Body type="14_regular" color="MEDIUM_GRAY">
-              {INVITATION_LINK}
-            </Font.Body>
-          </Layout.FlexCol>
-        </Layout.FlexRow>
-        <SvgIcon name="share_default" size={26} />
+        <SvgIcon name="my_profile" size={36} />
+        <Layout.FlexCol>
+          {/* FIXME: 디자인 시스템에 대응되는 폰트 없음 */}
+          <Font.Body type="14_semibold" color="MEDIUM_GRAY">
+            {t('text')}
+          </Font.Body>
+          <Typo type="body-medium" color="MEDIUM_GRAY">
+            {INVITATION_LINK}
+          </Typo>
+        </Layout.FlexCol>
+        <SvgIcon name="share_default" size={44} />
       </Layout.FlexRow>
       {showToast && <ToastMessage text={t('copy')} closeToastMessage={() => setShowToast(false)} />}
-    </Layout.LayoutBase>
+    </>
   );
 }

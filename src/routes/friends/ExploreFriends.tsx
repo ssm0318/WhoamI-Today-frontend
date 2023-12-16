@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import Tabs from '@components/_common/tabs/Tabs';
-import FriendInvitation from '@components/friends-settings/friend-invitation/FriendInvitation';
+import FriendInvitation from '@components/friends/explore-friends/friend-invitation/FriendInvitation';
+import FriendSearchInput from '@components/friends/explore-friends/friend-search/FriendSearchInput';
 import FriendList from '@components/friends-settings/friend-list/FriendList';
 import FriendRequestList from '@components/friends-settings/friend-request-list/FriendRequestList';
-import FriendSearchInput from '@components/friends-settings/friend-search/FriendSearchInput';
 import FriendSearchList from '@components/friends-settings/friend-search-list/FriendSearchList';
 import SubHeader from '@components/sub-header/SubHeader';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
@@ -26,9 +26,11 @@ function ExploreFriends() {
   return (
     <>
       <SubHeader title={t('explore_friends')} />
-      <Layout.FlexCol w="100%" gap={14}>
-        <FriendSearchInput query={query} setQuery={setQuery} />
-        <FriendInvitation />
+      <Layout.FlexCol w="100%">
+        <Layout.FlexCol w="100%" gap={16} p={16}>
+          <FriendSearchInput query={query} setQuery={setQuery} />
+          <FriendInvitation />
+        </Layout.FlexCol>
         <Divider width={1} />
         {query ? (
           <FriendSearchList query={query} />
