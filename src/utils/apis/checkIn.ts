@@ -21,6 +21,7 @@ export const getCheckInDetail = async (checkInId: number) => {
   return data;
 };
 
+// TODO: 나중에 삭제 UI 구현하면 적용
 // DELETE check-in
 export const deleteCheckIn = async () => {
   await axios.delete(`/check_in/`);
