@@ -10,7 +10,7 @@ import CheckInSpotifyMusic from '@components/check-in/check-in-edit/check-in-spo
 import CheckInTextInput from '@components/check-in/check-in-edit/check-in-text-input/CheckInTextInput';
 import SectionContainer from '@components/check-in/check-in-edit/section-container/SectionContainer';
 import AvailabilityChip from '@components/profile/availability-chip/AvailabilityChip';
-import TitleHeader from '@components/title-header/TitleHeader';
+import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
@@ -52,7 +52,7 @@ function CheckInEdit() {
 
   return (
     <MainContainer>
-      <TitleHeader
+      <SubHeader
         title="Edit Check-in"
         RightComponent={
           <button type="button" onClick={handleConfirmSave}>
