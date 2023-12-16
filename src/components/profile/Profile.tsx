@@ -13,7 +13,6 @@ interface ProfileProps {
   user?: User;
 }
 
-// TODO(Gina): 실제 데이터로 바꾸기
 function Profile({ user }: ProfileProps) {
   const [friendList, setFriendList] = useState<User[]>(mockFriendList);
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));

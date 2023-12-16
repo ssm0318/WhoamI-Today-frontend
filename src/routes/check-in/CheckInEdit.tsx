@@ -14,8 +14,9 @@ import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
-import { Availability, MyCheckIn } from '@models/checkIn';
+import { Availability, CheckInForm } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
+import { postCheckIn } from '@utils/apis/checkIn';
 
 function CheckInEdit() {
   const spotifyManager = SpotifyManager.getInstance();
@@ -24,7 +25,15 @@ function CheckInEdit() {
     checkIn: state.checkIn,
   }));
 
-  const [checkIn, setCheckIn] = useState<MyCheckIn | null>(initialCheckIn);
+  const [checkIn, setCheckIn] = useState<CheckInForm>(
+    initialCheckIn || {
+      availability: Availability.Available,
+      bio: '',
+      description: '',
+      mood: '',
+      track_id: '',
+    },
+  );
   const [trackData, setTrackData] = useState<Track | null>(null);
 
   const handleSearchMusic = () => {
@@ -33,20 +42,19 @@ function CheckInEdit() {
 
   const handleChange = (name: string, value: string) => {
     setCheckIn((prev) => {
-      if (!prev) return prev;
       return { ...prev, [name]: value };
     });
   };
 
   const handleDelete = (name: string) => {
     setCheckIn((prev) => {
-      if (!prev) return prev;
       return { ...prev, [name]: '' };
     });
   };
 
-  const handleConfirmSave = () => {
-    // TODO(Gina) 저장 API
+  const handleConfirmSave = async () => {
+    await postCheckIn(checkIn);
+    return navigate('/my');
   };
 
   useEffect(() => {
@@ -83,6 +91,7 @@ function CheckInEdit() {
             mood={checkIn?.mood || ''}
             onDelete={() => handleDelete('mood')}
             onSelectEmoji={(e: EmojiClickData) => {
+              console.log(e.emoji);
               handleChange('mood', e.emoji);
             }}
           />

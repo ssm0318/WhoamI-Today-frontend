@@ -24,4 +24,7 @@ export type MyCheckIn = CheckInBase & {
   shrare_friends: any[];
 };
 
-export type CheckInForm = Omit<MyCheckIn, 'id' | 'is_active' | 'created_at' | 'current_user_read'>;
+export type CheckInForm = Omit<
+  CheckInBase,
+  'id' | 'is_active' | 'created_at' | 'current_user_read'
+>;

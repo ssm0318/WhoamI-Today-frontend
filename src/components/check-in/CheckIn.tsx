@@ -75,19 +75,24 @@ function CheckIn({ user }: CheckInProps) {
           </Layout.FlexRow>
           <Layout.FlexRow
             w="100%"
-            justifyContent="space-between"
             gap={8}
             bgColor="WHITE"
+            alignItems="center"
             outline="GRAY_1"
             ph={8}
             pv={4}
             rounded={12}
           >
             {/* emoji */}
-            <EmojiItem emojiString="😋" size={24} bgColor="TRANSPARENT" outline="TRANSPARENT" />
+            <EmojiItem
+              emojiString={checkIn.mood}
+              size={24}
+              bgColor="TRANSPARENT"
+              outline="TRANSPARENT"
+            />
             {/* description */}
             <Font.Body type="14_semibold" numberOfLines={2}>
-              Got free boba tea from the new shop at work today!!
+              {checkIn.description}
             </Font.Body>
           </Layout.FlexRow>
           {/* check in time */}
