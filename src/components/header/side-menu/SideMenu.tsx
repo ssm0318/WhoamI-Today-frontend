@@ -5,7 +5,6 @@ import { Z_INDEX } from '@constants/layout';
 import { Font, Layout, SvgIcon } from '@design-system';
 
 const SIDE_MENU_LIST = [
-  { key: 'friends', path: '/settings/friends' },
   { key: 'questions', path: '/questions' },
   { key: 'settings', path: '/settings' },
 ];
