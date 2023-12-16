@@ -15,6 +15,11 @@ function Notifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
+  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
+    if (nextPage === null) return setIsLoading(false);
+    await fetchNotifications(nextPage ?? null);
+  });
+
   const fetchNotifications = async (page: string | null) => {
     const { results, next } = await getNotifications(page);
     if (!results) return;
@@ -22,11 +27,6 @@ function Notifications() {
     setNotifications([...notifications, ...results]);
     setIsLoading(false);
   };
-
-  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
-    if (nextPage === null) return setIsLoading(false);
-    await fetchNotifications(nextPage ?? null);
-  });
 
   return (
     <MainContainer>

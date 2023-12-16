@@ -16,6 +16,11 @@ function AllQuestions() {
   const [questions, setQuestions] = useState<ShortAnswerQuestion[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
+  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
+    if (nextPage === null) return setIsLoading(false);
+    await fetchQuestions(nextPage === undefined ? null : nextPage);
+  });
+
   const fetchQuestions = async (page: string | null) => {
     const { results, next } = await getAllQuestions(page);
     if (!results) return;
@@ -23,11 +28,6 @@ function AllQuestions() {
     setQuestions([...questions, ...results]);
     setIsLoading(false);
   };
-
-  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
-    if (nextPage === null) return setIsLoading(false);
-    await fetchQuestions(nextPage === undefined ? null : nextPage);
-  });
 
   return (
     <MainContainer>

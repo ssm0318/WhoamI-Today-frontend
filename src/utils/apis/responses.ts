@@ -26,9 +26,14 @@ export const getResponse = async (responseId: number | string) => {
 };
 
 // GET Reaction List
-export const getReactionList = async (postType: ReactionPostType, postId: number) => {
+export const getReactionList = async (
+  postType: ReactionPostType,
+  postId: number,
+  next?: string | null,
+) => {
+  const requestPage = next ? next.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Reaction[]>>(
-    `/reactions/${postType}/${postId}/`,
+    `/reactions/${postType}/${postId}/${requestPage ? `?page=${requestPage}` : ''}`,
   );
   return data;
 };

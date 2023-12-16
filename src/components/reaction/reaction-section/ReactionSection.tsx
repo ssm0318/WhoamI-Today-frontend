@@ -87,6 +87,8 @@ function ReactionSection({ postType, postId }: ReactionSectionProps) {
           isVisible={emojiViewPopupVisible}
           setIsVisible={setEmojiViewPopupVisible}
           popupPosition={popupPosition}
+          postType={postType}
+          postId={postId}
         />
       </Layout.FlexRow>
 
