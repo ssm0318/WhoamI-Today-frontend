@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import Tabs from '@components/_common/tabs/Tabs';
 import FriendInvitation from '@components/friends/explore-friends/friend-invitation/FriendInvitation';
@@ -11,6 +12,7 @@ import SubHeader from '@components/sub-header/SubHeader';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import i18n from '@i18n/index';
+import { Typo } from '../../design-system/Font/index';
 
 const TabList = [
   { key: 'requests', text: i18n.t('friends.explore_friends.tab.requests') },
@@ -19,13 +21,27 @@ const TabList = [
 
 function ExploreFriends() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends' });
+  const navigate = useNavigate();
 
   const [selectedTab, setSelectedTab] = useState('requests');
   const [query, setQuery] = useState('');
 
+  const handleClickDone = () => {
+    navigate('/friends');
+  };
+
   return (
     <>
-      <SubHeader title={t('title')} />
+      <SubHeader
+        title={t('title')}
+        RightComponent={
+          <button type="button" onClick={handleClickDone}>
+            <Typo type="title-large" color="PRIMARY">
+              Done
+            </Typo>
+          </button>
+        }
+      />
       <Layout.FlexCol w="100%">
         <Layout.FlexCol w="100%" gap={16} p={16}>
           <FriendSearchInput query={query} setQuery={setQuery} />

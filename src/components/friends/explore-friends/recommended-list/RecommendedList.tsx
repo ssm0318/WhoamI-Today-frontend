@@ -16,6 +16,7 @@ export default function RecommendedList() {
   const [friendList, setFriendList] = useState<User[]>();
   const [nextUrl, setNextUrl] = useState<string | null>(null);
 
+  // FIXME: 추천 친구 목록을 불러올 수 있도록 수정
   const fetchFriends = useCallback(async (_next?: string | null) => {
     const { results = [], next } = await getFriendList(_next);
     setFriendList((prev) => (_next ? (prev ? [...prev, ...results] : []) : results));
