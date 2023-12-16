@@ -125,14 +125,11 @@ export const BodySettings: { [key in BodyType]: FontSettings } = {
     fontWeight: FontWeight.SEMIBOLD,
     lineHeight: 1.4,
   },
-<<<<<<< HEAD
-=======
   '16_regular': {
     fontSize: 16,
     fontWeight: FontWeight.REGULAR,
     lineHeight: 1.4,
   },
->>>>>>> 5497610 ((#220) 노트 마크업 (#223))
   '16_semibold': {
     fontSize: 16,
     fontWeight: FontWeight.SEMIBOLD,
