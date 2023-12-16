@@ -37,7 +37,7 @@ function ExploreFriends() {
         RightComponent={
           <button type="button" onClick={handleClickDone}>
             <Typo type="title-large" color="PRIMARY">
-              Done
+              {t('done')}
             </Typo>
           </button>
         }

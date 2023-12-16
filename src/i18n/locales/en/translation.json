@@ -230,6 +230,7 @@
   "friends": {
     "explore_friends": {
       "title": "Explore Friends",
+      "done": "Done",
       "search": {
         "placeholder": "Add or search friends.",
         "cancel": "Cancel"

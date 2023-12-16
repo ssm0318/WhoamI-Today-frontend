@@ -225,6 +225,7 @@
   "friends": {
     "explore_friends": {
       "title": "친구 탐색",
+      "done": "완료",
       "search": {
         "placeholder": "친구를 추가하거나 검색하세요.",
         "cancel": "취소"
