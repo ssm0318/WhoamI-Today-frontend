@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import { ReactSVG } from 'react-svg';
 import { ColorKeys, Colors } from '@design-system';
 import * as icons from './icons';
@@ -59,7 +59,7 @@ export type SvgIconProps = {
   color?: ColorKeys | null;
   fill?: ColorKeys | null;
   name: IconNames;
-  onClick?: () => void;
+  onClick?: (e: MouseEvent) => void;
   className?: string;
 };
 

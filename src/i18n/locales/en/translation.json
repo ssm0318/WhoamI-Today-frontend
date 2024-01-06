@@ -183,34 +183,7 @@
     "yes_delete": "Yes, delete",
     "password": "Password",
     "continue": "Continue",
-    "are_you_sure": "Are you sure?\nThis cannot be done.",
-    "friends": {
-      "title": "Friends",
-      "search": {
-        "placeholder": "Add or search friends.",
-        "cancel": "Cancel"
-      },
-      "invite": {
-        "title": "WhoAmI Today Invitation Link",
-        "text": "Invite friends on WhoAmI Today",
-        "copy": "Invitation link copied to clipboard."
-      },
-      "tab": {
-        "friends": "Friends",
-        "request": "Requests"
-      },
-      "friend_list": {
-        "title": "{{number}} people"
-      },
-      "request_list": {
-        "title": "FRIEND REQUESTS ({{number}})",
-        "no_requests": {
-          "title": "No pending requests",
-          "text": "You don't have any pending requests"
-        },
-        "accept": "ACCEPT"
-      }
-    }
+    "are_you_sure": "Are you sure?\nThis cannot be done."
   },
   "time": {
     "just_a_moment_ago": "just a moment ago",
@@ -255,7 +228,39 @@
     }
   },
   "friends": {
-    "explore_friends": "Explore Friends",
+    "explore_friends": {
+      "title": "Explore Friends",
+      "done": "Done",
+      "search": {
+        "placeholder": "Add or search friends.",
+        "cancel": "Cancel"
+      },
+      "invite": {
+        "title": "WhoAmI Today Invitation Link",
+        "text": "Invite friends on WhoAmI Today",
+        "copy": "Invitation link copied to clipboard."
+      },
+      "tab": {
+        "requests": "Requests",
+        "recommended": "Recommended"
+      },
+      "request_list": {
+        "title": "FRIEND REQUESTS ({{number}})",
+        "sent_requests": "Sent Requests",
+        "no_requests": {
+          "title": "No pending requests",
+          "text": "You don't have any pending requests"
+        }
+      },
+      "recommended_list": {
+        "title": "RECOMMENDED FRIENDS ({{number}})"
+      },
+      "friend_item": {
+        "confirm": "Confirm",
+        "delete": "Delete",
+        "request": "Request"
+      }
+    },
     "edit_friends": "Edit Friends"
   }
 }

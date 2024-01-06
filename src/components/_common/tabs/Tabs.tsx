@@ -1,5 +1,6 @@
 import { StyledTab, StyledTabs } from '@components/_common/tabs/Tabs.styled';
-import { ColorKeys, Font } from '@design-system';
+import { ColorKeys, Typo } from '@design-system';
+import { FontType } from 'src/design-system/Font/Font.types';
 
 interface Tab<T> {
   key: T;
@@ -9,7 +10,7 @@ interface Tab<T> {
 interface TabsProps<T> {
   tabList: Tab<T>[];
   selectedKey: T;
-  displayFontType: Font.DisplayType;
+  fontType?: FontType;
   bgColor?: ColorKeys;
   tabWidth?: number;
   onClick: (key: T) => void;
@@ -18,13 +19,13 @@ interface TabsProps<T> {
 function Tabs<T extends string>({
   tabList,
   selectedKey,
-  displayFontType,
-  bgColor,
+  fontType,
+  bgColor = 'LIGHT_GRAY',
   tabWidth,
   onClick,
 }: TabsProps<T>) {
   return (
-    <StyledTabs bgColor={bgColor}>
+    <StyledTabs bgColor={bgColor} justifyContent="center" alignItems="center">
       {tabList.map(({ key, text }) => {
         const isSelected = key === selectedKey;
         return (
@@ -34,13 +35,13 @@ function Tabs<T extends string>({
             w={tabWidth}
             onClick={() => onClick(key)}
           >
-            <Font.Display
-              type={displayFontType}
+            <Typo
+              type={fontType ?? isSelected ? 'button-small' : 'label-large'}
               textAlign="center"
-              color={isSelected ? 'BLACK' : 'GRAY_5'}
+              color={isSelected ? 'BLACK' : 'MEDIUM_GRAY'}
             >
               {text}
-            </Font.Display>
+            </Typo>
           </StyledTab>
         );
       })}
