@@ -1,3 +1,4 @@
+import { FetchState } from '@models/api/common';
 import { MyProfile } from '@models/api/user';
 import { User } from '@models/user';
 import { getFriendList } from '@utils/apis/user';
@@ -5,8 +6,7 @@ import { BoundState, SliceStateCreator } from './useBoundStore';
 
 interface UserState {
   myProfile: MyProfile | undefined;
-  friendList: User[] | undefined;
-  isFriendListLoading: boolean;
+  friendList: FetchState<User[]>;
   fcmToken: string | undefined;
 }
 
@@ -21,10 +21,9 @@ interface UserAction {
 
 export type UserSlice = UserState & UserAction;
 
-const initialState = {
+const initialState: UserState = {
   myProfile: undefined,
-  friendList: undefined,
-  isFriendListLoading: false,
+  friendList: { state: 'loading' },
   fcmToken: undefined,
 };
 
@@ -44,10 +43,16 @@ export const createUserSlice: SliceStateCreator<UserSlice> = (set, get) => ({
     ),
   resetMyProfile: () => set(initialState),
   getFriendList: async () => {
-    set(() => ({ isFriendListLoading: true }));
-    const friendList = await getFriendList();
-    set(() => ({ friendList: friendList.results }), false, 'user/getFriendList');
-    set(() => ({ isFriendListLoading: false }));
+    try {
+      const friendList = await getFriendList();
+      set(
+        () => ({ friendList: { state: 'hasValue', data: friendList.results } }),
+        false,
+        'user/getFriendList',
+      );
+    } catch {
+      set(() => ({ friendList: { state: 'hasError' } }));
+    }
   },
   isUserAuthor: (authorId) => get().myProfile?.id === authorId,
   setFcmToken: (fcmToken) => set(() => ({ fcmToken }), false, 'user/setFcmToken'),
@@ -56,6 +61,5 @@ export const createUserSlice: SliceStateCreator<UserSlice> = (set, get) => ({
 export const UserSelector = (state: BoundState) => ({
   myProfile: state.myProfile,
   friendList: state.friendList,
-  isFriendListLoading: state.isFriendListLoading,
   getFriendList: state.getFriendList,
 });

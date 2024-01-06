@@ -47,6 +47,7 @@ const expand_open = 'expand_open';
 const expand_close = 'expand_close';
 const delete_default = 'delete_default';
 const friend_updates_profile = 'friend_updates_profile';
+const friend_updates_chat = 'friend_updates_chat';
 const chat_filled = 'chat_filled';
 const edit_filled = 'edit_filled';
 const share_default = 'share_default';
@@ -109,6 +110,7 @@ export {
   expand_open,
   favorite_false,
   favorite_true,
+  friend_updates_chat,
   friend_updates_profile,
   friends_active,
   friends_inactive,

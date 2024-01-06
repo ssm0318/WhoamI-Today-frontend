@@ -1,4 +1,5 @@
-import { Layout, SvgIcon } from '@design-system';
+import { Layout } from '@design-system';
+import { DefaultProfile, NonShrinkWrapper } from './ProfileImage.styled';
 
 interface ProfileImageProps {
   imageUrl?: string | null;
@@ -13,17 +14,22 @@ interface ProfileImageProps {
 }
 
 function ProfileImage({ imageUrl, username, className, ts, size = 36 }: ProfileImageProps) {
-  return imageUrl ? (
-    <Layout.LayoutBase w={size} h={size} rounded={size / 2} className={className}>
-      <img
-        src={ts ? `${imageUrl}?ts=${ts}` : imageUrl}
-        width={size}
-        height={size}
-        alt={`${username ?? 'user'}-profile`}
-      />
-    </Layout.LayoutBase>
-  ) : (
-    <SvgIcon name="my_profile" size={size} className={className} />
+  return (
+    <NonShrinkWrapper>
+      {imageUrl ? (
+        <Layout.LayoutBase w={size} h={size} rounded={size / 2} className={className}>
+          <img
+            src={ts ? `${imageUrl}?ts=${ts}` : imageUrl}
+            width={size}
+            height={size}
+            alt={`${username ?? 'user'}-profile`}
+          />
+        </Layout.LayoutBase>
+      ) : (
+        <DefaultProfile size={size} />
+      )}
+    </NonShrinkWrapper>
   );
 }
+
 export default ProfileImage;
