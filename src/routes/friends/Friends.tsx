@@ -6,6 +6,7 @@ import { Divider } from '@components/_common/divider/Divider.styled';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import NoContents from '@components/_common/no-contents/NoContents';
 import UpdatedProfile from '@components/_common/profile-image/UpdatedProfile';
+import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { StyledFriendListWrapper } from '@components/friends/friend-list/FriendProfile.styled';
 import UpdatedFriendItem from '@components/friends/updated-friend-item/UpdatedFriendItem';
 import { Button, Layout, SvgIcon } from '@design-system';
@@ -33,7 +34,7 @@ function Friends() {
   if (!friendList.data.length) return <NoContents text={t('no_contents.friends')} />;
 
   return (
-    <>
+    <SwipeLayoutList>
       <Layout.FlexRow w="100%" p={4} justifyContent="flex-end">
         <Button.Tertiary
           status="normal"
@@ -60,7 +61,7 @@ function Friends() {
       <Collapse
         title={t('friends.favorites')}
         collapsedItem={
-          <LayoutBase ph={17} w="100%">
+          <LayoutBase w="100%">
             {friendList.data.map(({ username, profile_image }) => (
               <UpdatedFriendItem
                 key={username}
@@ -79,7 +80,7 @@ function Friends() {
       <Collapse
         title={t('friends.all_friends')}
         collapsedItem={
-          <LayoutBase ph={17} w="100%">
+          <LayoutBase w="100%">
             {friendList.data.map(({ username, profile_image }) => (
               <UpdatedFriendItem
                 key={username}
@@ -92,7 +93,7 @@ function Friends() {
           </LayoutBase>
         }
       />
-    </>
+    </SwipeLayoutList>
   );
 }
 
