@@ -50,7 +50,7 @@ function Friends() {
         collapsedItem={
           <StyledFriendListWrapper>
             {friendList.data.map(({ username, profile_image }) => (
-              <UpdatedProfile username={username} imageUrl={profile_image} />
+              <UpdatedProfile key={username} username={username} imageUrl={profile_image} />
             ))}
           </StyledFriendListWrapper>
         }
@@ -63,6 +63,7 @@ function Friends() {
           <LayoutBase ph={17} w="100%">
             {friendList.data.map(({ username, profile_image }) => (
               <UpdatedFriendItem
+                key={username}
                 username={username}
                 profile_image={profile_image}
                 updated
@@ -81,6 +82,7 @@ function Friends() {
           <LayoutBase ph={17} w="100%">
             {friendList.data.map(({ username, profile_image }) => (
               <UpdatedFriendItem
+                key={username}
                 username={username}
                 profile_image={profile_image}
                 updated
