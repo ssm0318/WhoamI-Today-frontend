@@ -73,7 +73,7 @@ function Friends() {
           </LayoutBase>
         }
       />
-      <Divider width={1} />
+      <Divider width={1} marginLeading={9} />
       {/* TODO: Friend Request */}
       {/* All Friends */}
       <Collapse
