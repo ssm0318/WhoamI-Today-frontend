@@ -32,3 +32,9 @@ export const getAllFriends = async () => {
 
   return results ?? [];
 };
+
+export const addFriendToFavorite = async (userId: number) => {
+  await axios.post(`/user/favorite/add/`, {
+    friend_id: userId,
+  });
+};

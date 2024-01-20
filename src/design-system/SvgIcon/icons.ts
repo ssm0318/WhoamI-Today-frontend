@@ -59,6 +59,7 @@ const noti_icon_public_comment = 'noti_icon_public_comment';
 const noti_icon_private_comment = 'noti_icon_private_comment';
 const add_default = 'add_default';
 const star = 'star';
+const star_outline = 'star_outline';
 
 // My
 const checkbox_default = 'checkbox_default';
@@ -143,4 +144,5 @@ export {
   share_default,
   spotify,
   star,
+  star_outline,
 };

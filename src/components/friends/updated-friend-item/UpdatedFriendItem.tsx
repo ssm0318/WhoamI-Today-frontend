@@ -4,22 +4,27 @@ import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import Icon from '@components/header/icon/Icon';
 import { Layout, Typo } from '@design-system';
+import { User } from '@models/user';
+import { addFriendToFavorite } from '@utils/apis/friends';
 import { UpdatedChatNumber } from '../friend-list/FriendProfile.styled';
 import { StyledUpdatedItemWrapper, UpdatedFriendItemWrapper } from './UpdatedFriendItem.styled';
 
-interface UpdatedFriendItemProps {
-  profile_image: string | null;
-  username: string;
+interface UpdatedFriendItemProps extends User {
   updated?: boolean;
   new_chat: number;
 }
 
 function UpdatedFriendItem({
+  id,
   profile_image,
   username,
   updated = false,
   new_chat,
 }: UpdatedFriendItemProps) {
+  const handleAddFavorite = async () => {
+    await addFriendToFavorite(id);
+  };
+
   return (
     <SwipeLayout
       itemWidth={74}
@@ -36,8 +41,8 @@ function UpdatedFriendItem({
         </StyledSwipeButton>,
       ]}
       leftContent={[
-        <StyledSwipeButton key="unfriend" backgroundColor="DARK_GRAY">
-          <Icon name="star" size={28} />
+        <StyledSwipeButton key="favorite" backgroundColor="DARK_GRAY" onClick={handleAddFavorite}>
+          <Icon name="star_outline" size={28} color="WHITE" />
         </StyledSwipeButton>,
       ]}
     >

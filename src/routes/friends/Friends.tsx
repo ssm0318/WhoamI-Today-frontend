@@ -89,14 +89,8 @@ function Friends() {
           title={t('friends.all_friends')}
           collapsedItem={
             <LayoutBase w="100%">
-              {allFriends.data.map(({ username, profile_image }) => (
-                <UpdatedFriendItem
-                  key={username}
-                  username={username}
-                  profile_image={profile_image}
-                  updated
-                  new_chat={23}
-                />
+              {allFriends.data.map((user) => (
+                <UpdatedFriendItem key={user.id} {...user} updated new_chat={23} />
               ))}
             </LayoutBase>
           }
