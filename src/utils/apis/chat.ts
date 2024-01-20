@@ -7,7 +7,11 @@ export const getChatRooms = async () => {
   return data?.results || [];
 };
 
-export const getChatMessages = async (roomId: string | number) => {
-  const { data } = await axios.get<PaginationResponse<ChatMessage[]>>(`/chat/${roomId}/messages/`);
-  return data?.results || [];
+export const getChatMessages = async (roomId: string | number, next?: string | null) => {
+  const requestPage = next ? next.split('page=')[1] : null;
+
+  const { data } = await axios.get<PaginationResponse<ChatMessage[]>>(
+    `/chat/${roomId}/messages/${requestPage ? `?page=${requestPage}` : ''}`,
+  );
+  return data;
 };

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Loader } from '@components/_common/loader/Loader.styled';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { MessageInputBox } from '@components/chat-room/message-input-box/MessageInputBox';
 import { MessageList } from '@components/chat-room/message-list/MessageList';
@@ -8,6 +9,7 @@ import Icon from '@components/header/icon/Icon';
 import { TOP_NAVIGATION_HEIGHT, Z_INDEX } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { ChatRoom as ChatRoomType, SocketMessage } from '@models/api/chat';
 import { useBoundStore } from '@stores/useBoundStore';
 import { MainWrapper } from '@styles/wrappers';
@@ -36,18 +38,39 @@ export function ChatRoom() {
   const chatSocket = useRef<WebSocket>();
 
   const [messages, setMessages] = useState<SocketMessage[]>([]);
+  const [nextUrl, setNextUrl] = useState<string | null>(null);
 
-  const fetchChatMessages = useCallback(async () => {
-    if (!chatRoom) return;
-    const data = await getChatMessages(chatRoom.id);
-    const list = data.map((msg) => ({
-      message: msg.content,
-      userName: msg.sender.username,
-      timestamp: msg.timestamp,
-    }));
-    setMessages(list);
-  }, [chatRoom]);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
+
+  const fetchChatMessages = useCallback(
+    async (_next?: string) => {
+      if (!chatRoom) return;
+      const { next, results = [] } = await getChatMessages(chatRoom.id, _next);
+      const list = results.map((msg) => ({
+        message: msg.content,
+        userName: msg.sender.username,
+        timestamp: msg.timestamp,
+      }));
+
+      setMessages((prev) => (_next ? (prev ? [...list, ...prev] : []) : list));
+      setNextUrl(next);
+    },
+    [chatRoom],
+  );
   useAsyncEffect(fetchChatMessages, [fetchChatMessages]);
+
+  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
+    if (nextUrl) {
+      setPrevScrollHeight(scrollRef.current?.scrollHeight);
+      await fetchChatMessages(nextUrl);
+      setIsLoading(false);
+      return;
+    }
+    setIsLoading(false);
+  });
 
   const addEventListenerToSocket = useCallback((socket: WebSocket) => {
     socket.addEventListener('message', (e) => {
@@ -78,8 +101,6 @@ export function ChatRoom() {
     };
   }, [addEventListenerToSocket, chatRoom, fetchChatMessages]);
 
-  // TODO: 채팅방 입장시 메시지 읽음 처리
-
   const handleClickGoBack = () => {
     navigate('/chats');
   };
@@ -97,6 +118,20 @@ export function ChatRoom() {
   const handleOnCloseSettingsModal = () => {
     setSettingsVisible(false);
   };
+
+  // 스크롤 위치 유지
+  useEffect(() => {
+    if (!scrollRef.current) return;
+
+    if (prevScrollHeight) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight;
+      setPrevScrollHeight(undefined);
+      return;
+    }
+
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages]);
 
   return (
     <ChatRoomContainer
@@ -123,8 +158,11 @@ export function ChatRoom() {
         </Layout.FlexRow>
       </ChatRoomHeaderWrapper>
       <Layout.FlexCol w="100%" h="100%">
-        <MainWrapper alignItems="center" pt={TOP_NAVIGATION_HEIGHT}>
+        <MainWrapper alignItems="center" pt={TOP_NAVIGATION_HEIGHT} ref={scrollRef}>
+          <div ref={targetRef} />
+          {isLoading && <Loader />}
           {chatRoom ? <MessageList messages={messages} room={chatRoom} /> : 'loading...'}
+          <div ref={bottomRef} />
         </MainWrapper>
         <Layout.LayoutBase w="100%" ph={17} pv={13}>
           <MessageInputBox chatSocket={chatSocket} />
