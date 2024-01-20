@@ -48,6 +48,15 @@ function Friends() {
     });
   };
 
+  const hideFriendCallback = () => {
+    getUpdatedProfiles().then((results) => {
+      setUpdatedProfiles({ state: 'hasValue', data: results });
+    });
+    getAllFriends().then((results) => {
+      setAllFriends({ state: 'hasValue', data: results });
+    });
+  };
+
   return (
     <SwipeLayoutList>
       <Layout.FlexRow w="100%" p={4} justifyContent="flex-end">
@@ -66,9 +75,11 @@ function Friends() {
           title={t('friends.updated_profiles')}
           collapsedItem={
             <StyledFriendListWrapper>
-              {updatedProfiles.data.map(({ username, profile_image }) => (
-                <UpdatedProfileItem key={username} username={username} imageUrl={profile_image} />
-              ))}
+              {updatedProfiles.data
+                .filter(({ is_hidden }) => !is_hidden)
+                .map(({ username, profile_image }) => (
+                  <UpdatedProfileItem key={username} username={username} imageUrl={profile_image} />
+                ))}
             </StyledFriendListWrapper>
           }
         />
@@ -81,14 +92,17 @@ function Friends() {
             title={t('friends.favorites')}
             collapsedItem={
               <LayoutBase w="100%">
-                {favoriteFriends.data.map((user) => (
-                  <UpdatedFriendItem
-                    key={user.id}
-                    {...user}
-                    new_chat={23}
-                    updateFavoriteCallback={updateFavoriteCallback}
-                  />
-                ))}
+                {favoriteFriends.data
+                  .filter(({ is_hidden }) => !is_hidden)
+                  .map((user) => (
+                    <UpdatedFriendItem
+                      key={user.id}
+                      {...user}
+                      new_chat={23}
+                      updateFavoriteCallback={updateFavoriteCallback}
+                      hideFriendCallback={hideFriendCallback}
+                    />
+                  ))}
               </LayoutBase>
             }
           />
@@ -102,14 +116,17 @@ function Friends() {
           title={t('friends.all_friends')}
           collapsedItem={
             <LayoutBase w="100%">
-              {allFriends.data.map((user) => (
-                <UpdatedFriendItem
-                  key={user.id}
-                  {...user}
-                  new_chat={23}
-                  updateFavoriteCallback={updateFavoriteCallback}
-                />
-              ))}
+              {allFriends.data
+                .filter(({ is_hidden }) => !is_hidden)
+                .map((user) => (
+                  <UpdatedFriendItem
+                    key={user.id}
+                    {...user}
+                    new_chat={23}
+                    updateFavoriteCallback={updateFavoriteCallback}
+                    hideFriendCallback={hideFriendCallback}
+                  />
+                ))}
             </LayoutBase>
           }
         />

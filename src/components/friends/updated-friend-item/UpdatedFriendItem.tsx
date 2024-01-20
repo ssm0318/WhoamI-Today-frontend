@@ -5,13 +5,14 @@ import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem
 import Icon from '@components/header/icon/Icon';
 import { Layout, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
-import { addFriendToFavorite, deleteFavorite } from '@utils/apis/friends';
+import { addFriendToFavorite, deleteFavorite, hideFriend } from '@utils/apis/friends';
 import { UpdatedChatNumber } from '../friend-list/FriendProfile.styled';
 import { StyledUpdatedItemWrapper, UpdatedFriendItemWrapper } from './UpdatedFriendItem.styled';
 
 interface UpdatedFriendItemProps extends UpdatedProfile {
   new_chat: number;
   updateFavoriteCallback?: () => void;
+  hideFriendCallback: () => void;
 }
 
 function UpdatedFriendItem({
@@ -21,6 +22,7 @@ function UpdatedFriendItem({
   is_favorite,
   updateFavoriteCallback,
   current_user_read,
+  hideFriendCallback,
   new_chat,
 }: UpdatedFriendItemProps) {
   const handleDeleteFavorite = () => {
@@ -28,9 +30,16 @@ function UpdatedFriendItem({
       updateFavoriteCallback?.();
     });
   };
+
   const handleAddFavorite = () => {
     addFriendToFavorite(id).then(() => {
       updateFavoriteCallback?.();
+    });
+  };
+
+  const handleHide = () => {
+    hideFriend(id).then(() => {
+      hideFriendCallback?.();
     });
   };
 
@@ -38,7 +47,7 @@ function UpdatedFriendItem({
     <SwipeLayout
       itemWidth={74}
       rightContent={[
-        <StyledSwipeButton key="hide" backgroundColor="DARK_GRAY">
+        <StyledSwipeButton key="hide" backgroundColor="DARK_GRAY" onClick={handleHide}>
           <Typo type="body-medium" color="WHITE" textAlign="center">
             Hide
           </Typo>

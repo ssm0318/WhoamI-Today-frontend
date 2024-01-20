@@ -50,3 +50,9 @@ export const getFavoriteFriends = async () => {
 export const deleteFavorite = async (userId: number) => {
   await axios.delete(`/user/favorite/${userId}/`);
 };
+
+export const hideFriend = async (userId: number) => {
+  await axios.post(`/user/hidden/add/`, {
+    friend_id: userId,
+  });
+};
