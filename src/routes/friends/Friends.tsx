@@ -7,15 +7,16 @@ import UpdatedProfileItem from '@components/_common/profile-image/UpdatedProfile
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { StyledFriendListWrapper } from '@components/friends/friend-list/FriendProfile.styled';
 import UpdatedFriendItem from '@components/friends/updated-friend-item/UpdatedFriendItem';
-import { Button, Layout, SvgIcon } from '@design-system';
+import Icon from '@components/header/icon/Icon';
+import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { UpdatedProfile } from '@models/api/friends';
 import { getAllFriends, getFavoriteFriends, getUpdatedProfiles } from '@utils/apis/friends';
-import { LayoutBase } from 'src/design-system/layouts';
+import { FlexCol, LayoutBase } from 'src/design-system/layouts';
 
 function Friends() {
-  const [t] = useTranslation('translation');
+  const [t] = useTranslation('translation', { keyPrefix: 'friends' });
 
   const [updatedProfiles, setUpdatedProfiles] = useState<FetchState<UpdatedProfile[]>>({
     state: 'loading',
@@ -55,7 +56,7 @@ function Friends() {
       <Layout.FlexRow w="100%" p={4} justifyContent="flex-end">
         <Button.Tertiary
           status="normal"
-          text={t('friends.edit_friends')}
+          text={t('edit_friends')}
           onClick={handleClickEditFriends}
           icon={<SvgIcon name="edit_filled" size={16} />}
           iconPosition="left"
@@ -65,7 +66,7 @@ function Friends() {
       {/* Updated Profiles */}
       {updatedProfiles.state === 'hasValue' && !!updatedProfiles.data.length && (
         <Collapse
-          title={t('friends.updated_profiles')}
+          title={t('updated_profiles')}
           collapsedItem={
             <StyledFriendListWrapper>
               {updatedProfiles.data.map((user) => (
@@ -76,22 +77,31 @@ function Friends() {
         />
       )}
       {/* Favorites */}
-      {favoriteFriends.state === 'hasValue' && !!favoriteFriends.data.length && (
+      {favoriteFriends.state === 'hasValue' && (
         <>
           <Divider width={1} />
           <Collapse
-            title={t('friends.favorites')}
+            title={t('favorites')}
             collapsedItem={
               <LayoutBase w="100%">
-                {favoriteFriends.data.map((user) => (
-                  <UpdatedFriendItem
-                    key={user.id}
-                    {...user}
-                    new_chat={23}
-                    updateFavoriteCallback={updateFavoriteCallback}
-                    hideFriendCallback={fetchAllTypeFriends}
-                  />
-                ))}
+                {favoriteFriends.data.length ? (
+                  favoriteFriends.data.map((user) => (
+                    <UpdatedFriendItem
+                      key={user.id}
+                      {...user}
+                      new_chat={23}
+                      updateFavoriteCallback={updateFavoriteCallback}
+                      hideFriendCallback={fetchAllTypeFriends}
+                    />
+                  ))
+                ) : (
+                  <FlexCol alignItems="center" ph={75} gap={8}>
+                    <Typo type="label-medium" color="DARK_GRAY">
+                      {t('add_favorite')}
+                    </Typo>
+                    <Icon name="add_default" />
+                  </FlexCol>
+                )}
               </LayoutBase>
             }
           />
@@ -102,7 +112,7 @@ function Friends() {
       {/* All Friends */}
       {allFriends.state === 'hasValue' && !!allFriends.data.length && (
         <Collapse
-          title={t('friends.all_friends')}
+          title={t('all_friends')}
           collapsedItem={
             <LayoutBase w="100%">
               {allFriends.data.map((user) => (
