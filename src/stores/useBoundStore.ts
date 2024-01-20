@@ -1,6 +1,7 @@
 import { create, StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
+import { ChatSlice, createChatSlice } from '@stores/chat';
 import { createMomentSlice, MomentSlice } from './moment';
 import { createMyPageSlice, MyPageSlice } from './my';
 import { createNotificationSlice, NotificationSlice } from './notification';
@@ -9,6 +10,7 @@ import { createTodaysQuestionsSlice, TodaysQuestionsSlice } from './todaysQuesti
 import { createUserSlice, UserSlice } from './user';
 
 export type BoundState = MomentSlice &
+  ChatSlice &
   MyPageSlice &
   SignUpInfoSlice &
   TodaysQuestionsSlice &
@@ -33,6 +35,7 @@ const middleWares = (store: BoundStore) =>
 export const useBoundStore = create<BoundState>()(
   middleWares((...a) => ({
     ...createMyPageSlice(...a),
+    ...createChatSlice(...a),
     ...createMomentSlice(...a),
     ...createSignUpInfoSlice(...a),
     ...createTodaysQuestionsSlice(...a),

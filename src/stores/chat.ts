@@ -1,28 +1,33 @@
 import { ChatRoom } from '@models/api/chat';
+import { FetchState } from '@models/api/common';
+import { getChatRooms } from '@utils/apis/chat';
 import { SliceStateCreator } from './useBoundStore';
 
 interface ChatState {
-  chatRoomList: ChatRoom[];
+  chatRoomList: FetchState<ChatRoom[]>;
 }
 interface ChatAction {
-  findChatRoom: (roomId: string) => ChatRoom | undefined;
-  setChatRoomList: (chatRoomList: ChatRoom[]) => void;
+  getChatRoomList: () => void;
 }
 
-const initialState = {
-  chatRoomList: [],
+const initialState: ChatState = {
+  chatRoomList: { state: 'loading' },
 };
 
 export type ChatSlice = ChatState & ChatAction;
 
-export const createChatSlice: SliceStateCreator<ChatSlice> = (set, get) => ({
+export const createChatSlice: SliceStateCreator<ChatSlice> = (set) => ({
   ...initialState,
-  findChatRoom: (roomId: string) => {
-    return get().chatRoomList.find(({ id }) => id.toString() === roomId);
-  },
-  setChatRoomList: (chatRoomList) => {
-    set(() => ({
-      chatRoomList,
-    }));
+  getChatRoomList: async () => {
+    try {
+      const chatRoomList = await getChatRooms();
+      set(
+        () => ({ chatRoomList: { state: 'hasValue', data: chatRoomList } }),
+        false,
+        'chat/getChatRoomList',
+      );
+    } catch {
+      set(() => ({ chatRoomList: { state: 'hasError' } }));
+    }
   },
 });

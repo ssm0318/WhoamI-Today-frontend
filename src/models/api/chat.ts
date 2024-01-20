@@ -13,3 +13,9 @@ export interface ChatMessage {
   content: string;
   timestamp: string;
 }
+
+export interface SocketMessage {
+  message: string;
+  userName: string;
+  timestamp: string;
+}

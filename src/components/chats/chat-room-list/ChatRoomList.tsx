@@ -5,21 +5,19 @@ import { ChatRoomItem } from '@components/chats/chat-room-list/ChatRoomItem';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getChatRooms } from '@utils/apis/chat';
 
 export function ChatRoomList() {
   const [t] = useTranslation('translation', { keyPrefix: 'chats.room_list' });
 
-  const { rooms, setRooms } = useBoundStore((state) => ({
+  const { rooms, getChatRoomList } = useBoundStore((state) => ({
     rooms: state.chatRoomList,
-    setRooms: state.setChatRoomList,
+    getChatRoomList: state.getChatRoomList,
   }));
 
   // TODO: pagination 추가
   const fetchChatRooms = useCallback(async () => {
-    const chatRoomList = await getChatRooms();
-    setRooms(chatRoomList);
-  }, [setRooms]);
+    getChatRoomList();
+  }, [getChatRoomList]);
   useAsyncEffect(fetchChatRooms, [fetchChatRooms]);
 
   return (
@@ -30,7 +28,7 @@ export function ChatRoomList() {
       <Layout.FlexCol w="100%" gap={10}>
         <SwipeLayoutList>
           {/* TODO: 실제 데이터로 변경 */}
-          {rooms.map((room) => (
+          {rooms.data?.map((room) => (
             <ChatRoomItem key={room.id} room={room} />
           ))}
         </SwipeLayoutList>

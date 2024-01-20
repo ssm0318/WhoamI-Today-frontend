@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Layout, Typo } from '@design-system';
-import { ChatMessage } from '@models/api/chat';
+import { ChatRoom, SocketMessage } from '@models/api/chat';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getTime } from './MessageItem.helper';
 import {
@@ -13,17 +13,18 @@ import {
 } from './MessageItem.styled';
 
 interface Props {
-  message: ChatMessage;
+  room: ChatRoom;
+  message: SocketMessage;
 }
 
 // TODO: 비밀댓글 게시물 케이스 추가
-export function MessageItem({ message }: Props) {
-  const { sender, timestamp, content } = message;
-  const isUserAuthor = useBoundStore((state) => state.isUserAuthor);
+export function MessageItem({ room, message }: Props) {
+  const { userName, timestamp, message: content } = message;
+  const currentUser = useBoundStore((state) => state.myProfile);
 
   const isMyMsg = useMemo(() => {
-    return isUserAuthor(sender.id);
-  }, [isUserAuthor, sender.id]);
+    return userName === currentUser?.username;
+  }, [currentUser?.username, userName]);
 
   const formattedTime = getTime(timestamp);
 
@@ -37,7 +38,7 @@ export function MessageItem({ message }: Props) {
   ) : (
     <LeftMessageWrapper>
       <Layout.FlexRow gap={10}>
-        <ProfileImage imageUrl={sender.profile_image} size={40} />
+        <ProfileImage imageUrl={room.participants[0].profile_image} size={40} />
         <LeftMessageContent>
           <Typo type="body-medium">{content}</Typo>
         </LeftMessageContent>

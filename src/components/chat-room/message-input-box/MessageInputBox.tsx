@@ -1,14 +1,19 @@
-import { ChangeEvent, KeyboardEvent, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, MutableRefObject, useState } from 'react';
 import {
   MessageInput,
   StyledMessageInputBox,
 } from '@components/chat-room/message-input-box/MessageInputBox.styled';
 import Icon from '@components/header/icon/Icon';
 import { Layout } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
 
 const PLACE_HOLDER = 'Message...';
 
-export function MessageInputBox() {
+interface Props {
+  chatSocket: MutableRefObject<WebSocket | undefined>;
+}
+
+export function MessageInputBox({ chatSocket }: Props) {
   // TODO: input length 제한
   const [inputValue, setInputValue] = useState('');
 
@@ -28,8 +33,16 @@ export function MessageInputBox() {
     sendMessage();
   };
 
+  const currentUser = useBoundStore.getState().myProfile;
+
   const sendMessage = () => {
-    // TODO: send message
+    chatSocket.current?.send(
+      JSON.stringify({
+        message: inputValue,
+        userName: currentUser?.username,
+        userId: currentUser?.id,
+      }),
+    );
     setInputValue('');
   };
 
