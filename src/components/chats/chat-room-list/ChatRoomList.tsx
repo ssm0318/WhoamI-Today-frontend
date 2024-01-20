@@ -1,11 +1,22 @@
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { ChatRoomItem } from '@components/chats/chat-room-list/ChatRoomItem';
-import { MOCK_CHAT_ROOM_LIST } from '@components/chats/chat-room-list/ChatRoomList.helper';
 import { Layout, Typo } from '@design-system';
+import useAsyncEffect from '@hooks/useAsyncEffect';
+import { ChatRoom } from '@models/api/chat';
+import { getChatRooms } from '@utils/apis/chat';
 
 export function ChatRoomList() {
   const [t] = useTranslation('translation', { keyPrefix: 'chats.room_list' });
+  const [rooms, setRooms] = useState<ChatRoom[]>([]);
+
+  // TODO: pagination 추가
+  const fetchChatRooms = useCallback(async () => {
+    const chatRoomList = await getChatRooms();
+    setRooms(chatRoomList);
+  }, []);
+  useAsyncEffect(fetchChatRooms, [fetchChatRooms]);
 
   return (
     <Layout.FlexCol w="100%" pv={5} gap={5}>
@@ -15,8 +26,8 @@ export function ChatRoomList() {
       <Layout.FlexCol w="100%" gap={10}>
         <SwipeLayoutList>
           {/* TODO: 실제 데이터로 변경 */}
-          {MOCK_CHAT_ROOM_LIST.map((props) => (
-            <ChatRoomItem key={props.roomId} {...props} />
+          {rooms.map((room) => (
+            <ChatRoomItem key={room.id} room={room} />
           ))}
         </SwipeLayoutList>
       </Layout.FlexCol>
