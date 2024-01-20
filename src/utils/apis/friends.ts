@@ -38,3 +38,11 @@ export const addFriendToFavorite = async (userId: number) => {
     friend_id: userId,
   });
 };
+
+export const getFavoriteFriends = async () => {
+  const {
+    data: { results },
+  } = await axios.get<GetUpdatedProfileResponse>('/user/me/favorites/');
+
+  return results ?? [];
+};

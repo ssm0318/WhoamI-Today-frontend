@@ -11,7 +11,7 @@ import { Button, Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { UpdatedProfile } from '@models/api/friends';
-import { getAllFriends, getUpdatedProfiles } from '@utils/apis/friends';
+import { getAllFriends, getFavoriteFriends, getUpdatedProfiles } from '@utils/apis/friends';
 import { LayoutBase } from 'src/design-system/layouts';
 
 function Friends() {
@@ -20,7 +20,8 @@ function Friends() {
   const [updatedProfiles, setUpdatedProfiles] = useState<FetchState<UpdatedProfile[]>>({
     state: 'loading',
   });
-  const [allFriends, setAllFriends] = useState<FetchState<UpdatedProfile[]>>({
+  const [allFriends, setAllFriends] = useState<FetchState<UpdatedProfile[]>>({ state: 'loading' });
+  const [favoriteFriends, setFavoriteFriends] = useState<FetchState<UpdatedProfile[]>>({
     state: 'loading',
   });
 
@@ -30,6 +31,9 @@ function Friends() {
     });
     getAllFriends().then((results) => {
       setAllFriends({ state: 'hasValue', data: results });
+    });
+    getFavoriteFriends().then((results) => {
+      setFavoriteFriends({ state: 'hasValue', data: results });
     });
   }, []);
 
@@ -63,25 +67,23 @@ function Friends() {
           }
         />
       )}
-      <Divider width={1} />
       {/* Favorites */}
-      {/* <Collapse
-        title={t('friends.favorites')}
-        collapsedItem={
-          <LayoutBase w="100%">
-            {friendList.data.map(({ username, profile_image }) => (
-              <UpdatedFriendItem
-                key={username}
-                username={username}
-                profile_image={profile_image}
-                updated
-                new_chat={23}
-              />
-            ))}
-          </LayoutBase>
-        }
-      />
-      <Divider width={1} marginLeading={9} /> */}
+      {favoriteFriends.state === 'hasValue' && !!favoriteFriends.data.length && (
+        <>
+          <Divider width={1} />
+          <Collapse
+            title={t('friends.favorites')}
+            collapsedItem={
+              <LayoutBase w="100%">
+                {favoriteFriends.data.map((user) => (
+                  <UpdatedFriendItem key={user.id} {...user} updated new_chat={23} />
+                ))}
+              </LayoutBase>
+            }
+          />
+        </>
+      )}
+      <Divider width={1} marginLeading={9} />
       {/* TODO: Friend Request */}
       {/* All Friends */}
       {allFriends.state === 'hasValue' && !!allFriends.data.length && (

@@ -19,3 +19,4 @@ export interface UpdatedProfile extends User {
 }
 
 export type GetAllFriendsResponse = PaginationResponse<UpdatedProfile[]>;
+export type GetFavoriteFriendsResponse = PaginationResponse<UpdatedProfile[]>;
