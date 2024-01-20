@@ -13,7 +13,8 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { UpdatedProfile } from '@models/api/friends';
 import { getAllFriends, getFavoriteFriends, getUpdatedProfiles } from '@utils/apis/friends';
-import { FlexCol, LayoutBase } from 'src/design-system/layouts';
+import { getFriendRequests } from '@utils/apis/user';
+import { FlexCol, FlexRow, LayoutBase } from 'src/design-system/layouts';
 
 function Friends() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends' });
@@ -21,6 +22,7 @@ function Friends() {
   const [updatedProfiles, setUpdatedProfiles] = useState<FetchState<UpdatedProfile[]>>({
     state: 'loading',
   });
+  const [friendRequests, setFriendRequests] = useState<FetchState<number>>({ state: 'loading' });
   const [allFriends, setAllFriends] = useState<FetchState<UpdatedProfile[]>>({ state: 'loading' });
   const [favoriteFriends, setFavoriteFriends] = useState<FetchState<UpdatedProfile[]>>({
     state: 'loading',
@@ -38,7 +40,12 @@ function Friends() {
     });
   };
 
-  useAsyncEffect(fetchAllTypeFriends, []);
+  useAsyncEffect(async () => {
+    fetchAllTypeFriends();
+    getFriendRequests().then(({ count }) => {
+      setFriendRequests({ state: 'hasValue', data: count });
+    });
+  }, []);
 
   const navigate = useNavigate();
   const handleClickEditFriends = () => {
@@ -76,39 +83,58 @@ function Friends() {
           }
         />
       )}
+      <Divider width={1} marginLeading={9} />
       {/* Favorites */}
       {favoriteFriends.state === 'hasValue' && (
-        <>
-          <Divider width={1} />
-          <Collapse
-            title={t('favorites')}
-            collapsedItem={
-              <LayoutBase w="100%">
-                {favoriteFriends.data.length ? (
-                  favoriteFriends.data.map((user) => (
-                    <UpdatedFriendItem
-                      key={user.id}
-                      {...user}
-                      new_chat={23}
-                      updateFavoriteCallback={updateFavoriteCallback}
-                      hideFriendCallback={fetchAllTypeFriends}
-                    />
-                  ))
-                ) : (
-                  <FlexCol alignItems="center" ph={75} gap={8}>
-                    <Typo type="label-medium" color="DARK_GRAY">
-                      {t('add_favorite')}
-                    </Typo>
-                    <Icon name="add_default" />
-                  </FlexCol>
-                )}
-              </LayoutBase>
-            }
-          />
-        </>
+        <Collapse
+          title={t('favorites')}
+          collapsedItem={
+            <LayoutBase w="100%">
+              {favoriteFriends.data.length ? (
+                favoriteFriends.data.map((user) => (
+                  <UpdatedFriendItem
+                    key={user.id}
+                    {...user}
+                    new_chat={23}
+                    updateFavoriteCallback={updateFavoriteCallback}
+                    hideFriendCallback={fetchAllTypeFriends}
+                  />
+                ))
+              ) : (
+                <FlexCol alignItems="center" ph={75} gap={8}>
+                  <Typo type="label-medium" color="DARK_GRAY">
+                    {t('add_favorite')}
+                  </Typo>
+                  <Icon name="add_default" />
+                </FlexCol>
+              )}
+            </LayoutBase>
+          }
+        />
       )}
       <Divider width={1} marginLeading={9} />
-      {/* TODO: Friend Request */}
+      {/* Friend Requests */}
+      {friendRequests.state === 'hasValue' && (
+        <Collapse
+          title={`${t('friend_requests')} (${friendRequests.data})`}
+          collapsedItem={
+            <FlexRow
+              w="100%"
+              alignItems="center"
+              gap={8}
+              pl={16}
+              onClick={() => navigate('/friends/explore')}
+            >
+              <SvgIcon name="friend_requests" size={44} />
+              <Typo type="label-medium" color="DARK">
+                {t('friend_requests_desc')}
+              </Typo>
+              <SvgIcon name="arrow_right" size={26} />
+            </FlexRow>
+          }
+        />
+      )}
+      <Divider width={1} marginLeading={9} />
       {/* All Friends */}
       {allFriends.state === 'hasValue' && (
         <Collapse
