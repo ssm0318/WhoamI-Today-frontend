@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -14,6 +14,7 @@ import { ChatRoom as ChatRoomType, SocketMessage } from '@models/api/chat';
 import { useBoundStore } from '@stores/useBoundStore';
 import { MainWrapper } from '@styles/wrappers';
 import { getChatMessages } from '@utils/apis/chat';
+import { useChatRoomAutoScroll } from 'src/routes/chat-room/_hooks/useChatRoomAutoScroll';
 import { useChatRoomSocketProvider } from 'src/routes/chat-room/_hooks/useChatRoomSocketProvider';
 import { ChatRoomContainer, ChatRoomHeaderWrapper } from './ChatRoom.styled';
 
@@ -26,6 +27,11 @@ export function ChatRoom() {
   }));
 
   const [chatRoom, setChatRoom] = useState<ChatRoomType>();
+  const [messages, setMessages] = useState<SocketMessage[]>([]);
+  const [nextUrl, setNextUrl] = useState<string | null>(null);
+
+  const { scrollRef, setPrevScrollHeight } = useChatRoomAutoScroll(messages);
+
   // 채팅방 목록에서 해당 채팅방 정보 얻기.
   useEffect(() => {
     if (!roomId || chatRoomList.state !== 'hasValue') return;
@@ -33,14 +39,6 @@ export function ChatRoom() {
     if (!room) return;
     setChatRoom(room);
   }, [chatRoomList, roomId]);
-
-  const [messages, setMessages] = useState<SocketMessage[]>([]);
-  const [nextUrl, setNextUrl] = useState<string | null>(null);
-
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
-
-  const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
 
   const fetchChatMessages = useCallback(
     async (_next?: string) => {
@@ -59,12 +57,6 @@ export function ChatRoom() {
   );
   useAsyncEffect(fetchChatMessages, [fetchChatMessages]);
 
-  const onSocketMessage = useCallback((message: SocketMessage) => {
-    setMessages((prev) => [...prev, message]);
-  }, []);
-
-  const { sendSocketMsg } = useChatRoomSocketProvider({ chatRoom, onSocketMessage });
-
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextUrl) {
       setPrevScrollHeight(scrollRef.current?.scrollHeight);
@@ -74,6 +66,12 @@ export function ChatRoom() {
     }
     setIsLoading(false);
   });
+
+  const onSocketMessage = useCallback((message: SocketMessage) => {
+    setMessages((prev) => [...prev, message]);
+  }, []);
+
+  const { sendSocketMsg } = useChatRoomSocketProvider({ chatRoom, onSocketMessage });
 
   const handleClickGoBack = () => {
     navigate('/chats');
@@ -92,20 +90,6 @@ export function ChatRoom() {
   const handleOnCloseSettingsModal = () => {
     setSettingsVisible(false);
   };
-
-  // 스크롤 위치 유지
-  useEffect(() => {
-    if (!scrollRef.current) return;
-
-    if (prevScrollHeight) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight;
-      setPrevScrollHeight(undefined);
-      return;
-    }
-
-    scrollRef.current.scrollTop = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messages]);
 
   return (
     <ChatRoomContainer
@@ -136,7 +120,6 @@ export function ChatRoom() {
           <div ref={targetRef} />
           {isLoading && <Loader />}
           {chatRoom ? <MessageList messages={messages} room={chatRoom} /> : 'loading...'}
-          <div ref={bottomRef} />
         </MainWrapper>
         <Layout.LayoutBase w="100%" ph={17} pv={13}>
           <MessageInputBox sendSocketMsg={sendSocketMsg} />
