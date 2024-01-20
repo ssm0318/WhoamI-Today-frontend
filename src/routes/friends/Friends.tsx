@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Collapse from '@components/_common/\bcollapse/Collapse';
 import { Divider } from '@components/_common/divider/Divider.styled';
-import UpdatedProfileItem from '@components/_common/profile-image/UpdatedProfile';
+import UpdatedProfileItem from '@components/_common/profile-image/UpdatedProfileItem';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { StyledFriendListWrapper } from '@components/friends/friend-list/FriendProfile.styled';
 import UpdatedFriendItem from '@components/friends/updated-friend-item/UpdatedFriendItem';
@@ -68,8 +68,8 @@ function Friends() {
           title={t('friends.updated_profiles')}
           collapsedItem={
             <StyledFriendListWrapper>
-              {updatedProfiles.data.map(({ username, profile_image }) => (
-                <UpdatedProfileItem key={username} username={username} imageUrl={profile_image} />
+              {updatedProfiles.data.map((user) => (
+                <UpdatedProfileItem key={user.id} {...user} />
               ))}
             </StyledFriendListWrapper>
           }

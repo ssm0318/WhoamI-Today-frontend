@@ -4,19 +4,15 @@ import {
   UpdatedProfileWrapper,
 } from '@components/friends/friend-list/FriendProfile.styled';
 import { Typo } from '@design-system';
+import { UpdatedProfile } from '@models/api/friends';
 
-interface UpdatedProfileProps {
-  imageUrl?: string | null;
-  username: string;
-}
-
-function UpdatedProfile({ imageUrl, username }: UpdatedProfileProps) {
+function UpdatedProfileItem({ profile_image, username }: UpdatedProfile) {
   return (
     <UpdatedProfileWrapper>
       <UpdatedDot top={0} left={8} />
-      <StyledUserProfile imageUrl={imageUrl} />
+      <StyledUserProfile imageUrl={profile_image} />
       <Typo type="label-small">{username}</Typo>
     </UpdatedProfileWrapper>
   );
 }
-export default UpdatedProfile;
+export default UpdatedProfileItem;
