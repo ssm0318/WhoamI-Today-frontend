@@ -85,7 +85,6 @@ function Friends() {
                   <UpdatedFriendItem
                     key={user.id}
                     {...user}
-                    updated
                     new_chat={23}
                     updateFavoriteCallback={updateFavoriteCallback}
                   />
@@ -107,7 +106,6 @@ function Friends() {
                 <UpdatedFriendItem
                   key={user.id}
                   {...user}
-                  updated
                   new_chat={23}
                   updateFavoriteCallback={updateFavoriteCallback}
                 />

@@ -10,7 +10,6 @@ import { UpdatedChatNumber } from '../friend-list/FriendProfile.styled';
 import { StyledUpdatedItemWrapper, UpdatedFriendItemWrapper } from './UpdatedFriendItem.styled';
 
 interface UpdatedFriendItemProps extends UpdatedProfile {
-  updated?: boolean;
   new_chat: number;
   updateFavoriteCallback?: () => void;
 }
@@ -21,7 +20,7 @@ function UpdatedFriendItem({
   username,
   is_favorite,
   updateFavoriteCallback,
-  updated = false,
+  current_user_read,
   new_chat,
 }: UpdatedFriendItemProps) {
   const handleDeleteFavorite = () => {
@@ -79,7 +78,7 @@ function UpdatedFriendItem({
         </Layout.FlexRow>
         <Layout.FlexRow alignItems="center" gap={24} pr={8}>
           <StyledUpdatedItemWrapper>
-            {updated && <UpdatedDot top={-6} left={-7} />}
+            {!current_user_read && <UpdatedDot top={-6} left={-7} />}
             <Icon name="friend_updates_profile" size={28} />
           </StyledUpdatedItemWrapper>
           <StyledUpdatedItemWrapper>
