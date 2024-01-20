@@ -58,6 +58,7 @@ const noti_icon_emoji = 'noti_icon_emoji';
 const noti_icon_public_comment = 'noti_icon_public_comment';
 const noti_icon_private_comment = 'noti_icon_private_comment';
 const add_default = 'add_default';
+const star = 'star';
 
 // My
 const checkbox_default = 'checkbox_default';
@@ -141,4 +142,5 @@ export {
   search,
   share_default,
   spotify,
+  star,
 };

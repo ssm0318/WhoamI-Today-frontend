@@ -5,7 +5,7 @@ export const UpdatedFriendItemWrapper = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 0;
+  padding: 4px 16px;
   border-bottom: 1px ${({ theme }) => theme.LIGHT} solid;
 
   &:last-child {
