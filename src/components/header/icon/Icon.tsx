@@ -1,25 +1,20 @@
 import { MouseEvent } from 'react';
 import { TOP_NAVIGATION_HEIGHT } from '@constants/layout';
-import { SvgIcon } from '@design-system';
+import { ColorKeys, SvgIcon } from '@design-system';
 import { SvgIconProps } from 'src/design-system/SvgIcon/SvgIcon';
+import { StyledIcon } from './Icon.styled';
 
 interface IconProps extends Omit<SvgIconProps, 'size'> {
   onClick?: (e: MouseEvent) => void;
   size?: number;
+  background?: ColorKeys;
 }
 
-function Icon({ onClick, size = TOP_NAVIGATION_HEIGHT, ...iconProps }: IconProps) {
+function Icon({ onClick, size = TOP_NAVIGATION_HEIGHT, background, ...iconProps }: IconProps) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      style={{
-        width: size,
-        height: size,
-      }}
-    >
+    <StyledIcon type="button" onClick={onClick} size={size} backgroundColor={background}>
       <SvgIcon size={size} {...iconProps} />
-    </button>
+    </StyledIcon>
   );
 }
 

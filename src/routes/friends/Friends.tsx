@@ -110,20 +110,33 @@ function Friends() {
       <Divider width={1} marginLeading={9} />
       {/* TODO: Friend Request */}
       {/* All Friends */}
-      {allFriends.state === 'hasValue' && !!allFriends.data.length && (
+      {allFriends.state === 'hasValue' && (
         <Collapse
           title={t('all_friends')}
           collapsedItem={
             <LayoutBase w="100%">
-              {allFriends.data.map((user) => (
-                <UpdatedFriendItem
-                  key={user.id}
-                  {...user}
-                  new_chat={23}
-                  updateFavoriteCallback={updateFavoriteCallback}
-                  hideFriendCallback={fetchAllTypeFriends}
-                />
-              ))}
+              {allFriends.data.length ? (
+                allFriends.data.map((user) => (
+                  <UpdatedFriendItem
+                    key={user.id}
+                    {...user}
+                    new_chat={23}
+                    updateFavoriteCallback={updateFavoriteCallback}
+                    hideFriendCallback={fetchAllTypeFriends}
+                  />
+                ))
+              ) : (
+                <FlexCol alignItems="center" ph={75} gap={8}>
+                  <Typo type="label-medium" color="DARK_GRAY">
+                    {t('add_favorite')}
+                  </Typo>
+                  <Icon
+                    name="add_user"
+                    background="LIGHT_GRAY"
+                    onClick={() => navigate('/friends/explore')}
+                  />
+                </FlexCol>
+              )}
             </LayoutBase>
           }
         />
