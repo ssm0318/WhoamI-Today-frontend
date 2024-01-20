@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { UpdatedDot } from '@common-components/updated-dot/UpdatedDot.styled';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
@@ -25,6 +26,11 @@ function UpdatedFriendItem({
   hideFriendCallback,
   new_chat,
 }: UpdatedFriendItemProps) {
+  const navigate = useNavigate();
+  const handleClickProfile = () => {
+    navigate(`/users/${username}`);
+  };
+
   const handleDeleteFavorite = () => {
     deleteFavorite(id).then(() => {
       updateFavoriteCallback?.();
@@ -88,7 +94,7 @@ function UpdatedFriendItem({
         <Layout.FlexRow alignItems="center" gap={24} pr={8}>
           <StyledUpdatedItemWrapper>
             {!current_user_read && <UpdatedDot top={-6} left={-7} />}
-            <Icon name="friend_updates_profile" size={28} />
+            <Icon name="friend_updates_profile" size={28} onClick={handleClickProfile} />
           </StyledUpdatedItemWrapper>
           <StyledUpdatedItemWrapper>
             <Icon name="friend_updates_chat" size={28} />
