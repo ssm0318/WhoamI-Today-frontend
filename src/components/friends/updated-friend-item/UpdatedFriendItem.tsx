@@ -4,25 +4,35 @@ import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import Icon from '@components/header/icon/Icon';
 import { Layout, Typo } from '@design-system';
-import { User } from '@models/user';
-import { addFriendToFavorite } from '@utils/apis/friends';
+import { UpdatedProfile } from '@models/api/friends';
+import { addFriendToFavorite, deleteFavorite } from '@utils/apis/friends';
 import { UpdatedChatNumber } from '../friend-list/FriendProfile.styled';
 import { StyledUpdatedItemWrapper, UpdatedFriendItemWrapper } from './UpdatedFriendItem.styled';
 
-interface UpdatedFriendItemProps extends User {
+interface UpdatedFriendItemProps extends UpdatedProfile {
   updated?: boolean;
   new_chat: number;
+  updateFavoriteCallback?: () => void;
 }
 
 function UpdatedFriendItem({
   id,
   profile_image,
   username,
+  is_favorite,
+  updateFavoriteCallback,
   updated = false,
   new_chat,
 }: UpdatedFriendItemProps) {
-  const handleAddFavorite = async () => {
-    await addFriendToFavorite(id);
+  const handleDeleteFavorite = () => {
+    deleteFavorite(id).then(() => {
+      updateFavoriteCallback?.();
+    });
+  };
+  const handleAddFavorite = () => {
+    addFriendToFavorite(id).then(() => {
+      updateFavoriteCallback?.();
+    });
   };
 
   return (
@@ -40,11 +50,27 @@ function UpdatedFriendItem({
           </Typo>
         </StyledSwipeButton>,
       ]}
-      leftContent={[
-        <StyledSwipeButton key="favorite" backgroundColor="DARK_GRAY" onClick={handleAddFavorite}>
-          <Icon name="star_outline" size={28} color="WHITE" />
-        </StyledSwipeButton>,
-      ]}
+      leftContent={
+        is_favorite
+          ? [
+              <StyledSwipeButton
+                key="favorite"
+                backgroundColor="DARK_GRAY"
+                onClick={handleDeleteFavorite}
+              >
+                <Icon name="star" size={28} />
+              </StyledSwipeButton>,
+            ]
+          : [
+              <StyledSwipeButton
+                key="favorite"
+                backgroundColor="DARK_GRAY"
+                onClick={handleAddFavorite}
+              >
+                <Icon name="star_outline" size={28} color="WHITE" />
+              </StyledSwipeButton>,
+            ]
+      }
     >
       <UpdatedFriendItemWrapper>
         <Layout.FlexRow alignItems="center" gap={8}>

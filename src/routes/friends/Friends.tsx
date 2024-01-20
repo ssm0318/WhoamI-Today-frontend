@@ -42,6 +42,12 @@ function Friends() {
     navigate('edit');
   };
 
+  const updateFavoriteCallback = () => {
+    getFavoriteFriends().then((results) => {
+      setFavoriteFriends({ state: 'hasValue', data: results });
+    });
+  };
+
   return (
     <SwipeLayoutList>
       <Layout.FlexRow w="100%" p={4} justifyContent="flex-end">
@@ -76,7 +82,13 @@ function Friends() {
             collapsedItem={
               <LayoutBase w="100%">
                 {favoriteFriends.data.map((user) => (
-                  <UpdatedFriendItem key={user.id} {...user} updated new_chat={23} />
+                  <UpdatedFriendItem
+                    key={user.id}
+                    {...user}
+                    updated
+                    new_chat={23}
+                    updateFavoriteCallback={updateFavoriteCallback}
+                  />
                 ))}
               </LayoutBase>
             }
@@ -92,7 +104,13 @@ function Friends() {
           collapsedItem={
             <LayoutBase w="100%">
               {allFriends.data.map((user) => (
-                <UpdatedFriendItem key={user.id} {...user} updated new_chat={23} />
+                <UpdatedFriendItem
+                  key={user.id}
+                  {...user}
+                  updated
+                  new_chat={23}
+                  updateFavoriteCallback={updateFavoriteCallback}
+                />
               ))}
             </LayoutBase>
           }

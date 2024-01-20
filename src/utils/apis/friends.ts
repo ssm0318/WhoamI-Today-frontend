@@ -46,3 +46,7 @@ export const getFavoriteFriends = async () => {
 
   return results ?? [];
 };
+
+export const deleteFavorite = async (userId: number) => {
+  await axios.delete(`/user/favorite/${userId}/`);
+};
