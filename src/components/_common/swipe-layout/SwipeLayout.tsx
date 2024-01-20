@@ -12,7 +12,7 @@ import useClickOutside from '@hooks/useClickOutside';
 const DEFAULT_ITEM_WIDTH = 65;
 
 interface Props {
-  children: ReactElement;
+  children: ReactElement | ReactElement[];
   rightContent?: ReactElement[];
   leftContent?: ReactElement[];
   itemWidth?: number;
