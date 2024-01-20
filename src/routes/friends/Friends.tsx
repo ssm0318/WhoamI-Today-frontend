@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Collapse from '@components/_common/\bcollapse/Collapse';
 import { Divider } from '@components/_common/divider/Divider.styled';
+import { Loader } from '@components/_common/loader/Loader.styled';
 import UpdatedProfileItem from '@components/_common/profile-image/UpdatedProfileItem';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { StyledFriendListWrapper } from '@components/friends/friend-list/FriendProfile.styled';
@@ -57,6 +58,14 @@ function Friends() {
       setFavoriteFriends({ state: 'hasValue', data: results });
     });
   };
+
+  if (
+    updatedProfiles.state === 'loading' ||
+    friendRequests.state === 'loading' ||
+    allFriends.state === 'loading' ||
+    favoriteFriends.state === 'loading'
+  )
+    return <Loader />;
 
   return (
     <SwipeLayoutList>
