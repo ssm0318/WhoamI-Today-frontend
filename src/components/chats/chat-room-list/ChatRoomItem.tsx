@@ -52,16 +52,18 @@ export function ChatRoomItem({ room }: Props) {
         <Layout.FlexCol w="100%" justifyContent="center" gap={5}>
           <Layout.FlexRow w="100%" justifyContent="space-between">
             <Typo type="label-large">{participants[0].username}</Typo>
-            <Typo type="label-small" color="MEDIUM_GRAY">
-              {formatLastMessageTime(last_message_time)}
-            </Typo>
+            {last_message_time && (
+              <Typo type="label-small" color="MEDIUM_GRAY">
+                {formatLastMessageTime(last_message_time)}
+              </Typo>
+            )}
           </Layout.FlexRow>
           <Layout.FlexRow w="100%" justifyContent="space-between">
             <Typo
               type={hasUnreadMessages ? 'label-medium' : 'body-small'}
               color={hasUnreadMessages ? 'BLACK' : 'MEDIUM_GRAY'}
             >
-              {last_message_content}
+              {last_message_content ?? ''}
             </Typo>
             {hasUnreadMessages && <SvgIcon name="green_dot" size={10} />}
           </Layout.FlexRow>

@@ -7,7 +7,7 @@ export const getChatRooms = async () => {
   return data?.results || [];
 };
 
-export const getChatMessages = async (roomId: string) => {
+export const getChatMessages = async (roomId: string | number) => {
   const { data } = await axios.get<PaginationResponse<ChatMessage[]>>(`/chat/${roomId}/messages/`);
-  return data?.results || [[]];
+  return data?.results || [];
 };
