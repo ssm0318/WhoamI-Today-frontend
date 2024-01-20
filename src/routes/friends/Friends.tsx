@@ -1,37 +1,34 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Collapse from '@components/_common/\bcollapse/Collapse';
-import CommonError from '@components/_common/common-error/CommonError';
 import { Divider } from '@components/_common/divider/Divider.styled';
-import { Loader } from '@components/_common/loader/Loader.styled';
-import NoContents from '@components/_common/no-contents/NoContents';
-import UpdatedProfile from '@components/_common/profile-image/UpdatedProfile';
+import UpdatedProfileItem from '@components/_common/profile-image/UpdatedProfile';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { StyledFriendListWrapper } from '@components/friends/friend-list/FriendProfile.styled';
-import UpdatedFriendItem from '@components/friends/updated-friend-item/UpdatedFriendItem';
 import { Button, Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { useBoundStore } from '@stores/useBoundStore';
-import { UserSelector } from '@stores/user';
-import { LayoutBase } from 'src/design-system/layouts';
+import { FetchState } from '@models/api/common';
+import { UpdatedProfile } from '@models/api/friends';
+import { getUpdatedProfiles } from '@utils/apis/friends';
 
 function Friends() {
   const [t] = useTranslation('translation');
-  const { friendList, getFriendList } = useBoundStore(UserSelector);
+
+  const [updatedProfiles, setUpdatedProfiles] = useState<FetchState<UpdatedProfile[]>>({
+    state: 'loading',
+  });
 
   useAsyncEffect(async () => {
-    if (friendList.state === 'hasValue') return;
-    await getFriendList();
+    getUpdatedProfiles().then((results) => {
+      setUpdatedProfiles({ state: 'hasValue', data: results });
+    });
   }, []);
 
   const navigate = useNavigate();
   const handleClickEditFriends = () => {
     navigate('edit');
   };
-
-  if (friendList.state === 'loading') return <Loader />;
-  if (friendList.state === 'hasError') return <CommonError />;
-  if (!friendList.data.length) return <NoContents text={t('no_contents.friends')} />;
 
   return (
     <SwipeLayoutList>
@@ -46,19 +43,21 @@ function Friends() {
         />
       </Layout.FlexRow>
       {/* Updated Profiles */}
-      <Collapse
-        title={t('friends.updated_profiles')}
-        collapsedItem={
-          <StyledFriendListWrapper>
-            {friendList.data.map(({ username, profile_image }) => (
-              <UpdatedProfile key={username} username={username} imageUrl={profile_image} />
-            ))}
-          </StyledFriendListWrapper>
-        }
-      />
+      {updatedProfiles.state === 'hasValue' && !!updatedProfiles.data.length && (
+        <Collapse
+          title={t('friends.updated_profiles')}
+          collapsedItem={
+            <StyledFriendListWrapper>
+              {updatedProfiles.data.map(({ username, profile_image }) => (
+                <UpdatedProfileItem key={username} username={username} imageUrl={profile_image} />
+              ))}
+            </StyledFriendListWrapper>
+          }
+        />
+      )}
       <Divider width={1} />
       {/* Favorites */}
-      <Collapse
+      {/* <Collapse
         title={t('friends.favorites')}
         collapsedItem={
           <LayoutBase w="100%">
@@ -74,10 +73,10 @@ function Friends() {
           </LayoutBase>
         }
       />
-      <Divider width={1} marginLeading={9} />
+      <Divider width={1} marginLeading={9} /> */}
       {/* TODO: Friend Request */}
       {/* All Friends */}
-      <Collapse
+      {/* <Collapse
         title={t('friends.all_friends')}
         collapsedItem={
           <LayoutBase w="100%">
@@ -92,7 +91,7 @@ function Friends() {
             ))}
           </LayoutBase>
         }
-      />
+      /> */}
     </SwipeLayoutList>
   );
 }
