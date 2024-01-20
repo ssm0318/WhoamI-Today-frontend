@@ -24,3 +24,11 @@ export const getUpdatedProfiles = async () => {
 
   return results ?? [];
 };
+
+export const getAllFriends = async () => {
+  const {
+    data: { results },
+  } = await axios.get<GetUpdatedProfileResponse>('/user/me/friends/all/');
+
+  return results ?? [];
+};

@@ -6,11 +6,13 @@ import { Divider } from '@components/_common/divider/Divider.styled';
 import UpdatedProfileItem from '@components/_common/profile-image/UpdatedProfile';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { StyledFriendListWrapper } from '@components/friends/friend-list/FriendProfile.styled';
+import UpdatedFriendItem from '@components/friends/updated-friend-item/UpdatedFriendItem';
 import { Button, Layout, SvgIcon } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { UpdatedProfile } from '@models/api/friends';
-import { getUpdatedProfiles } from '@utils/apis/friends';
+import { getAllFriends, getUpdatedProfiles } from '@utils/apis/friends';
+import { LayoutBase } from 'src/design-system/layouts';
 
 function Friends() {
   const [t] = useTranslation('translation');
@@ -18,10 +20,16 @@ function Friends() {
   const [updatedProfiles, setUpdatedProfiles] = useState<FetchState<UpdatedProfile[]>>({
     state: 'loading',
   });
+  const [allFriends, setAllFriends] = useState<FetchState<UpdatedProfile[]>>({
+    state: 'loading',
+  });
 
   useAsyncEffect(async () => {
     getUpdatedProfiles().then((results) => {
       setUpdatedProfiles({ state: 'hasValue', data: results });
+    });
+    getAllFriends().then((results) => {
+      setAllFriends({ state: 'hasValue', data: results });
     });
   }, []);
 
@@ -76,22 +84,24 @@ function Friends() {
       <Divider width={1} marginLeading={9} /> */}
       {/* TODO: Friend Request */}
       {/* All Friends */}
-      {/* <Collapse
-        title={t('friends.all_friends')}
-        collapsedItem={
-          <LayoutBase w="100%">
-            {friendList.data.map(({ username, profile_image }) => (
-              <UpdatedFriendItem
-                key={username}
-                username={username}
-                profile_image={profile_image}
-                updated
-                new_chat={23}
-              />
-            ))}
-          </LayoutBase>
-        }
-      /> */}
+      {allFriends.state === 'hasValue' && !!allFriends.data.length && (
+        <Collapse
+          title={t('friends.all_friends')}
+          collapsedItem={
+            <LayoutBase w="100%">
+              {allFriends.data.map(({ username, profile_image }) => (
+                <UpdatedFriendItem
+                  key={username}
+                  username={username}
+                  profile_image={profile_image}
+                  updated
+                  new_chat={23}
+                />
+              ))}
+            </LayoutBase>
+          }
+        />
+      )}
     </SwipeLayoutList>
   );
 }
