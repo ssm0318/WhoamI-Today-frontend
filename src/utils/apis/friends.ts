@@ -1,6 +1,7 @@
 import { PaginationResponse } from '@models/api/common';
 import { GetFriendsTodayResponse, GetUpdatedProfileResponse } from '@models/api/friends';
 import axios from '@utils/apis/axios';
+import { filterHiddenFriends } from '@utils/filterHiddenFriends';
 
 export const getFriendsToday = async () => {
   const { data } = await axios.get<PaginationResponse<GetFriendsTodayResponse>>(
@@ -22,7 +23,7 @@ export const getUpdatedProfiles = async () => {
     data: { results },
   } = await axios.get<GetUpdatedProfileResponse>('/user/me/friends/updated/');
 
-  return results ?? [];
+  return filterHiddenFriends(results ?? []);
 };
 
 export const getAllFriends = async () => {
@@ -30,7 +31,7 @@ export const getAllFriends = async () => {
     data: { results },
   } = await axios.get<GetUpdatedProfileResponse>('/user/me/friends/all/');
 
-  return results ?? [];
+  return filterHiddenFriends(results ?? []);
 };
 
 export const addFriendToFavorite = async (userId: number) => {

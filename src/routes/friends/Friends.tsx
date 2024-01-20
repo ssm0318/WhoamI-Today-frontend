@@ -25,7 +25,7 @@ function Friends() {
     state: 'loading',
   });
 
-  useAsyncEffect(async () => {
+  const fetchAllTypeFriends = async () => {
     getUpdatedProfiles().then((results) => {
       setUpdatedProfiles({ state: 'hasValue', data: results });
     });
@@ -35,7 +35,9 @@ function Friends() {
     getFavoriteFriends().then((results) => {
       setFavoriteFriends({ state: 'hasValue', data: results });
     });
-  }, []);
+  };
+
+  useAsyncEffect(fetchAllTypeFriends, []);
 
   const navigate = useNavigate();
   const handleClickEditFriends = () => {
@@ -45,15 +47,6 @@ function Friends() {
   const updateFavoriteCallback = () => {
     getFavoriteFriends().then((results) => {
       setFavoriteFriends({ state: 'hasValue', data: results });
-    });
-  };
-
-  const hideFriendCallback = () => {
-    getUpdatedProfiles().then((results) => {
-      setUpdatedProfiles({ state: 'hasValue', data: results });
-    });
-    getAllFriends().then((results) => {
-      setAllFriends({ state: 'hasValue', data: results });
     });
   };
 
@@ -75,11 +68,9 @@ function Friends() {
           title={t('friends.updated_profiles')}
           collapsedItem={
             <StyledFriendListWrapper>
-              {updatedProfiles.data
-                .filter(({ is_hidden }) => !is_hidden)
-                .map(({ username, profile_image }) => (
-                  <UpdatedProfileItem key={username} username={username} imageUrl={profile_image} />
-                ))}
+              {updatedProfiles.data.map(({ username, profile_image }) => (
+                <UpdatedProfileItem key={username} username={username} imageUrl={profile_image} />
+              ))}
             </StyledFriendListWrapper>
           }
         />
@@ -92,17 +83,15 @@ function Friends() {
             title={t('friends.favorites')}
             collapsedItem={
               <LayoutBase w="100%">
-                {favoriteFriends.data
-                  .filter(({ is_hidden }) => !is_hidden)
-                  .map((user) => (
-                    <UpdatedFriendItem
-                      key={user.id}
-                      {...user}
-                      new_chat={23}
-                      updateFavoriteCallback={updateFavoriteCallback}
-                      hideFriendCallback={hideFriendCallback}
-                    />
-                  ))}
+                {favoriteFriends.data.map((user) => (
+                  <UpdatedFriendItem
+                    key={user.id}
+                    {...user}
+                    new_chat={23}
+                    updateFavoriteCallback={updateFavoriteCallback}
+                    hideFriendCallback={fetchAllTypeFriends}
+                  />
+                ))}
               </LayoutBase>
             }
           />
@@ -116,17 +105,15 @@ function Friends() {
           title={t('friends.all_friends')}
           collapsedItem={
             <LayoutBase w="100%">
-              {allFriends.data
-                .filter(({ is_hidden }) => !is_hidden)
-                .map((user) => (
-                  <UpdatedFriendItem
-                    key={user.id}
-                    {...user}
-                    new_chat={23}
-                    updateFavoriteCallback={updateFavoriteCallback}
-                    hideFriendCallback={hideFriendCallback}
-                  />
-                ))}
+              {allFriends.data.map((user) => (
+                <UpdatedFriendItem
+                  key={user.id}
+                  {...user}
+                  new_chat={23}
+                  updateFavoriteCallback={updateFavoriteCallback}
+                  hideFriendCallback={fetchAllTypeFriends}
+                />
+              ))}
             </LayoutBase>
           }
         />
