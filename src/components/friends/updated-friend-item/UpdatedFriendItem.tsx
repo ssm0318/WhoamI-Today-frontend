@@ -7,13 +7,14 @@ import Icon from '@components/header/icon/Icon';
 import { Layout, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
 import { addFriendToFavorite, deleteFavorite, hideFriend } from '@utils/apis/friends';
+import { breakFriend } from '@utils/apis/user';
 import { UpdatedChatNumber } from '../friend-list/FriendProfile.styled';
 import { StyledUpdatedItemWrapper, UpdatedFriendItemWrapper } from './UpdatedFriendItem.styled';
 
 interface UpdatedFriendItemProps extends UpdatedProfile {
   new_chat: number;
   updateFavoriteCallback?: () => void;
-  hideFriendCallback: () => void;
+  fetchAllTypeFriends: () => void;
 }
 
 function UpdatedFriendItem({
@@ -23,7 +24,7 @@ function UpdatedFriendItem({
   is_favorite,
   updateFavoriteCallback,
   current_user_read,
-  hideFriendCallback,
+  fetchAllTypeFriends,
   new_chat,
 }: UpdatedFriendItemProps) {
   const navigate = useNavigate();
@@ -45,7 +46,13 @@ function UpdatedFriendItem({
 
   const handleHide = () => {
     hideFriend(id).then(() => {
-      hideFriendCallback?.();
+      fetchAllTypeFriends();
+    });
+  };
+
+  const handleUnfriend = () => {
+    breakFriend(id).then(() => {
+      fetchAllTypeFriends();
     });
   };
 
@@ -58,7 +65,7 @@ function UpdatedFriendItem({
             Hide
           </Typo>
         </StyledSwipeButton>,
-        <StyledSwipeButton key="unfriend" backgroundColor="ERROR">
+        <StyledSwipeButton key="unfriend" backgroundColor="ERROR" onClick={handleUnfriend}>
           <Typo type="body-medium" color="WHITE" textAlign="center">
             Unfriend
           </Typo>

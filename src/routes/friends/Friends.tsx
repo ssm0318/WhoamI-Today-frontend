@@ -106,7 +106,7 @@ function Friends() {
                     {...user}
                     new_chat={23}
                     updateFavoriteCallback={updateFavoriteCallback}
-                    hideFriendCallback={fetchAllTypeFriends}
+                    fetchAllTypeFriends={fetchAllTypeFriends}
                   />
                 ))
               ) : (
@@ -157,7 +157,7 @@ function Friends() {
                     {...user}
                     new_chat={23}
                     updateFavoriteCallback={updateFavoriteCallback}
-                    hideFriendCallback={fetchAllTypeFriends}
+                    fetchAllTypeFriends={fetchAllTypeFriends}
                   />
                 ))
               ) : (
