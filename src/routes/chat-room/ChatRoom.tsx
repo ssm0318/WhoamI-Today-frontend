@@ -14,9 +14,8 @@ import { ChatRoom as ChatRoomType, SocketMessage } from '@models/api/chat';
 import { useBoundStore } from '@stores/useBoundStore';
 import { MainWrapper } from '@styles/wrappers';
 import { getChatMessages } from '@utils/apis/chat';
+import { useChatRoomSocketProvider } from 'src/routes/chat-room/_hooks/useChatRoomSocketProvider';
 import { ChatRoomContainer, ChatRoomHeaderWrapper } from './ChatRoom.styled';
-
-const chatHost = 'localhost:8000';
 
 export function ChatRoom() {
   const { roomId } = useParams();
@@ -34,8 +33,6 @@ export function ChatRoom() {
     if (!room) return;
     setChatRoom(room);
   }, [chatRoomList, roomId]);
-
-  const chatSocket = useRef<WebSocket>();
 
   const [messages, setMessages] = useState<SocketMessage[]>([]);
   const [nextUrl, setNextUrl] = useState<string | null>(null);
@@ -62,6 +59,12 @@ export function ChatRoom() {
   );
   useAsyncEffect(fetchChatMessages, [fetchChatMessages]);
 
+  const onSocketMessage = useCallback((message: SocketMessage) => {
+    setMessages((prev) => [...prev, message]);
+  }, []);
+
+  const { sendSocketMsg } = useChatRoomSocketProvider({ chatRoom, onSocketMessage });
+
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextUrl) {
       setPrevScrollHeight(scrollRef.current?.scrollHeight);
@@ -71,35 +74,6 @@ export function ChatRoom() {
     }
     setIsLoading(false);
   });
-
-  const addEventListenerToSocket = useCallback((socket: WebSocket) => {
-    socket.addEventListener('message', (e) => {
-      const message = JSON.parse(e.data);
-      console.log('message', message);
-      setMessages((prev) => [...prev, message]);
-    });
-
-    socket.addEventListener('open', (e) => {
-      console.log('socket has been opened', e);
-    });
-
-    socket.addEventListener('close', (e) => {
-      console.log('socket has been closed', e);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!chatRoom) return;
-
-    const socket = new WebSocket(`ws://${chatHost}/ws/chat/${chatRoom.id}/`);
-
-    addEventListenerToSocket(socket);
-    chatSocket.current = socket;
-
-    return () => {
-      socket.close();
-    };
-  }, [addEventListenerToSocket, chatRoom, fetchChatMessages]);
 
   const handleClickGoBack = () => {
     navigate('/chats');
@@ -165,7 +139,7 @@ export function ChatRoom() {
           <div ref={bottomRef} />
         </MainWrapper>
         <Layout.LayoutBase w="100%" ph={17} pv={13}>
-          <MessageInputBox chatSocket={chatSocket} />
+          <MessageInputBox sendSocketMsg={sendSocketMsg} />
         </Layout.LayoutBase>
       </Layout.FlexCol>
       <MessageNotiSettings visible={settingsVisible} onClose={handleOnCloseSettingsModal} />

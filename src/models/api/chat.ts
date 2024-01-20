@@ -19,3 +19,7 @@ export interface SocketMessage {
   userName: string;
   timestamp: string;
 }
+
+export interface SocketMessageInput extends Omit<SocketMessage, 'timestamp'> {
+  userId: number;
+}
