@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import FriendItem from '@components/friends/explore-friends/friend-item/FriendItem';
-import { Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { UserProfile } from '@models/user';
 import { searchUser } from '@utils/apis/user';
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function FriendSearchList({ query }: Props) {
-  const [t] = useTranslation('translation', { keyPrefix: 'no_contents' });
+  const [t] = useTranslation('translation');
 
   const [searchList, setSearchList] = useState<UserProfile[]>();
   const [nextUrl, setNextUrl] = useState<string | null>(null);
@@ -33,19 +33,52 @@ export default function FriendSearchList({ query }: Props) {
     fetchUsers(query);
   }, [fetchUsers, query]);
 
+  const { friendsResult, moreResult } = useMemo(() => {
+    if (!searchList) return { friendsResult: [], moreResult: [] };
+    return searchList.reduce(
+      (result, item) => {
+        if (item.are_friends) result.friendsResult.push(item);
+        else result.moreResult.push(item);
+        return result;
+      },
+      { friendsResult: [] as UserProfile[], moreResult: [] as UserProfile[] },
+    );
+  }, [searchList]);
+
   if (!searchList) return <Loader />;
   return (
-    <Layout.FlexCol w="100%" ph={10} gap={8}>
+    <Layout.FlexCol w="100%" ph={16} gap={8}>
       {searchList.length > 0 ? (
         <>
-          {searchList.map((user) => (
-            <FriendItem key={user.id} type="search" user={user} areFriends={user.are_friends} />
-          ))}
+          {friendsResult.length > 0 && (
+            <Layout.FlexCol w="100%">
+              <Layout.LayoutBase pv={13}>
+                <Typo type="body-medium" color="MEDIUM_GRAY">
+                  {t('friends.explore_friends.search.your_friends')}
+                </Typo>
+              </Layout.LayoutBase>
+              {friendsResult.map((user) => (
+                <FriendItem key={user.id} type="search" user={user} areFriends={user.are_friends} />
+              ))}
+            </Layout.FlexCol>
+          )}
+          {moreResult.length > 0 && (
+            <Layout.FlexCol w="100%">
+              <Layout.LayoutBase pv={13}>
+                <Typo type="body-medium" color="MEDIUM_GRAY">
+                  {t('friends.explore_friends.search.more_results')}
+                </Typo>
+              </Layout.LayoutBase>
+              {moreResult.map((user) => (
+                <FriendItem key={user.id} type="search" user={user} areFriends={user.are_friends} />
+              ))}
+            </Layout.FlexCol>
+          )}
           <div ref={targetRef} />
           {isLoading && <Loader />}
         </>
       ) : (
-        <NoContents text={t('friends_search')} />
+        <NoContents text={t('no_contents.friends_search')} />
       )}
     </Layout.FlexCol>
   );
