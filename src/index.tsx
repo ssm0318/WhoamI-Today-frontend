@@ -4,13 +4,13 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components';
 import { Colors } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
-import SpotifyManager from '@libs/SpotifyManager';
 import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
 import { checkIfSignIn } from '@utils/apis/user';
 import { ChatRoom } from 'src/routes/chat-room/ChatRoom';
 import ErrorPage from './components/error-page/ErrorPage';
 import './i18n';
+import SpotifyManager from './libs/SpotifyManager';
 import reportWebVitals from './reportWebVitals';
 import AllQuestions from './routes/AllQuestions';
 import Chats from './routes/Chats';

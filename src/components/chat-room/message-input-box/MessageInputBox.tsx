@@ -5,10 +5,16 @@ import {
 } from '@components/chat-room/message-input-box/MessageInputBox.styled';
 import Icon from '@components/header/icon/Icon';
 import { Layout } from '@design-system';
+import { SocketMessageInput } from '@models/api/chat';
+import { useBoundStore } from '@stores/useBoundStore';
 
 const PLACE_HOLDER = 'Message...';
 
-export function MessageInputBox() {
+interface Props {
+  sendSocketMsg: (msg: SocketMessageInput) => void;
+}
+
+export function MessageInputBox({ sendSocketMsg }: Props) {
   // TODO: input length 제한
   const [inputValue, setInputValue] = useState('');
 
@@ -28,8 +34,16 @@ export function MessageInputBox() {
     sendMessage();
   };
 
+  const currentUser = useBoundStore.getState().myProfile;
+
   const sendMessage = () => {
-    // TODO: send message
+    if (!currentUser) return;
+
+    sendSocketMsg({
+      message: inputValue,
+      userName: currentUser.username,
+      userId: currentUser.id,
+    });
     setInputValue('');
   };
 

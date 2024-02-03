@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import { MOCK_MESSAGE_LIST } from '@components/chat-room/message-list/MessageList.helper';
 import { Layout, Typo } from '@design-system';
+import { ChatRoom, SocketMessage } from '@models/api/chat';
+import { useBoundStore } from '@stores/useBoundStore';
 import { getTime } from './MessageItem.helper';
 import {
   LeftMessageContent,
@@ -12,36 +13,37 @@ import {
 } from './MessageItem.styled';
 
 interface Props {
-  content: string; // FIXME: 단순 text 이외의 케이스 추가
-  author: { username: string; imageUrl: string };
-  created_at: string;
+  room: ChatRoom;
+  message: SocketMessage;
 }
 
 // TODO: 비밀댓글 게시물 케이스 추가
-export function MessageItem({ content, author, created_at }: Props) {
-  const isUserAuthor = useMemo(() => {
-    // FIXME: 메시지 작성자 판별
-    return author.username === MOCK_MESSAGE_LIST[0].author.username;
-  }, [author.username]);
+export function MessageItem({ room, message }: Props) {
+  const { userName, timestamp, message: content } = message;
+  const currentUser = useBoundStore((state) => state.myProfile);
 
-  const formattedTime = getTime(created_at);
+  const isMyMsg = useMemo(() => {
+    return userName === currentUser?.username;
+  }, [currentUser?.username, userName]);
 
-  return isUserAuthor ? (
-    <LeftMessageWrapper>
-      <Layout.FlexRow gap={10}>
-        <ProfileImage imageUrl={author.imageUrl} size={40} />
-        <LeftMessageContent>
-          <Typo type="body-medium">{content}</Typo>
-        </LeftMessageContent>
-      </Layout.FlexRow>
-      <StyledTime>{formattedTime}</StyledTime>
-    </LeftMessageWrapper>
-  ) : (
+  const formattedTime = getTime(timestamp);
+
+  return isMyMsg ? (
     <RightMessageWrapper>
       <StyledTime>{formattedTime}</StyledTime>
       <RightMessageContent>
         <Typo type="body-medium">{content}</Typo>
       </RightMessageContent>
     </RightMessageWrapper>
+  ) : (
+    <LeftMessageWrapper>
+      <Layout.FlexRow gap={10}>
+        <ProfileImage imageUrl={room.participants[0].profile_image} size={40} />
+        <LeftMessageContent>
+          <Typo type="body-medium">{content}</Typo>
+        </LeftMessageContent>
+      </Layout.FlexRow>
+      <StyledTime>{formattedTime}</StyledTime>
+    </LeftMessageWrapper>
   );
 }
