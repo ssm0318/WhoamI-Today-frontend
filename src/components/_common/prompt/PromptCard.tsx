@@ -10,6 +10,13 @@ interface PromptCardProps {
 }
 function PromptCard({ question }: PromptCardProps) {
   const { content, is_admin_question, author } = question;
+  const handleClickRespond = () => {
+    // TODO
+  };
+
+  const handleClickSend = () => {
+    // TODO
+  };
   return (
     <StyledPromptCard>
       <FlexRow gap={8} alignItems="center">
@@ -22,8 +29,8 @@ function PromptCard({ question }: PromptCardProps) {
       </FlexRow>
       <Typo type="body-large">{content}</Typo>
       <StyledPromptCardButtons gap={18}>
-        <Icon name="question_respond" size={22} />
-        <Icon name="question_send" size={22} />
+        <Icon name="question_respond" size={22} onClick={handleClickRespond} />
+        <Icon name="question_send" size={22} onClick={handleClickSend} />
       </StyledPromptCardButtons>
     </StyledPromptCard>
   );

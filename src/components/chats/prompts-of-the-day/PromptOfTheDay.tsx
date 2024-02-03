@@ -15,6 +15,10 @@ function PromptsOfTheDay() {
     await fetchTodaysQuestions();
   }, []);
 
+  const handleClickMore = () => {
+    // TODO
+  };
+
   if (!todaysQuestions) return null;
   return (
     <Collapse
@@ -24,7 +28,7 @@ function PromptsOfTheDay() {
           {todaysQuestions.map((question) => (
             <PromptCard question={question} />
           ))}
-          <StyledPromptMoreButton type="button">
+          <StyledPromptMoreButton type="button" onClick={handleClickMore}>
             <Typo type="body-large">{t('more')}</Typo>
             <SvgIcon name="arrow_right" size={32} className="icon" />
           </StyledPromptMoreButton>
