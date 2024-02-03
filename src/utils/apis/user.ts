@@ -330,3 +330,7 @@ export const getRecommendedFriends = async () => {
   const { data } = await axios.get<User[]>('/user/recommended-friends/');
   return data;
 };
+
+export const blockRecommendation = async (userId: number) => {
+  return axios.post('/user/block-recommendation/', { blocked_user_id: userId });
+};

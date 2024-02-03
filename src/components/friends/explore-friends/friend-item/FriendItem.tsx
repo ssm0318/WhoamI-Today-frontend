@@ -8,6 +8,7 @@ import { Button, Layout, Typo } from '@design-system';
 import { User } from '@models/user';
 import {
   acceptFriendRequest,
+  blockRecommendation,
   breakFriend,
   rejectFriendRequest,
   requestFriend,
@@ -16,40 +17,52 @@ import {
 interface Props {
   type: 'requests' | 'recommended' | 'search';
   user: User;
-  areFriends?: boolean;
-  updateList?: () => void;
+  disableRequest?: boolean;
+  onClickConfirm?: () => void;
+  onClickDelete?: () => void;
+  onClickRequest?: () => void;
 }
 
-// FIXME: 각 버튼 클릭시 동작 정리 필요
-function FriendItem({ type, user, areFriends, updateList }: Props) {
+function FriendItem({
+  type,
+  user,
+  disableRequest,
+  onClickConfirm,
+  onClickDelete,
+  onClickRequest,
+}: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.friend_item' });
 
   const handleClickConfirm = async (e: MouseEvent) => {
     e.stopPropagation();
     await acceptFriendRequest(user.id);
-    updateList?.();
+    onClickConfirm?.();
   };
 
   const handleClickDelete = async (e: MouseEvent) => {
     e.stopPropagation();
 
-    if (type === 'requests') {
-      await rejectFriendRequest(user.id);
-      updateList?.();
-      return;
+    switch (type) {
+      case 'requests':
+        await rejectFriendRequest(user.id);
+        break;
+      case 'search':
+        await breakFriend(user.id);
+        break;
+      case 'recommended':
+        await blockRecommendation(user.id);
+        break;
+      default:
+        return;
     }
 
-    if (type === 'recommended' || type === 'search') {
-      await breakFriend(user.id);
-      updateList?.();
-    }
+    onClickDelete?.();
   };
 
   const handleClickRequest = async (e: MouseEvent) => {
     e.stopPropagation();
-
     await requestFriend(user.id);
-    updateList?.();
+    onClickRequest?.();
   };
 
   const navigate = useNavigate();
@@ -80,7 +93,7 @@ function FriendItem({ type, user, areFriends, updateList }: Props) {
       {(type === 'recommended' || type === 'search') && (
         <Layout.FlexRow gap={16} alignItems="center">
           <Button.Primary
-            status={areFriends ? 'disabled' : 'normal'}
+            status={disableRequest ? 'disabled' : 'normal'}
             text={t('request')}
             onClick={handleClickRequest}
           />
