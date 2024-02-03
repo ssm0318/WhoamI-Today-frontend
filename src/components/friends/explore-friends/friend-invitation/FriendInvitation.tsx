@@ -38,7 +38,7 @@ export default function FriendInvitation() {
         onClick={handleClickLinkShare}
       >
         <SvgIcon name="my_profile" size={36} />
-        <Layout.FlexCol>
+        <Layout.FlexCol w="100%">
           {/* FIXME: 디자인 시스템에 대응되는 폰트 없음 */}
           <Font.Body type="14_semibold" color="MEDIUM_GRAY">
             {t('text')}

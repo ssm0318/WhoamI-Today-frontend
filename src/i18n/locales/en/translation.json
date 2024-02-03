@@ -233,7 +233,9 @@
       "done": "Done",
       "search": {
         "placeholder": "Add or search friends.",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "your_friends": "YOUR FRIENDS",
+        "more_results": "MORE RESULTS"
       },
       "invite": {
         "title": "WhoAmI Today Invitation Link",

@@ -284,7 +284,7 @@ export const requestFriend = async (userId: number) => {
   const currentUser = useBoundStore.getState().myProfile;
   if (!currentUser) return;
 
-  await axios.post('user/friend-requests/', {
+  await axios.post('/user/friend-requests/', {
     requester_id: currentUser.id,
     requestee_id: userId,
   });
@@ -324,4 +324,13 @@ export const getFriendRequests = async (next?: string | null) => {
     `/user/friend-requests/${requestPage ? `?page=${requestPage}` : ''}`,
   );
   return data;
+};
+
+export const getRecommendedFriends = async () => {
+  const { data } = await axios.get<User[]>('/user/recommended-friends/');
+  return data;
+};
+
+export const blockRecommendation = async (userId: number) => {
+  return axios.post('/user/block-recommendation/', { blocked_user_id: userId });
 };
