@@ -32,6 +32,19 @@ export default function RequestList() {
     fetchRequests();
   }, [fetchRequests]);
 
+  const updateList = (requesterId: number) => () => {
+    setFriendRequests((prev) => {
+      if (!prev) return prev;
+
+      const itemIndex = prev.findIndex(({ requester_id }) => requester_id === requesterId);
+      if (itemIndex === -1) return prev;
+
+      const next = [...prev];
+      next.splice(itemIndex, 1);
+      return next;
+    });
+  };
+
   const handleClickSentRequests = () => {
     console.log('TODO: 보낸 친구 요청 목록 보기');
   };
@@ -58,7 +71,8 @@ export default function RequestList() {
               key={requester_id}
               type="requests"
               user={requester_detail}
-              updateList={fetchRequests}
+              onClickConfirm={updateList(requester_id)}
+              onClickDelete={updateList(requester_id)}
             />
           ))}
           <div ref={targetRef} />

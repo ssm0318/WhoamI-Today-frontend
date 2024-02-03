@@ -45,6 +45,38 @@ export default function FriendSearchList({ query }: Props) {
     );
   }, [searchList]);
 
+  const handleClickRequest = (userId: number) => () => {
+    setSearchList((prev) => {
+      return prev?.reduce<UserProfile[]>((result, curr) => {
+        if (curr.id !== userId) {
+          result.push(curr);
+        } else {
+          result.push({
+            ...curr,
+            sent_friend_request_to: true,
+          });
+        }
+        return result;
+      }, []);
+    });
+  };
+
+  const handleClickDelete = (userId: number) => () => {
+    setSearchList((prev) => {
+      return prev?.reduce<UserProfile[]>((result, curr) => {
+        if (curr.id !== userId) {
+          result.push(curr);
+        } else {
+          result.push({
+            ...curr,
+            are_friends: false,
+          });
+        }
+        return result;
+      }, []);
+    });
+  };
+
   if (!searchList) return <Loader />;
   return (
     <Layout.FlexCol w="100%" ph={16} gap={8}>
@@ -58,7 +90,13 @@ export default function FriendSearchList({ query }: Props) {
                 </Typo>
               </Layout.LayoutBase>
               {friendsResult.map((user) => (
-                <FriendItem key={user.id} type="search" user={user} areFriends={user.are_friends} />
+                <FriendItem
+                  key={user.id}
+                  type="search"
+                  user={user}
+                  disableRequest={user.are_friends}
+                  onClickDelete={handleClickDelete(user.id)}
+                />
               ))}
             </Layout.FlexCol>
           )}
@@ -70,7 +108,13 @@ export default function FriendSearchList({ query }: Props) {
                 </Typo>
               </Layout.LayoutBase>
               {moreResult.map((user) => (
-                <FriendItem key={user.id} type="search" user={user} areFriends={user.are_friends} />
+                <FriendItem
+                  key={user.id}
+                  type="search"
+                  user={user}
+                  disableRequest={user.sent_friend_request_to}
+                  onClickRequest={handleClickRequest(user.id)}
+                />
               ))}
             </Layout.FlexCol>
           )}
