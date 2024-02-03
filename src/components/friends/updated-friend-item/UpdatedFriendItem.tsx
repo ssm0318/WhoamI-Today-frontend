@@ -4,7 +4,7 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import Icon from '@components/header/icon/Icon';
-import { Layout, Typo } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
 import { addFriendToFavorite, deleteFavorite, hideFriend } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
@@ -88,7 +88,7 @@ function UpdatedFriendItem({
                 backgroundColor="DARK_GRAY"
                 onClick={handleAddFavorite}
               >
-                <Icon name="star_outline" size={28} color="WHITE" />
+                <SvgIcon name="star_outline" size={28} color="WHITE" />
               </StyledSwipeButton>,
             ]
       }
