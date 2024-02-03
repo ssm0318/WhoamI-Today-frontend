@@ -216,6 +216,10 @@
   },
   "chats": {
     "title": "Chats",
+    "prompts_of_the_day": {
+      "title": "Prompts of the day",
+      "more": "More"
+    },
     "room_list": {
       "search_placeholder": "Search",
       "title": "Messages"

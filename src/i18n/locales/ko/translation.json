@@ -211,6 +211,10 @@
   },
   "chats": {
     "title": "채팅",
+    "prompts_of_the_day": {
+      "title": "오늘의 질문",
+      "more": "더보기"
+    },
     "room_list": {
       "search_placeholder": "검색",
       "title": "메시지"

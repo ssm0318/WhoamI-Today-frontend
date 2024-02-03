@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { ChatRoomList } from '@components/chats/chat-room-list/ChatRoomList';
 import { ChatRoomSearchInput } from '@components/chats/chat-room-search-input/ChatRoomSearchInput';
+import PromptsOfTheDay from '@components/chats/prompts-of-the-day/PromptOfTheDay';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 
@@ -18,6 +19,7 @@ function Chats() {
         mb={BOTTOM_TABBAR_HEIGHT + 10}
       >
         <ChatRoomSearchInput query={query} setQuery={setQuery} />
+        <PromptsOfTheDay />
         <ChatRoomList />
       </Layout.FlexCol>
       <Outlet />
