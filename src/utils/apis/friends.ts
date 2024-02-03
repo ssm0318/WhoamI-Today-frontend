@@ -1,6 +1,7 @@
 import { PaginationResponse } from '@models/api/common';
-import { GetFriendsTodayResponse } from '@models/api/friends';
+import { GetFriendsTodayResponse, GetUpdatedProfileResponse } from '@models/api/friends';
 import axios from '@utils/apis/axios';
+import { filterHiddenFriends } from '@utils/filterHiddenFriends';
 
 export const getFriendsToday = async () => {
   const { data } = await axios.get<PaginationResponse<GetFriendsTodayResponse>>(
@@ -15,4 +16,44 @@ export const getFriendToday = async (userId: number) => {
   } = await axios.get<PaginationResponse<GetFriendsTodayResponse>>(`/user/friend/${userId}/today/`);
 
   return results ?? [];
+};
+
+export const getUpdatedProfiles = async () => {
+  const {
+    data: { results },
+  } = await axios.get<GetUpdatedProfileResponse>('/user/me/friends/updated/');
+
+  return filterHiddenFriends(results ?? []);
+};
+
+export const getAllFriends = async () => {
+  const {
+    data: { results },
+  } = await axios.get<GetUpdatedProfileResponse>('/user/me/friends/all/');
+
+  return filterHiddenFriends(results ?? []);
+};
+
+export const addFriendToFavorite = async (userId: number) => {
+  await axios.post(`/user/favorite/add/`, {
+    friend_id: userId,
+  });
+};
+
+export const getFavoriteFriends = async () => {
+  const {
+    data: { results },
+  } = await axios.get<GetUpdatedProfileResponse>('/user/me/favorites/');
+
+  return results ?? [];
+};
+
+export const deleteFavorite = async (userId: number) => {
+  await axios.delete(`/user/favorite/${userId}/`);
+};
+
+export const hideFriend = async (userId: number) => {
+  await axios.post(`/user/hidden/add/`, {
+    friend_id: userId,
+  });
 };

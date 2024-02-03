@@ -59,6 +59,8 @@ const noti_icon_public_comment = 'noti_icon_public_comment';
 const noti_icon_private_comment = 'noti_icon_private_comment';
 const add_default = 'add_default';
 const star = 'star';
+const star_outline = 'star_outline';
+const friend_requests = 'friend_requests';
 
 // My
 const checkbox_default = 'checkbox_default';
@@ -111,6 +113,7 @@ export {
   expand_open,
   favorite_false,
   favorite_true,
+  friend_requests,
   friend_updates_chat,
   friend_updates_profile,
   friends_active,
@@ -143,4 +146,5 @@ export {
   share_default,
   spotify,
   star,
+  star_outline,
 };

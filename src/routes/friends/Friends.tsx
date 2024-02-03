@@ -1,27 +1,51 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Collapse from '@components/_common/\bcollapse/Collapse';
-import CommonError from '@components/_common/common-error/CommonError';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import { Loader } from '@components/_common/loader/Loader.styled';
-import NoContents from '@components/_common/no-contents/NoContents';
-import UpdatedProfile from '@components/_common/profile-image/UpdatedProfile';
+import UpdatedProfileItem from '@components/_common/profile-image/UpdatedProfileItem';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { StyledFriendListWrapper } from '@components/friends/friend-list/FriendProfile.styled';
 import UpdatedFriendItem from '@components/friends/updated-friend-item/UpdatedFriendItem';
-import { Button, Layout, SvgIcon } from '@design-system';
+import Icon from '@components/header/icon/Icon';
+import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { useBoundStore } from '@stores/useBoundStore';
-import { UserSelector } from '@stores/user';
-import { LayoutBase } from 'src/design-system/layouts';
+import { FetchState } from '@models/api/common';
+import { UpdatedProfile } from '@models/api/friends';
+import { getAllFriends, getFavoriteFriends, getUpdatedProfiles } from '@utils/apis/friends';
+import { getFriendRequests } from '@utils/apis/user';
+import { FlexCol, FlexRow, LayoutBase } from 'src/design-system/layouts';
 
 function Friends() {
-  const [t] = useTranslation('translation');
-  const { friendList, getFriendList } = useBoundStore(UserSelector);
+  const [t] = useTranslation('translation', { keyPrefix: 'friends' });
+
+  const [updatedProfiles, setUpdatedProfiles] = useState<FetchState<UpdatedProfile[]>>({
+    state: 'loading',
+  });
+  const [friendRequests, setFriendRequests] = useState<FetchState<number>>({ state: 'loading' });
+  const [allFriends, setAllFriends] = useState<FetchState<UpdatedProfile[]>>({ state: 'loading' });
+  const [favoriteFriends, setFavoriteFriends] = useState<FetchState<UpdatedProfile[]>>({
+    state: 'loading',
+  });
+
+  const fetchAllTypeFriends = async () => {
+    getUpdatedProfiles().then((results) => {
+      setUpdatedProfiles({ state: 'hasValue', data: results });
+    });
+    getAllFriends().then((results) => {
+      setAllFriends({ state: 'hasValue', data: results });
+    });
+    getFavoriteFriends().then((results) => {
+      setFavoriteFriends({ state: 'hasValue', data: results });
+    });
+  };
 
   useAsyncEffect(async () => {
-    if (friendList.state === 'hasValue') return;
-    await getFriendList();
+    fetchAllTypeFriends();
+    getFriendRequests().then(({ count }) => {
+      setFriendRequests({ state: 'hasValue', data: count });
+    });
   }, []);
 
   const navigate = useNavigate();
@@ -29,16 +53,26 @@ function Friends() {
     navigate('edit');
   };
 
-  if (friendList.state === 'loading') return <Loader />;
-  if (friendList.state === 'hasError') return <CommonError />;
-  if (!friendList.data.length) return <NoContents text={t('no_contents.friends')} />;
+  const updateFavoriteCallback = () => {
+    getFavoriteFriends().then((results) => {
+      setFavoriteFriends({ state: 'hasValue', data: results });
+    });
+  };
+
+  if (
+    updatedProfiles.state === 'loading' ||
+    friendRequests.state === 'loading' ||
+    allFriends.state === 'loading' ||
+    favoriteFriends.state === 'loading'
+  )
+    return <Loader />;
 
   return (
     <SwipeLayoutList>
       <Layout.FlexRow w="100%" p={4} justifyContent="flex-end">
         <Button.Tertiary
           status="normal"
-          text={t('friends.edit_friends')}
+          text={t('edit_friends')}
           onClick={handleClickEditFriends}
           icon={<SvgIcon name="edit_filled" size={16} />}
           iconPosition="left"
@@ -46,53 +80,102 @@ function Friends() {
         />
       </Layout.FlexRow>
       {/* Updated Profiles */}
-      <Collapse
-        title={t('friends.updated_profiles')}
-        collapsedItem={
-          <StyledFriendListWrapper>
-            {friendList.data.map(({ username, profile_image }) => (
-              <UpdatedProfile key={username} username={username} imageUrl={profile_image} />
-            ))}
-          </StyledFriendListWrapper>
-        }
-      />
-      <Divider width={1} />
-      {/* Favorites */}
-      <Collapse
-        title={t('friends.favorites')}
-        collapsedItem={
-          <LayoutBase w="100%">
-            {friendList.data.map(({ username, profile_image }) => (
-              <UpdatedFriendItem
-                key={username}
-                username={username}
-                profile_image={profile_image}
-                updated
-                new_chat={23}
-              />
-            ))}
-          </LayoutBase>
-        }
-      />
+      {updatedProfiles.state === 'hasValue' && !!updatedProfiles.data.length && (
+        <Collapse
+          title={t('updated_profiles')}
+          collapsedItem={
+            <StyledFriendListWrapper>
+              {updatedProfiles.data.map((user) => (
+                <UpdatedProfileItem key={user.id} {...user} />
+              ))}
+            </StyledFriendListWrapper>
+          }
+        />
+      )}
       <Divider width={1} marginLeading={9} />
-      {/* TODO: Friend Request */}
+      {/* Favorites */}
+      {favoriteFriends.state === 'hasValue' && (
+        <Collapse
+          title={t('favorites')}
+          collapsedItem={
+            <LayoutBase w="100%">
+              {favoriteFriends.data.length ? (
+                favoriteFriends.data.map((user) => (
+                  <UpdatedFriendItem
+                    key={user.id}
+                    {...user}
+                    new_chat={23}
+                    updateFavoriteCallback={updateFavoriteCallback}
+                    fetchAllTypeFriends={fetchAllTypeFriends}
+                  />
+                ))
+              ) : (
+                <FlexCol alignItems="center" ph={75} gap={8}>
+                  <Typo type="label-medium" color="DARK_GRAY">
+                    {t('add_favorite')}
+                  </Typo>
+                  <Icon name="add_default" />
+                </FlexCol>
+              )}
+            </LayoutBase>
+          }
+        />
+      )}
+      <Divider width={1} marginLeading={9} />
+      {/* Friend Requests */}
+      {friendRequests.state === 'hasValue' && (
+        <Collapse
+          title={`${t('friend_requests')} (${friendRequests.data})`}
+          collapsedItem={
+            <FlexRow
+              w="100%"
+              alignItems="center"
+              gap={8}
+              pl={16}
+              onClick={() => navigate('/friends/explore')}
+            >
+              <SvgIcon name="friend_requests" size={44} />
+              <Typo type="label-medium" color="DARK">
+                {t('friend_requests_desc')}
+              </Typo>
+              <SvgIcon name="arrow_right" size={26} />
+            </FlexRow>
+          }
+        />
+      )}
+      <Divider width={1} marginLeading={9} />
       {/* All Friends */}
-      <Collapse
-        title={t('friends.all_friends')}
-        collapsedItem={
-          <LayoutBase w="100%">
-            {friendList.data.map(({ username, profile_image }) => (
-              <UpdatedFriendItem
-                key={username}
-                username={username}
-                profile_image={profile_image}
-                updated
-                new_chat={23}
-              />
-            ))}
-          </LayoutBase>
-        }
-      />
+      {allFriends.state === 'hasValue' && (
+        <Collapse
+          title={t('all_friends')}
+          collapsedItem={
+            <LayoutBase w="100%">
+              {allFriends.data.length ? (
+                allFriends.data.map((user) => (
+                  <UpdatedFriendItem
+                    key={user.id}
+                    {...user}
+                    new_chat={23}
+                    updateFavoriteCallback={updateFavoriteCallback}
+                    fetchAllTypeFriends={fetchAllTypeFriends}
+                  />
+                ))
+              ) : (
+                <FlexCol alignItems="center" ph={75} gap={8}>
+                  <Typo type="label-medium" color="DARK_GRAY">
+                    {t('add_favorite')}
+                  </Typo>
+                  <Icon
+                    name="add_user"
+                    background="LIGHT_GRAY"
+                    onClick={() => navigate('/friends/explore')}
+                  />
+                </FlexCol>
+              )}
+            </LayoutBase>
+          }
+        />
+      )}
     </SwipeLayoutList>
   );
 }

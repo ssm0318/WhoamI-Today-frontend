@@ -258,7 +258,11 @@
     },
     "edit_friends": "친구 목록 편집",
     "updated_profiles": "업데이트한 프로필",
+    "friend_requests":"친구 요청",
+    "friend_requests_desc": "친구 요청 및 추천 친구 보기",
     "favorites": "즐겨찾기",
-    "all_friends": "모든 친구"
+    "add_favorite": "즐겨찾기에 친구를 추가하고 피드 상단에서 친구의 콘텐츠를 확인하세요!",
+    "all_friends": "모든 친구",
+    "no_friends": "친구를 추가해 피드에서 친구의 콘텐츠를 확인해보세요."
   }
 }
