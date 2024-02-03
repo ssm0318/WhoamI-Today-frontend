@@ -1,19 +1,19 @@
 import { PaginationResponse } from '@models/api/common';
 import { GetResponseHistoriesResponse, ResponseQuestionRequestParams } from '@models/api/question';
-import { Response, ShortAnswerQuestion } from '@models/post';
+import { DailyQuestion, Question, Response } from '@models/post';
 import axios from './axios';
 import { getDateRequestParams } from './common';
 
 // GET today's questions
 export const getTodayQuestions = async () => {
-  const { data } = await axios.get<ShortAnswerQuestion[]>(`/feed/questions/daily/`);
+  const { data } = await axios.get<DailyQuestion[]>(`/feed/questions/daily/`);
   return data;
 };
 
 // GET all questions (pagination)
 export const getAllQuestions = async (page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
-  const { data } = await axios.get<PaginationResponse<ShortAnswerQuestion[]>>(
+  const { data } = await axios.get<PaginationResponse<Question[]>>(
     `/feed/questions/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
@@ -21,7 +21,7 @@ export const getAllQuestions = async (page: string | null) => {
 
 // GET question detail
 export const getQuestionDetail = async (id: number) => {
-  const { data } = await axios.get<ShortAnswerQuestion>(`/feed/questions/${id}/`);
+  const { data } = await axios.get<Question>(`/feed/questions/${id}/`);
   return data;
 };
 

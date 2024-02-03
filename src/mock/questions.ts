@@ -1,21 +1,17 @@
-import { ShortAnswerQuestion } from '@models/post';
+import { DailyQuestion } from '@models/post';
 
-export const shortAnswerQuestions: ShortAnswerQuestion[] = Array.from(
-  { length: 15 },
-  (_value, index) => ({
-    id: index,
-    content: 'How does electricity work?',
-    author: 'John Doe',
-    author_detail: {
-      id: 1,
-      profile_image: null,
-      profile_pic: 'https://example.com/profile_pic.jpg',
-      url: 'https://example.com/profile/johndoe',
-      username: 'johndoe',
-    },
-    like_count: 10,
-    current_user_like_id: null,
-    created_at: '2023-05-26T10:30:00Z',
+export const DailyQuestions: DailyQuestion[] = [
+  {
+    id: 24,
     type: 'Question',
-  }),
-);
+    content: 'buy',
+    created_at: '2023-06-03T18:29:29.412343+09:00',
+    selected_dates: ['2023-06-06'],
+    selected: false,
+    is_admin_question: false,
+    author: null,
+    author_detail: {
+      color_hex: '#96D178',
+    },
+  },
+];

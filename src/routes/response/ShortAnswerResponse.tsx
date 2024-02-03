@@ -13,7 +13,7 @@ import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
-import { ShortAnswerQuestion } from '@models/post';
+import { Question } from '@models/post';
 import { getQuestionDetail, responseQuestion } from '@utils/apis/question';
 
 // 주관식 질문 답변
@@ -21,7 +21,7 @@ function ShortAnswerResponse() {
   const { questionId } = useParams();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [sendModalVisible, setSendModalVisible] = useState(false);
-  const [question, setQuestion] = useState<FetchState<ShortAnswerQuestion>>({ state: 'loading' });
+  const [question, setQuestion] = useState<FetchState<Question>>({ state: 'loading' });
   const navigate = useNavigate();
   const [hasPosted, setHasPosted] = useState(false);
   const [showComplete, setShowComplete] = useState(false);

@@ -1,16 +1,16 @@
-import { ShortAnswerQuestion } from '@models/post';
+import { DailyQuestion } from '@models/post';
 import { getTodayQuestions } from '@utils/apis/question';
-import { SliceStateCreator } from './useBoundStore';
+import { BoundState, SliceStateCreator } from './useBoundStore';
 
 interface TodaysQuestionsState {
-  shortAnswerQuestions: ShortAnswerQuestion[];
+  todaysQuestions: DailyQuestion[] | undefined;
 }
 interface TodaysQuestionsAction {
   fetchTodaysQuestions: () => Promise<void>;
 }
 
 const initialState = {
-  shortAnswerQuestions: [],
+  todaysQuestions: [],
 };
 
 export type TodaysQuestionsSlice = TodaysQuestionsState & TodaysQuestionsAction;
@@ -18,9 +18,14 @@ export type TodaysQuestionsSlice = TodaysQuestionsState & TodaysQuestionsAction;
 export const createTodaysQuestionsSlice: SliceStateCreator<TodaysQuestionsSlice> = (set) => ({
   ...initialState,
   fetchTodaysQuestions: async () => {
-    const todayQuestions = await getTodayQuestions();
+    const todaysQuestions = await getTodayQuestions();
     set(() => ({
-      shortAnswerQuestions: todayQuestions,
+      todaysQuestions,
     }));
   },
+});
+
+export const TodayQuestionsSelector = (state: BoundState) => ({
+  todaysQuestions: state.todaysQuestions,
+  fetchTodaysQuestions: state.fetchTodaysQuestions,
 });

@@ -3,6 +3,7 @@ import { User } from './user';
 
 export enum POST_TYPE {
   RESPONSE = 'Response',
+  QUESTION = 'Question',
 }
 
 export interface ShareSettings {
@@ -10,11 +11,15 @@ export interface ShareSettings {
   share_anonymously: boolean;
 }
 
-// Question 타입 나중에 확장되면 추가
-export type Question = ShortAnswerQuestion;
-
-export interface ShortAnswerQuestion extends ContentsCommon {
+export interface Question extends ContentsCommon {
   type: 'Question';
+}
+
+export interface DailyQuestion extends Omit<Question, 'current_user_like_id' | 'like_count'> {
+  /** YYYY-MM-DD */
+  selected_dates: string[];
+  selected: boolean;
+  is_admin_question: boolean;
 }
 
 export interface ContentsCommon {
