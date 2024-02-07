@@ -1,53 +1,46 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import Loader from '@components/_common/loader/Loader';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { DEFAULT_MARGIN, SCREEN_WIDTH, Z_INDEX } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
-import { User } from '@models/user';
+import useInfiniteScroll from '@hooks/useInfiniteScroll';
+import { Reaction, ReactionPostType } from '@models/post';
+import { getReactionList } from '@utils/apis/responses';
 import EmojiItem from '../emoji-item/EmojiItem';
-
-interface EmojiData {
-  id: number;
-  emoji: string;
-  user: User;
-}
-
-// TODO(Gina): 실제 데이터로 바꾸기
-const mockEmojiDataList: EmojiData[] = [
-  {
-    id: 1,
-    emoji: '🥰',
-    user: {
-      id: 1,
-      username: '김민수',
-      profile_image: '',
-      profile_pic: '',
-      url: '',
-    },
-  },
-  {
-    id: 2,
-    emoji: '😋',
-    user: {
-      id: 2,
-      username: '이철수',
-      profile_image: '',
-      profile_pic: '',
-      url: '',
-    },
-  },
-];
 
 interface EmojiViewPopupProps {
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
   popupPosition: { top?: number; bottom?: number };
+  postType: ReactionPostType;
+  postId: number;
 }
 
-function EmojiViewPopup({ isVisible, setIsVisible, popupPosition }: EmojiViewPopupProps) {
+function EmojiViewPopup({
+  isVisible,
+  setIsVisible,
+  popupPosition,
+  postType,
+  postId,
+}: EmojiViewPopupProps) {
   const emojiPopupWrapper = useRef<HTMLDivElement>(null);
+  const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
+  const [reactions, setReactions] = useState<Reaction[]>([]);
 
   useClickOutside({ ref: emojiPopupWrapper, onClick: () => setIsVisible(false) });
+
+  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
+    if (nextPage === null) return setIsLoading(false);
+    await fetchReactions(nextPage ?? null);
+  });
+
+  const fetchReactions = async (page: string | null) => {
+    const { results, next } = await getReactionList(postType, postId, page);
+    if (!results) return;
+    setNextPage(next);
+    setReactions([...reactions, ...results]);
+  };
 
   if (!isVisible) return null;
   return (
@@ -70,7 +63,7 @@ function EmojiViewPopup({ isVisible, setIsVisible, popupPosition }: EmojiViewPop
         }}
         gap={12}
       >
-        {mockEmojiDataList.map((data) => (
+        {reactions.map((data) => (
           <Layout.FlexRow key={data.id} alignItems="center" justifyContent="space-between" w="100%">
             <Layout.FlexRow alignItems="center">
               <ProfileImage
@@ -85,6 +78,12 @@ function EmojiViewPopup({ isVisible, setIsVisible, popupPosition }: EmojiViewPop
             </Layout.FlexRow>
           </Layout.FlexRow>
         ))}
+        <div ref={targetRef} />
+        {isLoading && (
+          <Layout.FlexRow w="100%" h={40}>
+            <Loader />
+          </Layout.FlexRow>
+        )}
       </Layout.FlexCol>
     </Layout.Absolute>
   );

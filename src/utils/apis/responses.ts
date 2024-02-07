@@ -1,6 +1,6 @@
 import { DateRequestParams, PaginationResponse } from '@models/api/common';
 import { GetResponseDetailResponse } from '@models/api/response';
-import { Comment, DayQuestion } from '@models/post';
+import { Comment, DayQuestion, Reaction, ReactionPostType } from '@models/post';
 import axios from './axios';
 
 export const getDayQuestions = async ({ year, month, day }: DateRequestParams) => {
@@ -23,4 +23,22 @@ export const getCommentsOfResponse = async (responseId: number) => {
 export const getResponse = async (responseId: number | string) => {
   const { data } = await axios.get<GetResponseDetailResponse>(`/feed/responses/${responseId}/`);
   return data;
+};
+
+// GET Reaction List
+export const getReactionList = async (
+  postType: ReactionPostType,
+  postId: number,
+  next?: string | null,
+) => {
+  const requestPage = next ? next.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<Reaction[]>>(
+    `/reactions/${postType}/${postId}/${requestPage ? `?page=${requestPage}` : ''}`,
+  );
+  return data;
+};
+
+// POST Reaction
+export const postReaction = async (postType: ReactionPostType, postId: number, emoji: string) => {
+  await axios.post(`/reactions/${postType}/${postId}`, { emoji });
 };

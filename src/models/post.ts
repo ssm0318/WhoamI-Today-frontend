@@ -82,3 +82,11 @@ export type QuestionResponse = Omit<ContentsCommon, 'author_detail' | 'author'> 
 export interface MomentPost extends GetMomentResponse {}
 
 export type ResponseDetail = Response & ShareSettings;
+
+export type Reaction = {
+  id: number;
+  emoji: string;
+  user: User;
+};
+
+export type ReactionPostType = 'response';
