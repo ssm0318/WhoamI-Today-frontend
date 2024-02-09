@@ -4,4 +4,6 @@ export interface Note {
   created_at: string;
   current_user_like_id: number | null;
   // TBU
+  commentCount: number;
+  likeCount: number;
 }
