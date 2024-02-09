@@ -12,7 +12,7 @@ import { DEFAULT_MARGIN, SCREEN_WIDTH, TITLE_HEADER_HEIGHT } from '@constants/la
 import { Button, Font, Input, Layout } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
 import SpotifyManager from '@libs/SpotifyManager';
-import { Availability, CheckIn } from '@models/user';
+import { Availability, CheckInBase } from '@models/checkIn';
 
 const AVAILABILITIES: Availability[] = [
   Availability.Available,
@@ -26,7 +26,7 @@ function StatusEdit() {
   const navigate = useNavigate();
 
   // TODO(Gina) 현재 status 불러오기
-  const [status, setStatus] = useState<Partial<CheckIn>>({
+  const [status, setStatus] = useState<Partial<CheckInBase>>({
     availability: Availability.Available,
     bio: 'I’m a Bio! Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit ame.',
     description: 'Got free boba tea from the new shop at work today!!',
@@ -48,7 +48,7 @@ function StatusEdit() {
   };
 
   const handleSearchMusic = () => {
-    return navigate('/status/search-music');
+    return navigate('/check-in/search-music');
   };
 
   const toggleEmojiPicker = () => {

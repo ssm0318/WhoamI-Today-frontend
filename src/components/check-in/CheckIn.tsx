@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import { Font, Layout, SvgIcon } from '@design-system';
+import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
-import { checkIn as mockCheckIn } from '@mock/users';
-import { CheckIn as CheckInType, User } from '@models/user';
+import { MyCheckIn } from '@models/checkIn';
+import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import AvailabilityChip from '../profile/availability-chip/AvailabilityChip';
@@ -18,9 +19,17 @@ interface CheckInProps {
 
 function CheckIn({ user }: CheckInProps) {
   const spotifyManager = SpotifyManager.getInstance();
-  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+  const {
+    myProfile,
+    checkIn: initialCheckIn,
+    fetchCheckIn,
+  } = useBoundStore((state) => ({
+    myProfile: state.myProfile,
+    checkIn: state.checkIn,
+    fetchCheckIn: state.fetchCheckIn,
+  }));
   const isMyPage = user?.id === myProfile?.id;
-  const [checkIn, setCheckIn] = useState<CheckInType | null>(mockCheckIn);
+  const [checkIn, setCheckIn] = useState<MyCheckIn | null>(initialCheckIn);
   const { availability, track_id } = checkIn || {};
 
   const [trackData, setTrackData] = useState<Track | null>(null);
@@ -40,10 +49,10 @@ function CheckIn({ user }: CheckInProps) {
     spotifyManager.getTrack(track_id).then(setTrackData);
   }, [spotifyManager, track_id]);
 
-  useEffect(() => {
+  useAsyncEffect(async () => {
     if (!isMyPage) return;
-    // isMyPage -> check-in 데이터 부르기
-    setCheckIn(mockCheckIn);
+    const myCheckIn = await fetchCheckIn();
+    setCheckIn(myCheckIn);
   }, [isMyPage]);
 
   return (
@@ -66,19 +75,24 @@ function CheckIn({ user }: CheckInProps) {
           </Layout.FlexRow>
           <Layout.FlexRow
             w="100%"
-            justifyContent="space-between"
             gap={8}
             bgColor="WHITE"
+            alignItems="center"
             outline="GRAY_1"
             ph={8}
             pv={4}
             rounded={12}
           >
             {/* emoji */}
-            <EmojiItem emojiString="😋" size={24} bgColor="TRANSPARENT" outline="TRANSPARENT" />
+            <EmojiItem
+              emojiString={checkIn.mood}
+              size={24}
+              bgColor="TRANSPARENT"
+              outline="TRANSPARENT"
+            />
             {/* description */}
             <Font.Body type="14_semibold" numberOfLines={2}>
-              Got free boba tea from the new shop at work today!!
+              {checkIn.description}
             </Font.Body>
           </Layout.FlexRow>
           {/* check in time */}

@@ -14,41 +14,44 @@ import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
-import { checkIn as mockCheckIn } from '@mock/users';
-import { Availability, CheckIn } from '@models/user';
+import { Availability, CheckInForm } from '@models/checkIn';
+import { useBoundStore } from '@stores/useBoundStore';
+import { postCheckIn } from '@utils/apis/checkIn';
 
 function CheckInEdit() {
   const spotifyManager = SpotifyManager.getInstance();
   const navigate = useNavigate();
-
-  // TODO(Gina) 현재 status 불러오기
-  const [checkIn, setCheckIn] = useState<CheckIn>(mockCheckIn);
-  const { availability, bio, description, mood, track_id } = checkIn;
+  const [checkInForm, setCheckInForm] = useBoundStore((state) => [
+    state.checkInForm,
+    state.setCheckInForm,
+  ]);
   const [trackData, setTrackData] = useState<Track | null>(null);
 
   const handleSearchMusic = () => {
     return navigate('/check-in/search-music');
   };
 
-  const handleChange = (name: string, value: string) => {
-    setCheckIn((prev) => {
-      return { ...prev, [name]: value };
-    });
+  const handleChange = (name: keyof CheckInForm, value: string) => {
+    setCheckInForm({ [name]: value });
+  };
+
+  const handleChangeAvailability = (availability: Availability) => {
+    setCheckInForm({ availability });
   };
 
   const handleDelete = (name: string) => {
-    setCheckIn((prev) => {
-      return { ...prev, [name]: '' };
-    });
+    setCheckInForm({ [name]: '' });
   };
 
-  const handleConfirmSave = () => {
-    // TODO(Gina) 저장 API
+  const handleConfirmSave = async () => {
+    await postCheckIn(checkInForm);
+    return navigate('/my');
   };
 
   useEffect(() => {
-    spotifyManager.getTrack(track_id).then(setTrackData);
-  }, [spotifyManager, track_id]);
+    if (!checkInForm?.track_id) return;
+    spotifyManager.getTrack(checkInForm.track_id).then(setTrackData);
+  }, [spotifyManager, checkInForm]);
 
   return (
     <MainContainer>
@@ -76,7 +79,7 @@ function CheckInEdit() {
           description="What emoji describes you mood the best?"
         >
           <CheckInEmoji
-            mood={mood}
+            mood={checkInForm?.mood || ''}
             onDelete={() => handleDelete('mood')}
             onSelectEmoji={(e: EmojiClickData) => {
               handleChange('mood', e.emoji);
@@ -89,7 +92,7 @@ function CheckInEdit() {
           description=" Tell your friends more about your mood!"
         >
           <CheckInDescription
-            description={description}
+            description={checkInForm?.description || ''}
             onDelete={() => handleDelete('description')}
             onChange={(e) => handleChange('description', e.target.value)}
           />
@@ -111,10 +114,8 @@ function CheckInEdit() {
             <AvailabilityChip
               availability={a}
               key={a}
-              isSelected={availability === a}
-              onSelect={(av) => {
-                handleChange('availability', av);
-              }}
+              isSelected={checkInForm?.availability === a}
+              onSelect={handleChangeAvailability}
             />
           ))}
         </SectionContainer>
@@ -122,12 +123,12 @@ function CheckInEdit() {
         <SectionContainer title="Bio" description="Bio">
           <Layout.FlexRow mt={8} w="100%" alignItems="center" gap={8}>
             <CheckInTextInput
-              value={bio}
+              value={checkInForm?.bio || ''}
               onChange={(e) => {
                 handleChange('bio', e.target.value);
               }}
             />
-            {bio && <DeleteButton onClick={() => handleDelete('bio')} />}
+            {!!checkInForm?.bio && <DeleteButton onClick={() => handleDelete('bio')} />}
           </Layout.FlexRow>
         </SectionContainer>
       </Layout.FlexCol>

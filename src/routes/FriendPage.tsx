@@ -12,6 +12,7 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { readFriendCheckIn } from '@utils/apis/checkIn';
 import { getUserProfile } from '@utils/apis/user';
 
 function FriendPage() {
@@ -33,7 +34,14 @@ function FriendPage() {
     }
   };
 
+  const readCheckIn = async () => {
+    if (!username || !user.data) return;
+    await readFriendCheckIn(user.data.id);
+  };
+
   useAsyncEffect(updateUser, []);
+
+  useAsyncEffect(readCheckIn, [user.data]);
 
   useEffect(() => {
     if (!isMyPage) return;

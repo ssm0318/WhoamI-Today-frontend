@@ -1,7 +1,8 @@
+import { ChatSlice, createChatSlice } from '@stores/chat';
 import { create, StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import { ChatSlice, createChatSlice } from '@stores/chat';
+import { CheckInSlice, createCheckInSlice } from './checkIn';
 import { createMomentSlice, MomentSlice } from './moment';
 import { createMyPageSlice, MyPageSlice } from './my';
 import { createNotificationSlice, NotificationSlice } from './notification';
@@ -15,7 +16,8 @@ export type BoundState = MomentSlice &
   SignUpInfoSlice &
   TodaysQuestionsSlice &
   UserSlice &
-  NotificationSlice;
+  NotificationSlice &
+  CheckInSlice;
 
 export type SliceStateCreator<Slice> = StateCreator<
   BoundState,
@@ -41,5 +43,6 @@ export const useBoundStore = create<BoundState>()(
     ...createTodaysQuestionsSlice(...a),
     ...createUserSlice(...a),
     ...createNotificationSlice(...a),
+    ...createCheckInSlice(...a),
   })),
 );

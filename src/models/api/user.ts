@@ -1,3 +1,4 @@
+import { MyCheckIn } from '@models/checkIn';
 import { User } from '@models/user';
 
 export interface SignInParams {
@@ -120,6 +121,7 @@ export interface MyProfile extends User {
   noti_time: string;
   unread_noti: boolean;
   timezone?: string;
+  check_in?: MyCheckIn;
 }
 
 export interface FriendRequest {
