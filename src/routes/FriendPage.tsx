@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Divider } from '@components/_common/divider/Divider.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import UserHeader from '@components/header/user-header/UserHeader';
 import Status from '@components/profile/Profile';
-import ReactionSection from '@components/reaction/reaction-section/ReactionSection';
 import UserMoreModal from '@components/user-page/UserMoreModal';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
@@ -68,9 +66,6 @@ function FriendPage() {
         >
           <Status user={user.data} />
         </Layout.FlexRow>
-        <ReactionSection emojis={['💪🏻', '😊', '😋']} />
-        <Divider width={500} />
-        <ReactionSection emojis={['💡', '🙇‍♀️', '🤾', '🤪', '🤯', '🥺']} />
       </Layout.FlexCol>
     </MainContainer>
   );

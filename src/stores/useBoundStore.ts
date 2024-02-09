@@ -1,7 +1,7 @@
-import { ChatSlice, createChatSlice } from '@stores/chat';
 import { create, StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
+import { ChatSlice, createChatSlice } from '@stores/chat';
 import { CheckInSlice, createCheckInSlice } from './checkIn';
 import { createMomentSlice, MomentSlice } from './moment';
 import { createMyPageSlice, MyPageSlice } from './my';

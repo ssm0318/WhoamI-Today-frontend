@@ -1,11 +1,11 @@
+import { EmojiClickData } from 'emoji-picker-react';
+import { RefObject, useRef, useState } from 'react';
 import EmojiPicker from '@components/emoji-picker/EmojiPicker';
 import { SCREEN_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { ReactionPostType } from '@models/post';
 import { getReactionList, postReaction } from '@utils/apis/responses';
-import { EmojiClickData } from 'emoji-picker-react';
-import { RefObject, useRef, useState } from 'react';
 import EmojiReactionList from '../emoji-reaction-list/EmojiReactionList';
 import EmojiViewPopup from '../emoji-view-popup/EmojiViewPopup';
 
