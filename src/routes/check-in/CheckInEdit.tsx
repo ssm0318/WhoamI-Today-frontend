@@ -21,46 +21,37 @@ import { postCheckIn } from '@utils/apis/checkIn';
 function CheckInEdit() {
   const spotifyManager = SpotifyManager.getInstance();
   const navigate = useNavigate();
-  const { checkIn: initialCheckIn } = useBoundStore((state) => ({
-    checkIn: state.checkIn,
-  }));
-
-  const [checkIn, setCheckIn] = useState<CheckInForm>(
-    initialCheckIn || {
-      availability: Availability.Available,
-      bio: '',
-      description: '',
-      mood: '',
-      track_id: '',
-    },
-  );
+  const [checkInForm, setCheckInForm] = useBoundStore((state) => [
+    state.checkInForm,
+    state.setCheckInForm,
+  ]);
   const [trackData, setTrackData] = useState<Track | null>(null);
 
   const handleSearchMusic = () => {
     return navigate('/check-in/search-music');
   };
 
-  const handleChange = (name: string, value: string) => {
-    setCheckIn((prev) => {
-      return { ...prev, [name]: value };
-    });
+  const handleChange = (name: keyof CheckInForm, value: string) => {
+    setCheckInForm({ [name]: value });
+  };
+
+  const handleChangeAvailability = (availability: Availability) => {
+    setCheckInForm({ availability });
   };
 
   const handleDelete = (name: string) => {
-    setCheckIn((prev) => {
-      return { ...prev, [name]: '' };
-    });
+    setCheckInForm({ [name]: '' });
   };
 
   const handleConfirmSave = async () => {
-    await postCheckIn(checkIn);
+    await postCheckIn(checkInForm);
     return navigate('/my');
   };
 
   useEffect(() => {
-    if (!checkIn?.track_id) return;
-    spotifyManager.getTrack(checkIn.track_id).then(setTrackData);
-  }, [spotifyManager, checkIn]);
+    if (!checkInForm?.track_id) return;
+    spotifyManager.getTrack(checkInForm.track_id).then(setTrackData);
+  }, [spotifyManager, checkInForm]);
 
   return (
     <MainContainer>
@@ -88,7 +79,7 @@ function CheckInEdit() {
           description="What emoji describes you mood the best?"
         >
           <CheckInEmoji
-            mood={checkIn?.mood || ''}
+            mood={checkInForm?.mood || ''}
             onDelete={() => handleDelete('mood')}
             onSelectEmoji={(e: EmojiClickData) => {
               handleChange('mood', e.emoji);
@@ -101,7 +92,7 @@ function CheckInEdit() {
           description=" Tell your friends more about your mood!"
         >
           <CheckInDescription
-            description={checkIn?.description || ''}
+            description={checkInForm?.description || ''}
             onDelete={() => handleDelete('description')}
             onChange={(e) => handleChange('description', e.target.value)}
           />
@@ -123,10 +114,8 @@ function CheckInEdit() {
             <AvailabilityChip
               availability={a}
               key={a}
-              isSelected={checkIn?.availability === a}
-              onSelect={(av) => {
-                handleChange('availability', av);
-              }}
+              isSelected={checkInForm?.availability === a}
+              onSelect={handleChangeAvailability}
             />
           ))}
         </SectionContainer>
@@ -134,12 +123,12 @@ function CheckInEdit() {
         <SectionContainer title="Bio" description="Bio">
           <Layout.FlexRow mt={8} w="100%" alignItems="center" gap={8}>
             <CheckInTextInput
-              value={checkIn?.bio || ''}
+              value={checkInForm?.bio || ''}
               onChange={(e) => {
                 handleChange('bio', e.target.value);
               }}
             />
-            {!!checkIn?.bio && <DeleteButton onClick={() => handleDelete('bio')} />}
+            {!!checkInForm?.bio && <DeleteButton onClick={() => handleDelete('bio')} />}
           </Layout.FlexRow>
         </SectionContainer>
       </Layout.FlexCol>

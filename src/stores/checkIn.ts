@@ -1,16 +1,25 @@
-import { MyCheckIn } from '@models/checkIn';
+import { Availability, CheckInForm, MyCheckIn } from '@models/checkIn';
 import { getCheckInList } from '@utils/apis/checkIn';
 import { SliceStateCreator } from './useBoundStore';
 
 interface CheckInState {
   checkIn: MyCheckIn | null;
+  checkInForm: CheckInForm;
 }
 interface CheckInAction {
   fetchCheckIn: () => Promise<MyCheckIn | null>;
+  setCheckInForm: (checkInForm: Partial<CheckInForm>) => void;
 }
 
 const initialState = {
   checkIn: null,
+  checkInForm: {
+    availability: Availability.Available,
+    bio: '',
+    description: '',
+    mood: '',
+    track_id: '',
+  },
 };
 
 export type CheckInSlice = CheckInState & CheckInAction;
@@ -26,4 +35,6 @@ export const createCheckInSlice: SliceStateCreator<CheckInSlice> = (set) => ({
     }));
     return currentCheckIn;
   },
+  setCheckInForm: (checkInForm) =>
+    set((state) => ({ checkInForm: { ...state.checkInForm, ...checkInForm } })),
 });
