@@ -2,10 +2,12 @@ import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import IconButton from '@components/_common/icon-button/IconButton';
 import LikeButton from '@components/_common/like-button/LikeButton';
+import { SCREEN_WIDTH } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import { Note } from '@models/note';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
+import { NEW_NOTE_BUTTON_WIDTH } from '../new-note-button/NewNoteButton';
 
 interface NoteItemProps {
   note: Note;
@@ -60,6 +62,8 @@ function NoteItem({ note }: NoteItemProps) {
   );
 }
 
-export const NOTE_WIDTH = 228;
+const NOTE_GAP = 16;
+const NOTE_MARGIN = 12;
+export const NOTE_WIDTH = SCREEN_WIDTH - NEW_NOTE_BUTTON_WIDTH - 4 * NOTE_MARGIN - NOTE_GAP * 2;
 
 export default NoteItem;

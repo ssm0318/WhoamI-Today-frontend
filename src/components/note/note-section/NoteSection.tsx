@@ -57,6 +57,7 @@ function NoteSection() {
           overflowX: 'scroll',
           whiteSpace: 'nowrap',
         }}
+        pr={12}
       >
         <Layout.FlexRow gap={16} mt={10}>
           {isMyPage && <NewNoteButton />}
