@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const StyledValidatedInput = styled.div`
   width: 100%;
-  margin-bottom: 45px;
+  margin-bottom: 4px;
 
   span {
     display: block;
