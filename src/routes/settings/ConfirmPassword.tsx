@@ -33,7 +33,6 @@ function ConfirmPassword() {
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 14} w="100%" gap={10} ph={24}>
         <ValidatedPasswordInput
           label={t('settings.enter_your_current_password')}
-          labelType="14_regular"
           name="password"
           value={passwordInput}
           onChange={handleChange}

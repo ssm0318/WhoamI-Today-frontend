@@ -22,4 +22,5 @@ export const StyledEditProfileButton = styled.button`
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 `;

@@ -4,6 +4,8 @@ export interface User {
   profile_pic: string;
   url: string;
   username: string;
+  bio: string;
+  pronouns: string;
 }
 
 export interface UserProfile extends User {
