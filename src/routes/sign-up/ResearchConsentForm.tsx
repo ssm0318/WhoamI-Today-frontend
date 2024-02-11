@@ -71,7 +71,7 @@ function ResearchConsentForm() {
       {/* Age */}
       <ValidatedInput
         label={t('age')}
-        inputMode="numeric"
+        type="numeric"
         pattern="[0-9]*"
         name="age"
         value={ageInput}

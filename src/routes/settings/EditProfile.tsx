@@ -6,6 +6,7 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
 import ProfileImageEditButton from '@components/_common/profile-image-edit-button/ProfileImageEditButton';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
+import ValidatedTextArea from '@components/_common/validated-textarea/ValidatedTextArea';
 import { StyledEditProfileButton } from '@components/settings/SettingsButtons.styled';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
@@ -92,6 +93,11 @@ function EditProfile() {
     setDraft((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setDraft((prev) => ({ ...prev, [name]: value }));
+  };
+
   if (!myProfile) return null;
 
   return (
@@ -153,12 +159,11 @@ function EditProfile() {
           onChange={handleChangeInput}
         />
         {/* bio */}
-        <ValidatedInput
+        <ValidatedTextArea
           label={t('bio')}
           name="bio"
-          type="text"
           value={draft.bio}
-          onChange={handleChangeInput}
+          onChange={handleChangeTextArea}
           limit={120}
         />
       </Layout.FlexCol>
