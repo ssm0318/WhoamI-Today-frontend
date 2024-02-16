@@ -72,6 +72,11 @@ const spotify = 'spotify';
 const default_profile = 'default_profile';
 const add_comment = 'add_comment';
 
+// Bottom Sheet
+const bottomsheet_checkin = 'bottomsheet_checkin';
+const bottomsheet_note = 'bottomsheet_note';
+const bottomsheet_prompt = 'bottomsheet_prompt';
+
 // Chats
 const new_chat = 'new_chat';
 const edit_list = 'edit_list';
@@ -105,6 +110,9 @@ export {
   add_user,
   arrow_left,
   arrow_right,
+  bottomsheet_checkin,
+  bottomsheet_note,
+  bottomsheet_prompt,
   camera,
   chat_filled,
   chat_media_gif,

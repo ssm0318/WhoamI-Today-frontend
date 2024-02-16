@@ -72,6 +72,11 @@
         "friends": "Friends",
         "questions": "Questions",
         "settings": "Settings"
+      },
+      "bottom_sheet": {
+        "check-in": "Check-in",
+        "note": "Note",
+        "prompts": "Response to prompts"
       }
     }
   },

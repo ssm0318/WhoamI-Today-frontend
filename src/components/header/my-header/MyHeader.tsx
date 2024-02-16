@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Icon from '@components/_common/icon/Icon';
 import { useBoundStore } from '@stores/useBoundStore';
+import Icon from '../../_common/icon/Icon';
+import NewPostBottomSheet from '../bottom-sheet/NewPostBottomSheet';
 import MainHeader from '../MainHeader';
 import SideMenu from '../side-menu/SideMenu';
 
@@ -9,11 +9,12 @@ function MyHeader() {
   const myProfile = useBoundStore((state) => state.myProfile);
 
   const [showSideMenu, setShowSideMenu] = useState(false);
-  const navigate = useNavigate();
+  const [bottomSheet, setBottomSheet] = useState(false);
 
-  const handleEditStatus = () => {
-    // 수정 페이지로 이동
-    navigate('/check-in/edit');
+  // const navigate = useNavigate();
+
+  const handleNewPostStatus = () => {
+    setBottomSheet(true);
   };
 
   const handleClickHamburger = () => {
@@ -26,11 +27,14 @@ function MyHeader() {
         title={myProfile?.username ?? ''}
         rightButtons={
           <>
-            <Icon name="new_chat" size={44} onClick={handleEditStatus} />
+            <Icon name="new_chat" size={44} onClick={handleNewPostStatus} />
             <Icon name="hamburger" size={44} onClick={handleClickHamburger} />
           </>
         }
       />
+      {bottomSheet && (
+        <NewPostBottomSheet visible={bottomSheet} closeBottomSheet={() => setBottomSheet(false)} />
+      )}
       {showSideMenu && <SideMenu closeSideMenu={() => setShowSideMenu(false)} />}
     </>
   );
