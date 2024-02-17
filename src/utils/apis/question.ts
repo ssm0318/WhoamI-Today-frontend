@@ -6,7 +6,7 @@ import { getDateRequestParams } from './common';
 
 // GET today's questions
 export const getTodayQuestions = async () => {
-  const { data } = await axios.get<DailyQuestion[]>(`/feed/questions/daily/`);
+  const { data } = await axios.get<DailyQuestion[]>(`/qna/questions/daily/`);
   return data;
 };
 
@@ -14,14 +14,14 @@ export const getTodayQuestions = async () => {
 export const getAllQuestions = async (page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Question[]>>(
-    `/feed/questions/${!requestPage ? '' : `?page=${requestPage}`}`,
+    `/qna/questions/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
 };
 
 // GET question detail
 export const getQuestionDetail = async (id: number) => {
-  const { data } = await axios.get<Question>(`/feed/questions/${id}/`);
+  const { data } = await axios.get<Question>(`/qna/questions/${id}/`);
   return data;
 };
 
@@ -32,7 +32,7 @@ export const requestResponse = async (
 ) => {
   Promise.all(
     selectedFriendIdList.map((friend) =>
-      axios.post(`/feed/questions/response-request/`, {
+      axios.post(`/qna/questions/response-request/`, {
         requester_id: currentUserId,
         requestee_id: friend,
         question_id: questionId,
@@ -44,14 +44,14 @@ export const requestResponse = async (
 // POST response today's question
 export const responseQuestion = async (params: ResponseQuestionRequestParams) => {
   const { year, month, day } = getDateRequestParams(new Date());
-  const { data } = await axios.post<Response>(`/feed/responses/${year}/${month}/${day}/`, params);
+  const { data } = await axios.post<Response>(`/qna/responses/${year}/${month}/${day}/`, params);
   return data;
 };
 
 // GET all question response histories
 export const getResponseHistories = async (questionId: number) => {
   const { data } = await axios.get<GetResponseHistoriesResponse>(
-    `/feed/questions/${questionId}/responses/`,
+    `/qna/questions/${questionId}/responses/`,
   );
   return data;
 };
