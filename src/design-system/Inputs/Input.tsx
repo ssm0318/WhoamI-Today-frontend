@@ -9,7 +9,7 @@ export type InputProps = {
   InputHTMLAttributes<HTMLInputElement>;
 
 function Input(props: InputProps) {
-  const { label, labelType = '18_regular', ...inputProps } = props;
+  const { label = '', labelType = '18_regular', ...inputProps } = props;
   return (
     <>
       <Font.Body type={labelType}>{label}</Font.Body>

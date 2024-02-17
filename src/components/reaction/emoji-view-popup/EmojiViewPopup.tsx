@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import Loader from '@components/_common/loader/Loader';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { DEFAULT_MARGIN, SCREEN_WIDTH, Z_INDEX } from '@constants/layout';
@@ -7,7 +7,7 @@ import useClickOutside from '@hooks/useClickOutside';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Reaction, ReactionPostType } from '@models/post';
 import { getReactionList } from '@utils/apis/responses';
-import EmojiItem from '../emoji-item/EmojiItem';
+import { RefObject, useRef, useState } from 'react';
 
 interface EmojiViewPopupProps {
   isVisible: boolean;
@@ -15,6 +15,7 @@ interface EmojiViewPopupProps {
   popupPosition: { top?: number; bottom?: number };
   postType: ReactionPostType;
   postId: number;
+  toggleButtonRef?: RefObject<HTMLButtonElement>;
 }
 
 function EmojiViewPopup({
@@ -23,12 +24,17 @@ function EmojiViewPopup({
   popupPosition,
   postType,
   postId,
+  toggleButtonRef,
 }: EmojiViewPopupProps) {
   const emojiPopupWrapper = useRef<HTMLDivElement>(null);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
   const [reactions, setReactions] = useState<Reaction[]>([]);
 
-  useClickOutside({ ref: emojiPopupWrapper, onClick: () => setIsVisible(false) });
+  useClickOutside({
+    ref: emojiPopupWrapper,
+    toggleButtonRef,
+    onClick: () => setIsVisible(false),
+  });
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextPage === null) return setIsLoading(false);

@@ -1,7 +1,7 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { ChangeEvent, useState } from 'react';
 import MainContainer from '@components/_common/main-container/MainContainer';
-import StatusMusic from '@components/status/status-music/StatusMusic';
+import SpotifyMusic from '@components/check-in/spotify-music/SpotifyMusic';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Input, Layout } from '@design-system';
@@ -37,7 +37,7 @@ function MusicSearch() {
         <Input label="music search" value={query} onChange={handleChangeQuery} />
         {trackList.map((track) => (
           <Layout.FlexRow key={track.id} onClick={() => handleSelectMusic(track)}>
-            <StatusMusic track={track} width={250} />
+            <SpotifyMusic track={track} width={250} />
           </Layout.FlexRow>
         ))}
       </Layout.FlexCol>

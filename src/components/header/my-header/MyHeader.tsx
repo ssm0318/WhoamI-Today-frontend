@@ -13,7 +13,7 @@ function MyHeader() {
 
   const handleEditStatus = () => {
     // 수정 페이지로 이동
-    navigate('/status/edit');
+    navigate('/check-in/edit');
   };
 
   const handleClickHamburger = () => {
