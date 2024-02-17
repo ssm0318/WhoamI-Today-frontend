@@ -105,6 +105,7 @@ const router = createBrowserRouter([
     path: 'users/:username',
     loader: checkIfSignIn,
     element: <FriendPage />,
+    children: [{ path: 'notes', element: <AllNotes /> }],
   },
   {
     path: 'check-in',

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
@@ -9,10 +10,14 @@ import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Note } from '@models/note';
+import { useBoundStore } from '@stores/useBoundStore';
 import { getNoteList } from '@utils/apis/note';
 
 function AllNotes() {
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
+  const { username } = useParams();
+  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+
   const [noteList, setNoteList] = useState<Note[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
@@ -31,7 +36,7 @@ function AllNotes() {
 
   return (
     <MainContainer>
-      <SubHeader title={t('notes', { name: '유저 네임' })} />
+      <SubHeader title={t('notes', { name: username || myProfile?.username })} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} pv={14} w="100%" ph={DEFAULT_MARGIN}>
         {noteList.map((note) => (
           <NoteListItem note={note} key={note.id} />
