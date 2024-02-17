@@ -4,17 +4,16 @@ import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import NoteListItem from '@components/note/note-list-item/NoteListItem';
-import { noteList } from '@components/note/note-section/NoteSection';
 import SubHeader from '@components/sub-header/SubHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Note } from '@models/note';
-import { getAllNotes } from '@utils/apis/note';
+import { getNoteList } from '@utils/apis/note';
 
 function AllNotes() {
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
-  const [questions, setQuestions] = useState<Note[]>([]);
+  const [noteList, setNoteList] = useState<Note[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
@@ -23,10 +22,10 @@ function AllNotes() {
   });
 
   const fetchQuestions = async (page: string | null) => {
-    const { results, next } = await getAllNotes(page);
+    const { results, next } = await getNoteList(page);
     if (!results) return;
     setNextPage(next);
-    setQuestions([...questions, ...results]);
+    setNoteList([...noteList, ...results]);
     setIsLoading(false);
   };
 
@@ -43,7 +42,7 @@ function AllNotes() {
             <Loader />
           </Layout.FlexRow>
         )}
-        {!isLoading && questions.length < 1 && (
+        {!isLoading && noteList.length < 1 && (
           <NoContents text={t('no_contents.all_questions')} mv={10} />
         )}
       </Layout.FlexCol>
