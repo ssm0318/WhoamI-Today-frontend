@@ -12,8 +12,8 @@ const moment_photo_disabled = 'moment_photo_disabled';
 const moment_add = 'moment_add';
 /** @deprecated ver1 icon */
 const moment_add_disabled = 'moment_add_disabled';
-/** @deprecated ver1 icon */
 const question_send = 'question_send';
+const question_respond = 'question_respond';
 /** @deprecated ver1 icon */
 const circle_check_checked = 'circle_check_checked';
 /** @deprecated ver1 icon */
@@ -141,6 +141,7 @@ export {
   notification,
   private_comment_active,
   private_comment_inactive,
+  question_respond,
   question_send,
   search,
   share_default,

@@ -8,12 +8,12 @@ import SubHeader from '@components/sub-header/SubHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
-import { ShortAnswerQuestion } from '@models/post';
+import { Question } from '@models/post';
 import { getAllQuestions } from '@utils/apis/question';
 
 function AllQuestions() {
   const [t] = useTranslation('translation');
-  const [questions, setQuestions] = useState<ShortAnswerQuestion[]>([]);
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
