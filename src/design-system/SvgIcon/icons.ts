@@ -50,6 +50,7 @@ const friend_updates_profile = 'friend_updates_profile';
 const friend_updates_chat = 'friend_updates_chat';
 const chat_filled = 'chat_filled';
 const edit_filled = 'edit_filled';
+const edit_filled_white = 'edit_filled_white';
 const share_default = 'share_default';
 const private_comment_inactive = 'private_comment_inactive';
 const private_comment_active = 'private_comment_active';
@@ -66,6 +67,7 @@ const friend_requests = 'friend_requests';
 const checkbox_default = 'checkbox_default';
 const checkbox_checked = 'checkbox_checked';
 const spotify = 'spotify';
+const default_profile = 'default_profile';
 
 // Chats
 const new_chat = 'new_chat';
@@ -85,12 +87,6 @@ const my_inactive = 'my_inactive';
 const chats_active = 'chats_active';
 const chats_inactive = 'chats_inactive';
 const delete_button = 'delete_button';
-const show_password_eye = 'show_password_eye';
-const hide_password_eye = 'hide_password_eye';
-const link_share = 'link_share';
-const header_logo = 'header_logo';
-const lock_off = 'lock_off';
-const lock_on = 'lock_on';
 const top_navigation_friend = 'top_navigation_friend';
 const top_navigation_edit = 'top_navigation_edit';
 const top_navigation_dots = 'top_navigation_dots';
@@ -119,11 +115,13 @@ export {
   circle_check_unchecked,
   close,
   comment,
+  default_profile,
   delete_button,
   delete_default,
   dots_menu,
   edit,
   edit_filled,
+  edit_filled_white,
   edit_list,
   edit_outline,
   error,

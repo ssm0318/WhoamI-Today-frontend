@@ -9,12 +9,19 @@ interface SubHeaderProps {
   typo?: FontType;
   onGoBack?: () => void;
   RightComponent?: React.ReactNode;
+  LeftComponent?: React.ReactNode;
 }
 /**
  *
  * 중앙에 title이 있는 헤더
  */
-function SubHeader({ title, typo = 'head-line', onGoBack, RightComponent }: SubHeaderProps) {
+function SubHeader({
+  title,
+  typo = 'head-line',
+  onGoBack,
+  RightComponent,
+  LeftComponent,
+}: SubHeaderProps) {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
@@ -31,11 +38,13 @@ function SubHeader({ title, typo = 'head-line', onGoBack, RightComponent }: SubH
         ph="default"
         pv={4}
       >
-        <Layout.LayoutBase w={36} h={36}>
-          <button type="button" onClick={handleGoBack}>
-            <SvgIcon name="arrow_left" size={36} color="BLACK" />
-          </button>
-        </Layout.LayoutBase>
+        {LeftComponent || (
+          <Layout.LayoutBase w={36} h={36}>
+            <button type="button" onClick={handleGoBack}>
+              <SvgIcon name="arrow_left" size={36} color="BLACK" />
+            </button>
+          </Layout.LayoutBase>
+        )}
         {title && (
           <Typo type={typo} textAlign="center">
             {title}

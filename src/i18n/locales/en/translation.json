@@ -152,11 +152,6 @@
   "settings": {
     "title": "Settings",
     "account_settings": "Account Settings",
-    "edit_profile": "Edit Profile",
-    "change_picture": "Change Picture",
-    "crop_picture": "Crop Picture",
-    "username": "Username",
-    "email": "Email",
     "update": "Update",
     "change_password": "Change Password",
     "confirm_password": "Confirm Password",
@@ -183,7 +178,17 @@
     "yes_delete": "Yes, delete",
     "password": "Password",
     "continue": "Continue",
-    "are_you_sure": "Are you sure?\nThis cannot be done."
+    "are_you_sure": "Are you sure?\nThis cannot be done.",
+    "edit_profile": {
+      "title":  "Edit Profile",
+      "cancel": "Cancel",
+      "save": "Save",
+      "change_picture": "Change Picture",
+      "username": "Username",
+      "email": "Email",
+      "bio": "Bio",
+      "pronouns": "Pronouns"
+    }
   },
   "time": {
     "just_a_moment_ago": "just a moment ago",

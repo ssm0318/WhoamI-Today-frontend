@@ -1,0 +1,16 @@
+<svg width="161" height="160" viewBox="0 0 161 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Profile_picture">
+<circle id="Ellipse 451" cx="80.5" cy="80" r="80" fill="#D9D9D9"/>
+<g id="Mask group">
+<mask id="mask0_4347_21062" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="14" y="28" width="133" height="132">
+<circle id="Ellipse 449" cx="80.4252" cy="93.9252" r="65.8142" fill="#E3F6FF" stroke="#D9D9D9" stroke-width="0.22204"/>
+</mask>
+<g mask="url(#mask0_4347_21062)">
+<g id="Group 36708">
+<path id="Vector" d="M104.169 69.9522C104.169 81.4808 94.7252 90.833 83.0671 90.833C71.4091 90.833 61.9649 81.4808 61.9649 69.9522C61.9649 58.4236 71.4091 49.0713 83.0671 49.0713C94.7252 49.0713 104.169 58.4236 104.169 69.9522Z" fill="white" stroke="white" stroke-width="0.73832"/>
+<path id="Vector_2" d="M54.9929 100.216H108.278C117.077 100.216 124.209 107.349 124.209 116.147V167.478H39.0621V116.147C39.0621 107.349 46.1946 100.216 54.9929 100.216Z" fill="white" stroke="white" stroke-width="0.73832"/>
+</g>
+</g>
+</g>
+</g>
+</svg>

@@ -1,23 +1,34 @@
 import { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Divider } from '@components/_common/divider/Divider.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
+import ProfileImageEditButton from '@components/_common/profile-image-edit-button/ProfileImageEditButton';
+import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
+import ValidatedTextArea from '@components/_common/validated-textarea/ValidatedTextArea';
 import { StyledEditProfileButton } from '@components/settings/SettingsButtons.styled';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Button, Font, Layout } from '@design-system';
+import { Button, Layout, Typo } from '@design-system';
+import { MyProfile } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
-import { UserSelector } from '@stores/user';
-import { changeProfileImage, updateMyProfile } from '@utils/apis/user';
+import { changeProfileImage, editProfile } from '@utils/apis/user';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 
 function EditProfile() {
-  const [t] = useTranslation('translation', { keyPrefix: 'settings' });
-
-  const { myProfile } = useBoundStore(UserSelector);
+  const [t] = useTranslation('translation', { keyPrefix: 'settings.edit_profile' });
+  const { myProfile, updateMyProfile } = useBoundStore((state) => ({
+    myProfile: state.myProfile,
+    updateMyProfile: state.updateMyProfile,
+  }));
+  const [draft, setDraft] = useState<Pick<MyProfile, 'bio' | 'username' | 'pronouns'>>(
+    myProfile || {
+      bio: '',
+      username: '',
+      pronouns: '',
+    },
+  );
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -55,26 +66,67 @@ function EditProfile() {
   };
 
   const navigate = useNavigate();
-  const handleChangeProfileImage = async () => {
+
+  const handleChangeProfileImage = () => {
     if (!croppedImg) return;
-    await changeProfileImage({ profileImage: croppedImg.file });
-    updateMyProfile().then(() => {
-      navigate('/settings');
+    changeProfileImage({ profileImage: croppedImg.file, onSuccess: () => navigate('/settings') });
+  };
+
+  const handleClickCancel = () => {
+    navigate(-1);
+  };
+
+  const handleClickSave = async () => {
+    if (!myProfile) return;
+    editProfile({
+      profile: {
+        ...draft,
+      },
+      onSuccess: () => {
+        updateMyProfile({ ...draft });
+      },
     });
+  };
+
+  const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setDraft((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setDraft((prev) => ({ ...prev, [name]: value }));
   };
 
   if (!myProfile) return null;
 
   return (
     <MainContainer>
-      <SubHeader typo="title-large" title={t('edit_profile')} />
+      <SubHeader
+        typo="title-large"
+        title={t('title')}
+        LeftComponent={
+          <button type="button" onClick={handleClickCancel}>
+            <Typo type="title-large" color="DARK">
+              {t('cancel')}
+            </Typo>
+          </button>
+        }
+        RightComponent={
+          <button type="button" onClick={handleClickSave}>
+            <Typo type="title-large" color="PRIMARY">
+              {t('save')}
+            </Typo>
+          </button>
+        }
+      />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" gap={10}>
-        <Layout.FlexCol pt={12} pb={19} bgColor="GRAY_10" w="100%" alignItems="center">
+        <Layout.FlexCol pt={24} w="100%" alignItems="center">
           <StyledEditProfileButton type="button" onClick={handleClickUpdate}>
             <ProfileImage
               imageUrl={croppedImg?.url || myProfile.profile_image}
               username={myProfile.username}
-              size={124}
+              size={160}
             />
             <input
               ref={inputRef}
@@ -84,16 +136,36 @@ function EditProfile() {
               multiple={false}
               style={{ display: 'none' }}
             />
-            <Font.Display type="14_regular">{t('change_picture')}</Font.Display>
+            <ProfileImageEditButton size={40} iconSize={32} />
           </StyledEditProfileButton>
         </Layout.FlexCol>
       </Layout.FlexCol>
       <Layout.FlexCol pt={32} ph={24} gap={24} w="100%">
-        <Font.Display type="14_regular">{t('username')}</Font.Display>
-        <Font.Body type="18_regular">{myProfile.username}</Font.Body>
-        <Divider width={1} />
-        <Font.Display type="14_regular">{t('email')}</Font.Display>
-        <Font.Body type="18_regular">{myProfile.email}</Font.Body>
+        {/* username */}
+        <ValidatedInput
+          label={t('username')}
+          name="username"
+          type="text"
+          value={draft.username}
+          onChange={handleChangeInput}
+          limit={30}
+        />
+        {/* pronouns */}
+        <ValidatedInput
+          label={t('pronouns')}
+          name="pronouns"
+          type="text"
+          value={draft.pronouns}
+          onChange={handleChangeInput}
+        />
+        {/* bio */}
+        <ValidatedTextArea
+          label={t('bio')}
+          name="bio"
+          value={draft.bio}
+          onChange={handleChangeTextArea}
+          limit={120}
+        />
       </Layout.FlexCol>
       {croppedImg && (
         <Layout.Absolute w="100%" b="50px" pl={24} pr={24} flexDirection="column">

@@ -11,14 +11,19 @@ export const CommonInput = styled.input`
   padding: 14px 0;
   font-size: 18px;
   border-width: 0 0 1px;
-  border-color: ${({ theme }) => theme.GRAY_1};
+  border-color: ${({ theme }) => theme.MEDIUM_GRAY};
 
   :disabled {
-    background-color: ${({ theme }) => theme.LIGHT_GRAY};
-    color: ${({ theme }) => theme.GRAY_9};
+    background-color: ${({ theme }) => theme.MEDIUM_GRAY};
+    color: ${({ theme }) => theme.MEDIUM_GRAY};
     border-radius: 8px;
     border: none;
     margin-top: 12px;
+  }
+
+  :focus {
+    border-bottom-width: 2px;
+    border-bottom-color: ${({ theme }) => theme.PRIMARY};
   }
 `;
 

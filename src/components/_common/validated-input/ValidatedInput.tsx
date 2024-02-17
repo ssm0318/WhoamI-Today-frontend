@@ -1,4 +1,4 @@
-import { Font, Input, Layout, SvgIcon } from '@design-system';
+import { Input, Layout, SvgIcon, Typo } from '@design-system';
 import { ValidatedInputProps } from './ValidatedInput.helper';
 import StyledValidatedInput from './ValidatedInput.styled';
 
@@ -11,15 +11,15 @@ function ValidatedInput(props: ValidatedInputProps) {
       {error && (
         <Layout.FlexRow alignItems="center" mt={14}>
           <SvgIcon name="error" size={14} />
-          <Font.Display type="14_regular" color="ERROR" ml={6}>
+          <Typo type="label-small" color="ERROR" ml={6}>
             {error}
-          </Font.Display>
+          </Typo>
         </Layout.FlexRow>
       )}
       {guide && !error && (
-        <Font.Display type="14_regular" color="GRAY_4" mt={18}>
+        <Typo type="label-small" color="DARK_GRAY" mt={18}>
           {guide}
-        </Font.Display>
+        </Typo>
       )}
     </StyledValidatedInput>
   );

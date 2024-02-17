@@ -236,6 +236,31 @@ export const changeProfileImage = ({
     });
 };
 
+export const editProfile = ({
+  profile,
+  onSuccess,
+  onError,
+}: {
+  profile: Pick<MyProfile, 'bio' | 'username' | 'pronouns'>;
+  onSuccess?: () => void;
+  onError?: (error: string) => void;
+}) => {
+  const formData = new FormData();
+
+  Object.entries(profile).forEach(([key, value]) => {
+    if (value) {
+      formData.append(key, value as string);
+    }
+  });
+
+  axiosFormDataInstance
+    .patch('/user/me/', formData)
+    .then(() => onSuccess?.())
+    .catch((e) => {
+      onError?.(e);
+    });
+};
+
 export const resetPassword = ({
   userId,
   password,
