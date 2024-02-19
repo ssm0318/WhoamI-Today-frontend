@@ -13,7 +13,7 @@ function MyHeader() {
 
   // const navigate = useNavigate();
 
-  const handleNewPostStatus = () => {
+  const handleNewPost = () => {
     setBottomSheet(true);
   };
 
@@ -27,7 +27,7 @@ function MyHeader() {
         title={myProfile?.username ?? ''}
         rightButtons={
           <>
-            <Icon name="new_chat" size={44} onClick={handleNewPostStatus} />
+            <Icon name="new_chat" size={44} onClick={handleNewPost} />
             <Icon name="hamburger" size={44} onClick={handleClickHamburger} />
           </>
         }
