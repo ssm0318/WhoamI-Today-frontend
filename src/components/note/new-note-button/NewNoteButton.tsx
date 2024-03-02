@@ -1,12 +1,14 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import { Font, Layout } from '@design-system';
 
 function NewNoteButton() {
   const [t] = useTranslation('translation');
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    // TODO (팝업 or 페이지 이동)
+    navigate('/notes/new');
   };
 
   return (
