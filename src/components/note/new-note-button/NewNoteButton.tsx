@@ -1,4 +1,4 @@
-import IconButton from '@components/_common/icon-button/IconButton';
+import Icon from '@components/_common/icon/Icon';
 import { Font, Layout } from '@design-system';
 
 function NewNoteButton() {
@@ -15,7 +15,7 @@ function NewNoteButton() {
       alignItems="center"
       gap={8}
     >
-      <IconButton size={44} name="add_default" onClick={handleClick} color="TRANSPARENT" />
+      <Icon size={44} name="add_default" onClick={handleClick} color="TRANSPARENT" />
       <Font.Body type="14_semibold" color="DARK_GRAY" textAlign="center">
         New Note
       </Font.Body>

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import IconButton from '@components/_common/icon-button/IconButton';
+import Icon from '@components/_common/icon/Icon';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { Note } from '@models/note';
@@ -40,7 +40,7 @@ function NoteSection() {
         <Typo type="title-large" color="BLACK">
           Notes
         </Typo>
-        <IconButton onClick={handleClickMore} name="arrow_right" />
+        <Icon onClick={handleClickMore} name="arrow_right" />
       </Layout.FlexRow>
       <S.NoteSectionWrapper w="100%" pr={12} h={220}>
         <Layout.FlexRow gap={16} mt={10} h="100%">

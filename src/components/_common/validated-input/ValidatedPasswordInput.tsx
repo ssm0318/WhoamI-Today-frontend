@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Icon from '@components/header/icon/Icon';
+import Icon from '@components/_common/icon/Icon';
 import { Font, Input, Layout, SvgIcon } from '@design-system';
 import { ValidatedInputProps } from './ValidatedInput.helper';
 import StyledValidatedInput from './ValidatedInput.styled';

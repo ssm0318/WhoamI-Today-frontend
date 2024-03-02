@@ -1,6 +1,6 @@
 import { MouseEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import IconButton from '@components/_common/icon-button/IconButton';
+import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
@@ -49,7 +49,7 @@ function NoteItem({ note }: NoteItemProps) {
         <Typo type="label-medium" color="MEDIUM_GRAY">
           {convertTimeDiffByString(new Date(), new Date(created_at))}
         </Typo>
-        <IconButton name="dots_menu" onClick={handleClickMore} />
+        <Icon name="dots_menu" onClick={handleClickMore} />
       </Layout.FlexRow>
       <Layout.FlexCol
         style={{
@@ -71,7 +71,7 @@ function NoteItem({ note }: NoteItemProps) {
       </Layout.FlexCol>
       <Layout.FlexRow gap={12}>
         <LikeButton postType="Note" post={note} iconSize={24} m={0} />
-        <IconButton name="comment" onClick={handleClickComment} />
+        <Icon name="comment" onClick={handleClickComment} />
       </Layout.FlexRow>
     </Layout.FlexCol>
   );

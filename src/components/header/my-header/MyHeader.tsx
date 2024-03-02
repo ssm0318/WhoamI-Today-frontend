@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Icon from '@components/_common/icon/Icon';
 import { useBoundStore } from '@stores/useBoundStore';
-import Icon from '../icon/Icon';
 import MainHeader from '../MainHeader';
 import SideMenu from '../side-menu/SideMenu';
 

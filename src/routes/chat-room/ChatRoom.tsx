@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { MessageInputBox } from '@components/chat-room/message-input-box/MessageInputBox';
 import { MessageList } from '@components/chat-room/message-list/MessageList';
 import { MessageNotiSettings } from '@components/chat-room/message-noti-settings/MessageNotiSettings';
-import Icon from '@components/header/icon/Icon';
 import { TOP_NAVIGATION_HEIGHT, Z_INDEX } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';

@@ -1,9 +1,9 @@
 import { MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledFriendItem } from '@components/friends/explore-friends/friend-item/FriendItem.styled';
-import Icon from '@components/header/icon/Icon';
 import { Button, Layout, Typo } from '@design-system';
 import { User } from '@models/user';
 import {

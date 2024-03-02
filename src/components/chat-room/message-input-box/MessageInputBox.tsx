@@ -1,9 +1,9 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
+import Icon from '@components/_common/icon/Icon';
 import {
   MessageInput,
   StyledMessageInputBox,
 } from '@components/chat-room/message-input-box/MessageInputBox.styled';
-import Icon from '@components/header/icon/Icon';
 import { Layout } from '@design-system';
 import { SocketMessageInput } from '@models/api/chat';
 import { useBoundStore } from '@stores/useBoundStore';

@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import IconButton from '@components/_common/icon-button/IconButton';
+import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import { Layout, Typo } from '@design-system';
 import { Note } from '@models/note';
@@ -30,7 +30,7 @@ function NoteListItem({ note }: NoteListItemProps) {
         <Typo type="label-medium" color="MEDIUM_GRAY">
           {convertTimeDiffByString(new Date(), new Date(created_at))}
         </Typo>
-        <IconButton name="dots_menu" onClick={handleClickMore} />
+        <Icon name="dots_menu" onClick={handleClickMore} />
       </Layout.FlexRow>
       <Layout.FlexCol gap={8}>
         <Typo type="body-large" color="BLACK">
@@ -38,7 +38,7 @@ function NoteListItem({ note }: NoteListItemProps) {
         </Typo>
         <Layout.FlexRow gap={12}>
           <LikeButton postType="Note" post={note} iconSize={24} m={0} />
-          <IconButton name="add_comment" onClick={handleClickComment} />
+          <Icon name="add_comment" onClick={handleClickComment} />
         </Layout.FlexRow>
         <Layout.FlexRow>
           <Typo type="label-large" color="BLACK">

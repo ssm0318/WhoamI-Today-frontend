@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import Icon from '../icon/Icon';
+import Icon from '@components/_common/icon/Icon';
 import MainHeader from '../MainHeader';
 
 function ChatsHeader() {
