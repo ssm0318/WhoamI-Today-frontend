@@ -22,6 +22,7 @@
     "add": "Add",
     "skip": "Skip",
     "next": "Next",
+    "crop_picture": "Crop Picture",
     "temporary_error": "An error has occurred temporarily. Please try again later.",
     "password_constraints": "The password must be at least 8 characters with a mix of upper and lowercase letters, numbers and symbols.",
     "research_participation_consent_form": "Research Participation Consent Form",
