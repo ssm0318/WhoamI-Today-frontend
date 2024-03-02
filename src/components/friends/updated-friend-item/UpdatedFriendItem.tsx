@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { UpdatedDot } from '@common-components/updated-dot/UpdatedDot.styled';
+import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
-import Icon from '@components/header/icon/Icon';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
 import { addFriendToFavorite, deleteFavorite, hideFriend } from '@utils/apis/friends';

@@ -1,5 +1,5 @@
 import { ReactElement, useState } from 'react';
-import Icon from '@components/header/icon/Icon';
+import Icon from '@components/_common/icon/Icon';
 import { Layout, Typo } from '@design-system';
 
 interface CollapseProps {

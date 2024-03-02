@@ -37,6 +37,8 @@ const arrow_left = 'arrow_left';
 const arrow_right = 'arrow_right';
 const search = 'search';
 const logo = 'logo';
+const like = 'like';
+const like_filled = 'like_filled';
 
 // Friends
 const hide_true = 'hide_true';
@@ -68,6 +70,7 @@ const checkbox_default = 'checkbox_default';
 const checkbox_checked = 'checkbox_checked';
 const spotify = 'spotify';
 const default_profile = 'default_profile';
+const add_comment = 'add_comment';
 
 // Chats
 const new_chat = 'new_chat';
@@ -75,7 +78,6 @@ const edit_list = 'edit_list';
 const camera = 'camera';
 const chat_media_image = 'chat_media_image';
 const chat_media_gif = 'chat_media_gif';
-
 const green_dot = 'green_dot';
 
 // FIXME: 하단 탭 아이콘 교체
@@ -97,6 +99,7 @@ const new_add = 'new_add';
 const add_reaction = 'add_reaction';
 
 export {
+  add_comment,
   add_default,
   add_reaction,
   add_user,
@@ -139,6 +142,8 @@ export {
   heart,
   hide_false,
   hide_true,
+  like,
+  like_filled,
   logo,
   moment_add,
   moment_add_disabled,

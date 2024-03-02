@@ -1,4 +1,4 @@
-import Icon from '@components/header/icon/Icon';
+import Icon from '@components/_common/icon/Icon';
 import { Typo } from '@design-system';
 import { DailyQuestion } from '@models/post';
 import { FlexRow } from 'src/design-system/layouts';

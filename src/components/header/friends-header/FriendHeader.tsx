@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import Icon from '@components/_common/icon/Icon';
 import { SvgIcon } from '@design-system';
 import { Noti } from '../Header.styled';
-import Icon from '../icon/Icon';
 import MainHeader from '../MainHeader';
 
 function FriendsHeader() {

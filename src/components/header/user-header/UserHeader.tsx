@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
+import Icon from '@components/_common/icon/Icon';
 import { Font, Layout } from '@design-system';
 import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { HeaderWrapper } from '../Header.styled';
-import Icon from '../icon/Icon';
 
 interface UserHeaderProps {
   onClickHamburger?: () => void;

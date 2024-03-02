@@ -150,6 +150,11 @@
     "cancel": "Cancel",
     "confirm": "Confirm"
   },
+  "notes": {
+    "notes": "{{name}}'s Notes",
+    "comments": "comments",
+    "likes": "likes"
+  },
   "settings": {
     "title": "Settings",
     "account_settings": "Account Settings",
@@ -215,6 +220,7 @@
     "moment_detail": "No moment found.",
     "response_detail": "No response found.",
     "all_questions": "No questions.",
+    "all_notes": "No notes.",
     "error": {
       "title": "Something's Wrong.",
       "text": "Please try again."
