@@ -59,7 +59,7 @@ function ProfileImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileI
   return (
     <>
       <SubHeader
-        title={t('settings.crop_picture')}
+        title={t('sign_up.crop_picture')}
         RightComponent={
           <button type="button" onClick={handleClickComplete}>
             <Typo type="title-large" color="PRIMARY">
