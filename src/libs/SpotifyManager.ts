@@ -1,5 +1,5 @@
 import { SpotifyApi, Track } from '@spotify/web-api-ts-sdk';
-import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from 'src/key';
+import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '../key';
 
 class SpotifyManager {
   private static instance: SpotifyManager | null = null;
