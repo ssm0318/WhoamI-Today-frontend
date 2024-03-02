@@ -32,7 +32,7 @@ export function ChatRoomItem({ room, isEditMode, hasSwipedItem }: Props) {
     <Layout.FlexRow
       w="100%"
       justifyContent="space-between"
-      gap={10}
+      gap={16}
       alignItems="center"
       ph={16}
       onMouseDown={handleClickItem}

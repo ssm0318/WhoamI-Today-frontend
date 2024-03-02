@@ -28,10 +28,10 @@ export function EditChats() {
           </button>
         }
       />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 8} w="100%">
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 8} mb={80} w="100%">
         <ChatRoomList isEditMode />
       </Layout.FlexCol>
-      <StyledBottomArea w="100%" b={0} pv={15} ph={8}>
+      <StyledBottomArea w="100%" b={0} pv={15} ph={8} bgColor="WHITE">
         <Layout.FlexRow w="100%" gap={5}>
           <Button.Primary status="normal" text="Mute" sizing="stretch" />
           <Button.Primary status="normal" text="Delete" sizing="stretch" />
