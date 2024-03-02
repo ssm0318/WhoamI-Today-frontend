@@ -1,3 +1,4 @@
+import React from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -30,7 +31,6 @@ function NewPostBottomSheet({ visible, closeBottomSheet }: Props) {
   const navigate = useNavigate();
 
   const handleClickMenu = (path: string) => () => {
-    console.log(path);
     navigate(path);
   };
 
@@ -40,11 +40,10 @@ function NewPostBottomSheet({ visible, closeBottomSheet }: Props) {
         <Typo type="title-large">Create</Typo>
         <Layout.FlexCol gap={12} pt={30} w="100%">
           {BOTTOM_SHEET_LIST.map((menu) => (
-            <>
+            <React.Fragment key={menu.key}>
               <Divider width={1} />
               <button
                 type="button"
-                key={menu.key}
                 onClick={handleClickMenu(menu.path)}
                 style={{ padding: '0 25px' }}
               >
@@ -53,7 +52,7 @@ function NewPostBottomSheet({ visible, closeBottomSheet }: Props) {
                   <Font.Body type="18_regular">{t(menu.key)}</Font.Body>
                 </Layout.FlexRow>
               </button>
-            </>
+            </React.Fragment>
           ))}
         </Layout.FlexCol>
       </Layout.FlexCol>
