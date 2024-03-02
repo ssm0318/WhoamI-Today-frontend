@@ -72,6 +72,13 @@ const spotify = 'spotify';
 const default_profile = 'default_profile';
 const add_comment = 'add_comment';
 
+// Mypage: Bottom Sheet
+const add_post = 'add_post';
+const home_indicator = 'home_indicator';
+const bottomsheet_checkin = 'bottomsheet_checkin';
+const bottomsheet_note = 'bottomsheet_note';
+const bottomsheet_prompt = 'bottomsheet_prompt';
+
 // Chats
 const new_chat = 'new_chat';
 const edit_list = 'edit_list';
@@ -101,10 +108,14 @@ const add_reaction = 'add_reaction';
 export {
   add_comment,
   add_default,
+  add_post,
   add_reaction,
   add_user,
   arrow_left,
   arrow_right,
+  bottomsheet_checkin,
+  bottomsheet_note,
+  bottomsheet_prompt,
   camera,
   chat_filled,
   chat_media_gif,
@@ -142,6 +153,7 @@ export {
   heart,
   hide_false,
   hide_true,
+  home_indicator,
   like,
   like_filled,
   logo,

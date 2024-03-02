@@ -72,6 +72,11 @@
         "friends": "친구 관리",
         "questions": "전체 질문",
         "settings": "설정"
+      },
+      "bottom_sheet": {
+        "check-in": "체크인 수정",
+        "note": "새 노트 작성",
+        "prompts": "새 답변 작성"
       }
     }
   },
