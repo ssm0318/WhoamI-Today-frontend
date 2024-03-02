@@ -11,6 +11,7 @@ export function EditChats() {
   const [t] = useTranslation('translation', { keyPrefix: 'chats.edit_room_list.header' });
 
   const navigate = useNavigate();
+
   const handleClickCancel = () => {
     navigate('/chats');
   };
@@ -19,13 +20,6 @@ export function EditChats() {
     <MainContainer>
       <SubHeader
         title={t('title')}
-        LeftComponent={
-          <button type="button" onClick={handleClickCancel}>
-            <Typo type="button-medium" color="PRIMARY">
-              {t('select_all')}
-            </Typo>
-          </button>
-        }
         RightComponent={
           <button type="button" onClick={handleClickCancel}>
             <Typo type="button-medium" color="PRIMARY">

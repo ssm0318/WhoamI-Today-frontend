@@ -234,7 +234,6 @@
     "edit_room_list": {
       "header": {
         "title": "채팅",
-        "select_all": "전체 선택",
         "cancel": "취소"
       }
     }

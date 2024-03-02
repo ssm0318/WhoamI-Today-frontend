@@ -239,7 +239,6 @@
     "edit_room_list": {
       "header": {
         "title": "Chats",
-        "select_all": "Select All",
         "cancel": "Cancel"
       }
     }
