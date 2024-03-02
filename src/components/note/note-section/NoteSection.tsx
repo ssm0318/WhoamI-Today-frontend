@@ -36,7 +36,7 @@ function NoteSection() {
   if (!myProfile) return null;
   return (
     <>
-      <Layout.FlexRow w="100%" justifyContent="space-between">
+      <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
         <Typo type="title-large" color="BLACK">
           Notes
         </Typo>
