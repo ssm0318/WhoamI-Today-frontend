@@ -194,7 +194,13 @@
     "comments": "comments",
     "likes": "likes",
     "title": "Notes",
-    "new_note": "New Note"
+    "new_note": "New Note",
+    "new_note_header": {
+      "new_note": "New Note",
+      "new_response": "New Response"
+    },
+    "cancel": "Cancel",
+    "post": "Post"
   },
   "responses": {
     "title": "Responses",

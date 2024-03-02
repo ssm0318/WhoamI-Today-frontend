@@ -191,7 +191,13 @@
     "comments": "댓글",
     "likes": "좋아요",
     "title": "노트",
-    "new_note": "새로운 노트"
+    "new_note": "새로운 노트",
+    "new_note_header": {
+      "new_note": "새 노트 작성",
+      "new_response": "새 답변 작성"
+    },
+    "cancel": "취소",
+    "post": "게시"
   },
   "responses": {
     "title": "답변",
