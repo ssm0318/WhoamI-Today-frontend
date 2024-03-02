@@ -18,20 +18,24 @@ export const getFriendToday = async (userId: number) => {
   return results ?? [];
 };
 
-export const getUpdatedProfiles = async () => {
+interface getFriendsOptions {
+  filterHidden?: boolean;
+}
+
+export const getUpdatedProfiles = async (options?: getFriendsOptions) => {
   const {
     data: { results },
   } = await axios.get<GetUpdatedProfileResponse>('/user/friends/?type=has_updates');
 
-  return filterHiddenFriends(results ?? []);
+  return options?.filterHidden ? filterHiddenFriends(results ?? []) : results ?? [];
 };
 
-export const getAllFriends = async () => {
+export const getAllFriends = async (options?: getFriendsOptions) => {
   const {
     data: { results },
   } = await axios.get<GetUpdatedProfileResponse>('/user/friends/?type=all');
 
-  return filterHiddenFriends(results ?? []);
+  return options?.filterHidden ? filterHiddenFriends(results ?? []) : results ?? [];
 };
 
 export const addFriendToFavorite = async (userId: number) => {
