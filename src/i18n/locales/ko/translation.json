@@ -197,7 +197,8 @@
       "new_response": "새 답변 작성"
     },
     "cancel": "취소",
-    "post": "게시"
+    "post": "게시",
+    "whats_on_your_mind": "지금 떠오르는 생각이 무엇인가요?"
   },
   "responses": {
     "title": "답변",

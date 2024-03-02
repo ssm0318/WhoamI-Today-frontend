@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import NewNoteContent from '@components/note/new-note-content/NewNoteContent';
 import NewNoteHeader from '@components/note/new-note-header/NewNoteHeader';
 
 function NewNote() {
@@ -7,6 +8,7 @@ function NewNote() {
   return (
     <MainContainer>
       <NewNoteHeader title={t('new_note')} />
+      <NewNoteContent />
     </MainContainer>
   );
 }

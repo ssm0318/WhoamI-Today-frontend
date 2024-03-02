@@ -200,7 +200,8 @@
       "new_response": "New Response"
     },
     "cancel": "Cancel",
-    "post": "Post"
+    "post": "Post",
+    "whats_on_your_mind": "What's on your mind?"
   },
   "responses": {
     "title": "Responses",
