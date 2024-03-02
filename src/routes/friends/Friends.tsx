@@ -72,7 +72,7 @@ function Friends() {
       <Layout.FlexRow w="100%" p={4} justifyContent="flex-end">
         <Button.Tertiary
           status="normal"
-          text={t('edit_friends')}
+          text={t('edit_friends.title')}
           onClick={handleClickEditFriends}
           icon={<SvgIcon name="edit_filled" size={16} />}
           iconPosition="left"
