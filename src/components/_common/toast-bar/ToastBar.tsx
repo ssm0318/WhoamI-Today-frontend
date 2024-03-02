@@ -1,13 +1,15 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { DEFAULT_MARGIN, SCREEN_WIDTH, Z_INDEX } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import { AnimatedToastBarContainer, AnimationState } from './ToastBar.styled';
 
 interface ToastBarProps {
   text: string;
   bottom?: number;
   RightComponent?: ReactNode;
   closeToastBar?: () => void;
+  timeout?: number;
 }
 
 export default function ToastBar({
@@ -15,15 +17,22 @@ export default function ToastBar({
   bottom = 16,
   RightComponent,
   closeToastBar,
+  timeout = 3000,
 }: ToastBarProps) {
+  const [animationState, setAnimationState] = useState<AnimationState>('show');
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      closeToastBar?.();
-    }, 2000);
+      setAnimationState('hide');
+      setTimeout(() => {
+        closeToastBar?.();
+      }, timeout);
+    }, timeout);
+
     return () => {
       clearTimeout(timer);
     };
-  }, [closeToastBar]);
+  }, [closeToastBar, timeout]);
 
   return createPortal(
     <Layout.Absolute
@@ -35,7 +44,8 @@ export default function ToastBar({
       tl={['-50%', 0]}
       justifyContent="center"
     >
-      <Layout.FlexRow
+      <AnimatedToastBarContainer
+        state={animationState}
         justifyContent={RightComponent ? 'space-between' : 'center'}
         bgColor="LIGHT_GRAY"
         rounded={12}
@@ -47,7 +57,7 @@ export default function ToastBar({
           {text}
         </Typo>
         {RightComponent && RightComponent}
-      </Layout.FlexRow>
+      </AnimatedToastBarContainer>
     </Layout.Absolute>,
     document.getElementById('toastbar-container') || document.body,
   );
