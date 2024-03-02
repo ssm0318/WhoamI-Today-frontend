@@ -1,37 +1,13 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import Divider from '@components/_common/divider/Divider';
-import Loader from '@components/_common/loader/Loader';
-import NoContents from '@components/_common/no-contents/NoContents';
 import NoteSection from '@components/note/note-section/NoteSection';
 import Profile from '@components/profile/Profile';
-import ReactionSection from '@components/reaction/reaction-section/ReactionSection';
+import ResponseSection from '@components/response/response-section/ResponseSection';
 import { DEFAULT_MARGIN } from '@constants/layout';
-import { Layout, Typo } from '@design-system';
-import useAsyncEffect from '@hooks/useAsyncEffect';
-import { FetchState } from '@models/api/common';
-import { GetResponseHistoriesResponse } from '@models/api/question';
+import { Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getResponseHistories } from '@utils/apis/question';
 
 function My() {
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
-  const [t] = useTranslation('translation', { keyPrefix: 'no_contents' });
-
-  const [responseHistory, setResponseHistory] = useState<FetchState<GetResponseHistoriesResponse>>({
-    state: 'loading',
-  });
-
-  // TODO response 모두 가져올 수 있는 api 추가
-  useAsyncEffect(async () => {
-    getResponseHistories(1)
-      .then((data) => {
-        setResponseHistory({ state: 'hasValue', data });
-      })
-      .catch(() => {
-        setResponseHistory({ state: 'hasError' });
-      });
-  }, []);
 
   return (
     <Layout.FlexCol w="100%" bgColor="WHITE">
@@ -49,22 +25,8 @@ function My() {
         <NoteSection />
       </Layout.FlexCol>
       <Divider width={1} />
-      {/* TODO Responses List 추가 */}
-      <Layout.FlexCol pt={12} w="100%">
-        <Typo type="title-large" mh={DEFAULT_MARGIN}>
-          Responses
-        </Typo>
-        {responseHistory.state === 'loading' ? (
-          <Loader />
-        ) : responseHistory.state === 'hasError' ? (
-          <NoContents text={t('response_detail')} />
-        ) : (
-          <Layout.FlexCol w="100%" gap={24} mt={64}>
-            {responseHistory.data.response_set.map((response) => (
-              <ReactionSection postType="response" postId={response.id} />
-            ))}
-          </Layout.FlexCol>
-        )}
+      <Layout.FlexCol pt={12} pl={12} w="100%">
+        <ResponseSection />
       </Layout.FlexCol>
     </Layout.FlexCol>
   );

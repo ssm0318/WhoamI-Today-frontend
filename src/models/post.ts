@@ -67,7 +67,7 @@ export interface AdminAuthor {
 export interface Response extends ContentsCommon {
   type: POST_TYPE.RESPONSE;
   comments: Comment[];
-  question: Question;
+  question: DailyQuestion;
   question_id: number;
 }
 

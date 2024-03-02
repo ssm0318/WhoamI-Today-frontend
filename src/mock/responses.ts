@@ -103,11 +103,15 @@ export const responseList: Response[] = [
     question: {
       id: 1,
       content: 'Sample question',
+      author: null,
+      author_detail: {
+        color_hex: '#000000',
+      },
       created_at: '2023-05-31',
       type: 'Question',
+      selected: true,
       is_admin_question: true,
       selected_dates: [],
-      selected: false,
     },
     question_id: 1,
   },
@@ -132,11 +136,15 @@ export const responseList: Response[] = [
     question: {
       id: 2,
       content: 'Question 2',
+      author: null,
+      author_detail: {
+        color_hex: '#000000',
+      },
       created_at: '2023-05-30',
       type: 'Question',
+      selected: true,
       is_admin_question: true,
       selected_dates: [],
-      selected: false,
     },
     question_id: 2,
   },

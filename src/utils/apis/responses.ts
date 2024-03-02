@@ -1,7 +1,14 @@
 import { DateRequestParams, PaginationResponse } from '@models/api/common';
-import { GetResponseDetailResponse } from '@models/api/response';
+import { GetResponseDetailResponse, GetResponsesResponse } from '@models/api/response';
 import { Comment, DayQuestion, Reaction, ReactionPostType } from '@models/post';
 import axios from './axios';
+
+export const getResponses = async () => {
+  const {
+    data: { results },
+  } = await axios.get<PaginationResponse<GetResponsesResponse>>(`/qna/responses/`);
+  return results ?? [];
+};
 
 export const getDayQuestions = async ({ year, month, day }: DateRequestParams) => {
   const { data } = await axios.get<DayQuestion[]>(`/qna/responses/${year}/${month}/${day}/`);
