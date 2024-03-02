@@ -76,7 +76,7 @@
       "bottom_sheet": {
         "check-in": "체크인 수정",
         "note": "새 노트 작성",
-        "prompts": "프롬프트 답변 작성"
+        "prompts": "새 답변 작성"
       }
     }
   },

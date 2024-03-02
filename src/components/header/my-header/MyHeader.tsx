@@ -11,8 +11,6 @@ function MyHeader() {
   const [showSideMenu, setShowSideMenu] = useState(false);
   const [bottomSheet, setBottomSheet] = useState(false);
 
-  // const navigate = useNavigate();
-
   const handleNewPost = () => {
     setBottomSheet(true);
   };
@@ -27,7 +25,7 @@ function MyHeader() {
         title={myProfile?.username ?? ''}
         rightButtons={
           <>
-            <Icon name="new_chat" size={44} onClick={handleNewPost} />
+            <Icon name="add_post" size={44} onClick={handleNewPost} />
             <Icon name="hamburger" size={44} onClick={handleClickHamburger} />
           </>
         }

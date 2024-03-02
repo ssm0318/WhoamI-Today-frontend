@@ -36,9 +36,10 @@ function NewPostBottomSheet({ visible, closeBottomSheet }: Props) {
 
   return createPortal(
     <BottomModal visible={visible} onClose={closeBottomSheet} maxHeight={700}>
-      <Layout.FlexCol alignItems="center" pt={70} pb={60} w="100%" bgColor="WHITE">
+      <Layout.FlexCol alignItems="center" pb={34} w="100%" bgColor="WHITE">
+        <Icon name="home_indicator" />
         <Typo type="title-large">Create</Typo>
-        <Layout.FlexCol gap={12} pt={30} w="100%">
+        <Layout.FlexCol gap={12} pt={24} pb={24} w="100%">
           {BOTTOM_SHEET_LIST.map((menu) => (
             <React.Fragment key={menu.key}>
               <Divider width={1} />

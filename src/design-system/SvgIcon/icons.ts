@@ -72,7 +72,9 @@ const spotify = 'spotify';
 const default_profile = 'default_profile';
 const add_comment = 'add_comment';
 
-// Bottom Sheet
+// Mypage: Bottom Sheet
+const add_post = 'add_post';
+const home_indicator = 'home_indicator';
 const bottomsheet_checkin = 'bottomsheet_checkin';
 const bottomsheet_note = 'bottomsheet_note';
 const bottomsheet_prompt = 'bottomsheet_prompt';
@@ -106,6 +108,7 @@ const add_reaction = 'add_reaction';
 export {
   add_comment,
   add_default,
+  add_post,
   add_reaction,
   add_user,
   arrow_left,
@@ -150,6 +153,7 @@ export {
   heart,
   hide_false,
   hide_true,
+  home_indicator,
   like,
   like_filled,
   logo,
