@@ -30,7 +30,7 @@ function NoteListItem({ note }: NoteListItemProps) {
         <Typo type="label-medium" color="MEDIUM_GRAY">
           {convertTimeDiffByString(new Date(), new Date(created_at))}
         </Typo>
-        <Icon name="dots_menu" onClick={handleClickMore} />
+        <Icon name="dots_menu" size={24} onClick={handleClickMore} />
       </Layout.FlexRow>
       <Layout.FlexCol gap={8}>
         <Typo type="body-large" color="BLACK">
