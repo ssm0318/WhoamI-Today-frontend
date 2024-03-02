@@ -8,6 +8,7 @@ interface SubHeaderProps {
   title?: string | null;
   typo?: FontType;
   onGoBack?: () => void;
+  useBackButton?: boolean;
   RightComponent?: React.ReactNode;
   LeftComponent?: React.ReactNode;
 }
@@ -19,6 +20,7 @@ function SubHeader({
   title,
   typo = 'head-line',
   onGoBack,
+  useBackButton = true,
   RightComponent,
   LeftComponent,
 }: SubHeaderProps) {
@@ -40,9 +42,11 @@ function SubHeader({
       >
         {LeftComponent || (
           <Layout.LayoutBase w={36} h={36}>
-            <button type="button" onClick={handleGoBack}>
-              <SvgIcon name="arrow_left" size={36} color="BLACK" />
-            </button>
+            {useBackButton && (
+              <button type="button" onClick={handleGoBack}>
+                <SvgIcon name="arrow_left" size={36} color="BLACK" />
+              </button>
+            )}
           </Layout.LayoutBase>
         )}
         {title && (
