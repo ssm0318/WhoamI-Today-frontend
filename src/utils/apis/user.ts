@@ -286,7 +286,7 @@ export const resetPassword = ({
 
 export const deleteAccount = async (onSuccess: () => void) => {
   axios
-    .delete('/user/me/delete/')
+    .delete('/user/me/')
     .then(() => onSuccess())
     // TODO
     .catch((e) => console.log('todo', e));
@@ -295,13 +295,13 @@ export const deleteAccount = async (onSuccess: () => void) => {
 export const getFriendList = async (next?: string | null) => {
   const requestPage = next ? next.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<User[]>>(
-    `/user/me/friends/${requestPage ? `?page=${requestPage}` : ''}`,
+    `/user/friends/?type=all${requestPage ? `&page=${requestPage}` : ''}`,
   );
   return data;
 };
 
 export const getUserProfile = async (username: string) => {
-  const { data } = await axios.get<UserProfile>(`/user/profile/${username}/`);
+  const { data } = await axios.get<UserProfile>(`/user/${username}/profile/`);
   return data;
 };
 
@@ -332,7 +332,7 @@ export const reportUser = async (userId: number) => {
 };
 
 export const breakFriend = async (friendId: number) => {
-  await axios.delete(`/user/friend/${friendId}/`);
+  await axios.delete(`/user/friends/${friendId}/`);
 };
 
 export const searchUser = async (query: string, next?: string | null) => {

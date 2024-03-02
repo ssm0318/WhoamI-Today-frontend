@@ -21,7 +21,7 @@ export const getFriendToday = async (userId: number) => {
 export const getUpdatedProfiles = async () => {
   const {
     data: { results },
-  } = await axios.get<GetUpdatedProfileResponse>('/user/me/friends/updated/');
+  } = await axios.get<GetUpdatedProfileResponse>('/user/friends/?type=has_updates');
 
   return filterHiddenFriends(results ?? []);
 };
@@ -29,13 +29,13 @@ export const getUpdatedProfiles = async () => {
 export const getAllFriends = async () => {
   const {
     data: { results },
-  } = await axios.get<GetUpdatedProfileResponse>('/user/me/friends/all/');
+  } = await axios.get<GetUpdatedProfileResponse>('/user/friends/?type=all');
 
   return filterHiddenFriends(results ?? []);
 };
 
 export const addFriendToFavorite = async (userId: number) => {
-  await axios.post(`/user/favorite/add/`, {
+  await axios.post(`/user/friends/favorites/`, {
     friend_id: userId,
   });
 };
@@ -43,17 +43,17 @@ export const addFriendToFavorite = async (userId: number) => {
 export const getFavoriteFriends = async () => {
   const {
     data: { results },
-  } = await axios.get<GetUpdatedProfileResponse>('/user/me/favorites/');
+  } = await axios.get<GetUpdatedProfileResponse>('/user/friends/?type=favorites');
 
   return results ?? [];
 };
 
 export const deleteFavorite = async (userId: number) => {
-  await axios.delete(`/user/favorite/${userId}/`);
+  await axios.delete(`/user/friends/${userId}/favorites/ `);
 };
 
 export const hideFriend = async (userId: number) => {
-  await axios.post(`/user/hidden/add/`, {
+  await axios.post(`/user/friends/hidden/`, {
     friend_id: userId,
   });
 };
