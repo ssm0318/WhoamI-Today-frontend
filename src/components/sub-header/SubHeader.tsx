@@ -17,7 +17,7 @@ interface SubHeaderProps {
  */
 function SubHeader({
   title,
-  typo = 'head-line',
+  typo = 'title-large',
   onGoBack,
   RightComponent,
   LeftComponent,

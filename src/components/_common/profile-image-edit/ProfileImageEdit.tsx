@@ -67,7 +67,6 @@ function ProfileImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileI
             </Typo>
           </button>
         }
-        typo="title-large"
         onGoBack={handleOnClose}
       />
       <Cropper
