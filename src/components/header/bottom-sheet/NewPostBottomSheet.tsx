@@ -6,8 +6,7 @@ import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import Divider from '@components/_common/divider/Divider';
 import { Font, Layout, Typo } from '@design-system';
 import { IconNames } from 'src/design-system/SvgIcon/SvgIcon.types';
-// import Icon from '../icon/Icon';
-import Icon from '../../_common/icon/Icon';
+import Icon from '../icon/Icon';
 
 interface MenuItem {
   key: string;
