@@ -2,16 +2,17 @@ import { MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import IconButton from '@components/_common/icon-button/IconButton';
 import LikeButton from '@components/_common/like-button/LikeButton';
-import { Colors, Layout, Typo } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import { Note } from '@models/note';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
+import * as S from './NoteListItem.styled';
 
 interface NoteListItemProps {
   note: Note;
 }
 
 function NoteListItem({ note }: NoteListItemProps) {
-  const { content, created_at, likeCount, commentCount } = note;
+  const { content, created_at, like_count, comment_count } = note;
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
 
   const handleClickMore = (e: MouseEvent) => {
@@ -24,13 +25,7 @@ function NoteListItem({ note }: NoteListItemProps) {
   };
 
   return (
-    <Layout.FlexCol
-      p={12}
-      gap={8}
-      style={{
-        borderBottom: `1px solid ${Colors.LIGHT}`,
-      }}
-    >
+    <S.NoteListItemWrapper p={12} gap={8} w="100%">
       <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
         <Typo type="label-medium" color="MEDIUM_GRAY">
           {convertTimeDiffByString(new Date(), new Date(created_at))}
@@ -43,17 +38,17 @@ function NoteListItem({ note }: NoteListItemProps) {
         </Typo>
         <Layout.FlexRow gap={12}>
           <LikeButton postType="Note" post={note} iconSize={24} m={0} />
-          <IconButton name="comment" onClick={handleClickComment} />
+          <IconButton name="add_comment" onClick={handleClickComment} />
         </Layout.FlexRow>
         <Layout.FlexRow>
           <Typo type="label-large" color="BLACK">
-            {likeCount} {t('likes')}
+            {like_count} {t('likes')}
             {' ・ '}
-            {commentCount} {t('comments')}
+            {comment_count} {t('comments')}
           </Typo>
         </Layout.FlexRow>
       </Layout.FlexCol>
-    </Layout.FlexCol>
+    </S.NoteListItemWrapper>
   );
 }
 

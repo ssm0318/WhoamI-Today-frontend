@@ -39,7 +39,7 @@ function LikeButton({ postType, post, iconSize, m = 6 }: LikeButtonProps) {
   return (
     <Layout.FlexRow alignItems="center">
       <S.IconButton type="button" m={m} onClick={toggleLike} size={iconSize}>
-        <SvgIcon name="heart" size={iconSize} fill={likeId ? 'PRIMARY' : null} />
+        <SvgIcon name={likeId ? 'like_filled' : 'like'} size={iconSize} />
       </S.IconButton>
     </Layout.FlexRow>
   );
