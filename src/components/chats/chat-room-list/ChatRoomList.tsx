@@ -8,8 +8,13 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getChatRooms } from '@utils/apis/chat';
+import { SwipeableChatRoomItem } from './SwipeableChatRoomItem';
 
-export function ChatRoomList() {
+interface Props {
+  isEditMode?: boolean;
+}
+
+export function ChatRoomList({ isEditMode }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'chats.room_list' });
 
   const { rooms, setRooms } = useBoundStore((state) => ({
@@ -43,19 +48,29 @@ export function ChatRoomList() {
   });
 
   return (
-    <Layout.FlexCol w="100%" pv={5} gap={5}>
+    <Layout.FlexCol w="100%" h="100%" pv={5} gap={5}>
       <Layout.LayoutBase ph={16}>
         <Typo type="title-medium">{t('title')}</Typo>
       </Layout.LayoutBase>
-      <Layout.FlexCol w="100%" gap={10}>
-        <SwipeLayoutList>
-          {rooms.data?.map((room) => (
-            <ChatRoomItem key={room.id} room={room} />
-          ))}
-        </SwipeLayoutList>
-        <div ref={targetRef} />
-        {isLoading && <Loader />}
-      </Layout.FlexCol>
+      {rooms.data && (
+        <Layout.FlexCol w="100%" gap={10}>
+          {isEditMode ? (
+            <>
+              {rooms.data.map((room) => (
+                <ChatRoomItem key={room.id} room={room} isEditMode={isEditMode} />
+              ))}
+            </>
+          ) : (
+            <SwipeLayoutList>
+              {rooms.data.map((room) => (
+                <SwipeableChatRoomItem key={room.id} room={room} />
+              ))}
+            </SwipeLayoutList>
+          )}
+          <div ref={targetRef} />
+          {isLoading && <Loader />}
+        </Layout.FlexCol>
+      )}
     </Layout.FlexCol>
   );
 }

@@ -35,7 +35,7 @@ export function EditChats() {
         }
       />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 8} w="100%">
-        <ChatRoomList />
+        <ChatRoomList isEditMode />
       </Layout.FlexCol>
       <StyledBottomArea w="100%" b={0} pv={15} ph={8}>
         <Layout.FlexRow w="100%" gap={5}>
