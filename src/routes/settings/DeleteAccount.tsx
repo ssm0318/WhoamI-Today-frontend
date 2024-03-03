@@ -7,7 +7,8 @@ import ValidatedPasswordInput from '@components/_common/validated-input/Validate
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Font, Layout } from '@design-system';
-import { confirmPassword, deleteAccount } from '@utils/apis/user';
+import { deleteAccount } from '@utils/apis/my';
+import { confirmPassword } from '@utils/apis/user';
 
 function DeleteAccount() {
   const [t] = useTranslation('translation', { keyPrefix: 'settings' });

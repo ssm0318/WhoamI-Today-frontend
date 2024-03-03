@@ -5,7 +5,6 @@ import { PaginationResponse } from '@models/api/common';
 import {
   EmailError,
   FriendRequest,
-  MyProfile,
   PasswordConfirmError,
   PasswordError,
   SignInError,
@@ -14,9 +13,12 @@ import {
   SignUpParams,
   UsernameError,
 } from '@models/api/user';
+import { Note } from '@models/note';
+import { Response } from '@models/post';
 import { User, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
+import { getMe, syncTimeZone } from './my';
 
 export const signIn = ({
   signInInfo,
@@ -39,37 +41,15 @@ export const signIn = ({
     });
 };
 
-export const syncTimeZone = async (timezone?: string) => {
-  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  if (currentTimezone === timezone) return;
-
-  const formData = new FormData();
-
-  formData.append('timezone', currentTimezone);
-
-  await axiosFormDataInstance.patch('/user/me/', formData);
-
-  return currentTimezone;
-};
-
 export const checkIfSignIn = async () => {
   try {
-    const user = await axios.get<MyProfile>('/user/me/');
-    const currentTimezone = await syncTimeZone(user.data?.timezone);
-    useBoundStore.getState().setMyProfile({ ...user.data, timezone: currentTimezone });
+    const user = await getMe();
+    const currentTimezone = await syncTimeZone(user?.timezone);
+    useBoundStore.getState().setMyProfile({ ...user, timezone: currentTimezone });
     return user;
   } catch {
     return redirect('/signin');
   }
-};
-
-export const updateMyProfile = async () => {
-  axios
-    .get<MyProfile>('/user/me/')
-    .then((user) => {
-      useBoundStore.getState().setMyProfile(user.data);
-    })
-    .catch((e) => console.log(e));
 };
 
 export const signOut = async (onSuccess: () => void) => {
@@ -215,52 +195,6 @@ export const confirmPassword = ({
     });
 };
 
-export const changeProfileImage = ({
-  profileImage,
-  onSuccess,
-  onError,
-}: {
-  profileImage: File;
-  onSuccess?: () => void;
-  onError?: (error: string) => void;
-}) => {
-  const formData = new FormData();
-
-  formData.append('profile_image', profileImage, 'profile_image.png');
-
-  axiosFormDataInstance
-    .patch('/user/me/', formData)
-    .then(() => onSuccess?.())
-    .catch((e) => {
-      onError?.(e);
-    });
-};
-
-export const editProfile = ({
-  profile,
-  onSuccess,
-  onError,
-}: {
-  profile: Pick<MyProfile, 'bio' | 'username' | 'pronouns'>;
-  onSuccess?: () => void;
-  onError?: (error: string) => void;
-}) => {
-  const formData = new FormData();
-
-  Object.entries(profile).forEach(([key, value]) => {
-    if (value) {
-      formData.append(key, value as string);
-    }
-  });
-
-  axiosFormDataInstance
-    .patch('/user/me/', formData)
-    .then(() => onSuccess?.())
-    .catch((e) => {
-      onError?.(e);
-    });
-};
-
 export const resetPassword = ({
   userId,
   password,
@@ -282,14 +216,6 @@ export const resetPassword = ({
       }
       onError(i18n.t('sign_up.temporary_error'));
     });
-};
-
-export const deleteAccount = async (onSuccess: () => void) => {
-  axios
-    .delete('/user/me/')
-    .then(() => onSuccess())
-    // TODO
-    .catch((e) => console.log('todo', e));
 };
 
 export const getFriendList = async (next?: string | null) => {
@@ -358,4 +284,22 @@ export const getRecommendedFriends = async () => {
 
 export const blockRecommendation = async (userId: number) => {
   return axios.post('/user/block-recommendation/', { blocked_user_id: userId });
+};
+
+// users notes
+export const getUserNotes = async (username: string, next?: string | null) => {
+  const requestPage = next ? next.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<Note[]>>(
+    `/user/${username}/notes/${requestPage ? `?page=${requestPage}` : ''}`,
+  );
+  return data;
+};
+
+// users responses
+export const getUserResponses = async (username: string, next?: string | null) => {
+  const requestPage = next ? next.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<Response[]>>(
+    `/user/${username}/responses/${requestPage ? `?page=${requestPage}` : ''}`,
+  );
+  return data;
 };
