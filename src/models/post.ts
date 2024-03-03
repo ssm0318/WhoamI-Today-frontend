@@ -69,6 +69,7 @@ export interface Response extends ContentsCommon {
   comments: Comment[];
   question: DailyQuestion;
   question_id: number;
+  comment_count: number | null;
 }
 
 // 질문에 대한 답변 리스트

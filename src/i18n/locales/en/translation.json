@@ -169,7 +169,9 @@
     "new_note": "New Note"
   },
   "responses": {
-    "title": "Responses"
+    "title": "Responses",
+    "comments": "comments",
+    "likes": "likes"
   },
   "settings": {
     "title": "Settings",

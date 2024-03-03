@@ -166,7 +166,9 @@
     "new_note": "새로운 노트"
   },
   "responses": {
-    "title": "답변"
+    "title": "답변",
+    "comments": "댓글",
+    "likes": "좋아요"
   },
   "settings": {
     "title": "설정",

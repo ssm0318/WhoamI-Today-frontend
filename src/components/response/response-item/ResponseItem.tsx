@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorProfile.helper';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
@@ -15,11 +16,12 @@ interface ResponseItemProps {
 }
 
 function ResponseItem({ response }: ResponseItemProps) {
-  const { content, created_at, author_detail, question } = response;
+  const { content, created_at, author_detail, question, like_count, comment_count } = response;
   const { username } = getAuthorProfileInfo(author_detail);
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [replyHeight, setReplyHeight] = useState<number>(0);
+  const [t] = useTranslation('translation', { keyPrefix: 'responses' });
 
   const handleClickMore = () => {
     // TODO
@@ -37,7 +39,7 @@ function ResponseItem({ response }: ResponseItemProps) {
         wrapperRef.current.clientHeight -
           2 * WRAPPER_PADDING -
           PROFILE_IMAGE_SIZE -
-          BOTTOM_ICON_SECTION_HEIGHT,
+          BOTTOM_ICON_SECTION_HEIGHT * 2,
       );
     }
   }, []);
@@ -93,6 +95,13 @@ function ResponseItem({ response }: ResponseItemProps) {
             m={0}
           />
           <Icon name="add_comment" size={BOTTOM_ICON_SECTION_HEIGHT} onClick={handleClickComment} />
+        </Layout.FlexRow>
+        <Layout.FlexRow>
+          <Typo type="label-large" color="BLACK">
+            {like_count || 0} {t('likes')}
+            {' ・ '}
+            {comment_count || 0} {t('comments')}
+          </Typo>
         </Layout.FlexRow>
       </Layout.FlexCol>
     </Layout.FlexRow>

@@ -18,6 +18,7 @@ export const responseList: Response[] = [
     current_user_like_id: null,
     created_at: '2023-06-16',
     type: POST_TYPE.RESPONSE,
+    comment_count: 2,
     comments: [
       {
         id: 1,
@@ -132,6 +133,7 @@ export const responseList: Response[] = [
     current_user_like_id: null,
     created_at: '2023-06-02',
     type: POST_TYPE.RESPONSE,
+    comment_count: 0,
     comments: [],
     question: {
       id: 2,
