@@ -78,7 +78,7 @@ export const syncTimeZone = async (timezone?: string) => {
 // delete me
 export const deleteAccount = async (onSuccess: () => void) => {
   axios
-    .delete('/user/me/')
+    .delete('/user/me/delete')
     .then(() => onSuccess())
     // TODO
     .catch((e) => console.log('todo', e));
