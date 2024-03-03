@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import { Layout, Typo } from '@design-system';
@@ -12,6 +13,7 @@ import * as S from './NoteSection.styled';
 
 function NoteSection() {
   const { username } = useParams();
+  const [t] = useTranslation('translation');
 
   const myProfile = useBoundStore((state) => state.myProfile);
   const [noteList, setNoteList] = useState<Note[]>([]);
@@ -38,7 +40,7 @@ function NoteSection() {
     <>
       <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
         <Typo type="title-large" color="BLACK">
-          Notes
+          {t('notes.title')}
         </Typo>
         <Icon onClick={handleClickMore} name="arrow_right" />
       </Layout.FlexRow>

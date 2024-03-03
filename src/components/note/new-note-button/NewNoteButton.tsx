@@ -1,7 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import Icon from '@components/_common/icon/Icon';
 import { Font, Layout } from '@design-system';
 
 function NewNoteButton() {
+  const [t] = useTranslation('translation');
+
   const handleClick = () => {
     // TODO (팝업 or 페이지 이동)
   };
@@ -17,7 +20,7 @@ function NewNoteButton() {
     >
       <Icon size={44} name="add_default" onClick={handleClick} color="TRANSPARENT" />
       <Font.Body type="14_semibold" color="DARK_GRAY" textAlign="center">
-        New Note
+        {t('notes.new_note')}
       </Font.Body>
     </Layout.FlexCol>
   );

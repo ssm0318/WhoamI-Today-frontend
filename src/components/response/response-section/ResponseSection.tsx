@@ -10,12 +10,13 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { getResponses } from '@utils/apis/responses';
 import ResponseItem from '../response-item/ResponseItem';
 
+// TODO: infinite scroll
 function ResponseSection() {
   const myProfile = useBoundStore((state) => state.myProfile);
   const [responses, setResponses] = useState<FetchState<GetResponsesResponse>>({
     state: 'loading',
   });
-  const [t] = useTranslation('translation', { keyPrefix: 'no_contents' });
+  const [t] = useTranslation('translation');
 
   useAsyncEffect(async () => {
     getResponses()
@@ -32,7 +33,7 @@ function ResponseSection() {
     <>
       <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
         <Typo type="title-large" color="BLACK">
-          Responses
+          {t('responses.title')}
         </Typo>
       </Layout.FlexRow>
       <Layout.FlexCol w="100%" pr={12}>
@@ -40,7 +41,7 @@ function ResponseSection() {
           {responses.state === 'loading' ? (
             <Loader />
           ) : responses.state === 'hasError' ? (
-            <NoContents text={t('response_detail')} />
+            <NoContents text={t('no_contents.responses')} />
           ) : (
             <Layout.FlexCol w="100%" gap={8}>
               {responses.data.map((response) => (

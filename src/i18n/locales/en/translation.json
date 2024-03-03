@@ -164,7 +164,12 @@
   "notes": {
     "notes": "{{name}}'s Notes",
     "comments": "comments",
-    "likes": "likes"
+    "likes": "likes",
+    "title": "Notes",
+    "new_note": "New Note"
+  },
+  "responses": {
+    "title": "Responses"
   },
   "settings": {
     "title": "Settings",
@@ -229,6 +234,7 @@
     "friends": "No friends yet.",
     "friends_search": "No search research.",
     "moment_detail": "No moment found.",
+    "responses": "No responses yet.",
     "response_detail": "No response found.",
     "all_questions": "No questions.",
     "all_notes": "No notes.",

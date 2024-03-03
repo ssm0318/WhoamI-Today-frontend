@@ -161,7 +161,12 @@
   "notes": {
     "notes": "{{name}}의 노트",
     "comments": "댓글",
-    "likes": "좋아요"
+    "likes": "좋아요",
+    "title": "노트",
+    "new_note": "새로운 노트"
+  },
+  "responses": {
+    "title": "답변"
   },
   "settings": {
     "title": "설정",
@@ -224,6 +229,7 @@
     "friends": "아직 친구가 없습니다.",
     "friends_search": "검색 결과가 없습니다.",
     "moment_detail": "모먼트를 찾지 못했습니다.",
+    "responses": "답변이 없습니다.",
     "response_detail": "답변을 찾지 못했습니다.",
     "all_questions": "질문이 없습니다.",
     "all_notes": "노트가 없습니다.",
