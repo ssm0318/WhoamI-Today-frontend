@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorProfile.helper';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
@@ -7,6 +8,7 @@ import { Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
+import { ReplyWrapper } from './ResponseItem.styled';
 
 interface ResponseItemProps {
   response: Response;
@@ -16,24 +18,46 @@ function ResponseItem({ response }: ResponseItemProps) {
   const { content, created_at, author_detail, question } = response;
   const { username } = getAuthorProfileInfo(author_detail);
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [replyHeight, setReplyHeight] = useState<number>(0);
 
   const handleClickMore = () => {
+    // TODO
     console.log('more');
   };
 
   const handleClickComment = () => {
+    // TODO
     console.log('comment');
   };
 
+  useEffect(() => {
+    if (wrapperRef.current) {
+      setReplyHeight(
+        wrapperRef.current.clientHeight -
+          2 * WRAPPER_PADDING -
+          PROFILE_IMAGE_SIZE -
+          BOTTOM_ICON_SECTION_HEIGHT,
+      );
+    }
+  }, []);
+
   return (
-    <Layout.FlexRow w="100%" p={12} rounded={12} outline="LIGHT">
-      <Layout.FlexCol h="100%">
+    <Layout.FlexRow
+      w="100%"
+      p={WRAPPER_PADDING}
+      rounded={12}
+      outline="LIGHT"
+      h="100%"
+      ref={wrapperRef}
+    >
+      <Layout.FlexCol h="100%" alignItems="flex-end">
         <ProfileImage
           imageUrl={myProfile?.profile_image}
           username={myProfile?.username}
           size={PROFILE_IMAGE_SIZE}
         />
-        {/* TODO reply styles */}
+        <ReplyWrapper h={replyHeight} w="50%" mt={8} />
       </Layout.FlexCol>
       <Layout.FlexCol ml={8} gap={8} w="100%">
         <Layout.FlexRow
@@ -62,8 +86,13 @@ function ResponseItem({ response }: ResponseItemProps) {
         </Layout.FlexCol>
         <QuestionItem question={question} />
         <Layout.FlexRow gap={18} alignItems="center">
-          <LikeButton postType="Response" post={response} iconSize={24} m={0} />
-          <Icon name="add_comment" size={24} onClick={handleClickComment} />
+          <LikeButton
+            postType="Response"
+            post={response}
+            iconSize={BOTTOM_ICON_SECTION_HEIGHT}
+            m={0}
+          />
+          <Icon name="add_comment" size={BOTTOM_ICON_SECTION_HEIGHT} onClick={handleClickComment} />
         </Layout.FlexRow>
       </Layout.FlexCol>
     </Layout.FlexRow>
@@ -73,3 +102,5 @@ function ResponseItem({ response }: ResponseItemProps) {
 export default ResponseItem;
 
 const PROFILE_IMAGE_SIZE = 44;
+const WRAPPER_PADDING = 12;
+const BOTTOM_ICON_SECTION_HEIGHT = 24;
