@@ -240,6 +240,7 @@
     "response_detail": "No response found.",
     "all_questions": "No questions.",
     "all_notes": "No notes.",
+    "notes": "No notes yet.",
     "error": {
       "title": "Something's Wrong.",
       "text": "Please try again."

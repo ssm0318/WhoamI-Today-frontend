@@ -1,4 +1,7 @@
+import { PaginationResponse } from '@models/api/common';
 import { MyProfile } from '@models/api/user';
+import { Note } from '@models/note';
+import { Response } from '@models/post';
 import { UserProfile } from '@models/user';
 import axios, { axiosFormDataInstance } from './axios';
 
@@ -82,4 +85,20 @@ export const deleteAccount = async (onSuccess: () => void) => {
     .then(() => onSuccess())
     // TODO
     .catch((e) => console.log('todo', e));
+};
+
+export const getMyResponses = async (page: string | null) => {
+  const requestPage = page ? page.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<Response[]>>(
+    `/user/me/responses/${!requestPage ? '' : `?page=${requestPage}`}`,
+  );
+  return data;
+};
+
+export const getMyNotes = async (page: string | null) => {
+  const requestPage = page ? page.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<Note[]>>(
+    `/user/me/notes/${!requestPage ? '' : `?page=${requestPage}`}`,
+  );
+  return data;
 };

@@ -2,11 +2,12 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
+import NoContents from '@components/_common/no-contents/NoContents';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { Note } from '@models/note';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getNoteList } from '@utils/apis/note';
+import { getMyNotes } from '@utils/apis/my';
 import NewNoteButton from '../new-note-button/NewNoteButton';
 import NoteItem from '../note-item/NoteItem';
 import * as S from './NoteSection.styled';
@@ -28,7 +29,7 @@ function NoteSection() {
   };
 
   const fetchNotes = useCallback(async () => {
-    const { results } = await getNoteList(null);
+    const { results } = await getMyNotes(null);
     if (!results) return;
     setNoteList(results);
   }, []);
@@ -49,9 +50,13 @@ function NoteSection() {
           <Layout.FlexRow alignItems="center" h="100%">
             {isMyPage && <NewNoteButton />}
           </Layout.FlexRow>
-          {noteList.map((note) => (
-            <NoteItem key={note.id} note={note} />
-          ))}
+          {noteList.length === 0 ? (
+            <Layout.FlexRow alignItems="center" h="100%">
+              <NoContents title={t('no_contents.notes')} />
+            </Layout.FlexRow>
+          ) : (
+            noteList.map((note) => <NoteItem key={note.id} note={note} />)
+          )}
         </Layout.FlexRow>
       </S.NoteSectionWrapper>
     </>
