@@ -13,7 +13,7 @@ import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Layout, Typo } from '@design-system';
 import { MyProfile } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
-import { changeProfileImage, editProfile } from '@utils/apis/user';
+import { changeProfileImage, editProfile } from '@utils/apis/my';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 
 function EditProfile() {
