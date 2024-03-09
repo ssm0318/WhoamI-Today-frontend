@@ -4,7 +4,6 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getFriendList } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
 import FriendsInfo from './friends-info/FriendsInfo';
 
@@ -20,9 +19,9 @@ function Profile({ user }: ProfileProps) {
   const { username } = useParams();
   const navigate = useNavigate();
 
-  const fetchFriends = useCallback(async (_next?: string | null) => {
-    const { results = [] } = await getFriendList(_next);
-    setFriendList((prev) => (_next ? (prev ? [...prev, ...results] : []) : results));
+  const fetchFriends = useCallback(async () => {
+    // TODO friends list API 조회
+    setFriendList([]);
   }, []);
 
   const handleClickEditProfile = () => {
@@ -30,8 +29,9 @@ function Profile({ user }: ProfileProps) {
   };
 
   useEffect(() => {
+    if (isMyPage) return;
     fetchFriends();
-  }, [fetchFriends]);
+  }, [isMyPage, fetchFriends]);
 
   if (!user) return null;
 
