@@ -5,11 +5,11 @@ import MainContainer from '@components/_common/main-container/MainContainer';
 import { ChatRoomList } from '@components/chats/chat-room-list/ChatRoomList';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Button, Layout, Typo } from '@design-system';
-import { StyledBottomArea } from './EditChats.styled';
+import { Layout, Typo } from '@design-system';
+import { StyledBottomArea, StyledDeleteButton, StyledMuteButton } from './EditChats.styled';
 
 export function EditChats() {
-  const [t] = useTranslation('translation', { keyPrefix: 'chats.edit_room_list.header' });
+  const [t] = useTranslation('translation', { keyPrefix: 'chats.edit_room_list' });
 
   const navigate = useNavigate();
 
@@ -18,6 +18,8 @@ export function EditChats() {
   };
 
   const [checkList, setCheckList] = useState(new Set<number>());
+  const checkListLength = checkList.size;
+  const hasCheckList = checkListLength > 0;
 
   const handleClickCheckBox = (roomId: number) => {
     const isChecked = !checkList.has(roomId);
@@ -34,14 +36,22 @@ export function EditChats() {
     }
   };
 
+  const handleClickMute = () => {
+    console.log('handle click mute');
+  };
+
+  const handleClickDelete = () => {
+    console.log('handle click delete');
+  };
+
   return (
     <MainContainer>
       <SubHeader
-        title={t('title')}
+        title={t('header.title')}
         RightComponent={
           <button type="button" onClick={handleClickCancel}>
             <Typo type="button-medium" color="PRIMARY">
-              {t('cancel')}
+              {t('header.cancel')}
             </Typo>
           </button>
         }
@@ -51,8 +61,18 @@ export function EditChats() {
       </Layout.FlexCol>
       <StyledBottomArea w="100%" b={0} pv={15} ph={8} bgColor="WHITE">
         <Layout.FlexRow w="100%" gap={5}>
-          <Button.Primary status="normal" text="Mute" sizing="stretch" />
-          <Button.Primary status="normal" text="Delete" sizing="stretch" />
+          <StyledMuteButton type="button" onClick={handleClickMute} disabled={!hasCheckList}>
+            <Typo type="button-large">
+              {[t('button.mute'), hasCheckList && `(${checkListLength})`].filter(Boolean).join(' ')}
+            </Typo>
+          </StyledMuteButton>
+          <StyledDeleteButton type="button" onClick={handleClickDelete} disabled={!hasCheckList}>
+            <Typo type="button-large">
+              {[t('button.delete'), hasCheckList && `(${checkListLength})`]
+                .filter(Boolean)
+                .join(' ')}
+            </Typo>
+          </StyledDeleteButton>
         </Layout.FlexRow>
       </StyledBottomArea>
     </MainContainer>

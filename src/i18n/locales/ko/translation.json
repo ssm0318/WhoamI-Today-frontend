@@ -235,6 +235,10 @@
       "header": {
         "title": "채팅",
         "cancel": "취소"
+      },
+      "button": {
+        "mute": "알림 끄기",
+        "delete": "나가기"
       }
     }
   },

@@ -240,6 +240,10 @@
       "header": {
         "title": "Chats",
         "cancel": "Cancel"
+      },
+      "button": {
+        "mute": "Mute",
+        "delete": "Delete"
       }
     }
   },
