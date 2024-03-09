@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
@@ -16,6 +17,23 @@ export function EditChats() {
     navigate('/chats');
   };
 
+  const [checkList, setCheckList] = useState(new Set());
+
+  const handleClickCheckBox = (roomId: number) => {
+    const isChecked = !checkList.has(roomId);
+    if (isChecked) {
+      setCheckList((prev) => {
+        prev.add(roomId);
+        return new Set(prev);
+      });
+    } else {
+      setCheckList((prev) => {
+        prev.delete(roomId);
+        return new Set(prev);
+      });
+    }
+  };
+
   return (
     <MainContainer>
       <SubHeader
@@ -29,7 +47,7 @@ export function EditChats() {
         }
       />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 8} mb={80} w="100%">
-        <ChatRoomList isEditMode />
+        <ChatRoomList isEditMode onClickCheckBox={handleClickCheckBox} />
       </Layout.FlexCol>
       <StyledBottomArea w="100%" b={0} pv={15} ph={8} bgColor="WHITE">
         <Layout.FlexRow w="100%" gap={5}>
