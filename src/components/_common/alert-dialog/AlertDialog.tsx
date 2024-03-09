@@ -5,15 +5,16 @@ import * as S from './AlertDialog.styled';
 interface AlertDialogProps {
   children: ReactNode;
   visible: boolean;
+  className?: string;
   onClickDimmed?: () => void;
 }
 
-function AlertDialog({ children, visible, onClickDimmed }: AlertDialogProps) {
+function AlertDialog({ children, visible, className, onClickDimmed }: AlertDialogProps) {
   if (!visible) return null;
   return createPortal(
-    <S.Container>
+    <S.Container className={className}>
       <S.Background onClick={onClickDimmed} />
-      <S.Body>{children}</S.Body>
+      <S.Body className="body">{children}</S.Body>
     </S.Container>,
     document.getElementById('modal-container') || document.body,
   );
