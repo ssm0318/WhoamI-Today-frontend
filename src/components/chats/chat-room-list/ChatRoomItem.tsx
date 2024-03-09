@@ -44,7 +44,7 @@ export function ChatRoomItem({
   }, [id, onClickCheckBox]);
 
   return (
-    <Layout.FlexRow w="100%" pl={16} justifyContent="space-between" alignItems="center">
+    <Layout.FlexRow w="100%" pl={16} gap={16} justifyContent="space-between" alignItems="center">
       {isEditMode && (
         <StyledCheckBox
           name={participants[0].username}
@@ -57,7 +57,7 @@ export function ChatRoomItem({
         justifyContent="space-between"
         gap={16}
         alignItems="center"
-        ph={16}
+        pr={16}
         onMouseDown={handleClickItem}
       >
         <ProfileImage imageUrl={participants[0].profile_image} size={55} />
