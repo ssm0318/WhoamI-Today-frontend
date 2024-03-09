@@ -5,7 +5,7 @@ import { Font, Layout, SvgIcon } from '@design-system';
 import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import CheckInSection from '../check-in/CheckIn';
-import FriendsInfo from './friends-info/FriendsInfo';
+import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
 
 interface ProfileProps {
   user?: User;
@@ -51,7 +51,7 @@ function Profile({ user }: ProfileProps) {
         </Layout.FlexCol>
       </Layout.FlexRow>
       {/* 친구 목록 */}
-      {!isMyPage && <FriendsInfo friends={friendList} />}
+      {!isMyPage && <MutualFriendsInfo mutualFriends={friendList} />}
       <CheckInSection user={user} />
     </Layout.FlexCol>
   );
