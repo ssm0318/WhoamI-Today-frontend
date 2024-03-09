@@ -65,7 +65,7 @@ export function ChatRoomItem({
           <Layout.FlexRow w="100%" justifyContent="space-between">
             <Layout.FlexRow gap={4} alignItems="center">
               <Typo type="label-large">{participants[0].username}</Typo>
-              {isMute && <SvgIcon name="notification_mute" size={10} />}
+              {isMute && <SvgIcon name="chat_notification_mute" size={12} />}
             </Layout.FlexRow>
             {last_message_time && (
               <Typo type="label-small" color="MEDIUM_GRAY">

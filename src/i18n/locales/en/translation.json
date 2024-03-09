@@ -253,9 +253,11 @@
     }
   },
   "chat_room": {
-    "noti_settings": {
-      "title": "Notification",
-      "mute": "Mute conversation"
+    "noti_setting_dialog": {
+      "title": "Mute Chats?",
+      "content": "You will not receive notifications from this chat until you click the mute icon again.",
+      "cancel": "Cancel",
+      "confirm": "Mute"
     }
   },
   "friends": {
