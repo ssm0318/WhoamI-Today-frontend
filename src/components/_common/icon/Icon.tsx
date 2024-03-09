@@ -8,11 +8,26 @@ interface IconProps extends Omit<SvgIconProps, 'size'> {
   onClick?: (e: MouseEvent) => void;
   size?: number;
   background?: ColorKeys;
+  disabled?: boolean;
+  padding?: number;
 }
 
-function Icon({ onClick, size = TOP_NAVIGATION_HEIGHT, background, ...iconProps }: IconProps) {
+function Icon({
+  onClick,
+  size = TOP_NAVIGATION_HEIGHT,
+  background,
+  disabled = false,
+  padding,
+  ...iconProps
+}: IconProps) {
   return (
-    <StyledIcon type="button" onClick={onClick} size={size} backgroundColor={background}>
+    <StyledIcon
+      type="button"
+      onClick={onClick}
+      size={padding ? size + 2 * padding : size}
+      backgroundColor={background}
+      disabled={disabled}
+    >
       <SvgIcon size={size} {...iconProps} />
     </StyledIcon>
   );

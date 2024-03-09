@@ -110,9 +110,6 @@ export const Colors = {
    * @deprecated
    */
   NO_STATUS_BG: '#FFC70033',
-  /**
-   * @deprecated
-   */
   NO_STATUS_CHIP: '#FFC700',
   /**
    * @deprecated

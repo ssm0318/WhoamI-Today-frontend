@@ -13,9 +13,10 @@ import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { UpdatedProfile } from '@models/api/friends';
-import { getAllFriends, getFavoriteFriends, getUpdatedProfiles } from '@utils/apis/friends';
+import { getFavoriteFriends, getUpdatedProfiles } from '@utils/apis/friends';
 import { getFriendRequests } from '@utils/apis/user';
 import { FlexCol, FlexRow, LayoutBase } from 'src/design-system/layouts';
+import useInfiniteFetchFriends from './_hooks/useInfiniteFetchFriends';
 
 function Friends() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends' });
@@ -24,7 +25,8 @@ function Friends() {
     state: 'loading',
   });
   const [friendRequests, setFriendRequests] = useState<FetchState<number>>({ state: 'loading' });
-  const [allFriends, setAllFriends] = useState<FetchState<UpdatedProfile[]>>({ state: 'loading' });
+  const { isLoadingMoreAllFriends, allFriends, fetchAllFriends, targetRef } =
+    useInfiniteFetchFriends({ filterHidden: true });
   const [favoriteFriends, setFavoriteFriends] = useState<FetchState<UpdatedProfile[]>>({
     state: 'loading',
   });
@@ -33,9 +35,7 @@ function Friends() {
     getUpdatedProfiles().then((results) => {
       setUpdatedProfiles({ state: 'hasValue', data: results });
     });
-    getAllFriends().then((results) => {
-      setAllFriends({ state: 'hasValue', data: results });
-    });
+    fetchAllFriends();
     getFavoriteFriends().then((results) => {
       setFavoriteFriends({ state: 'hasValue', data: results });
     });
@@ -72,7 +72,7 @@ function Friends() {
       <Layout.FlexRow w="100%" p={4} justifyContent="flex-end">
         <Button.Tertiary
           status="normal"
-          text={t('edit_friends')}
+          text={t('edit_friends.title')}
           onClick={handleClickEditFriends}
           icon={<SvgIcon name="edit_filled" size={16} />}
           iconPosition="left"
@@ -150,16 +150,20 @@ function Friends() {
           title={t('all_friends')}
           collapsedItem={
             <LayoutBase w="100%">
-              {allFriends.data.length ? (
-                allFriends.data.map((user) => (
-                  <UpdatedFriendItem
-                    key={user.id}
-                    {...user}
-                    new_chat={23}
-                    updateFavoriteCallback={updateFavoriteCallback}
-                    fetchAllTypeFriends={fetchAllTypeFriends}
-                  />
-                ))
+              {allFriends.data.results?.length ? (
+                <>
+                  {allFriends.data.results.map((user) => (
+                    <UpdatedFriendItem
+                      key={user.id}
+                      {...user}
+                      new_chat={23}
+                      updateFavoriteCallback={updateFavoriteCallback}
+                      fetchAllTypeFriends={fetchAllTypeFriends}
+                    />
+                  ))}
+                  <div ref={targetRef} />
+                  {isLoadingMoreAllFriends && allFriends.data.next && <Loader />}
+                </>
               ) : (
                 <FlexCol alignItems="center" ph={75} gap={8}>
                   <Typo type="label-medium" color="DARK_GRAY">

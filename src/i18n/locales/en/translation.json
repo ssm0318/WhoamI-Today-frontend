@@ -294,7 +294,10 @@
         "request": "Request"
       }
     },
-    "edit_friends": "Edit Friends",
+    "edit_friends": {
+      "title": "Edit Friends",
+      "save": "Save"
+    },
     "updated_profiles": "Updated Profiles",
     "friend_requests": "Friend Requests",
     "friend_requests_desc": "See friend requests & recommended friends",
