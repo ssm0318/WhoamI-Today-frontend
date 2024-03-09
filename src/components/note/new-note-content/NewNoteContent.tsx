@@ -1,16 +1,44 @@
-import { ChangeEvent, KeyboardEvent, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
+import { readFile } from '@utils/getCroppedImg';
+import NewNoteImage from '../new-note-image/NewNoteImage';
 import { NoteInput } from './NoteInputBox.styled';
 
 function NewNoteContent() {
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
   const PLACE_HOLDER = t('whats_on_your_mind');
 
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState<string>();
+  const [noteImages, setNoteImages] = useState<string[]>([]);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const onClickAdd = () => {
+    inputRef.current?.click();
+  };
+
+  const onImageAdd = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+
+    const image = e.target.files[0];
+
+    try {
+      const imageDataUrl = await readFile(image);
+
+      if (typeof imageDataUrl !== 'string') {
+        throw new Error('read file error');
+      }
+
+      setNoteImages((images) => [...images, imageDataUrl]);
+    } catch (error) {
+      // TODO
+      console.error(error);
+    }
+  };
 
   const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
@@ -36,7 +64,19 @@ function NewNoteContent() {
           onChange={handleChangeInput}
           onKeyDown={handleKeyDownInput}
         />
-        <SvgIcon name="chat_media_image" size={30} />
+        <SvgIcon name="chat_media_image" size={30} onClick={onClickAdd} />
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/jpeg, image/png"
+          onChange={onImageAdd}
+          multiple={false}
+          style={{ display: 'none' }}
+        />
+        {/* TODO: 좌우 스크롤 가능한 상위컴포넌트 추가 */}
+        {noteImages?.map((imgurl) => {
+          return <NewNoteImage url={imgurl} />;
+        })}
       </Layout.FlexCol>
     </Layout.FlexRow>
   );
