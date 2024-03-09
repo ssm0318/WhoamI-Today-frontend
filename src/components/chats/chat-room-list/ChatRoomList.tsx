@@ -46,12 +46,12 @@ export function ChatRoomList({ isEditMode, checkList, onClickCheckBox }: Props) 
   // });
 
   return (
-    <Layout.FlexCol w="100%" h="100%" pv={5} gap={5}>
+    <Layout.FlexCol w="100%" h="100%" pv={5} gap={10}>
       <Layout.LayoutBase ph={16}>
         <Typo type="title-medium">{t('title')}</Typo>
       </Layout.LayoutBase>
       {rooms.data && (
-        <Layout.FlexCol w="100%" gap={10}>
+        <Layout.FlexCol w="100%" gap={8}>
           {isEditMode ? (
             <>
               {rooms.data.map((room) => (
