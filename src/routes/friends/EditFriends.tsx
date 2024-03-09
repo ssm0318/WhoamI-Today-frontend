@@ -25,10 +25,6 @@ function EditFriends() {
 
   useAsyncEffect(fetchAllTypeFriends);
 
-  const handleClickSave = () => {
-    // TODO
-  };
-
   const handleToggleFavorite = () => {
     // TODO
   };
@@ -43,16 +39,7 @@ function EditFriends() {
 
   return (
     <>
-      <SubHeader
-        title={t('title')}
-        RightComponent={
-          <button type="button" onClick={handleClickSave}>
-            <Typo type="title-large" color="PRIMARY">
-              {t('save')}
-            </Typo>
-          </button>
-        }
-      />
+      <SubHeader title={t('title')} />
       <Layout.FlexCol
         w="100%"
         h="100vh"
