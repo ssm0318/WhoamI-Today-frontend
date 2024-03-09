@@ -23,6 +23,8 @@ export function ChatRoomItem({
 }: Props) {
   /* TODO: 안읽은 메시지 api 추가 필요 + 개수? */
   const hasUnreadMessages = false;
+  /* TODO: 채팅방 알림 뮤트 여부 적용 */
+  const isMute = false;
   const { id, participants, last_message_content, last_message_time } = room;
   const navigate = useNavigate();
 
@@ -61,7 +63,10 @@ export function ChatRoomItem({
         <ProfileImage imageUrl={participants[0].profile_image} size={55} />
         <Layout.FlexCol w="100%" justifyContent="center" gap={5}>
           <Layout.FlexRow w="100%" justifyContent="space-between">
-            <Typo type="label-large">{participants[0].username}</Typo>
+            <Layout.FlexRow gap={4} alignItems="center">
+              <Typo type="label-large">{participants[0].username}</Typo>
+              {isMute && <SvgIcon name="notification_mute" size={10} />}
+            </Layout.FlexRow>
             {last_message_time && (
               <Typo type="label-small" color="MEDIUM_GRAY">
                 {formatLastMessageTime(last_message_time)}
