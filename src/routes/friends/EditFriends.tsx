@@ -9,7 +9,7 @@ import UserRelatedAlert, { Alert } from '@components/user-page/UserRelatedAlert'
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { addFriendToFavorite, deleteFavorite, hideFriend } from '@utils/apis/friends';
+import { addFriendToFavorite, deleteFavorite, hideFriend, unHideFriend } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
 import updateFriendsList from '@utils/updateFriendsList';
 import useInfiniteFetchFriends from './_hooks/useInfiniteFetchFriends';
@@ -40,7 +40,7 @@ function EditFriends() {
     try {
       if (is_hidden) {
         updateFriendsList({ userId, type: 'is_hidden', value: false, setAllFriends });
-        // TODO: 숨김 취소 API
+        await unHideFriend(userId);
         return;
       }
       updateFriendsList({ userId, type: 'is_hidden', value: true, setAllFriends });
