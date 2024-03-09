@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Font, Layout, SvgIcon } from '@design-system';
-import { friendList as mockFriendList } from '@mock/friends';
 import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getFriendList } from '@utils/apis/user';
@@ -14,7 +13,7 @@ interface ProfileProps {
 }
 
 function Profile({ user }: ProfileProps) {
-  const [friendList, setFriendList] = useState<User[]>(mockFriendList);
+  const [friendList, setFriendList] = useState<User[]>([]);
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const isMyPage = user?.id === myProfile?.id;
 
