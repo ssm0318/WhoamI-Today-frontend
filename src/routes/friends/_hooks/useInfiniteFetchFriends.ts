@@ -48,7 +48,7 @@ const useInfiniteFetchFriends = (options?: getFriendsOptions) => {
     setIsLoadingMoreAllFriends(false);
   });
 
-  return { isLoadingMoreAllFriends, allFriends, fetchAllFriends, targetRef };
+  return { isLoadingMoreAllFriends, allFriends, setAllFriends, fetchAllFriends, targetRef };
 };
 
 export default useInfiniteFetchFriends;
