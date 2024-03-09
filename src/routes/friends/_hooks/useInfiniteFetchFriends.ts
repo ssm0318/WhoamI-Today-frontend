@@ -12,8 +12,11 @@ const useInfiniteFetchFriends = (options?: getFriendsOptions) => {
   const fetchAllFriends = async (next?: string) => {
     try {
       const data = await getAllFriends({ filterHidden: options?.filterHidden, next });
-      setAllFriends((prev) =>
-        next
+      setAllFriends((prev) => {
+        // NOTE: 첫 로딩 시, useEffect가 두번 실행되는데, 첫 로딩에서 연속 두 페이지 요청할 때 에러 핸들링을 위함
+        if (prev.data && !next) return prev;
+
+        return next
           ? {
               state: 'hasValue',
               data: {
@@ -24,8 +27,8 @@ const useInfiniteFetchFriends = (options?: getFriendsOptions) => {
                 next: data.next,
               },
             }
-          : { state: 'hasValue', data },
-      );
+          : { state: 'hasValue', data };
+      });
     } catch {
       setAllFriends({ state: 'hasError' });
     }
