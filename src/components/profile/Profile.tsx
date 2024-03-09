@@ -52,7 +52,7 @@ function Profile({ user }: ProfileProps) {
         </Layout.FlexCol>
       </Layout.FlexRow>
       {/* 친구 목록 */}
-      <FriendsInfo friends={friendList} />
+      {!isMyPage && <FriendsInfo friends={friendList} />}
       <CheckInSection user={user} />
     </Layout.FlexCol>
   );

@@ -1,5 +1,5 @@
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import { Font, Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import { User } from '@models/user';
 
 interface FriendsInfoProps {
@@ -23,9 +23,9 @@ function FriendsInfo({ friends }: FriendsInfoProps) {
           <ProfileImage imageUrl={friend.profile_image} size={25} />
         </Layout.FlexRow>
       ))}
-      <Font.Body ml={12} type="12_regular">
+      <Typo ml={12} type="label-medium">
         {getFriendDescription(friends)}
-      </Font.Body>
+      </Typo>
     </Layout.FlexRow>
   );
 }
