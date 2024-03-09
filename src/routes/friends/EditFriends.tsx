@@ -1,18 +1,21 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { UpdatedFriendItemWrapper } from '@components/friends/updated-friend-item/UpdatedFriendItem.styled';
 import SubHeader from '@components/sub-header/SubHeader';
+import UserRelatedAlert, { Alert } from '@components/user-page/UserRelatedAlert';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { addFriendToFavorite, deleteFavorite, hideFriend } from '@utils/apis/friends';
+import { breakFriend } from '@utils/apis/user';
 import updateFriendsList from '@utils/updateFriendsList';
 import useInfiniteFetchFriends from './_hooks/useInfiniteFetchFriends';
 
 function EditFriends() {
-  const [t] = useTranslation('translation', { keyPrefix: 'friends.edit_friends' });
+  const [t] = useTranslation('translation');
 
   const { isLoadingMoreAllFriends, allFriends, setAllFriends, fetchAllFriends, targetRef } =
     useInfiniteFetchFriends({ filterHidden: false });
@@ -47,13 +50,22 @@ function EditFriends() {
     }
   };
 
-  const handleClickDelete = () => {
-    // TODO
+  const [showBreakFriendsAlert, setShowBreakFriendsAlert] = useState<Alert>();
+  const handleClickDelete = (userId: number) => () => {
+    setShowBreakFriendsAlert({
+      onClickConfirm: async () => {
+        handleOnCloseAlert();
+        updateFriendsList({ userId, type: 'break_friends', setAllFriends });
+        await breakFriend(userId);
+      },
+      confirmMsg: t('user_page.are_you_sure_you_want_to_delete_this_friend'),
+    });
   };
+  const handleOnCloseAlert = () => setShowBreakFriendsAlert(undefined);
 
   return (
     <>
-      <SubHeader title={t('title')} />
+      <SubHeader title={t('friends.edit_friends.title')} />
       <Layout.FlexCol
         w="100%"
         h="100vh"
@@ -97,7 +109,7 @@ function EditFriends() {
                       size={44}
                       onClick={handleToggleHide(id, is_hidden)}
                     />
-                    <Icon name="close" size={16} padding={14} onClick={handleClickDelete} />
+                    <Icon name="close" size={16} padding={14} onClick={handleClickDelete(id)} />
                   </Layout.FlexRow>
                 </UpdatedFriendItemWrapper>
               ),
@@ -107,6 +119,13 @@ function EditFriends() {
           </>
         )}
       </Layout.FlexCol>
+      {showBreakFriendsAlert && (
+        <UserRelatedAlert
+          visible={!!showBreakFriendsAlert}
+          close={handleOnCloseAlert}
+          {...showBreakFriendsAlert}
+        />
+      )}
     </>
   );
 }
