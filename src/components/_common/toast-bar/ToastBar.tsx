@@ -59,6 +59,6 @@ export default function ToastBar({
         {RightComponent && RightComponent}
       </AnimatedToastBarContainer>
     </Layout.Absolute>,
-    document.getElementById('toastbar-container') || document.body,
+    document.getElementById('toast-container') || document.body,
   );
 }
