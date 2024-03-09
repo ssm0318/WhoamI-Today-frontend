@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import AlertDialog from '@components/_common/alert-dialog/AlertDialog';
 import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -22,6 +23,9 @@ function EditFriends() {
 
   useAsyncEffect(fetchAllFriends);
 
+  const [showTemporalErrorAlert, setShowTemporalErrorAlert] = useState(false);
+  const handleOnCloseTemporalErrorAlert = () => setShowTemporalErrorAlert(false);
+
   const handleToggleFavorite = (userId: number, is_favorite: boolean) => async () => {
     try {
       if (is_favorite) {
@@ -32,7 +36,7 @@ function EditFriends() {
       updateFriendsList({ userId, type: 'is_favorite', value: true, setAllFriends });
       await addFriendToFavorite(userId);
     } catch {
-      // TODO
+      setShowTemporalErrorAlert(true);
     }
   };
 
@@ -46,7 +50,7 @@ function EditFriends() {
       updateFriendsList({ userId, type: 'is_hidden', value: true, setAllFriends });
       await hideFriend(userId);
     } catch {
-      // TODO
+      setShowTemporalErrorAlert(true);
     }
   };
 
@@ -54,14 +58,18 @@ function EditFriends() {
   const handleClickDelete = (userId: number) => () => {
     setShowBreakFriendsAlert({
       onClickConfirm: async () => {
-        handleOnCloseAlert();
-        updateFriendsList({ userId, type: 'break_friends', setAllFriends });
-        await breakFriend(userId);
+        try {
+          handleOnCloseBreakFriendsAlert();
+          updateFriendsList({ userId, type: 'break_friends', setAllFriends });
+          await breakFriend(userId);
+        } catch {
+          setShowTemporalErrorAlert(true);
+        }
       },
       confirmMsg: t('user_page.are_you_sure_you_want_to_delete_this_friend'),
     });
   };
-  const handleOnCloseAlert = () => setShowBreakFriendsAlert(undefined);
+  const handleOnCloseBreakFriendsAlert = () => setShowBreakFriendsAlert(undefined);
 
   return (
     <>
@@ -122,9 +130,17 @@ function EditFriends() {
       {showBreakFriendsAlert && (
         <UserRelatedAlert
           visible={!!showBreakFriendsAlert}
-          close={handleOnCloseAlert}
+          close={handleOnCloseBreakFriendsAlert}
           {...showBreakFriendsAlert}
         />
+      )}
+      {showTemporalErrorAlert && (
+        <AlertDialog
+          visible={showTemporalErrorAlert}
+          onClickDimmed={handleOnCloseTemporalErrorAlert}
+        >
+          {t('sign_up.temporary_error')}
+        </AlertDialog>
       )}
     </>
   );
