@@ -17,7 +17,7 @@ export function EditChats() {
     navigate('/chats');
   };
 
-  const [checkList, setCheckList] = useState(new Set());
+  const [checkList, setCheckList] = useState(new Set<number>());
 
   const handleClickCheckBox = (roomId: number) => {
     const isChecked = !checkList.has(roomId);
@@ -47,7 +47,7 @@ export function EditChats() {
         }
       />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 8} mb={80} w="100%">
-        <ChatRoomList isEditMode onClickCheckBox={handleClickCheckBox} />
+        <ChatRoomList isEditMode onClickCheckBox={handleClickCheckBox} checkList={checkList} />
       </Layout.FlexCol>
       <StyledBottomArea w="100%" b={0} pv={15} ph={8} bgColor="WHITE">
         <Layout.FlexRow w="100%" gap={5}>

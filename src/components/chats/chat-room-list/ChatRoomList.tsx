@@ -7,10 +7,11 @@ import { SwipeableChatRoomItem } from './SwipeableChatRoomItem';
 
 interface Props {
   isEditMode?: boolean;
+  checkList?: Set<number>;
   onClickCheckBox?: (roomId: number) => void;
 }
 
-export function ChatRoomList({ isEditMode, onClickCheckBox }: Props) {
+export function ChatRoomList({ isEditMode, checkList, onClickCheckBox }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'chats.room_list' });
 
   const { rooms } = useBoundStore((state) => ({
@@ -58,6 +59,7 @@ export function ChatRoomList({ isEditMode, onClickCheckBox }: Props) {
                   key={room.id}
                   room={room}
                   isEditMode={isEditMode}
+                  checkList={checkList}
                   onClickCheckBox={onClickCheckBox}
                 />
               ))}
