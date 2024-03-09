@@ -16,20 +16,26 @@ interface MenuItem {
 const BOTTOM_SHEET_LIST: MenuItem[] = [
   { key: 'check-in', path: '/check-in/edit', icon: 'bottomsheet_checkin' },
   { key: 'note', path: '/check-in/edit', icon: 'bottomsheet_note' },
-  { key: 'prompts', path: '/check-in/edit', icon: 'bottomsheet_prompt' },
+  { key: 'prompts', path: '/check-in/prompt', icon: 'bottomsheet_prompt' },
 ];
 
 interface Props {
   visible: boolean;
   closeBottomSheet: () => void;
+  setSelectPrompt: (select: boolean) => void;
 }
 
-function NewPostBottomSheet({ visible, closeBottomSheet }: Props) {
+function NewPostBottomSheet({ visible, closeBottomSheet, setSelectPrompt }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'home.header.bottom_sheet' });
   const navigate = useNavigate();
 
   const handleClickMenu = (path: string) => () => {
-    navigate(path);
+    closeBottomSheet();
+    if (path === '/check-in/prompt') {
+      setSelectPrompt(true);
+    } else {
+      navigate(path);
+    }
   };
 
   return (

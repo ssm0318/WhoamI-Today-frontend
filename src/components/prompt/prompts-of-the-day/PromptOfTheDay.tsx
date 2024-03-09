@@ -8,7 +8,7 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { StyledPromptMoreButton, StyledPromptsOfTheDay } from './PromptsOfTheDay.styled';
 
 function PromptsOfTheDay() {
-  const [t] = useTranslation('translation', { keyPrefix: 'chats.prompts_of_the_day' });
+  const [t] = useTranslation('translation', { keyPrefix: 'prompts.prompts_of_the_day' });
   const { todaysQuestions, fetchTodaysQuestions } = useBoundStore(TodayQuestionsSelector);
 
   useAsyncEffect(async () => {
