@@ -8,6 +8,7 @@ export interface UserRelatedAlertProps {
   onClickConfirm: (() => void) | (() => Promise<void>);
   confirmMsg: string;
 }
+export type Alert = Pick<UserRelatedAlertProps, 'confirmMsg' | 'onClickConfirm'>;
 
 function UserRelatedAlert({ visible, close, onClickConfirm, confirmMsg }: UserRelatedAlertProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
