@@ -16,7 +16,9 @@ function CheckInSpotifySearchInput(props: CheckInSpotifySearchInputProps) {
       }}
     >
       <Layout.Absolute l={8}>
-        <SvgIcon name="search" size={24} />
+        <Layout.LayoutBase p={7}>
+          <SvgIcon name="search" size={12} fill="MEDIUM_GRAY" />
+        </Layout.LayoutBase>
       </Layout.Absolute>
       <S.StyledCheckInSpotifySearchInput {...props} placeholder="Search" />
       <Layout.Absolute r={8}>

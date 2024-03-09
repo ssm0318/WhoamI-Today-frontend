@@ -86,6 +86,7 @@ const camera = 'camera';
 const chat_media_image = 'chat_media_image';
 const chat_media_gif = 'chat_media_gif';
 const green_dot = 'green_dot';
+const notification_mute = 'notification_mute';
 
 // FIXME: 하단 탭 아이콘 교체
 const my_profile = 'my_profile';
@@ -173,6 +174,7 @@ export {
   noti_icon_private_comment,
   noti_icon_public_comment,
   notification,
+  notification_mute,
   private_comment_active,
   private_comment_inactive,
   question_respond,

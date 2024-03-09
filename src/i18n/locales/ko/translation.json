@@ -188,7 +188,7 @@
     "continue": "계속하기",
     "are_you_sure": "정말로 계속하시겠습니까?\n한 번 계정을 삭제하면 다시 복구할 수 없습니다.",
     "edit_profile": {
-      "title":  "프로필 수정",
+      "title": "프로필 수정",
       "cancel": "취소",
       "save": "저장",
       "change_picture": "사진 변경하기",
@@ -235,6 +235,16 @@
     "room_list": {
       "search_placeholder": "검색",
       "title": "메시지"
+    },
+    "edit_room_list": {
+      "header": {
+        "title": "채팅",
+        "cancel": "취소"
+      },
+      "button": {
+        "mute": "알림 끄기",
+        "delete": "나가기"
+      }
     }
   },
   "chat_room": {
@@ -281,7 +291,7 @@
     },
     "edit_friends": "친구 목록 편집",
     "updated_profiles": "업데이트한 프로필",
-    "friend_requests":"친구 요청",
+    "friend_requests": "친구 요청",
     "friend_requests_desc": "친구 요청 및 추천 친구 보기",
     "favorites": "즐겨찾기",
     "add_favorite": "즐겨찾기에 친구를 추가하고 피드 상단에서 친구의 콘텐츠를 확인하세요!",

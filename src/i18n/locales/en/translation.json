@@ -191,7 +191,7 @@
     "continue": "Continue",
     "are_you_sure": "Are you sure?\nThis cannot be done.",
     "edit_profile": {
-      "title":  "Edit Profile",
+      "title": "Edit Profile",
       "cancel": "Cancel",
       "save": "Save",
       "change_picture": "Change Picture",
@@ -240,6 +240,16 @@
     "room_list": {
       "search_placeholder": "Search",
       "title": "Messages"
+    },
+    "edit_room_list": {
+      "header": {
+        "title": "Chats",
+        "cancel": "Cancel"
+      },
+      "button": {
+        "mute": "Mute",
+        "delete": "Delete"
+      }
     }
   },
   "chat_room": {
@@ -286,7 +296,7 @@
     },
     "edit_friends": "Edit Friends",
     "updated_profiles": "Updated Profiles",
-    "friend_requests":"Friend Requests",
+    "friend_requests": "Friend Requests",
     "friend_requests_desc": "See friend requests & recommended friends",
     "favorites": "Favorites",
     "add_favorite": "Add your friends to Favorites and see their content at the top of your feed!",

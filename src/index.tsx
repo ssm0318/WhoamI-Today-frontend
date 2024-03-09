@@ -16,6 +16,7 @@ import AllQuestions from './routes/AllQuestions';
 import Chats from './routes/Chats';
 import CheckInEdit from './routes/check-in/CheckInEdit';
 import MusicSearch from './routes/check-in/MusicSearch';
+import { EditChats } from './routes/edit-chats/EditChats';
 import ForgotPassword from './routes/ForgotPassword';
 import FriendPage from './routes/FriendPage';
 import EditFriends from './routes/friends/EditFriends';
@@ -101,6 +102,7 @@ const router = createBrowserRouter([
     path: 'notifications',
     element: <Notifications />,
   },
+  { path: 'chats/edit', element: <EditChats /> },
   {
     path: 'users/:username',
     loader: checkIfSignIn,
