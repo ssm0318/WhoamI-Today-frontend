@@ -67,3 +67,7 @@ export const hideFriend = async (userId: number) => {
     friend_id: userId,
   });
 };
+
+export const unHideFriend = async (userId: number) => {
+  await axios.delete(`/user/friends/${userId}/hidden/`);
+};

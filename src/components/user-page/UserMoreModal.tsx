@@ -4,7 +4,7 @@ import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { Font, Layout } from '@design-system';
 import { UserProfile } from '@models/user';
 import { breakFriend, reportUser } from '@utils/apis/user';
-import UserRelatedAlert, { UserRelatedAlertProps } from './UserRelatedAlert';
+import UserRelatedAlert, { Alert } from './UserRelatedAlert';
 
 interface UserMoreModalProps {
   isVisible: boolean;
@@ -12,8 +12,6 @@ interface UserMoreModalProps {
   user: UserProfile;
   callback?: () => Promise<void>;
 }
-
-type Alert = Pick<UserRelatedAlertProps, 'confirmMsg' | 'onClickConfirm'>;
 
 function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModalProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
