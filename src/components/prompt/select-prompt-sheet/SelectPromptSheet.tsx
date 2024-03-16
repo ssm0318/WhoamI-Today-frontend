@@ -4,6 +4,7 @@ import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import Divider from '@components/_common/divider/Divider';
 import Icon from '@components/_common/icon/Icon';
 import { Layout, Typo } from '@design-system';
+import PromptsOfTheDay from '../prompts-of-the-day/PromptOfTheDay';
 
 interface Props {
   visible: boolean;
@@ -25,6 +26,7 @@ function SelectPromptSheet({ visible, closeBottomSheet }: Props) {
         <Typo type="title-large">{t('select_a_prompt')}</Typo>
         <Layout.FlexCol gap={12} pt={24} pb={24} w="100%">
           <Divider width={1} />
+          <PromptsOfTheDay />
         </Layout.FlexCol>
       </Layout.FlexCol>
     </BottomModal>,
