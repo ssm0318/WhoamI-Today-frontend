@@ -38,7 +38,7 @@ function Profile({ user }: ProfileProps) {
   return (
     <Layout.FlexCol gap={8}>
       <Layout.FlexRow gap={8}>
-        <ProfileImage imageUrl={myProfile?.profile_image} username={username} size={80} />
+        <ProfileImage imageUrl={user?.profile_image} username={username} size={80} />
         <Layout.FlexCol gap={8}>
           <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
             <Font.Body type="20_semibold">{isMyPage ? myProfile?.username : username}</Font.Body>
