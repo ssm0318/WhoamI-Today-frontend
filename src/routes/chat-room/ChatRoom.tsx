@@ -5,7 +5,7 @@ import { Loader } from '@components/_common/loader/Loader.styled';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { MessageInputBox } from '@components/chat-room/message-input-box/MessageInputBox';
 import { MessageList } from '@components/chat-room/message-list/MessageList';
-import { MessageNotiSettings } from '@components/chat-room/message-noti-settings/MessageNotiSettings';
+import { MessageNotiSettingDialog } from '@components/chat-room/message-noti-setting-dialog/MessageNotiSettingDialog';
 import { TOP_NAVIGATION_HEIGHT, Z_INDEX } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -81,14 +81,21 @@ export function ChatRoom() {
     // TODO: notification setting modal
   };
 
-  const [settingsVisible, setSettingsVisible] = useState(false);
+  // TODO: 채팅방 뮤트 설정 반영
+  const [isMuted, setIsMuted] = useState(false);
+  const setMuteOn = () => setIsMuted(true);
+  const setMuteOff = () => setIsMuted(false);
 
-  const handleClickNotiSettings = () => {
-    setSettingsVisible(true);
-  };
+  const [showNotiSettingDialog, setShowNotiSettingDialog] = useState(false);
+  const openNotiSettingDialog = () => setShowNotiSettingDialog(true);
+  const closeNotiSettingDialog = () => setShowNotiSettingDialog(false);
 
-  const handleOnCloseSettingsModal = () => {
-    setSettingsVisible(false);
+  const handleClickNotiSetting = () => {
+    if (isMuted) {
+      setMuteOff();
+      return;
+    }
+    openNotiSettingDialog();
   };
 
   return (
@@ -111,7 +118,12 @@ export function ChatRoom() {
           )}
           <Layout.FlexRow alignItems="center" gap={10}>
             <Icon name="search" size={18} fill="BLACK" onClick={handleClickMsgSearch} />
-            <Icon name="notification" size={36} color="BLACK" onClick={handleClickNotiSettings} />
+            <Icon
+              name={isMuted ? 'notification_mute' : 'notification'}
+              size={36}
+              color="BLACK"
+              onClick={handleClickNotiSetting}
+            />
           </Layout.FlexRow>
         </Layout.FlexRow>
       </ChatRoomHeaderWrapper>
@@ -125,7 +137,11 @@ export function ChatRoom() {
           <MessageInputBox sendSocketMsg={sendSocketMsg} />
         </Layout.LayoutBase>
       </Layout.FlexCol>
-      <MessageNotiSettings visible={settingsVisible} onClose={handleOnCloseSettingsModal} />
+      <MessageNotiSettingDialog
+        visible={showNotiSettingDialog}
+        onClickMute={setMuteOn}
+        onClose={closeNotiSettingDialog}
+      />
     </ChatRoomContainer>
   );
 }

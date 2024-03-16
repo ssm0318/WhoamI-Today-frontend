@@ -18,6 +18,7 @@ export const StyledMessageInputBox = styled(Layout.FlexRow).attrs({
 export const MessageInput = styled(TextareaAutosize)`
   width: 100%;
   font-size: 12px;
+  border-color: transparent;
 
   ::placeholder {
     color: ${({ theme }) => theme.MEDIUM_GRAY};

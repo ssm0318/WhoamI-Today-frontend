@@ -27,6 +27,7 @@ const error = 'error';
 
 // Universal
 const notification = 'notification';
+const notification_mute = 'notification_mute';
 const hamburger = 'hamburger';
 const close = 'close';
 const dots_menu = 'dots_menu';
@@ -86,7 +87,7 @@ const camera = 'camera';
 const chat_media_image = 'chat_media_image';
 const chat_media_gif = 'chat_media_gif';
 const green_dot = 'green_dot';
-const notification_mute = 'notification_mute';
+const chat_notification_mute = 'chat_notification_mute';
 
 // 하단탭
 const friends_active = 'friends_active';
@@ -124,6 +125,7 @@ export {
   chat_filled,
   chat_media_gif,
   chat_media_image,
+  chat_notification_mute,
   chat_outline,
   chats_active,
   chats_dot,

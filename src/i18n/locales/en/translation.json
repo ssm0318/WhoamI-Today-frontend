@@ -253,9 +253,11 @@
     }
   },
   "chat_room": {
-    "noti_settings": {
-      "title": "Notification",
-      "mute": "Mute conversation"
+    "noti_setting_dialog": {
+      "title": "Mute Chats?",
+      "content": "You will not receive notifications from this chat until you click the mute icon again.",
+      "cancel": "Cancel",
+      "confirm": "Mute"
     }
   },
   "friends": {
@@ -294,7 +296,10 @@
         "request": "Request"
       }
     },
-    "edit_friends": "Edit Friends",
+    "edit_friends": {
+      "title": "Edit Friends",
+      "save": "Save"
+    },
     "updated_profiles": "Updated Profiles",
     "friend_requests": "Friend Requests",
     "friend_requests_desc": "See friend requests & recommended friends",
