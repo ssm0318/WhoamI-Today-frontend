@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { Font, Layout, SvgIcon } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
-import { NavTabItem, TabWrapper } from './Tab.styled';
+import { NavTabItem, StyledTabItem, TabWrapper } from './Tab.styled';
 
 interface TabItemProps {
   to: string;
@@ -13,26 +13,39 @@ function TabItem({ to, type, size = 48 }: TabItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'nav_tab' });
   const myProfile = useBoundStore((state) => state.myProfile);
 
+  // TODO: 안읽은 메시지 개수 얻기
+  const unReadMsgCnt = 15;
+
   return (
     <NavTabItem to={to}>
       {({ isActive }) => (
-        <Layout.FlexCol w="100%" alignItems="center">
-          {type === 'my' && myProfile?.profile_image ? (
-            <img
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              src={myProfile.profile_image!}
-              width={32}
-              height={32}
-              alt={`${myProfile?.username ?? 'user'}-profile`}
-              className={`${isActive ? 'active' : ''}`}
-            />
-          ) : (
-            <SvgIcon name={isActive ? `${type}_active` : `${type}_inactive`} size={size} />
+        <StyledTabItem w="100%" alignItems="center" pt={5}>
+          {type === 'chats' && unReadMsgCnt > 0 && (
+            <Layout.Absolute r={0}>
+              <SvgIcon name="chats_dot" size={20} />
+              <Layout.Absolute l="50%" t="45%" tl={['-50%', '-50%']}>
+                <Typo type="label-small">{unReadMsgCnt > 99 ? '99+' : unReadMsgCnt}</Typo>
+              </Layout.Absolute>
+            </Layout.Absolute>
           )}
-          <Font.Body type="14_semibold" color={isActive ? 'PRIMARY' : 'LIGHT_GRAY'}>
+          <Layout.FlexCol pt={5}>
+            {type === 'my' && myProfile?.profile_image ? (
+              <img
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                src={myProfile.profile_image!}
+                width={32}
+                height={32}
+                alt={`${myProfile?.username ?? 'user'}-profile`}
+                className={`${isActive ? 'active' : ''}`}
+              />
+            ) : (
+              <SvgIcon name={isActive ? `${type}_active` : `${type}_inactive`} size={size} />
+            )}
+          </Layout.FlexCol>
+          <Typo type="label-large" color={isActive ? 'PRIMARY' : 'LIGHT_GRAY'}>
             {t(type)}
-          </Font.Body>
-        </Layout.FlexCol>
+          </Typo>
+        </StyledTabItem>
       )}
     </NavTabItem>
   );

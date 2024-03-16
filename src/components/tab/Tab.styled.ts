@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { BOTTOM_TABBAR_HEIGHT, MAX_WINDOW_WIDTH, Z_INDEX } from '@constants/layout';
+import { Layout } from '@design-system';
 
 export const TabWrapper = styled.nav`
   position: fixed;
@@ -31,4 +32,8 @@ export const NavTabItem = styled(NavLink)`
   .active {
     border: 2px solid ${({ theme }) => theme.PRIMARY};
   }
+`;
+
+export const StyledTabItem = styled(Layout.FlexCol)`
+  position: relative;
 `;

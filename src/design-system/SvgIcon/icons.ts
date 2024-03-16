@@ -96,6 +96,7 @@ const my_active = 'my_active';
 const my_inactive = 'my_inactive';
 const chats_active = 'chats_active';
 const chats_inactive = 'chats_inactive';
+const chats_dot = 'chats_dot';
 const delete_button = 'delete_button';
 const top_navigation_friend = 'top_navigation_friend';
 const top_navigation_edit = 'top_navigation_edit';
@@ -123,6 +124,7 @@ export {
   chat_media_image,
   chat_outline,
   chats_active,
+  chats_dot,
   chats_inactive,
   checkbox_checked,
   checkbox_default,
