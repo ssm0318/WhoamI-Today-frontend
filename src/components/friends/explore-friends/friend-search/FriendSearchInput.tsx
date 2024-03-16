@@ -7,9 +7,10 @@ import * as S from './FriendSearchInput.styled';
 interface Props {
   query: string;
   setQuery: Dispatch<SetStateAction<string>>;
+  fontSize?: number;
 }
 
-export default function FriendSearchInput({ query, setQuery }: Props) {
+export default function FriendSearchInput({ query, setQuery, fontSize }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.search' });
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchMode, setSearchMode] = useState(false);
@@ -51,6 +52,7 @@ export default function FriendSearchInput({ query, setQuery }: Props) {
           autoComplete="off"
           value={query}
           onChange={handleChangeInput}
+          fontSize={fontSize}
         />
         {query && <DeleteButton onClick={handleClickDeleteInput} size={44} />}
       </Layout.FlexRow>
