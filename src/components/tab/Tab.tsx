@@ -21,14 +21,14 @@ function TabItem({ to, type, size = 48 }: TabItemProps) {
       {({ isActive }) => (
         <StyledTabItem w="100%" alignItems="center" pt={5}>
           {type === 'chats' && unReadMsgCnt > 0 && (
-            <Layout.Absolute r={0}>
+            <Layout.Absolute t={5} r={0}>
               <SvgIcon name="chats_dot" size={20} />
               <Layout.Absolute l="50%" t="45%" tl={['-50%', '-50%']}>
                 <Typo type="label-small">{unReadMsgCnt > 99 ? '99+' : unReadMsgCnt}</Typo>
               </Layout.Absolute>
             </Layout.Absolute>
           )}
-          <Layout.FlexCol pt={5}>
+          <Layout.FlexCol pt={8}>
             {type === 'my' && myProfile?.profile_image ? (
               <img
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -55,10 +55,10 @@ export default function Tab() {
   return (
     <TabWrapper>
       <Layout.FlexRow w="100%" justifyContent="center" alignItems="center" gap={80} pt={4}>
-        <TabItem to="/friends" type="friends" size={32} />
+        <TabItem to="/friends" type="friends" size={28} />
         <TabItem to="/my" type="my" size={32} />
         {/* TODO: 안읽은 메시지 개수 노출 */}
-        <TabItem to="/chats" type="chats" size={32} />
+        <TabItem to="/chats" type="chats" size={28} />
       </Layout.FlexRow>
     </TabWrapper>
   );
