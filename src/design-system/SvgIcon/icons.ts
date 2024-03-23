@@ -100,7 +100,11 @@ const chat_media_gif = 'chat_media_gif';
 const green_dot = 'green_dot';
 const chat_notification_mute = 'chat_notification_mute';
 
-// 하단탭
+// Note
+const delete_image = 'delete_image';
+
+// FIXME: 하단 탭 아이콘 교체
+const my_profile = 'my_profile';
 const friends_active = 'friends_active';
 const friends_inactive = 'friends_inactive';
 const my_active = 'my_active';
@@ -108,7 +112,6 @@ const my_inactive = 'my_inactive';
 const chats_active = 'chats_active';
 const chats_inactive = 'chats_inactive';
 
-const my_profile = 'my_profile';
 const delete_button = 'delete_button';
 const top_navigation_friend = 'top_navigation_friend';
 const top_navigation_edit = 'top_navigation_edit';
@@ -162,6 +165,7 @@ export {
   default_profile,
   delete_button,
   delete_default,
+  delete_image,
   dots_menu,
   edit,
   edit_filled,

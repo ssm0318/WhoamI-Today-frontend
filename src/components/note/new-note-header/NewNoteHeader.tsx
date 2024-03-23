@@ -24,13 +24,17 @@ function NewNoteHeader({ title }: NewNoteHeaderProps) {
     <NewNoteHeaderWrapper>
       <Layout.FlexRow justifyContent="space-between" w="100%" h="100%" alignItems="center">
         <Layout.FlexRow gap={8} alignItems="center" onClick={cancelPost}>
-          {t('cancel')}
+          <Typo type="title-medium" color="BLACK">
+            {t('cancel')}
+          </Typo>
         </Layout.FlexRow>
         <Layout.FlexRow>
           <Typo type="head-line">{title}</Typo>
         </Layout.FlexRow>
         <Layout.FlexRow gap={8} alignItems="center" onClick={confirmPost}>
-          {t('post')}
+          <Typo type="title-medium" color="PRIMARY">
+            {t('post')}
+          </Typo>
         </Layout.FlexRow>
       </Layout.FlexRow>
     </NewNoteHeaderWrapper>
