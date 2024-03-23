@@ -109,11 +109,12 @@ function NewNoteContent() {
             alignItems: 'center',
           }}
           slidesPerView={1}
+          initialSlide={noteImages.length - 1}
         >
           {noteImages?.map((imgurl) => {
             return (
               <SwiperSlide>
-                <NewNoteImage url={imgurl} />
+                <NewNoteImage url={imgurl} noteImages={noteImages} setNoteImages={setNoteImages} />
               </SwiperSlide>
             );
           })}
