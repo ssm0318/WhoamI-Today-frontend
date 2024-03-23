@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+import ToastBar from '@components/_common/toast-bar/ToastBar';
 import { Colors } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -141,7 +142,10 @@ const router = createBrowserRouter([
 
 function App() {
   const spotifyManager = SpotifyManager.getInstance();
-
+  const { message: toastMessage, closeToast } = useBoundStore((state) => ({
+    message: state.message,
+    closeToast: state.closeToast,
+  }));
   const { setAppNotiPermission } = useBoundStore((state) => ({
     setAppNotiPermission: state.setAppNotiPermission,
   }));
@@ -163,6 +167,7 @@ function App() {
       <GlobalStyle />
       <ThemeProvider theme={Colors}>
         <RouterProvider router={router} />
+        {toastMessage && <ToastBar text={toastMessage} closeToastBar={closeToast} />}
       </ThemeProvider>
     </React.StrictMode>
   );

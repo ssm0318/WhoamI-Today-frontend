@@ -89,7 +89,9 @@
       "send_question": "Send to Friends",
       "new_response": "New Response",
       "cancel": "Cancel",
-      "what_is_your_response": "What's your response?"
+      "what_is_your_response": "What's your response?",
+      "posting": "Posting...",
+      "posted": "Posted🎉"
     },
     "send": {
       "ask": "ask",

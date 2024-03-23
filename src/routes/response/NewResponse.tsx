@@ -51,11 +51,14 @@ function NewResponse() {
     navigate(-1);
   };
 
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const handleClickPost = async () => {
     if (!questionId) return;
-    await responseQuestion({ question_id: Number(questionId), content: newResponse });
-    // TODO: 포스팅 완료 토스트 연동
     navigate('/my');
+    openToast(t('question.response.posting'));
+
+    await responseQuestion({ question_id: Number(questionId), content: newResponse });
+    openToast(t('question.response.posted'));
   };
 
   const disabledPost = !newResponse.trim().length;
