@@ -1,5 +1,6 @@
-import { ChangeEvent, KeyboardEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, KeyboardEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import NoteImageEdit from '@components/note/note-image-edit/NoteImageEdit';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
@@ -8,23 +9,26 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import 'swiper/css';
 // eslint-disable-next-line import/order
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Note } from '@models/note';
 import NewNoteImage from '../new-note-image/NewNoteImage';
 import { NoteInput } from './NoteInputBox.styled';
 
-function NewNoteContent() {
+interface NoteInformationProps {
+  noteInfo: Partial<Note>;
+  setNoteInfo: React.Dispatch<React.SetStateAction<Partial<Note>>>;
+}
+
+function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
   const PLACE_HOLDER = t('whats_on_your_mind');
 
-  const [inputValue, setInputValue] = useState<string>();
-  const [noteImages, setNoteImages] = useState<string[]>([]);
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [editImageUrl, setEditImageUrl] = useState<string>();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onClickAdd = () => {
-    if (noteImages.length < 10) inputRef.current?.click();
+    if (noteInfo.image && noteInfo.image.length < 10) inputRef.current?.click();
     else console.log('exceed 10 images');
   };
 
@@ -48,11 +52,17 @@ function NewNoteContent() {
   };
 
   const onCompleteImageCrop = (croppedImage: CroppedImg) => {
-    setNoteImages((images) => [...images, croppedImage.url]);
+    setNoteInfo((prevNoteInfo) => ({
+      ...prevNoteInfo,
+      image: [...(prevNoteInfo?.image || []), croppedImage.url],
+    }));
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(e.target.value);
+    setNoteInfo((prevNoteInfo) => ({
+      ...prevNoteInfo,
+      content: e.target.value,
+    }));
   };
 
   const handleKeyDownInput = (e: KeyboardEvent) => {
@@ -60,7 +70,6 @@ function NewNoteContent() {
     if (e.shiftKey) return;
 
     e.preventDefault();
-    // sendPost();
   };
 
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
@@ -76,7 +85,7 @@ function NewNoteContent() {
         <Layout.FlexCol w="100%" gap={8} pv={8}>
           <Font.Body type="16_semibold">{myProfile?.username}</Font.Body>
           <NoteInput
-            value={inputValue}
+            value={noteInfo.content}
             placeholder={PLACE_HOLDER}
             onChange={handleChangeInput}
             onKeyDown={handleKeyDownInput}
@@ -107,12 +116,12 @@ function NewNoteContent() {
             alignItems: 'center',
           }}
           slidesPerView={1}
-          initialSlide={noteImages.length - 1}
+          initialSlide={noteInfo.image && noteInfo.image.length - 1}
         >
-          {noteImages?.map((imgurl) => {
+          {noteInfo.image?.map((imgurl) => {
             return (
               <SwiperSlide>
-                <NewNoteImage url={imgurl} noteImages={noteImages} setNoteImages={setNoteImages} />
+                <NewNoteImage url={imgurl} noteImages={noteInfo.image} setNoteInfo={setNoteInfo} />
               </SwiperSlide>
             );
           })}

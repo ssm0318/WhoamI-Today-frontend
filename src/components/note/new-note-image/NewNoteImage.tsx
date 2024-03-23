@@ -1,15 +1,20 @@
+import React from 'react';
 import { Layout, SvgIcon } from '@design-system';
+import { Note } from '@models/note';
 
 interface NoteImageViewProps {
   url?: string;
   noteImages?: string[];
-  setNoteImages: (imglist: string[]) => void;
+  setNoteInfo: React.Dispatch<React.SetStateAction<Partial<Note>>>;
 }
 
-function NewNoteImage({ url, noteImages, setNoteImages }: NoteImageViewProps) {
+function NewNoteImage({ url, noteImages, setNoteInfo }: NoteImageViewProps) {
   const onImageDelete = () => {
     if (noteImages) {
-      setNoteImages(noteImages.filter((img) => img !== url));
+      setNoteInfo((prevNoteInfo) => ({
+        ...prevNoteInfo,
+        image: prevNoteInfo?.image?.filter((img) => img !== url) || [],
+      }));
     }
   };
 

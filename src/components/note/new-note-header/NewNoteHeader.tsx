@@ -1,13 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Layout, Typo } from '@design-system';
+import { Note } from '@models/note';
+import { postNote } from '@utils/apis/note';
 import { NewNoteHeaderWrapper } from './NewNoteHeader.styled';
 
 interface NewNoteHeaderProps {
   title: string;
+  noteInfo: Partial<Note>;
 }
 
-function NewNoteHeader({ title }: NewNoteHeaderProps) {
+function NewNoteHeader({ title, noteInfo }: NewNoteHeaderProps) {
   const navigate = useNavigate();
 
   const cancelPost = () => {
@@ -17,6 +20,7 @@ function NewNoteHeader({ title }: NewNoteHeaderProps) {
   // TODO: 게시물 업로드 toast message 추가
   const confirmPost = () => {
     navigate('/my');
+    postNote(noteInfo);
   };
 
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
