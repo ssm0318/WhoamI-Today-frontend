@@ -1,6 +1,7 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledFriendItem } from '@components/friends/explore-friends/friend-item/FriendItem.styled';
@@ -10,12 +11,13 @@ import {
   acceptFriendRequest,
   blockRecommendation,
   breakFriend,
+  cancelFriendRequest,
   rejectFriendRequest,
   requestFriend,
 } from '@utils/apis/user';
 
 interface Props {
-  type: 'requests' | 'recommended' | 'search';
+  type: 'sent_requests' | 'requests' | 'recommended' | 'search';
   user: User;
   disableRequest?: boolean;
   onClickConfirm?: () => void;
@@ -32,6 +34,8 @@ function FriendItem({
   onClickRequest,
 }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.friend_item' });
+
+  const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
 
   const handleClickConfirm = async (e: MouseEvent) => {
     e.stopPropagation();
@@ -52,10 +56,18 @@ function FriendItem({
       case 'recommended':
         await blockRecommendation(user.id);
         break;
-      default:
+      case 'sent_requests':
+        setIsDeleteDialogVisible(true);
         return;
+      default:
     }
 
+    onClickDelete?.();
+  };
+
+  const handleClickDeleteDialogConfirm = async () => {
+    await cancelFriendRequest(user.id);
+    setIsDeleteDialogVisible(false);
     onClickDelete?.();
   };
 
@@ -90,15 +102,27 @@ function FriendItem({
           <Button.Secondary status="normal" text={t('delete')} onClick={handleClickDelete} />
         </Layout.FlexRow>
       )}
-      {(type === 'recommended' || type === 'search') && (
+      {(type === 'recommended' || type === 'search' || type === 'sent_requests') && (
         <Layout.FlexRow gap={16} alignItems="center">
           <Button.Primary
             status={disableRequest ? 'disabled' : 'normal'}
-            text={t('request')}
+            text={type === 'sent_requests' ? t('requested') : t('request')}
             onClick={handleClickRequest}
           />
           <Icon name="close" size={16} onClick={handleClickDelete} />
         </Layout.FlexRow>
+      )}
+      {type === 'sent_requests' && isDeleteDialogVisible && (
+        <CommonDialog
+          visible={isDeleteDialogVisible}
+          title={t('delete_request_dialog.title')}
+          content={t('delete_request_dialog.content', { user: user.username })}
+          cancelText={t('delete_request_dialog.cancel')}
+          confirmText={t('delete_request_dialog.confirm')}
+          confirmTextColor="WARNING"
+          onClickConfirm={handleClickDeleteDialogConfirm}
+          onClickClose={() => setIsDeleteDialogVisible(false)}
+        />
       )}
     </StyledFriendItem>
   );

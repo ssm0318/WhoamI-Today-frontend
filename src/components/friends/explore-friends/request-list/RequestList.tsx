@@ -7,6 +7,7 @@ import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { FriendRequest } from '@models/api/user';
 import { getFriendRequests } from '@utils/apis/user';
+import { SentRequestsModal } from './SentRequestsModal';
 
 export default function RequestList() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.request_list' });
@@ -45,8 +46,10 @@ export default function RequestList() {
     });
   };
 
+  const [isSentRequestsModalVisible, setIsSentRequestsModalVisible] = useState(false);
+
   const handleClickSentRequests = () => {
-    console.log('TODO: 보낸 친구 요청 목록 보기');
+    setIsSentRequestsModalVisible(true);
   };
 
   if (!friendRequests) return <Loader />;
@@ -83,6 +86,12 @@ export default function RequestList() {
           title={t('no_requests.title')}
           text={t('no_requests.text')}
           bgColor="INPUT_GRAY"
+        />
+      )}
+      {isSentRequestsModalVisible && (
+        <SentRequestsModal
+          visible={isSentRequestsModalVisible}
+          onClose={() => setIsSentRequestsModalVisible(false)}
         />
       )}
     </Layout.FlexCol>
