@@ -14,7 +14,7 @@ function TabItem({ to, type, size = 48 }: TabItemProps) {
   const myProfile = useBoundStore((state) => state.myProfile);
 
   // TODO: 안읽은 메시지 개수 얻기
-  const unReadMsgCnt = 1500;
+  const unReadMsgCnt = 15;
 
   return (
     <NavTabItem to={to}>
@@ -53,7 +53,7 @@ export default function Tab() {
     <TabWrapper>
       <Layout.FlexRow w="100%" justifyContent="center" alignItems="center" gap={80} pt={4}>
         <TabItem to="/friends" type="friends" size={28} />
-        <TabItem to="/my" type="my" size={32} />
+        <TabItem to="/my" type="my" size={28} />
         <TabItem to="/chats" type="chats" size={28} />
       </Layout.FlexRow>
     </TabWrapper>

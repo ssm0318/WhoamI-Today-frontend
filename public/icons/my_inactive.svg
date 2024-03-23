@@ -1,10 +1,17 @@
-<svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="15" cy="15" r="15" fill="#D9D9D9"/>
-<mask id="mask0_4347_21911" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="2" y="5" width="26" height="26">
-<circle cx="15.0882" cy="17.8155" r="12.3402" fill="#E3F6FF" stroke="#D9D9D9" stroke-width="0.0416325"/>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_5105_185)">
+<path d="M16 30.6C24.0634 30.6 30.6 24.0634 30.6 16C30.6 7.93664 24.0634 1.39999 16 1.39999C7.93664 1.39999 1.39999 7.93664 1.39999 16C1.39999 24.0634 7.93664 30.6 16 30.6Z" fill="white" stroke="#D9D9D9" stroke-width="2.8"/>
+<mask id="mask0_5105_185" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="3" y="5" width="27" height="27">
+<path d="M16.185 30.4368C22.6937 30.4368 27.97 25.1605 27.97 18.6518C27.97 12.1431 22.6937 6.86679 16.185 6.86679C9.67632 6.86679 4.39999 12.1431 4.39999 18.6518C4.39999 25.1605 9.67632 30.4368 16.185 30.4368Z" fill="#E3F6FF" stroke="#D9D9D9" stroke-width="2.8"/>
 </mask>
-<g mask="url(#mask0_4347_21911)">
-<path d="M19.3528 13.5336C19.3528 15.6952 17.582 17.4487 15.3961 17.4487C13.2102 17.4487 11.4395 15.6952 11.4395 13.5336C11.4395 11.372 13.2102 9.61841 15.3961 9.61841C17.582 9.61841 19.3528 11.372 19.3528 13.5336Z" fill="white" stroke="white" stroke-width="0.138435"/>
-<path d="M10.1322 19.2081H20.1232C21.7729 19.2081 23.1103 20.5454 23.1103 22.1951V31.8197H7.14518V22.1951C7.14518 20.5454 8.48252 19.2081 10.1322 19.2081Z" fill="white" stroke="white" stroke-width="0.138435"/>
+<g mask="url(#mask0_5105_185)">
+<path d="M19.6 14.7411C19.6 16.7301 17.988 18.342 16 18.342C14.012 18.342 12.4 16.7301 12.4 14.7411C12.4 12.7522 14.012 11.1403 16 11.1403C17.988 11.1403 19.6 12.7522 19.6 14.7411Z" stroke="#D9D9D9" stroke-width="2.8"/>
+<path d="M10.8045 21.3694H21.4616C22.4888 21.3694 23.3216 22.2021 23.3216 23.2294V32.1694H8.94449V23.2294C8.94449 22.2021 9.77725 21.3694 10.8045 21.3694Z" stroke="#D9D9D9" stroke-width="2.8"/>
 </g>
+</g>
+<defs>
+<clipPath id="clip0_5105_185">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
 </svg>
