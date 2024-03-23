@@ -130,3 +130,9 @@ export interface FriendRequest {
   requester_detail: User;
   accepted: boolean;
 }
+
+export interface SentFriendRequest {
+  requestee_id: number;
+  requester_id: number;
+  requestee_detail: User;
+}

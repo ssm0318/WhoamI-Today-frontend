@@ -294,10 +294,23 @@
       "recommended_list": {
         "title": "RECOMMENDED FRIENDS ({{number}})"
       },
+      "sent_requests_modal": {
+        "title": "Sent Requests",
+        "no_contents": {
+          "title": "No Sent Requests."
+        }
+      },
       "friend_item": {
         "confirm": "Confirm",
         "delete": "Delete",
-        "request": "Request"
+        "request": "Request",
+        "requested": "Requested",
+        "delete_request_dialog": {
+          "title": "Delete request?",
+          "content": "{{user}} will not see your friend request anymore and will not be notified.",
+          "cancel": "Cancel",
+          "confirm": "Delete"
+        }
       }
     },
     "edit_friends": {

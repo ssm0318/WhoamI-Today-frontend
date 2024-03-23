@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from 'react';
 import { DEFAULT_MARGIN } from '@constants/layout';
+import { ColorKeys } from '@design-system';
 import * as S from './BottomModal.styled';
 
 interface BottomModalProps {
@@ -8,6 +9,7 @@ interface BottomModalProps {
   onClose?: () => void;
   children: React.ReactNode;
   bgColor?: string;
+  containerBgColor?: ColorKeys;
   maxHeight?: number; // 바텀 모달의 최대 높이
   TopComponent?: React.ReactNode; // 바텀 모달 위 컴포넌트
 }
@@ -17,6 +19,7 @@ function BottomModal({
   onClose,
   children,
   bgColor = 'rgba(0, 0, 0, 0.7)',
+  containerBgColor = 'WHITE',
   maxHeight = 450,
   TopComponent,
 }: BottomModalProps) {
@@ -49,7 +52,7 @@ function BottomModal({
           )}
         </S.Background>
       )}
-      <S.Container visible={visible} height={height}>
+      <S.Container visible={visible} height={height} bgColor={containerBgColor}>
         <S.Body ref={bodyRef}>{children}</S.Body>
       </S.Container>
     </>

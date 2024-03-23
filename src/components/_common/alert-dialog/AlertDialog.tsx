@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { MouseEvent, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import * as S from './AlertDialog.styled';
 
@@ -10,11 +10,18 @@ interface AlertDialogProps {
 }
 
 function AlertDialog({ children, visible, className, onClickDimmed }: AlertDialogProps) {
+  const onClick = (e: MouseEvent) => {
+    e.stopPropagation();
+    onClickDimmed?.();
+  };
+
   if (!visible) return null;
   return createPortal(
     <S.Container className={className}>
-      <S.Background onClick={onClickDimmed} />
-      <S.Body className="body">{children}</S.Body>
+      <S.Background onClick={onClick} />
+      <S.Body className="body" onClick={(e) => e.stopPropagation()}>
+        {children}
+      </S.Body>
     </S.Container>,
     document.getElementById('modal-container') || document.body,
   );

@@ -25,7 +25,7 @@ function CommonDialog({
   return (
     <StyledCommonDialog visible={visible} onClickDimmed={onClickClose}>
       <Layout.FlexCol w="100%" h="100%" alignItems="center">
-        <Layout.FlexCol className="text_area" w="100%" p={16}>
+        <Layout.FlexCol className="text_area" w="100%" p={16} alignItems="center">
           <Typo type="title-large" textAlign="center">
             {title}
           </Typo>
