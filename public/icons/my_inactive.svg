@@ -1,16 +1,10 @@
-<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="My default_Button">
-<circle id="Ellipse 451" cx="24" cy="24" r="15.25" fill="#F5F5F5" stroke="#D9D9D9" stroke-width="1.5"/>
-<g id="Mask group">
-<mask id="mask0_2075_7838" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="11" y="13" width="27" height="27">
-<circle id="Ellipse 449" cx="24.185" cy="26.6518" r="13.1628" fill="#E3F6FF" stroke="#D9D9D9" stroke-width="0.044408"/>
+<svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="15" cy="15" r="15" fill="#D9D9D9"/>
+<mask id="mask0_4347_21911" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="2" y="5" width="26" height="26">
+<circle cx="15.0882" cy="17.8155" r="12.3402" fill="#E3F6FF" stroke="#D9D9D9" stroke-width="0.0416325"/>
 </mask>
-<g mask="url(#mask0_2075_7838)">
-<g id="Group 36708">
-<path id="Vector" d="M28.6397 21.9902C28.6397 24.296 26.7509 26.1664 24.4193 26.1664C22.0877 26.1664 20.1988 24.296 20.1988 21.9902C20.1988 19.6845 22.0877 17.8141 24.4193 17.8141C26.7509 17.8141 28.6397 19.6845 28.6397 21.9902Z" fill="#D9D9D9" stroke="#D9D9D9" stroke-width="0.147664"/>
-<path id="Vector_2" d="M18.8044 28.0431H29.4615C31.2212 28.0431 32.6477 29.4696 32.6477 31.2292V41.4954H15.6183V31.2292C15.6183 29.4696 17.0448 28.0431 18.8044 28.0431Z" fill="#D9D9D9" stroke="#D9D9D9" stroke-width="0.147664"/>
-</g>
-</g>
-</g>
+<g mask="url(#mask0_4347_21911)">
+<path d="M19.3528 13.5336C19.3528 15.6952 17.582 17.4487 15.3961 17.4487C13.2102 17.4487 11.4395 15.6952 11.4395 13.5336C11.4395 11.372 13.2102 9.61841 15.3961 9.61841C17.582 9.61841 19.3528 11.372 19.3528 13.5336Z" fill="white" stroke="white" stroke-width="0.138435"/>
+<path d="M10.1322 19.2081H20.1232C21.7729 19.2081 23.1103 20.5454 23.1103 22.1951V31.8197H7.14518V22.1951C7.14518 20.5454 8.48252 19.2081 10.1322 19.2081Z" fill="white" stroke="white" stroke-width="0.138435"/>
 </g>
 </svg>
