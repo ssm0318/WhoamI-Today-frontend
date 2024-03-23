@@ -37,3 +37,8 @@ export const NavTabItem = styled(NavLink)`
 export const StyledTabItem = styled(Layout.FlexCol)`
   position: relative;
 `;
+
+export const StyledMessageCount = styled(Layout.Absolute)`
+  background-color: ${({ theme }) => theme.SECONDARY};
+  border-radius: 8px;
+`;
