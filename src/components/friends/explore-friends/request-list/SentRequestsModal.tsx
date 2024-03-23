@@ -56,32 +56,34 @@ export function SentRequestsModal({ visible, onClose }: Props) {
   return (
     <BottomModal visible={visible} onClose={onClose} maxHeight={contentHeight}>
       <Layout.FlexCol w="100%">
-        <StyledModalHeader w="100%" pv={12} bgColor="WHITE">
-          <StyledTitle w="100%" pt={5} alignItems="center" justifyContent="center">
-            <Layout.Absolute l={16} pv={3}>
-              <Icon name="close" size={20} padding={6} onClick={onClose} />
-            </Layout.Absolute>
-            <Typo type="title-large">{t('title')}</Typo>
-          </StyledTitle>
-        </StyledModalHeader>
-        <Layout.FlexCol w="100%" pv={12} ph={16} h={contentHeight}>
-          {sentRequests?.length > 0 ? (
-            <>
-              {sentRequests.map(({ requestee_id, requestee_detail }) => (
-                <FriendItem
-                  key={requestee_id}
-                  type="sent_requests"
-                  user={requestee_detail}
-                  disableRequest
-                  onClickDelete={updateList(requestee_id)}
-                />
-              ))}
-              <div ref={targetRef} />
-              {isLoading && <Loader />}
-            </>
-          ) : (
-            <NoContents title={t('no_contents.title')} bgColor="INPUT_GRAY" />
-          )}
+        <Layout.FlexCol w="100%" h={contentHeight}>
+          <StyledModalHeader w="100%" pv={12} bgColor="WHITE">
+            <StyledTitle w="100%" pt={5} alignItems="center" justifyContent="center">
+              <Layout.Absolute l={16} pv={3}>
+                <Icon name="close" size={20} padding={6} onClick={onClose} />
+              </Layout.Absolute>
+              <Typo type="title-large">{t('title')}</Typo>
+            </StyledTitle>
+          </StyledModalHeader>
+          <Layout.FlexCol w="100%" pv={12} ph={16}>
+            {sentRequests?.length > 0 ? (
+              <>
+                {sentRequests.map(({ requestee_id, requestee_detail }) => (
+                  <FriendItem
+                    key={requestee_id}
+                    type="sent_requests"
+                    user={requestee_detail}
+                    disableRequest
+                    onClickDelete={updateList(requestee_id)}
+                  />
+                ))}
+                <div ref={targetRef} />
+                {isLoading && <Loader />}
+              </>
+            ) : (
+              <NoContents title={t('no_contents.title')} bgColor="INPUT_GRAY" />
+            )}
+          </Layout.FlexCol>
         </Layout.FlexCol>
       </Layout.FlexCol>
     </BottomModal>
