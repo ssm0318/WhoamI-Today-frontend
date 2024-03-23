@@ -11,15 +11,19 @@ export interface ShareSettings {
   share_anonymously: boolean;
 }
 
-export interface Question extends ContentsCommon {
+export interface Question {
   type: 'Question';
-}
-
-export interface DailyQuestion extends Omit<Question, 'current_user_like_id' | 'like_count'> {
-  /** YYYY-MM-DD */
+  id: number;
+  content: string;
+  created_at: string;
+  is_admin_question: boolean;
   selected_dates: string[];
   selected: boolean;
-  is_admin_question: boolean;
+}
+
+export interface DailyQuestion extends Question {
+  author: string | null;
+  author_detail: User | AdminAuthor;
 }
 
 export interface ContentsCommon {
@@ -68,12 +72,8 @@ export interface Response extends ContentsCommon {
 }
 
 // 질문에 대한 답변 리스트
-export interface DayQuestion {
-  id: number;
-  type: 'Question';
-  content: string;
-  created_at: string;
-  is_admin_question: boolean;
+/** deprecated */
+export interface DayQuestion extends Omit<Question, 'selected_dates' | 'selected'> {
   responses: QuestionResponse[];
 }
 
