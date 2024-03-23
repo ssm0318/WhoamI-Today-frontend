@@ -7,6 +7,7 @@ import { createMomentSlice, MomentSlice } from './moment';
 import { createMyPageSlice, MyPageSlice } from './my';
 import { createNotificationSlice, NotificationSlice } from './notification';
 import { createSignUpInfoSlice, SignUpInfoSlice } from './signUpInfo';
+import { createToastSlice, ToastSlice } from './toast';
 import { createTodaysQuestionsSlice, TodaysQuestionsSlice } from './todaysQuestions';
 import { createUserSlice, UserSlice } from './user';
 
@@ -17,7 +18,8 @@ export type BoundState = MomentSlice &
   TodaysQuestionsSlice &
   UserSlice &
   NotificationSlice &
-  CheckInSlice;
+  CheckInSlice &
+  ToastSlice;
 
 export type SliceStateCreator<Slice> = StateCreator<
   BoundState,
@@ -44,5 +46,6 @@ export const useBoundStore = create<BoundState>()(
     ...createUserSlice(...a),
     ...createNotificationSlice(...a),
     ...createCheckInSlice(...a),
+    ...createToastSlice(...a),
   })),
 );
