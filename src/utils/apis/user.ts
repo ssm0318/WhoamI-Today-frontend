@@ -7,6 +7,7 @@ import {
   FriendRequest,
   PasswordConfirmError,
   PasswordError,
+  SentFriendRequest,
   SignInError,
   SignInParams,
   SignInResponse,
@@ -273,6 +274,14 @@ export const getFriendRequests = async (next?: string | null) => {
   const requestPage = next ? next.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<FriendRequest[]>>(
     `/user/friend-requests/${requestPage ? `?page=${requestPage}` : ''}`,
+  );
+  return data;
+};
+
+export const getSentFriendRequests = async (next?: string | null) => {
+  const requestPage = next ? next.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<SentFriendRequest[]>>(
+    `/user/friend-requests/sent/${requestPage ? `?page=${requestPage}` : ''}`,
   );
   return data;
 };
