@@ -19,3 +19,10 @@ export const StyledPromptCardButtons = styled(FlexRow)`
   position: absolute;
   bottom: 16px;
 `;
+
+export const StyledNewResponsePrompt = styled.div`
+  border: 2px solid ${({ theme }) => theme.LIGHT_GRAY};
+  border-radius: 12px;
+  padding: 16px;
+  width: 100%;
+`;

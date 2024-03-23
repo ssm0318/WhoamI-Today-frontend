@@ -20,7 +20,7 @@ export const getAllQuestions = async (page: string | null) => {
 };
 
 // GET question detail
-export const getQuestionDetail = async (id: number) => {
+export const getQuestionDetail = async (id: string) => {
   const { data } = await axios.get<Question>(`/qna/questions/${id}/`);
   return data;
 };
