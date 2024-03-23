@@ -54,14 +54,19 @@ function NewResponse() {
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const handleClickPost = async () => {
     if (!questionId) return;
-    openToast(t('question.response.posting'));
+    navigate('/my');
+    openToast({ message: t('question.response.posting') });
 
-    await responseQuestion({ question_id: Number(questionId), content: newResponse }).then(
-      (data) => {
-        navigate(`/responses/${data.id}`);
-      },
-    );
-    openToast(t('question.response.posted'));
+    const { id: newResponseId } = await responseQuestion({
+      question_id: Number(questionId),
+      content: newResponse,
+    });
+
+    openToast({
+      message: t('question.response.posted'),
+      actionText: t('question.response.view'),
+      action: () => navigate(`/responses/${newResponseId}`),
+    });
   };
 
   const disabledPost = !newResponse.trim().length;

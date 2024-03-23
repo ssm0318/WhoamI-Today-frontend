@@ -46,6 +46,7 @@ export default function ToastBar({
     >
       <AnimatedToastBarContainer
         state={animationState}
+        justifyContent={RightComponent ? 'space-between' : 'center'}
         bgColor="LIGHT_GRAY"
         rounded={12}
         ph={12}

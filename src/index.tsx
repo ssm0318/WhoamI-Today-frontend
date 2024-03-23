@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import ToastBar from '@components/_common/toast-bar/ToastBar';
-import { Colors } from '@design-system';
+import { Colors, Typo } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
 import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
@@ -142,8 +142,8 @@ const router = createBrowserRouter([
 
 function App() {
   const spotifyManager = SpotifyManager.getInstance();
-  const { message: toastMessage, closeToast } = useBoundStore((state) => ({
-    message: state.message,
+  const { toast, closeToast } = useBoundStore((state) => ({
+    toast: state.toast,
     closeToast: state.closeToast,
   }));
   const { setAppNotiPermission } = useBoundStore((state) => ({
@@ -167,7 +167,20 @@ function App() {
       <GlobalStyle />
       <ThemeProvider theme={Colors}>
         <RouterProvider router={router} />
-        {toastMessage && <ToastBar text={toastMessage} closeToastBar={closeToast} />}
+        {toast?.message && (
+          <ToastBar
+            text={toast?.message}
+            RightComponent={
+              toast.action &&
+              toast.actionText && (
+                <button type="button" onClick={toast.action}>
+                  <Typo type="title-medium">{toast.actionText}</Typo>
+                </button>
+              )
+            }
+            closeToastBar={closeToast}
+          />
+        )}
       </ThemeProvider>
     </React.StrictMode>
   );

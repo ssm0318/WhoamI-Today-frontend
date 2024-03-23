@@ -1,22 +1,27 @@
 import { SliceStateCreator } from './useBoundStore';
 
+interface Toast {
+  message: string;
+  actionText?: string | null;
+  action?: () => void;
+}
 interface ToastState {
-  message?: string;
+  toast?: Toast;
 }
 
 interface ToastAction {
-  openToast: (msg: string) => void;
+  openToast: (toast: Toast) => void;
   closeToast: () => void;
 }
 
 const initialState = {
-  message: undefined,
+  toast: undefined,
 };
 
 export type ToastSlice = ToastState & ToastAction;
 
 export const createToastSlice: SliceStateCreator<ToastSlice> = (set) => ({
   ...initialState,
-  openToast: (msg: string) => set(() => ({ message: msg }), false, 'toast/openToast'),
+  openToast: (toast: Toast) => set(() => ({ toast }), false, 'toast/openToast'),
   closeToast: () => set(() => ({ message: undefined }), false, 'toast/closeToast'),
 });
