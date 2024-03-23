@@ -92,6 +92,7 @@ const router = createBrowserRouter([
   { path: 'response-history/:questionId', element: <ResponseHistory /> },
   {
     path: 'questions',
+    loader: checkIfSignIn,
     children: [
       { path: '', element: <AllQuestions /> },
       { path: ':questionId/new', element: <NewResponse /> },

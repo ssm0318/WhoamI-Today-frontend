@@ -11,6 +11,7 @@ import { Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { Question } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
 import { getQuestionDetail } from '@utils/apis/question';
 import { FlexRow, LayoutBase } from 'src/design-system/layouts';
 
@@ -19,6 +20,8 @@ const isValidQuestionId = (questionId?: string): questionId is string =>
 
 function NewResponse() {
   const { questionId } = useParams();
+  const currentUser = useBoundStore.getState().myProfile;
+
   const [t] = useTranslation('translation', { keyPrefix: 'question.response' });
   const [question, setQuestion] = useState<FetchState<Question>>({ state: 'loading' });
 
@@ -36,6 +39,16 @@ function NewResponse() {
     <MainContainer>
       <SubHeader title={t('new_response')} />
       <LayoutBase mt={TITLE_HEADER_HEIGHT} w="100%" pt={20} ph={12}>
+        {currentUser && (
+          <FlexRow gap={4} alignItems="center" mb={12}>
+            <ProfileImage
+              imageUrl={currentUser.profile_image}
+              username={currentUser.username}
+              size={44}
+            />
+            <Typo type="title-medium">{currentUser.username}</Typo>
+          </FlexRow>
+        )}
         {question.state === 'loading' && <Loader />}
         {question.state === 'hasValue' && (
           <StyledNewResponsePrompt>
