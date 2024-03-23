@@ -105,7 +105,9 @@ function FriendItem({
       {(type === 'recommended' || type === 'search' || type === 'sent_requests') && (
         <Layout.FlexRow gap={16} alignItems="center">
           <Button.Primary
-            status={disableRequest ? 'disabled' : 'normal'}
+            status={
+              disableRequest ? (type === 'sent_requests' ? 'completed' : 'disabled') : 'normal'
+            }
             text={type === 'sent_requests' ? t('requested') : t('request')}
             onClick={handleClickRequest}
           />

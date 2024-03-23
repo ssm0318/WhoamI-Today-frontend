@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
-import { Divider } from '@components/_common/divider/Divider.styled';
 import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import NoContents from '@components/_common/no-contents/NoContents';
@@ -9,7 +9,7 @@ import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { SentFriendRequest } from '@models/api/user';
 import { getSentFriendRequests } from '@utils/apis/user';
 import FriendItem from '../friend-item/FriendItem';
-import { StyledTitle } from './SentRequestsModal.styled';
+import { StyledModalHeader, StyledTitle } from './SentRequestsModal.styled';
 
 interface Props {
   visible: boolean;
@@ -17,6 +17,9 @@ interface Props {
 }
 
 export function SentRequestsModal({ visible, onClose }: Props) {
+  const [t] = useTranslation('translation', {
+    keyPrefix: 'friends.explore_friends.sent_requests_modal',
+  });
   const [sentRequests, setSentRequests] = useState<SentFriendRequest[]>([]);
   const [nextUrl, setNextUrl] = useState<string | null>(null);
 
@@ -52,15 +55,16 @@ export function SentRequestsModal({ visible, onClose }: Props) {
 
   return (
     <BottomModal visible={visible} onClose={onClose} maxHeight={contentHeight}>
-      <Layout.FlexCol w="100%" bgColor="WHITE">
-        <StyledTitle w="100%" alignItems="center" justifyContent="center" pv={12}>
-          <Layout.Absolute l={16} pv={3}>
-            <Icon name="close" size={20} padding={6} onClick={onClose} />
-          </Layout.Absolute>
-          <Typo type="title-large">Sent Requests</Typo>
-        </StyledTitle>
-        <Divider width={1} />
-        <Layout.FlexCol w="100%" h={contentHeight} pv={12} ph={16}>
+      <Layout.FlexCol w="100%">
+        <StyledModalHeader w="100%" pv={12} bgColor="WHITE">
+          <StyledTitle w="100%" pt={5} alignItems="center" justifyContent="center">
+            <Layout.Absolute l={16} pv={3}>
+              <Icon name="close" size={20} padding={6} onClick={onClose} />
+            </Layout.Absolute>
+            <Typo type="title-large">{t('title')}</Typo>
+          </StyledTitle>
+        </StyledModalHeader>
+        <Layout.FlexCol w="100%" pv={12} ph={16} h={contentHeight}>
           {sentRequests?.length > 0 ? (
             <>
               {sentRequests.map(({ requestee_id, requestee_detail }) => (

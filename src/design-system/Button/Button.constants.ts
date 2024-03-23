@@ -42,7 +42,7 @@ export const buttonColorSettings: {
     normal: { background: 'DARK', text: 'WHITE' },
     hovered: { background: 'DARK', text: 'WHITE' },
     disabled: { background: 'LIGHT_GRAY', text: 'MEDIUM_GRAY' },
-    completed: { background: 'DARK', text: 'WHITE' },
+    completed: { background: 'MEDIUM_GRAY', text: 'WHITE' },
   },
   secondary: {
     normal: { background: 'WHITE', text: 'DARK', outline: 'DARK_GRAY' },

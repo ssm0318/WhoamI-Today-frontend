@@ -290,6 +290,9 @@
       "recommended_list": {
         "title": "RECOMMENDED FRIENDS ({{number}})"
       },
+      "sent_requests_modal": {
+        "title": "Sent Requests"
+      },
       "friend_item": {
         "confirm": "Confirm",
         "delete": "Delete",
