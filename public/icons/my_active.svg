@@ -1,16 +1,17 @@
-<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="My default_Button">
-<circle id="Ellipse 451" cx="24" cy="24" r="15.25" fill="#F5F5F5" stroke="#8700FF" stroke-width="1.5"/>
-<g id="Mask group">
-<mask id="mask0_2075_7844" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="11" y="13" width="27" height="27">
-<circle id="Ellipse 449" cx="24.185" cy="26.6518" r="13.1628" fill="#E3F6FF" stroke="#D9D9D9" stroke-width="0.044408"/>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_5105_193)">
+<path d="M16 31.4849C24.5604 31.4849 31.5 24.5453 31.5 15.9849C31.5 7.42445 24.5604 0.484863 16 0.484863C7.43959 0.484863 0.5 7.42445 0.5 15.9849C0.5 24.5453 7.43959 31.4849 16 31.4849Z" fill="#8700FF" stroke="#8700FF"/>
+<mask id="mask0_5105_193" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="3" y="6" width="26" height="30">
+<path d="M16 36C23.1797 36 29 29.2843 29 21C29 12.7157 23.1797 6 16 6C8.8203 6 3 12.7157 3 21C3 29.2843 8.8203 36 16 36Z" fill="white"/>
 </mask>
-<g mask="url(#mask0_2075_7844)">
-<g id="Group 36708">
-<path id="Vector" d="M28.6397 21.9902C28.6397 24.296 26.7509 26.1664 24.4193 26.1664C22.0877 26.1664 20.1988 24.296 20.1988 21.9902C20.1988 19.6845 22.0877 17.8141 24.4193 17.8141C26.7509 17.8141 28.6397 19.6845 28.6397 21.9902Z" fill="#8700FF" stroke="#D9D9D9" stroke-width="0.147664"/>
-<path id="Vector_2" d="M18.8044 28.0431H29.4615C31.2212 28.0431 32.6477 29.4696 32.6477 31.2292V41.4954H15.6183V31.2292C15.6183 29.4696 17.0448 28.0431 18.8044 28.0431Z" fill="#8700FF" stroke="#D9D9D9" stroke-width="0.147664"/>
+<g mask="url(#mask0_5105_193)">
+<path d="M16 20.1469C18.7614 20.1469 21 17.9757 21 15.2975C21 12.6193 18.7614 10.4482 16 10.4482C13.2386 10.4482 11 12.6193 11 15.2975C11 17.9757 13.2386 20.1469 16 20.1469Z" fill="white"/>
+<path d="M21.4616 20.3673H10.8045C9.00405 20.3673 7.54449 21.741 7.54449 23.4355V33.1673H24.7216V23.4355C24.7216 21.741 23.262 20.3673 21.4616 20.3673Z" fill="white"/>
 </g>
 </g>
-</g>
-</g>
+<defs>
+<clipPath id="clip0_5105_193">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
 </svg>

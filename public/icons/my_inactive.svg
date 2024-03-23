@@ -1,16 +1,17 @@
-<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="My default_Button">
-<circle id="Ellipse 451" cx="24" cy="24" r="15.25" fill="#F5F5F5" stroke="#D9D9D9" stroke-width="1.5"/>
-<g id="Mask group">
-<mask id="mask0_2075_7838" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="11" y="13" width="27" height="27">
-<circle id="Ellipse 449" cx="24.185" cy="26.6518" r="13.1628" fill="#E3F6FF" stroke="#D9D9D9" stroke-width="0.044408"/>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_5105_185)">
+<path d="M16 30.6C24.0634 30.6 30.6 24.0634 30.6 16C30.6 7.93664 24.0634 1.39999 16 1.39999C7.93664 1.39999 1.39999 7.93664 1.39999 16C1.39999 24.0634 7.93664 30.6 16 30.6Z" fill="white" stroke="#D9D9D9" stroke-width="2.8"/>
+<mask id="mask0_5105_185" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="3" y="5" width="27" height="27">
+<path d="M16.185 30.4368C22.6937 30.4368 27.97 25.1605 27.97 18.6518C27.97 12.1431 22.6937 6.86679 16.185 6.86679C9.67632 6.86679 4.39999 12.1431 4.39999 18.6518C4.39999 25.1605 9.67632 30.4368 16.185 30.4368Z" fill="#E3F6FF" stroke="#D9D9D9" stroke-width="2.8"/>
 </mask>
-<g mask="url(#mask0_2075_7838)">
-<g id="Group 36708">
-<path id="Vector" d="M28.6397 21.9902C28.6397 24.296 26.7509 26.1664 24.4193 26.1664C22.0877 26.1664 20.1988 24.296 20.1988 21.9902C20.1988 19.6845 22.0877 17.8141 24.4193 17.8141C26.7509 17.8141 28.6397 19.6845 28.6397 21.9902Z" fill="#D9D9D9" stroke="#D9D9D9" stroke-width="0.147664"/>
-<path id="Vector_2" d="M18.8044 28.0431H29.4615C31.2212 28.0431 32.6477 29.4696 32.6477 31.2292V41.4954H15.6183V31.2292C15.6183 29.4696 17.0448 28.0431 18.8044 28.0431Z" fill="#D9D9D9" stroke="#D9D9D9" stroke-width="0.147664"/>
+<g mask="url(#mask0_5105_185)">
+<path d="M19.6 14.7411C19.6 16.7301 17.988 18.342 16 18.342C14.012 18.342 12.4 16.7301 12.4 14.7411C12.4 12.7522 14.012 11.1403 16 11.1403C17.988 11.1403 19.6 12.7522 19.6 14.7411Z" stroke="#D9D9D9" stroke-width="2.8"/>
+<path d="M10.8045 21.3694H21.4616C22.4888 21.3694 23.3216 22.2021 23.3216 23.2294V32.1694H8.94449V23.2294C8.94449 22.2021 9.77725 21.3694 10.8045 21.3694Z" stroke="#D9D9D9" stroke-width="2.8"/>
 </g>
 </g>
-</g>
-</g>
+<defs>
+<clipPath id="clip0_5105_185">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
 </svg>
