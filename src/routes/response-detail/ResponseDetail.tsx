@@ -9,6 +9,7 @@ interface ResponseDetailProps {
   response: GetResponseDetailResponse;
 }
 
+// TODO: 답변 상세 페이지 디자인 업데이트 필요
 function ResponseDetail({ response }: ResponseDetailProps) {
   const { author_detail, created_at } = response;
 

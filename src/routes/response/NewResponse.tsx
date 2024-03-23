@@ -54,10 +54,13 @@ function NewResponse() {
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const handleClickPost = async () => {
     if (!questionId) return;
-    navigate('/my');
     openToast(t('question.response.posting'));
 
-    await responseQuestion({ question_id: Number(questionId), content: newResponse });
+    await responseQuestion({ question_id: Number(questionId), content: newResponse }).then(
+      (data) => {
+        navigate(`/responses/${data.id}`);
+      },
+    );
     openToast(t('question.response.posted'));
   };
 
