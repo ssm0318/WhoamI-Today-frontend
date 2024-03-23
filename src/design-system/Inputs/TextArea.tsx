@@ -6,7 +6,7 @@ import { FontType } from '../Font/Font.types';
 import { CommonTextArea, CommonTextAreaProps } from './TextArea.styled';
 
 export type TextAreaProps = {
-  label: string;
+  label?: string | null;
   labelType?: FontType;
   limit?: number;
 } & CommonTextAreaProps &
@@ -24,9 +24,11 @@ function TextArea(props: TextAreaProps) {
 
   return (
     <>
-      <Typo type={labelType} color={isFocused ? 'BLACK' : 'MEDIUM_GRAY'}>
-        {label}
-      </Typo>
+      {label && (
+        <Typo type={labelType} color={isFocused ? 'BLACK' : 'MEDIUM_GRAY'}>
+          {label}
+        </Typo>
+      )}
       <CommonTextArea {...inputProps} onFocus={handleFocus} onBlur={handleBlur} maxLength={limit} />
       {limit && (
         <Layout.FlexRow w="100%" justifyContent="flex-end" mt={4}>
