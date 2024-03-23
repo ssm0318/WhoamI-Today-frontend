@@ -97,7 +97,6 @@ const my_inactive = 'my_inactive';
 const chats_active = 'chats_active';
 const chats_inactive = 'chats_inactive';
 
-// FIXME: 하단 탭 아이콘 교체
 const my_profile = 'my_profile';
 const delete_button = 'delete_button';
 const top_navigation_friend = 'top_navigation_friend';
