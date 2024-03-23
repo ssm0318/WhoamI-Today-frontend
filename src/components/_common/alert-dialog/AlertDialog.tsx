@@ -19,7 +19,9 @@ function AlertDialog({ children, visible, className, onClickDimmed }: AlertDialo
   return createPortal(
     <S.Container className={className}>
       <S.Background onClick={onClick} />
-      <S.Body className="body">{children}</S.Body>
+      <S.Body className="body" onClick={(e) => e.stopPropagation()}>
+        {children}
+      </S.Body>
     </S.Container>,
     document.getElementById('modal-container') || document.body,
   );
