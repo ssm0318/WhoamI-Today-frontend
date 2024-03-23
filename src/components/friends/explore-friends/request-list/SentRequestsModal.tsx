@@ -80,7 +80,7 @@ export function SentRequestsModal({ visible, onClose }: Props) {
               {isLoading && <Loader />}
             </>
           ) : (
-            <NoContents title="보낸 친구요청이 없습니다." text="no contents" bgColor="INPUT_GRAY" />
+            <NoContents title={t('no_contents.title')} bgColor="INPUT_GRAY" />
           )}
         </Layout.FlexCol>
       </Layout.FlexCol>

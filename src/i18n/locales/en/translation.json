@@ -291,7 +291,10 @@
         "title": "RECOMMENDED FRIENDS ({{number}})"
       },
       "sent_requests_modal": {
-        "title": "Sent Requests"
+        "title": "Sent Requests",
+        "no_contents": {
+          "title": "No Sent Requests."
+        }
       },
       "friend_item": {
         "confirm": "Confirm",

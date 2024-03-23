@@ -286,7 +286,10 @@
         "title": "추천 친구 ({{number}})"
       },
       "sent_requests_modal": {
-        "title": "보낸 친구 요청 목록"
+        "title": "보낸 친구 요청 목록",
+        "no_contents": {
+          "title": "보낸 요청이 없습니다."
+        }
       },
       "friend_item": {
         "confirm": "수락",
