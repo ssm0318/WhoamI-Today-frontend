@@ -6,6 +6,7 @@ import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
+import { getChatRoomIdByUserId } from '@utils/apis/chat';
 import { addFriendToFavorite, deleteFavorite, hideFriend } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
 import { UpdatedChatNumber } from '../friend-list/FriendProfile.styled';
@@ -56,6 +57,12 @@ function UpdatedFriendItem({
     });
   };
 
+  const handleClickChat = async () => {
+    const roomId = await getChatRoomIdByUserId(id);
+    if (!roomId) return;
+    navigate(`/chats/${roomId}`);
+  };
+
   return (
     <SwipeLayout
       itemWidth={74}
@@ -104,7 +111,7 @@ function UpdatedFriendItem({
             <Icon name="friend_updates_profile" size={28} onClick={handleClickProfile} />
           </StyledUpdatedItemWrapper>
           <StyledUpdatedItemWrapper>
-            <Icon name="friend_updates_chat" size={28} />
+            <Icon name="friend_updates_chat" size={28} onClick={handleClickChat} />
             {new_chat && (
               <UpdatedChatNumber type="label-small" color="PRIMARY">
                 {new_chat}
