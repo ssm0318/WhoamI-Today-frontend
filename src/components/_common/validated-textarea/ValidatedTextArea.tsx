@@ -7,7 +7,7 @@ function ValidatedTextArea(props: ValidatedTextAreaProps) {
 
   return (
     <StyledValidatedTextArea>
-      <TextArea {...inputProps} />
+      <TextArea {...inputProps} underline />
     </StyledValidatedTextArea>
   );
 }

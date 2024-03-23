@@ -27,7 +27,7 @@ import My from './routes/My';
 import AllNotes from './routes/notes/AllNotes';
 import NoteDetail from './routes/notes/NoteDetail';
 import Notifications from './routes/Notifications';
-import ShortAnswerResponse from './routes/response/ShortAnswerResponse';
+import NewResponse from './routes/response/NewResponse';
 import ResponseDetailContainer from './routes/response-detail/ResponseDetailContainer';
 import ResponseHistory from './routes/ResponseHistory';
 import Root from './routes/Root';
@@ -92,9 +92,10 @@ const router = createBrowserRouter([
   { path: 'response-history/:questionId', element: <ResponseHistory /> },
   {
     path: 'questions',
+    loader: checkIfSignIn,
     children: [
       { path: '', element: <AllQuestions /> },
-      { path: ':questionId/short-answer', element: <ShortAnswerResponse /> },
+      { path: ':questionId/new', element: <NewResponse /> },
     ],
   },
   { path: 'responses/:responseId', element: <ResponseDetailContainer />, loader: checkIfSignIn },

@@ -2,7 +2,6 @@ import { PaginationResponse } from '@models/api/common';
 import { GetResponseHistoriesResponse, ResponseQuestionRequestParams } from '@models/api/question';
 import { DailyQuestion, Question, Response } from '@models/post';
 import axios from './axios';
-import { getDateRequestParams } from './common';
 
 // GET today's questions
 export const getTodayQuestions = async () => {
@@ -20,7 +19,7 @@ export const getAllQuestions = async (page: string | null) => {
 };
 
 // GET question detail
-export const getQuestionDetail = async (id: number) => {
+export const getQuestionDetail = async (id: string) => {
   const { data } = await axios.get<Question>(`/qna/questions/${id}/`);
   return data;
 };
@@ -41,10 +40,18 @@ export const requestResponse = async (
   );
 };
 
-// POST response today's question
-export const responseQuestion = async (params: ResponseQuestionRequestParams) => {
-  const { year, month, day } = getDateRequestParams(new Date());
-  const { data } = await axios.post<Response>(`/qna/responses/${year}/${month}/${day}/`, params);
+export const responseQuestion = async ({
+  question_id,
+  content,
+  share_friends = [],
+  share_groups = [],
+}: ResponseQuestionRequestParams) => {
+  const { data } = await axios.post<Response>(`/qna/responses/`, {
+    question_id,
+    content,
+    share_friends,
+    share_groups,
+  });
   return data;
 };
 
