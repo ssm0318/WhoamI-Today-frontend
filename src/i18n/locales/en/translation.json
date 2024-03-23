@@ -86,7 +86,8 @@
       "post": "Post",
       "complete": "Your answer has been posted!",
       "send_question_to_friends_now": "Send the question to friends now?",
-      "send_question": "Send to Friends"
+      "send_question": "Send to Friends",
+      "new_response": "New Response"
     },
     "send": {
       "ask": "ask",
