@@ -232,7 +232,8 @@
     "error": {
       "title": "Something's Wrong.",
       "text": "Please try again."
-    }
+    },
+    "question": "No questions found."
   },
   "chats": {
     "title": "Chats",

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledNewResponsePrompt } from '@components/_common/prompt/PromptCard.styled';
 import SubHeader from '@components/sub-header/SubHeader';
@@ -22,17 +23,22 @@ function NewResponse() {
   const { questionId } = useParams();
   const currentUser = useBoundStore.getState().myProfile;
 
-  const [t] = useTranslation('translation', { keyPrefix: 'question.response' });
+  const [t] = useTranslation('translation');
   const [question, setQuestion] = useState<FetchState<Question>>({ state: 'loading' });
 
   useAsyncEffect(async () => {
-    if (!isValidQuestionId(questionId)) return;
-    // TODO: 잘못된 접근 처리
+    if (!isValidQuestionId(questionId)) {
+      setQuestion({ state: 'hasError' });
+      return;
+    }
+
     getQuestionDetail(questionId)
       .then((data) => {
         setQuestion({ state: 'hasValue', data });
       })
-      .catch((error) => ({ state: 'hasError', error }));
+      .catch(() => {
+        setQuestion({ state: 'hasError' });
+      });
   }, []);
 
   const [newResponse, setNewResponse] = useState('');
@@ -57,16 +63,16 @@ function NewResponse() {
   return (
     <MainContainer>
       <SubHeader
-        title={t('new_response')}
+        title={t('question.response.new_response')}
         LeftComponent={
           <button type="button" onClick={handleClickCancel}>
-            <Typo type="title-large">{t('cancel')}</Typo>
+            <Typo type="title-large">{t('question.response.cancel')}</Typo>
           </button>
         }
         RightComponent={
           <button type="button" onClick={handleClickPost} disabled={disabledPost}>
             <Typo type="title-large" color={disabledPost ? 'MEDIUM_GRAY' : 'PRIMARY'}>
-              {t('post')}
+              {t('question.response.post')}
             </Typo>
           </button>
         }
@@ -87,7 +93,7 @@ function NewResponse() {
         {question.state === 'hasValue' && (
           <>
             <TextArea
-              placeholder={t('what_is_your_response') || ''}
+              placeholder={t('question.response.what_is_your_response') || ''}
               value={newResponse}
               onChange={handleChangeResponse}
             />
@@ -100,6 +106,7 @@ function NewResponse() {
             </StyledNewResponsePrompt>
           </>
         )}
+        {question.state === 'hasError' && <NoContents text={t('no_contents.question')} />}
       </LayoutBase>
     </MainContainer>
   );
