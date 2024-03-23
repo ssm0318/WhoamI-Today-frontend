@@ -24,7 +24,8 @@ function NewNoteContent() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onClickAdd = () => {
-    inputRef.current?.click();
+    if (noteImages.length < 10) inputRef.current?.click();
+    else console.log('exceed 10 images');
   };
 
   const onImageAdd = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,8 +48,6 @@ function NewNoteContent() {
   };
 
   const onCompleteImageCrop = (croppedImage: CroppedImg) => {
-    // setSignUpInfo({ profileImage: croppedImage.file });
-    // setProfileImagePreview(croppedImage.url);
     setNoteImages((images) => [...images, croppedImage.url]);
   };
 
@@ -68,7 +67,6 @@ function NewNoteContent() {
 
   return (
     <>
-      {/* <NewNoteHeader title={t('new_note_header.new_note')} /> */}
       <Layout.FlexRow w="100%" ph={DEFAULT_MARGIN} mt={TITLE_HEADER_HEIGHT} pv={12} gap={16}>
         <ProfileImage
           imageUrl={myProfile?.profile_image}
