@@ -30,7 +30,7 @@ function NoteListItem({ note }: NoteListItemProps) {
         <Typo type="label-medium" color="MEDIUM_GRAY">
           {convertTimeDiffByString(new Date(), new Date(created_at))}
         </Typo>
-        <Icon name="dots_menu" onClick={handleClickMore} />
+        <Icon name="dots_menu" size={24} onClick={handleClickMore} />
       </Layout.FlexRow>
       <Layout.FlexCol gap={8}>
         <Typo type="body-large" color="BLACK">
@@ -38,13 +38,13 @@ function NoteListItem({ note }: NoteListItemProps) {
         </Typo>
         <Layout.FlexRow gap={12}>
           <LikeButton postType="Note" post={note} iconSize={24} m={0} />
-          <Icon name="add_comment" onClick={handleClickComment} />
+          <Icon name="add_comment" size={24} onClick={handleClickComment} />
         </Layout.FlexRow>
         <Layout.FlexRow>
           <Typo type="label-large" color="BLACK">
-            {like_count} {t('likes')}
+            {like_count || 0} {t('likes')}
             {' ・ '}
-            {comment_count} {t('comments')}
+            {comment_count || 0} {t('comments')}
           </Typo>
         </Layout.FlexRow>
       </Layout.FlexCol>

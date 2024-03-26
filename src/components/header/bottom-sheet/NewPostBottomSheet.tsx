@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import Divider from '@components/_common/divider/Divider';
+import Icon from '@components/_common/icon/Icon';
 import { Font, Layout, Typo } from '@design-system';
 import { IconNames } from 'src/design-system/SvgIcon/SvgIcon.types';
-import Icon from '../icon/Icon';
 
 interface MenuItem {
   key: string;

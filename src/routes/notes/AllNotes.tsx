@@ -11,10 +11,10 @@ import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Note } from '@models/note';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getNoteList } from '@utils/apis/note';
+import { getMyNotes } from '@utils/apis/my';
 
 function AllNotes() {
-  const [t] = useTranslation('translation', { keyPrefix: 'notes' });
+  const [t] = useTranslation('translation');
   const { username } = useParams();
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
@@ -23,11 +23,11 @@ function AllNotes() {
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextPage === null) return setIsLoading(false);
-    await fetchQuestions(nextPage === undefined ? null : nextPage);
+    await fetchNotes(nextPage === undefined ? null : nextPage);
   });
 
-  const fetchQuestions = async (page: string | null) => {
-    const { results, next } = await getNoteList(page);
+  const fetchNotes = async (page: string | null) => {
+    const { results, next } = await getMyNotes(page);
     if (!results) return;
     setNextPage(next);
     setNoteList([...noteList, ...results]);
@@ -36,7 +36,7 @@ function AllNotes() {
 
   return (
     <MainContainer>
-      <SubHeader title={t('notes', { name: username || myProfile?.username })} />
+      <SubHeader title={t('notes.notes', { name: username || myProfile?.username })} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} pv={14} w="100%" ph={DEFAULT_MARGIN}>
         {noteList.map((note) => (
           <NoteListItem note={note} key={note.id} />
@@ -48,7 +48,7 @@ function AllNotes() {
           </Layout.FlexRow>
         )}
         {!isLoading && noteList.length < 1 && (
-          <NoContents text={t('no_contents.all_questions')} mv={10} />
+          <NoContents text={t('no_contents.all_notes')} mv={10} />
         )}
       </Layout.FlexCol>
     </MainContainer>

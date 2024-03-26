@@ -1,48 +1,44 @@
-import { MouseEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Font, Layout, SvgIcon } from '@design-system';
-import { Question } from '@models/post';
+import Icon from '@components/_common/icon/Icon';
+import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import { Layout, Typo } from '@design-system';
+import { DailyQuestion } from '@models/post';
+import { QuestionItemWrapper } from './QuestionItem.styled';
 
 interface QuestionItemProps {
-  question: Question;
+  question: DailyQuestion;
   onSend?: () => void;
-  disableClickQuestion?: boolean;
 }
 
-function QuestionItem({ question, onSend, disableClickQuestion = false }: QuestionItemProps) {
-  const { content } = question;
-  const navigate = useNavigate();
+function QuestionItem({ question, onSend }: QuestionItemProps) {
+  const { content, is_admin_question, author } = question;
 
-  const handleSend = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
+  const handleClickRespond = () => {
+    // TODO
+  };
+
+  const handleClickSend = () => {
+    // TODO
     onSend?.();
   };
 
-  const handleClickQuestion = () => {
-    if (disableClickQuestion) return;
-    navigate(`/response-history/${question.id}`);
-  };
-
   return (
-    <Layout.FlexCol
-      pt={22}
-      pb={20}
-      ph={20}
-      rounded={14.5}
-      bgColor="LIGHT"
-      w="100%"
-      alignItems="center"
-      onClick={handleClickQuestion}
-    >
-      <Font.Body type="20_regular" color="DARK" textAlign="center">
-        {content}
-      </Font.Body>
-      <Layout.FlexRow w="100%" alignItems="center" justifyContent="flex-end" mt={5}>
-        <button type="button" onClick={handleSend}>
-          <SvgIcon name="question_send" size={36} />
-        </button>
+    <QuestionItemWrapper p={16} rounded={12} w="100%">
+      <Layout.FlexRow gap={8} alignItems="center">
+        <ProfileImage
+          imageUrl={is_admin_question ? '/whoami-profile.svg' : null}
+          username={author ?? 'Whoami Today'}
+          size={28}
+        />
+        <Typo type="title-medium">Prompt of the day</Typo>
       </Layout.FlexRow>
-    </Layout.FlexCol>
+      <Typo type="body-large" mt={14}>
+        {content}
+      </Typo>
+      <Layout.FlexRow w="100%" alignItems="center" justifyContent="flex-end" gap={18} mt={4}>
+        <Icon name="question_respond" size={22} onClick={handleClickRespond} />
+        <Icon name="question_send" size={22} onClick={handleClickSend} />
+      </Layout.FlexRow>
+    </QuestionItemWrapper>
   );
 }
 

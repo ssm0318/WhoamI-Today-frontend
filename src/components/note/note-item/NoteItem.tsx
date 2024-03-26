@@ -49,7 +49,7 @@ function NoteItem({ note }: NoteItemProps) {
         <Typo type="label-medium" color="MEDIUM_GRAY">
           {convertTimeDiffByString(new Date(), new Date(created_at))}
         </Typo>
-        <Icon name="dots_menu" onClick={handleClickMore} />
+        <Icon name="dots_menu" size={24} onClick={handleClickMore} />
       </Layout.FlexRow>
       <Layout.FlexCol
         style={{
@@ -69,9 +69,9 @@ function NoteItem({ note }: NoteItemProps) {
           )}
         </Typo>
       </Layout.FlexCol>
-      <Layout.FlexRow gap={12}>
+      <Layout.FlexRow gap={12} alignItems="center">
         <LikeButton postType="Note" post={note} iconSize={24} m={0} />
-        <Icon name="comment" onClick={handleClickComment} />
+        <Icon name="add_comment" size={24} onClick={handleClickComment} />
       </Layout.FlexRow>
     </Layout.FlexCol>
   );

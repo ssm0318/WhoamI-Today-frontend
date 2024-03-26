@@ -30,7 +30,6 @@ import NoteDetail from './routes/notes/NoteDetail';
 import Notifications from './routes/Notifications';
 import NewResponse from './routes/response/NewResponse';
 import ResponseDetailContainer from './routes/response-detail/ResponseDetailContainer';
-import ResponseHistory from './routes/ResponseHistory';
 import Root from './routes/Root';
 import ConfirmPassword from './routes/settings/ConfirmPassword';
 import DeleteAccount from './routes/settings/DeleteAccount';
@@ -90,7 +89,6 @@ const router = createBrowserRouter([
     ],
   },
   { path: 'forgot-password', element: <ForgotPassword /> },
-  { path: 'response-history/:questionId', element: <ResponseHistory /> },
   {
     path: 'questions',
     loader: checkIfSignIn,

@@ -1,5 +1,5 @@
 import { PaginationResponse } from '@models/api/common';
-import { GetResponseHistoriesResponse, ResponseQuestionRequestParams } from '@models/api/question';
+import { ResponseQuestionRequestParams } from '@models/api/question';
 import { DailyQuestion, Question, Response } from '@models/post';
 import axios from './axios';
 
@@ -52,13 +52,5 @@ export const responseQuestion = async ({
     share_friends,
     share_groups,
   });
-  return data;
-};
-
-// GET all question response histories
-export const getResponseHistories = async (questionId: number) => {
-  const { data } = await axios.get<GetResponseHistoriesResponse>(
-    `/qna/questions/${questionId}/responses/`,
-  );
   return data;
 };

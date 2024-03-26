@@ -18,6 +18,7 @@ export const responseList: Response[] = [
     current_user_like_id: null,
     created_at: '2023-06-16',
     type: POST_TYPE.RESPONSE,
+    comment_count: 2,
     comments: [
       {
         id: 1,
@@ -103,11 +104,15 @@ export const responseList: Response[] = [
     question: {
       id: 1,
       content: 'Sample question',
+      author: null,
+      author_detail: {
+        color_hex: '#000000',
+      },
       created_at: '2023-05-31',
       type: 'Question',
+      selected: true,
       is_admin_question: true,
       selected_dates: [],
-      selected: false,
     },
     question_id: 1,
   },
@@ -128,15 +133,20 @@ export const responseList: Response[] = [
     current_user_like_id: null,
     created_at: '2023-06-02',
     type: POST_TYPE.RESPONSE,
+    comment_count: 0,
     comments: [],
     question: {
       id: 2,
       content: 'Question 2',
+      author: null,
+      author_detail: {
+        color_hex: '#000000',
+      },
       created_at: '2023-05-30',
       type: 'Question',
+      selected: true,
       is_admin_question: true,
       selected_dates: [],
-      selected: false,
     },
     question_id: 2,
   },
