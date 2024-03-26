@@ -5,7 +5,9 @@ import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorP
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import ProfileImageList from '@components/_common/profile-image-list/ProfileImageList';
 import { Layout, Typo } from '@design-system';
+import { userList } from '@mock/users';
 import { Note } from '@models/post';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 
@@ -24,6 +26,8 @@ function NoteItem({ note, isMyPage }: NoteItemProps) {
     e.stopPropagation();
     //
   };
+
+  const likedUserList = userList;
 
   const handleClickNote = () => {
     return navigate(`/notes/${id}`);
@@ -79,7 +83,7 @@ function NoteItem({ note, isMyPage }: NoteItemProps) {
       <Layout.FlexCol gap={8}>
         <Layout.FlexRow gap={16} alignItems="center">
           {isMyPage ? (
-            <Layout.FlexRow>{/* TODO 좋아요 누른 사람들 profile */}</Layout.FlexRow>
+            <ProfileImageList images={likedUserList.map((user) => user.profile_pic)} />
           ) : (
             <LikeButton postType="Note" post={note} iconSize={24} m={0} />
           )}

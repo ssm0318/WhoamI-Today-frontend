@@ -1,4 +1,4 @@
-import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import ProfileImageList from '@components/_common/profile-image-list/ProfileImageList';
 import { Layout, Typo } from '@design-system';
 import { User } from '@models/user';
 
@@ -18,11 +18,7 @@ function MutualFriendsInfo({ mutualFriends = [] }: MutualFriendsInfoProps) {
   if (!mutualFriends || mutualFriends.length === 0) return null;
   return (
     <Layout.FlexRow alignItems="center">
-      {mutualFriends.slice(0, 3).map((friend, index) => (
-        <Layout.FlexRow key={friend.id} ml={index === 0 ? 0 : -10} z={3 - index}>
-          <ProfileImage imageUrl={friend.profile_image} size={25} />
-        </Layout.FlexRow>
-      ))}
+      <ProfileImageList images={mutualFriends.map((friend) => friend.profile_image)} size={25} />
       <Typo ml={12} type="label-medium">
         {getFriendDescription(mutualFriends)}
       </Typo>

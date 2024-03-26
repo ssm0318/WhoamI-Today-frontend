@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import ProfileImageList from '@components/_common/profile-image-list/ProfileImageList';
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import { userList } from '@mock/users';
 import { Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
@@ -23,6 +25,8 @@ function ResponseItem({ response, isMyPage = false }: ResponseItemProps) {
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
+
+  const likedUserList = userList;
 
   const handleClickMore = () => {
     // TODO
@@ -86,7 +90,7 @@ function ResponseItem({ response, isMyPage = false }: ResponseItemProps) {
         <QuestionItem question={question} />
         <Layout.FlexRow gap={16} alignItems="center">
           {isMyPage ? (
-            <Layout.FlexRow>{/* TODO 좋아요 누른 사람들 profile */}</Layout.FlexRow>
+            <ProfileImageList images={likedUserList.map((user) => user.profile_pic)} />
           ) : (
             <LikeButton
               postType="Response"
