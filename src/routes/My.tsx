@@ -20,12 +20,12 @@ function My() {
       >
         <Profile user={myProfile} />
       </Layout.FlexRow>
-      <Divider width={1} />
+      <Divider width={8} bgColor="LIGHT" />
       <Layout.FlexCol pv={12} pl={12} w="100%">
         <ResponseSection isMyPage />
       </Layout.FlexCol>
-      <Divider width={1} />
-      <Layout.FlexCol pt={12} pl={12} w="100%">
+      <Divider width={8} bgColor="LIGHT" />
+      <Layout.FlexCol pt={12} pl={12} pb="default" w="100%">
         <NoteSection isMyPage />
       </Layout.FlexCol>
     </Layout.FlexCol>

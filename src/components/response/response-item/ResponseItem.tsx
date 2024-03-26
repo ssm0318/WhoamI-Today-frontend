@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import Icon from '@components/_common/icon/Icon';
-import LikeButton from '@components/_common/like-button/LikeButton';
+import PostFooter from '@components/_common/post-footer/PostFooter';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import ProfileImageList from '@components/_common/profile-image-list/ProfileImageList';
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
-import { userList } from '@mock/users';
+import { friendList } from '@mock/friends';
 import { Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
@@ -20,22 +18,16 @@ interface ResponseItemProps {
 function ResponseItem({ response, isMyPage = false }: ResponseItemProps) {
   // TODO Gina BE main 브랜치 merge 후 수정 필요 (author_detail)
   // const { content, created_at, author_detail, question, like_count, comment_count } = response;
-  const { content, created_at, question, comment_count } = response;
+  const { content, created_at, question } = response;
   // const { username } = getAuthorProfileInfo(author_detail);
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
-  const [t] = useTranslation('translation', { keyPrefix: 'responses' });
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
 
-  const likedUserList = userList;
+  const likedUserList = friendList;
 
   const handleClickMore = () => {
     // TODO
     console.log('more');
-  };
-
-  const handleClickComment = () => {
-    // TODO
-    console.log('comment');
   };
 
   useEffect(() => {
@@ -88,24 +80,7 @@ function ResponseItem({ response, isMyPage = false }: ResponseItemProps) {
           <Layout.FlexRow w="100%" justifyContent="flex-end" />
         </Layout.FlexCol>
         <QuestionItem question={question} />
-        <Layout.FlexRow gap={16} alignItems="center">
-          {isMyPage ? (
-            <ProfileImageList images={likedUserList.map((user) => user.profile_pic)} />
-          ) : (
-            <LikeButton
-              postType="Response"
-              post={response}
-              iconSize={BOTTOM_ICON_SECTION_HEIGHT}
-              m={0}
-            />
-          )}
-          <Icon name="add_comment" size={BOTTOM_ICON_SECTION_HEIGHT} onClick={handleClickComment} />
-        </Layout.FlexRow>
-        <Layout.FlexRow>
-          <Typo type="label-large" color="BLACK" underline>
-            {comment_count || 0} {t('comments')}
-          </Typo>
-        </Layout.FlexRow>
+        <PostFooter likedUserList={likedUserList} isMyPage={isMyPage} post={response} />
       </Layout.FlexCol>
     </Layout.FlexRow>
   );
@@ -115,7 +90,6 @@ export default ResponseItem;
 
 const PROFILE_IMAGE_SIZE = 44;
 const WRAPPER_PADDING = 12;
-const BOTTOM_ICON_SECTION_HEIGHT = 24;
 
 const NOTE_GAP = 16;
 const NOTE_MARGIN = 12;

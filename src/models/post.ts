@@ -4,6 +4,7 @@ import { User } from './user';
 export enum POST_TYPE {
   RESPONSE = 'Response',
   QUESTION = 'Question',
+  NOTE = 'Note',
 }
 
 export interface ShareSettings {
@@ -73,6 +74,7 @@ export interface Response extends ContentsCommon {
 }
 
 export interface Note extends ContentsCommon {
+  type: POST_TYPE.NOTE;
   images: string[];
   comment_count: number | null;
 }
