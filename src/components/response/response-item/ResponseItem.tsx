@@ -37,7 +37,7 @@ function ResponseItem({ response, isMyPage = false }: ResponseItemProps) {
   }, [content]);
 
   return (
-    <Layout.FlexRow p={WRAPPER_PADDING} rounded={12} outline="LIGHT" h="100%" w={NOTE_WIDTH}>
+    <Layout.FlexRow p={WRAPPER_PADDING} rounded={12} outline="LIGHT" h="100%" w={RESPONSE_WIDTH}>
       <Layout.FlexCol gap={8} w="100%">
         <Layout.FlexRow
           w="100%"
@@ -91,9 +91,9 @@ export default ResponseItem;
 const PROFILE_IMAGE_SIZE = 44;
 const WRAPPER_PADDING = 12;
 
-const NOTE_GAP = 16;
-const NOTE_MARGIN = 12;
-export const NOTE_WIDTH = SCREEN_WIDTH - 4 * NOTE_MARGIN - NOTE_GAP * 2;
-export const NOTE_HEIGHT = 368;
+const RESPONSE_GAP = 16;
+const RESPONSE_MARGIN = 12;
+export const RESPONSE_WIDTH = SCREEN_WIDTH - 4 * RESPONSE_MARGIN - RESPONSE_GAP * 2;
+export const RESPONSE_HEIGHT = 368;
 
 const MAX_RESPONSE_CONTENT_LENGTH = 140;
