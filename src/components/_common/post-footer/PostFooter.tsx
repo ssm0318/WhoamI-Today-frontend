@@ -34,11 +34,13 @@ function PostFooter({ likedUserList, isMyPage, post }: PostFooterProps) {
         )}
         <Icon name="add_comment" size={23} onClick={handleClickComment} />
       </Layout.FlexRow>
-      <Layout.FlexRow>
-        <Typo type="label-large" color="BLACK" underline>
-          {comment_count || 0} {t('comments')}
-        </Typo>
-      </Layout.FlexRow>
+      {!!comment_count && (
+        <Layout.FlexRow>
+          <Typo type="label-large" color="BLACK" underline>
+            {comment_count || 0} {t('comments')}
+          </Typo>
+        </Layout.FlexRow>
+      )}
     </Layout.FlexCol>
   );
 }

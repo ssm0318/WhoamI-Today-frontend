@@ -24,11 +24,12 @@ function MoreResponseButton({ isMyPage, username }: MoreResponseButtonProps) {
       alignItems="center"
       gap={4}
       w={MORE_RESPONSE_BUTTON_WIDTH}
+      onClick={handleClick}
     >
       <Typo type="button-medium" color="DARK_GRAY">
         {t('responses.more')}
       </Typo>
-      <Icon size={32} name="arrow_right" onClick={handleClick} />
+      <Icon size={32} name="arrow_right" />
     </Layout.FlexRow>
   );
 }

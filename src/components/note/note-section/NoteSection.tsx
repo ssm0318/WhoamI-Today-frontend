@@ -1,8 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import { Layout, Typo } from '@design-system';
-import useAsyncEffect from '@hooks/useAsyncEffect';
+import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMyNotes } from '@utils/apis/my';
@@ -17,14 +18,20 @@ function NoteSection({ isMyPage }: NoteSectionProps) {
 
   const myProfile = useBoundStore((state) => state.myProfile);
   const [noteList, setNoteList] = useState<Note[]>([]);
+  const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
-  const fetchNotes = useCallback(async () => {
-    const { results } = await getMyNotes(null);
+  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
+    if (nextPage === null) return setIsLoading(false);
+    await fetchNotes(nextPage ?? null);
+  });
+
+  const fetchNotes = async (page: string | null) => {
+    const { results, next } = await getMyNotes(page);
     if (!results) return;
-    setNoteList(results);
-  }, []);
-
-  useAsyncEffect(fetchNotes, [fetchNotes]);
+    setNextPage(next);
+    setNoteList([...noteList, ...results]);
+    setIsLoading(false);
+  };
 
   if (!myProfile) return null;
   return (
@@ -44,6 +51,12 @@ function NoteSection({ isMyPage }: NoteSectionProps) {
             noteList.map((note) => <NoteItem key={note.id} note={note} isMyPage={isMyPage} />)
           )}
         </Layout.FlexCol>
+        <div ref={targetRef} />
+        {isLoading && (
+          <Layout.FlexRow w="100%" h={40}>
+            <Loader />
+          </Layout.FlexRow>
+        )}
       </Layout.FlexCol>
     </>
   );
