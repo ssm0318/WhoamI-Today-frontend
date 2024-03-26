@@ -8,15 +8,16 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import { Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMyResponses } from '@utils/apis/my';
+import MoreResponseButton from '../more-response-button/MoreResponseButton';
 import ResponseItem from '../response-item/ResponseItem';
 import * as S from './ResponseSection.styled';
 
 type ResponseSectionProps = {
   isMyPage: boolean;
+  username?: string;
 };
 
-// TODO: infinite scroll
-function ResponseSection({ isMyPage }: ResponseSectionProps) {
+function ResponseSection({ isMyPage, username }: ResponseSectionProps) {
   const myProfile = useBoundStore((state) => state.myProfile);
   const [responses, setResponses] = useState<Response[]>([]);
   const [t] = useTranslation('translation');
@@ -29,7 +30,7 @@ function ResponseSection({ isMyPage }: ResponseSectionProps) {
   }, []);
 
   const handleClickMore = () => {
-    navigate(`/responses`);
+    navigate(isMyPage ? '/my/responses' : `/users/${username}/responses`);
   };
 
   useAsyncEffect(fetchResponses, [fetchResponses]);
@@ -56,6 +57,7 @@ function ResponseSection({ isMyPage }: ResponseSectionProps) {
               ))
             )}
           </Layout.FlexRow>
+          <MoreResponseButton isMyPage={isMyPage} />
         </Layout.FlexRow>
       </S.ResponseSectionWrapper>
     </>

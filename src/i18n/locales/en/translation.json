@@ -171,7 +171,8 @@
   "responses": {
     "title": "Responses",
     "comments": "comments",
-    "likes": "likes"
+    "likes": "likes",
+    "more": "More"
   },
   "settings": {
     "title": "Settings",

@@ -168,7 +168,8 @@
   "responses": {
     "title": "답변",
     "comments": "댓글",
-    "likes": "좋아요"
+    "likes": "좋아요",
+    "more": "더보기"
   },
   "settings": {
     "title": "설정",

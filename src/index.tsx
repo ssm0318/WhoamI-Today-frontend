@@ -62,6 +62,7 @@ const router = createBrowserRouter([
       {
         path: 'my',
         element: <My />,
+        children: [{ path: 'responses', element: null }],
       },
       {
         path: 'friends',
