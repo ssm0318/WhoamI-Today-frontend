@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorProfile.helper';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -16,8 +15,10 @@ interface ResponseItemProps {
 }
 
 function ResponseItem({ response }: ResponseItemProps) {
-  const { content, created_at, author_detail, question, like_count, comment_count } = response;
-  const { username } = getAuthorProfileInfo(author_detail);
+  // TODO Gina BE main 브랜치 merge 후 수정 필요 (author_detail)
+  // const { content, created_at, author_detail, question, like_count, comment_count } = response;
+  const { content, created_at, question, like_count, comment_count } = response;
+  // const { username } = getAuthorProfileInfo(author_detail);
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [replyHeight, setReplyHeight] = useState<number>(0);
@@ -70,7 +71,7 @@ function ResponseItem({ response }: ResponseItemProps) {
         >
           {/* author, created_at 정보 */}
           <Layout.FlexRow alignItems="center" gap={8}>
-            <Typo type="title-medium">{username}</Typo>
+            <Typo type="title-medium">TODO USERNAME</Typo>
             <Typo type="label-medium" color="MEDIUM_GRAY">
               {convertTimeDiffByString(new Date(), new Date(created_at))}
             </Typo>
