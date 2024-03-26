@@ -11,6 +11,7 @@ function My() {
 
   return (
     <Layout.FlexCol w="100%" bgColor="WHITE">
+      <Divider width={8} bgColor="LIGHT" />
       <Layout.FlexRow
         w="100%"
         alignItems="center"
