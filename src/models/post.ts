@@ -72,6 +72,11 @@ export interface Response extends ContentsCommon {
   comment_count: number | null;
 }
 
+export interface Note extends ContentsCommon {
+  images: string[];
+  comment_count: number | null;
+}
+
 // 질문에 대한 답변 리스트
 /** deprecated */
 export interface DayQuestion extends Omit<Question, 'selected_dates' | 'selected'> {

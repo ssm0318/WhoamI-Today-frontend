@@ -10,7 +10,7 @@ interface QuestionItemProps {
 }
 
 function QuestionItem({ question, onSend }: QuestionItemProps) {
-  const { content, is_admin_question, author } = question;
+  const { content } = question;
 
   const handleClickRespond = () => {
     // TODO
@@ -24,11 +24,7 @@ function QuestionItem({ question, onSend }: QuestionItemProps) {
   return (
     <QuestionItemWrapper p={16} rounded={12} w="100%">
       <Layout.FlexRow gap={8} alignItems="center">
-        <ProfileImage
-          imageUrl={is_admin_question ? '/whoami-profile.svg' : null}
-          username={author ?? 'Whoami Today'}
-          size={28}
-        />
+        <ProfileImage imageUrl="/whoami-profile.svg" username="Whoami Today" size={28} />
         <Typo type="title-medium">Prompt of the day</Typo>
       </Layout.FlexRow>
       <Typo type="body-large" mt={14}>

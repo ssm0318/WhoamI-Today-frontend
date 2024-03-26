@@ -1,7 +1,6 @@
 import { PaginationResponse } from '@models/api/common';
 import { MyProfile } from '@models/api/user';
-import { Note } from '@models/note';
-import { Response } from '@models/post';
+import { Note, Response } from '@models/post';
 import { UserProfile } from '@models/user';
 import axios, { axiosFormDataInstance } from './axios';
 

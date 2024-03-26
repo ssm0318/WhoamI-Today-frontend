@@ -1,7 +1,6 @@
 import { MouseEvent, useState } from 'react';
 import { Layout, SvgIcon } from '@design-system';
-import { Note } from '@models/note';
-import { Comment, MomentPost, QuestionResponse, Response } from '@models/post';
+import { Comment, MomentPost, Note, QuestionResponse, Response } from '@models/post';
 import { deleteLike, postLike } from '@utils/apis/likes';
 import * as S from './LikeButton.styled';
 

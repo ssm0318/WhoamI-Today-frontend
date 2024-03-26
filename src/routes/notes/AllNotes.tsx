@@ -9,7 +9,7 @@ import SubHeader from '@components/sub-header/SubHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
-import { Note } from '@models/note';
+import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMyNotes } from '@utils/apis/my';
 

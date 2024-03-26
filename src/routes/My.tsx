@@ -22,11 +22,11 @@ function My() {
       </Layout.FlexRow>
       <Divider width={1} />
       <Layout.FlexCol pv={12} pl={12} w="100%">
-        <NoteSection />
+        <ResponseSection isMyPage />
       </Layout.FlexCol>
       <Divider width={1} />
       <Layout.FlexCol pt={12} pl={12} w="100%">
-        <ResponseSection />
+        <NoteSection isMyPage />
       </Layout.FlexCol>
     </Layout.FlexCol>
   );

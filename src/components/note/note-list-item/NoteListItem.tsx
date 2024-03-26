@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import { Layout, Typo } from '@design-system';
-import { Note } from '@models/note';
+import { Note } from '@models/post';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import * as S from './NoteListItem.styled';
 
