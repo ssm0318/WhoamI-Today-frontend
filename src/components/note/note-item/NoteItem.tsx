@@ -4,10 +4,12 @@ import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorP
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { friendList } from '@mock/friends';
 import { Note } from '@models/post';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
+import NoteImageList from '../note-image-list/NoteImageList';
 
 interface NoteItemProps {
   note: Note;
@@ -37,7 +39,14 @@ function NoteItem({ note, isMyPage }: NoteItemProps) {
   }, [content]);
 
   return (
-    <Layout.FlexCol w="100%" p={12} gap={8} outline="LIGHT" rounded={12} onClick={handleClickNote}>
+    <Layout.FlexCol
+      w={SCREEN_WIDTH - 12 * 2}
+      p={12}
+      gap={8}
+      outline="LIGHT"
+      rounded={12}
+      onClick={handleClickNote}
+    >
       <Layout.FlexRow
         w="100%"
         alignItems="center"
@@ -72,6 +81,9 @@ function NoteItem({ note, isMyPage }: NoteItemProps) {
             content
           )}
         </Typo>
+        <Layout.FlexRow w="100%" mv={10}>
+          <NoteImageList images={likedUserList?.map((user) => user.profile_image || '') || []} />
+        </Layout.FlexRow>
       </Layout.FlexCol>
       <PostFooter likedUserList={likedUserList} isMyPage={isMyPage} post={note} />
     </Layout.FlexCol>

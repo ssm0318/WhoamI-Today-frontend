@@ -26,7 +26,9 @@
       }
     }
   },
-  "overrides": [],
+  "overrides": [
+
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -47,6 +49,7 @@
     "@typescript-eslint/no-unused-vars": ["error"],
     "@typescript-eslint/no-shadow": ["error"],
     "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/no-empty-function": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": false }],
     "react/jsx-props-no-spreading": "off",
     "consistent-return": "off",
