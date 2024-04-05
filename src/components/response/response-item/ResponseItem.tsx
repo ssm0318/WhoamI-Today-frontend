@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorProfile.helper';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -6,7 +7,6 @@ import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { friendList } from '@mock/friends';
 import { Response } from '@models/post';
-import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
@@ -16,11 +16,8 @@ interface ResponseItemProps {
 }
 
 function ResponseItem({ response, isMyPage = false }: ResponseItemProps) {
-  // TODO Gina BE main 브랜치 merge 후 수정 필요 (author_detail)
-  // const { content, created_at, author_detail, question, like_count, comment_count } = response;
-  const { content, created_at, question } = response;
-  // const { username } = getAuthorProfileInfo(author_detail);
-  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+  const { content, created_at, author_detail, question } = response;
+  const { username, imageUrl } = getAuthorProfileInfo(author_detail);
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
 
   const likedUserList = friendList;
@@ -46,14 +43,10 @@ function ResponseItem({ response, isMyPage = false }: ResponseItemProps) {
           h={PROFILE_IMAGE_SIZE}
         >
           <Layout.FlexRow w="100%" alignItems="center" gap={8}>
-            <ProfileImage
-              imageUrl={myProfile?.profile_image}
-              username={myProfile?.username}
-              size={PROFILE_IMAGE_SIZE}
-            />
+            <ProfileImage imageUrl={imageUrl} username={username} size={PROFILE_IMAGE_SIZE} />
             {/* author, created_at 정보 */}
             <Layout.FlexRow alignItems="center" gap={8}>
-              <Typo type="title-medium">USERNAME</Typo>
+              <Typo type="title-medium">{username}</Typo>
               <Typo type="label-medium" color="MEDIUM_GRAY">
                 {convertTimeDiffByString(new Date(), new Date(created_at))}
               </Typo>
