@@ -14,12 +14,15 @@ export interface ChatMessage {
   timestamp: string;
 }
 
-export interface SocketMessage {
-  message: string;
+export interface ChatSocketData {
+  content: string;
   userName: string;
   timestamp: string;
 }
 
-export interface SocketMessageInput extends Omit<SocketMessage, 'timestamp'> {
+type SendChatSocketDataAction = 'message' | 'like' | 'remove_like';
+
+export interface SendChatSocketData extends Omit<ChatSocketData, 'timestamp'> {
   userId: number;
+  action: SendChatSocketDataAction;
 }

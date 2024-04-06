@@ -10,7 +10,7 @@ import { TOP_NAVIGATION_HEIGHT, Z_INDEX } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
-import { ChatRoom as ChatRoomType, SocketMessage } from '@models/api/chat';
+import { ChatRoom as ChatRoomType, ChatSocketData } from '@models/api/chat';
 import { useBoundStore } from '@stores/useBoundStore';
 import { MainWrapper } from '@styles/wrappers';
 import { getChatMessages } from '@utils/apis/chat';
@@ -27,7 +27,7 @@ export function ChatRoom() {
   }));
 
   const [chatRoom, setChatRoom] = useState<ChatRoomType>();
-  const [messages, setMessages] = useState<SocketMessage[]>([]);
+  const [messages, setMessages] = useState<ChatSocketData[]>([]);
   const [nextUrl, setNextUrl] = useState<string | null>(null);
 
   const { scrollRef, setPrevScrollHeight } = useChatRoomAutoScroll(messages);
@@ -42,10 +42,10 @@ export function ChatRoom() {
 
   const fetchChatMessages = useCallback(
     async (_next?: string) => {
-      if (!chatRoom) return;
-      const { next, results = [] } = await getChatMessages(chatRoom.id, _next);
+      if (!roomId) return;
+      const { next, results = [] } = await getChatMessages(roomId, _next);
       const list = results.map((msg) => ({
-        message: msg.content,
+        content: msg.content,
         userName: msg.sender.username,
         timestamp: msg.timestamp,
       }));
@@ -53,7 +53,7 @@ export function ChatRoom() {
       setMessages((prev) => (_next ? (prev ? [...list, ...prev] : []) : list));
       setNextUrl(next);
     },
-    [chatRoom],
+    [roomId],
   );
   useAsyncEffect(fetchChatMessages, [fetchChatMessages]);
 
@@ -67,11 +67,11 @@ export function ChatRoom() {
     setIsLoading(false);
   });
 
-  const onSocketMessage = useCallback((message: SocketMessage) => {
+  const onSocketMessage = useCallback((message: ChatSocketData) => {
     setMessages((prev) => [...prev, message]);
   }, []);
 
-  const { sendSocketMsg } = useChatRoomSocketProvider({ chatRoom, onSocketMessage });
+  const { sendSocketData } = useChatRoomSocketProvider({ roomId, onSocketMessage });
 
   const handleClickGoBack = () => {
     navigate('/chats');
@@ -134,7 +134,7 @@ export function ChatRoom() {
           {chatRoom ? <MessageList messages={messages} room={chatRoom} /> : 'loading...'}
         </MainWrapper>
         <Layout.LayoutBase w="100%" ph={17} pv={13}>
-          <MessageInputBox sendSocketMsg={sendSocketMsg} />
+          <MessageInputBox sendSocketData={sendSocketData} />
         </Layout.LayoutBase>
       </Layout.FlexCol>
       <MessageNotiSettingDialog

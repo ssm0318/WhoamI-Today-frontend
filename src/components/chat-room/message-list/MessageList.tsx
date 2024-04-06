@@ -1,11 +1,11 @@
 import { useRef } from 'react';
 import { MessageItem } from '@components/chat-room/message-item/MessageItem';
 import { Layout } from '@design-system';
-import { ChatRoom, SocketMessage } from '@models/api/chat';
+import { ChatRoom, ChatSocketData } from '@models/api/chat';
 
 interface Props {
   room: ChatRoom;
-  messages: SocketMessage[];
+  messages: ChatSocketData[];
 }
 
 export function MessageList({ room, messages }: Props) {

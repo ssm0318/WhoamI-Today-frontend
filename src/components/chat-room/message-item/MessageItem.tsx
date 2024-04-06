@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Layout, Typo } from '@design-system';
-import { ChatRoom, SocketMessage } from '@models/api/chat';
+import { ChatRoom, ChatSocketData } from '@models/api/chat';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getTime } from './MessageItem.helper';
 import {
@@ -14,12 +14,12 @@ import {
 
 interface Props {
   room: ChatRoom;
-  message: SocketMessage;
+  message: ChatSocketData;
 }
 
 // TODO: 비밀댓글 게시물 케이스 추가
 export function MessageItem({ room, message }: Props) {
-  const { userName, timestamp, message: content } = message;
+  const { userName, timestamp, content } = message;
   const currentUser = useBoundStore((state) => state.myProfile);
 
   const isMyMsg = useMemo(() => {
