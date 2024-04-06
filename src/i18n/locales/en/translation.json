@@ -199,11 +199,16 @@
       "new_note": "New Note",
       "new_response": "New Response"
     },
-    "crop_photo": "Crop Photo",
     "cancel": "Cancel",
-    "done": "Done",
     "post": "Post",
-    "whats_on_your_mind": "What's on your mind?"
+    "whats_on_your_mind": "What's on your mind?",
+    "crop_photo": "Crop Photo",
+    "done": "Done"
+  },
+  "responses": {
+    "title": "Responses",
+    "comments": "comments",
+    "likes": "likes"
   },
   "responses": {
     "title": "Responses",
