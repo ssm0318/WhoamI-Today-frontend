@@ -21,8 +21,8 @@ export const postNote = async (noteData: Partial<Note>) => {
   if (noteData.content) {
     formData.append('content', noteData.content);
   }
-  if (noteData.image) {
-    noteData.image.forEach((element) => {
+  if (noteData.images) {
+    noteData.images.forEach((element) => {
       formData.append('images', element);
     });
   }
