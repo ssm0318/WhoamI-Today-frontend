@@ -8,7 +8,7 @@ import NewNoteContent from '../../components/note/new-note-content/NewNoteConten
 function NewNote() {
   const [t] = useTranslation('translation', { keyPrefix: 'notes.new_note_header' });
 
-  const [noteInfo, setNoteInfo] = useState<Partial<Note>>({ content: '', image: [] });
+  const [noteInfo, setNoteInfo] = useState<Partial<Note>>({ content: '', images: [] });
 
   return (
     <MainContainer>

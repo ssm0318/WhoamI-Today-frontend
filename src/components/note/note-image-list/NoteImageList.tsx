@@ -2,11 +2,11 @@ import ImageSlider from '@components/_common/image-slider/ImageSlider';
 import { SCREEN_WIDTH } from '@constants/layout';
 
 interface NoteImageListProps {
-  images: string[];
+  image: string[];
 }
 
-function NoteImageList({ images }: NoteImageListProps) {
-  return <ImageSlider images={images} width={IMAGE_WIDTH} height={IMAGE_HEIGHT} />;
+function NoteImageList({ image }: NoteImageListProps) {
+  return <ImageSlider image={image} width={IMAGE_WIDTH} height={IMAGE_HEIGHT} />;
 }
 
 export const IMAGE_RATIO = 180 / 327;

@@ -28,7 +28,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onClickAdd = () => {
-    if (noteInfo.image && noteInfo.image.length < 10) inputRef.current?.click();
+    if (noteInfo.images && noteInfo.images.length < 10) inputRef.current?.click();
     // TODO: exception message
     else console.log('exceed 10 images');
   };
@@ -54,7 +54,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const onCompleteImageCrop = (croppedImage: CroppedImg) => {
     setNoteInfo((prevNoteInfo) => ({
       ...prevNoteInfo,
-      image: [...(prevNoteInfo?.image || []), croppedImage.url],
+      images: [...(prevNoteInfo?.images || []), croppedImage.url],
     }));
   };
 
@@ -116,12 +116,12 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
             alignItems: 'center',
           }}
           slidesPerView={1}
-          initialSlide={noteInfo.image && noteInfo.image.length - 1}
+          initialSlide={noteInfo.images && noteInfo.images.length - 1}
         >
-          {noteInfo.image?.map((imgurl) => {
+          {noteInfo.images?.map((imgurl) => {
             return (
               <SwiperSlide>
-                <NewNoteImage url={imgurl} noteImages={noteInfo.image} setNoteInfo={setNoteInfo} />
+                <NewNoteImage url={imgurl} noteImages={noteInfo.images} setNoteInfo={setNoteInfo} />
               </SwiperSlide>
             );
           })}

@@ -26,7 +26,9 @@ export const postNote = async (noteData: Partial<Note>) => {
       formData.append('images', element);
     });
   }
+
   const { data } = await axiosFormDataInstance.post(`notes/`, formData);
+  console.log(data, formData);
   return data;
 };
 

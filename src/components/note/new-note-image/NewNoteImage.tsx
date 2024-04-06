@@ -13,7 +13,7 @@ function NewNoteImage({ url, noteImages, setNoteInfo }: NoteImageViewProps) {
     if (noteImages) {
       setNoteInfo((prevNoteInfo) => ({
         ...prevNoteInfo,
-        image: prevNoteInfo?.image?.filter((img) => img !== url) || [],
+        images: prevNoteInfo?.images?.filter((img) => img !== url) || [],
       }));
     }
   };
