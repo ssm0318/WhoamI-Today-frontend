@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { Layout, Typo } from '@design-system';
+import * as S from './ImageSlider.styled';
 
 interface ImageSliderProps {
   images: string[];
@@ -25,23 +26,10 @@ function ImageSlider({ images, width, height }: ImageSliderProps) {
   });
 
   return (
-    <Layout.FlexCol {...handlers} style={{ touchAction: 'none' }}>
+    <S.ImageSliderWrapper {...handlers}>
       <Layout.FlexRow justifyContent="center">
-        <Layout.FlexRow
-          w={width}
-          h={height}
-          bgColor="MEDIUM_GRAY"
-          style={{
-            position: 'relative',
-          }}
-        >
-          {images[currentIndex] && (
-            <img
-              src={images[currentIndex]}
-              alt="slide-img"
-              style={{ width: '100%', height: '100%' }}
-            />
-          )}
+        <S.ImageWrapper w={width} h={height} bgColor="MEDIUM_GRAY">
+          {images[currentIndex] && <S.Image src={images[currentIndex]} alt="slide-img" />}
           {/* current index */}
           <Layout.Absolute t={6} r={6}>
             <Layout.FlexRow bgColor="GRAY_4" ph={4} pv={2} rounded={12}>
@@ -50,26 +38,24 @@ function ImageSlider({ images, width, height }: ImageSliderProps) {
               </Typo>
             </Layout.FlexRow>
           </Layout.Absolute>
-        </Layout.FlexRow>
+        </S.ImageWrapper>
       </Layout.FlexRow>
       {/* indicator */}
       <Layout.FlexRow w="100%" justifyContent="center" mv={10}>
         {images.map((image, index) => (
-          <Layout.LayoutBase
+          <S.IndicatorItem
             key={image + index.toString()}
             w={6}
             h={6}
             rounded={3}
             mr={4}
             bgColor={currentIndex === index ? 'PRIMARY' : 'LIGHT_GRAY'}
-            style={{
-              opacity: currentIndex === index ? 1 : 0.5,
-            }}
+            isActive={currentIndex === index}
             onClick={() => setCurrentIndex(index)}
           />
         ))}
       </Layout.FlexRow>
-    </Layout.FlexCol>
+    </S.ImageSliderWrapper>
   );
 }
 
