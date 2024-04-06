@@ -4,16 +4,15 @@ import Icon from '@components/_common/icon/Icon';
 import { Layout, Typo } from '@design-system';
 
 type MoreResponseButtonProps = {
-  isMyPage: boolean;
   username?: string;
 };
 
-function MoreResponseButton({ isMyPage, username }: MoreResponseButtonProps) {
+function MoreResponseButton({ username }: MoreResponseButtonProps) {
   const [t] = useTranslation('translation');
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(isMyPage ? '/my/responses' : `/users/${username}/responses`);
+    navigate(username ? `/users/${username}/responses` : '/my/responses');
   };
 
   return (
