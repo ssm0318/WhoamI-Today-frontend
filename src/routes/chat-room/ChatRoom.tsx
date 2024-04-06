@@ -11,9 +11,8 @@ import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { ChatRoom as ChatRoomType, ChatSocketData } from '@models/api/chat';
-import { useBoundStore } from '@stores/useBoundStore';
 import { MainWrapper } from '@styles/wrappers';
-import { getChatMessages } from '@utils/apis/chat';
+import { getChatMessages, getChatRoomInfo } from '@utils/apis/chat';
 import { useChatRoomAutoScroll } from 'src/routes/chat-room/_hooks/useChatRoomAutoScroll';
 import { useChatRoomSocketProvider } from 'src/routes/chat-room/_hooks/useChatRoomSocketProvider';
 import { ChatRoomContainer, ChatRoomHeaderWrapper } from './ChatRoom.styled';
@@ -22,23 +21,23 @@ export function ChatRoom() {
   const { roomId } = useParams();
   const navigate = useNavigate();
 
-  const { chatRoomList } = useBoundStore((state) => ({
-    chatRoomList: state.chatRoomList,
-  }));
-
   const [chatRoom, setChatRoom] = useState<ChatRoomType>();
   const [messages, setMessages] = useState<ChatSocketData[]>([]);
   const [nextUrl, setNextUrl] = useState<string | null>(null);
 
   const { scrollRef, setPrevScrollHeight } = useChatRoomAutoScroll(messages);
 
+  const fetchChatRoomInfo = useCallback(async (id: string) => {
+    const room = await getChatRoomInfo(id);
+    setChatRoom(room);
+  }, []);
+
   // 채팅방 목록에서 해당 채팅방 정보 얻기.
   useEffect(() => {
-    if (!roomId || chatRoomList.state !== 'hasValue') return;
-    const room = chatRoomList.data.find(({ id }) => id.toString() === roomId);
-    if (!room) return;
-    setChatRoom(room);
-  }, [chatRoomList, roomId]);
+    if (!roomId) return;
+
+    fetchChatRoomInfo(roomId);
+  }, [fetchChatRoomInfo, roomId]);
 
   const fetchChatMessages = useCallback(
     async (_next?: string) => {

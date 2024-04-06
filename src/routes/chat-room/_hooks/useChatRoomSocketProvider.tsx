@@ -1,20 +1,21 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { ChatRoom, SocketMessage, SocketMessageInput } from '@models/api/chat';
+import { ChatSocketData, SendChatSocketData } from '@models/api/chat';
 
 const chatHost = 'localhost:8000';
 
 interface Props {
-  chatRoom: ChatRoom | undefined;
-  onSocketMessage: (msg: SocketMessage) => void;
+  roomId: string | undefined;
+  onSocketMessage: (msg: ChatSocketData) => void;
 }
 
-export function useChatRoomSocketProvider({ chatRoom, onSocketMessage }: Props) {
+export function useChatRoomSocketProvider({ roomId, onSocketMessage }: Props) {
   const chatSocket = useRef<WebSocket>();
 
   const addEventListenerToSocket = useCallback(
     (socket: WebSocket) => {
       socket.addEventListener('message', (e) => {
         const message = JSON.parse(e.data);
+        console.log('on socket message', message);
         onSocketMessage(message);
       });
 
@@ -30,21 +31,20 @@ export function useChatRoomSocketProvider({ chatRoom, onSocketMessage }: Props) 
   );
 
   useEffect(() => {
-    if (!chatRoom) return;
+    if (!roomId) return;
 
-    const socket = new WebSocket(`ws://${chatHost}/ws/chat/${chatRoom.id}/`);
-
+    const socket = new WebSocket(`ws://${chatHost}/ws/chat/${roomId}/`);
     addEventListenerToSocket(socket);
     chatSocket.current = socket;
 
     return () => {
       socket.close();
     };
-  }, [addEventListenerToSocket, chatRoom]);
+  }, [addEventListenerToSocket, roomId]);
 
-  const sendSocketMsg = useCallback((msg: SocketMessageInput) => {
+  const sendSocketData = useCallback((msg: SendChatSocketData) => {
     chatSocket.current?.send(JSON.stringify(msg));
   }, []);
 
-  return { sendSocketMsg };
+  return { sendSocketData };
 }
