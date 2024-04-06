@@ -1,5 +1,5 @@
 import { PaginationResponse } from '@models/api/common';
-import { Note } from '@models/note';
+import { Note } from '@models/post';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 import { objectFormDataSerializer } from '@utils/validateHelpers';
 

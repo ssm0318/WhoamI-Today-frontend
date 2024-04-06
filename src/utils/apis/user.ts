@@ -14,8 +14,7 @@ import {
   SignUpParams,
   UsernameError,
 } from '@models/api/user';
-import { Note } from '@models/note';
-import { Response } from '@models/post';
+import { Note, Response } from '@models/post';
 import { User, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
