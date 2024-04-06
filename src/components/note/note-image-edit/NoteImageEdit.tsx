@@ -36,7 +36,6 @@ function NoteImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileImag
 
       try {
         const croppedImg = await getCroppedImg(image, areaPixels);
-
         setCroppedImage(croppedImg);
       } catch (error) {
         console.error(error);

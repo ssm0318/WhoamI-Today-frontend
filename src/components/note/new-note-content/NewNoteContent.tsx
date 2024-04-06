@@ -29,12 +29,12 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
 
   const onClickAdd = () => {
     if (noteInfo.image && noteInfo.image.length < 10) inputRef.current?.click();
+    // TODO: exception message
     else console.log('exceed 10 images');
   };
 
   const onImageAdd = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
-
     const image = e.target.files[0];
 
     try {
