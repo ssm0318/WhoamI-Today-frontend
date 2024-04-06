@@ -13,18 +13,6 @@ export const AvailabilityLabels: Record<Availability, string> = {
   feeling_quiet: 'Feeling quiet',
 };
 
-// export const AvailabilityBgColors: Record<Availability, ColorKeys> = {
-//   available: 'AVAILABLE_BG',
-//   may_be_slow: 'MAYBE_SLOW_BG',
-//   not_available: 'NOT_AVAILABLE_BG',
-// };
-
-// export const AvailabilityChipColors: Record<Availability, ColorKeys> = {
-//   available: 'AVAILABLE_CHIP',
-//   may_be_slow: 'MAYBE_SLOW_CHIP',
-//   not_available: 'NOT_AVAILABLE_CHIP',
-// };
-
 export const AvailabilityChipAssets: Record<
   Availability,
   { icon: IconNames | null; emoji: string | null }
