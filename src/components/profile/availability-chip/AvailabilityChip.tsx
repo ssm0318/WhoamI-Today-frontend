@@ -5,7 +5,7 @@ import { AvailabilityChipAssets, AvailabilityLabels } from './AvailabilityChip.c
 interface AvailabilityChipProps {
   availability: Availability;
   onSelect?: (availability: Availability) => void;
-  isSelected: boolean;
+  isSelected?: boolean;
 }
 
 function AvailabilityChip({ availability, onSelect, isSelected }: AvailabilityChipProps) {
