@@ -14,7 +14,7 @@ interface CheckInAction {
 const initialState = {
   checkIn: null,
   checkInForm: {
-    availability: Availability.Available,
+    availability: Availability.available,
     bio: '',
     description: '',
     mood: '',

@@ -73,6 +73,12 @@ const spotify = 'spotify';
 const default_profile = 'default_profile';
 const add_comment = 'add_comment';
 
+// Check In
+const availability_available = 'availability_available';
+const availability_busy = 'availability_busy';
+const availability_might_get_distracted = 'availability_might_get_distracted';
+const availability_urgent_only = 'availability_urgent_only';
+
 // Mypage: Bottom Sheet
 const add_post = 'add_post';
 const home_indicator = 'home_indicator';
@@ -116,6 +122,10 @@ export {
   add_user,
   arrow_left,
   arrow_right,
+  availability_available,
+  availability_busy,
+  availability_might_get_distracted,
+  availability_urgent_only,
   bottomsheet_checkin,
   bottomsheet_note,
   bottomsheet_prompt,

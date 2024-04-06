@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { Font, Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 
 interface SectionContainerProps extends PropsWithChildren {
   title: string;
@@ -9,10 +9,10 @@ interface SectionContainerProps extends PropsWithChildren {
 function SectionContainer({ children, title, description }: SectionContainerProps) {
   return (
     <Layout.FlexCol justifyContent="space-between" w="100%" bgColor="WHITE" rounded={12} p={12}>
-      <Font.Body type="20_semibold">{title}</Font.Body>
-      <Font.Body type="12_semibold" color="GRAY_4">
+      <Typo type="title-large">{title}</Typo>
+      <Typo type="body-small" color="DARK_GRAY">
         {description}
-      </Font.Body>
+      </Typo>
       {children}
     </Layout.FlexCol>
   );

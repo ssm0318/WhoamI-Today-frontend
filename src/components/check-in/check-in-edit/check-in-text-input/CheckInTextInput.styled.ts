@@ -6,7 +6,7 @@ export const StyledCheckInTextInput = styled(TextareaAutosize)`
   padding: 8px;
   font-size: 16px;
   border-width: 1px;
-  border-color: ${({ theme }) => theme.GRAY_4};
+  border-color: ${({ theme }) => theme.LIGHT_GRAY};
   background-color: ${({ theme }) => theme.WHITE};
   border-radius: 12px;
 `;

@@ -36,7 +36,7 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
         alignItems="center"
         justifyContent="center"
         rounded={12}
-        outline="GRAY_8"
+        outline="LIGHT_GRAY"
         w={EMOJI_ICON_SIZE}
         h={EMOJI_ICON_SIZE}
       >
