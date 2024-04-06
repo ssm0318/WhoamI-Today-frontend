@@ -11,7 +11,7 @@ export const checkIn: CheckInBase = {
   created_at: '2023-11-17T22:13:27.155202-08:00',
   is_active: true,
   mood: '🎀',
-  availability: Availability.Available,
+  availability: Availability.available,
   description: 'I am available',
   track_id: '11dFghVXANMlKmJXsNCbNl',
   current_user_read: true,

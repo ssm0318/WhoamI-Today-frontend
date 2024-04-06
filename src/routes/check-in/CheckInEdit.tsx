@@ -2,17 +2,15 @@ import { Track } from '@spotify/web-api-ts-sdk';
 import { EmojiClickData } from 'emoji-picker-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import CheckInAvailability from '@components/check-in/check-in-edit/check-in-availability/CheckInAvailability';
 import CheckInDescription from '@components/check-in/check-in-edit/check-in-description/CheckInDescription';
 import CheckInEmoji from '@components/check-in/check-in-edit/check-in-emoji/CheckInEmoji';
 import CheckInSpotifyMusic from '@components/check-in/check-in-edit/check-in-spotify-music/CheckInSpotifyMusic';
-import CheckInTextInput from '@components/check-in/check-in-edit/check-in-text-input/CheckInTextInput';
 import SectionContainer from '@components/check-in/check-in-edit/section-container/SectionContainer';
-import AvailabilityChip from '@components/profile/availability-chip/AvailabilityChip';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Font, Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
 import { Availability, CheckInForm } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -59,9 +57,9 @@ function CheckInEdit() {
         title="Edit Check-in"
         RightComponent={
           <button type="button" onClick={handleConfirmSave}>
-            <Font.Body type="20_semibold" color="PRIMARY">
+            <Typo type="title-medium" color="PRIMARY">
               Save
-            </Font.Body>
+            </Typo>
           </button>
         }
       />
@@ -73,33 +71,20 @@ function CheckInEdit() {
         bgColor="BACKGROUND_COLOR"
         p={12}
       >
-        {/* emoji */}
+        {/* availability */}
         <SectionContainer
-          title="Select an emoji"
-          description="What emoji describes you mood the best?"
+          title="What’s your availability?"
+          description="Let your friends know if you’re up for a chat"
         >
-          <CheckInEmoji
-            mood={checkInForm?.mood || ''}
-            onDelete={() => handleDelete('mood')}
-            onSelectEmoji={(e: EmojiClickData) => {
-              handleChange('mood', e.emoji);
-            }}
-          />
-        </SectionContainer>
-        {/* description */}
-        <SectionContainer
-          title="Enter a short text"
-          description=" Tell your friends more about your mood!"
-        >
-          <CheckInDescription
-            description={checkInForm?.description || ''}
-            onDelete={() => handleDelete('description')}
-            onChange={(e) => handleChange('description', e.target.value)}
+          <CheckInAvailability
+            availability={checkInForm?.availability}
+            onDelete={() => handleDelete('availability')}
+            onSelectAvailability={handleChangeAvailability}
           />
         </SectionContainer>
         {/* spotify */}
         <SectionContainer
-          title="Choose a Spotify song"
+          title="Share a song"
           description="What song describes your mood the best?"
         >
           <CheckInSpotifyMusic
@@ -108,28 +93,23 @@ function CheckInEdit() {
             onSearchMusic={handleSearchMusic}
           />
         </SectionContainer>
-        {/* FIXME availability */}
-        <SectionContainer title="Availability" description="Availability">
-          {Object.values(Availability).map((a) => (
-            <AvailabilityChip
-              availability={a}
-              key={a}
-              isSelected={checkInForm?.availability === a}
-              onSelect={handleChangeAvailability}
-            />
-          ))}
-        </SectionContainer>
-        {/* FIXME bio */}
-        <SectionContainer title="Bio" description="Bio">
-          <Layout.FlexRow mt={8} w="100%" alignItems="center" gap={8}>
-            <CheckInTextInput
-              value={checkInForm?.bio || ''}
-              onChange={(e) => {
-                handleChange('bio', e.target.value);
-              }}
-            />
-            {!!checkInForm?.bio && <DeleteButton onClick={() => handleDelete('bio')} />}
-          </Layout.FlexRow>
+        {/* mood (emoji & description) */}
+        <SectionContainer
+          title="Share your mood"
+          description="Choose an emoji and enter a short text to describe your day"
+        >
+          <CheckInEmoji
+            mood={checkInForm?.mood || ''}
+            onDelete={() => handleDelete('mood')}
+            onSelectEmoji={(e: EmojiClickData) => {
+              handleChange('mood', e.emoji);
+            }}
+          />
+          <CheckInDescription
+            description={checkInForm?.description || ''}
+            onDelete={() => handleDelete('description')}
+            onChange={(e) => handleChange('description', e.target.value)}
+          />
         </SectionContainer>
       </Layout.FlexCol>
     </MainContainer>

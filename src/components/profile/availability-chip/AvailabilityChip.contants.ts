@@ -1,23 +1,29 @@
-import { ColorKeys } from '@design-system';
+import { IconNames } from '@design-system';
 import { Availability } from '@models/checkIn';
 
 export const AvailabilityLabels: Record<Availability, string> = {
   available: 'Available',
-  no_status: 'No Status',
-  may_be_slow: 'Maybe Slow',
-  not_available: 'Not Available',
+  busy: 'Busy',
+  might_get_distracted: 'Might get distracted',
+  urgent_only: 'Urgent only',
+  about_to_sleep: 'About to sleep',
+  studying: 'Studying',
+  in_transit: 'In transit',
+  feeling_social: 'Feeling social',
+  feeling_quiet: 'Feeling quiet',
 };
 
-export const AvailabilityBgColors: Record<Availability, ColorKeys> = {
-  available: 'AVAILABLE_BG',
-  no_status: 'NO_STATUS_BG',
-  may_be_slow: 'MAYBE_SLOW_BG',
-  not_available: 'NOT_AVAILABLE_BG',
-};
-
-export const AvailabilityChipColors: Record<Availability, ColorKeys> = {
-  available: 'AVAILABLE_CHIP',
-  no_status: 'NO_STATUS_CHIP',
-  may_be_slow: 'MAYBE_SLOW_CHIP',
-  not_available: 'NOT_AVAILABLE_CHIP',
+export const AvailabilityChipAssets: Record<
+  Availability,
+  { icon: IconNames | null; emoji: string | null }
+> = {
+  available: { icon: 'availability_available', emoji: null },
+  busy: { icon: 'availability_busy', emoji: null },
+  might_get_distracted: { icon: 'availability_might_get_distracted', emoji: null },
+  urgent_only: { icon: 'availability_urgent_only', emoji: null },
+  about_to_sleep: { icon: null, emoji: '😴' },
+  studying: { icon: null, emoji: '✍🏼' },
+  in_transit: { icon: null, emoji: '🚌' },
+  feeling_social: { icon: null, emoji: '👯' },
+  feeling_quiet: { icon: null, emoji: '😶' },
 };
