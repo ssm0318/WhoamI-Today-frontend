@@ -10,7 +10,7 @@ import { TOP_NAVIGATION_HEIGHT, Z_INDEX } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
-import { ChatRoom as ChatRoomType, ChatSocketData } from '@models/api/chat';
+import { ChatRoom as ChatRoomType, ResponseMessageAction } from '@models/api/chat';
 import { MainWrapper } from '@styles/wrappers';
 import { getChatMessages, getChatRoomInfo } from '@utils/apis/chat';
 import { useChatRoomAutoScroll } from 'src/routes/chat-room/_hooks/useChatRoomAutoScroll';
@@ -22,7 +22,7 @@ export function ChatRoom() {
   const navigate = useNavigate();
 
   const [chatRoom, setChatRoom] = useState<ChatRoomType>();
-  const [messages, setMessages] = useState<ChatSocketData[]>([]);
+  const [messages, setMessages] = useState<ResponseMessageAction[]>([]);
   const [nextUrl, setNextUrl] = useState<string | null>(null);
 
   const { scrollRef, setPrevScrollHeight } = useChatRoomAutoScroll(messages);
@@ -66,7 +66,7 @@ export function ChatRoom() {
     setIsLoading(false);
   });
 
-  const onSocketMessage = useCallback((message: ChatSocketData) => {
+  const onSocketMessage = useCallback((message: ResponseMessageAction) => {
     setMessages((prev) => [...prev, message]);
   }, []);
 
@@ -130,7 +130,11 @@ export function ChatRoom() {
         <MainWrapper alignItems="center" pt={TOP_NAVIGATION_HEIGHT} ref={scrollRef}>
           <div ref={targetRef} />
           {isLoading && <Loader />}
-          {chatRoom ? <MessageList messages={messages} room={chatRoom} /> : 'loading...'}
+          {chatRoom ? (
+            <MessageList messages={messages} room={chatRoom} sendSocketData={sendSocketData} />
+          ) : (
+            'loading...'
+          )}
         </MainWrapper>
         <Layout.LayoutBase w="100%" ph={17} pv={13}>
           <MessageInputBox sendSocketData={sendSocketData} />

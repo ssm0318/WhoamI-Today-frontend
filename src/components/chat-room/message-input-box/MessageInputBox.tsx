@@ -5,13 +5,13 @@ import {
   StyledMessageInputBox,
 } from '@components/chat-room/message-input-box/MessageInputBox.styled';
 import { Layout } from '@design-system';
-import { SendChatSocketData } from '@models/api/chat';
+import { SendChatRoomSocketData } from '@models/api/chat';
 import { useBoundStore } from '@stores/useBoundStore';
 
 const PLACE_HOLDER = 'Message...';
 
 interface Props {
-  sendSocketData: (data: SendChatSocketData) => void;
+  sendSocketData: (data: SendChatRoomSocketData) => void;
 }
 
 export function MessageInputBox({ sendSocketData }: Props) {

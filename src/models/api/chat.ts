@@ -14,15 +14,38 @@ export interface ChatMessage {
   timestamp: string;
 }
 
-export interface ChatSocketData {
-  content: string;
+// export interface ChatSocketData {
+//   content: string;
+//   userName: string;
+//   timestamp: string;
+// }
+
+export interface RequestMessageAction {
+  action: 'message';
+  userId: number;
   userName: string;
+  content: string;
+}
+export interface ResponseMessageAction extends Omit<RequestMessageAction, 'action' | 'userId'> {
   timestamp: string;
 }
 
-type SendChatSocketDataAction = 'message' | 'like' | 'remove_like';
-
-export interface SendChatSocketData extends Omit<ChatSocketData, 'timestamp'> {
-  userId: number;
-  action: SendChatSocketDataAction;
+export interface RequestLikeAction {
+  action: 'like';
+  messageId: number;
 }
+export interface ResponseLikeAction extends RequestLikeAction {
+  messageLikeCnt: number;
+  currentUserMessageLikeId: number;
+}
+
+export interface RequestRemoveLikeAction {
+  action: 'remove_like';
+  messageLikeId: number;
+}
+export type ResponseRemoveLikeAction = ResponseLikeAction;
+
+export type SendChatRoomSocketData =
+  | RequestMessageAction
+  | RequestLikeAction
+  | RequestRemoveLikeAction;
