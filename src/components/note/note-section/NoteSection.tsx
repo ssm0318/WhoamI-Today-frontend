@@ -5,18 +5,18 @@ import NoContents from '@components/_common/no-contents/NoContents';
 import { Layout, Typo } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Note } from '@models/post';
-import { useBoundStore } from '@stores/useBoundStore';
 import { getMyNotes } from '@utils/apis/my';
+import { getUserNotes } from '../../../utils/apis/user';
 import NoteItem from '../note-item/NoteItem';
 
 type NoteSectionProps = {
-  isMyPage: boolean;
+  /** username이 있으면 username에 대한 response를, 없으면 내 response를 보여줍니다. */
+  username?: string;
 };
 
-function NoteSection({ isMyPage }: NoteSectionProps) {
+function NoteSection({ username }: NoteSectionProps) {
   const [t] = useTranslation('translation');
 
-  const myProfile = useBoundStore((state) => state.myProfile);
   const [noteList, setNoteList] = useState<Note[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
@@ -26,14 +26,13 @@ function NoteSection({ isMyPage }: NoteSectionProps) {
   });
 
   const fetchNotes = async (page: string | null) => {
-    const { results, next } = await getMyNotes(page);
+    const { results, next } = username ? await getUserNotes(username) : await getMyNotes(page);
     if (!results) return;
     setNextPage(next);
     setNoteList([...noteList, ...results]);
     setIsLoading(false);
   };
 
-  if (!myProfile) return null;
   return (
     <>
       <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
@@ -48,7 +47,7 @@ function NoteSection({ isMyPage }: NoteSectionProps) {
               <NoContents title={t('no_contents.notes')} />
             </Layout.FlexRow>
           ) : (
-            noteList.map((note) => <NoteItem key={note.id} note={note} isMyPage={isMyPage} />)
+            noteList.map((note) => <NoteItem key={note.id} note={note} isMyPage={!username} />)
           )}
         </Layout.FlexCol>
         <div ref={targetRef} />

@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Divider } from '@components/_common/divider/Divider.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import UserHeader from '@components/header/user-header/UserHeader';
+import NoteSection from '@components/note/note-section/NoteSection';
 import Status from '@components/profile/Profile';
+import ResponseSection from '@components/response/response-section/ResponseSection';
 import UserMoreModal from '@components/user-page/UserMoreModal';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
@@ -46,7 +49,7 @@ function FriendPage() {
     return navigate('/my');
   }, [isMyPage, navigate]);
 
-  if (!user.data) return null;
+  if (!username || !user.data) return null;
   return (
     <MainContainer>
       <UserHeader user={user.data} />
@@ -66,6 +69,14 @@ function FriendPage() {
         >
           <Status user={user.data} />
         </Layout.FlexRow>
+        <Divider width={8} bgColor="LIGHT" />
+        <Layout.FlexCol pv={12} pl={12} w="100%">
+          <ResponseSection username={username} />
+        </Layout.FlexCol>
+        <Divider width={8} bgColor="LIGHT" />
+        <Layout.FlexCol pt={12} pl={12} pb="default" w="100%">
+          <NoteSection username={username} />
+        </Layout.FlexCol>
       </Layout.FlexCol>
     </MainContainer>
   );
