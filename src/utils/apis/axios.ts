@@ -6,7 +6,8 @@ export const API_BASE_URL = 'http://localhost:8000/api/';
 const JSON_DEFAULT_OPTIONS: AxiosRequestConfig = {
   baseURL: API_BASE_URL,
   withCredentials: true,
-  xsrfHeaderName: 'X-CSRFTOKEN',
+  withXSRFToken: true,
+  xsrfHeaderName: 'X-CSRFToken',
   xsrfCookieName: 'csrftoken',
   headers: {
     'Content-Type': 'application/json',
