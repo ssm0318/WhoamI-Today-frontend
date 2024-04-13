@@ -5,8 +5,9 @@ import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
-import { MyCheckIn } from '@models/checkIn';
-import { User } from '@models/user';
+import { MyProfile } from '@models/api/user';
+import { CheckInBase } from '@models/checkIn';
+import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import AvailabilityChip from '../profile/availability-chip/AvailabilityChip';
@@ -14,7 +15,7 @@ import AddNewCheckIn from './add-new-check-in/AddNewCheckIn';
 import SpotifyMusic from './spotify-music/SpotifyMusic';
 
 interface CheckInProps {
-  user: User;
+  user: UserProfile | MyProfile;
 }
 
 function CheckIn({ user }: CheckInProps) {
@@ -29,7 +30,9 @@ function CheckIn({ user }: CheckInProps) {
     fetchCheckIn: state.fetchCheckIn,
   }));
   const isMyPage = user?.id === myProfile?.id;
-  const [checkIn, setCheckIn] = useState<MyCheckIn | null>(initialCheckIn);
+  const [checkIn, setCheckIn] = useState<CheckInBase | null | undefined>(
+    isMyPage ? initialCheckIn : user.check_in,
+  );
   const { availability, track_id } = checkIn || {};
 
   const [trackData, setTrackData] = useState<Track | null>(null);
@@ -69,7 +72,12 @@ function CheckIn({ user }: CheckInProps) {
             </Layout.FlexRow>
             {/* more */}
             {isMyPage ? (
-              <SvgIcon name="edit_outline" size={24} onClick={handleClickEditCheckIn} />
+              <SvgIcon
+                name="edit_filled"
+                fill="DARK_GRAY"
+                size={24}
+                onClick={handleClickEditCheckIn}
+              />
             ) : (
               <SvgIcon name="dots_menu" color="BLACK" size={24} onClick={handleClickViewMore} />
             )}
