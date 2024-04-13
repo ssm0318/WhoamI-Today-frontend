@@ -17,7 +17,6 @@ export type CheckInBase = {
   mood: string;
   availability: Availability;
   description: string;
-  bio: string;
   track_id: string;
   current_user_read: boolean;
 };

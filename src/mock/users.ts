@@ -15,5 +15,4 @@ export const checkIn: CheckInBase = {
   description: 'I am available',
   track_id: '11dFghVXANMlKmJXsNCbNl',
   current_user_read: true,
-  bio: '자기 소개 자기 소개',
 };

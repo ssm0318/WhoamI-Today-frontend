@@ -41,9 +41,11 @@ function Profile({ user }: ProfileProps) {
             )}
           </Layout.FlexRow>
           {/* bio */}
-          <Typo type="body-medium" numberOfLines={2}>
-            I’m a Bio! Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit ame.
-          </Typo>
+          {user.bio && (
+            <Typo type="body-medium" numberOfLines={3}>
+              {user.bio}
+            </Typo>
+          )}
         </Layout.FlexCol>
       </Layout.FlexRow>
       {/* 친구 목록 */}
