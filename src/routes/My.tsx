@@ -2,7 +2,6 @@ import Divider from '@components/_common/divider/Divider';
 import NoteSection from '@components/note/note-section/NoteSection';
 import Profile from '@components/profile/Profile';
 import ResponseSection from '@components/response/response-section/ResponseSection';
-import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 
@@ -16,8 +15,7 @@ function My() {
         w="100%"
         alignItems="center"
         justifyContent="space-between"
-        ph={DEFAULT_MARGIN}
-        pv={12}
+        p={12}
         bgColor="WHITE"
         rounded={8}
       >

@@ -7,7 +7,7 @@ import NoteSection from '@components/note/note-section/NoteSection';
 import Profile from '@components/profile/Profile';
 import ResponseSection from '@components/response/response-section/ResponseSection';
 import UserMoreModal from '@components/user-page/UserMoreModal';
-import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
+import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
@@ -64,8 +64,7 @@ function FriendPage() {
           w="100%"
           alignItems="center"
           justifyContent="space-between"
-          ph={DEFAULT_MARGIN}
-          pv={12}
+          p={12}
           bgColor="WHITE"
           rounded={8}
         >
