@@ -11,7 +11,7 @@
     "@types/node": "^16.18.25",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.1",
-    "axios": "^1.4.0",
+    "axios": "^1.6.2",
     "date-fns": "^2.30.0",
     "emoji-picker-react": "^4.4.9",
     "firebase": "10.3.0",
