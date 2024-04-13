@@ -10,7 +10,7 @@ function My() {
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
   return (
-    <Layout.FlexCol w="100%" bgColor="WHITE">
+    <Layout.FlexCol w="100%" bgColor="LIGHT">
       <Divider width={8} bgColor="LIGHT" />
       <Layout.FlexRow
         w="100%"
@@ -18,15 +18,17 @@ function My() {
         justifyContent="space-between"
         ph={DEFAULT_MARGIN}
         pv={12}
+        bgColor="WHITE"
+        rounded={8}
       >
         <Profile user={myProfile} />
       </Layout.FlexRow>
       <Divider width={8} bgColor="LIGHT" />
-      <Layout.FlexCol pv={12} pl={12} w="100%">
+      <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
         <ResponseSection />
       </Layout.FlexCol>
       <Divider width={8} bgColor="LIGHT" />
-      <Layout.FlexCol pt={12} pl={12} pb="default" w="100%">
+      <Layout.FlexCol pt={12} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
         <NoteSection />
       </Layout.FlexCol>
     </Layout.FlexCol>

@@ -53,7 +53,7 @@ function FriendPage() {
   return (
     <MainContainer>
       <UserHeader user={user.data} />
-      <Layout.FlexCol w="100%" bgColor="WHITE" mt={TITLE_HEADER_HEIGHT}>
+      <Layout.FlexCol w="100%" bgColor="LIGHT" mt={TITLE_HEADER_HEIGHT}>
         <UserMoreModal
           isVisible={showMore}
           setIsVisible={setShowMore}
@@ -66,15 +66,17 @@ function FriendPage() {
           justifyContent="space-between"
           ph={DEFAULT_MARGIN}
           pv={12}
+          bgColor="WHITE"
+          rounded={8}
         >
           <Profile user={user.data} />
         </Layout.FlexRow>
         <Divider width={8} bgColor="LIGHT" />
-        <Layout.FlexCol pv={12} pl={12} w="100%">
+        <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
           <ResponseSection username={username} />
         </Layout.FlexCol>
         <Divider width={8} bgColor="LIGHT" />
-        <Layout.FlexCol pt={12} pl={12} pb="default" w="100%">
+        <Layout.FlexCol pt={12} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
           <NoteSection username={username} />
         </Layout.FlexCol>
       </Layout.FlexCol>
