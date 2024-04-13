@@ -33,7 +33,8 @@ function CheckIn({ user }: CheckInProps) {
   const [checkIn, setCheckIn] = useState<CheckInBase | null | undefined>(
     isMyPage ? initialCheckIn : user.check_in,
   );
-  const { availability, track_id } = checkIn || {};
+  const { availability, track_id, mood, description } = checkIn || {};
+  const hasCheckIn = checkIn && (mood || description || availability || track_id);
 
   const [trackData, setTrackData] = useState<Track | null>(null);
   const [currentDate] = useState(() => new Date());
@@ -58,10 +59,10 @@ function CheckIn({ user }: CheckInProps) {
     setCheckIn(myCheckIn);
   }, [isMyPage]);
 
-  if (!checkIn && !isMyPage) return null;
+  if (!hasCheckIn && !isMyPage) return null;
   return (
     <Layout.FlexCol w="100%" gap={8} p={16} bgColor="GRAY_14" rounded={8} justifyContent="center">
-      {checkIn ? (
+      {hasCheckIn ? (
         <>
           <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
             <Layout.FlexRow gap={8}>
@@ -93,16 +94,15 @@ function CheckIn({ user }: CheckInProps) {
             rounded={12}
           >
             {/* emoji */}
-            <EmojiItem
-              emojiString={checkIn.mood}
-              size={24}
-              bgColor="TRANSPARENT"
-              outline="TRANSPARENT"
-            />
+            {mood && (
+              <EmojiItem emojiString={mood} size={24} bgColor="TRANSPARENT" outline="TRANSPARENT" />
+            )}
             {/* description */}
-            <Typo type="label-large" numberOfLines={2}>
-              {checkIn.description}
-            </Typo>
+            {description && (
+              <Typo type="label-large" numberOfLines={2}>
+                {description}
+              </Typo>
+            )}
           </Layout.FlexRow>
           {/* check in time */}
           <Layout.FlexRow w="100%" justifyContent="flex-end">

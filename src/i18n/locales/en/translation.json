@@ -162,7 +162,12 @@
     "reject": "Reject",
     "requested": "Requested",
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "mutual_friends": {
+      "one": "1 mutual friend: {{firstUserName}}",
+      "two": "2 mutual friends: {{firstUserName}} and {{secondUserName}}",
+      "others": "{{firstUserName}}, {{secondUserName}} and {{others}} other mutual friends"
+    }
   },
   "notes": {
     "notes": "{{name}}'s Notes",
