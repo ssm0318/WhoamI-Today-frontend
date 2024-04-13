@@ -2,7 +2,7 @@ import { Track } from '@spotify/web-api-ts-sdk';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
-import { Font, Layout, SvgIcon } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
 import { MyCheckIn } from '@models/checkIn';
@@ -55,6 +55,7 @@ function CheckIn({ user }: CheckInProps) {
     setCheckIn(myCheckIn);
   }, [isMyPage]);
 
+  if (!checkIn && !isMyPage) return null;
   return (
     <Layout.FlexCol w="100%" gap={8} p={16} bgColor="GRAY_14" rounded={8} justifyContent="center">
       {checkIn ? (
@@ -91,15 +92,15 @@ function CheckIn({ user }: CheckInProps) {
               outline="TRANSPARENT"
             />
             {/* description */}
-            <Font.Body type="14_semibold" numberOfLines={2}>
+            <Typo type="label-large" numberOfLines={2}>
               {checkIn.description}
-            </Font.Body>
+            </Typo>
           </Layout.FlexRow>
           {/* check in time */}
           <Layout.FlexRow w="100%" justifyContent="flex-end">
-            <Font.Body type="12_regular" numberOfLines={2} color="GRAY_4">
+            <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
               Checked in {convertTimeDiffByString(currentDate, new Date('2023-10-28 12:00:00'))}
-            </Font.Body>
+            </Typo>
           </Layout.FlexRow>
         </>
       ) : (

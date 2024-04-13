@@ -4,7 +4,7 @@ import { Divider } from '@components/_common/divider/Divider.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import UserHeader from '@components/header/user-header/UserHeader';
 import NoteSection from '@components/note/note-section/NoteSection';
-import Status from '@components/profile/Profile';
+import Profile from '@components/profile/Profile';
 import ResponseSection from '@components/response/response-section/ResponseSection';
 import UserMoreModal from '@components/user-page/UserMoreModal';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
@@ -67,7 +67,7 @@ function FriendPage() {
           ph={DEFAULT_MARGIN}
           pv={12}
         >
-          <Status user={user.data} />
+          <Profile user={user.data} />
         </Layout.FlexRow>
         <Divider width={8} bgColor="LIGHT" />
         <Layout.FlexCol pv={12} pl={12} w="100%">
