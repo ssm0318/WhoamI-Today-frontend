@@ -220,7 +220,10 @@
       "username": "Username",
       "email": "Email",
       "bio": "Bio",
-      "pronouns": "Pronouns"
+      "pronouns": "Pronouns",
+      "response": {
+        "updated": "Profile Updated🎉"
+      }
     }
   },
   "time": {

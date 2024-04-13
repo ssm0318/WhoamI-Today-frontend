@@ -18,9 +18,10 @@ import { CroppedImg, readFile } from '@utils/getCroppedImg';
 
 function EditProfile() {
   const [t] = useTranslation('translation', { keyPrefix: 'settings.edit_profile' });
-  const { myProfile, updateMyProfile } = useBoundStore((state) => ({
+  const { myProfile, updateMyProfile, openToast } = useBoundStore((state) => ({
     myProfile: state.myProfile,
     updateMyProfile: state.updateMyProfile,
+    openToast: state.openToast,
   }));
   const [draft, setDraft] = useState<Pick<MyProfile, 'bio' | 'username' | 'pronouns'>>(
     myProfile || {
@@ -84,6 +85,8 @@ function EditProfile() {
       },
       onSuccess: () => {
         updateMyProfile({ ...draft });
+        navigate(-1);
+        openToast({ message: t('response.updated') });
       },
     });
   };
