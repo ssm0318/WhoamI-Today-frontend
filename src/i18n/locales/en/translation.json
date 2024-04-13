@@ -56,6 +56,9 @@
     "my": "My",
     "chats": "Chats"
   },
+  "header": {
+    "my": "My Profile"
+  },
   "home": {
     "moment": {
       "todays_moments": "Today's Moments",

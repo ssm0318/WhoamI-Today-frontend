@@ -56,6 +56,9 @@
     "my": "나",
     "chats": "채팅"
   },
+  "header": {
+    "my": "내 프로필"
+  },
   "home": {
     "moment": {
       "todays_moments": "오늘의 순간들",
