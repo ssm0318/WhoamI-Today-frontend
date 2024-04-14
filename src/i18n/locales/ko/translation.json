@@ -56,6 +56,9 @@
     "my": "나",
     "chats": "채팅"
   },
+  "header": {
+    "my": "내 프로필"
+  },
   "home": {
     "moment": {
       "todays_moments": "오늘의 순간들",
@@ -156,7 +159,12 @@
     "reject": "거절",
     "requested": "요청됨",
     "cancel": "취소",
-    "confirm": "확인"
+    "confirm": "확인",
+    "mutual_friends": {
+      "one": "1명의 공통 친구({{firstUserName}})가 있습니다.",
+      "two": "2명의 공통 친구({{firstUserName}, {{secondUserName}})가 있습니다.",
+      "others": "{{firstUserName}와(과) {{secondUserName}}, 그 외 {{others}}명의 공통친구가 있습니다."
+    }
   },
   "notes": {
     "notes": "{{name}}의 노트",
@@ -209,7 +217,10 @@
       "username": "닉네임",
       "email": "이메일",
       "bio": "소개",
-      "pronouns": "대명사"
+      "pronouns": "대명사",
+      "response": {
+        "updated": "프로필이 업데이트되었습니다🎉"
+      }
     }
   },
   "time": {

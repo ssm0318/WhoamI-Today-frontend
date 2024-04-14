@@ -2,11 +2,12 @@ import { Track } from '@spotify/web-api-ts-sdk';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
-import { Font, Layout, SvgIcon } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
-import { MyCheckIn } from '@models/checkIn';
-import { User } from '@models/user';
+import { MyProfile } from '@models/api/user';
+import { CheckInBase } from '@models/checkIn';
+import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import AvailabilityChip from '../profile/availability-chip/AvailabilityChip';
@@ -14,7 +15,7 @@ import AddNewCheckIn from './add-new-check-in/AddNewCheckIn';
 import SpotifyMusic from './spotify-music/SpotifyMusic';
 
 interface CheckInProps {
-  user: User;
+  user: UserProfile | MyProfile;
 }
 
 function CheckIn({ user }: CheckInProps) {
@@ -29,8 +30,11 @@ function CheckIn({ user }: CheckInProps) {
     fetchCheckIn: state.fetchCheckIn,
   }));
   const isMyPage = user?.id === myProfile?.id;
-  const [checkIn, setCheckIn] = useState<MyCheckIn | null>(initialCheckIn);
-  const { availability, track_id } = checkIn || {};
+  const [checkIn, setCheckIn] = useState<CheckInBase | null | undefined>(
+    isMyPage ? initialCheckIn : user.check_in,
+  );
+  const { availability, track_id, mood, description } = checkIn || {};
+  const hasCheckIn = checkIn && (mood || description || availability || track_id);
 
   const [trackData, setTrackData] = useState<Track | null>(null);
   const [currentDate] = useState(() => new Date());
@@ -55,9 +59,10 @@ function CheckIn({ user }: CheckInProps) {
     setCheckIn(myCheckIn);
   }, [isMyPage]);
 
+  if (!hasCheckIn && !isMyPage) return null;
   return (
     <Layout.FlexCol w="100%" gap={8} p={16} bgColor="GRAY_14" rounded={8} justifyContent="center">
-      {checkIn ? (
+      {hasCheckIn ? (
         <>
           <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
             <Layout.FlexRow gap={8}>
@@ -68,7 +73,12 @@ function CheckIn({ user }: CheckInProps) {
             </Layout.FlexRow>
             {/* more */}
             {isMyPage ? (
-              <SvgIcon name="edit_outline" size={24} onClick={handleClickEditCheckIn} />
+              <SvgIcon
+                name="edit_filled"
+                fill="DARK_GRAY"
+                size={24}
+                onClick={handleClickEditCheckIn}
+              />
             ) : (
               <SvgIcon name="dots_menu" color="BLACK" size={24} onClick={handleClickViewMore} />
             )}
@@ -84,22 +94,21 @@ function CheckIn({ user }: CheckInProps) {
             rounded={12}
           >
             {/* emoji */}
-            <EmojiItem
-              emojiString={checkIn.mood}
-              size={24}
-              bgColor="TRANSPARENT"
-              outline="TRANSPARENT"
-            />
+            {mood && (
+              <EmojiItem emojiString={mood} size={24} bgColor="TRANSPARENT" outline="TRANSPARENT" />
+            )}
             {/* description */}
-            <Font.Body type="14_semibold" numberOfLines={2}>
-              {checkIn.description}
-            </Font.Body>
+            {description && (
+              <Typo type="label-large" numberOfLines={2}>
+                {description}
+              </Typo>
+            )}
           </Layout.FlexRow>
           {/* check in time */}
           <Layout.FlexRow w="100%" justifyContent="flex-end">
-            <Font.Body type="12_regular" numberOfLines={2} color="GRAY_4">
+            <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
               Checked in {convertTimeDiffByString(currentDate, new Date('2023-10-28 12:00:00'))}
-            </Font.Body>
+            </Typo>
           </Layout.FlexRow>
         </>
       ) : (

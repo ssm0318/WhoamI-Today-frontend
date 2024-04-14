@@ -56,6 +56,9 @@
     "my": "My",
     "chats": "Chats"
   },
+  "header": {
+    "my": "My Profile"
+  },
   "home": {
     "moment": {
       "todays_moments": "Today's Moments",
@@ -159,7 +162,12 @@
     "reject": "Reject",
     "requested": "Requested",
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "mutual_friends": {
+      "one": "1 mutual friend: {{firstUserName}}",
+      "two": "2 mutual friends: {{firstUserName}} and {{secondUserName}}",
+      "others": "{{firstUserName}}, {{secondUserName}} and {{others}} other mutual friends"
+    }
   },
   "notes": {
     "notes": "{{name}}'s Notes",
@@ -212,7 +220,10 @@
       "username": "Username",
       "email": "Email",
       "bio": "Bio",
-      "pronouns": "Pronouns"
+      "pronouns": "Pronouns",
+      "response": {
+        "updated": "Profile Updated🎉"
+      }
     }
   },
   "time": {

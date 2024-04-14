@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { useBoundStore } from '@stores/useBoundStore';
+import { useTranslation } from 'react-i18next';
 import Icon from '../../_common/icon/Icon';
 import NewPostBottomSheet from '../bottom-sheet/NewPostBottomSheet';
 import MainHeader from '../MainHeader';
 import SideMenu from '../side-menu/SideMenu';
 
 function MyHeader() {
-  const myProfile = useBoundStore((state) => state.myProfile);
+  const [t] = useTranslation('translation', { keyPrefix: 'header' });
 
   const [showSideMenu, setShowSideMenu] = useState(false);
   const [bottomSheet, setBottomSheet] = useState(false);
@@ -22,7 +22,7 @@ function MyHeader() {
   return (
     <>
       <MainHeader
-        title={myProfile?.username ?? ''}
+        title={t('my')}
         rightButtons={
           <>
             <Icon name="add_post" size={44} onClick={handleNewPost} />

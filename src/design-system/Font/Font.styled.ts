@@ -64,4 +64,21 @@ export const StyledFont = styled.span<FontAttrs & TypoPropBase>`
     getStyle('margin', toMarginPaddingString(m, mh, mv, mt, mr, mb, ml))}
   white-space: ${({ pre }) => (pre ? 'pre' : 'normal')};
   text-decoration: ${({ lineThrough, underline }) => getTextDecoration({ lineThrough, underline })};
+
+  ${({ numberOfLines, fontSize, lineHeight = 1.4 }) =>
+    !!numberOfLines &&
+    css`
+      text-overflow: ellipsis;
+      -webkit-line-clamp: ${numberOfLines};
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      max-height: ${fontSize * lineHeight * numberOfLines}px;
+    `}
+
+  ${({ italic }) =>
+    italic &&
+    css`
+      font-style: italic;
+    `}
 `;
