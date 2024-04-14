@@ -1,5 +1,4 @@
 import React from 'react';
-import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
@@ -33,7 +32,7 @@ function NewPostBottomSheet({ visible, closeBottomSheet }: Props) {
     navigate(path);
   };
 
-  return createPortal(
+  return (
     <BottomModal visible={visible} onClose={closeBottomSheet} maxHeight={700}>
       <Layout.FlexCol alignItems="center" pb={34} w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
@@ -56,8 +55,7 @@ function NewPostBottomSheet({ visible, closeBottomSheet }: Props) {
           ))}
         </Layout.FlexCol>
       </Layout.FlexCol>
-    </BottomModal>,
-    document.getElementById('root-container') || document.body,
+    </BottomModal>
   );
 }
 
