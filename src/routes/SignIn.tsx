@@ -6,6 +6,7 @@ import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
 import { DEFAULT_REDIRECTION_PATH } from '@constants/url';
 import { Button, Font, Layout } from '@design-system';
+import { usePostAppMessage } from '@hooks/useAppMessage';
 import { SignInParams } from '@models/api/user';
 import { signIn } from '@utils/apis/user';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
@@ -15,12 +16,12 @@ function SignIn() {
 
   const [signInInfo, setSignInInfo] = useState<SignInParams>({ username: '', password: '' });
   const [signInError, setSignInError] = useState<string>();
+  const postMessage = usePostAppMessage();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (signInError) {
       setSignInError('');
     }
-
     const { name, value } = e.target;
     setSignInInfo((prev) => ({ ...prev, [name]: value }));
   };
@@ -29,7 +30,14 @@ function SignIn() {
   const onSubmit = () => {
     signIn({
       signInInfo,
-      onSuccess: () => navigate(DEFAULT_REDIRECTION_PATH),
+      onSuccess: ({ access_token }) => {
+        navigate(DEFAULT_REDIRECTION_PATH);
+        postMessage('SET_TOKEN', {
+          value: {
+            accessToken: access_token,
+          },
+        });
+      },
       onError: (e) => setSignInError(e),
     });
   };

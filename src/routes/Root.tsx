@@ -24,8 +24,11 @@ function Root() {
 
   useEffect(() => {
     if (!document.cookie) return;
-    postMessage('SET_COOKIE', {
-      value: document.cookie,
+    postMessage('SET_TOKEN', {
+      value: {
+        // csrftoken=...; 이런식으로 쿠키가 저장되어 있기 때문에 =로 split해서 csrfToken을 가져옴
+        csrfToken: document.cookie.split('=')[1],
+      },
     });
   }, [postMessage]);
 

@@ -7,9 +7,9 @@ export interface SignInParams {
 }
 
 export interface SignInResponse {
-  access: string;
-  refresh: string;
+  access_token: string;
 }
+
 export interface SignInError {
   code: SignInErrorCodeType;
   detail: string;

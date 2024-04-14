@@ -26,12 +26,14 @@ export const signIn = ({
   onError,
 }: {
   signInInfo: SignInParams;
-  onSuccess: () => void;
+  onSuccess: (res: SignInResponse) => void;
   onError: (errorMsg: string) => void;
 }) => {
   axios
     .post<SignInResponse>('/user/login/', signInInfo)
-    .then(() => onSuccess())
+    .then((res) => {
+      onSuccess(res.data);
+    })
     .catch((e: AxiosError<SignInError>) => {
       if (e.response?.data.detail) {
         onError(e.response?.data.detail);
