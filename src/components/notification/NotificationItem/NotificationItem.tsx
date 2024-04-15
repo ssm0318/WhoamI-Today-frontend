@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from 'styled-components';
-import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import ProfileImageList from '@components/_common/profile-image-list/ProfileImageList';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import { Notification } from '@models/notification';
@@ -13,8 +13,7 @@ interface NotificationItemProps {
 }
 
 function NotificationItem({ item }: NotificationItemProps) {
-  const { message, created_at, actor_detail, redirect_url, is_read } = item;
-  const { profile_image } = actor_detail;
+  const { message, created_at, recent_actors, redirect_url, is_read } = item;
   const theme = useTheme();
 
   const navigate = useNavigate();
@@ -35,8 +34,8 @@ function NotificationItem({ item }: NotificationItemProps) {
       bgColor={is_read ? 'WHITE' : 'GRAY_10'}
       ph={DEFAULT_MARGIN}
     >
-      <Layout.FlexRow w={50} h={50} mr={7} alignItems="center" justifyContent="center">
-        <ProfileImage imageUrl={profile_image} size={40} />
+      <Layout.FlexRow alignItems="center" justifyContent="center">
+        <ProfileImageList images={recent_actors.map((a) => a.profile_image)} size={40} />
       </Layout.FlexRow>
 
       <Layout.FlexRow flex={1}>

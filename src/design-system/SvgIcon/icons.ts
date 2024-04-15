@@ -114,6 +114,9 @@ const edit = 'edit';
 const new_add = 'new_add';
 const add_reaction = 'add_reaction';
 
+// Notification
+const prompts = 'prompts';
+
 export {
   add_comment,
   add_default,
@@ -190,6 +193,7 @@ export {
   notification_mute,
   private_comment_active,
   private_comment_inactive,
+  prompts,
   question_respond,
   question_send,
   search,
