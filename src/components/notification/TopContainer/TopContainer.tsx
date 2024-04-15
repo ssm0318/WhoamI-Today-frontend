@@ -1,5 +1,11 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import useAsyncEffect from '@hooks/useAsyncEffect';
+import { FetchState } from '@models/api/common';
+import { TodayQuestionsSelector } from '@stores/todaysQuestions';
+import { useBoundStore } from '@stores/useBoundStore';
+import { getFriendRequests } from '@utils/apis/user';
 
 export type TopContainerProps = {
   type: 'FriendRequest' | 'PromptsReceived';
@@ -7,6 +13,8 @@ export type TopContainerProps = {
 
 export default function TopContainer({ type }: TopContainerProps) {
   const navigate = useNavigate();
+  const [friendRequests, setFriendRequests] = useState<FetchState<number>>({ state: 'loading' });
+  const { todaysQuestions, fetchTodaysQuestions } = useBoundStore(TodayQuestionsSelector);
 
   const handleClick = () => {
     if (type === 'FriendRequest') {
@@ -15,6 +23,14 @@ export default function TopContainer({ type }: TopContainerProps) {
       // TODO navigate to prompts page
     }
   };
+
+  useAsyncEffect(async () => {
+    getFriendRequests().then(({ count }) => {
+      setFriendRequests({ state: 'hasValue', data: count });
+    });
+
+    await fetchTodaysQuestions();
+  }, []);
 
   return (
     <Layout.FlexRow
@@ -31,7 +47,9 @@ export default function TopContainer({ type }: TopContainerProps) {
         />
         <Typo type="label-large" ml={4}>
           {type === 'FriendRequest' ? 'See Friend Requests' : 'See Prompts Received'}
-          {` (${type === 'FriendRequest' ? 24 : 12})`}
+          {` (${
+            type === 'FriendRequest' ? friendRequests.data || 0 : todaysQuestions?.length || 0
+          })`}
         </Typo>
       </Layout.FlexRow>
       <Layout.FlexRow>
