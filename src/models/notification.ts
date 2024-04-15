@@ -8,9 +8,17 @@ export interface Notification {
   is_friend_request: boolean;
   is_recent: boolean;
   question_content: string;
-  notification_type: 'FriendRequest';
+  notification_type: NotificationType;
   recent_actors: ActorDetail[];
 }
+
+export type NotificationType =
+  | 'FriendRequest'
+  | 'ResponseRequest'
+  | 'Like'
+  | 'Comment'
+  | 'Response'
+  | 'other';
 
 export interface ActorDetail {
   id: number;

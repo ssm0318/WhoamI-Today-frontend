@@ -231,7 +231,17 @@
     "minute_ago_one": "{{count}} minute ago",
     "minute_ago_other": "{{count}} minutes ago",
     "hour_ago_one": "{{count}} hour ago",
-    "hour_ago_other": "{{count}} hours ago"
+    "hour_ago_other": "{{count}} hours ago",
+    "day_ago_one": "{{count}} day ago",
+    "day_ago_other": "{{count}} days ago",
+    "week_ago_one": "{{count}} week ago",
+    "week_ago_other": "{{count}} weeks ago",
+    "short" : {
+      "minute": "{{count}}m",
+      "hour": "{{count}h",
+      "day": "{{count}}d",
+      "week": "{{count}}w"
+    }
   },
   "notifications": {
     "title": "Notifications"

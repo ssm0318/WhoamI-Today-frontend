@@ -1,20 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTheme } from 'styled-components';
 import ProfileImageList from '@components/_common/profile-image-list/ProfileImageList';
-import { DEFAULT_MARGIN } from '@constants/layout';
-import { Font, Layout } from '@design-system';
+import { IconNames, Layout, SvgIcon, Typo } from '@design-system';
 import { Notification } from '@models/notification';
 import { readNotification } from '@utils/apis/notification';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
+import * as S from './NotificationItem.styled';
 
 interface NotificationItemProps {
   item: Notification;
 }
 
 function NotificationItem({ item }: NotificationItemProps) {
-  const { message, created_at, recent_actors, redirect_url, is_read } = item;
-  const theme = useTheme();
+  const { message, created_at, recent_actors, redirect_url, notification_type } = item;
 
   const navigate = useNavigate();
 
@@ -26,33 +24,43 @@ function NotificationItem({ item }: NotificationItemProps) {
     await readNotification([item.id]);
   };
 
-  return (
-    <Layout.FlexRow
-      w="100%"
-      onClick={handleClickNotification}
-      pv={14}
-      bgColor={is_read ? 'WHITE' : 'GRAY_10'}
-      ph={DEFAULT_MARGIN}
-    >
-      <Layout.FlexRow alignItems="center" justifyContent="center">
-        <ProfileImageList images={recent_actors.map((a) => a.profile_image)} size={40} />
-      </Layout.FlexRow>
+  // TODO fix this if other notis are added
+  const getNotiIconName = (): IconNames => {
+    switch (notification_type) {
+      case 'Like':
+        return 'noti_icon_like';
+      case 'Comment':
+        return 'noti_icon_public_comment';
+      case 'Response':
+        return 'noti_icon_prompt';
+      default:
+        return 'noti_icon_prompt';
+    }
+  };
 
-      <Layout.FlexRow flex={1}>
-        <Font.Body type={is_read ? '14_regular' : '14_semibold'}>
-          {message}
-          <span
-            style={{
-              color: theme.GRAY_4,
-              marginLeft: 4,
-            }}
-          >
-            {convertTimeDiffByString(currentDate, createdAt)}
-          </span>
-        </Font.Body>
+  return (
+    <S.NotificationContainer w="100%" onClick={handleClickNotification} pv={9} alignItems="center">
+      <Layout.FlexRow
+        alignItems="center"
+        justifyContent="center"
+        style={{
+          position: 'relative',
+        }}
+      >
+        <ProfileImageList images={recent_actors.map((a) => a.profile_image)} size={40} />
+        <Layout.Absolute r={0} b={-10}>
+          <SvgIcon name={getNotiIconName()} size={20} />
+        </Layout.Absolute>
       </Layout.FlexRow>
-      {!is_read && <Layout.LayoutBase w={10} h={10} bgColor="NUDGE" rounded={5} mr={2} />}
-    </Layout.FlexRow>
+      <Layout.FlexRow flex={1} ml={4}>
+        <Typo type="body-medium">{message}</Typo>
+      </Layout.FlexRow>
+      <Layout.FlexRow ml={4}>
+        <Typo type="label-small" color="MEDIUM_GRAY">
+          {convertTimeDiffByString(currentDate, createdAt, 'yyyy.MM.dd HH:mm', true)}
+        </Typo>
+      </Layout.FlexRow>
+    </S.NotificationContainer>
   );
 }
 

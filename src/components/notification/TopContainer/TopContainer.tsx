@@ -21,7 +21,6 @@ export default function TopContainer({ type }: TopContainerProps) {
       w="100%"
       justifyContent="space-between"
       alignItems="center"
-      ph={16}
       onClick={handleClick}
     >
       <Layout.FlexRow w="100%" alignItems="center">

@@ -6,7 +6,7 @@ import NotificationItem from '@components/notification/NotificationItem/Notifica
 import TopContainer from '@components/notification/TopContainer/TopContainer';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Notification } from '@models/notification';
 import { getNotifications } from '@utils/apis/notification';
@@ -29,10 +29,13 @@ function Notifications() {
     setIsLoading(false);
   };
 
+  const recentNotifications = notifications.filter((n) => n.is_recent);
+  const restNotifications = notifications.filter((n) => !n.is_recent);
+
   return (
     <MainContainer>
       <SubHeader title={t('title')} />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%">
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" ph={16}>
         <Layout.FlexCol mt={12} mb={4} w="100%">
           {/* See Friend Requests */}
           <TopContainer type="FriendRequest" />
@@ -40,10 +43,19 @@ function Notifications() {
           <TopContainer type="PromptsReceived" />
         </Layout.FlexCol>
         {/* Last 7 days */}
-        {notifications.map((noti) => (
+        <Layout.FlexRow pv={8}>
+          <Typo type="title-medium">Last 7 days</Typo>
+        </Layout.FlexRow>
+        {recentNotifications.map((noti) => (
           <NotificationItem item={noti} key={noti.id} />
         ))}
         {/* Rest of notifications */}
+        <Layout.FlexRow mt={8} pv={8}>
+          <Typo type="title-medium">Last 30 days</Typo>
+        </Layout.FlexRow>
+        {restNotifications.map((noti) => (
+          <NotificationItem item={noti} key={noti.id} />
+        ))}
         <div ref={targetRef} />
         {isLoading && (
           <Layout.FlexRow w="100%" h={40}>

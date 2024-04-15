@@ -16,20 +16,35 @@ type DateFormat = typeof DEFAULT_FORMAT | 'yyyy.MM.dd HH:mm';
  * @param day 기준 날짜
  * @returns
  */
-export const convertTimeDiffByString = (now: Date, day: Date, dateFormat?: DateFormat) => {
+export const convertTimeDiffByString = (
+  now: Date,
+  day: Date,
+  dateFormat?: DateFormat,
+  isShortFormat = false,
+) => {
   const diffMins = differenceInMinutes(now, day);
   const diffHours = differenceInHours(now, day);
+  const diffDays = Math.floor(diffHours / 24);
+  const diffWeeks = Math.floor(diffHours / 24 / 7);
 
   if (diffMins < 1) {
     return i18n.t('time.just_a_moment_ago');
   }
 
   if (diffHours < 1) {
-    return i18n.t('time.minute_ago', { count: diffMins });
+    return i18n.t(isShortFormat ? 'time.short.minute' : 'time.minute_ago', { count: diffMins });
   }
 
   if (diffHours < 24) {
-    return i18n.t('time.hour_ago', { count: diffHours });
+    return i18n.t(isShortFormat ? 'time.short.hour' : 'time.hour_ago', { count: diffHours });
+  }
+
+  if (diffDays < 7) {
+    return i18n.t(isShortFormat ? 'time.short.day' : 'time.day_ago', { count: diffDays });
+  }
+
+  if (diffWeeks < 5) {
+    return i18n.t(isShortFormat ? 'time.short.week' : 'time.week_ago', { count: diffWeeks });
   }
 
   return format(new Date(day), dateFormat ?? DEFAULT_FORMAT);
