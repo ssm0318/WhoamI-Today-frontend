@@ -170,7 +170,8 @@
         "report": {
           "title": "{{username}}을(를) 신고하시겠습니까?",
           "content": "신고하면 자동으로 유저를 차단합니다."
-        }
+        },
+        "cancel": "Cancel"
       }
     },
     "friend": "친구",

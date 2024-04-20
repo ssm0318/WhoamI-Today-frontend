@@ -173,7 +173,8 @@
         "report": {
           "title": "Report {{username}}?",
           "content": "By reporting, we will automatically block this account from you as well"
-        }
+        },
+        "cancel": "Cancel"
       }
     },
     "friend": "Friend",

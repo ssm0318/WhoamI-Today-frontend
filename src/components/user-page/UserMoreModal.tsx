@@ -1,11 +1,13 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BottomMenuDialog } from '@components/_common/alert-dialog/bottom-menu-dialog/BottomMenuDialog';
+import CommonDialog, {
+  CommonDialogProps,
+} from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import { Typo } from '@design-system';
 import { UserProfile } from '@models/user';
 import { addFriendToFavorite, deleteFavorite } from '@utils/apis/friends';
 import { breakFriend, reportUser } from '@utils/apis/user';
-import UserRelatedAlert, { Alert } from './UserRelatedAlert';
 
 interface UserMoreModalProps {
   isVisible: boolean;
@@ -14,11 +16,13 @@ interface UserMoreModalProps {
   callback?: () => Promise<void>;
 }
 
+type AlertProps = Pick<CommonDialogProps, 'title' | 'content' | 'confirmText' | 'onClickConfirm'>;
+
 function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModalProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page.more_modal' });
-  const [showAlert, setShowAlert] = useState<Alert>();
+  const [showAlert, setShowAlert] = useState<AlertProps>();
 
-  const { id, is_favorite } = user;
+  const { id, username, is_favorite } = user;
 
   const closeMoreModal = () => {
     setIsVisible(false);
@@ -33,11 +37,8 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
   const handleClickAddToFavorite = async () => {
     closeMoreModal();
 
-    if (is_favorite) {
-      await deleteFavorite(id);
-    } else {
-      await addFriendToFavorite(id);
-    }
+    if (is_favorite) await deleteFavorite(id);
+    else await addFriendToFavorite(id);
 
     callback?.();
   };
@@ -49,37 +50,43 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
 
   const handleClickUnfriend = () => {
     setShowAlert({
+      title: t('alert.unfriend.title', { username }),
+      content: t('alert.unfriend.content'),
+      confirmText: t('menu.unfriend'),
       onClickConfirm: async () => {
         await breakFriend(user.id);
         callback?.();
         handleOnConfirmAlert();
       },
-      confirmMsg: t('alert.unfriend.content'),
     });
     closeMoreModal();
   };
 
   const handleClickBlockUser = () => {
     setShowAlert({
+      title: t('alert.block.title', { username }),
+      content: t('alert.block.content'),
+      confirmText: t('menu.block'),
       onClickConfirm: async () => {
         // NOTE: 현재는 차단이 신고와 동일함
         await reportUser(user.id);
         callback?.();
         handleOnConfirmAlert();
       },
-      confirmMsg: t('alert.block.content'),
     });
     closeMoreModal();
   };
 
   const handleClickReportUser = () => {
     setShowAlert({
+      title: t('alert.report.title', { username }),
+      content: t('alert.report.content'),
+      confirmText: t('menu.block'),
       onClickConfirm: async () => {
         await reportUser(user.id);
         callback?.();
         handleOnConfirmAlert();
       },
-      confirmMsg: t('alert.block.content'),
     });
     closeMoreModal();
   };
@@ -114,7 +121,13 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
         </button>
       </BottomMenuDialog>
       {showAlert && (
-        <UserRelatedAlert visible={!!showAlert} close={handleOnCloseAlert} {...showAlert} />
+        <CommonDialog
+          visible={!!showAlert}
+          onClickClose={handleOnCloseAlert}
+          confirmTextColor="WARNING"
+          cancelText={t('alert.cancel')}
+          {...showAlert}
+        />
       )}
     </>
   );
