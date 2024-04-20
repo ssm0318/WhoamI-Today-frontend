@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import ToastBar from '@components/_common/toast-bar/ToastBar';
+import ErrorPage from '@components/error-page/ErrorPage';
 import { Colors, Typo } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
 import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
 import { checkIfSignIn } from '@utils/apis/user';
 import { ChatRoom } from 'src/routes/chat-room/ChatRoom';
-import ErrorPage from './components/error-page/ErrorPage';
 import './i18n';
 import SpotifyManager from './libs/SpotifyManager';
 import reportWebVitals from './reportWebVitals';
@@ -47,7 +47,7 @@ import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
 
 const router = createBrowserRouter([
-  { path: '', element: <Intro /> },
+  { path: '', element: <Intro />, loader: checkIfSignIn },
   {
     path: '/',
     element: <Root />,
