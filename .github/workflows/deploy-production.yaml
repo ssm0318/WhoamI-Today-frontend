@@ -52,5 +52,4 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_KEY }}
         script: |
-          sudo systemctl restart nginx
-	
+          sudo systemctl restart nginx.service
