@@ -76,7 +76,7 @@ function Settings() {
         {/* account settings */}
         <Layout.FlexCol ph={DEFAULT_MARGIN} gap={10} w="100%">
           <Font.Display type="20_bold">{t('account_settings')}</Font.Display>
-          <AccountSettingButton text={t('edit_profile')} onClick={handleClickEditProfile} />
+          <AccountSettingButton text={t('edit_profile.title')} onClick={handleClickEditProfile} />
           <AccountSettingButton text={t('change_password')} onClick={handleClickChangePassword} />
         </Layout.FlexCol>
         <Divider width={1} />
