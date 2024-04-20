@@ -22,7 +22,7 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
   const [t] = useTranslation('translation', { keyPrefix: 'user_page.more_modal' });
   const [showAlert, setShowAlert] = useState<AlertProps>();
 
-  const { id, username, is_favorite } = user;
+  const { id, username, are_friends, is_favorite } = user;
 
   const closeMoreModal = () => {
     setIsVisible(false);
@@ -94,21 +94,25 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
   return (
     <>
       <BottomMenuDialog visible={isVisible} onClickClose={closeMoreModal}>
-        <button type="button" onClick={handleClickAddToFavorite}>
-          <Typo type="button-large" color="DARK_GRAY">
-            {is_favorite ? t('menu.remove_from_favorite') : t('menu.add_to_favorite')}
-          </Typo>
-        </button>
-        <button type="button" onClick={handleClickManageFriendGroups}>
-          <Typo type="button-large" color="DARK_GRAY">
-            {t('menu.manage_friend_groups')}
-          </Typo>
-        </button>
-        <button type="button" onClick={handleClickUnfriend}>
-          <Typo type="button-large" color="WARNING">
-            {t('menu.unfriend')}
-          </Typo>
-        </button>
+        {are_friends && (
+          <>
+            <button type="button" onClick={handleClickAddToFavorite}>
+              <Typo type="button-large" color="DARK_GRAY">
+                {is_favorite ? t('menu.remove_from_favorite') : t('menu.add_to_favorite')}
+              </Typo>
+            </button>
+            <button type="button" onClick={handleClickManageFriendGroups}>
+              <Typo type="button-large" color="DARK_GRAY">
+                {t('menu.manage_friend_groups')}
+              </Typo>
+            </button>
+            <button type="button" onClick={handleClickUnfriend}>
+              <Typo type="button-large" color="WARNING">
+                {t('menu.unfriend')}
+              </Typo>
+            </button>
+          </>
+        )}
         <button type="button" onClick={handleClickBlockUser}>
           <Typo type="button-large" color="WARNING">
             {t('menu.block')}
