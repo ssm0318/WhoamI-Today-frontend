@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { BottomMenuDialog } from '@components/_common/alert-dialog/bottom-menu-dialog/BottomMenuDialog';
 import { Typo } from '@design-system';
 import { UserProfile } from '@models/user';
+import { addFriendToFavorite, deleteFavorite } from '@utils/apis/friends';
 import { breakFriend, reportUser } from '@utils/apis/user';
 import UserRelatedAlert, { Alert } from './UserRelatedAlert';
 
@@ -17,6 +18,8 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
   const [t] = useTranslation('translation', { keyPrefix: 'user_page.more_modal' });
   const [showAlert, setShowAlert] = useState<Alert>();
 
+  const { id, is_favorite } = user;
+
   const closeMoreModal = () => {
     setIsVisible(false);
   };
@@ -27,9 +30,16 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
     closeMoreModal();
   };
 
-  const handleClickAddToFavorite = () => {
-    // TODO
+  const handleClickAddToFavorite = async () => {
     closeMoreModal();
+
+    if (is_favorite) {
+      await deleteFavorite(id);
+    } else {
+      await addFriendToFavorite(id);
+    }
+
+    callback?.();
   };
 
   const handleClickManageFriendGroups = () => {
@@ -79,7 +89,7 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
       <BottomMenuDialog visible={isVisible} onClickClose={closeMoreModal}>
         <button type="button" onClick={handleClickAddToFavorite}>
           <Typo type="button-large" color="DARK_GRAY">
-            {t('menu.add_to_favorite')}
+            {is_favorite ? t('menu.remove_from_favorite') : t('menu.add_to_favorite')}
           </Typo>
         </button>
         <button type="button" onClick={handleClickManageFriendGroups}>

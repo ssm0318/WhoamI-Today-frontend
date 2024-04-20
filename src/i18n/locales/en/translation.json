@@ -155,6 +155,7 @@
     "more_modal": {
       "menu": {
         "add_to_favorite": "Add to Favorite",
+        "remove_from_favorite": "Remove From Favorite",
         "manage_friend_groups": "Manage Friend Groups",
         "unfriend": "Unfriend",
         "block": "Block",
