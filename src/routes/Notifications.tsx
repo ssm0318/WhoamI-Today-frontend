@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
-import NotificationItem from '@components/notification/NotificationItem';
+import NotificationItem from '@components/notification/NotificationItem/NotificationItem';
+import TopContainer from '@components/notification/TopContainer/TopContainer';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Notification } from '@models/notification';
 import { getNotifications } from '@utils/apis/notification';
@@ -28,11 +29,31 @@ function Notifications() {
     setIsLoading(false);
   };
 
+  const recentNotifications = notifications.filter((n) => n.is_recent);
+  const restNotifications = notifications.filter((n) => !n.is_recent);
+
   return (
     <MainContainer>
       <SubHeader title={t('title')} />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 8} w="100%">
-        {notifications.map((noti) => (
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" ph={16}>
+        <Layout.FlexCol mt={12} mb={4} w="100%">
+          {/* See Friend Requests */}
+          <TopContainer type="FriendRequest" />
+          {/* See Prompts Received */}
+          <TopContainer type="PromptsReceived" />
+        </Layout.FlexCol>
+        {/* Last 7 days */}
+        <Layout.FlexRow pv={8}>
+          <Typo type="title-medium">{t('last_7_days')}</Typo>
+        </Layout.FlexRow>
+        {recentNotifications.map((noti) => (
+          <NotificationItem item={noti} key={noti.id} />
+        ))}
+        {/* Rest of notifications */}
+        <Layout.FlexRow mt={8} pv={8}>
+          <Typo type="title-medium">{t('last_30_days')}</Typo>
+        </Layout.FlexRow>
+        {restNotifications.map((noti) => (
           <NotificationItem item={noti} key={noti.id} />
         ))}
         <div ref={targetRef} />

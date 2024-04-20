@@ -61,6 +61,7 @@ const noti_icon_like = 'noti_icon_like';
 const noti_icon_emoji = 'noti_icon_emoji';
 const noti_icon_public_comment = 'noti_icon_public_comment';
 const noti_icon_private_comment = 'noti_icon_private_comment';
+const noti_icon_prompt = 'noti_icon_prompt';
 const add_default = 'add_default';
 const star = 'star';
 const star_outline = 'star_outline';
@@ -113,6 +114,9 @@ const top_navigation_back = 'top_navigation_back';
 const edit = 'edit';
 const new_add = 'new_add';
 const add_reaction = 'add_reaction';
+
+// Notification
+const prompts = 'prompts';
 
 export {
   add_comment,
@@ -185,11 +189,13 @@ export {
   noti_icon_emoji,
   noti_icon_like,
   noti_icon_private_comment,
+  noti_icon_prompt,
   noti_icon_public_comment,
   notification,
   notification_mute,
   private_comment_active,
   private_comment_inactive,
+  prompts,
   question_respond,
   question_send,
   search,

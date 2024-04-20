@@ -226,10 +226,22 @@
   "time": {
     "just_a_moment_ago": "방금 전",
     "minute_ago": "{{count}}분 전",
-    "hour_ago": "{{count}}시간 전"
+    "hour_ago": "{{count}}시간 전",
+    "day_ago": "{{count}}일 전",
+    "week_ago": "{{count}}주 전",
+    "short": {
+      "minute": "{{count}}분",
+      "hour": "{{count}}시간",
+      "day": "{{count}}일",
+      "week": "{{count}}주"
+    }
   },
   "notifications": {
-    "title": "알림"
+    "title": "알림",
+    "last_7_days": "지난 7일",
+    "last_30_days": "지난 30일",
+    "see_friend_requests": "친구 요청",
+    "see_prompts_received": "받은 질문"
   },
   "comment": {
     "reply": "답글",

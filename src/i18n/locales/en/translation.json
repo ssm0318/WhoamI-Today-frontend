@@ -231,10 +231,24 @@
     "minute_ago_one": "{{count}} minute ago",
     "minute_ago_other": "{{count}} minutes ago",
     "hour_ago_one": "{{count}} hour ago",
-    "hour_ago_other": "{{count}} hours ago"
+    "hour_ago_other": "{{count}} hours ago",
+    "day_ago_one": "{{count}} day ago",
+    "day_ago_other": "{{count}} days ago",
+    "week_ago_one": "{{count}} week ago",
+    "week_ago_other": "{{count}} weeks ago",
+    "short" : {
+      "minute": "{{count}}m",
+      "hour": "{{count}h",
+      "day": "{{count}}d",
+      "week": "{{count}}w"
+    }
   },
   "notifications": {
-    "title": "Notifications"
+    "title": "Notifications",
+    "last_7_days": "Last 7 days",
+    "last_30_days": "Last 30 days",
+    "see_friend_requests": "See Friend Requests",
+    "see_prompts_received": "See Prompts Received"
   },
   "comment": {
     "reply": "Reply",
