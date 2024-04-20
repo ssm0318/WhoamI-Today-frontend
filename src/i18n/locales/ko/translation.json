@@ -297,7 +297,8 @@
     "prompts_of_the_day": {
       "title": "오늘의 질문",
       "more": "더보기"
-    }
+    },
+    "recent_prompts": "최근 질문"
   },
   "friends": {
     "explore_friends": {

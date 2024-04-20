@@ -296,7 +296,8 @@
     "prompts_of_the_day": {
       "title": "Prompts of the day",
       "more": "More"
-    }
+    },
+    "recent_prompts": "Recent Prompts"
   },
   "chat_room": {
     "noti_setting_dialog": {
