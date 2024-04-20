@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import { Typo } from '@design-system';
 import { DailyQuestion, Question } from '@models/post';
@@ -9,9 +10,11 @@ interface PromptCardProps {
   question: Question | DailyQuestion;
 }
 function RecentPromptCard({ question }: PromptCardProps) {
-  const { content } = question;
+  const navigate = useNavigate();
+
+  const { content, id } = question;
   const handleClickRespond = () => {
-    // TODO
+    navigate(`questions/${id}/new`);
   };
 
   const handleClickSend = () => {

@@ -20,7 +20,7 @@ function BottomModal({
   children,
   bgColor = 'rgba(0, 0, 0, 0.7)',
   containerBgColor = 'WHITE',
-  maxHeight = 450,
+  maxHeight = 700,
   TopComponent,
 }: BottomModalProps) {
   const bodyRef = useRef<HTMLDivElement>(null);

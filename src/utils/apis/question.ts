@@ -6,7 +6,6 @@ import axios from './axios';
 // GET today's questions
 export const getTodayQuestions = async () => {
   const { data } = await axios.get<DailyQuestion[]>(`/qna/questions/daily/`);
-  console.log(data);
   return data;
 };
 
