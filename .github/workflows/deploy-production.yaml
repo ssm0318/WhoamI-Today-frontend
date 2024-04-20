@@ -17,9 +17,6 @@ jobs:
       with:
         node-version: 16
 
-    - name: move to Frontend directory
-      run: cd WhoAmI-Today-frontend
-
     - name: Install dependencies
       run: yarn install
 
