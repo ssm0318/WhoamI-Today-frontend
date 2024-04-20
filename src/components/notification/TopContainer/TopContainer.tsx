@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -15,6 +16,7 @@ export default function TopContainer({ type }: TopContainerProps) {
   const navigate = useNavigate();
   const [friendRequests, setFriendRequests] = useState<FetchState<number>>({ state: 'loading' });
   const { todaysQuestions, fetchTodaysQuestions } = useBoundStore(TodayQuestionsSelector);
+  const [t] = useTranslation('translation', { keyPrefix: 'notifications' });
 
   const handleClick = () => {
     if (type === 'FriendRequest') {
@@ -28,7 +30,6 @@ export default function TopContainer({ type }: TopContainerProps) {
     getFriendRequests().then(({ count }) => {
       setFriendRequests({ state: 'hasValue', data: count });
     });
-
     await fetchTodaysQuestions();
   }, []);
 
@@ -46,7 +47,7 @@ export default function TopContainer({ type }: TopContainerProps) {
           size={44}
         />
         <Typo type="label-large" ml={4}>
-          {type === 'FriendRequest' ? 'See Friend Requests' : 'See Prompts Received'}
+          {type === 'FriendRequest' ? t('see_friend_requests') : t('see_prompts_received')}
           {` (${
             type === 'FriendRequest' ? friendRequests.data || 0 : todaysQuestions?.length || 0
           })`}
