@@ -13,11 +13,6 @@ interface Props {
 
 function SelectPromptSheet({ visible, closeBottomSheet }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'prompts' });
-  //   const navigate = useNavigate();
-
-  //   const handleClickMenu = (path: string) => () => {
-  //     navigate(path);
-  //   };
 
   return createPortal(
     <BottomModal visible={visible} onClose={closeBottomSheet} maxHeight={700}>
