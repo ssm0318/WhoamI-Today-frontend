@@ -149,7 +149,29 @@
   "user_page": {
     "this_user_do_not_exist": "존재하지 않는 사용자입니다 :(",
     "request_a_friend": "친구 요청",
-    "are_you_sure_you_want_to_delete_this_friend": "친구를 삭제하시겠습니까?",
+    "more_modal": {
+      "menu": {
+        "add_to_favorite": "즐겨찾기",
+        "manage_friend_groups": "친구 그룹 관리",
+        "unfriend": "친구 취소",
+        "block": "차단",
+        "report": "신고"
+      },
+      "alert": {
+        "unfriend": {
+          "title": "{{username}}을(를) 친구목록에서 삭제하시겠습니까?",
+          "content": "이 유저와 다시 친구과 되고 싶으면 친구 요청을 다시 보내야합니다."
+        },
+        "block": {
+          "title": "{{username}}을(를) 차단하시겠습니까?",
+          "content": "이 유저의 게시글 또는 댓글을 더이상 볼 수 없게 됩니다."
+        },
+        "report": {
+          "title": "{{username}}을(를) 신고하시겠습니까?",
+          "content": "신고하면 자동으로 유저를 차단합니다."
+        }
+      }
+    },
     "friend": "친구",
     "accept": "수락",
     "reject": "거절",

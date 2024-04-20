@@ -5,15 +5,16 @@ import { User } from '@models/user';
 
 interface UserHeaderProps {
   user?: User;
+  onClickMore: () => void;
 }
 
-function UserHeader({ user }: UserHeaderProps) {
+function UserHeader({ user, onClickMore }: UserHeaderProps) {
   const handleClickChat = () => {
     // TODO: 유저와의 채팅방으로 이동
   };
 
   const handleClickMore = () => {
-    // TODO: 유저 더보기 모달 열기
+    onClickMore();
   };
 
   if (!user) return null;

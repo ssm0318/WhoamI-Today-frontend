@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import BottomModal from '@components/_common/bottom-modal/BottomModal';
-import { Font, Layout } from '@design-system';
+import { BottomMenuDialog } from '@components/_common/alert-dialog/bottom-menu-dialog/BottomMenuDialog';
+import { Typo } from '@design-system';
 import { UserProfile } from '@models/user';
 import { breakFriend, reportUser } from '@utils/apis/user';
 import UserRelatedAlert, { Alert } from './UserRelatedAlert';
@@ -14,31 +14,42 @@ interface UserMoreModalProps {
 }
 
 function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModalProps) {
-  const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
+  const [t] = useTranslation('translation', { keyPrefix: 'user_page.more_modal' });
   const [showAlert, setShowAlert] = useState<Alert>();
 
-  const handleOnCloseMore = () => {
+  const closeMoreModal = () => {
     setIsVisible(false);
   };
 
   const handleOnCloseAlert = () => setShowAlert(undefined);
   const handleOnConfirmAlert = () => {
     handleOnCloseAlert();
-    handleOnCloseMore();
+    closeMoreModal();
   };
 
-  const handleOnClickReportUser = () => {
+  const handleClickAddToFavorite = () => {
+    // TODO
+    closeMoreModal();
+  };
+
+  const handleClickManageFriendGroups = () => {
+    // TODO
+    closeMoreModal();
+  };
+
+  const handleClickUnfriend = () => {
     setShowAlert({
       onClickConfirm: async () => {
-        await reportUser(user.id);
+        await breakFriend(user.id);
         callback?.();
         handleOnConfirmAlert();
       },
-      confirmMsg: t('do_you_want_to_report_this_user'),
+      confirmMsg: t('alert.unfriend.content'),
     });
+    closeMoreModal();
   };
 
-  const handleOnClickBlockUser = () => {
+  const handleClickBlockUser = () => {
     setShowAlert({
       onClickConfirm: async () => {
         // NOTE: 현재는 차단이 신고와 동일함
@@ -46,39 +57,52 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
         callback?.();
         handleOnConfirmAlert();
       },
-      confirmMsg: t('do_you_want_to_block_this_user'),
+      confirmMsg: t('alert.block.content'),
     });
+    closeMoreModal();
   };
 
-  const handleOnClickBreakFriends = () => {
+  const handleClickReportUser = () => {
     setShowAlert({
       onClickConfirm: async () => {
-        await breakFriend(user.id);
+        await reportUser(user.id);
         callback?.();
         handleOnConfirmAlert();
       },
-      confirmMsg: t('are_you_sure_you_want_to_delete_this_friend'),
+      confirmMsg: t('alert.block.content'),
     });
+    closeMoreModal();
   };
 
   return (
     <>
-      <BottomModal visible={isVisible} onClose={handleOnCloseMore}>
-        <Layout.FlexCol w="100%" alignItems="center" bgColor="WHITE" pt={12} pb={12} gap={16}>
-          {/* NOTE: 현재는 차단이 신고와 동일함 */}
-          <button type="button" onClick={handleOnClickBlockUser}>
-            <Font.Body type="20_regular">{t('block_this_user')}</Font.Body>
-          </button>
-          <button type="button" onClick={handleOnClickReportUser}>
-            <Font.Body type="20_regular">{t('report_this_user')}</Font.Body>
-          </button>
-          {user.are_friends && (
-            <button type="button" onClick={handleOnClickBreakFriends}>
-              <Font.Body type="20_regular">{t('break_friends')}</Font.Body>
-            </button>
-          )}
-        </Layout.FlexCol>
-      </BottomModal>
+      <BottomMenuDialog visible={isVisible} onClickClose={closeMoreModal}>
+        <button type="button" onClick={handleClickAddToFavorite}>
+          <Typo type="button-large" color="DARK_GRAY">
+            {t('menu.add_to_favorite')}
+          </Typo>
+        </button>
+        <button type="button" onClick={handleClickManageFriendGroups}>
+          <Typo type="button-large" color="DARK_GRAY">
+            {t('menu.manage_friend_groups')}
+          </Typo>
+        </button>
+        <button type="button" onClick={handleClickUnfriend}>
+          <Typo type="button-large" color="WARNING">
+            {t('menu.unfriend')}
+          </Typo>
+        </button>
+        <button type="button" onClick={handleClickBlockUser}>
+          <Typo type="button-large" color="WARNING">
+            {t('menu.block')}
+          </Typo>
+        </button>
+        <button type="button" onClick={handleClickReportUser}>
+          <Typo type="button-large" color="WARNING">
+            {t('menu.report')}
+          </Typo>
+        </button>
+      </BottomMenuDialog>
       {showAlert && (
         <UserRelatedAlert visible={!!showAlert} close={handleOnCloseAlert} {...showAlert} />
       )}

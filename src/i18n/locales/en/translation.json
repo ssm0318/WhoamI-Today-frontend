@@ -152,7 +152,29 @@
   "user_page": {
     "this_user_do_not_exist": "This user doesn't exist :(",
     "request_a_friend": "Send a friend request",
-    "are_you_sure_you_want_to_delete_this_friend": "Are you sure you want to delete this friend?",
+    "more_modal": {
+      "menu": {
+        "add_to_favorite": "Add to Favorite",
+        "manage_friend_groups": "Manage Friend Groups",
+        "unfriend": "Unfriend",
+        "block": "Block",
+        "report": "Report"
+      },
+      "alert": {
+        "unfriend": {
+          "title": "Unfriend {{username}}?",
+          "content": "If you change your mind, you’ll have to request to friend this account again."
+        },
+        "block": {
+          "title": "Block {{username}}?",
+          "content": "You will no longer see any posts or comments from this account."
+        },
+        "report": {
+          "title": "Report {{username}}?",
+          "content": "By reporting, we will automatically block this account from you as well"
+        }
+      }
+    },
     "friend": "Friend",
     "accept": "Accept",
     "reject": "Reject",
