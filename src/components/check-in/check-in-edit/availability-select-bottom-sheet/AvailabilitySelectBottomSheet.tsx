@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { createPortal } from 'react-dom';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
 import Icon from '@components/_common/icon/Icon';
@@ -28,7 +27,7 @@ function AvailabilitySelectBottomSheet({
     }
   };
 
-  return createPortal(
+  return (
     <BottomModal visible={visible} onClose={closeBottomSheet} maxHeight={700}>
       <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
@@ -58,8 +57,7 @@ function AvailabilitySelectBottomSheet({
           />
         </S.ConfirmButtonContainer>
       </Layout.FlexCol>
-    </BottomModal>,
-    document.getElementById('root-container') || document.body,
+    </BottomModal>
   );
 }
 

@@ -49,13 +49,13 @@ export const Container = styled(Layout.Absolute)<{
   box-shadow: ${(props) => (props.visible ? '0px -4px 44px rgba(0, 0, 0, 0.12)' : 'none')};
   border-radius: 17px 17px 0px 0px;
   width: 100%;
+  left: 50%;
   height: ${(props) => props.height}px;
   bottom: ${(props) => -1 * props.height}px;
-  transform: translateY(${(props) => (props.visible ? -props.height : 0)}px);
+  transform: translateX(-50%) translateY(${(props) => (props.visible ? -props.height : 0)}px);
   transition: transform 0.3s ease-in;
   overflow: hidden;
   position: fixed;
-  align-self: center;
   max-width: ${MAX_WINDOW_WIDTH}px;
   display: flex;
   flex-direction: column;

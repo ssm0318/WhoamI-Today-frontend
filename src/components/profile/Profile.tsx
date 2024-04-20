@@ -25,7 +25,7 @@ function Profile({ user }: ProfileProps) {
   if (!user) return null;
 
   return (
-    <Layout.FlexCol gap={8}>
+    <Layout.FlexCol gap={8} w="100%">
       <Layout.FlexRow gap={8}>
         <ProfileImage imageUrl={user?.profile_image} username={username} size={80} />
         <Layout.FlexCol gap={8}>
