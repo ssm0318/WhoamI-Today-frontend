@@ -40,18 +40,12 @@ function NotificationItem({ item }: NotificationItemProps) {
 
   return (
     <S.NotificationContainer w="100%" onClick={handleClickNotification} pv={9} alignItems="center">
-      <Layout.FlexRow
-        alignItems="center"
-        justifyContent="center"
-        style={{
-          position: 'relative',
-        }}
-      >
+      <S.NotificationContent alignItems="center" justifyContent="center">
         <ProfileImageList images={recent_actors.map((a) => a.profile_image)} size={40} />
         <Layout.Absolute r={0} b={-10}>
           <SvgIcon name={getNotiIconName()} size={20} />
         </Layout.Absolute>
-      </Layout.FlexRow>
+      </S.NotificationContent>
       <Layout.FlexRow flex={1} ml={4}>
         <Typo type="body-medium">{message}</Typo>
       </Layout.FlexRow>
