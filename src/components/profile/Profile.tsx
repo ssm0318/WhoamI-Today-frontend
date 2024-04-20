@@ -25,10 +25,10 @@ function Profile({ user }: ProfileProps) {
   if (!user) return null;
 
   return (
-    <Layout.FlexCol gap={8} w="100%">
-      <Layout.FlexRow gap={8}>
+    <Layout.FlexCol w="100%" gap={8}>
+      <Layout.FlexRow w="100%" gap={8}>
         <ProfileImage imageUrl={user?.profile_image} username={username} size={80} />
-        <Layout.FlexCol gap={8}>
+        <Layout.FlexCol w="100%" gap={8}>
           <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
             <Typo type="title-large">{isMyPage ? myProfile?.username : username}</Typo>
             {isMyPage && (

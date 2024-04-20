@@ -59,6 +59,7 @@ function CheckIn({ user }: CheckInProps) {
     setCheckIn(myCheckIn);
   }, [isMyPage]);
 
+  // TODO: 체크인 로딩 표시
   if (!hasCheckIn && !isMyPage) return null;
   return (
     <Layout.FlexCol w="100%" gap={8} p={16} bgColor="GRAY_14" rounded={8} justifyContent="center">
