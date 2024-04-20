@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { DEFAULT_MARGIN, MAX_WINDOW_WIDTH, Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
 
@@ -21,13 +21,36 @@ export const Background = styled(Layout.Absolute)`
 
 const MAX_WIDTH = MAX_WINDOW_WIDTH - 2 * DEFAULT_MARGIN;
 
-export const Body = styled(Layout.Absolute)`
-  top: 50%;
+export interface BodyProps {
+  position: 'top' | 'center' | 'bottom';
+}
+
+export const Body = styled(Layout.Absolute)<BodyProps>`
+  ${({ position }) =>
+    position === 'center' &&
+    css`
+      top: 50%;
+      transform: translate(-50%, -50%);
+    `}
+
+  ${({ position }) =>
+    position === 'bottom' &&
+    css`
+      bottom: 10px;
+      transform: translateX(-50%);
+    `}
+
+  ${({ position }) =>
+    position === 'top' &&
+    css`
+      top: 10px;
+      transform: translateX(-50%);
+    `}
+    
   left: 50%;
   padding: 32px 24.5px 31.62px 25px;
-  transform: translate(-50%, -50%);
   border-radius: 12.195px;
-  background: ${({ theme }) => theme.WHITE};
+  background-color: ${({ theme }) => theme.WHITE};
   width: 70%;
   max-width: ${MAX_WIDTH}px;
 `;

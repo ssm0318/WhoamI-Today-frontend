@@ -6,10 +6,17 @@ interface AlertDialogProps {
   children: ReactNode;
   visible: boolean;
   className?: string;
+  position?: S.BodyProps['position'];
   onClickDimmed?: () => void;
 }
 
-function AlertDialog({ children, visible, className, onClickDimmed }: AlertDialogProps) {
+function AlertDialog({
+  children,
+  visible,
+  className,
+  position = 'center',
+  onClickDimmed,
+}: AlertDialogProps) {
   const onClick = (e: MouseEvent) => {
     e.stopPropagation();
     onClickDimmed?.();
@@ -19,7 +26,7 @@ function AlertDialog({ children, visible, className, onClickDimmed }: AlertDialo
   return createPortal(
     <S.Container className={className}>
       <S.Background onClick={onClick} />
-      <S.Body className="body" onClick={(e) => e.stopPropagation()}>
+      <S.Body className="body" position={position} onClick={(e) => e.stopPropagation()}>
         {children}
       </S.Body>
     </S.Container>,
