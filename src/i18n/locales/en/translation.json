@@ -221,6 +221,7 @@
       "email": "Email",
       "bio": "Bio",
       "pronouns": "Pronouns",
+      "update": "Update", 
       "response": {
         "updated": "Profile Updated🎉"
       }
