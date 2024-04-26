@@ -1,6 +1,7 @@
 {
   "common": {
-    "done": "Done"
+    "done": "Done",
+    "cancel": "Cancel"
   },
   "intro": {
     "sign_in": "Sign In",
@@ -150,13 +151,32 @@
   },
   "user_page": {
     "this_user_do_not_exist": "This user doesn't exist :(",
-    "block_this_user": "Block this user",
-    "report_this_user": "Report this user",
-    "do_you_want_to_block_this_user": "Do you want to block this user?",
-    "do_you_want_to_report_this_user": "Do you want to report this user?",
     "request_a_friend": "Send a friend request",
-    "break_friends": "Break Friends",
-    "are_you_sure_you_want_to_delete_this_friend": "Are you sure you want to delete this friend?",
+    "more_modal": {
+      "menu": {
+        "add_to_favorite": "Add to Favorite",
+        "remove_from_favorite": "Remove From Favorite",
+        "manage_friend_groups": "Manage Friend Groups",
+        "unfriend": "Unfriend",
+        "block": "Block",
+        "report": "Report"
+      },
+      "alert": {
+        "unfriend": {
+          "title": "Unfriend {{username}}?",
+          "content": "If you change your mind, you’ll have to request to friend this account again."
+        },
+        "block": {
+          "title": "Block {{username}}?",
+          "content": "You will no longer see any posts or comments from this account."
+        },
+        "report": {
+          "title": "Report {{username}}?",
+          "content": "By reporting, we will automatically block this account from you as well"
+        },
+        "cancel": "Cancel"
+      }
+    },
     "friend": "Friend",
     "accept": "Accept",
     "reject": "Reject",

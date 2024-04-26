@@ -49,10 +49,14 @@ function FriendPage() {
     return navigate('/my');
   }, [isMyPage, navigate]);
 
+  const handleClickMore = () => {
+    setShowMore(true);
+  };
+
   if (!username || !user.data) return null;
   return (
     <MainContainer>
-      <UserHeader user={user.data} />
+      <UserHeader user={user.data} onClickMore={handleClickMore} />
       <Layout.FlexCol w="100%" bgColor="LIGHT" mt={TITLE_HEADER_HEIGHT}>
         <UserMoreModal
           isVisible={showMore}

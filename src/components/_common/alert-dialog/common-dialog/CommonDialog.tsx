@@ -1,7 +1,7 @@
 import { ColorKeys, Layout, Typo } from '@design-system';
 import { StyledCommonDialog } from './CommonDialog.styled';
 
-interface CommonDialogProps {
+export interface CommonDialogProps {
   visible: boolean;
   title: string;
   content: string;
