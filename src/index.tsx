@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import ToastBar from '@components/_common/toast-bar/ToastBar';
+import { ChatRoomList } from '@components/chats/chat-room-list/ChatRoomList';
 import ErrorPage from '@components/error-page/ErrorPage';
 import { Colors, Typo } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
@@ -57,7 +58,10 @@ const router = createBrowserRouter([
       {
         path: 'chats',
         element: <Chats />,
-        children: [{ path: ':roomId', element: <ChatRoom /> }],
+        children: [
+          { path: '', element: <ChatRoomList /> },
+          { path: ':roomId', element: <ChatRoom /> },
+        ],
       },
       {
         path: 'my',

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { SocketMessage } from '@models/api/chat';
+import { ResponseMessageAction } from '@models/api/chat';
 
-export function useChatRoomAutoScroll(messages: SocketMessage[]) {
+export function useChatRoomAutoScroll(messages: ResponseMessageAction[]) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
 

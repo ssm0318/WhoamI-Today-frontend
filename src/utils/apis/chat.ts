@@ -19,3 +19,13 @@ export const getChatMessages = async (roomId: string | number, next?: string | n
   );
   return data;
 };
+
+export const getChatRoomIdByUserId = async (userId: number) => {
+  const { data } = await axios.get<{ chat_room_id?: number }>(`/chat/rooms/one_on_one/${userId}/`);
+  return data.chat_room_id;
+};
+
+export const getChatRoomInfo = async (roomId: string | number) => {
+  const { data } = await axios.get<ChatRoom>(`/chat/rooms/${roomId}/`);
+  return data;
+};
