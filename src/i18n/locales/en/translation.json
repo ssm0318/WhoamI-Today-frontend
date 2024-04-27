@@ -273,10 +273,13 @@
   },
   "comment": {
     "reply": "Reply",
+    "message": "Message",
     "delete": "Delete",
     "post": "Post",
-    "comment_place_holder": "Please enter a comment.",
-    "reply_place_holder": "Please enter a reply."
+    "comment_place_holder": "Add a comment for {{username}}",
+    "reply_place_holder": "Add a reply to {{username}}",
+    "private_comment": "Private Comment",
+    "replying_to": "Replying to {{username}}"
   },
   "no_contents": {
     "the_day_detail": "No moment or responses.",

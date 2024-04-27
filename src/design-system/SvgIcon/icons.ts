@@ -57,6 +57,10 @@ const edit_filled_white = 'edit_filled_white';
 const share_default = 'share_default';
 const private_comment_inactive = 'private_comment_inactive';
 const private_comment_active = 'private_comment_active';
+const close_comment = 'close_comment';
+const checkbox_rectangle_checked = 'checkbox_rectangle_checked';
+const checkbox_rectangle_default = 'checkbox_rectangle_default';
+
 const noti_icon_like = 'noti_icon_like';
 const noti_icon_emoji = 'noti_icon_emoji';
 const noti_icon_public_comment = 'noti_icon_public_comment';
@@ -118,6 +122,9 @@ const add_reaction = 'add_reaction';
 // Notification
 const prompts = 'prompts';
 
+const comment_reply = 'comment_reply';
+const comment_message = 'comment_message';
+
 export {
   add_comment,
   add_default,
@@ -143,10 +150,15 @@ export {
   chats_inactive,
   checkbox_checked,
   checkbox_default,
+  checkbox_rectangle_checked,
+  checkbox_rectangle_default,
   circle_check_checked,
   circle_check_unchecked,
   close,
+  close_comment,
   comment,
+  comment_message,
+  comment_reply,
   default_profile,
   delete_button,
   delete_default,
