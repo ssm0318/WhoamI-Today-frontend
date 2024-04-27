@@ -1,5 +1,5 @@
 import { PaginationResponse } from '@models/api/common';
-import { Note } from '@models/post';
+import { Comment, Note } from '@models/post';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 import { objectFormDataSerializer } from '@utils/validateHelpers';
 
@@ -40,4 +40,12 @@ export const updateNote = async (noteId: number, noteData: Partial<Note>) => {
 
 export const deleteNote = async (noteId: number) => {
   await axios.delete(`/notes/${noteId}/`);
+};
+
+export const getNoteComments = async (noteId: number, page: string | null) => {
+  const requestPage = page ? page.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<Comment[]>>(
+    `/notes/${noteId}/comments${!requestPage ? '' : `?page=${requestPage}`}`,
+  );
+  return data;
 };

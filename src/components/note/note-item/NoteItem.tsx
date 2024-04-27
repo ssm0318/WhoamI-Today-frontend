@@ -14,13 +14,15 @@ import NoteImageList from '../note-image-list/NoteImageList';
 interface NoteItemProps {
   note: Note;
   isMyPage: boolean;
+  enableCollapse?: boolean;
 }
 
-function NoteItem({ note, isMyPage }: NoteItemProps) {
+function NoteItem({ note, isMyPage, enableCollapse = true }: NoteItemProps) {
   const { content, created_at, id, author_detail, images } = note;
   const navigate = useNavigate();
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const { username, imageUrl } = getAuthorProfileInfo(author_detail);
+
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
     //
@@ -68,7 +70,7 @@ function NoteItem({ note, isMyPage }: NoteItemProps) {
       </Layout.FlexRow>
       <Layout.FlexCol>
         <Typo type="body-large" color="BLACK">
-          {overflowActive ? (
+          {enableCollapse && overflowActive ? (
             <>
               {`${content.slice(0, MAX_NOTE_CONTENT_LENGTH)}...`}
               <Typo type="body-medium" color="BLACK" italic underline ml={3}>

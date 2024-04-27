@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorProfile.helper';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
-import { Comment, QuestionResponse, Response } from '@models/post';
+import { Comment, Note, QuestionResponse, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { postComment } from '@utils/apis/comments';
 import * as S from './CommentInputBox.styled';
@@ -11,8 +11,8 @@ import * as S from './CommentInputBox.styled';
 interface CommentInputBoxProps {
   isReply?: boolean;
   replyTo?: Comment | null;
-  postType: 'Response' | 'Comment';
-  post: QuestionResponse | Response | Comment;
+  postType: 'Response' | 'Comment' | 'Note';
+  post: QuestionResponse | Response | Comment | Note;
   reloadComments?: () => void;
 }
 

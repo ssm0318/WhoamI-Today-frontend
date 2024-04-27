@@ -7,7 +7,7 @@ interface NoteImageListProps {
 
 function NoteImageList({ images }: NoteImageListProps) {
   if (!images.length) return null;
-  return <ImageSlider image={images} width={IMAGE_WIDTH} height={IMAGE_HEIGHT} />;
+  return <ImageSlider images={images} width={IMAGE_WIDTH} height={IMAGE_HEIGHT} />;
 }
 
 export const IMAGE_RATIO = 180 / 327;
