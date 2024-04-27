@@ -31,7 +31,7 @@ export function useChatRoomSocketProvider({ roomId, onSocketMessage }: Props) {
   );
 
   useEffect(() => {
-    if (!roomId || chatSocket.current) return;
+    if (!roomId) return;
 
     // FIXME: 토큰 전달방식 수정
     const accessToken = document.cookie
@@ -44,7 +44,15 @@ export function useChatRoomSocketProvider({ roomId, onSocketMessage }: Props) {
     chatSocket.current = socket;
 
     return () => {
-      socket.close();
+      const ws = chatSocket.current;
+      if (!ws) return;
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      } else {
+        ws.addEventListener('open', () => {
+          ws.close();
+        });
+      }
     };
   }, [addEventListenerToSocket, roomId]);
 

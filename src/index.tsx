@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
@@ -168,7 +168,7 @@ function App() {
   }, [spotifyManager]);
 
   return (
-    <>
+    <React.StrictMode>
       <GlobalStyle />
       <ThemeProvider theme={Colors}>
         <RouterProvider router={router} />
@@ -187,7 +187,7 @@ function App() {
           />
         )}
       </ThemeProvider>
-    </>
+    </React.StrictMode>
   );
 }
 
