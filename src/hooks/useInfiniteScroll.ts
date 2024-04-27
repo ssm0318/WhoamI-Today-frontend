@@ -22,7 +22,7 @@ const useInfiniteScroll = <T extends HTMLElement>(
         onIntersectCallback();
       }
     },
-    [onIntersectCallback, isLoading],
+    [isLoading, onIntersectCallback],
   );
 
   useEffect(() => {

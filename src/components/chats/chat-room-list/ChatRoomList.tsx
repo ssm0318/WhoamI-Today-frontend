@@ -45,14 +45,17 @@ export function ChatRoomList({ isEditMode, checkList, onClickCheckBox }: Props) 
   );
   useAsyncEffect(fetchChatRoomList, [fetchChatRoomList]);
 
-  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
+  const infiniteCallback = useCallback(async () => {
     if (nextUrl) {
       await fetchChatRoomList(nextUrl);
       setIsLoading(false);
       return;
     }
     setIsLoading(false);
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchChatRoomList, nextUrl]);
+  const { isLoading, targetRef, setIsLoading } =
+    useInfiniteScroll<HTMLDivElement>(infiniteCallback);
 
   return (
     <Layout.FlexCol w="100%" h="100%" pv={5} gap={10}>
