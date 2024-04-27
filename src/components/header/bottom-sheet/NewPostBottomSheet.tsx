@@ -16,24 +16,30 @@ interface MenuItem {
 const BOTTOM_SHEET_LIST: MenuItem[] = [
   { key: 'check-in', path: '/check-in/edit', icon: 'bottomsheet_checkin' },
   { key: 'note', path: '/notes/new', icon: 'bottomsheet_note' },
-  { key: 'prompts', path: '/check-in/edit', icon: 'bottomsheet_prompt' },
+  { key: 'prompts', path: '/check-in/prompt', icon: 'bottomsheet_prompt' },
 ];
 
 interface Props {
   visible: boolean;
   closeBottomSheet: () => void;
+  setSelectPrompt: (select: boolean) => void;
 }
 
-function NewPostBottomSheet({ visible, closeBottomSheet }: Props) {
+function NewPostBottomSheet({ visible, closeBottomSheet, setSelectPrompt }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'home.header.bottom_sheet' });
   const navigate = useNavigate();
 
   const handleClickMenu = (path: string) => () => {
-    navigate(path);
+    closeBottomSheet();
+    if (path === '/check-in/prompt') {
+      setSelectPrompt(true);
+    } else {
+      navigate(path);
+    }
   };
 
   return (
-    <BottomModal visible={visible} onClose={closeBottomSheet} maxHeight={700}>
+    <BottomModal visible={visible} onClose={closeBottomSheet} maxHeight={650}>
       <Layout.FlexCol alignItems="center" pb={34} w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
         <Typo type="title-large">Create</Typo>

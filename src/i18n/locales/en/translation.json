@@ -308,10 +308,6 @@
   },
   "chats": {
     "title": "Chats",
-    "prompts_of_the_day": {
-      "title": "Prompts of the day",
-      "more": "More"
-    },
     "room_list": {
       "search_placeholder": "Search",
       "title": "Messages",
@@ -327,6 +323,14 @@
         "delete": "Delete"
       }
     }
+  },
+  "prompts": {
+    "select_a_prompt": "Select a Prompt",
+    "prompts_of_the_day": {
+      "title": "Prompts of the day",
+      "more": "More"
+    },
+    "recent_prompts": "Recent Prompts"
   },
   "chat_room": {
     "noti_setting_dialog": {

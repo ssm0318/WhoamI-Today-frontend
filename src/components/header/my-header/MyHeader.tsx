@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import SelectPromptSheet from '@components/prompt/select-prompt-sheet/SelectPromptSheet';
 import Icon from '../../_common/icon/Icon';
 import NewPostBottomSheet from '../bottom-sheet/NewPostBottomSheet';
 import MainHeader from '../MainHeader';
@@ -10,6 +11,7 @@ function MyHeader() {
 
   const [showSideMenu, setShowSideMenu] = useState(false);
   const [bottomSheet, setBottomSheet] = useState(false);
+  const [selectPrompt, setSelectPrompt] = useState(false);
 
   const handleNewPost = () => {
     setBottomSheet(true);
@@ -31,7 +33,14 @@ function MyHeader() {
         }
       />
       {bottomSheet && (
-        <NewPostBottomSheet visible={bottomSheet} closeBottomSheet={() => setBottomSheet(false)} />
+        <NewPostBottomSheet
+          visible={bottomSheet}
+          closeBottomSheet={() => setBottomSheet(false)}
+          setSelectPrompt={setSelectPrompt}
+        />
+      )}
+      {selectPrompt && (
+        <SelectPromptSheet visible={selectPrompt} closeBottomSheet={() => setSelectPrompt(false)} />
       )}
       {showSideMenu && <SideMenu closeSideMenu={() => setShowSideMenu(false)} />}
     </>
