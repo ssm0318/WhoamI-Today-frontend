@@ -122,6 +122,9 @@ const add_reaction = 'add_reaction';
 // Notification
 const prompts = 'prompts';
 
+const comment_reply = 'comment_reply';
+const comment_message = 'comment_message';
+
 export {
   add_comment,
   add_default,
@@ -154,6 +157,8 @@ export {
   close,
   close_comment,
   comment,
+  comment_message,
+  comment_reply,
   default_profile,
   delete_button,
   delete_default,

@@ -10,17 +10,13 @@ function NoteDetail() {
   const post = responseList[0];
   const comment = responseList[0].comments[0];
 
+  console.log(noteId);
+
   return (
     <MainContainer>
       {/* TBU */}
-      {noteId}
+      <CommentItem comment={comment} />
 
-      <CommentItem
-        comment={comment}
-        onClickDeleteBtn={() => {
-          //
-        }}
-      />
       <CommentInputBox postType="Response" post={post} />
       <CommentInputBox postType="Response" post={post} isReply />
       <CommentInputBox postType="Response" post={post} />

@@ -266,6 +266,7 @@
   },
   "comment": {
     "reply": "답글",
+    "message": "메시지",
     "delete": "삭제",
     "post": "게시",
     "comment_place_holder": "댓글을 입력하세요.",

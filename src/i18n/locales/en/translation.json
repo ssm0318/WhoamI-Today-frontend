@@ -273,6 +273,7 @@
   },
   "comment": {
     "reply": "Reply",
+    "message": "Message",
     "delete": "Delete",
     "post": "Post",
     "comment_place_holder": "Please enter a comment.",

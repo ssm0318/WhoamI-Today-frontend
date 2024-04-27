@@ -29,9 +29,9 @@ function CommentList({ postType, post }: CommentListProps) {
     setDeleteTarget(undefined);
   };
 
-  const onClickCommentDeleteBtn = (comment: Comment) => {
-    setDeleteTarget(comment);
-  };
+  // const onClickCommentDeleteBtn = (comment: Comment) => {
+  //   setDeleteTarget(comment);
+  // };
 
   const confirmDeleteAlert = () => {
     if (!deleteTarget) return;
@@ -50,7 +50,7 @@ function CommentList({ postType, post }: CommentListProps) {
           <CommentItem
             key={comment.id}
             comment={comment}
-            onClickDeleteBtn={onClickCommentDeleteBtn}
+            // onClickDeleteBtn={onClickCommentDeleteBtn}
             // reloadComments={getComments}
           />
         ))}
