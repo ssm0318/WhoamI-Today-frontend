@@ -295,7 +295,8 @@
     },
     "room_list": {
       "search_placeholder": "검색",
-      "title": "메시지"
+      "title": "메시지",
+      "no_contents": "메시지가 없습니다."
     },
     "edit_room_list": {
       "header": {

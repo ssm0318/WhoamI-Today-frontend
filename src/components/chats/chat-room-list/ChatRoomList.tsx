@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
+import NoContents from '@components/_common/no-contents/NoContents';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { ChatRoomItem } from '@components/chats/chat-room-list/ChatRoomItem';
 import { Layout, Typo } from '@design-system';
@@ -62,31 +63,36 @@ export function ChatRoomList({ isEditMode, checkList, onClickCheckBox }: Props) 
       <Layout.LayoutBase ph={16}>
         <Typo type="title-medium">{t('title')}</Typo>
       </Layout.LayoutBase>
-      {rooms.data && (
-        <Layout.FlexCol w="100%" gap={8}>
-          {isEditMode ? (
-            <>
-              {rooms.data.map((room) => (
-                <ChatRoomItem
-                  key={room.id}
-                  room={room}
-                  isEditMode={isEditMode}
-                  checkList={checkList}
-                  onClickCheckBox={onClickCheckBox}
-                />
-              ))}
-            </>
-          ) : (
-            <SwipeLayoutList>
-              {rooms.data.map((room) => (
-                <SwipeableChatRoomItem key={room.id} room={room} />
-              ))}
-            </SwipeLayoutList>
-          )}
-          <div ref={targetRef} />
-          {isLoading && <Loader />}
-        </Layout.FlexCol>
-      )}
+      {rooms.data &&
+        (rooms.data.length === 0 ? (
+          <Layout.FlexCol w="100%" ph={16}>
+            <NoContents text={t('no_contents')} />
+          </Layout.FlexCol>
+        ) : (
+          <Layout.FlexCol w="100%" gap={8}>
+            {isEditMode ? (
+              <>
+                {rooms.data.map((room) => (
+                  <ChatRoomItem
+                    key={room.id}
+                    room={room}
+                    isEditMode={isEditMode}
+                    checkList={checkList}
+                    onClickCheckBox={onClickCheckBox}
+                  />
+                ))}
+              </>
+            ) : (
+              <SwipeLayoutList>
+                {rooms.data.map((room) => (
+                  <SwipeableChatRoomItem key={room.id} room={room} />
+                ))}
+              </SwipeLayoutList>
+            )}
+            <div ref={targetRef} />
+            {isLoading && <Loader />}
+          </Layout.FlexCol>
+        ))}
     </Layout.FlexCol>
   );
 }
