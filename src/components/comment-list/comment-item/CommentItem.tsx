@@ -58,7 +58,6 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
                 </Typo>
               </Layout.FlexRow>
             </Layout.FlexRow>
-            {/* TODO: 줄바꿈 표시 */}
             <Typo pre type="body-medium">{`${comment.content}`}</Typo>
             {/* Reply & Message buttons */}
             <Layout.FlexRow w="100%" gap={7} alignItems="center">
