@@ -27,6 +27,7 @@ import Friends from './routes/friends/Friends';
 import Intro from './routes/Intro';
 import My from './routes/My';
 import AllNotes from './routes/notes/AllNotes';
+import NewNote from './routes/notes/NewNote';
 import NoteDetail from './routes/notes/NoteDetail';
 import Notifications from './routes/Notifications';
 import NewResponse from './routes/response/NewResponse';
@@ -130,6 +131,7 @@ const router = createBrowserRouter([
     children: [
       { path: '', element: <AllNotes /> },
       { path: ':noteId', element: <NoteDetail /> },
+      { path: 'new', element: <NewNote /> },
     ],
   },
   {

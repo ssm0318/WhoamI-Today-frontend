@@ -194,7 +194,16 @@
     "comments": "comments",
     "likes": "likes",
     "title": "Notes",
-    "new_note": "New Note"
+    "new_note": "New Note",
+    "new_note_header": {
+      "new_note": "New Note",
+      "new_response": "New Response"
+    },
+    "cancel": "Cancel",
+    "post": "Post",
+    "whats_on_your_mind": "What's on your mind?",
+    "crop_photo": "Crop Photo",
+    "done": "Done"
   },
   "responses": {
     "title": "Responses",

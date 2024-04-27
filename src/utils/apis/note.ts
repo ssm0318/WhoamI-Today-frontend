@@ -17,8 +17,18 @@ export const getNoteDetail = async (noteId: number) => {
 };
 
 export const postNote = async (noteData: Partial<Note>) => {
-  const noteFormData = objectFormDataSerializer(noteData);
-  const { data } = await axiosFormDataInstance.post(`notes/`, noteFormData);
+  const formData = new FormData();
+  if (noteData.content) {
+    formData.append('content', noteData.content);
+  }
+  if (noteData.images) {
+    noteData.images.forEach((element) => {
+      formData.append('images', element);
+    });
+  }
+
+  const { data } = await axiosFormDataInstance.post(`notes/`, formData);
+  console.log(data, formData);
   return data;
 };
 

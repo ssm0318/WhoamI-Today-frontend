@@ -82,7 +82,7 @@ function NoteItem({ note, isMyPage }: NoteItemProps) {
           )}
         </Typo>
         <Layout.FlexRow w="100%" mv={10}>
-          <NoteImageList images={likedUserList?.map((user) => user.profile_image || '') || []} />
+          <NoteImageList image={likedUserList?.map((user) => user.profile_image || '') || []} />
         </Layout.FlexRow>
       </Layout.FlexCol>
       <PostFooter likedUserList={likedUserList} isMyPage={isMyPage} post={note} />
