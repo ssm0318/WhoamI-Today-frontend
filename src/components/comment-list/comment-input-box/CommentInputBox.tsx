@@ -1,26 +1,43 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorProfile.helper';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
-import { Comment, MomentPost, QuestionResponse, Response } from '@models/post';
+import { Comment, QuestionResponse, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { postComment } from '@utils/apis/comments';
 import * as S from './CommentInputBox.styled';
 
 interface CommentInputBoxProps {
   isReply?: boolean;
-  postType: 'Moment' | 'Response' | 'Comment';
-  post: MomentPost | QuestionResponse | Response | Comment;
+  replyTo?: Comment | null;
+  postType: 'Response' | 'Comment';
+  post: QuestionResponse | Response | Comment;
   reloadComments?: () => void;
 }
 
-function CommentInputBox({ isReply, postType, post, reloadComments }: CommentInputBoxProps) {
+function CommentInputBox({
+  isReply,
+  replyTo,
+  postType,
+  post,
+  reloadComments,
+}: CommentInputBoxProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
-  const placeholder = isReply ? t('reply_place_holder') : t('comment_place_holder');
   const myProfile = useBoundStore((state) => state.myProfile);
-
   const [content, setContent] = useState('');
   const [isPrivate, setIsPrivate] = useState(false);
+  const replyToAuthor = replyTo ? getAuthorProfileInfo(replyTo.author_detail).username : '';
+  const commentToAuthor = post.author;
+
+  const placeholder =
+    isReply && replyTo
+      ? t('reply_place_holder', {
+          username: replyToAuthor,
+        })
+      : t('comment_place_holder', {
+          username: commentToAuthor,
+        });
 
   const handleSubmitComment = () => {
     if (!content) return;
@@ -61,7 +78,7 @@ function CommentInputBox({ isReply, postType, post, reloadComments }: CommentInp
       <Layout.FlexRow w="100%" alignItems="flex-end" justifyContent="space-between">
         {myProfile && <ProfileImage imageUrl={myProfile.profile_image} size={36} />}
         <Layout.FlexCol w="100%" ml={4} mr={8} outline="LIGHT_GRAY" rounded={18}>
-          {isReply && (
+          {isReply && replyTo && (
             <Layout.FlexRow
               ph={10}
               pv={5}
@@ -71,7 +88,9 @@ function CommentInputBox({ isReply, postType, post, reloadComments }: CommentInp
               justifyContent="space-between"
             >
               <Typo type="body-medium" color="DARK_GRAY">
-                Replying to QWJN_2
+                {t('replying_to', {
+                  username: replyToAuthor,
+                })}
               </Typo>
               <SvgIcon name="close_comment" size={24} />
             </Layout.FlexRow>

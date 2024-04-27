@@ -18,7 +18,7 @@ function NoteDetail() {
       <CommentItem comment={comment} />
 
       <CommentInputBox postType="Response" post={post} />
-      <CommentInputBox postType="Response" post={post} isReply />
+      <CommentInputBox postType="Response" post={post} isReply replyTo={comment} />
       <CommentInputBox postType="Response" post={post} />
     </MainContainer>
   );

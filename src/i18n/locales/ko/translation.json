@@ -269,10 +269,10 @@
     "message": "메시지",
     "delete": "삭제",
     "post": "게시",
-    "comment_place_holder": "댓글을 입력하세요.",
-    "reply_place_holder": "답글을 입력하세요.",
+    "comment_place_holder": "{{username}}에게 댓글을 입력하세요.",
+    "reply_place_holder": "{{username}}에게 답글을 입력하세요.",
     "private_comment": "비밀 댓글",
-    "replying_to": "답글 작성 중: {{name}}"
+    "replying_to": "{{username}}에게 답글 작성중"
   },
   "no_contents": {
     "the_day_detail": "업로드한 모먼트나 답변이 없습니다.",

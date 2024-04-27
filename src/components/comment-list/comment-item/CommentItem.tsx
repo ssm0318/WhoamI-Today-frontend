@@ -16,7 +16,7 @@ interface CommentItemProps {
   onClickReplyBtn?: () => void;
 }
 
-function CommentItem({ comment, onClickReplyBtn, replyAvailable = false }: CommentItemProps) {
+function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const { author_detail, created_at, is_private, replies } = comment;
   const { username, imageUrl } = getAuthorProfileInfo(author_detail);
@@ -27,8 +27,12 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = false }: Comme
   const isUserAuthor = useBoundStore((state) => state.isUserAuthor);
   const isCommentAuthor = isUserAuthor((author_detail as User).id);
 
-  const toggleReplyInput = () => {
+  const handleReplyInput = () => {
     onClickReplyBtn?.();
+  };
+
+  const handleSendMessage = () => {
+    // TODO : 채팅방으로 이동
   };
 
   const handleClickMore = () => {
@@ -59,7 +63,7 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = false }: Comme
             {/* Reply & Message buttons */}
             <Layout.FlexRow w="100%" gap={7} alignItems="center">
               {replyAvailable && (
-                <button type="button" onClick={toggleReplyInput}>
+                <button type="button" onClick={handleReplyInput}>
                   <Layout.FlexRow gap={4} alignItems="center">
                     <SvgIcon name="comment_reply" size={24} />
                     <Typo type="label-medium" color="DARK_GRAY">
@@ -68,7 +72,7 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = false }: Comme
                   </Layout.FlexRow>
                 </button>
               )}
-              <button type="button" onClick={toggleReplyInput}>
+              <button type="button" onClick={handleSendMessage}>
                 <Layout.FlexRow gap={4} alignItems="center">
                   <SvgIcon name="comment_message" size={24} />
                   <Typo type="label-medium" color="DARK_GRAY">
