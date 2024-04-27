@@ -19,7 +19,7 @@ export function MessageList({ room, messages, sendSocketData }: Props) {
     });
   };
 
-  const removelikeMsg = (messageLikeId: number) => {
+  const removeLikeMsg = (messageLikeId: number) => {
     sendSocketData({
       action: 'remove_like',
       messageLikeId,
@@ -36,7 +36,7 @@ export function MessageList({ room, messages, sendSocketData }: Props) {
             room={room}
             message={msg}
             like={likeMsg}
-            removeLike={removelikeMsg}
+            removeLike={removeLikeMsg}
           />
         );
       })}

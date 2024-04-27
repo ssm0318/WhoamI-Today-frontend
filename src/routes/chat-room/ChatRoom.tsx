@@ -133,7 +133,7 @@ export function ChatRoom() {
           {chatRoom ? (
             <MessageList messages={messages} room={chatRoom} sendSocketData={sendSocketData} />
           ) : (
-            'loading...'
+            <Loader />
           )}
         </MainWrapper>
         <Layout.LayoutBase w="100%" ph={17} pv={13}>
