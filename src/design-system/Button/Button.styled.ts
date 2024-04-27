@@ -65,7 +65,7 @@ export const SmallButton = styled(Button)`
 `;
 
 export const RoundButton = styled(Button)`
-  padding: 8px 12px;
+  padding: 6px 8px;
   border-radius: 12px;
 `;
 

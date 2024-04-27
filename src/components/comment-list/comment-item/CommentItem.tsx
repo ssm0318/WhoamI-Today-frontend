@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AuthorProfile from '@components/_common/author-profile/AuthorProfile';
 import LikeButton from '@components/_common/like-button/LikeButton';
@@ -7,21 +6,20 @@ import { Comment } from '@models/post';
 import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
-import CommentInputBox from '../comment-input-box/CommentInputBox';
 
 interface CommentItemProps {
   comment: Comment;
   onClickReplyBtn?: () => void;
   onClickDeleteBtn: (comment: Comment) => void;
-  reloadComments?: () => void;
+  // reloadComments?: () => void;
 }
 
 function CommentItem({
   comment,
   onClickReplyBtn,
   onClickDeleteBtn,
-  reloadComments,
-}: CommentItemProps) {
+}: // reloadComments,
+CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
 
   const { author_detail, replies, is_reply, is_private } = comment;
@@ -29,10 +27,10 @@ function CommentItem({
   const isUserAuthor = useBoundStore((state) => state.isUserAuthor);
   const isCommentAuthor = isUserAuthor((author_detail as User).id);
 
-  const [showReplyInput, setShowReplyInput] = useState(false);
+  // const [showReplyInput, setShowReplyInput] = useState(false);
 
   const toggleReplyInput = () => {
-    setShowReplyInput((prev) => !prev);
+    // setShowReplyInput((prev) => !prev);
     onClickReplyBtn?.();
   };
 
@@ -88,7 +86,7 @@ function CommentItem({
           />
         ))}
       </Layout.FlexCol>
-      {!is_reply && showReplyInput && (
+      {/* {!is_reply && showReplyInput && (
         <CommentInputBox
           isReply
           forcePrivate={is_private}
@@ -96,7 +94,7 @@ function CommentItem({
           postType="Comment"
           reloadComments={reloadComments}
         />
-      )}
+      )} */}
     </Layout.FlexCol>
   );
 }

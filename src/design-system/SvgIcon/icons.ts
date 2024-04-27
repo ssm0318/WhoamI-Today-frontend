@@ -57,6 +57,10 @@ const edit_filled_white = 'edit_filled_white';
 const share_default = 'share_default';
 const private_comment_inactive = 'private_comment_inactive';
 const private_comment_active = 'private_comment_active';
+const close_comment = 'close_comment';
+const checkbox_rectangle_checked = 'checkbox_rectangle_checked';
+const checkbox_rectangle_default = 'checkbox_rectangle_default';
+
 const noti_icon_like = 'noti_icon_like';
 const noti_icon_emoji = 'noti_icon_emoji';
 const noti_icon_public_comment = 'noti_icon_public_comment';
@@ -143,9 +147,12 @@ export {
   chats_inactive,
   checkbox_checked,
   checkbox_default,
+  checkbox_rectangle_checked,
+  checkbox_rectangle_default,
   circle_check_checked,
   circle_check_unchecked,
   close,
+  close_comment,
   comment,
   default_profile,
   delete_button,

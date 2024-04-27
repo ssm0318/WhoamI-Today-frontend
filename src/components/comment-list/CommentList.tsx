@@ -51,7 +51,7 @@ function CommentList({ postType, post }: CommentListProps) {
             key={comment.id}
             comment={comment}
             onClickDeleteBtn={onClickCommentDeleteBtn}
-            reloadComments={getComments}
+            // reloadComments={getComments}
           />
         ))}
       </Layout.FlexCol>

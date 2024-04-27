@@ -3,9 +3,10 @@ import styled from 'styled-components';
 
 export const CommentInput = styled(TextareaAutosize)`
   width: 100%;
-  border: 1px solid ${({ theme }) => theme.GRAY_1};
-  border-radius: 4px;
-  font-size: 14px;
+  border-radius: 18px;
+  padding: 6px 12px;
+  border: none;
+  font-size: 16px;
 
   ::placeholder {
     color: ${({ theme }) => theme.MEDIUM_GRAY};

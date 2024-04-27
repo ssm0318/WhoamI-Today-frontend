@@ -5,25 +5,21 @@ export const StyledCheckBox = styled.div`
   align-items: center;
 
   input {
-    display: none;
-  }
+    display: block;
+    appearance: none;
+    width: 20px;
+    height: 20px;
 
-  input + label {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    border: 2px solid ${({ theme }) => theme.LIGHT_GRAY};
-    position: relative;
-    flex-shrink: 0;
-  }
+    background-image: url('/icons/checkbox_rectangle_default.svg');
 
-  input:checked + label {
-    border: 2px solid ${({ theme }) => theme.GRAY_8};
-    background-color: ${({ theme }) => theme.BLACK};
+    &:checked {
+      border-color: transparent;
+      background-image: url('/icons/checkbox_rectangle_checked.svg');
+    }
   }
 
   .display-label {
-    margin-left: 14px;
+    margin-left: 10px;
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
