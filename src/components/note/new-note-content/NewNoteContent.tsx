@@ -7,7 +7,6 @@ import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
-import 'swiper/css';
 // eslint-disable-next-line import/order
 import { Note } from '@models/note';
 import NewNoteImage from '../new-note-image/NewNoteImage';
@@ -120,7 +119,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
         >
           {noteInfo.images?.map((imgurl) => {
             return (
-              <SwiperSlide>
+              <SwiperSlide key={imgurl}>
                 <NewNoteImage url={imgurl} noteImages={noteInfo.images} setNoteInfo={setNoteInfo} />
               </SwiperSlide>
             );
