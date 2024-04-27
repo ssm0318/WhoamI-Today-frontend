@@ -32,20 +32,26 @@ function Friends() {
   });
 
   const fetchAllTypeFriends = async () => {
-    getUpdatedProfiles().then((results) => {
-      setUpdatedProfiles({ state: 'hasValue', data: results });
-    });
+    getUpdatedProfiles()
+      .then((results) => {
+        setUpdatedProfiles({ state: 'hasValue', data: results });
+      })
+      .catch(() => setUpdatedProfiles({ state: 'hasError' }));
     fetchAllFriends();
-    getFavoriteFriends().then((results) => {
-      setFavoriteFriends({ state: 'hasValue', data: results });
-    });
+    getFavoriteFriends()
+      .then((results) => {
+        setFavoriteFriends({ state: 'hasValue', data: results });
+      })
+      .catch(() => setFavoriteFriends({ state: 'hasError' }));
   };
 
   useAsyncEffect(async () => {
     fetchAllTypeFriends();
-    getFriendRequests().then(({ count }) => {
-      setFriendRequests({ state: 'hasValue', data: count });
-    });
+    getFriendRequests()
+      .then(({ count }) => {
+        setFriendRequests({ state: 'hasValue', data: count });
+      })
+      .catch(() => setFriendRequests({ state: 'hasError' }));
   }, []);
 
   const navigate = useNavigate();
