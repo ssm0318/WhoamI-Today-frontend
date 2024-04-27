@@ -1,0 +1,39 @@
+import { useNavigate } from 'react-router-dom';
+import Icon from '@components/_common/icon/Icon';
+import { Layout, Typo } from '@design-system';
+import { DailyQuestion, Question } from '@models/post';
+import ProfileImage from '../profile-image/ProfileImage';
+import { StyledRecentPromptCard, StyledRecentPromptCardButtons } from './RecentPromptCard.styled';
+
+interface PromptCardProps {
+  question: Question | DailyQuestion;
+}
+function RecentPromptCard({ question }: PromptCardProps) {
+  const navigate = useNavigate();
+
+  const { content, id } = question;
+  const handleClickRespond = () => {
+    navigate(`questions/${id}/new`);
+  };
+
+  const handleClickSend = () => {
+    // TODO
+  };
+  return (
+    <StyledRecentPromptCard>
+      <Layout.FlexCol gap={8}>
+        <Layout.FlexRow gap={8} alignItems="center">
+          <ProfileImage imageUrl="/whoami-profile.svg" username="Whoami Today" size={28} />
+          <Typo type="title-medium">Whoami Today</Typo>
+        </Layout.FlexRow>
+        <Typo type="body-large">{content}</Typo>
+      </Layout.FlexCol>
+      <StyledRecentPromptCardButtons gap={18}>
+        <Icon name="question_send" size={22} onClick={handleClickSend} />
+        <Icon name="question_respond" size={22} onClick={handleClickRespond} />
+      </StyledRecentPromptCardButtons>
+    </StyledRecentPromptCard>
+  );
+}
+
+export default RecentPromptCard;

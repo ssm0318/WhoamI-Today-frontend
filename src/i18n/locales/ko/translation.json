@@ -292,10 +292,6 @@
   },
   "chats": {
     "title": "채팅",
-    "prompts_of_the_day": {
-      "title": "오늘의 질문",
-      "more": "더보기"
-    },
     "room_list": {
       "search_placeholder": "검색",
       "title": "메시지",
@@ -319,6 +315,14 @@
       "cancel": "취소",
       "confirm": "비활성화"
     }
+  },
+  "prompts": {
+    "select_a_prompt": "프롬프트 선택",
+    "prompts_of_the_day": {
+      "title": "오늘의 질문",
+      "more": "더보기"
+    },
+    "recent_prompts": "최근 질문"
   },
   "friends": {
     "explore_friends": {

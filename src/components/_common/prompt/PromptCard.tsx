@@ -1,7 +1,7 @@
+import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
-import { Typo } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import { DailyQuestion, Question } from '@models/post';
-import { FlexRow } from 'src/design-system/layouts';
 import ProfileImage from '../profile-image/ProfileImage';
 import { StyledPromptCard, StyledPromptCardButtons } from './PromptCard.styled';
 
@@ -9,9 +9,11 @@ interface PromptCardProps {
   question: Question | DailyQuestion;
 }
 function PromptCard({ question }: PromptCardProps) {
-  const { content } = question;
+  const navigate = useNavigate();
+
+  const { content, id } = question;
   const handleClickRespond = () => {
-    // TODO
+    navigate(`questions/${id}/new`);
   };
 
   const handleClickSend = () => {
@@ -19,10 +21,10 @@ function PromptCard({ question }: PromptCardProps) {
   };
   return (
     <StyledPromptCard>
-      <FlexRow gap={8} alignItems="center">
+      <Layout.FlexRow gap={8} alignItems="center">
         <ProfileImage imageUrl="/whoami-profile.svg" username="Whoami Today" size={28} />
         <Typo type="title-medium">Whoami Today</Typo>
-      </FlexRow>
+      </Layout.FlexRow>
       <Typo type="body-large">{content}</Typo>
       <StyledPromptCardButtons gap={18}>
         <Icon name="question_respond" size={22} onClick={handleClickRespond} />
