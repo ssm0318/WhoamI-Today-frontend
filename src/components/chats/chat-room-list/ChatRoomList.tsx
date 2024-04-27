@@ -30,7 +30,12 @@ export function ChatRoomList({ isEditMode, checkList, onClickCheckBox }: Props) 
     async (_next?: string) => {
       try {
         const { results = [], next } = await getChatRooms(_next);
-        setRooms({ state: 'hasValue', data: results });
+        const sortedResults = results.sort((a, b) => {
+          const aTime = new Date(a.last_message_time).getTime();
+          const bTime = new Date(b.last_message_time).getTime();
+          return bTime - aTime;
+        });
+        setRooms({ state: 'hasValue', data: sortedResults });
         setNextUrl(next);
       } catch {
         setRooms({ state: 'hasError' });
