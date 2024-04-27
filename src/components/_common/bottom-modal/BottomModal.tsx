@@ -10,6 +10,7 @@ interface BottomModalProps {
   children: React.ReactNode;
   bgColor?: string;
   containerBgColor?: ColorKeys;
+  h?: number;
   maxHeight?: number; // 바텀 모달의 최대 높이
   TopComponent?: React.ReactNode; // 바텀 모달 위 컴포넌트
 }
@@ -20,11 +21,12 @@ function BottomModal({
   children,
   bgColor = 'rgba(0, 0, 0, 0.7)',
   containerBgColor = 'WHITE',
-  maxHeight = 700,
+  h,
+  maxHeight = 650,
   TopComponent,
 }: BottomModalProps) {
   const bodyRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState(0);
+  const [height, setHeight] = useState(h || 0);
 
   // Body안의 height을 계산 후 Container에 그 값을 넣어줌 -> 자동 높이 계산
   useEffect(() => {

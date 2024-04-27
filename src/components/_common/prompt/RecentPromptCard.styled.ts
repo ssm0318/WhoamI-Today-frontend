@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 import { Layout } from '@design-system';
 
-export const StyledRecentPromptCard = styled(Layout.FlexCol)`
+export const StyledRecentPromptCard = styled(Layout.FlexRow)`
   width: 100%;
   height: 100px;
   padding: 16px;
-  flex-direction: row;
   align-items: flex-start;
   gap: 8px;
   flex-shrink: 0;
