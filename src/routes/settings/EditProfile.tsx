@@ -10,10 +10,10 @@ import ValidatedTextArea from '@components/_common/validated-textarea/ValidatedT
 import { StyledEditProfileButton } from '@components/settings/SettingsButtons.styled';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Button, Layout, Typo } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import { MyProfile } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
-import { changeProfileImage, editProfile } from '@utils/apis/my';
+import { editProfile } from '@utils/apis/my';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 
 function EditProfile() {
@@ -68,11 +68,6 @@ function EditProfile() {
 
   const navigate = useNavigate();
 
-  const handleChangeProfileImage = () => {
-    if (!croppedImg) return;
-    changeProfileImage({ profileImage: croppedImg.file, onSuccess: () => navigate('/settings') });
-  };
-
   const handleClickCancel = () => {
     navigate(-1);
   };
@@ -82,11 +77,12 @@ function EditProfile() {
     editProfile({
       profile: {
         ...draft,
+        ...(croppedImg ? { profile_image: croppedImg.file } : {}),
       },
-      onSuccess: () => {
-        updateMyProfile({ ...draft });
-        navigate(-1);
+      onSuccess: (data: MyProfile) => {
+        updateMyProfile({ ...data });
         openToast({ message: t('response.updated') });
+        navigate('/settings');
       },
     });
   };
@@ -170,17 +166,6 @@ function EditProfile() {
           limit={120}
         />
       </Layout.FlexCol>
-      {croppedImg && (
-        <Layout.Absolute w="100%" b="50px" pl={24} pr={24} flexDirection="column">
-          <Button.Large
-            type="filled"
-            status="normal"
-            sizing="stretch"
-            text={t('update')}
-            onClick={handleChangeProfileImage}
-          />
-        </Layout.Absolute>
-      )}
       {isEditModalVisible && (
         <ProfileImageEdit
           setIsVisible={setIsEditModalVisible}
