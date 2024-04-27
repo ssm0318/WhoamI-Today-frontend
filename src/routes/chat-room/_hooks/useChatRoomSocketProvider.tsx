@@ -31,12 +31,15 @@ export function useChatRoomSocketProvider({ roomId, onSocketMessage }: Props) {
   );
 
   useEffect(() => {
-    if (!roomId) return;
+    if (!roomId || chatSocket.current) return;
 
-    // TODO: 임시토큰 제거
-    const socket = new WebSocket(
-      `ws://${chatHost}/ws/chat/${roomId}/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTE0Mjk4LCJpYXQiOjE3MTIzNzgyOTgsImp0aSI6Ijk0ZWMzNDc3MzBhNjRkMDdhYzY1ZjlkY2FjNjQzY2FkIiwidXNlcl9pZCI6MTN9.0q9nS2EUEuYWpyBcEx8GOE9p_nhcRv6SpMhMYOtBY90`,
-    );
+    // FIXME: 토큰 전달방식 수정
+    const accessToken = document.cookie
+      .split('; ')
+      .find((cookie) => cookie.startsWith('access_token='))
+      ?.split('=')[1];
+
+    const socket = new WebSocket(`ws://${chatHost}/ws/chat/${roomId}/?token=${accessToken}`);
     addEventListenerToSocket(socket);
     chatSocket.current = socket;
 

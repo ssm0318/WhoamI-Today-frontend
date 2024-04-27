@@ -14,19 +14,15 @@ export interface ChatMessage {
   timestamp: string;
 }
 
-// export interface ChatSocketData {
-//   content: string;
-//   userName: string;
-//   timestamp: string;
-// }
-
 export interface RequestMessageAction {
   action: 'message';
   userId: number;
   userName: string;
   content: string;
+  parentId: number;
 }
-export interface ResponseMessageAction extends Omit<RequestMessageAction, 'action' | 'userId'> {
+export interface ResponseMessageAction
+  extends Omit<RequestMessageAction, 'action' | 'userId' | 'parentId'> {
   timestamp: string;
 }
 

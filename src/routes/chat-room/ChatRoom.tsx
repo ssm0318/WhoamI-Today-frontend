@@ -137,7 +137,7 @@ export function ChatRoom() {
           )}
         </MainWrapper>
         <Layout.LayoutBase w="100%" ph={17} pv={13}>
-          <MessageInputBox sendSocketData={sendSocketData} />
+          <MessageInputBox participants={chatRoom?.participants} sendSocketData={sendSocketData} />
         </Layout.LayoutBase>
       </Layout.FlexCol>
       <MessageNotiSettingDialog
