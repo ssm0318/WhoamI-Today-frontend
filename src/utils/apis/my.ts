@@ -21,43 +21,25 @@ export const editProfile = ({
   onSuccess,
   onError,
 }: {
-  profile: Pick<MyProfile, 'bio' | 'username' | 'pronouns'>;
-  onSuccess?: () => void;
+  profile: Pick<MyProfile, 'bio' | 'username' | 'pronouns'> & { profile_image?: File };
+  onSuccess: (data: MyProfile) => void;
   onError?: (error: string) => void;
 }) => {
   const formData = new FormData();
 
   Object.entries(profile).forEach(([key, value]) => {
+    if (profile.profile_image && key === 'profile_image') {
+      formData.append('profile_image', profile.profile_image, 'profile_image.png');
+      return;
+    }
     if (value) {
       formData.append(key, value as string);
     }
   });
 
   axiosFormDataInstance
-    .patch('/user/me/', formData)
-    .then(() => onSuccess?.())
-    .catch((e) => {
-      onError?.(e);
-    });
-};
-
-// update my profile image
-export const changeProfileImage = ({
-  profileImage,
-  onSuccess,
-  onError,
-}: {
-  profileImage: File;
-  onSuccess?: () => void;
-  onError?: (error: string) => void;
-}) => {
-  const formData = new FormData();
-
-  formData.append('profile_image', profileImage, 'profile_image.png');
-
-  axiosFormDataInstance
-    .patch('/user/me/', formData)
-    .then(() => onSuccess?.())
+    .patch<MyProfile>('/user/me/', formData)
+    .then((res) => onSuccess(res.data))
     .catch((e) => {
       onError?.(e);
     });
