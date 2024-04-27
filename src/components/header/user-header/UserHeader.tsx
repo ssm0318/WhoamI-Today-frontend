@@ -1,7 +1,9 @@
+import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import SubHeader from '@components/sub-header/SubHeader';
 import { Layout } from '@design-system';
 import { User } from '@models/user';
+import { getChatRoomIdByUserId } from '@utils/apis/chat';
 
 interface UserHeaderProps {
   user?: User;
@@ -9,8 +11,13 @@ interface UserHeaderProps {
 }
 
 function UserHeader({ user, onClickMore }: UserHeaderProps) {
-  const handleClickChat = () => {
-    // TODO: 유저와의 채팅방으로 이동
+  const navigate = useNavigate();
+
+  const handleClickChat = async () => {
+    if (!user) return;
+    const roomId = await getChatRoomIdByUserId(user.id);
+    if (!roomId) return;
+    navigate(`/chats/${roomId}`);
   };
 
   const handleClickMore = () => {
