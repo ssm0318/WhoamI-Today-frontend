@@ -1,11 +1,10 @@
 import styled from 'styled-components';
-import { FlexCol, FlexRow } from 'src/design-system/layouts';
+import { Layout } from '@design-system';
 
-export const StyledPromptCard = styled(FlexCol)`
+export const StyledPromptCard = styled(Layout.FlexCol)`
   width: 250px;
   height: 154.5px;
   padding: 16px;
-  flex-direction: column;
   align-items: flex-start;
   gap: 8px;
   flex-shrink: 0;
@@ -15,7 +14,7 @@ export const StyledPromptCard = styled(FlexCol)`
   position: relative;
 `;
 
-export const StyledPromptCardButtons = styled(FlexRow)`
+export const StyledPromptCardButtons = styled(Layout.FlexRow)`
   position: absolute;
   bottom: 16px;
 `;
