@@ -16,18 +16,19 @@ function PromptsOfTheDay() {
   }, []);
 
   if (!todaysQuestions) return null;
+
   return (
     <Layout.FlexCol w="100%" p={26}>
       <Typo type="title-medium">{t('prompts_of_the_day.title')}</Typo>
       <StyledPromptsOfTheDay gap={16} pl={12} pb={26} pr={50} w="100%" alignItems="center">
         {todaysQuestions.map((question) => (
-          <PromptCard question={question} />
+          <PromptCard key={question.id} question={question} />
         ))}
       </StyledPromptsOfTheDay>
       <Typo type="title-medium">{t('recent_prompts')}</Typo>
       <StyledRecentPromptsOfTheDay gap={16} pl={12} pb={26} pr={50} w="100%" alignItems="center">
         {todaysQuestions.slice(0, 5).map((question) => (
-          <RecentPromptCard question={question} />
+          <RecentPromptCard key={question.id} question={question} />
         ))}
       </StyledRecentPromptsOfTheDay>
     </Layout.FlexCol>

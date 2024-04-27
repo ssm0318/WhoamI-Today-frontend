@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
-import { Typo } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import { DailyQuestion, Question } from '@models/post';
-import { FlexCol, FlexRow } from 'src/design-system/layouts';
 import ProfileImage from '../profile-image/ProfileImage';
 import { StyledRecentPromptCard, StyledRecentPromptCardButtons } from './RecentPromptCard.styled';
 
@@ -22,13 +21,13 @@ function RecentPromptCard({ question }: PromptCardProps) {
   };
   return (
     <StyledRecentPromptCard>
-      <FlexCol gap={8}>
-        <FlexRow gap={8} alignItems="center">
+      <Layout.FlexCol gap={8}>
+        <Layout.FlexRow gap={8} alignItems="center">
           <ProfileImage imageUrl="/whoami-profile.svg" username="Whoami Today" size={28} />
           <Typo type="title-medium">Whoami Today</Typo>
-        </FlexRow>
+        </Layout.FlexRow>
         <Typo type="body-large">{content}</Typo>
-      </FlexCol>
+      </Layout.FlexCol>
       <StyledRecentPromptCardButtons gap={18}>
         <Icon name="question_send" size={22} onClick={handleClickSend} />
         <Icon name="question_respond" size={22} onClick={handleClickRespond} />

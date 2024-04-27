@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { FlexCol } from 'src/design-system/layouts';
+import { Layout } from '@design-system';
 
-export const StyledRecentPromptCard = styled(FlexCol)`
+export const StyledRecentPromptCard = styled(Layout.FlexCol)`
   width: 100%;
   height: 100px;
   padding: 16px;
@@ -15,7 +15,7 @@ export const StyledRecentPromptCard = styled(FlexCol)`
   position: relative;
 `;
 
-export const StyledRecentPromptCardButtons = styled(FlexCol)`
+export const StyledRecentPromptCardButtons = styled(Layout.FlexCol)`
   bottom: 16px;
   margin-left: auto;
 `;

@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { FlexCol, FlexRow } from 'src/design-system/layouts';
+import { Layout } from '@design-system';
 
-export const StyledPromptsOfTheDay = styled(FlexRow)`
+export const StyledPromptsOfTheDay = styled(Layout.FlexRow)`
   overflow-y: scroll;
 `;
 
-export const StyledRecentPromptsOfTheDay = styled(FlexCol)`
+export const StyledRecentPromptsOfTheDay = styled(Layout.FlexCol)`
   overflow-y: scroll;
   padding: 10px 0px;
 `;
