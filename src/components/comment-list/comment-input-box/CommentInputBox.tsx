@@ -54,8 +54,8 @@ function CommentInputBox({ isReply, postType, post, reloadComments }: CommentInp
   return (
     <Layout.FlexCol gap={10} w="100%" pv={12} ph={16} outline="LIGHT_GRAY">
       {/* isPrivate */}
-      <Layout.FlexRow gap={4}>
-        <CheckBox name="Private Comment" onChange={togglePrivate} checked={isPrivate} />
+      <Layout.FlexRow gap={4} alignItems="center">
+        <CheckBox name={t('private_comment') || ''} onChange={togglePrivate} checked={isPrivate} />
         <SvgIcon name="private_comment_active" size={20} />
       </Layout.FlexRow>
       <Layout.FlexRow w="100%" alignItems="flex-end" justifyContent="space-between">

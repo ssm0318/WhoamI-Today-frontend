@@ -13,27 +13,20 @@ import { convertTimeDiffByString } from '@utils/timeHelpers';
 interface CommentItemProps {
   comment: Comment;
   onClickReplyBtn?: () => void;
-  // onClickDeleteBtn: (comment: Comment) => void;
-  // reloadComments?: () => void;
 }
 
-function CommentItem({
-  comment,
-  onClickReplyBtn,
-}: // onClickDeleteBtn,
-// reloadComments,
-CommentItemProps) {
+function CommentItem({ comment, onClickReplyBtn }: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
-  const { author_detail, created_at } = comment;
+  const { author_detail, created_at, is_private } = comment;
   const { username, imageUrl } = getAuthorProfileInfo(author_detail);
 
   const [createdAt] = useState(() => new Date(created_at));
   const [currentDate] = useState(() => new Date());
+
   const isUserAuthor = useBoundStore((state) => state.isUserAuthor);
   const isCommentAuthor = isUserAuthor((author_detail as User).id);
 
   const toggleReplyInput = () => {
-    // setShowReplyInput((prev) => !prev);
     onClickReplyBtn?.();
   };
 
@@ -51,7 +44,7 @@ CommentItemProps) {
       <Layout.FlexCol flex={1} alignItems="center">
         <Layout.FlexCol w="100%" gap={4}>
           <Layout.FlexRow w="100%" alignItems="center">
-            <Icon name="private_comment_active" size={16} />
+            {is_private && <Icon name="private_comment_active" size={16} />}
             <Typo type="label-medium">{username}</Typo>
             <Layout.FlexRow ml={8}>
               <Typo type="label-small" color="MEDIUM_GRAY">
@@ -60,15 +53,12 @@ CommentItemProps) {
             </Layout.FlexRow>
           </Layout.FlexRow>
           {/* TODO: 줄바꿈 표시 */}
-          <Typo type="body-medium">
-            {`${comment.content}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec purus feugiat, molestie ipsum et, consectetur libero. Nulla facilisi`}
-          </Typo>
+          <Typo type="body-medium">{`${comment.content}`}</Typo>
           {/* Reply & Message buttons */}
           <Layout.FlexRow w="100%" gap={7} alignItems="center">
             <button type="button" onClick={toggleReplyInput}>
               <Layout.FlexRow gap={4} alignItems="center">
-                {/* TODO 아이콘 교체 필요 */}
-                <SvgIcon name="comment_message" size={24} />
+                <SvgIcon name="comment_reply" size={24} />
                 <Typo type="label-medium" color="DARK_GRAY">
                   {t('reply')}
                 </Typo>
