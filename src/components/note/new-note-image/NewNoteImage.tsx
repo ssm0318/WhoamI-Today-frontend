@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout, SvgIcon } from '@design-system';
-import { Note } from '@models/note';
+import { Note } from '@models/post';
 
 interface NoteImageViewProps {
   url?: string;
