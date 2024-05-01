@@ -1,37 +1,48 @@
-import AuthorProfile from '@components/_common/author-profile/AuthorProfile';
-import LikeButton from '@components/_common/like-button/LikeButton';
+import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorProfile.helper';
+import Loader from '@components/_common/loader/Loader';
+import MainContainer from '@components/_common/main-container/MainContainer';
 import CommentList from '@components/comment-list/CommentList';
-import { Font, Layout } from '@design-system';
-import { GetResponseDetailResponse } from '@models/api/response';
-import { convertTimeDiffByString } from '@utils/timeHelpers';
+import ResponseItem from '@components/response/response-item/ResponseItem';
+import SubHeader from '@components/sub-header/SubHeader';
+import { TITLE_HEADER_HEIGHT } from '@constants/layout';
+import { Layout } from '@design-system';
+import useAsyncEffect from '@hooks/useAsyncEffect';
+import { Response } from '@models/post';
+import { getResponse } from '@utils/apis/responses';
 
-interface ResponseDetailProps {
-  response: GetResponseDetailResponse;
-}
+function ResponseDetail() {
+  const { responseId } = useParams();
+  const [t] = useTranslation('translation');
+  const [responseDetail, setResponseDetail] = useState<Response | null>(null);
 
-// TODO: 답변 상세 페이지 디자인 업데이트 필요
-function ResponseDetail({ response }: ResponseDetailProps) {
-  const { author_detail, created_at } = response;
+  const getResponseDetail = useCallback(async () => {
+    if (!responseId) return;
+    setResponseDetail(await getResponse(Number(responseId)));
+  }, [responseId]);
+
+  useAsyncEffect(getResponseDetail, [getResponseDetail]);
+
+  if (!responseDetail) return <Loader />;
+
+  const { username } = getAuthorProfileInfo(responseDetail.author_detail);
 
   return (
-    <>
-      <AuthorProfile authorDetail={author_detail} usernameFont="18_semibold" />
-      <Layout.FlexCol w="100%" bgColor="BASIC_DISABLED_SOFT" rounded={12} pv={14} ph={20}>
-        <Font.Display type="18_bold" color="DARK_GRAY">
-          {response.question.content}
-        </Font.Display>
+    <MainContainer>
+      <SubHeader
+        title={t('response_detail.title', {
+          name: username,
+        })}
+      />
+      <Layout.FlexCol w="100%" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
+        <ResponseItem response={responseDetail} type="DETAIL" />
       </Layout.FlexCol>
-      <Layout.FlexCol pl={6}>
-        <Font.Body type="18_regular">{response.content}</Font.Body>
+      <Layout.FlexCol w="100%" flex={1}>
+        <CommentList postType="Response" post={responseDetail} />
       </Layout.FlexCol>
-      <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
-        <Font.Body type="12_regular" color="MEDIUM_GRAY">
-          {convertTimeDiffByString(new Date(), new Date(created_at), 'yyyy.MM.dd HH:mm')}
-        </Font.Body>
-        <LikeButton postType="Response" post={response} iconSize={18} />
-      </Layout.FlexRow>
-      <CommentList postType="Response" post={response} />
-    </>
+    </MainContainer>
   );
 }
 

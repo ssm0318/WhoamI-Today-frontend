@@ -200,13 +200,20 @@
     "post": "게시",
     "whats_on_your_mind": "지금 떠오르는 생각이 무엇인가요?",
     "crop_photo": "이미지 자르기",
-    "done": "완료"
+    "done": "완료",
+    "more": "더보기"
+  },
+  "note_detail": {
+    "title": "{{username}}의 노트"
   },
   "responses": {
     "title": "답변",
     "comments": "댓글",
     "likes": "좋아요",
     "more": "더보기"
+  },
+  "response_detail": {
+    "title": "{{name}}의 답변"
   },
   "settings": {
     "title": "설정",

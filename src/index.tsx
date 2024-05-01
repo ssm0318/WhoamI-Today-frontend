@@ -28,10 +28,10 @@ import Intro from './routes/Intro';
 import My from './routes/My';
 import AllNotes from './routes/notes/AllNotes';
 import NewNote from './routes/notes/NewNote';
-import NoteDetail from './routes/notes/NoteDetail';
+import { NoteDetail } from './routes/notes/NoteDetail';
 import Notifications from './routes/Notifications';
 import NewResponse from './routes/response/NewResponse';
-import ResponseDetailContainer from './routes/response-detail/ResponseDetailContainer';
+import ResponseDetail from './routes/response-detail/ResponseDetail';
 import Root from './routes/Root';
 import ConfirmPassword from './routes/settings/ConfirmPassword';
 import DeleteAccount from './routes/settings/DeleteAccount';
@@ -105,7 +105,6 @@ const router = createBrowserRouter([
       { path: ':questionId/new', element: <NewResponse /> },
     ],
   },
-  { path: 'responses/:responseId', element: <ResponseDetailContainer />, loader: checkIfSignIn },
   {
     path: 'notifications',
     element: <Notifications />,
@@ -132,6 +131,14 @@ const router = createBrowserRouter([
       { path: '', element: <AllNotes /> },
       { path: ':noteId', element: <NoteDetail /> },
       { path: 'new', element: <NewNote /> },
+    ],
+  },
+  {
+    path: 'responses',
+    loader: checkIfSignIn,
+    children: [
+      { path: '', element: null }, // TODO add response list
+      { path: ':responseId', element: <ResponseDetail /> },
     ],
   },
   {

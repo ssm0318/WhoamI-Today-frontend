@@ -203,13 +203,20 @@
     "post": "Post",
     "whats_on_your_mind": "What's on your mind?",
     "crop_photo": "Crop Photo",
-    "done": "Done"
+    "done": "Done",
+    "more": "more"
+  },
+  "note_detail": {
+    "title": "{{name}}'s Note"
   },
   "responses": {
     "title": "Responses",
     "comments": "comments",
     "likes": "likes",
     "more": "More"
+  },
+  "response_detail": {
+    "title": "{{name}}'s Response"
   },
   "settings": {
     "title": "Settings",

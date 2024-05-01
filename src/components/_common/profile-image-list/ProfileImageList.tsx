@@ -9,6 +9,7 @@ type ProfileImageProps = {
 };
 
 function ProfileImageList({ images, size = 25, maxCount = 3, order = 'desc' }: ProfileImageProps) {
+  if (!images || images.length === 0) return null;
   return (
     <Layout.FlexRow alignItems="center">
       {images.slice(0, maxCount).map((image, index) => {

@@ -71,12 +71,14 @@ export interface Response extends ContentsCommon {
   question: DailyQuestion;
   question_id: number;
   comment_count: number | null;
+  like_user_sample: User[];
 }
 
 export interface Note extends ContentsCommon {
   type: POST_TYPE.NOTE;
   images: string[];
   comment_count: number | null;
+  like_user_sample: User[];
 }
 
 // 질문에 대한 답변 리스트

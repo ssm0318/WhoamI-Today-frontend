@@ -44,8 +44,12 @@ export const deleteNote = async (noteId: number) => {
 
 export const getNoteComments = async (noteId: number, page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
-  const { data } = await axios.get<PaginationResponse<Comment[]>>(
+  const { data } = await axios.get<PaginationResponse<Comment[][]>>(
     `/notes/${noteId}/comments${!requestPage ? '' : `?page=${requestPage}`}`,
   );
-  return data;
+
+  return {
+    ...data,
+    results: data?.results ? data?.results[0] : [],
+  };
 };

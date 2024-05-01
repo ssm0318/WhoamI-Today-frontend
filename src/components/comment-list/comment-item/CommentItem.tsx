@@ -19,6 +19,7 @@ interface CommentItemProps {
 function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const { author_detail, created_at, is_private, replies } = comment;
+  console.log(22, comment);
   const { username, imageUrl } = getAuthorProfileInfo(author_detail);
 
   const [createdAt] = useState(() => new Date(created_at));
@@ -94,11 +95,11 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
         </Layout.FlexCol>
       </Layout.FlexRow>
       {/* replies */}
-      <Layout.FlexRow w="100%" gap={8} ml={20} mt={14}>
+      <Layout.FlexCol w="100%" gap={8} pl={20} mt={14}>
         {replies.map((reply) => (
           <CommentItem key={reply.id} comment={reply} replyAvailable={false} />
         ))}
-      </Layout.FlexRow>
+      </Layout.FlexCol>
     </Layout.FlexCol>
   );
 }
