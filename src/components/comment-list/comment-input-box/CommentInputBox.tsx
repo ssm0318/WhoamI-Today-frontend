@@ -1,6 +1,5 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorProfile.helper';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
 import { Comment, Note, Response } from '@models/post';
@@ -28,9 +27,7 @@ function CommentInputBox({
   const [content, setContent] = useState('');
   const [isPrivate, setIsPrivate] = useState(false);
   const commentTargetAuthor =
-    isReply && replyTo
-      ? getAuthorProfileInfo(replyTo.author_detail).username
-      : getAuthorProfileInfo(post?.author_detail).username;
+    isReply && replyTo ? replyTo.author_detail.username : post?.author_detail.username;
 
   const placeholder =
     isReply && replyTo

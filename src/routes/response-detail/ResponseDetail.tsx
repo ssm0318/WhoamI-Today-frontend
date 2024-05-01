@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorProfile.helper';
 import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import CommentList from '@components/comment-list/CommentList';
@@ -27,7 +26,7 @@ function ResponseDetail() {
 
   if (!responseDetail) return <Loader />;
 
-  const { username } = getAuthorProfileInfo(responseDetail.author_detail);
+  const { username } = responseDetail.author_detail;
 
   return (
     <MainContainer>

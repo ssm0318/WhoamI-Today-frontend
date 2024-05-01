@@ -1,11 +1,9 @@
 import { Font, Layout } from '@design-system';
-import { AdminAuthor } from '@models/post';
 import { User } from '@models/user';
 import ProfileImage from '../profile-image/ProfileImage';
-import { getAuthorProfileInfo } from './AuthorProfile.helper';
 
 interface AuthorProfileProps {
-  authorDetail: User | AdminAuthor;
+  authorDetail: User;
   usernameFont?: Font.BodyType;
   profileImgSize?: number;
 }
@@ -15,10 +13,10 @@ function AuthorProfile({
   profileImgSize,
   usernameFont = '14_semibold',
 }: AuthorProfileProps) {
-  const { username, imageUrl } = getAuthorProfileInfo(authorDetail);
+  const { username, profile_image } = authorDetail;
   return (
     <Layout.FlexRow alignItems="center" gap={5}>
-      <ProfileImage imageUrl={imageUrl} username={username} size={profileImgSize} />
+      <ProfileImage imageUrl={profile_image} username={username} size={profileImgSize} />
       <Font.Body pre type={usernameFont}>
         {username}
       </Font.Body>

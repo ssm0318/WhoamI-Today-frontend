@@ -1,7 +1,6 @@
 import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorProfile.helper';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -22,7 +21,7 @@ function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: Note
   const { content, created_at, id, author_detail, images, like_user_sample } = note;
   const navigate = useNavigate();
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
-  const { username, imageUrl } = getAuthorProfileInfo(author_detail);
+  const { username, profile_image } = author_detail;
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
 
   const handleClickMore = (e: MouseEvent) => {
@@ -57,7 +56,7 @@ function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: Note
         h={PROFILE_IMAGE_SIZE}
       >
         <Layout.FlexRow w="100%" alignItems="center" gap={8}>
-          <ProfileImage imageUrl={imageUrl} username={username} size={PROFILE_IMAGE_SIZE} />
+          <ProfileImage imageUrl={profile_image} username={username} size={PROFILE_IMAGE_SIZE} />
           {/* author, created_at 정보 */}
           <Layout.FlexRow alignItems="center" gap={8}>
             <Typo type="title-medium">{username}</Typo>

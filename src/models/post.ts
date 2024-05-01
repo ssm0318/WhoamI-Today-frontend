@@ -31,7 +31,7 @@ export interface ContentsCommon {
   id: number;
   content: string;
   author: string | null;
-  author_detail: User | AdminAuthor;
+  author_detail: User;
   like_count: number | null;
   current_user_like_id: number | null;
   created_at: string;
