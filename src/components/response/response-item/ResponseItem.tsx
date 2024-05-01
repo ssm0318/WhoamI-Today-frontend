@@ -28,6 +28,7 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST' }: ResponseIte
   };
 
   const handleClickDetail = () => {
+    if (type === 'DETAIL') return;
     navigate(`/responses/${response.id}`);
   };
 
