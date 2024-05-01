@@ -15,9 +15,10 @@ interface NoteItemProps {
   note: Note;
   isMyPage: boolean;
   enableCollapse?: boolean;
+  type?: 'LIST' | 'DETAIL';
 }
 
-function NoteItem({ note, isMyPage, enableCollapse = true }: NoteItemProps) {
+function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: NoteItemProps) {
   const { content, created_at, id, author_detail, images, like_user_sample } = note;
   const navigate = useNavigate();
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
@@ -30,6 +31,7 @@ function NoteItem({ note, isMyPage, enableCollapse = true }: NoteItemProps) {
   };
 
   const handleClickNote = () => {
+    if (type === 'DETAIL') return;
     return navigate(`/notes/${id}`);
   };
 
