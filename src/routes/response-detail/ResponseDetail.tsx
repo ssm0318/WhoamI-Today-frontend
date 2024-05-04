@@ -10,12 +10,14 @@ import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { Response } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
 import { getResponse } from '@utils/apis/responses';
 
 function ResponseDetail() {
   const { responseId } = useParams();
   const [t] = useTranslation('translation');
   const [responseDetail, setResponseDetail] = useState<Response | null>(null);
+  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
   const getResponseDetail = useCallback(async () => {
     if (!responseId) return;
@@ -25,6 +27,7 @@ function ResponseDetail() {
   useAsyncEffect(getResponseDetail, [getResponseDetail]);
 
   if (!responseDetail) return <Loader />;
+  const isMyPage = responseDetail?.author_detail.id === myProfile?.id;
 
   const { username } = responseDetail.author_detail;
 
@@ -36,7 +39,7 @@ function ResponseDetail() {
         })}
       />
       <Layout.FlexCol w="100%" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
-        <ResponseItem response={responseDetail} type="DETAIL" />
+        <ResponseItem response={responseDetail} type="DETAIL" isMyPage={isMyPage} />
       </Layout.FlexCol>
       <Layout.FlexCol w="100%" flex={1}>
         <CommentList postType="Response" post={responseDetail} />
