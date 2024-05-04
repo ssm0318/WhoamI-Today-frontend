@@ -207,7 +207,7 @@
     "more": "more"
   },
   "note_detail": {
-    "title": "{{name}}'s Note"
+    "title": "{{username}}'s Note"
   },
   "responses": {
     "title": "Responses",
