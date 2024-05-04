@@ -1,12 +1,16 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import FriendSearchInput from '@components/friends/explore-friends/friend-search/FriendSearchInput';
 import { Button, Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import useInfiniteScroll from '@hooks/useInfiniteScroll';
+import { FetchState } from '@models/api/common';
 import { UpdatedProfile } from '@models/api/friends';
+import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { requestResponse } from '@utils/apis/question';
+import { searchFriends } from '@utils/apis/user';
 import { StyledCheckBox } from 'src/design-system/Inputs/CheckBox.styled';
 import { LayoutBase } from 'src/design-system/layouts';
 import useInfiniteFetchFriends from 'src/routes/friends/_hooks/useInfiniteFetchFriends';
@@ -30,18 +34,53 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
   const [t] = useTranslation('translation', { keyPrefix: 'prompts' });
 
   const [query, setQuery] = useState('');
-  const { isLoadingMoreAllFriends, allFriends, fetchAllFriends, targetRef } =
-    useInfiniteFetchFriends({ filterHidden: true });
+  const {
+    isLoadingMoreAllFriends,
+    allFriends,
+    fetchAllFriends,
+    targetRef: allFriendsTargetRef,
+  } = useInfiniteFetchFriends({ filterHidden: true });
 
   useAsyncEffect(async () => {
     if (!visible) return;
     fetchAllFriends();
   }, [visible]);
 
+  const [searchedFriendsList, setSearchFriendsList] = useState<FetchState<UserProfile[]>>({
+    state: 'loading',
+  });
+  const [nextUrl, setNextUrl] = useState<string | null>(null);
+
+  const fetchSearchUsers = useCallback(async (_query: string, _next?: string | null) => {
+    const { results = [], next } = await searchFriends(_query, _next);
+    setSearchFriendsList((prev) =>
+      _next
+        ? prev?.data
+          ? { state: 'hasValue', data: [...prev.data, ...results] }
+          : { state: 'hasValue', data: [] }
+        : { state: 'hasValue', data: results },
+    );
+    setNextUrl(next);
+  }, []);
+
+  const {
+    isLoading: isLoadingSearchFriends,
+    setIsLoading: setSearchFriendsLoading,
+    targetRef: searchFriendsTargetRef,
+  } = useInfiniteScroll<HTMLDivElement>(async () => {
+    if (nextUrl) await fetchSearchUsers(query, nextUrl);
+    setSearchFriendsLoading(false);
+  });
+
+  useEffect(() => {
+    if (!query) return;
+    fetchSearchUsers(query);
+  }, [fetchSearchUsers, query]);
+
   const [selectedFriends, setSelectedFriends] = useState<number[]>([]);
   const [messageInput, setMessageInput] = useState('');
 
-  const handleChangeCheckBox = (updateFriend: UpdatedProfile) => () => {
+  const handleChangeCheckBox = (updateFriend: UpdatedProfile | UserProfile) => () => {
     const checkedIndex = selectedFriends.findIndex((friendId) => friendId === updateFriend.id);
     if (checkedIndex !== -1) {
       setSelectedFriends((prev) => [
@@ -86,31 +125,65 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
           />
         </LayoutBase>
         <SendPromptModalFriendList ph={12} w="100%">
-          {allFriends.state === 'loading' && <Loader />}
-          {allFriends.state === 'hasValue' && allFriends.data.results && (
+          {query ? (
             <>
-              {allFriends.data.results.map((friend) => {
-                const { username, profile_image } = friend;
-                const checked = !!selectedFriends.find((id) => id === friend.id);
-                return (
-                  <Layout.FlexRow
-                    key={username}
-                    alignItems="center"
-                    justifyContent="space-between"
-                    pv={12}
-                    w="100%"
-                    onClick={handleChangeCheckBox(friend)}
-                  >
-                    <Layout.FlexRow gap={8} alignItems="center">
-                      <ProfileImage imageUrl={profile_image} username={username} size={30} />
-                      <Typo type="title-medium">{username}</Typo>
-                    </Layout.FlexRow>
-                    <StyledCheckBox onChange={handleChangeCheckBox(friend)} checked={checked} />
-                  </Layout.FlexRow>
-                );
-              })}
-              <div ref={targetRef} />
-              {isLoadingMoreAllFriends && allFriends.data.next && <Loader />}
+              {searchedFriendsList.state === 'loading' && <Loader />}
+              {searchedFriendsList.state === 'hasValue' && (
+                <>
+                  {searchedFriendsList.data.map((friend) => {
+                    const { username, profile_image } = friend;
+                    const checked = !!selectedFriends.find((id) => id === friend.id);
+                    return (
+                      <Layout.FlexRow
+                        key={username}
+                        alignItems="center"
+                        justifyContent="space-between"
+                        pv={12}
+                        w="100%"
+                        onClick={handleChangeCheckBox(friend)}
+                      >
+                        <Layout.FlexRow gap={8} alignItems="center">
+                          <ProfileImage imageUrl={profile_image} username={username} size={30} />
+                          <Typo type="title-medium">{username}</Typo>
+                        </Layout.FlexRow>
+                        <StyledCheckBox onChange={handleChangeCheckBox(friend)} checked={checked} />
+                      </Layout.FlexRow>
+                    );
+                  })}
+                  <div ref={searchFriendsTargetRef} />
+                  {isLoadingSearchFriends && nextUrl && <Loader />}
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              {allFriends.state === 'loading' && <Loader />}
+              {allFriends.state === 'hasValue' && allFriends.data.results && (
+                <>
+                  {allFriends.data.results.map((friend) => {
+                    const { username, profile_image } = friend;
+                    const checked = !!selectedFriends.find((id) => id === friend.id);
+                    return (
+                      <Layout.FlexRow
+                        key={username}
+                        alignItems="center"
+                        justifyContent="space-between"
+                        pv={12}
+                        w="100%"
+                        onClick={handleChangeCheckBox(friend)}
+                      >
+                        <Layout.FlexRow gap={8} alignItems="center">
+                          <ProfileImage imageUrl={profile_image} username={username} size={30} />
+                          <Typo type="title-medium">{username}</Typo>
+                        </Layout.FlexRow>
+                        <StyledCheckBox onChange={handleChangeCheckBox(friend)} checked={checked} />
+                      </Layout.FlexRow>
+                    );
+                  })}
+                  <div ref={allFriendsTargetRef} />
+                  {isLoadingMoreAllFriends && allFriends.data.next && <Loader />}
+                </>
+              )}
             </>
           )}
         </SendPromptModalFriendList>
