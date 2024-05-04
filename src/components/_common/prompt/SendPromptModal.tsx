@@ -5,6 +5,8 @@ import FriendSearchInput from '@components/friends/explore-friends/friend-search
 import { Button, Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { UpdatedProfile } from '@models/api/friends';
+import { useBoundStore } from '@stores/useBoundStore';
+import { requestResponse } from '@utils/apis/question';
 import { StyledCheckBox } from 'src/design-system/Inputs/CheckBox.styled';
 import { LayoutBase } from 'src/design-system/layouts';
 import useInfiniteFetchFriends from 'src/routes/friends/_hooks/useInfiniteFetchFriends';
@@ -22,19 +24,25 @@ import {
 interface SendPromptModalProps {
   visible: boolean;
   onClose: () => void;
+  questionId: number;
 }
-function SendPromptModal({ visible, onClose }: SendPromptModalProps) {
+function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'prompts' });
 
   const [query, setQuery] = useState('');
   const { isLoadingMoreAllFriends, allFriends, fetchAllFriends, targetRef } =
     useInfiniteFetchFriends({ filterHidden: true });
 
-  const [selectedFriends, setSelectedFriends] = useState<UpdatedProfile[]>([]);
+  useAsyncEffect(async () => {
+    if (!visible) return;
+    fetchAllFriends();
+  }, [visible]);
+
+  const [selectedFriends, setSelectedFriends] = useState<number[]>([]);
   const [messageInput, setMessageInput] = useState('');
 
   const handleChangeCheckBox = (updateFriend: UpdatedProfile) => () => {
-    const checkedIndex = selectedFriends.findIndex((friend) => friend.id === updateFriend.id);
+    const checkedIndex = selectedFriends.findIndex((friendId) => friendId === updateFriend.id);
     if (checkedIndex !== -1) {
       setSelectedFriends((prev) => [
         ...prev.slice(0, checkedIndex),
@@ -43,16 +51,23 @@ function SendPromptModal({ visible, onClose }: SendPromptModalProps) {
       return;
     }
 
-    setSelectedFriends((prev) => [...prev, updateFriend]);
+    setSelectedFriends((prev) => [...prev, updateFriend.id]);
   };
-
-  useAsyncEffect(async () => {
-    if (!visible) return;
-    fetchAllFriends();
-  }, [visible]);
 
   const handleChangeMessage = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setMessageInput(e.target.value);
+  };
+
+  const currentUser = useBoundStore.getState().myProfile;
+  const handleClickSend = async () => {
+    if (!currentUser) return;
+    try {
+      // TODO: API 수정 후 확인 필요 https://github.com/GooJinSun/WhoAmI-Today-backend/issues/233
+      await requestResponse(currentUser.id, questionId, selectedFriends, messageInput);
+      onClose();
+    } catch {
+      // TODO: Error
+    }
   };
 
   // TODO: cleanup(selectedFriends, scroll)
@@ -76,7 +91,7 @@ function SendPromptModal({ visible, onClose }: SendPromptModalProps) {
             <>
               {allFriends.data.results.map((friend) => {
                 const { username, profile_image } = friend;
-                const checked = !!selectedFriends.find((f) => f.id === friend.id);
+                const checked = !!selectedFriends.find((id) => id === friend.id);
                 return (
                   <Layout.FlexRow
                     key={username}
@@ -109,7 +124,12 @@ function SendPromptModal({ visible, onClose }: SendPromptModalProps) {
             />
             <Divider width={1} />
             <LayoutBase pv={12} ph={16} w="100%">
-              <Button.Confirm text={t('send_separately')} status="normal" sizing="stretch" />
+              <Button.Confirm
+                text={t('send_separately')}
+                status="normal"
+                sizing="stretch"
+                onClick={handleClickSend}
+              />
             </LayoutBase>
           </Layout.Fixed>
         )}

@@ -40,7 +40,11 @@ function PromptCard({ question }: PromptCardProps) {
           <Icon name="question_send" size={22} onClick={handleClickSend} />
         </StyledPromptCardButtons>
       </StyledPromptCard>
-      <SendPromptModal visible={sendPromptModalVisible} onClose={onCloseSendBottomModal} />
+      <SendPromptModal
+        visible={sendPromptModalVisible}
+        onClose={onCloseSendBottomModal}
+        questionId={question.id}
+      />
     </>
   );
 }

@@ -28,6 +28,7 @@ export const requestResponse = async (
   currentUserId: number,
   questionId: number,
   selectedFriendIdList: number[],
+  message?: string,
 ) => {
   Promise.all(
     selectedFriendIdList.map((friend) =>
@@ -35,6 +36,7 @@ export const requestResponse = async (
         requester_id: currentUserId,
         requestee_id: friend,
         question_id: questionId,
+        message,
       }),
     ),
   );

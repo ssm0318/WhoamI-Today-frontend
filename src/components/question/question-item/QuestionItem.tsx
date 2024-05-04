@@ -9,6 +9,9 @@ type QuestionItemProps = {
 };
 
 // 주관식
+/**
+ * @deprecated
+ */
 function QuestionItem({ question }: QuestionItemProps) {
   const { content } = question;
   const [sendModalVisible, setSendModalVisible] = useState(false);

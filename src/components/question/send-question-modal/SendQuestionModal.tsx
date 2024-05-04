@@ -18,6 +18,10 @@ type SendQuestionModalProps = {
   onSend?: () => void;
 };
 
+/**
+ *
+ * @deprecated
+ */
 function SendQuestionModal({
   isVisible,
   setIsVisible,
