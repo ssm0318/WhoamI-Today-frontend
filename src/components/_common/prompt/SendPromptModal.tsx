@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import FriendSearchInput from '@components/friends/explore-friends/friend-search/FriendSearchInput';
@@ -13,6 +13,7 @@ import { Divider } from '../divider/Divider.styled';
 import { Loader } from '../loader/Loader.styled';
 import ProfileImage from '../profile-image/ProfileImage';
 import {
+  MessageInput,
   SendPromptModalContainer,
   SendPromptModalFriendList,
   SendPromptModalTitle,
@@ -30,6 +31,7 @@ function SendPromptModal({ visible, onClose }: SendPromptModalProps) {
     useInfiniteFetchFriends({ filterHidden: true });
 
   const [selectedFriends, setSelectedFriends] = useState<UpdatedProfile[]>([]);
+  const [messageInput, setMessageInput] = useState('');
 
   const handleChangeCheckBox = (updateFriend: UpdatedProfile) => () => {
     const checkedIndex = selectedFriends.findIndex((friend) => friend.id === updateFriend.id);
@@ -49,6 +51,10 @@ function SendPromptModal({ visible, onClose }: SendPromptModalProps) {
     fetchAllFriends();
   }, [visible]);
 
+  const handleChangeMessage = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setMessageInput(e.target.value);
+  };
+
   // TODO: cleanup(selectedFriends, scroll)
 
   return createPortal(
@@ -56,13 +62,15 @@ function SendPromptModal({ visible, onClose }: SendPromptModalProps) {
       <SendPromptModalContainer>
         <LayoutBase w={75} h={5} bgColor="MEDIUM_GRAY" />
         <SendPromptModalTitle type="title-large">{t('send_this_prompt_to')}</SendPromptModalTitle>
-        <FriendSearchInput
-          query={query}
-          setQuery={setQuery}
-          fontSize={16}
-          placeholder={t('search_friends') || undefined}
-        />
-        <SendPromptModalFriendList pt={8} ph={18} w="100%">
+        <LayoutBase pb={8} bgColor="WHITE" w="100%">
+          <FriendSearchInput
+            query={query}
+            setQuery={setQuery}
+            fontSize={16}
+            placeholder={t('search_friends') || undefined}
+          />
+        </LayoutBase>
+        <SendPromptModalFriendList ph={12} w="100%">
           {allFriends.state === 'loading' && <Loader />}
           {allFriends.state === 'hasValue' && allFriends.data.results && (
             <>
@@ -92,9 +100,17 @@ function SendPromptModal({ visible, onClose }: SendPromptModalProps) {
           )}
         </SendPromptModalFriendList>
         {selectedFriends.length !== 0 && (
-          <Layout.Fixed b={0} w="100%">
+          <Layout.Fixed b={0} w="100%" pt={12} bgColor="WHITE">
             <Divider width={1} />
-            <Button.Primary text="send separately" status="normal" sizing="stretch" type />
+            <MessageInput
+              placeholder={t('write_a_message') || ''}
+              value={messageInput}
+              onChange={handleChangeMessage}
+            />
+            <Divider width={1} />
+            <LayoutBase pv={12} ph={16} w="100%">
+              <Button.Confirm text={t('send_separately')} status="normal" sizing="stretch" />
+            </LayoutBase>
           </Layout.Fixed>
         )}
       </SendPromptModalContainer>

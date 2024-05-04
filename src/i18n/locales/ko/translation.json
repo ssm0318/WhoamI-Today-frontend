@@ -342,8 +342,10 @@
       "more": "더보기"
     },
     "recent_prompts": "최근 질문",
-    "send_this_prompt_to": "질문 전송하기",
-    "search_friends": "검색"
+    "send_this_prompt_to": "질문 보내기",
+    "search_friends": "검색",
+    "write_a_message": "메시지를 작성해주세요...",
+    "send_separately": "보내기"
   },
   "friends": {
     "explore_friends": {

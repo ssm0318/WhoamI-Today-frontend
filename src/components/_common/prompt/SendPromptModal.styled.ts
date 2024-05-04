@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Layout, Typo } from '@design-system';
+import { Layout, TextArea, Typo } from '@design-system';
 
 export const SendPromptModalContainer = styled.div`
   padding: 16px;
@@ -23,4 +23,12 @@ export const SendPromptModalTitle = styled(Typo)`
 
 export const SendPromptModalFriendList = styled(Layout.FlexCol)`
   overflow-y: auto;
+`;
+
+export const MessageInput = styled(TextArea)`
+  outline: none;
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  border: none;
 `;
