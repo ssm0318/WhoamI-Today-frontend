@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import FriendSearchInput from '@components/friends/explore-friends/friend-search/FriendSearchInput';
-import { Layout, Typo } from '@design-system';
+import { Button, Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { UpdatedProfile } from '@models/api/friends';
 import { StyledCheckBox } from 'src/design-system/Inputs/CheckBox.styled';
 import { LayoutBase } from 'src/design-system/layouts';
 import useInfiniteFetchFriends from 'src/routes/friends/_hooks/useInfiniteFetchFriends';
 import BottomModal from '../bottom-modal/BottomModal';
+import { Divider } from '../divider/Divider.styled';
 import { Loader } from '../loader/Loader.styled';
 import ProfileImage from '../profile-image/ProfileImage';
 import {
@@ -90,6 +91,12 @@ function SendPromptModal({ visible, onClose }: SendPromptModalProps) {
             </>
           )}
         </SendPromptModalFriendList>
+        {selectedFriends.length !== 0 && (
+          <Layout.Fixed b={0} w="100%">
+            <Divider width={1} />
+            <Button.Primary text="send separately" status="normal" sizing="stretch" type />
+          </Layout.Fixed>
+        )}
       </SendPromptModalContainer>
     </BottomModal>,
     document.getElementById('root-container') || document.body,
