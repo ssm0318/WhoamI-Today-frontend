@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import FriendSearchInput from '@components/friends/explore-friends/friend-search/FriendSearchInput';
@@ -109,7 +109,17 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
     }
   };
 
-  // TODO: cleanup(selectedFriends, scroll)
+  // NOTE: Clean up on close modal
+  const friendListRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (visible || !friendListRef.current) return;
+    setQuery('');
+    setSearchFriendsList({ state: 'loading' });
+    setNextUrl(null);
+    setSelectedFriends([]);
+    setMessageInput('');
+    friendListRef.current.scrollTo(0, 0);
+  }, [visible]);
 
   return createPortal(
     <BottomModal visible={visible} onClose={onClose} h={650}>
@@ -124,7 +134,7 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
             placeholder={t('search_friends') || undefined}
           />
         </LayoutBase>
-        <SendPromptModalFriendList ph={12} w="100%">
+        <SendPromptModalFriendList ph={12} w="100%" ref={friendListRef}>
           {query ? (
             <>
               {searchedFriendsList.state === 'loading' && <Loader />}
