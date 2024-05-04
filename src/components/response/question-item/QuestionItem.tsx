@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -21,7 +21,8 @@ function QuestionItem({ question, onSend }: QuestionItemProps) {
     navigate(`questions/${id}/new`);
   };
 
-  const handleClickSend = () => {
+  const handleClickSend = (e: MouseEvent) => {
+    e.stopPropagation();
     onSend?.();
     setSendPromptBottomModalVisible(true);
   };

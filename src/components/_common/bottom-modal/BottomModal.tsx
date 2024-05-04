@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { MouseEvent, useEffect, useRef, useState } from 'react';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { ColorKeys } from '@design-system';
 import * as S from './BottomModal.styled';
@@ -37,10 +37,18 @@ function BottomModal({
     }
   }, [maxHeight, visible]);
 
+  const onCloseModal = (e: MouseEvent) => {
+    e.stopPropagation();
+    onClose?.();
+  };
+
+  // NOTE: 모달 아래 클릭 영역이 있을 때 이벤트 전파 방지
+  const onClickModal = (e: MouseEvent) => e.stopPropagation();
+
   return (
     <>
       {visible && (
-        <S.Background onClick={onClose} backgroundColor={bgColor}>
+        <S.Background onClick={onCloseModal} backgroundColor={bgColor}>
           {TopComponent && (
             <S.TopComponentContainer
               w="100%"
@@ -55,7 +63,9 @@ function BottomModal({
         </S.Background>
       )}
       <S.Container visible={visible} height={height} bgColor={containerBgColor}>
-        <S.Body ref={bodyRef}>{children}</S.Body>
+        <S.Body ref={bodyRef} onClick={onClickModal}>
+          {children}
+        </S.Body>
       </S.Container>
     </>
   );
