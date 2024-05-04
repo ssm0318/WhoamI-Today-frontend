@@ -1,28 +1,36 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAlert';
-import { Divider } from '@components/_common/divider/Divider.styled';
+import Loader from '@components/_common/loader/Loader';
 import { Layout } from '@design-system';
-import useAsyncEffect from '@hooks/useAsyncEffect';
-import { Comment, QuestionResponse, Response } from '@models/post';
+import useInfiniteScroll from '@hooks/useInfiniteScroll';
+import { Comment, Note, Response } from '@models/post';
 import { deleteComment } from '@utils/apis/comments';
 import CommentInputBox from './comment-input-box/CommentInputBox';
 import CommentItem from './comment-item/CommentItem';
 import { getCommentList } from './CommentList.helper';
 
 interface CommentListProps {
-  postType: 'Response';
-  post: QuestionResponse | Response;
+  postType: 'Response' | 'Note';
+  post: Response | Note;
 }
 
 function CommentList({ postType, post }: CommentListProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
-  const getComments = useCallback(async () => {
-    const commentList = await getCommentList(postType, post.id);
-    // TODO: comment pagination 추가
-    setComments(commentList.flat());
-  }, [post.id, postType]);
-  useAsyncEffect(getComments, [getComments]);
+  const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
+
+  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
+    if (nextPage === null) return setIsLoading(false);
+    await fetchComments(nextPage ?? null);
+  });
+
+  const fetchComments = async (page: string | null) => {
+    const { results, next } = await getCommentList(postType, post.id, page);
+    if (!results) return;
+    setNextPage(next);
+    setComments([...comments, ...results]);
+    setIsLoading(false);
+  };
 
   const [deleteTarget, setDeleteTarget] = useState<Comment>();
 
@@ -33,16 +41,15 @@ function CommentList({ postType, post }: CommentListProps) {
   const confirmDeleteAlert = () => {
     if (!deleteTarget) return;
     deleteComment(deleteTarget.id)
-      .then(() => getComments())
+      .then(() => fetchComments(null))
       .catch(() => console.log('TODO: 삭제 실패 알림'))
       .finally(() => closeDeleteAlert());
     closeDeleteAlert();
   };
 
   return (
-    <Layout.FlexCol w="100%" ph={8}>
-      <Divider width={1} marginTrailing={10} />
-      <Layout.FlexCol w="100%" gap={2}>
+    <Layout.FlexCol w="100%" h="100%" pt={24}>
+      <Layout.FlexCol w="100%" gap={2} ph={16}>
         {comments.map((comment) => (
           <CommentItem
             key={comment.id}
@@ -51,17 +58,22 @@ function CommentList({ postType, post }: CommentListProps) {
           />
         ))}
       </Layout.FlexCol>
-      <CommentInputBox
-        post={post}
-        postType={postType}
-        reloadComments={getComments}
-        replyTo={replyTo}
-      />
+      <Layout.Fixed b={0} w="100%" bgColor="WHITE">
+        <Layout.FlexRow w="100%">
+          <CommentInputBox post={post} postType={postType} replyTo={replyTo} />
+        </Layout.FlexRow>
+      </Layout.Fixed>
       <DeleteAlert
         visible={!!deleteTarget}
         close={closeDeleteAlert}
         onClickConfirm={confirmDeleteAlert}
       />
+      <div ref={targetRef} />
+      {isLoading && (
+        <Layout.FlexRow w="100%" h={40}>
+          <Loader />
+        </Layout.FlexRow>
+      )}
     </Layout.FlexCol>
   );
 }

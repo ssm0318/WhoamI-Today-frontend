@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorProfile.helper';
+import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
-import { friendList } from '@mock/friends';
 import { Response } from '@models/post';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
@@ -13,18 +12,23 @@ import QuestionItem from '../question-item/QuestionItem';
 interface ResponseItemProps {
   response: Response;
   isMyPage?: boolean;
+  type?: 'LIST' | 'DETAIL';
 }
 
-function ResponseItem({ response, isMyPage = false }: ResponseItemProps) {
-  const { content, created_at, author_detail, question } = response;
-  const { username, imageUrl } = getAuthorProfileInfo(author_detail);
+function ResponseItem({ response, isMyPage = false, type = 'LIST' }: ResponseItemProps) {
+  const { content, created_at, author_detail, question, like_user_sample } = response;
+  const { username, profile_image } = author_detail;
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
-
-  const likedUserList = friendList;
+  const navigate = useNavigate();
 
   const handleClickMore = () => {
     // TODO
     console.log('more');
+  };
+
+  const handleClickDetail = () => {
+    if (type === 'DETAIL') return;
+    navigate(`/responses/${response.id}`);
   };
 
   useEffect(() => {
@@ -34,7 +38,14 @@ function ResponseItem({ response, isMyPage = false }: ResponseItemProps) {
   }, [content]);
 
   return (
-    <Layout.FlexRow p={WRAPPER_PADDING} rounded={12} outline="LIGHT" h="100%" w={RESPONSE_WIDTH}>
+    <Layout.FlexRow
+      p={WRAPPER_PADDING}
+      rounded={12}
+      outline="LIGHT"
+      h="100%"
+      w={type === 'LIST' ? RESPONSE_WIDTH : '100%'}
+      onClick={handleClickDetail}
+    >
       <Layout.FlexCol gap={8} w="100%">
         <Layout.FlexRow
           w="100%"
@@ -43,7 +54,7 @@ function ResponseItem({ response, isMyPage = false }: ResponseItemProps) {
           h={PROFILE_IMAGE_SIZE}
         >
           <Layout.FlexRow w="100%" alignItems="center" gap={8}>
-            <ProfileImage imageUrl={imageUrl} username={username} size={PROFILE_IMAGE_SIZE} />
+            <ProfileImage imageUrl={profile_image} username={username} size={PROFILE_IMAGE_SIZE} />
             {/* author, created_at 정보 */}
             <Layout.FlexRow alignItems="center" gap={8}>
               <Typo type="title-medium">{username}</Typo>
@@ -73,7 +84,7 @@ function ResponseItem({ response, isMyPage = false }: ResponseItemProps) {
           <Layout.FlexRow w="100%" justifyContent="flex-end" />
         </Layout.FlexCol>
         <QuestionItem question={question} />
-        <PostFooter likedUserList={likedUserList} isMyPage={isMyPage} post={response} />
+        <PostFooter likedUserList={like_user_sample} isMyPage={isMyPage} post={response} />
       </Layout.FlexCol>
     </Layout.FlexRow>
   );

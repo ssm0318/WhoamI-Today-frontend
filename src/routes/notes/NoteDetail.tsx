@@ -1,27 +1,43 @@
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
-import CommentInputBox from '@components/comment-list/comment-input-box/CommentInputBox';
-import CommentItem from '@components/comment-list/comment-item/CommentItem';
-import { responseList } from '@mock/responses';
+import CommentList from '@components/comment-list/CommentList';
+import NoteItem from '@components/note/note-item/NoteItem';
+import SubHeader from '@components/sub-header/SubHeader';
+import { TITLE_HEADER_HEIGHT } from '@constants/layout';
+import { Layout } from '@design-system';
+import useAsyncEffect from '@hooks/useAsyncEffect';
+import { Note } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
+import { getNoteDetail } from '@utils/apis/note';
 
-function NoteDetail() {
+export function NoteDetail() {
   const { noteId } = useParams();
+  const [t] = useTranslation('translation', { keyPrefix: 'note_detail' });
+  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+  const [noteDetail, setNoteDetail] = useState<Note | null>(null);
+  const isMyPage = noteDetail?.author_detail.id === myProfile?.id;
 
-  const post = responseList[0];
-  const comment = responseList[0].comments[0];
+  useAsyncEffect(async () => {
+    if (!noteId) return;
+    setNoteDetail(await getNoteDetail(Number(noteId)));
+  }, [noteId]);
 
-  console.log(noteId);
+  if (!noteDetail) return <Loader />;
+
+  const { username } = noteDetail.author_detail;
 
   return (
     <MainContainer>
-      {/* TBU */}
-      <CommentItem comment={comment} />
-
-      <CommentInputBox postType="Response" post={post} />
-      <CommentInputBox postType="Response" post={post} isReply replyTo={comment} />
-      <CommentInputBox postType="Response" post={post} />
+      <SubHeader title={t('title', { username })} />
+      <Layout.FlexCol w="100%" alignItems="center" mt={TITLE_HEADER_HEIGHT + 12}>
+        <NoteItem note={noteDetail} isMyPage={isMyPage} enableCollapse={false} type="DETAIL" />
+      </Layout.FlexCol>
+      <Layout.FlexCol w="100%" flex={1}>
+        <CommentList postType="Note" post={noteDetail} />
+      </Layout.FlexCol>
     </MainContainer>
   );
 }
-
-export default NoteDetail;

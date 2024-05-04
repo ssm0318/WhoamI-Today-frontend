@@ -5,10 +5,9 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import NoteImageEdit from '@components/note/note-image-edit/NoteImageEdit';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Font, Layout, SvgIcon } from '@design-system';
+import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
-// eslint-disable-next-line import/order
-import { Note } from '@models/note';
 import NewNoteImage from '../new-note-image/NewNoteImage';
 import { NoteInput } from './NoteInputBox.styled';
 

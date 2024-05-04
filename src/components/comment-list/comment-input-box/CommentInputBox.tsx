@@ -1,9 +1,8 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorProfile.helper';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
-import { Comment, QuestionResponse, Response } from '@models/post';
+import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { postComment } from '@utils/apis/comments';
 import * as S from './CommentInputBox.styled';
@@ -11,8 +10,8 @@ import * as S from './CommentInputBox.styled';
 interface CommentInputBoxProps {
   isReply?: boolean;
   replyTo?: Comment | null;
-  postType: 'Response' | 'Comment';
-  post: QuestionResponse | Response | Comment;
+  postType: 'Response' | 'Comment' | 'Note';
+  post: Response | Comment | Note;
   reloadComments?: () => void;
 }
 
@@ -27,16 +26,16 @@ function CommentInputBox({
   const myProfile = useBoundStore((state) => state.myProfile);
   const [content, setContent] = useState('');
   const [isPrivate, setIsPrivate] = useState(false);
-  const replyToAuthor = replyTo ? getAuthorProfileInfo(replyTo.author_detail).username : '';
-  const commentToAuthor = post.author;
+  const commentTargetAuthor =
+    isReply && replyTo ? replyTo.author_detail.username : post?.author_detail.username;
 
   const placeholder =
     isReply && replyTo
       ? t('reply_place_holder', {
-          username: replyToAuthor,
+          username: commentTargetAuthor,
         })
       : t('comment_place_holder', {
-          username: commentToAuthor,
+          username: commentTargetAuthor,
         });
 
   const handleSubmitComment = () => {
@@ -73,7 +72,10 @@ function CommentInputBox({
       {/* isPrivate */}
       <Layout.FlexRow gap={4} alignItems="center">
         <CheckBox name={t('private_comment') || ''} onChange={togglePrivate} checked={isPrivate} />
-        <SvgIcon name="private_comment_active" size={20} />
+        <SvgIcon
+          name={isPrivate ? 'private_comment_active' : 'private_comment_inactive'}
+          size={17}
+        />
       </Layout.FlexRow>
       <Layout.FlexRow w="100%" alignItems="flex-end" justifyContent="space-between">
         {myProfile && <ProfileImage imageUrl={myProfile.profile_image} size={36} />}
@@ -89,7 +91,7 @@ function CommentInputBox({
             >
               <Typo type="body-medium" color="DARK_GRAY">
                 {t('replying_to', {
-                  username: replyToAuthor,
+                  username: commentTargetAuthor,
                 })}
               </Typo>
               <SvgIcon name="close_comment" size={24} />

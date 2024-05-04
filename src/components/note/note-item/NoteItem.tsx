@@ -1,12 +1,11 @@
 import { MouseEvent, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorProfile.helper';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
-import { friendList } from '@mock/friends';
 import { Note } from '@models/post';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import NoteImageList from '../note-image-list/NoteImageList';
@@ -14,19 +13,24 @@ import NoteImageList from '../note-image-list/NoteImageList';
 interface NoteItemProps {
   note: Note;
   isMyPage: boolean;
+  enableCollapse?: boolean;
+  type?: 'LIST' | 'DETAIL';
 }
 
-function NoteItem({ note, isMyPage }: NoteItemProps) {
-  const { content, created_at, id, author_detail, images } = note;
+function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: NoteItemProps) {
+  const { content, created_at, id, author_detail, images, like_user_sample } = note;
   const navigate = useNavigate();
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
-  const { username, imageUrl } = getAuthorProfileInfo(author_detail);
+  const { username, profile_image } = author_detail;
+  const [t] = useTranslation('translation', { keyPrefix: 'notes' });
+
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
     //
   };
 
   const handleClickNote = () => {
+    if (type === 'DETAIL') return;
     return navigate(`/notes/${id}`);
   };
 
@@ -52,7 +56,7 @@ function NoteItem({ note, isMyPage }: NoteItemProps) {
         h={PROFILE_IMAGE_SIZE}
       >
         <Layout.FlexRow w="100%" alignItems="center" gap={8}>
-          <ProfileImage imageUrl={imageUrl} username={username} size={PROFILE_IMAGE_SIZE} />
+          <ProfileImage imageUrl={profile_image} username={username} size={PROFILE_IMAGE_SIZE} />
           {/* author, created_at 정보 */}
           <Layout.FlexRow alignItems="center" gap={8}>
             <Typo type="title-medium">{username}</Typo>
@@ -68,11 +72,11 @@ function NoteItem({ note, isMyPage }: NoteItemProps) {
       </Layout.FlexRow>
       <Layout.FlexCol>
         <Typo type="body-large" color="BLACK">
-          {overflowActive ? (
+          {enableCollapse && overflowActive ? (
             <>
               {`${content.slice(0, MAX_NOTE_CONTENT_LENGTH)}...`}
               <Typo type="body-medium" color="BLACK" italic underline ml={3}>
-                more
+                {t('more')}
               </Typo>
             </>
           ) : (
@@ -83,7 +87,7 @@ function NoteItem({ note, isMyPage }: NoteItemProps) {
           <NoteImageList images={images} />
         </Layout.FlexRow>
       </Layout.FlexCol>
-      <PostFooter likedUserList={friendList} isMyPage={isMyPage} post={note} />
+      <PostFooter likedUserList={like_user_sample} isMyPage={isMyPage} post={note} />
     </Layout.FlexCol>
   );
 }

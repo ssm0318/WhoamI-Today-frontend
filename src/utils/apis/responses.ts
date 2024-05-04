@@ -19,12 +19,13 @@ export const deleteResponse = async (responseId: number) => {
   return axios.delete(`/qna/responses/${responseId}/`);
 };
 
-export const getCommentsOfResponse = async (responseId: number) => {
-  const { data } = await axios.get<PaginationResponse<Comment[][]>>(
-    `/qna/responses/comments/${responseId}/`,
+export const getCommentsOfResponse = async (responseId: number, page: string | null) => {
+  const requestPage = page ? page.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<Comment[]>>(
+    `/qna/responses/${responseId}/comments${!requestPage ? '' : `?page=${requestPage}`}`,
   );
-  // TODO: 페이지네이션 작업시 수정
-  return data?.results || [[]];
+
+  return data;
 };
 
 export const getResponse = async (responseId: number | string) => {

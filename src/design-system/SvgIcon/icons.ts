@@ -57,6 +57,8 @@ const edit_filled_white = 'edit_filled_white';
 const share_default = 'share_default';
 const private_comment_inactive = 'private_comment_inactive';
 const private_comment_active = 'private_comment_active';
+const private_comment = 'private_comment';
+
 const close_comment = 'close_comment';
 const checkbox_rectangle_checked = 'checkbox_rectangle_checked';
 const checkbox_rectangle_default = 'checkbox_rectangle_default';
@@ -209,6 +211,7 @@ export {
   noti_icon_public_comment,
   notification,
   notification_mute,
+  private_comment,
   private_comment_active,
   private_comment_inactive,
   prompts,

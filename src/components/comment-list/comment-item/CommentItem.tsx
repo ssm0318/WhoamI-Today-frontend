@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAuthorProfileInfo } from '@components/_common/author-profile/AuthorProfile.helper';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -19,7 +18,7 @@ interface CommentItemProps {
 function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const { author_detail, created_at, is_private, replies } = comment;
-  const { username, imageUrl } = getAuthorProfileInfo(author_detail);
+  const { username, profile_image } = author_detail;
 
   const [createdAt] = useState(() => new Date(created_at));
   const [currentDate] = useState(() => new Date());
@@ -44,14 +43,16 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
       <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="flex-start" gap={8}>
         {/* Author Profile */}
         <Layout.FlexCol w={30}>
-          <ProfileImage imageUrl={imageUrl} size={30} />
+          <ProfileImage imageUrl={profile_image} size={30} />
         </Layout.FlexCol>
         {/* Author name, time, content */}
         <Layout.FlexCol flex={1} alignItems="center">
           <Layout.FlexCol w="100%" gap={4}>
             <Layout.FlexRow w="100%" alignItems="center">
-              {is_private && <Icon name="private_comment_active" size={16} />}
-              <Typo type="label-medium">{username}</Typo>
+              {is_private && <Icon name="private_comment" size={16} />}
+              <Typo ml={3} type="label-medium">
+                {username}
+              </Typo>
               <Layout.FlexRow ml={8}>
                 <Typo type="label-small" color="MEDIUM_GRAY">
                   {convertTimeDiffByString(currentDate, createdAt, 'yyyy.MM.dd HH:mm', true)}
@@ -94,11 +95,11 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
         </Layout.FlexCol>
       </Layout.FlexRow>
       {/* replies */}
-      <Layout.FlexRow w="100%" gap={8} ml={20} mt={14}>
+      <Layout.FlexCol w="100%" gap={8} pl={20} mt={14}>
         {replies.map((reply) => (
           <CommentItem key={reply.id} comment={reply} replyAvailable={false} />
         ))}
-      </Layout.FlexRow>
+      </Layout.FlexCol>
     </Layout.FlexCol>
   );
 }
