@@ -74,6 +74,11 @@ export const UnderlineButton = styled(Button)`
   text-decoration-line: underline;
 `;
 
+export const ConfirmButton = styled(Button)`
+  padding: 10px 0px;
+  border-radius: 5.74px;
+`;
+
 export const Container = styled.div<{ sizing?: 'fit-content' | 'stretch'; disabled: boolean }>`
   display: flex;
   flex-direction: column;

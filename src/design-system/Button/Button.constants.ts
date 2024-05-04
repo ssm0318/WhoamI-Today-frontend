@@ -56,4 +56,10 @@ export const buttonColorSettings: {
     disabled: { text: 'MEDIUM_GRAY' },
     completed: { text: 'DARK' },
   },
+  confirm: {
+    normal: { background: 'SECONDARY', text: 'BLACK' },
+    hovered: { background: 'SECONDARY', text: 'BLACK' },
+    disabled: { background: 'LIGHT_GRAY', text: 'MEDIUM_GRAY' },
+    completed: { background: 'MEDIUM_GRAY', text: 'WHITE' },
+  },
 };
