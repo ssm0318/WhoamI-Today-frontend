@@ -336,12 +336,14 @@
     }
   },
   "prompts": {
-    "select_a_prompt": "프롬프트 선택",
+    "select_a_prompt": "질문 선택",
     "prompts_of_the_day": {
       "title": "오늘의 질문",
       "more": "더보기"
     },
-    "recent_prompts": "최근 질문"
+    "recent_prompts": "최근 질문",
+    "send_this_prompt_to": "질문 전송하기",
+    "search_friends": "검색"
   },
   "friends": {
     "explore_friends": {

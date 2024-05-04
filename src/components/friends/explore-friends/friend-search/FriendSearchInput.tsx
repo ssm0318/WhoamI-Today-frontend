@@ -8,9 +8,10 @@ interface Props {
   query: string;
   setQuery: Dispatch<SetStateAction<string>>;
   fontSize?: number;
+  placeholder?: string;
 }
 
-export default function FriendSearchInput({ query, setQuery, fontSize }: Props) {
+export default function FriendSearchInput({ query, setQuery, fontSize, placeholder }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.search' });
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchMode, setSearchMode] = useState(false);
@@ -47,7 +48,7 @@ export default function FriendSearchInput({ query, setQuery, fontSize }: Props) 
         </Layout.LayoutBase>
         <S.SearchInput
           ref={inputRef}
-          placeholder={t('placeholder') || undefined}
+          placeholder={placeholder || t('placeholder') || undefined}
           name="friend_search"
           autoComplete="off"
           value={query}

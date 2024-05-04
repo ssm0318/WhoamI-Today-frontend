@@ -340,7 +340,9 @@
       "title": "Prompts of the day",
       "more": "More"
     },
-    "recent_prompts": "Recent Prompts"
+    "recent_prompts": "Recent Prompts",
+    "send_this_prompt_to": "Send this prompt to...",
+    "search_friends": "Search"
   },
   "chat_room": {
     "noti_setting_dialog": {
