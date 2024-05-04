@@ -214,6 +214,9 @@
     "likes": "좋아요",
     "more": "더보기"
   },
+  "all_responses": {
+    "title": "{{username}}의 답변들"
+  },
   "response_detail": {
     "title": "{{name}}의 답변"
   },

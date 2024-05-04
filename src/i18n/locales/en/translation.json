@@ -217,6 +217,9 @@
     "likes": "likes",
     "more": "More"
   },
+  "all_responses": {
+    "title": "{{username}}'s Responses"
+  },
   "response_detail": {
     "title": "{{name}}'s Response"
   },
