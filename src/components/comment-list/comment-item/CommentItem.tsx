@@ -49,8 +49,10 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
         <Layout.FlexCol flex={1} alignItems="center">
           <Layout.FlexCol w="100%" gap={4}>
             <Layout.FlexRow w="100%" alignItems="center">
-              {is_private && <Icon name="private_comment_active" size={16} />}
-              <Typo type="label-medium">{username}</Typo>
+              {is_private && <Icon name="private_comment" size={16} />}
+              <Typo ml={3} type="label-medium">
+                {username}
+              </Typo>
               <Layout.FlexRow ml={8}>
                 <Typo type="label-small" color="MEDIUM_GRAY">
                   {convertTimeDiffByString(currentDate, createdAt, 'yyyy.MM.dd HH:mm', true)}

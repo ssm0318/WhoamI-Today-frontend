@@ -74,7 +74,7 @@ function CommentInputBox({
         <CheckBox name={t('private_comment') || ''} onChange={togglePrivate} checked={isPrivate} />
         <SvgIcon
           name={isPrivate ? 'private_comment_active' : 'private_comment_inactive'}
-          size={20}
+          size={17}
         />
       </Layout.FlexRow>
       <Layout.FlexRow w="100%" alignItems="flex-end" justifyContent="space-between">
