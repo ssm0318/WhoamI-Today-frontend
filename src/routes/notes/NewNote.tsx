@@ -1,8 +1,8 @@
-import { Note } from '@models/note';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NewNoteHeader from '@components/note/new-note-header/NewNoteHeader';
+import { Note } from '@models/post';
 import NewNoteContent from '../../components/note/new-note-content/NewNoteContent';
 
 function NewNote() {
