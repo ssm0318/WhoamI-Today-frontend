@@ -17,7 +17,7 @@ interface NoteItemProps {
 }
 
 function NoteItem({ note, isMyPage }: NoteItemProps) {
-  const { content, created_at, id, author_detail } = note;
+  const { content, created_at, id, author_detail, images } = note;
   const navigate = useNavigate();
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const { username, imageUrl } = getAuthorProfileInfo(author_detail);
@@ -25,8 +25,6 @@ function NoteItem({ note, isMyPage }: NoteItemProps) {
     e.stopPropagation();
     //
   };
-
-  const likedUserList = friendList;
 
   const handleClickNote = () => {
     return navigate(`/notes/${id}`);
@@ -82,10 +80,10 @@ function NoteItem({ note, isMyPage }: NoteItemProps) {
           )}
         </Typo>
         <Layout.FlexRow w="100%" mv={10}>
-          <NoteImageList image={likedUserList?.map((user) => user.profile_image || '') || []} />
+          <NoteImageList images={images} />
         </Layout.FlexRow>
       </Layout.FlexCol>
-      <PostFooter likedUserList={likedUserList} isMyPage={isMyPage} post={note} />
+      <PostFooter likedUserList={friendList} isMyPage={isMyPage} post={note} />
     </Layout.FlexCol>
   );
 }
