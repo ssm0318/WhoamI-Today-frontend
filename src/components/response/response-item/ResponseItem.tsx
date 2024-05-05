@@ -14,9 +14,10 @@ interface ResponseItemProps {
   response: Response;
   isMyPage?: boolean;
   type?: 'LIST' | 'DETAIL';
+  onRefetch?: () => Promise<void>;
 }
 
-function ResponseItem({ response, isMyPage = false, type = 'LIST' }: ResponseItemProps) {
+function ResponseItem({ response, isMyPage = false, type = 'LIST', onRefetch }: ResponseItemProps) {
   const { content, created_at, author_detail, question, like_user_sample } = response;
   const { username, profile_image } = author_detail;
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
@@ -51,6 +52,7 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST' }: ResponseIte
         setIsVisible={setShowMore}
         post={response}
         isMyPage={isMyPage}
+        callback={onRefetch}
       />
       <Layout.FlexCol gap={8} w="100%">
         <Layout.FlexRow

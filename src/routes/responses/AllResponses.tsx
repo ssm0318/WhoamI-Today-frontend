@@ -37,12 +37,21 @@ function AllResponses({ isMyPage = false }: AllResponsesProps) {
     await fetchResponses(nextPage ?? null);
   });
 
-  const fetchResponses = async (page: string | null) => {
+  const fetchResponses = async (page: string | null, isRefresh?: boolean) => {
     const { results, next } = await getResponses(page);
     if (!results) return;
     setNextPage(next);
-    setResponses([...responses, ...results]);
+    if (isRefresh) {
+      setResponses(results);
+    } else {
+      setResponses([...responses, ...results]);
+    }
     setIsLoading(false);
+  };
+
+  // Refetch responses
+  const handleRefetch = async () => {
+    await fetchResponses(null, true);
   };
 
   return (
@@ -50,7 +59,13 @@ function AllResponses({ isMyPage = false }: AllResponsesProps) {
       <SubHeader title={t('title', { username: username || myProfile?.username })} />
       <Layout.FlexCol w="100%" mt={TITLE_HEADER_HEIGHT + 12} ph={16} gap={12}>
         {responses.map((response) => (
-          <ResponseItem key={response.id} response={response} isMyPage={isMyPage} type="DETAIL" />
+          <ResponseItem
+            key={response.id}
+            response={response}
+            isMyPage={isMyPage}
+            type="DETAIL"
+            onRefetch={handleRefetch}
+          />
         ))}
         <div ref={targetRef} />
         {isLoading && (

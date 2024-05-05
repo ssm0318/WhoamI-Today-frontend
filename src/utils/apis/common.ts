@@ -1,4 +1,5 @@
 import { DateRequestParams } from '@models/api/common';
+import { POST_TYPE } from '@models/post';
 import axios from './axios';
 
 export const getDateRequestParams = (date: Date): DateRequestParams => {
@@ -8,6 +9,6 @@ export const getDateRequestParams = (date: Date): DateRequestParams => {
   return { year, month, day };
 };
 
-export const reportContent = async (postId: number, postType: 'note' | 'response') => {
+export const reportContent = async (postId: number, postType: POST_TYPE) => {
   await axios.post('/content_reports/', { target_id: postId, target_type: postType });
 };
