@@ -48,7 +48,7 @@ function AllResponses({ isMyPage = false }: AllResponsesProps) {
   return (
     <MainContainer>
       <SubHeader title={t('title', { username: username || myProfile?.username })} />
-      <Layout.FlexCol w="100%" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
+      <Layout.FlexCol w="100%" mt={TITLE_HEADER_HEIGHT + 12} ph={16} gap={12}>
         {responses.map((response) => (
           <ResponseItem key={response.id} response={response} isMyPage={isMyPage} type="DETAIL" />
         ))}
