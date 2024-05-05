@@ -127,6 +127,7 @@ const router = createBrowserRouter([
   },
   {
     path: 'my',
+    loader: checkIfSignIn,
     children: [{ path: 'responses', element: <AllResponses isMyPage /> }],
   },
   {

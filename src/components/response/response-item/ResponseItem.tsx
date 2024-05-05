@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
+import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
@@ -20,10 +21,10 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST' }: ResponseIte
   const { username, profile_image } = author_detail;
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [showMore, setShowMore] = useState(false);
 
   const handleClickMore = () => {
-    // TODO
-    console.log('more');
+    setShowMore(true);
   };
 
   const handleClickDetail = () => {
@@ -45,6 +46,12 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST' }: ResponseIte
       w={type === 'LIST' ? RESPONSE_WIDTH : '100%'}
       onClick={handleClickDetail}
     >
+      <PostMoreModal
+        isVisible={showMore}
+        setIsVisible={setShowMore}
+        post={response}
+        isMyPage={isMyPage}
+      />
       <Layout.FlexCol gap={8} w="100%">
         <Layout.FlexRow
           w="100%"

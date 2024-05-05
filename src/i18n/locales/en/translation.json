@@ -223,6 +223,17 @@
   "response_detail": {
     "title": "{{name}}'s Response"
   },
+  "post_more_modal": {
+    "menu": {
+      "report": "Report"
+    },
+    "report": {
+      "title": "Report This Post?",
+      "content": "By reporting, we will automatically hide this post from you as well.",
+      "cancel": "Cancel",
+      "report": "Report"
+    }
+  },
   "settings": {
     "title": "Settings",
     "account_settings": "Account Settings",
