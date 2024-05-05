@@ -42,7 +42,6 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST' }: ResponseIte
       p={WRAPPER_PADDING}
       rounded={12}
       outline="LIGHT"
-      h="100%"
       w={type === 'LIST' ? RESPONSE_WIDTH : '100%'}
       onClick={handleClickDetail}
     >
