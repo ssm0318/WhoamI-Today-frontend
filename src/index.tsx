@@ -183,7 +183,7 @@ function App() {
         <RouterProvider router={router} />
         {toast?.message && (
           <ToastBar
-            text={toast?.message}
+            text={toast.message}
             RightComponent={
               toast.action &&
               toast.actionText && (

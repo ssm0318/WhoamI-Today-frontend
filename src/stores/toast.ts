@@ -23,5 +23,5 @@ export type ToastSlice = ToastState & ToastAction;
 export const createToastSlice: SliceStateCreator<ToastSlice> = (set) => ({
   ...initialState,
   openToast: (toast: Toast) => set(() => ({ toast }), false, 'toast/openToast'),
-  closeToast: () => set(() => ({ message: undefined }), false, 'toast/closeToast'),
+  closeToast: () => set(() => ({ toast: undefined }), false, 'toast/closeToast'),
 });
