@@ -26,7 +26,7 @@ export default function ToastBar({
       setAnimationState('hide');
       setTimeout(() => {
         closeToastBar?.();
-      }, timeout);
+      }, 500);
     }, timeout);
 
     return () => {
