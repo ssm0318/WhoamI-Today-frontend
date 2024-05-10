@@ -275,7 +275,7 @@
     "week_ago_other": "{{count}} weeks ago",
     "short": {
       "minute": "{{count}}m",
-      "hour": "{{count}h",
+      "hour": "{{count}}h",
       "day": "{{count}}d",
       "week": "{{count}}w"
     }
@@ -285,7 +285,10 @@
     "last_7_days": "Last 7 days",
     "last_30_days": "Last 30 days",
     "see_friend_requests": "See Friend Requests",
-    "see_prompts_received": "See Prompts Received"
+    "see_prompts_received": "See Prompts Received",
+    "received_prompts": {
+      "sent_by": "Sent by {{username}}"
+    }
   },
   "comment": {
     "reply": "Reply",

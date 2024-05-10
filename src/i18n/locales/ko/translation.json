@@ -278,7 +278,10 @@
     "last_7_days": "지난 7일",
     "last_30_days": "지난 30일",
     "see_friend_requests": "친구 요청",
-    "see_prompts_received": "받은 질문"
+    "see_prompts_received": "받은 질문",
+    "received_prompts": {
+      "sent_by": "{{username}}이(가) 보냄"
+    }
   },
   "comment": {
     "reply": "답글",
