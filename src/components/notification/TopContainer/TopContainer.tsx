@@ -22,7 +22,7 @@ export default function TopContainer({ type }: TopContainerProps) {
     if (type === 'FriendRequest') {
       navigate('/friends/explore');
     } else {
-      // TODO navigate to prompts page
+      navigate('/notifications/prompts');
     }
   };
 
