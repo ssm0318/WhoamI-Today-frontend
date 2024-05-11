@@ -2,9 +2,8 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { formatLastMessageTime } from '@components/chats/chat-room-list/ChatRoomItem.helper';
-import { Layout, SvgIcon, Typo } from '@design-system';
+import { Layout, StyledCheckBox, SvgIcon, Typo } from '@design-system';
 import { ChatRoom } from '@models/api/chat';
-import { StyledCheckBox } from 'src/design-system/Inputs/CheckBox.styled';
 
 interface Props {
   room: ChatRoom;

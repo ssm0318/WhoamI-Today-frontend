@@ -15,7 +15,6 @@ import { FetchState } from '@models/api/common';
 import { UpdatedProfile } from '@models/api/friends';
 import { getFavoriteFriends, getUpdatedProfiles } from '@utils/apis/friends';
 import { getFriendRequests } from '@utils/apis/user';
-import { FlexCol, FlexRow, LayoutBase } from 'src/design-system/layouts';
 import useInfiniteFetchFriends from './_hooks/useInfiniteFetchFriends';
 
 function Friends() {
@@ -104,7 +103,7 @@ function Friends() {
         <Collapse
           title={t('favorites')}
           collapsedItem={
-            <LayoutBase w="100%">
+            <Layout.LayoutBase w="100%">
               {favoriteFriends.data.length ? (
                 favoriteFriends.data.map((user) => (
                   <UpdatedFriendItem
@@ -116,14 +115,14 @@ function Friends() {
                   />
                 ))
               ) : (
-                <FlexCol alignItems="center" ph={75} gap={8}>
+                <Layout.FlexCol alignItems="center" ph={75} gap={8}>
                   <Typo type="label-medium" color="DARK_GRAY">
                     {t('add_favorite')}
                   </Typo>
                   <Icon name="add_default" />
-                </FlexCol>
+                </Layout.FlexCol>
               )}
-            </LayoutBase>
+            </Layout.LayoutBase>
           }
         />
       )}
@@ -133,7 +132,7 @@ function Friends() {
         <Collapse
           title={`${t('friend_requests')} (${friendRequests.data})`}
           collapsedItem={
-            <FlexRow
+            <Layout.FlexRow
               w="100%"
               alignItems="center"
               gap={8}
@@ -145,7 +144,7 @@ function Friends() {
                 {t('friend_requests_desc')}
               </Typo>
               <SvgIcon name="arrow_right" size={26} />
-            </FlexRow>
+            </Layout.FlexRow>
           }
         />
       )}
@@ -155,7 +154,7 @@ function Friends() {
         <Collapse
           title={t('all_friends')}
           collapsedItem={
-            <LayoutBase w="100%">
+            <Layout.LayoutBase w="100%">
               {allFriends.data.results?.length ? (
                 <>
                   {allFriends.data.results.map((user) => (
@@ -171,7 +170,7 @@ function Friends() {
                   {isLoadingMoreAllFriends && allFriends.data.next && <Loader />}
                 </>
               ) : (
-                <FlexCol alignItems="center" ph={75} gap={8}>
+                <Layout.FlexCol alignItems="center" ph={75} gap={8}>
                   <Typo type="label-medium" color="DARK_GRAY">
                     {t('add_favorite')}
                   </Typo>
@@ -180,9 +179,9 @@ function Friends() {
                     background="LIGHT_GRAY"
                     onClick={() => navigate('/friends/explore')}
                   />
-                </FlexCol>
+                </Layout.FlexCol>
               )}
-            </LayoutBase>
+            </Layout.LayoutBase>
           }
         />
       )}
