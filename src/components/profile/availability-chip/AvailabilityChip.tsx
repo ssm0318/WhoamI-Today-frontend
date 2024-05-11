@@ -12,6 +12,11 @@ function AvailabilityChip({ availability, onSelect, isSelected }: AvailabilityCh
   const handleOnClick = () => {
     onSelect?.(availability);
   };
+
+  // NOTE: availability가 없거나, availability가 정의되지 않은 경우 null을 반환
+  if (!availability || !Object.keys(Availability).includes(availability)) {
+    return null;
+  }
   return (
     <Layout.FlexRow
       bgColor="WHITE"

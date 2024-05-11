@@ -50,6 +50,7 @@ function Profile({ user }: ProfileProps) {
       </Layout.FlexRow>
       {/* 친구 목록 */}
       {!isMyPage && <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />}
+      {/* 체크인 */}
       <CheckInSection user={user} />
     </Layout.FlexCol>
   );

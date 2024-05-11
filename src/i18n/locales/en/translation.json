@@ -186,6 +186,9 @@
       "one": "1 mutual friend: {{firstUserName}}",
       "two": "2 mutual friends: {{firstUserName}} and {{secondUserName}}",
       "others": "{{firstUserName}}, {{secondUserName}} and {{others}} other mutual friends"
+    },
+    "check_in": {
+      "checked_in_time": "Checked in {{time}}"
     }
   },
   "notes": {

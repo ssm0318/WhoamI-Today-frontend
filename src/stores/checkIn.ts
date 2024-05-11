@@ -1,4 +1,4 @@
-import { Availability, CheckInForm, MyCheckIn } from '@models/checkIn';
+import { CheckInForm, MyCheckIn } from '@models/checkIn';
 import { getCheckInList } from '@utils/apis/checkIn';
 import { SliceStateCreator } from './useBoundStore';
 
@@ -14,7 +14,7 @@ interface CheckInAction {
 const initialState = {
   checkIn: null,
   checkInForm: {
-    availability: Availability.available,
+    availability: null,
     bio: '',
     description: '',
     mood: '',
