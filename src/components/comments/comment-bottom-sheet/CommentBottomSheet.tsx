@@ -9,8 +9,7 @@ import CommentItem from '@components/comment-list/comment-item/CommentItem';
 import { getCommentList } from '@components/comment-list/CommentList.helper';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { responseList } from '@mock/responses';
-import { Comment } from '@models/post';
+import { Comment, Note, Response } from '@models/post';
 import {
   CommentBottomContentWrapper,
   CommentBottomFooterWrapper,
@@ -18,22 +17,20 @@ import {
 } from './CommentBottomSheet.styled';
 
 interface Props {
-  id: number;
   postType: 'Response' | 'Note';
+  post: Response | Note;
   visible: boolean;
   closeBottomSheet: () => void;
 }
 
-function CommentBottomSheet({ id, postType, visible, closeBottomSheet }: Props) {
+function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyTo, setReplyTo] = useState<Comment>();
-  // post 수정
-  const post = responseList[0];
 
   const fetchComments = async (page: string | null) => {
-    const { results } = await getCommentList(postType, id, page);
+    const { results } = await getCommentList(postType, post.id, page);
     if (!results) return;
     console.log(results);
     setComments([...comments, ...results]);

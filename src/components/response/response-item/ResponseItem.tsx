@@ -19,7 +19,7 @@ interface ResponseItemProps {
 }
 
 function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: ResponseItemProps) {
-  const { id, content, created_at, author_detail, question, like_user_sample } = response;
+  const { content, created_at, author_detail, question, like_user_sample } = response;
   const { username, profile_image } = author_detail;
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
@@ -110,8 +110,8 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: Re
       </Layout.FlexRow>
       {bottomSheet && (
         <CommentBottomSheet
-          id={id}
           postType="Response"
+          post={response}
           visible={bottomSheet}
           closeBottomSheet={() => setBottomSheet(false)}
         />

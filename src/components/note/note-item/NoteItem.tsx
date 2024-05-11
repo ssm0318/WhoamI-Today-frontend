@@ -100,8 +100,8 @@ function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: Note
       </Layout.FlexCol>
       {bottomSheet && (
         <CommentBottomSheet
-          id={id}
           postType="Note"
+          post={note}
           visible={bottomSheet}
           closeBottomSheet={() => setBottomSheet(false)}
         />
