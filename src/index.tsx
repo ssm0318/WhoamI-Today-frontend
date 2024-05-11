@@ -68,7 +68,10 @@ const router = createBrowserRouter([
       },
       {
         path: 'my',
-        children: [{ path: '', element: <My /> }],
+        children: [
+          { path: '', element: <My /> },
+          { path: 'responses', element: <AllResponses /> },
+        ],
       },
       {
         path: 'friends',
@@ -124,11 +127,7 @@ const router = createBrowserRouter([
       },
     ],
   },
-  {
-    path: 'my',
-    loader: checkIfSignIn,
-    children: [{ path: 'responses', element: <AllResponses /> }],
-  },
+
   {
     path: 'check-in',
     loader: checkIfSignIn,

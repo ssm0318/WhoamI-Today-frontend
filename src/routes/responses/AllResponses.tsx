@@ -54,7 +54,12 @@ function AllResponses() {
   return (
     <MainContainer>
       <SubHeader title={t('title', { username: username || myProfile?.username })} />
-      <Layout.FlexCol w="100%" mt={TITLE_HEADER_HEIGHT + 12} ph={16} gap={12}>
+      <Layout.FlexCol
+        w="100%"
+        mt={(username ? TITLE_HEADER_HEIGHT : 0) + TOP_MARGIN}
+        ph={16}
+        gap={12}
+      >
         {responses.map((response) => (
           <ResponseItem
             key={response.id}
@@ -74,5 +79,7 @@ function AllResponses() {
     </MainContainer>
   );
 }
+
+const TOP_MARGIN = 12;
 
 export default AllResponses;
