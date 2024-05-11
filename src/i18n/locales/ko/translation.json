@@ -184,6 +184,9 @@
       "one": "1명의 공통 친구({{firstUserName}})가 있습니다.",
       "two": "2명의 공통 친구({{firstUserName}}, {{secondUserName}})가 있습니다.",
       "others": "{{firstUserName}}와(과) {{secondUserName}}, 그 외 {{others}}명의 공통친구가 있습니다."
+    },
+    "check_in": {
+      "checked_in_time": "{{time}}에 체크인"
     }
   },
   "notes": {

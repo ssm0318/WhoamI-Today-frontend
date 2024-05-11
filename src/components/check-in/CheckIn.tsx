@@ -1,5 +1,6 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import { Layout, SvgIcon, Typo } from '@design-system';
@@ -19,6 +20,7 @@ interface CheckInProps {
 }
 
 function CheckIn({ user }: CheckInProps) {
+  const [t] = useTranslation('translation', { keyPrefix: 'user_page.check_in' });
   const spotifyManager = SpotifyManager.getInstance();
   const {
     myProfile,
@@ -66,7 +68,7 @@ function CheckIn({ user }: CheckInProps) {
       {hasCheckIn ? (
         <>
           <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
-            <Layout.FlexRow gap={8}>
+            <Layout.FlexRow gap={8} alignItems="center">
               {/* availability */}
               {availability && <AvailabilityChip availability={availability} />}
               {/* spotify */}
@@ -108,7 +110,9 @@ function CheckIn({ user }: CheckInProps) {
           {/* check in time */}
           <Layout.FlexRow w="100%" justifyContent="flex-end">
             <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
-              Checked in {convertTimeDiffByString(currentDate, new Date('2023-10-28 12:00:00'))}
+              {t('checked_in_time', {
+                time: convertTimeDiffByString(currentDate, new Date(checkIn?.created_at)),
+              })}
             </Typo>
           </Layout.FlexRow>
         </>
