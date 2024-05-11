@@ -11,6 +11,11 @@ import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { responseList } from '@mock/responses';
 import { Comment } from '@models/post';
+import {
+  CommentBottomContentWrapper,
+  CommentBottomFooterWrapper,
+  CommentBottomHeaderWrapper,
+} from './CommentBottomSheet.styled';
 
 interface Props {
   id: number;
@@ -27,12 +32,6 @@ function CommentBottomSheet({ id, postType, visible, closeBottomSheet }: Props) 
   // post 수정
   const post = responseList[0];
 
-  // const getComments = useCallback(async () => {
-  //   const commentList = await getCommentList(postType, id, null);
-  //   console.log('commentlist', commentList);
-  //   setComments(JSON.parse(JSON.stringify(commentList)));
-  // }, [id, postType]);
-
   const fetchComments = async (page: string | null) => {
     const { results } = await getCommentList(postType, id, page);
     if (!results) return;
@@ -43,7 +42,6 @@ function CommentBottomSheet({ id, postType, visible, closeBottomSheet }: Props) 
   useAsyncEffect(async () => {
     await fetchComments(null);
   }, []);
-  //   useAsyncEffect(await getComments, [getComments]);
 
   const handleClick = () => {
     closeBottomSheet();
@@ -51,7 +49,7 @@ function CommentBottomSheet({ id, postType, visible, closeBottomSheet }: Props) 
 
   return createPortal(
     <BottomModal visible={visible} onClose={closeBottomSheet} h={650} maxHeight={650}>
-      <Layout.FlexCol pb={10} w="100%" bgColor="WHITE">
+      <CommentBottomHeaderWrapper>
         <Layout.FlexRow w="100%" justifyContent="center">
           <Icon name="home_indicator" />
         </Layout.FlexRow>
@@ -68,8 +66,9 @@ function CommentBottomSheet({ id, postType, visible, closeBottomSheet }: Props) 
         <Layout.FlexCol gap={12} pt={12} w="100%">
           <Divider width={1} />
         </Layout.FlexCol>
-      </Layout.FlexCol>
-      <Layout.FlexCol w="100%" p={15}>
+      </CommentBottomHeaderWrapper>
+
+      <CommentBottomContentWrapper>
         {comments.map((comment) => (
           <CommentItem
             key={comment.id}
@@ -77,7 +76,9 @@ function CommentBottomSheet({ id, postType, visible, closeBottomSheet }: Props) 
             onClickReplyBtn={() => setReplyTo(comment)}
           />
         ))}
+      </CommentBottomContentWrapper>
 
+      <CommentBottomFooterWrapper>
         {!replyTo ? (
           <CommentInputBox postType="Comment" post={post} />
         ) : (
@@ -91,7 +92,7 @@ function CommentBottomSheet({ id, postType, visible, closeBottomSheet }: Props) 
             }}
           />
         )}
-      </Layout.FlexCol>
+      </CommentBottomFooterWrapper>
     </BottomModal>,
     document.getElementById('root-container') || document.body,
   );

@@ -38,7 +38,7 @@ function PostFooter({ likedUserList, isMyPage, post, showComments }: PostFooterP
 
       {/* temporal: comment_count not showing */}
       <Icon
-        name="add_comment"
+        name="star"
         size={23}
         onClick={(e) => {
           e.stopPropagation();

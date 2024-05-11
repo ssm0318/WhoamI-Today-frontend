@@ -1,5 +1,6 @@
 import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -19,7 +20,7 @@ interface NoteItemProps {
 
 function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: NoteItemProps) {
   const { content, created_at, id, author_detail, images, like_user_sample } = note;
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
 
@@ -33,9 +34,7 @@ function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: Note
 
   const handleClickNote = () => {
     if (type === 'DETAIL') return;
-    // temporal
-    // return navigate(`/notes/${id}`);
-    setBottomSheet(true);
+    return navigate(`/notes/${id}`);
   };
 
   useEffect(() => {
