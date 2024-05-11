@@ -10,6 +10,7 @@ import * as S from './CommentInputBox.styled';
 interface CommentInputBoxProps {
   isReply?: boolean;
   replyTo?: Comment | null;
+  setReplyTo?: () => void;
   postType: 'Response' | 'Comment' | 'Note';
   post: Response | Comment | Note;
   reloadComments?: () => void;
@@ -18,6 +19,7 @@ interface CommentInputBoxProps {
 function CommentInputBox({
   isReply,
   replyTo,
+  setReplyTo,
   postType,
   post,
   reloadComments,
@@ -94,7 +96,7 @@ function CommentInputBox({
                   username: commentTargetAuthor,
                 })}
               </Typo>
-              <SvgIcon name="close_comment" size={24} />
+              <SvgIcon name="close_comment" size={24} onClick={setReplyTo} />
             </Layout.FlexRow>
           )}
           <S.CommentInput
