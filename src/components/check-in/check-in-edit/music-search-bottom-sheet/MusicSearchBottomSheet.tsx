@@ -74,9 +74,11 @@ function MusicSearchBottomSheet({
           </Layout.FlexRow>
           {/* Song Results */}
           <Layout.FlexCol mt={12} gap={12}>
-            <Typo type="title-medium" color="MEDIUM_GRAY">
-              {t('all_results')}
-            </Typo>
+            {!!trackList.length && (
+              <Typo type="title-medium" color="MEDIUM_GRAY">
+                {t('all_results')}
+              </Typo>
+            )}
             {trackList.map((track) => (
               <Layout.FlexRow key={track.id} w="100%">
                 <MusicItem
