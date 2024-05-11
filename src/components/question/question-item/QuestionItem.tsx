@@ -24,7 +24,7 @@ function QuestionItem({ question }: QuestionItemProps) {
 
   const handleResponse = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/questions/${question.id}/short-answer`);
+    navigate(`/questions/${question.id}/new`);
   };
 
   const handleClickQuestion = () => {
