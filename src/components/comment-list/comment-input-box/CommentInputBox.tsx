@@ -47,10 +47,9 @@ function CommentInputBox({
       target_type: postType,
       content: content.trim(),
       is_private: isPrivate,
-    }).then((res) => {
+    }).then(() => {
       setContent('');
       reloadComments?.();
-      console.log('submit comment', res);
     });
   };
 

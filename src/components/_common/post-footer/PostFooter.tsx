@@ -50,15 +50,18 @@ function PostFooter({ likedUserList, isMyPage, post, showComments }: PostFooterP
       {/*  */}
 
       {!!comment_count && (
-        <Layout.FlexRow
-          onClick={(e) => {
-            e.stopPropagation();
-            showComments();
-          }}
-        >
-          <Typo type="label-large" color="BLACK" underline>
-            {comment_count || 0} {t('comments')}
-          </Typo>
+        <Layout.FlexRow>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              showComments();
+            }}
+          >
+            <Typo type="label-large" color="BLACK" underline>
+              {comment_count || 0} {t('comments')}
+            </Typo>
+          </button>
         </Layout.FlexRow>
       )}
     </Layout.FlexCol>

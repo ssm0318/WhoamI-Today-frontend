@@ -7,8 +7,7 @@ import {
 } from '@constants/layout';
 import { Layout } from '@design-system';
 
-export const CommentBottomHeaderWrapper = styled(Layout.FlexCol)`
-  position: fixed;
+export const CommentBottomHeaderWrapper = styled(Layout.Fixed)`
   top: 0;
   display: flex;
   max-width: ${MAX_WINDOW_WIDTH}px;

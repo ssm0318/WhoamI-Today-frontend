@@ -32,7 +32,6 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
   const fetchComments = async (page: string | null) => {
     const { results } = await getCommentList(postType, post.id, page);
     if (!results) return;
-    console.log(results);
     setComments([...comments, ...results]);
   };
 
