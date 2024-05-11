@@ -36,18 +36,26 @@ function PostFooter({ likedUserList, isMyPage, post, showComments }: PostFooterP
         <Icon name="add_comment" size={23} onClick={handleClickComment} />
       </Layout.FlexRow>
 
-      {/* temporal: comment_count not showing */}
-      <Icon
-        name="star"
-        size={23}
-        onClick={(e) => {
-          e.stopPropagation();
-          showComments();
-        }}
-      />
+      {/* temporal: comment_count not showing in Responses */}
+      {post.type === POST_TYPE.RESPONSE && (
+        <Icon
+          name="star"
+          size={23}
+          onClick={(e) => {
+            e.stopPropagation();
+            showComments();
+          }}
+        />
+      )}
+      {/*  */}
 
       {!!comment_count && (
-        <Layout.FlexRow>
+        <Layout.FlexRow
+          onClick={(e) => {
+            e.stopPropagation();
+            showComments();
+          }}
+        >
           <Typo type="label-large" color="BLACK" underline>
             {comment_count || 0} {t('comments')}
           </Typo>
