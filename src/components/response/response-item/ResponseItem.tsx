@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
+import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
@@ -13,17 +14,18 @@ interface ResponseItemProps {
   response: Response;
   isMyPage?: boolean;
   type?: 'LIST' | 'DETAIL';
+  refresh?: () => Promise<void>;
 }
 
-function ResponseItem({ response, isMyPage = false, type = 'LIST' }: ResponseItemProps) {
+function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: ResponseItemProps) {
   const { content, created_at, author_detail, question, like_user_sample } = response;
   const { username, profile_image } = author_detail;
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [showMore, setShowMore] = useState(false);
 
   const handleClickMore = () => {
-    // TODO
-    console.log('more');
+    setShowMore(true);
   };
 
   const handleClickDetail = () => {
@@ -42,10 +44,16 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST' }: ResponseIte
       p={WRAPPER_PADDING}
       rounded={12}
       outline="LIGHT"
-      h="100%"
       w={type === 'LIST' ? RESPONSE_WIDTH : '100%'}
       onClick={handleClickDetail}
     >
+      <PostMoreModal
+        isVisible={showMore}
+        setIsVisible={setShowMore}
+        post={response}
+        isMyPage={isMyPage}
+        onConfirmReport={refresh}
+      />
       <Layout.FlexCol gap={8} w="100%">
         <Layout.FlexRow
           w="100%"

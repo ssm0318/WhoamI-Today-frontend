@@ -31,8 +31,9 @@ import NewNote from './routes/notes/NewNote';
 import { NoteDetail } from './routes/notes/NoteDetail';
 import Notifications from './routes/Notifications';
 import ReceivedPrompts from './routes/ReceivedPrompts';
-import NewResponse from './routes/response/NewResponse';
-import ResponseDetail from './routes/response-detail/ResponseDetail';
+import AllResponses from './routes/responses/AllResponses';
+import NewResponse from './routes/responses/NewResponse';
+import ResponseDetail from './routes/responses/ResponseDetail';
 import Root from './routes/Root';
 import ConfirmPassword from './routes/settings/ConfirmPassword';
 import DeleteAccount from './routes/settings/DeleteAccount';
@@ -69,7 +70,7 @@ const router = createBrowserRouter([
         path: 'my',
         children: [
           { path: '', element: <My /> },
-          { path: 'responses', element: null },
+          { path: 'responses', element: <AllResponses /> },
         ],
       },
       {
@@ -118,9 +119,15 @@ const router = createBrowserRouter([
   {
     path: 'users/:username',
     loader: checkIfSignIn,
-    element: <FriendPage />,
-    children: [{ path: 'notes', element: <AllNotes /> }],
+    children: [
+      { path: '', element: <FriendPage /> },
+      {
+        path: 'responses',
+        element: <AllResponses />,
+      },
+    ],
   },
+
   {
     path: 'check-in',
     loader: checkIfSignIn,
@@ -141,10 +148,7 @@ const router = createBrowserRouter([
   {
     path: 'responses',
     loader: checkIfSignIn,
-    children: [
-      { path: '', element: null }, // TODO add response list
-      { path: ':responseId', element: <ResponseDetail /> },
-    ],
+    children: [{ path: ':responseId', element: <ResponseDetail /> }],
   },
   {
     path: 'settings',

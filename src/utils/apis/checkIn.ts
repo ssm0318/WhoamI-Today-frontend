@@ -28,6 +28,6 @@ export const deleteCheckIn = async () => {
 };
 
 // PATCH read friend check-in
-export const readFriendCheckIn = async (friendId: number) => {
-  await axios.patch<CheckInBase>(`/check_in/read/${friendId}/`);
+export const readFriendCheckIn = async (checkInId: number) => {
+  await axios.patch<CheckInBase>(`/check_in/read/${checkInId}/`);
 };

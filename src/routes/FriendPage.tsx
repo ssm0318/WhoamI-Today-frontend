@@ -36,8 +36,8 @@ function FriendPage() {
   };
 
   const readCheckIn = async () => {
-    if (!username || !user.data) return;
-    await readFriendCheckIn(user.data.id);
+    if (!username || !user.data || !user.data.check_in.id) return;
+    await readFriendCheckIn(user.data.check_in.id);
   };
 
   useAsyncEffect(updateUser, []);

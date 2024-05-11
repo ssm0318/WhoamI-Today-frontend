@@ -214,8 +214,22 @@
     "likes": "좋아요",
     "more": "더보기"
   },
+  "all_responses": {
+    "title": "{{username}}의 답변들"
+  },
   "response_detail": {
     "title": "{{name}}의 답변"
+  },
+  "post_more_modal": {
+    "menu": {
+      "report": "신고"
+    },
+    "report": {
+      "title": "이 게시물을 신고하시겠습니까?",
+      "content": "신고하면 이 게시물이 자동으로 숨겨집니다.",
+      "cancel": "취소",
+      "report": "신고"
+    }
   },
   "settings": {
     "title": "설정",
