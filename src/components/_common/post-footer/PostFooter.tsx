@@ -10,9 +10,10 @@ type PostFooterProps = {
   likedUserList: User[];
   isMyPage: boolean;
   post: Response | Note;
+  showComments: () => void;
 };
 
-function PostFooter({ likedUserList, isMyPage, post }: PostFooterProps) {
+function PostFooter({ likedUserList, isMyPage, post, showComments }: PostFooterProps) {
   const { comment_count, type } = post;
 
   const [t] = useTranslation('translation', {
@@ -34,6 +35,17 @@ function PostFooter({ likedUserList, isMyPage, post }: PostFooterProps) {
         )}
         <Icon name="add_comment" size={23} onClick={handleClickComment} />
       </Layout.FlexRow>
+
+      {/* temporal: comment_count not showing */}
+      <Icon
+        name="add_comment"
+        size={23}
+        onClick={(e) => {
+          e.stopPropagation();
+          showComments();
+        }}
+      />
+
       {!!comment_count && (
         <Layout.FlexRow>
           <Typo type="label-large" color="BLACK" underline>

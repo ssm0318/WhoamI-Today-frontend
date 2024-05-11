@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
@@ -14,26 +14,34 @@ import { Comment } from '@models/post';
 
 interface Props {
   id: number;
+  postType: 'Response' | 'Note';
   visible: boolean;
   closeBottomSheet: () => void;
 }
 
-function CommentBottomSheet({ id, visible, closeBottomSheet }: Props) {
+function CommentBottomSheet({ id, postType, visible, closeBottomSheet }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
 
-  const postType = 'Note';
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyTo, setReplyTo] = useState<Comment>();
-  const comment = responseList[0].comments[0];
+  // post 수정
   const post = responseList[0];
 
-  const getComments = useCallback(async () => {
-    const commentList = await getCommentList(postType, id, null);
-    setComments(JSON.parse(JSON.stringify(commentList)));
-  }, [id]);
+  // const getComments = useCallback(async () => {
+  //   const commentList = await getCommentList(postType, id, null);
+  //   console.log('commentlist', commentList);
+  //   setComments(JSON.parse(JSON.stringify(commentList)));
+  // }, [id, postType]);
+
+  const fetchComments = async (page: string | null) => {
+    const { results } = await getCommentList(postType, id, page);
+    if (!results) return;
+    console.log(results);
+    setComments([...comments, ...results]);
+  };
 
   useAsyncEffect(async () => {
-    await getComments();
+    await fetchComments(null);
   }, []);
   //   useAsyncEffect(await getComments, [getComments]);
 
@@ -62,15 +70,13 @@ function CommentBottomSheet({ id, visible, closeBottomSheet }: Props) {
         </Layout.FlexCol>
       </Layout.FlexCol>
       <Layout.FlexCol w="100%" p={15}>
-        {/* api용 */}
-        {comments && <CommentItem comment={comment} />}
-
-        <CommentItem
-          comment={comment}
-          onClickReplyBtn={() => {
-            setReplyTo(comment);
-          }}
-        />
+        {comments.map((comment) => (
+          <CommentItem
+            key={comment.id}
+            comment={comment}
+            onClickReplyBtn={() => setReplyTo(comment)}
+          />
+        ))}
 
         {!replyTo ? (
           <CommentInputBox postType="Comment" post={post} />

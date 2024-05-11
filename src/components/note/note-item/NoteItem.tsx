@@ -92,11 +92,17 @@ function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: Note
             <NoteImageList images={images} />
           </Layout.FlexRow>
         </Layout.FlexCol>
-        <PostFooter likedUserList={like_user_sample} isMyPage={isMyPage} post={note} />
+        <PostFooter
+          likedUserList={like_user_sample}
+          isMyPage={isMyPage}
+          post={note}
+          showComments={() => setBottomSheet(true)}
+        />
       </Layout.FlexCol>
       {bottomSheet && (
         <CommentBottomSheet
           id={id}
+          postType="Note"
           visible={bottomSheet}
           closeBottomSheet={() => setBottomSheet(false)}
         />
