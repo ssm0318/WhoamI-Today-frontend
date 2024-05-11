@@ -118,7 +118,6 @@ const router = createBrowserRouter([
     loader: checkIfSignIn,
     children: [
       { path: '', element: <FriendPage /> },
-      { path: 'notes', element: <AllNotes /> },
       {
         path: 'responses',
         element: <AllResponses />,
