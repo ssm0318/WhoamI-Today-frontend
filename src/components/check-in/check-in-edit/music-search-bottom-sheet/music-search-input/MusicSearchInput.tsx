@@ -2,7 +2,7 @@ import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import { Layout, SvgIcon } from '@design-system';
-import * as S from './FriendSearchInput.styled';
+import * as S from './MusicSearchInput.styled';
 
 interface Props {
   query: string;
@@ -11,7 +11,7 @@ interface Props {
   placeholder?: string;
 }
 
-export default function FriendSearchInput({ query, setQuery, fontSize, placeholder }: Props) {
+export default function MusicSearchInput({ query, setQuery, fontSize, placeholder }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.search' });
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchMode, setSearchMode] = useState(false);
@@ -27,7 +27,6 @@ export default function FriendSearchInput({ query, setQuery, fontSize, placehold
   };
 
   const handleClickCancel = () => {
-    // TODO: 검색 모드 전환
     setSearchMode(false);
     setQuery('');
   };

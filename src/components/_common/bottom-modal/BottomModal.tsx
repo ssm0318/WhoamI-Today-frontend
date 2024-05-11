@@ -27,16 +27,17 @@ function BottomModal({
   TopComponent,
 }: BottomModalProps) {
   const bodyRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState(h || 0);
+  const [height, setHeight] = useState(0);
 
   // Body안의 height을 계산 후 Container에 그 값을 넣어줌 -> 자동 높이 계산
   useEffect(() => {
     if (!visible) return;
     if (bodyRef.current) {
       const bodyHeight = bodyRef.current.scrollHeight;
+      if (h) return setHeight(h);
       setHeight(Math.min(bodyHeight, maxHeight));
     }
-  }, [maxHeight, visible]);
+  }, [maxHeight, visible, h]);
 
   usePreventScroll(visible);
 

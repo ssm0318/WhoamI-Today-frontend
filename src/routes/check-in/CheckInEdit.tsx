@@ -30,10 +30,6 @@ function CheckInEdit() {
 
   const [trackData, setTrackData] = useState<Track | null>(null);
 
-  const handleSearchMusic = () => {
-    return navigate('/check-in/search-music');
-  };
-
   const handleChange = (name: keyof CheckInForm, value: string) => {
     setCheckInForm({ [name]: value });
   };
@@ -98,7 +94,9 @@ function CheckInEdit() {
           <CheckInSpotifyMusic
             trackData={trackData}
             onDelete={() => setTrackData(null)}
-            onSearchMusic={handleSearchMusic}
+            onSelect={(trackId: string) => {
+              handleChange('track_id', trackId);
+            }}
           />
         </SectionContainer>
         {/* mood (emoji & description) */}

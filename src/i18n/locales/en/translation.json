@@ -361,6 +361,7 @@
     "recent_prompts": "Recent Prompts",
     "send_this_prompt_to": "Send this prompt to...",
     "search_friends": "Search",
+    "cancel": "Cancel",
     "write_a_message": "Write a message...",
     "send_separately": "Send separately"
   },
@@ -449,7 +450,14 @@
     "song": {
       "title": "Share a song",
       "description": "What song describes your mood the best?",
-      "search_placeholder": "Search song, album, artist..."
+      "search_placeholder": "Search song, album, artist...",
+      "search_bottom_sheet": {
+        "title": "Share a Song",
+        "confirm": "Confirm",
+        "search_placeholder": "Search song, album, artist...",
+        "cancel": "Cancel",
+        "all_results": "All Results"
+      }
     },
     "mood": {
       "title": "Share your mood",
