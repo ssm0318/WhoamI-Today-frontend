@@ -15,7 +15,7 @@ export type CheckInBase = {
   is_active: boolean;
   created_at: string;
   mood: string;
-  availability: Availability;
+  availability: Availability | null;
   description: string;
   track_id: string;
   current_user_read: boolean;
