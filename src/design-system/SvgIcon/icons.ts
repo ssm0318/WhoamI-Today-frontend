@@ -123,7 +123,8 @@ const top_navigation_chat = 'top_navigation_chat';
 const top_navigation_back = 'top_navigation_back';
 const edit = 'edit';
 const new_add = 'new_add';
-const add_reaction = 'add_reaction';
+const add_reaction_default = 'add_reaction_default';
+const add_reaction_active = 'add_reaction_active';
 
 // Notification
 const prompts = 'prompts';
@@ -136,7 +137,8 @@ export {
   add_comment,
   add_default,
   add_post,
-  add_reaction,
+  add_reaction_active,
+  add_reaction_default,
   add_user,
   arrow_left,
   arrow_right,

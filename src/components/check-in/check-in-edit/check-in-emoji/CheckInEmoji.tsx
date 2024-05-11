@@ -37,14 +37,18 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
         alignItems="center"
         justifyContent="center"
         rounded={12}
-        outline="LIGHT_GRAY"
+        outline={emojiPickerVisible ? 'BLACK' : 'LIGHT_GRAY'}
         w={EMOJI_ICON_SIZE}
         h={EMOJI_ICON_SIZE}
       >
         {mood ? (
           <EmojiItem emojiString={mood} size={24} outline="TRANSPARENT" />
         ) : (
-          <Icon onClick={handleClickEmoji} name="add_reaction" size={24} />
+          <Icon
+            onClick={handleClickEmoji}
+            name={emojiPickerVisible ? 'add_reaction_active' : 'add_reaction_default'}
+            size={24}
+          />
         )}
       </Layout.FlexRow>
       {mood && <DeleteButton onClick={onDelete} size={32} />}
