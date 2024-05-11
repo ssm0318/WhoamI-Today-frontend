@@ -24,7 +24,6 @@
     "skip": "Skip",
     "next": "Next",
     "crop_picture": "Crop Picture",
-    "temporary_error": "An error has occurred temporarily. Please try again later.",
     "password_constraints": "The password must be at least 8 characters with a mix of upper and lowercase letters, numbers and symbols.",
     "research_participation_consent_form": "Research Participation Consent Form",
     "research_desc": "<0>WhoAmI Today is a non-profit service developed by a group of researchers at the University of Washington to make social media more aligned with the needs of adolescents. If you agree to the<1>privacy policy/consent form</1>, you agree to participating in our research, which includes the (aggregated and deidentified) analysis of your data.</0>",
@@ -413,5 +412,8 @@
     "favorites": "Favorites",
     "add_favorite": "Add your friends to Favorites and see their content at the top of your feed!",
     "all_friends": "All Friends"
+  },
+  "error": {
+    "temporary_error": "An error has occurred temporarily. Please try again later."
   }
 }

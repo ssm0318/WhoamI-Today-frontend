@@ -139,7 +139,7 @@ function EditFriends() {
           visible={showTemporalErrorAlert}
           onClickDimmed={handleOnCloseTemporalErrorAlert}
         >
-          {t('sign_up.temporary_error')}
+          {t('error.temporary_error')}
         </AlertDialog>
       )}
     </>

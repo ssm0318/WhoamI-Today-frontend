@@ -29,7 +29,7 @@ interface SendPromptModalProps {
   questionId: number;
 }
 function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps) {
-  const [t] = useTranslation('translation', { keyPrefix: 'prompts' });
+  const [t] = useTranslation('translation');
 
   const [query, setQuery] = useState('');
   const {
@@ -96,15 +96,17 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
   };
 
   const currentUser = useBoundStore.getState().myProfile;
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const handleClickSend = async () => {
-    console.log('send');
     if (!currentUser) return;
-    try {
-      await requestResponse(currentUser.id, questionId, selectedFriends, messageInput);
-      onClose();
-    } catch {
-      // TODO: Error
-    }
+    await requestResponse({
+      currentUserId: currentUser.id,
+      questionId,
+      selectedFriends,
+      message: messageInput,
+      onSuccess: () => onClose,
+      onError: () => openToast({ message: t('error.temporary_error') }),
+    });
   };
 
   // NOTE: Clean up on close modal
@@ -123,13 +125,15 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
     <BottomModal visible={visible} onClose={onClose} h={650}>
       <SendPromptModalContainer>
         <Layout.LayoutBase w={75} h={5} bgColor="MEDIUM_GRAY" />
-        <SendPromptModalTitle type="title-large">{t('send_this_prompt_to')}</SendPromptModalTitle>
+        <SendPromptModalTitle type="title-large">
+          {t('prompts.send_this_prompt_to')}
+        </SendPromptModalTitle>
         <Layout.LayoutBase pb={8} bgColor="WHITE" w="100%">
           <FriendSearchInput
             query={query}
             setQuery={setQuery}
             fontSize={16}
-            placeholder={t('search_friends') || undefined}
+            placeholder={t('prompts.search_friends') || undefined}
           />
         </Layout.LayoutBase>
         <SendPromptModalFriendList ph={12} w="100%" ref={friendListRef}>
@@ -148,7 +152,6 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
                         justifyContent="space-between"
                         pv={12}
                         w="100%"
-                        onClick={handleChangeCheckBox(friend)}
                       >
                         <Layout.FlexRow gap={8} alignItems="center">
                           <ProfileImage imageUrl={profile_image} username={username} size={30} />
@@ -199,14 +202,14 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
           <Layout.Fixed b={0} w="100%" pt={12} bgColor="WHITE">
             <Divider width={1} />
             <MessageInput
-              placeholder={t('write_a_message') || ''}
+              placeholder={t('prompts.write_a_message') || ''}
               value={messageInput}
               onChange={handleChangeMessage}
             />
             <Divider width={1} />
             <Layout.LayoutBase pv={12} ph={16} w="100%">
               <Button.Confirm
-                text={t('send_separately')}
+                text={t('prompts.send_separately')}
                 status="normal"
                 sizing="stretch"
                 onClick={handleClickSend}
