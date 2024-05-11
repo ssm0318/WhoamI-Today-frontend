@@ -36,7 +36,7 @@ function QuestionItem({ question, onSend }: QuestionItemProps) {
       <QuestionItemWrapper p={16} rounded={12} w="100%">
         <Layout.FlexRow gap={8} alignItems="center">
           <ProfileImage imageUrl="/whoami-profile.svg" username="Whoami Today" size={28} />
-          <Typo type="title-medium">Prompt of the day</Typo>
+          <Typo type="title-medium">Whoami Today</Typo>
         </Layout.FlexRow>
         <Typo type="body-large" mt={14}>
           {content}
