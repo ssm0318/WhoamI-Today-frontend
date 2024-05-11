@@ -73,7 +73,7 @@ function MusicSearchBottomSheet({
             />
           </Layout.FlexRow>
           {/* Song Results */}
-          <Layout.FlexCol mt={12} gap={12}>
+          <Layout.FlexCol mt={12} gap={12} w="100%">
             {!!trackList.length && (
               <Typo type="title-medium" color="MEDIUM_GRAY">
                 {t('all_results')}

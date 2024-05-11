@@ -10,7 +10,7 @@ type MusicItemProps = {
 function MusicItem({ track, onSelect, selected }: MusicItemProps) {
   return (
     <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center">
-      <Layout.FlexRow gap={12}>
+      <Layout.FlexRow gap={12} flex={1}>
         {/* 썸네일 */}
         <img
           src={track.album.images[0].url}
@@ -22,7 +22,7 @@ function MusicItem({ track, onSelect, selected }: MusicItemProps) {
           }}
         />
         {/* 제목 & 아티스트 */}
-        <Layout.FlexCol justifyContent="center">
+        <Layout.FlexCol justifyContent="center" w="100%" flex={1}>
           <Typo type="body-large" numberOfLines={1}>
             {track.name}
           </Typo>
