@@ -13,7 +13,7 @@ interface PostMoreModalProps {
   setIsVisible: Dispatch<SetStateAction<boolean>>;
   post: Note | Response;
   isMyPage?: boolean;
-  callback?: () => Promise<void>;
+  onConfirmReport?: () => Promise<void>;
 }
 
 type AlertProps = Pick<
@@ -26,7 +26,7 @@ function PostMoreModal({
   isMyPage = false,
   setIsVisible,
   post,
-  callback,
+  onConfirmReport,
 }: PostMoreModalProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'post_more_modal' });
   const [showAlert, setShowAlert] = useState<AlertProps>();
@@ -49,7 +49,7 @@ function PostMoreModal({
       cancelText: t('report.cancel'),
       onClickConfirm: async () => {
         await reportContent(post.id, post.type);
-        callback?.();
+        onConfirmReport?.();
         handleOnConfirmAlert();
       },
     });

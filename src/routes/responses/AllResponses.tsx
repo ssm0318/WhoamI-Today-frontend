@@ -64,7 +64,7 @@ function AllResponses({ isMyPage = false }: AllResponsesProps) {
             response={response}
             isMyPage={isMyPage}
             type="DETAIL"
-            onRefetch={handleRefetch}
+            refresh={handleRefetch}
           />
         ))}
         <div ref={targetRef} />
