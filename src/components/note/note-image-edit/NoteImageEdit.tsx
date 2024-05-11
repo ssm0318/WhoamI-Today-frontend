@@ -2,20 +2,12 @@ import { useCallback, useState } from 'react';
 import Cropper, { Area } from 'react-easy-crop';
 import { useTranslation } from 'react-i18next';
 import SubHeader from '@components/sub-header/SubHeader';
+import { NOTE_IMAGE_CROP_HEIGHT, NOTE_IMAGE_CROP_WIDTH } from '@constants/size';
 import { Typo } from '@design-system';
 import getCroppedImg, { CroppedImg } from '@utils/getCroppedImg';
 
 const cropContainerStyle = {
-  width: '100%',
   backgroundColor: '#7F7F7F',
-};
-
-const cropAreaStyle = {
-  content: '',
-  left: '50%',
-  top: '50%',
-  transform: 'translate3d(-50%,-50%,0)',
-  backgroundColor: 'transparent',
 };
 
 interface ProfileImageEditProps {
@@ -77,17 +69,13 @@ function NoteImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileImag
         image={image}
         crop={crop}
         zoom={zoom}
-        cropSize={{ height: 250, width: 450 }}
         aspect={1}
         showGrid
+        cropSize={{ width: NOTE_IMAGE_CROP_WIDTH, height: NOTE_IMAGE_CROP_HEIGHT }}
         onCropChange={setCrop}
         onCropComplete={showCroppedImage}
         onZoomChange={setZoom}
-        objectFit="horizontal-cover"
-        style={{
-          containerStyle: cropContainerStyle,
-          cropAreaStyle,
-        }}
+        style={{ containerStyle: cropContainerStyle }}
       />
     </>
   );
