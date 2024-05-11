@@ -17,6 +17,9 @@ function SpotifyMusic({ track, width = 200 }: SpotifyMusicProps) {
       alignItems="center"
       bgColor="WHITE"
       w={width}
+      style={{
+        flexShrink: 0,
+      }}
     >
       <img
         src={track.album.images[0].url}
