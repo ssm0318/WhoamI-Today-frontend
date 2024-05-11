@@ -23,22 +23,26 @@ function NewNoteHeader({ title, noteInfo }: NewNoteHeaderProps) {
     postNote(noteInfo);
   };
 
+  const canPost = !!noteInfo.content;
+
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
   return (
     <NewNoteHeaderWrapper>
       <Layout.FlexRow justifyContent="space-between" w="100%" h="100%" alignItems="center">
         <Layout.FlexRow gap={8} alignItems="center" onClick={cancelPost}>
-          <Typo type="title-medium" color="BLACK">
+          <Typo type="title-large" color="BLACK">
             {t('cancel')}
           </Typo>
         </Layout.FlexRow>
         <Layout.FlexRow>
           <Typo type="head-line">{title}</Typo>
         </Layout.FlexRow>
-        <Layout.FlexRow gap={8} alignItems="center" onClick={confirmPost}>
-          <Typo type="title-medium" color="PRIMARY">
-            {t('post')}
-          </Typo>
+        <Layout.FlexRow gap={8} alignItems="center">
+          <button type="button" disabled={!canPost} onClick={confirmPost}>
+            <Typo type="title-large" color={canPost ? 'PRIMARY' : 'MEDIUM_GRAY'}>
+              {t('post')}
+            </Typo>
+          </button>
         </Layout.FlexRow>
       </Layout.FlexRow>
     </NewNoteHeaderWrapper>
