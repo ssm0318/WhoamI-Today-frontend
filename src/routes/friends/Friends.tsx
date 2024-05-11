@@ -15,7 +15,7 @@ import { FetchState } from '@models/api/common';
 import { UpdatedProfile } from '@models/api/friends';
 import { getFavoriteFriends, getUpdatedProfiles } from '@utils/apis/friends';
 import { getFriendRequests } from '@utils/apis/user';
-import useInfiniteFetchFriends from './_hooks/useInfiniteFetchFriends';
+import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
 
 function Friends() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends' });

@@ -13,7 +13,7 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import { addFriendToFavorite, deleteFavorite, hideFriend, unHideFriend } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
 import updateFriendsList from '@utils/updateFriendsList';
-import useInfiniteFetchFriends from './_hooks/useInfiniteFetchFriends';
+import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
 
 function EditFriends() {
   const [t] = useTranslation('translation');
