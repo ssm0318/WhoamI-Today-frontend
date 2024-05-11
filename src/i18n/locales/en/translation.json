@@ -437,6 +437,24 @@
     "file_size_exceeded": "File size exceeds the {{size}}MB limit."
   },
   "check_in_edit": {
+    "availability": {
+      "title": "What’s your availability?",
+      "description": "Let your friends know if you’re up for a chat",
+      "select_placeholder": "Select Availability",
+      "select_bottom_sheet": {
+        "title": "Select Availability",
+        "confirm": "Confirm"
+      }
+    },
+    "song": {
+      "title": "Share a song",
+      "description": "What song describes your mood the best?",
+      "search_placeholder": "Search song, album, artist..."
+    },
+    "mood": {
+      "title": "Share your mood",
+      "description": "Choose an emoji and enter a short text to describe your day"
+    },
     "description_placeholder": "Share a short text to describe your day..."
   }
 }

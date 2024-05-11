@@ -101,6 +101,7 @@ const chat_media_image = 'chat_media_image';
 const chat_media_gif = 'chat_media_gif';
 const green_dot = 'green_dot';
 const chat_notification_mute = 'chat_notification_mute';
+const search_black = 'search_black';
 
 // Note
 const delete_image = 'delete_image';
@@ -219,6 +220,7 @@ export {
   question_respond,
   question_send,
   search,
+  search_black,
   sent_by,
   share_default,
   spotify,

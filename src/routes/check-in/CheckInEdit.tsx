@@ -1,6 +1,7 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { EmojiClickData } from 'emoji-picker-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import CheckInAvailability from '@components/check-in/check-in-edit/check-in-availability/CheckInAvailability';
@@ -18,6 +19,7 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { postCheckIn } from '@utils/apis/checkIn';
 
 function CheckInEdit() {
+  const [t] = useTranslation('translation', { keyPrefix: 'check_in_edit' });
   const spotifyManager = SpotifyManager.getInstance();
   const navigate = useNavigate();
   const { checkInForm, setCheckInForm, fetchCheckIn } = useBoundStore((state) => ({
@@ -82,8 +84,8 @@ function CheckInEdit() {
       >
         {/* availability */}
         <SectionContainer
-          title="What’s your availability?"
-          description="Let your friends know if you’re up for a chat"
+          title={t('availability.title')}
+          description={t('availability.description')}
         >
           <CheckInAvailability
             availability={checkInForm?.availability}
@@ -92,10 +94,7 @@ function CheckInEdit() {
           />
         </SectionContainer>
         {/* spotify */}
-        <SectionContainer
-          title="Share a song"
-          description="What song describes your mood the best?"
-        >
+        <SectionContainer title={t('song.title')} description={t('song.description')}>
           <CheckInSpotifyMusic
             trackData={trackData}
             onDelete={() => setTrackData(null)}
@@ -103,10 +102,7 @@ function CheckInEdit() {
           />
         </SectionContainer>
         {/* mood (emoji & description) */}
-        <SectionContainer
-          title="Share your mood"
-          description="Choose an emoji and enter a short text to describe your day"
-        >
+        <SectionContainer title={t('mood.title')} description={t('mood.description')}>
           <CheckInEmoji
             mood={checkInForm?.mood || ''}
             onDelete={() => handleDelete('mood')}

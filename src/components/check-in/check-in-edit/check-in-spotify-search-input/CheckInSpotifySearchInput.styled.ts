@@ -4,9 +4,10 @@ import styled from 'styled-components';
 export const StyledCheckInSpotifySearchInput = styled(TextareaAutosize)`
   width: 100%;
   padding: 8px 32px 8px 32px;
-  font-size: 16px;
+  font-size: 14px;
   border-width: 1px;
-  border-color: ${({ theme }) => theme.SPOTIFY_GREEN};
+  border-color: ${({ theme }) => theme.LIGHT_GRAY};
   background-color: ${({ theme }) => theme.WHITE};
+  color: ${({ theme }) => theme.LIGHT_GRAY};
   border-radius: 12px;
 `;

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
 import Icon from '@components/_common/icon/Icon';
@@ -20,6 +21,9 @@ function AvailabilitySelectBottomSheet({
   onSelect,
   selectedAvailability = null,
 }: AvailabilitySelectBottomSheetProps) {
+  const [t] = useTranslation('translation', {
+    keyPrefix: 'check_in_edit.availability.select_bottom_sheet',
+  });
   const [selected, setSelected] = useState<Availability | null>(selectedAvailability || null);
 
   const handleConfirm = () => {
@@ -33,7 +37,7 @@ function AvailabilitySelectBottomSheet({
     <BottomModal visible={visible} onClose={closeBottomSheet} maxHeight={700}>
       <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
-        <Typo type="title-large">Select Availability</Typo>
+        <Typo type="title-large">{t('title')}</Typo>
         <Layout.FlexRow
           gap={6}
           pv={16}
@@ -54,7 +58,7 @@ function AvailabilitySelectBottomSheet({
         <S.ConfirmButtonContainer w="100%" pt={16} pb={20} ph={12}>
           <BottomModalActionButton
             status={selected ? 'normal' : 'disabled'}
-            text="Confirm"
+            text={t('confirm')}
             onClick={handleConfirm}
           />
         </S.ConfirmButtonContainer>

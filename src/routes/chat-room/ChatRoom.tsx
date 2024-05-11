@@ -116,7 +116,8 @@ export function ChatRoom() {
             </Layout.FlexRow>
           )}
           <Layout.FlexRow alignItems="center" gap={10}>
-            <Icon name="search" size={18} fill="BLACK" onClick={handleClickMsgSearch} />
+            {/* TODO: search icon 다시 확인 (현재 figma에서 균일하게 잡혀있지 않음) */}
+            <Icon name="search_black" size={18} fill="BLACK" onClick={handleClickMsgSearch} />
             <Icon
               name={isMuted ? 'notification_mute' : 'notification'}
               size={36}

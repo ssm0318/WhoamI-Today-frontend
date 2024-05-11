@@ -43,9 +43,7 @@ export default function FriendSearchInput({ query, setQuery, fontSize, placehold
         pv={6}
         h={56}
       >
-        <Layout.LayoutBase p={12}>
-          <SvgIcon name="search" size={20} fill="MEDIUM_GRAY" />
-        </Layout.LayoutBase>
+        <SvgIcon name="search" size={44} fill="MEDIUM_GRAY" />
         <S.SearchInput
           ref={inputRef}
           placeholder={placeholder || t('placeholder') || undefined}
