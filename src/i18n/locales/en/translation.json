@@ -311,6 +311,8 @@
     "message": "Message",
     "delete": "Delete",
     "post": "Post",
+    "cancel": "Cancel",
+    "comment": "Comment",
     "comment_place_holder": "Add a comment for {{username}}",
     "reply_place_holder": "Add a reply to {{username}}",
     "private_comment": "Private Comment",

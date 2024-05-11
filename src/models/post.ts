@@ -79,6 +79,7 @@ export interface Note extends ContentsCommon {
   images: string[];
   comment_count: number | null;
   like_user_sample: User[];
+  comments: Comment[];
 }
 
 // 질문에 대한 답변 리스트

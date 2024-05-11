@@ -304,6 +304,8 @@
     "message": "메시지",
     "delete": "삭제",
     "post": "게시",
+    "cancel": "취소",
+    "comment": "댓글",
     "comment_place_holder": "{{username}}에게 댓글을 입력하세요.",
     "reply_place_holder": "{{username}}에게 답글을 입력하세요.",
     "private_comment": "비밀 댓글",
