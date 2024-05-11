@@ -431,6 +431,31 @@
     "file_size_exceeded": "파일 크기가 {{size}}MB 제한을 초과합니다."
   },
   "check_in_edit": {
-    "description_placeholder": "오늘 하루를 설명해주세요."
+    "availability": {
+      "title": "당신의 상태는 어떻게 되나요?",
+      "description": "친구들에게 대화할 준비가 되어 있는지 알려주세요",
+      "select_placeholder": "상태 선택",
+      "select_bottom_sheet": {
+        "title": "상태 선택",
+        "confirm": "확인"
+      }
+    },
+    "song": {
+      "title": "노래 공유",
+      "description": "당신의 기분을 가장 잘 나타내는 노래는 무엇인가요?",
+      "search_placeholder": "노래, 앨범, 아티스트 검색...",
+      "search_bottom_sheet": {
+        "title": "노래 공유",
+        "confirm": "확인",
+        "search_placeholder": "노래, 앨범, 아티스트 검색...",
+        "cancel": "취소",
+        "all_results": "모든 결과"
+      }
+    },
+    "mood": {
+      "title": "당신의 기분 공유",
+      "description": "이모지를 선택하고 하루를 설명하는 짧은 텍스트를 입력해주세요"
+    },
+    "description_placeholder": "하루를 설명하는 짧은 텍스트를 입력해주세요..."
   }
 }
