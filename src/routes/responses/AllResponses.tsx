@@ -13,23 +13,20 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { getMyResponses } from '@utils/apis/my';
 import { getUserResponses } from '@utils/apis/user';
 
-type AllResponsesProps = {
-  isMyPage?: boolean;
-};
-
-function AllResponses({ isMyPage = false }: AllResponsesProps) {
+function AllResponses() {
   const [t] = useTranslation('translation', { keyPrefix: 'all_responses' });
   const [responses, setResponses] = useState<Response[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
+  // NOTE: username이 있으면 username에 대한 response를, 없으면 내 response를 보여줍니다.
   const { username } = useParams();
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
   const getResponses = useCallback(
     async (page: string | null) => {
-      if (isMyPage) return getMyResponses(page);
-      return getUserResponses(username || '', page);
+      if (!username) return getMyResponses(page);
+      return getUserResponses(username, page);
     },
-    [isMyPage, username],
+    [username],
   );
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
@@ -62,7 +59,7 @@ function AllResponses({ isMyPage = false }: AllResponsesProps) {
           <ResponseItem
             key={response.id}
             response={response}
-            isMyPage={isMyPage}
+            isMyPage={!username}
             type="DETAIL"
             refresh={handleRefetch}
           />
