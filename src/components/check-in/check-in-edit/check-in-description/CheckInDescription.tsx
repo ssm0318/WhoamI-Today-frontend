@@ -30,7 +30,7 @@ function CheckInDescription({ description, onDelete, onChange }: CheckInDescript
           placeholder={t('description_placeholder') || ''}
           maxLength={DESCRIPTION_LENGTH_LIMIT}
         />
-        <Layout.FlexRow h="100%" alignItems="flex-end">
+        <Layout.FlexRow h="100%" alignItems="center">
           {description && (
             <Typo type="label-small" color="DARK_GRAY">
               {description.length} / {DESCRIPTION_LENGTH_LIMIT}

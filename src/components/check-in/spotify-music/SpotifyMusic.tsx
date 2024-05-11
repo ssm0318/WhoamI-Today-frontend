@@ -1,14 +1,13 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import React from 'react';
-import { Font, Layout, SvgIcon } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 
 interface SpotifyMusicProps {
   track: Track;
-  width?: number;
   containerStyle?: React.CSSProperties;
 }
 
-function SpotifyMusic({ track, width = 200, containerStyle }: SpotifyMusicProps) {
+function SpotifyMusic({ track, containerStyle }: SpotifyMusicProps) {
   return (
     <Layout.FlexRow
       outline="SPOTIFY_GREEN"
@@ -18,9 +17,7 @@ function SpotifyMusic({ track, width = 200, containerStyle }: SpotifyMusicProps)
       rounded={12}
       alignItems="center"
       bgColor="WHITE"
-      w={width}
       style={{
-        flexShrink: 0,
         ...containerStyle,
       }}
     >
@@ -33,9 +30,9 @@ function SpotifyMusic({ track, width = 200, containerStyle }: SpotifyMusicProps)
           borderRadius: 4,
         }}
       />
-      <Font.Body type="12_semibold" numberOfLines={1}>
+      <Typo type="label-large" numberOfLines={1}>
         {track.artists[0].name} - {track.name}
-      </Font.Body>
+      </Typo>
       <Layout.LayoutBase w={16} h={16}>
         <SvgIcon name="spotify" size={16} />
       </Layout.LayoutBase>
