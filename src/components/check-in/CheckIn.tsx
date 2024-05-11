@@ -86,27 +86,35 @@ function CheckIn({ user }: CheckInProps) {
               <SvgIcon name="dots_menu" color="BLACK" size={24} onClick={handleClickViewMore} />
             )}
           </Layout.FlexRow>
-          <Layout.FlexRow
-            w="100%"
-            gap={8}
-            bgColor="WHITE"
-            alignItems="center"
-            outline="GRAY_1"
-            ph={8}
-            pv={4}
-            rounded={12}
-          >
-            {/* emoji */}
-            {mood && (
-              <EmojiItem emojiString={mood} size={24} bgColor="TRANSPARENT" outline="TRANSPARENT" />
-            )}
-            {/* description */}
-            {description && (
-              <Typo type="label-large" numberOfLines={2}>
-                {description}
-              </Typo>
-            )}
-          </Layout.FlexRow>
+          {(!!mood || !!description) && (
+            <Layout.FlexRow
+              w="100%"
+              gap={8}
+              bgColor="WHITE"
+              alignItems="center"
+              outline="GRAY_1"
+              ph={8}
+              pv={4}
+              rounded={12}
+            >
+              {/* emoji */}
+              {mood && (
+                <EmojiItem
+                  emojiString={mood}
+                  size={24}
+                  bgColor="TRANSPARENT"
+                  outline="TRANSPARENT"
+                />
+              )}
+              {/* description */}
+              {description && (
+                <Typo type="label-large" numberOfLines={2}>
+                  {description}
+                </Typo>
+              )}
+            </Layout.FlexRow>
+          )}
+
           {/* check in time */}
           <Layout.FlexRow w="100%" justifyContent="flex-end">
             <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
