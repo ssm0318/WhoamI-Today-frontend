@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
-import { Layout, Typo } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
+import { Border } from 'src/design-system/layouts/layout.types';
 import * as S from './ImageSlider.styled';
 
-interface ImageSliderProps {
+interface ImageSliderProps extends Border {
   images: string[];
-  width: number;
-  height: number;
+  onDeleteImage?: (imgIndex: number) => void;
 }
 
-function ImageSlider({ images, width, height }: ImageSliderProps) {
+function ImageSlider({ images, onDeleteImage, ...borderStyleProps }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToPrevious = () => {
@@ -25,19 +25,38 @@ function ImageSlider({ images, width, height }: ImageSliderProps) {
     onSwipedRight: () => goToPrevious(),
   });
 
+  const isEditMode = !!onDeleteImage;
+
+  const handleDeleteImage = (imgIndex: number) => {
+    onDeleteImage?.(imgIndex);
+    setCurrentIndex(0);
+  };
+
   return (
     <S.ImageSliderWrapper {...handlers}>
       <Layout.FlexRow justifyContent="center">
-        <S.ImageWrapper w={width} h={height} bgColor="MEDIUM_GRAY">
-          {images[currentIndex] && <S.Image src={images[currentIndex]} alt="slide-img" />}
-          {/* current index */}
-          <Layout.Absolute t={6} r={6}>
-            <Layout.FlexRow bgColor="GRAY_4" ph={4} pv={2} rounded={12}>
+        <S.ImageWrapper bgColor="MEDIUM_GRAY" {...borderStyleProps}>
+          {images[currentIndex] && (
+            <S.Image src={images[currentIndex]} alt="slide-img" isEditMode={isEditMode} />
+          )}
+          <Layout.Absolute t={6} {...(isEditMode ? { l: 8 } : { l: 6 })}>
+            <Layout.FlexRow bgColor="DARK" ph={4} pv={2} rounded={12}>
               <Typo type="label-small" color="LIGHT">
                 {currentIndex + 1}/{images.length}
               </Typo>
             </Layout.FlexRow>
           </Layout.Absolute>
+          {isEditMode && (
+            <Layout.Absolute t={0} r={0}>
+              <SvgIcon
+                name="delete_image"
+                size={50}
+                onClick={() => {
+                  handleDeleteImage(currentIndex);
+                }}
+              />
+            </Layout.Absolute>
+          )}
         </S.ImageWrapper>
       </Layout.FlexRow>
       {/* indicator */}

@@ -1,6 +1,6 @@
 import React, { ChangeEvent, KeyboardEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import ImageSlider from '@components/_common/image-slider/ImageSlider';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import NoteImageEdit from '@components/note/note-image-edit/NoteImageEdit';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
@@ -8,7 +8,6 @@ import { Font, Layout, SvgIcon } from '@design-system';
 import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
-import NewNoteImage from '../new-note-image/NewNoteImage';
 import { NoteInput } from './NoteInputBox.styled';
 
 interface NoteInformationProps {
@@ -53,6 +52,15 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
     setNoteInfo((prevNoteInfo) => ({
       ...prevNoteInfo,
       images: [...(prevNoteInfo?.images || []), croppedImage.url],
+    }));
+  };
+
+  const handleDeleteImage = (imgIndex: number) => {
+    if (!noteInfo.images) return;
+
+    setNoteInfo((prevNoteInfo) => ({
+      ...prevNoteInfo,
+      images: prevNoteInfo?.images?.filter((image, index) => index !== imgIndex) || [],
     }));
   };
 
@@ -105,26 +113,11 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
           setIsVisible={setIsEditVisible}
           onCompleteImageCrop={onCompleteImageCrop}
         />
-      ) : (
-        <Swiper
-          style={{
-            height: '300px',
-            width: '100%',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-          slidesPerView={1}
-          initialSlide={noteInfo.images && noteInfo.images.length - 1}
-        >
-          {noteInfo.images?.map((imgurl) => {
-            return (
-              <SwiperSlide key={imgurl}>
-                <NewNoteImage url={imgurl} noteImages={noteInfo.images} setNoteInfo={setNoteInfo} />
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
-      )}
+      ) : noteInfo?.images?.length ? (
+        <Layout.FlexCol alignItems="center" w="100%">
+          <ImageSlider images={noteInfo.images} rounded={17} onDeleteImage={handleDeleteImage} />
+        </Layout.FlexCol>
+      ) : null}
     </>
   );
 }
