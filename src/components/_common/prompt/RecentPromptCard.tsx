@@ -24,7 +24,7 @@ function RecentPromptCard({ question, sentBy }: PromptCardProps) {
     // TODO
   };
   return (
-    <StyledRecentPromptCard w="100%" ph={16} pv={10} rounded={12} gap={8} bgColor="LIGHT_GRAY">
+    <StyledRecentPromptCard w="100%" ph={16} pv={10} rounded={12} gap={8} bgColor="LIGHT">
       <Layout.FlexRow w="100%" alignItems="center" gap={8}>
         <Layout.FlexCol w="100%" gap={8}>
           {sentBy && (
