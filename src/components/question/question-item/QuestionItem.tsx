@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SendPromptModal from '@components/_common/prompt/SendPromptModal';
 import { Font, Layout, SvgIcon } from '@design-system';
 import { Question } from '@models/post';
-import SendQuestionModal from '../send-question-modal/SendQuestionModal';
 
 type QuestionItemProps = {
   question: Question;
 };
 
 // 주관식
+/**
+ * @deprecated
+ */
 function QuestionItem({ question }: QuestionItemProps) {
   const { content } = question;
   const [sendModalVisible, setSendModalVisible] = useState(false);
@@ -27,6 +30,8 @@ function QuestionItem({ question }: QuestionItemProps) {
   const handleClickQuestion = () => {
     navigate(`/response-history/${question.id}`);
   };
+
+  const handleCloseModal = () => setSendModalVisible(false);
 
   return (
     <>
@@ -49,10 +54,10 @@ function QuestionItem({ question }: QuestionItemProps) {
           </button>
         </Layout.FlexRow>
       </Layout.FlexRow>
-      <SendQuestionModal
+      <SendPromptModal
+        visible={sendModalVisible}
+        onClose={handleCloseModal}
         questionId={question.id}
-        isVisible={sendModalVisible}
-        setIsVisible={setSendModalVisible}
       />
     </>
   );

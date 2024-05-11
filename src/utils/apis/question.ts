@@ -24,20 +24,33 @@ export const getQuestionDetail = async (id: string) => {
   return data;
 };
 
-export const requestResponse = async (
-  currentUserId: number,
-  questionId: number,
-  selectedFriendIdList: number[],
-) => {
+export const requestResponse = async ({
+  currentUserId,
+  questionId,
+  selectedFriends,
+  message,
+  onSuccess,
+  onError,
+}: {
+  currentUserId: number;
+  questionId: number;
+  selectedFriends: number[];
+  message?: string;
+  onSuccess: () => void;
+  onError: () => void;
+}) => {
   Promise.all(
-    selectedFriendIdList.map((friend) =>
+    selectedFriends.map((friend) =>
       axios.post(`/qna/questions/response-request/`, {
         requester_id: currentUserId,
         requestee_id: friend,
         question_id: questionId,
+        message,
       }),
     ),
-  );
+  )
+    .then(() => onSuccess())
+    .catch(() => onError());
 };
 
 export const responseQuestion = async ({

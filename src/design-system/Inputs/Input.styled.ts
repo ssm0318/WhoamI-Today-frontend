@@ -2,14 +2,14 @@ import styled from 'styled-components';
 
 export interface CommonInputProps {
   width?: number;
+  fontSize?: number;
 }
 
-export const CommonInput = styled.input`
-  ${(props: CommonInputProps) =>
-    `outline: none;
-    width: ${props.width ? `${props.width}px` : '100%'};`}
+export const CommonInput = styled.input<CommonInputProps>`
+  outline: none;
+  width: ${({ width }) => (width ? `${width}px` : '100%')};
   padding: 14px 0;
-  font-size: 18px;
+  font-size: ${({ fontSize }) => (fontSize ? `${fontSize}px` : '18px')};
   border-width: 0 0 1px;
   border-color: ${({ theme }) => theme.MEDIUM_GRAY};
 

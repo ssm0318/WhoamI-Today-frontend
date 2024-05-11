@@ -166,6 +166,10 @@ const Tertiary = React.memo((props: Omit<ButtonProps, 'type'>) => (
   <Button {...props} type="tertiary" />
 ));
 
+const Confirm = React.memo((props: Omit<ButtonProps, 'type'>) => (
+  <Button {...props} type="confirm" />
+));
+
 const buttons: ButtonSetting = {
   primary: {
     ButtonComponent: S.RoundButton,
@@ -179,6 +183,10 @@ const buttons: ButtonSetting = {
     ButtonComponent: S.UnderlineButton,
     fontType: 'button-small',
   },
+  confirm: {
+    ButtonComponent: S.ConfirmButton,
+    fontType: 'button-medium',
+  },
 };
 
-export { Dialog, Large, Medium, Primary, Secondary, Small, Tertiary };
+export { Confirm, Dialog, Large, Medium, Primary, Secondary, Small, Tertiary };

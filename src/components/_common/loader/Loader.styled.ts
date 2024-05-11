@@ -35,6 +35,7 @@ export const Loader = styled.div`
   transform: translateZ(0);
   -webkit-animation: ${Loading} 1.1s infinite linear;
   animation: ${Loading} 1.1s infinite linear;
+  flex-shrink: 0;
   &:after {
     border-radius: 50%;
     width: 48px;

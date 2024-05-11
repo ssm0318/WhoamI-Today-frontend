@@ -37,7 +37,7 @@ export const signIn = ({
         onError(e.response?.data.detail);
         return;
       }
-      onError(i18n.t('sign_up.temporary_error'));
+      onError(i18n.t('error.temporary_error'));
     });
 };
 
@@ -77,7 +77,7 @@ export const validateEmail = ({
         onError(e.response.data.detail);
         return;
       }
-      onError(i18n.t('sign_up.temporary_error'));
+      onError(i18n.t('error.temporary_error'));
     });
 };
 
@@ -100,7 +100,7 @@ export const validatePassword = ({
         onError(e.response.data.password[0]);
         return;
       }
-      onError(i18n.t('sign_up.temporary_error'));
+      onError(i18n.t('error.temporary_error'));
     });
 };
 
@@ -123,7 +123,7 @@ export const validateUsername = ({
         onError(e.response.data.detail);
         return;
       }
-      onError(i18n.t('sign_up.temporary_error'));
+      onError(i18n.t('error.temporary_error'));
     });
 };
 
@@ -214,7 +214,7 @@ export const resetPassword = ({
         onError(e.response.data.password[0]);
         return;
       }
-      onError(i18n.t('sign_up.temporary_error'));
+      onError(i18n.t('error.temporary_error'));
     });
 };
 
@@ -265,6 +265,14 @@ export const searchUser = async (query: string, next?: string | null) => {
   const queryParams = next?.split('?')[1] || `query=${query}`;
   const { data } = await axios.get<PaginationResponse<UserProfile[]>>(
     `/user/search/?${queryParams}`,
+  );
+  return data;
+};
+
+export const searchFriends = async (query: string, next?: string | null) => {
+  const queryParams = next?.split('?')[1] || `query=${query}`;
+  const { data } = await axios.get<PaginationResponse<UserProfile[]>>(
+    `/user/me/search/?${queryParams}`,
   );
   return data;
 };
