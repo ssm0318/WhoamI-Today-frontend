@@ -97,9 +97,9 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
 
   const currentUser = useBoundStore.getState().myProfile;
   const handleClickSend = async () => {
+    console.log('send');
     if (!currentUser) return;
     try {
-      // TODO: API 수정 후 확인 필요 https://github.com/GooJinSun/WhoAmI-Today-backend/issues/233
       await requestResponse(currentUser.id, questionId, selectedFriends, messageInput);
       onClose();
     } catch {
