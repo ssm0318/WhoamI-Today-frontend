@@ -1,12 +1,14 @@
 import { Track } from '@spotify/web-api-ts-sdk';
+import React from 'react';
 import { Font, Layout, SvgIcon } from '@design-system';
 
 interface SpotifyMusicProps {
   track: Track;
   width?: number;
+  containerStyle?: React.CSSProperties;
 }
 
-function SpotifyMusic({ track, width = 200 }: SpotifyMusicProps) {
+function SpotifyMusic({ track, width = 200, containerStyle }: SpotifyMusicProps) {
   return (
     <Layout.FlexRow
       outline="SPOTIFY_GREEN"
@@ -19,6 +21,7 @@ function SpotifyMusic({ track, width = 200 }: SpotifyMusicProps) {
       w={width}
       style={{
         flexShrink: 0,
+        ...containerStyle,
       }}
     >
       <img

@@ -435,5 +435,8 @@
   "error": {
     "temporary_error": "An error has occurred temporarily. Please try again later.",
     "file_size_exceeded": "File size exceeds the {{size}}MB limit."
+  },
+  "check_in_edit": {
+    "description_placeholder": "Share a short text to describe your day..."
   }
 }

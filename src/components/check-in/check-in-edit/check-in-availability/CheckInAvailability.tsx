@@ -25,7 +25,7 @@ function CheckInAvailability({
     <Layout.FlexRow mt={8} w="100%" alignItems="center" gap={8}>
       {availability ? (
         <>
-          <AvailabilityChip availability={availability} />
+          <AvailabilityChip availability={availability} onSelect={onClickSelectAvailability} />
           <DeleteButton onClick={onDelete} size={32} />
         </>
       ) : (
@@ -48,6 +48,7 @@ function CheckInAvailability({
           visible={showAvailabilitySelect}
           closeBottomSheet={() => setShowAvailabilitySelect(false)}
           onSelect={onSelectAvailability}
+          selectedAvailability={availability}
         />
       )}
     </Layout.FlexRow>

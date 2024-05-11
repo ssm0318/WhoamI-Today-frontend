@@ -15,8 +15,13 @@ function CheckInSpotifyMusic({ trackData, onDelete, onSearchMusic }: CheckInSpot
     <Layout.FlexRow w="100%" alignItems="center" mt={8} gap={8}>
       {trackData ? (
         <>
-          <SpotifyMusic track={trackData} />
-          <DeleteButton onClick={onDelete} />
+          <SpotifyMusic
+            track={trackData}
+            containerStyle={{
+              padding: 8,
+            }}
+          />
+          <DeleteButton onClick={onDelete} size={32} />
         </>
       ) : (
         <Layout.FlexRow w="100%" onClick={onSearchMusic} alignItems="center">

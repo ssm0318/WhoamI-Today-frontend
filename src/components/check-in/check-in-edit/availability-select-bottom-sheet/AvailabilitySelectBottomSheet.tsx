@@ -11,14 +11,16 @@ type AvailabilitySelectBottomSheetProps = {
   visible: boolean;
   closeBottomSheet: () => void;
   onSelect: (availability: Availability) => void;
+  selectedAvailability: Availability | null;
 };
 
 function AvailabilitySelectBottomSheet({
   visible,
   closeBottomSheet,
   onSelect,
+  selectedAvailability = null,
 }: AvailabilitySelectBottomSheetProps) {
-  const [selected, setSelected] = useState<Availability | null>(null);
+  const [selected, setSelected] = useState<Availability | null>(selectedAvailability || null);
 
   const handleConfirm = () => {
     if (selected) {

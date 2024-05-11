@@ -11,6 +11,7 @@ import SectionContainer from '@components/check-in/check-in-edit/section-contain
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
 import { Availability, CheckInForm } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -19,10 +20,12 @@ import { postCheckIn } from '@utils/apis/checkIn';
 function CheckInEdit() {
   const spotifyManager = SpotifyManager.getInstance();
   const navigate = useNavigate();
-  const [checkInForm, setCheckInForm] = useBoundStore((state) => [
-    state.checkInForm,
-    state.setCheckInForm,
-  ]);
+  const { checkInForm, setCheckInForm, fetchCheckIn } = useBoundStore((state) => ({
+    checkInForm: state.checkInForm,
+    setCheckInForm: state.setCheckInForm,
+    fetchCheckIn: state.fetchCheckIn,
+  }));
+
   const [trackData, setTrackData] = useState<Track | null>(null);
 
   const handleSearchMusic = () => {
@@ -50,6 +53,12 @@ function CheckInEdit() {
     if (!checkInForm?.track_id) return;
     spotifyManager.getTrack(checkInForm.track_id).then(setTrackData);
   }, [spotifyManager, checkInForm]);
+
+  useAsyncEffect(async () => {
+    const myCheckIn = await fetchCheckIn();
+    if (!myCheckIn) return;
+    setCheckInForm(myCheckIn);
+  }, []);
 
   return (
     <MainContainer>
