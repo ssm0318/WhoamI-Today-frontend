@@ -30,6 +30,7 @@ import AllNotes from './routes/notes/AllNotes';
 import NewNote from './routes/notes/NewNote';
 import { NoteDetail } from './routes/notes/NoteDetail';
 import Notifications from './routes/Notifications';
+import ReceivedPrompts from './routes/ReceivedPrompts';
 import NewResponse from './routes/response/NewResponse';
 import ResponseDetail from './routes/response-detail/ResponseDetail';
 import Root from './routes/Root';
@@ -107,7 +108,11 @@ const router = createBrowserRouter([
   },
   {
     path: 'notifications',
-    element: <Notifications />,
+    loader: checkIfSignIn,
+    children: [
+      { path: '', element: <Notifications /> },
+      { path: 'prompts', element: <ReceivedPrompts /> },
+    ],
   },
   { path: 'chats/edit', element: <EditChats /> },
   {

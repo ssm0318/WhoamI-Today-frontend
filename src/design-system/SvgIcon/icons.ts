@@ -126,6 +126,7 @@ const add_reaction = 'add_reaction';
 
 // Notification
 const prompts = 'prompts';
+const sent_by = 'sent_by';
 
 const comment_reply = 'comment_reply';
 const comment_message = 'comment_message';
@@ -218,6 +219,7 @@ export {
   question_respond,
   question_send,
   search,
+  sent_by,
   share_default,
   spotify,
   star,
