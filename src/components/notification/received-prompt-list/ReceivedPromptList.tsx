@@ -57,6 +57,7 @@ function ReceivedPromptItem({ prompt, currDate }: ReceivedPromptItemProps) {
             now: currDate,
             day: new Date(created_at),
             isShortFormat: true,
+            useSoonText: false,
           })}
         </Typo>
       </Layout.FlexCol>

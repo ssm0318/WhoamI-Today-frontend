@@ -21,10 +21,12 @@ export const convertTimeDiffByString = ({
   day,
   dateFormat = 'yyyy.MM.dd HH:mm',
   isShortFormat = false,
+  useSoonText = true,
 }: {
   now?: Date;
   day: Date;
   dateFormat?: DateFormat;
+  useSoonText?: boolean;
   isShortFormat?: boolean;
 }) => {
   const diffMins = differenceInMinutes(now, day);
@@ -32,7 +34,7 @@ export const convertTimeDiffByString = ({
   const diffDays = Math.floor(diffHours / 24);
   const diffWeeks = Math.floor(diffHours / 24 / 7);
 
-  if (diffMins < 1) {
+  if (diffMins < 1 && useSoonText) {
     return i18n.t('time.just_a_moment_ago');
   }
 
