@@ -2,7 +2,7 @@ import styled, { keyframes } from 'styled-components';
 import { MAX_WINDOW_WIDTH, Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
 
-export const Background = styled(Layout.Absolute)<{
+export const Background = styled(Layout.Fixed)<{
   backgroundColor: string;
 }>`
   width: 100%;

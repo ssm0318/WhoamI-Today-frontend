@@ -37,6 +37,15 @@ function BottomModal({
     }
   }, [maxHeight, visible]);
 
+  // 모달창 열리면 뒷 배경 스크롤 방지
+  useEffect(() => {
+    if (visible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [visible]);
+
   const onCloseModal = (e: MouseEvent) => {
     e.stopPropagation();
     onClose?.();
