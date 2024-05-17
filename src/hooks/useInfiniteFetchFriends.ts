@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { FetchState } from '@models/api/common';
-import { GetUpdatedProfileResponse } from '@models/api/friends';
+import { GetUpdatedProfileResponse, UpdatedProfile } from '@models/api/friends';
 import { getAllFriends, getFriendsOptions } from '@utils/apis/friends';
 
 const useInfiniteFetchFriends = (options?: getFriendsOptions) => {
@@ -34,6 +34,24 @@ const useInfiniteFetchFriends = (options?: getFriendsOptions) => {
     }
   };
 
+  const replaceFriendOnUpdateFavorite = (
+    updatedTargetProfile: UpdatedProfile | undefined,
+    targetProfile: UpdatedProfile,
+  ) => {
+    setAllFriends((prev) => {
+      const { state, data } = prev;
+      if (state !== 'hasValue' || !data?.results?.length) return prev;
+
+      const targetId = updatedTargetProfile ? updatedTargetProfile.id : targetProfile.id;
+      const findIndex = data.results.findIndex((profile) => profile.id === targetId);
+      if (findIndex === -1) return prev;
+
+      const profile = updatedTargetProfile ?? { ...targetProfile, is_favorite: false };
+      data.results.splice(findIndex, 1, profile);
+      return prev;
+    });
+  };
+
   const {
     isLoading: isLoadingMoreAllFriends,
     targetRef,
@@ -48,7 +66,14 @@ const useInfiniteFetchFriends = (options?: getFriendsOptions) => {
     setIsLoadingMoreAllFriends(false);
   });
 
-  return { isLoadingMoreAllFriends, allFriends, setAllFriends, fetchAllFriends, targetRef };
+  return {
+    isLoadingMoreAllFriends,
+    allFriends,
+    setAllFriends,
+    fetchAllFriends,
+    targetRef,
+    replaceFriendOnUpdateFavorite,
+  };
 };
 
 export default useInfiniteFetchFriends;
