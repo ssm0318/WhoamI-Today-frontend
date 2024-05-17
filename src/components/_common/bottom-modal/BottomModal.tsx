@@ -2,6 +2,7 @@
 import React, { MouseEvent, useEffect, useRef, useState } from 'react';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { ColorKeys } from '@design-system';
+import { usePreventScroll } from '@hooks/usePreventScroll';
 import * as S from './BottomModal.styled';
 
 interface BottomModalProps {
@@ -37,14 +38,7 @@ function BottomModal({
     }
   }, [maxHeight, visible]);
 
-  // 모달창 열리면 뒷 배경 스크롤 방지
-  useEffect(() => {
-    if (visible) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-  }, [visible]);
+  usePreventScroll(visible);
 
   const onCloseModal = (e: MouseEvent) => {
     e.stopPropagation();
