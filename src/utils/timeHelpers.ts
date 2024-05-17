@@ -16,12 +16,17 @@ type DateFormat = typeof DEFAULT_FORMAT | 'yyyy.MM.dd HH:mm';
  * @param day 기준 날짜
  * @returns
  */
-export const convertTimeDiffByString = (
-  now: Date,
-  day: Date,
-  dateFormat?: DateFormat,
+export const convertTimeDiffByString = ({
+  now = new Date(),
+  day,
+  dateFormat = 'yyyy.MM.dd HH:mm',
   isShortFormat = false,
-) => {
+}: {
+  now?: Date;
+  day: Date;
+  dateFormat?: DateFormat;
+  isShortFormat?: boolean;
+}) => {
   const diffMins = differenceInMinutes(now, day);
   const diffHours = differenceInHours(now, day);
   const diffDays = Math.floor(diffHours / 24);

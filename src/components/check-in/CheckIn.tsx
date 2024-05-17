@@ -119,7 +119,10 @@ function CheckIn({ user }: CheckInProps) {
           <Layout.FlexRow w="100%" justifyContent="flex-end">
             <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
               {t('checked_in_time', {
-                time: convertTimeDiffByString(currentDate, new Date(checkIn?.created_at)),
+                time: convertTimeDiffByString({
+                  now: currentDate,
+                  day: new Date(checkIn?.created_at),
+                }),
               })}
             </Typo>
           </Layout.FlexRow>

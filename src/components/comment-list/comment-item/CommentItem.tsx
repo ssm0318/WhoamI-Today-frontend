@@ -55,7 +55,11 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
               </Typo>
               <Layout.FlexRow ml={8}>
                 <Typo type="label-small" color="MEDIUM_GRAY">
-                  {convertTimeDiffByString(currentDate, createdAt, 'yyyy.MM.dd HH:mm', true)}
+                  {convertTimeDiffByString({
+                    now: currentDate,
+                    day: createdAt,
+                    isShortFormat: true,
+                  })}
                 </Typo>
               </Layout.FlexRow>
             </Layout.FlexRow>

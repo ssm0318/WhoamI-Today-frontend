@@ -6,9 +6,10 @@ import { convertTimeDiffByString } from '@utils/timeHelpers';
 interface ReceivedPromptListProps {
   title: string;
   prompts: ResponseRequest[];
+  currDate: Date;
 }
 
-export default function ReceivedPromptList({ title, prompts }: ReceivedPromptListProps) {
+export default function ReceivedPromptList({ title, prompts, currDate }: ReceivedPromptListProps) {
   if (!prompts.length) return null;
   return (
     <Layout.FlexCol w="100%">
@@ -20,7 +21,7 @@ export default function ReceivedPromptList({ title, prompts }: ReceivedPromptLis
         </Layout.FlexRow>
         <Layout.FlexCol w="100%" gap={12}>
           {prompts.map((n) => (
-            <ReceivedPromptItem prompt={n} />
+            <ReceivedPromptItem prompt={n} currDate={currDate} />
           ))}
         </Layout.FlexCol>
       </Layout.FlexCol>
@@ -30,9 +31,10 @@ export default function ReceivedPromptList({ title, prompts }: ReceivedPromptLis
 
 interface ReceivedPromptItemProps {
   prompt: ResponseRequest;
+  currDate: Date;
 }
 
-function ReceivedPromptItem({ prompt }: ReceivedPromptItemProps) {
+function ReceivedPromptItem({ prompt, currDate }: ReceivedPromptItemProps) {
   const { id, created_at, question_id } = prompt;
   return (
     <Layout.FlexRow w="100%" key={id} gap={4} alignItems="center">
@@ -51,7 +53,11 @@ function ReceivedPromptItem({ prompt }: ReceivedPromptItemProps) {
       />
       <Layout.FlexCol w={21} alignItems="flex-end" gap={2}>
         <Typo type="label-small" color="MEDIUM_GRAY">
-          {convertTimeDiffByString(new Date(), new Date(created_at), 'yyyy.MM.dd HH:mm', true)}
+          {convertTimeDiffByString({
+            now: currDate,
+            day: new Date(created_at),
+            isShortFormat: true,
+          })}
         </Typo>
       </Layout.FlexCol>
     </Layout.FlexRow>

@@ -33,13 +33,22 @@ export default function ReceivedPrompts() {
 
   const recentPrompts = receivedPrompts.filter((n) => n.is_recent);
   const restPrompts = receivedPrompts.filter((n) => !n.is_recent);
+  const [currentDate] = useState(() => new Date());
 
   return (
     <MainContainer>
       <SubHeader title="Received Prompts" />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" ph={16}>
-        <ReceivedPromptList title={t('last_7_days')} prompts={recentPrompts} />
-        <ReceivedPromptList title={t('last_30_days')} prompts={restPrompts} />
+        <ReceivedPromptList
+          title={t('last_7_days')}
+          prompts={recentPrompts}
+          currDate={currentDate}
+        />
+        <ReceivedPromptList
+          title={t('last_30_days')}
+          prompts={restPrompts}
+          currDate={currentDate}
+        />
       </Layout.FlexCol>
       <div ref={targetRef} />
       {isLoading && (
