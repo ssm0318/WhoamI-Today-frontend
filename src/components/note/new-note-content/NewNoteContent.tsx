@@ -1,4 +1,4 @@
-import React, { ChangeEvent, KeyboardEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ImageSlider from '@components/_common/image-slider/ImageSlider';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -71,13 +71,6 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
     }));
   };
 
-  const handleKeyDownInput = (e: KeyboardEvent) => {
-    if (e.nativeEvent.isComposing || e.key !== 'Enter') return;
-    if (e.shiftKey) return;
-
-    e.preventDefault();
-  };
-
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
   return (
@@ -95,7 +88,6 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
           value={noteInfo.content}
           placeholder={PLACE_HOLDER}
           onChange={handleChangeInput}
-          onKeyDown={handleKeyDownInput}
         />
         <SvgIcon name="chat_media_image" size={30} onClick={onClickAdd} />
         <input
