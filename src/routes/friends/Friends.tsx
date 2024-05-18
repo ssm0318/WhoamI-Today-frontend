@@ -24,8 +24,13 @@ function Friends() {
     state: 'loading',
   });
   const [friendRequests, setFriendRequests] = useState<FetchState<number>>({ state: 'loading' });
-  const { isLoadingMoreAllFriends, allFriends, fetchAllFriends, targetRef } =
-    useInfiniteFetchFriends({ filterHidden: true });
+  const {
+    isLoadingMoreAllFriends,
+    allFriends,
+    fetchAllFriends,
+    replaceFriendOnUpdateFavorite,
+    targetRef,
+  } = useInfiniteFetchFriends({ filterHidden: true });
   const [favoriteFriends, setFavoriteFriends] = useState<FetchState<UpdatedProfile[]>>({
     state: 'loading',
   });
@@ -58,9 +63,12 @@ function Friends() {
     navigate('edit');
   };
 
-  const updateFavoriteCallback = () => {
+  const updateFavoriteCallback = (friendProfile: UpdatedProfile) => () => {
     getFavoriteFriends().then((results) => {
       setFavoriteFriends({ state: 'hasValue', data: results });
+
+      const updatedTargetProfile = results.find((profile) => profile.id === friendProfile.id);
+      replaceFriendOnUpdateFavorite(updatedTargetProfile, friendProfile);
     });
   };
 
@@ -110,7 +118,7 @@ function Friends() {
                     key={user.id}
                     {...user}
                     new_chat={23}
-                    updateFavoriteCallback={updateFavoriteCallback}
+                    updateFavoriteCallback={updateFavoriteCallback(user)}
                     fetchAllTypeFriends={fetchAllTypeFriends}
                   />
                 ))
@@ -162,7 +170,7 @@ function Friends() {
                       key={user.id}
                       {...user}
                       new_chat={23}
-                      updateFavoriteCallback={updateFavoriteCallback}
+                      updateFavoriteCallback={updateFavoriteCallback(user)}
                       fetchAllTypeFriends={fetchAllTypeFriends}
                     />
                   ))}
