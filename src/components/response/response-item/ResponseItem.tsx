@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
@@ -19,6 +20,7 @@ interface ResponseItemProps {
 }
 
 function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: ResponseItemProps) {
+  const [t] = useTranslation('translation', { keyPrefix: 'responses' });
   const { content, created_at, author_detail, question, like_user_sample } = response;
   const { username, profile_image } = author_detail;
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
@@ -90,7 +92,7 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: Re
                 <>
                   {`${content.slice(0, MAX_RESPONSE_CONTENT_LENGTH)}...`}
                   <Typo type="body-medium" color="BLACK" italic underline ml={3}>
-                    more
+                    {t('more').toLowerCase()}
                   </Typo>
                 </>
               ) : (
