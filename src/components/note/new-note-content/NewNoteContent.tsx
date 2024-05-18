@@ -18,6 +18,7 @@ interface NoteInformationProps {
 function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
   const PLACE_HOLDER = t('whats_on_your_mind');
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [editImageUrl, setEditImageUrl] = useState<string>();
@@ -33,7 +34,6 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const onImageAdd = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const image = e.target.files[0];
-
     try {
       const imageDataUrl = await readFile(image);
 
@@ -43,8 +43,9 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
       setEditImageUrl(imageDataUrl);
       setIsEditVisible(true);
     } catch (error) {
-      // TODO
-      console.error(error);
+      openToast({
+        message: (error as Error).message,
+      });
     }
   };
 

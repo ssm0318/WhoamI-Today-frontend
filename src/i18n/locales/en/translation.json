@@ -433,6 +433,7 @@
     "all_friends": "All Friends"
   },
   "error": {
-    "temporary_error": "An error has occurred temporarily. Please try again later."
+    "temporary_error": "An error has occurred temporarily. Please try again later.",
+    "file_size_exceeded": "File size exceeds the {{size}}MB limit."
   }
 }

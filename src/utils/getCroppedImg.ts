@@ -1,4 +1,6 @@
 import { Area } from 'react-easy-crop';
+import { NOTE_IMAGE_FILE_SIZE_LIMIT } from '@constants/size';
+import i18n from '@i18n/index';
 
 export const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
@@ -26,7 +28,19 @@ export const rotateSize = (width: number, height: number, rotation: number) => {
 };
 
 export const readFile = (file: File): Promise<string | ArrayBuffer | null> => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
+    // 파일 크기 확인
+    if (file.size > NOTE_IMAGE_FILE_SIZE_LIMIT) {
+      reject(
+        new Error(
+          i18n.t('error.file_size_exceeded', {
+            size: NOTE_IMAGE_FILE_SIZE_LIMIT / 1024 / 1024,
+          }) || '',
+        ),
+      );
+      return;
+    }
+
     const reader = new FileReader();
     reader.addEventListener('load', () => resolve(reader.result), false);
     reader.readAsDataURL(file);
