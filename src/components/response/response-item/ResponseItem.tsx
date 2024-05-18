@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
@@ -29,7 +29,8 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: Re
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
 
-  const handleClickMore = () => {
+  const handleClickMore = (e: MouseEvent) => {
+    e.stopPropagation();
     setShowMore(true);
   };
 
