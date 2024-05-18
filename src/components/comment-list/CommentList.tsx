@@ -22,6 +22,9 @@ function CommentList({ postType, post }: CommentListProps) {
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
+  const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
+  const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
+
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextPage === null) return setIsLoading(false);
     await fetchComments(nextPage ?? null);
@@ -60,6 +63,8 @@ function CommentList({ postType, post }: CommentListProps) {
             onClickReplyBtn={() => {
               setReplyTo(comment);
               setIsPrivate(comment.is_private);
+              setCommentTo(comment);
+              setCommentToType('Comment');
             }}
           />
         ))}
@@ -67,8 +72,8 @@ function CommentList({ postType, post }: CommentListProps) {
       <StyledCommentListFooter ref={footerRef} b={0} w="100%" bgColor="WHITE">
         <Layout.FlexRow w="100%">
           <CommentInputBox
-            post={post}
-            postType={postType}
+            post={commentTo}
+            postType={commentToType}
             isPrivate={isPrivate}
             setIsPrivate={() => {
               setIsPrivate((prev) => !prev);

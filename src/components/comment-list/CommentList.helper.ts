@@ -4,7 +4,7 @@ import { getNoteComments } from '@utils/apis/note';
 import { getCommentsOfResponse } from '@utils/apis/responses';
 
 export const getCommentList = async (
-  postType: 'Response' | 'Note',
+  postType: 'Response' | 'Note' | 'Comment',
   postId: number,
   page: string | null,
 ): Promise<PaginationResponse<Comment[]>> => {

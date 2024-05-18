@@ -30,6 +30,9 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
 
+  const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
+  const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
+
   const fetchComments = async (page: string | null) => {
     const { results } = await getCommentList(postType, post.id, page);
     if (!results) return;
@@ -73,6 +76,8 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
             onClickReplyBtn={() => {
               setReplyTo(comment);
               setIsPrivate(comment.is_private);
+              setCommentTo(comment);
+              setCommentToType('Comment');
             }}
           />
         ))}
@@ -80,8 +85,8 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
 
       <CommentBottomFooterWrapper>
         <CommentInputBox
-          post={post}
-          postType={postType}
+          post={commentTo}
+          postType={commentToType}
           isPrivate={isPrivate}
           setIsPrivate={() => {
             setIsPrivate((prev) => !prev);
