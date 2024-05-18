@@ -69,7 +69,7 @@ function CommentInputBox({
   };
 
   return (
-    <Layout.FlexCol gap={10} w="100%" pv={12} ph={16} outline="LIGHT_GRAY">
+    <Layout.FlexCol gap={10} w="100%" pv={12} ph={16} outline="LIGHT_GRAY" bgColor="WHITE">
       {/* isPrivate */}
       <Layout.FlexRow gap={4} alignItems="center">
         <CheckBox name={t('private_comment') || ''} onChange={setIsPrivate} checked={isPrivate} />
