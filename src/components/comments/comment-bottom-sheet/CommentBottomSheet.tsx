@@ -80,7 +80,14 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
 
       <CommentBottomFooterWrapper>
         {!replyTo ? (
-          <CommentInputBox postType="Comment" post={post} isPrivate={isPrivate} />
+          <CommentInputBox
+            postType="Comment"
+            post={post}
+            isPrivate={isPrivate}
+            setIsPrivate={() => {
+              setIsPrivate((prev) => !prev);
+            }}
+          />
         ) : (
           <CommentInputBox
             postType="Comment"
