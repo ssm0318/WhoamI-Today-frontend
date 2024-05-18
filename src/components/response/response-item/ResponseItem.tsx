@@ -37,10 +37,10 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: Re
   };
 
   useEffect(() => {
-    if (content.length > MAX_RESPONSE_CONTENT_LENGTH) {
+    if (type === 'LIST' && content.length > MAX_RESPONSE_CONTENT_LENGTH) {
       setOverflowActive(true);
     }
-  }, [content]);
+  }, [content, type]);
 
   return (
     <>
