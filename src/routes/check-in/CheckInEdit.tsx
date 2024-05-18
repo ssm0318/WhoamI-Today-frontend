@@ -43,12 +43,17 @@ function CheckInEdit() {
   };
 
   const handleConfirmSave = async () => {
-    await postCheckIn(checkInForm);
+    await postCheckIn({
+      availability: checkInForm.availability,
+      description: checkInForm.description,
+      mood: checkInForm.mood,
+      track_id: checkInForm.track_id,
+    });
     return navigate('/my');
   };
 
   useEffect(() => {
-    if (!checkInForm?.track_id) return;
+    if (!checkInForm.track_id) return setTrackData(null);
     spotifyManager.getTrack(checkInForm.track_id).then(setTrackData);
   }, [spotifyManager, checkInForm]);
 
@@ -93,7 +98,7 @@ function CheckInEdit() {
         <SectionContainer title={t('song.title')} description={t('song.description')}>
           <CheckInSpotifyMusic
             trackData={trackData}
-            onDelete={() => setTrackData(null)}
+            onDelete={() => handleDelete('track_id')}
             onSelect={(trackId: string) => {
               handleChange('track_id', trackId);
             }}
