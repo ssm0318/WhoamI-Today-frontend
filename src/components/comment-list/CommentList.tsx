@@ -19,6 +19,7 @@ function CommentList({ postType, post }: CommentListProps) {
   const footerRef = useRef<HTMLDivElement>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
@@ -56,13 +57,24 @@ function CommentList({ postType, post }: CommentListProps) {
           <CommentItem
             key={comment.id}
             comment={comment}
-            onClickReplyBtn={() => setReplyTo(comment)}
+            onClickReplyBtn={() => {
+              setReplyTo(comment);
+              setIsPrivate(comment.is_private);
+            }}
           />
         ))}
       </Layout.FlexCol>
       <StyledCommentListFooter ref={footerRef} b={0} w="100%" bgColor="WHITE">
         <Layout.FlexRow w="100%">
-          <CommentInputBox post={post} postType={postType} replyTo={replyTo} />
+          <CommentInputBox
+            post={post}
+            postType={postType}
+            isPrivate={isPrivate}
+            setIsPrivate={() => {
+              setIsPrivate((prev) => !prev);
+            }}
+            replyTo={replyTo}
+          />
         </Layout.FlexRow>
       </StyledCommentListFooter>
       <DeleteAlert
