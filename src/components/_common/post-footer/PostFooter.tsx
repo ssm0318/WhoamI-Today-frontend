@@ -1,3 +1,4 @@
+import { MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Layout, Typo } from '@design-system';
 import { Note, POST_TYPE, Response } from '@models/post';
@@ -20,9 +21,9 @@ function PostFooter({ likedUserList, isMyPage, post, showComments }: PostFooterP
     keyPrefix: post.type === POST_TYPE.RESPONSE ? 'responses' : 'notes',
   });
 
-  const handleClickComment = () => {
-    // TODO
-    console.log('comment');
+  const handleClickComment = (e: MouseEvent) => {
+    e.stopPropagation();
+    showComments();
   };
 
   return (
@@ -36,28 +37,9 @@ function PostFooter({ likedUserList, isMyPage, post, showComments }: PostFooterP
         <Icon name="add_comment" size={23} onClick={handleClickComment} />
       </Layout.FlexRow>
 
-      {/* temporal: comment_count not showing in Responses */}
-      {post.type === POST_TYPE.RESPONSE && (
-        <Icon
-          name="star"
-          size={23}
-          onClick={(e) => {
-            e.stopPropagation();
-            showComments();
-          }}
-        />
-      )}
-      {/*  */}
-
       {!!comment_count && (
         <Layout.FlexRow>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              showComments();
-            }}
-          >
+          <button type="button" onClick={handleClickComment}>
             <Typo type="label-large" color="BLACK" underline>
               {comment_count || 0} {t('comments')}
             </Typo>
