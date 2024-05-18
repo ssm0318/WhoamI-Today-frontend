@@ -88,7 +88,7 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
           }}
           isReply={!!replyTo}
           replyTo={replyTo}
-          setReplyTo={() => {
+          resetReplyTo={() => {
             setReplyTo(null);
           }}
         />

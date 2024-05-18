@@ -12,7 +12,7 @@ interface CommentInputBoxProps {
   replyTo?: Comment | null;
   isPrivate: boolean;
   setIsPrivate?: () => void;
-  setReplyTo?: () => void;
+  resetReplyTo?: () => void;
   postType: 'Response' | 'Comment' | 'Note';
   post: Response | Comment | Note;
   reloadComments?: () => void;
@@ -23,7 +23,7 @@ function CommentInputBox({
   isPrivate,
   setIsPrivate,
   replyTo,
-  setReplyTo,
+  resetReplyTo,
   postType,
   post,
   reloadComments,
@@ -95,7 +95,7 @@ function CommentInputBox({
                   username: commentTargetAuthor,
                 })}
               </Typo>
-              <SvgIcon name="close_comment" size={24} onClick={setReplyTo} />
+              <SvgIcon name="close_comment" size={24} onClick={resetReplyTo} />
             </Layout.FlexRow>
           )}
           <S.CommentInput

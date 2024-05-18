@@ -75,7 +75,7 @@ function CommentList({ postType, post }: CommentListProps) {
             }}
             isReply={!!replyTo}
             replyTo={replyTo}
-            setReplyTo={() => {
+            resetReplyTo={() => {
               setReplyTo(null);
             }}
           />
