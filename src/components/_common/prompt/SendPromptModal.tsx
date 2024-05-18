@@ -1,7 +1,6 @@
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import FriendSearchInput from '@components/friends/explore-friends/friend-search/FriendSearchInput';
 import { Button, Layout, StyledCheckBox, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
@@ -16,6 +15,7 @@ import BottomModal from '../bottom-modal/BottomModal';
 import { Divider } from '../divider/Divider.styled';
 import { Loader } from '../loader/Loader.styled';
 import ProfileImage from '../profile-image/ProfileImage';
+import SearchInput from '../search-input/SearchInput';
 import {
   MessageInput,
   SendPromptModalContainer,
@@ -129,11 +129,12 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
           {t('prompts.send_this_prompt_to')}
         </SendPromptModalTitle>
         <Layout.LayoutBase pb={8} bgColor="WHITE" w="100%">
-          <FriendSearchInput
+          <SearchInput
             query={query}
             setQuery={setQuery}
             fontSize={16}
             placeholder={t('prompts.search_friends') || undefined}
+            cancelText={t('prompts.cancel') || undefined}
           />
         </Layout.LayoutBase>
         <SendPromptModalFriendList ph={12} w="100%" ref={friendListRef}>

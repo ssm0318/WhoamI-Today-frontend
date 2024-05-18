@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { TextareaAutosizeProps } from 'react-textarea-autosize';
 import { Layout, SvgIcon } from '@design-system';
 import * as S from './CheckInSpotifySearchInput.styled';
@@ -5,6 +6,7 @@ import * as S from './CheckInSpotifySearchInput.styled';
 interface CheckInSpotifySearchInputProps extends TextareaAutosizeProps {}
 
 function CheckInSpotifySearchInput(props: CheckInSpotifySearchInputProps) {
+  const [t] = useTranslation('translation', { keyPrefix: 'check_in_edit.song' });
   return (
     <Layout.FlexRow
       w="100%"
@@ -16,11 +18,9 @@ function CheckInSpotifySearchInput(props: CheckInSpotifySearchInputProps) {
       }}
     >
       <Layout.Absolute l={8}>
-        <Layout.LayoutBase p={7}>
-          <SvgIcon name="search" size={12} fill="MEDIUM_GRAY" />
-        </Layout.LayoutBase>
+        <SvgIcon name="search" size={24} fill="MEDIUM_GRAY" />
       </Layout.Absolute>
-      <S.StyledCheckInSpotifySearchInput {...props} placeholder="Search" />
+      <S.StyledCheckInSpotifySearchInput {...props} placeholder={t('search_placeholder') || ''} />
       <Layout.Absolute r={8}>
         <SvgIcon name="spotify" size={24} />
       </Layout.Absolute>

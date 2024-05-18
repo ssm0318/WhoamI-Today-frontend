@@ -2,8 +2,9 @@ import { EmojiClickData } from 'emoji-picker-react';
 import { useRef, useState } from 'react';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
+import Icon from '@components/_common/icon/Icon';
 import EmojiPicker from '@components/emoji-picker/EmojiPicker';
-import { Layout, SvgIcon } from '@design-system';
+import { Layout } from '@design-system';
 
 interface CheckInEmojiProps {
   mood: string | null;
@@ -36,22 +37,21 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
         alignItems="center"
         justifyContent="center"
         rounded={12}
-        outline="LIGHT_GRAY"
+        outline={emojiPickerVisible ? 'BLACK' : 'LIGHT_GRAY'}
         w={EMOJI_ICON_SIZE}
         h={EMOJI_ICON_SIZE}
       >
         {mood ? (
           <EmojiItem emojiString={mood} size={24} outline="TRANSPARENT" />
         ) : (
-          <>
-            {/* FIXME IconButton으로 변경 */}
-            <button type="button" onClick={handleClickEmoji} ref={toggleButtonWrapper}>
-              <SvgIcon name="add_default" size={24} />
-            </button>
-          </>
+          <Icon
+            onClick={handleClickEmoji}
+            name={emojiPickerVisible ? 'add_reaction_active' : 'add_reaction_default'}
+            size={24}
+          />
         )}
       </Layout.FlexRow>
-      {mood && <DeleteButton onClick={onDelete} />}
+      {mood && <DeleteButton onClick={onDelete} size={32} />}
       {/* emoji toggle popup */}
       {emojiPickerVisible && (
         <EmojiPicker

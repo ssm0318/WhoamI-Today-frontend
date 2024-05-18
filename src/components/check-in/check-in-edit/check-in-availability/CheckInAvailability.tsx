@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import AvailabilityChip from '@components/profile/availability-chip/AvailabilityChip';
 import { Layout, Typo } from '@design-system';
@@ -16,6 +17,7 @@ function CheckInAvailability({
   onDelete,
   onSelectAvailability,
 }: CheckInAvailabilityProps) {
+  const [t] = useTranslation('translation', { keyPrefix: 'check_in_edit.availability' });
   const [showAvailabilitySelect, setShowAvailabilitySelect] = useState(false);
   const onClickSelectAvailability = () => {
     setShowAvailabilitySelect(true);
@@ -25,7 +27,7 @@ function CheckInAvailability({
     <Layout.FlexRow mt={8} w="100%" alignItems="center" gap={8}>
       {availability ? (
         <>
-          <AvailabilityChip availability={availability} />
+          <AvailabilityChip availability={availability} onSelect={onClickSelectAvailability} />
           <DeleteButton onClick={onDelete} size={32} />
         </>
       ) : (
@@ -39,7 +41,7 @@ function CheckInAvailability({
         >
           <Layout.LayoutBase bgColor="MEDIUM_GRAY" w={10} h={10} rounded={5} />
           <Typo type="body-medium" color="MEDIUM_GRAY">
-            Select Availability
+            {t('select_placeholder')}
           </Typo>
         </Layout.FlexRow>
       )}
@@ -48,6 +50,7 @@ function CheckInAvailability({
           visible={showAvailabilitySelect}
           closeBottomSheet={() => setShowAvailabilitySelect(false)}
           onSelect={onSelectAvailability}
+          selectedAvailability={availability}
         />
       )}
     </Layout.FlexRow>

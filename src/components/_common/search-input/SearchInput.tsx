@@ -1,18 +1,17 @@
 import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import { Layout, SvgIcon } from '@design-system';
-import * as S from './FriendSearchInput.styled';
+import * as S from './SearchInput.styled';
 
 interface Props {
   query: string;
   setQuery: Dispatch<SetStateAction<string>>;
   fontSize?: number;
   placeholder?: string;
+  cancelText?: string;
 }
 
-export default function FriendSearchInput({ query, setQuery, fontSize, placeholder }: Props) {
-  const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.search' });
+export default function SearchInput({ query, setQuery, fontSize, placeholder, cancelText }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchMode, setSearchMode] = useState(false);
 
@@ -43,13 +42,10 @@ export default function FriendSearchInput({ query, setQuery, fontSize, placehold
         pv={6}
         h={56}
       >
-        <Layout.LayoutBase p={12}>
-          <SvgIcon name="search" size={20} fill="MEDIUM_GRAY" />
-        </Layout.LayoutBase>
+        <SvgIcon name="search" size={44} fill="MEDIUM_GRAY" />
         <S.SearchInput
           ref={inputRef}
-          placeholder={placeholder || t('placeholder') || undefined}
-          name="friend_search"
+          placeholder={placeholder}
           autoComplete="off"
           value={query}
           onChange={handleChangeInput}
@@ -57,7 +53,7 @@ export default function FriendSearchInput({ query, setQuery, fontSize, placehold
         />
         {query && <DeleteButton onClick={handleClickDeleteInput} size={44} />}
       </Layout.FlexRow>
-      {searchMode && <S.SearchCancel onClick={handleClickCancel}>{t('cancel')}</S.SearchCancel>}
+      {searchMode && <S.SearchCancel onClick={handleClickCancel}>{cancelText}</S.SearchCancel>}
     </Layout.FlexRow>
   );
 }

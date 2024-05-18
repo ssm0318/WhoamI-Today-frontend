@@ -361,6 +361,7 @@
     "recent_prompts": "Recent Prompts",
     "send_this_prompt_to": "Send this prompt to...",
     "search_friends": "Search",
+    "cancel": "Cancel",
     "write_a_message": "Write a message...",
     "send_separately": "Send separately"
   },
@@ -435,5 +436,33 @@
   "error": {
     "temporary_error": "An error has occurred temporarily. Please try again later.",
     "file_size_exceeded": "File size exceeds the {{size}}MB limit."
+  },
+  "check_in_edit": {
+    "availability": {
+      "title": "What’s your availability?",
+      "description": "Let your friends know if you’re up for a chat",
+      "select_placeholder": "Select Availability",
+      "select_bottom_sheet": {
+        "title": "Select Availability",
+        "confirm": "Confirm"
+      }
+    },
+    "song": {
+      "title": "Share a song",
+      "description": "What song describes your mood the best?",
+      "search_placeholder": "Search song, album, artist...",
+      "search_bottom_sheet": {
+        "title": "Share a Song",
+        "confirm": "Confirm",
+        "search_placeholder": "Search song, album, artist...",
+        "cancel": "Cancel",
+        "all_results": "All Results"
+      }
+    },
+    "mood": {
+      "title": "Share your mood",
+      "description": "Choose an emoji and enter a short text to describe your day"
+    },
+    "description_placeholder": "Share a short text to describe your day..."
   }
 }

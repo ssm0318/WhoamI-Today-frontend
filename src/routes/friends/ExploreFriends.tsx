@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Divider } from '@components/_common/divider/Divider.styled';
+import SearchInput from '@components/_common/search-input/SearchInput';
 import Tabs from '@components/_common/tabs/Tabs';
 import FriendInvitation from '@components/friends/explore-friends/friend-invitation/FriendInvitation';
-import FriendSearchInput from '@components/friends/explore-friends/friend-search/FriendSearchInput';
 import FriendSearchList from '@components/friends/explore-friends/friend-search-list/FriendSearchList';
 import RecommendedList from '@components/friends/explore-friends/recommended-list/RecommendedList';
 import RequestList from '@components/friends/explore-friends/request-list/RequestList';
@@ -44,7 +44,13 @@ function ExploreFriends() {
       />
       <Layout.FlexCol w="100%">
         <Layout.FlexCol w="100%" gap={16} p={16}>
-          <FriendSearchInput query={query} setQuery={setQuery} />
+          <SearchInput
+            query={query}
+            setQuery={setQuery}
+            fontSize={16}
+            placeholder={t('search.placeholder') || undefined}
+            cancelText={t('search.cancel') || undefined}
+          />
           {!query && <FriendInvitation />}
         </Layout.FlexCol>
         {query ? (

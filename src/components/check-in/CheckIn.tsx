@@ -51,7 +51,7 @@ function CheckIn({ user }: CheckInProps) {
   };
 
   useEffect(() => {
-    if (!track_id) return;
+    if (!track_id) return setTrackData(null);
     spotifyManager.getTrack(track_id).then(setTrackData);
   }, [spotifyManager, track_id]);
 

@@ -2,11 +2,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import styled from 'styled-components';
 
 export const StyledCheckInTextInput = styled(TextareaAutosize)`
-  width: 100%;
-  padding: 8px;
-  font-size: 16px;
-  border-width: 1px;
-  border-color: ${({ theme }) => theme.LIGHT_GRAY};
-  background-color: ${({ theme }) => theme.WHITE};
-  border-radius: 12px;
+  font-size: 14px;
+  border: none;
+  flex: 1;
 `;

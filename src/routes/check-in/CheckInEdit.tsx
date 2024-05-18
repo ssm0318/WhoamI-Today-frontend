@@ -1,6 +1,7 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { EmojiClickData } from 'emoji-picker-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import CheckInAvailability from '@components/check-in/check-in-edit/check-in-availability/CheckInAvailability';
@@ -11,23 +12,23 @@ import SectionContainer from '@components/check-in/check-in-edit/section-contain
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
 import { Availability, CheckInForm } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
 import { postCheckIn } from '@utils/apis/checkIn';
 
 function CheckInEdit() {
+  const [t] = useTranslation('translation', { keyPrefix: 'check_in_edit' });
   const spotifyManager = SpotifyManager.getInstance();
   const navigate = useNavigate();
-  const [checkInForm, setCheckInForm] = useBoundStore((state) => [
-    state.checkInForm,
-    state.setCheckInForm,
-  ]);
-  const [trackData, setTrackData] = useState<Track | null>(null);
+  const { checkInForm, setCheckInForm, fetchCheckIn } = useBoundStore((state) => ({
+    checkInForm: state.checkInForm,
+    setCheckInForm: state.setCheckInForm,
+    fetchCheckIn: state.fetchCheckIn,
+  }));
 
-  const handleSearchMusic = () => {
-    return navigate('/check-in/search-music');
-  };
+  const [trackData, setTrackData] = useState<Track | null>(null);
 
   const handleChange = (name: keyof CheckInForm, value: string) => {
     setCheckInForm({ [name]: value });
@@ -42,14 +43,25 @@ function CheckInEdit() {
   };
 
   const handleConfirmSave = async () => {
-    await postCheckIn(checkInForm);
+    await postCheckIn({
+      availability: checkInForm.availability,
+      description: checkInForm.description,
+      mood: checkInForm.mood,
+      track_id: checkInForm.track_id,
+    });
     return navigate('/my');
   };
 
   useEffect(() => {
-    if (!checkInForm?.track_id) return;
+    if (!checkInForm.track_id) return setTrackData(null);
     spotifyManager.getTrack(checkInForm.track_id).then(setTrackData);
   }, [spotifyManager, checkInForm]);
+
+  useAsyncEffect(async () => {
+    const myCheckIn = await fetchCheckIn();
+    if (!myCheckIn) return;
+    setCheckInForm(myCheckIn);
+  }, []);
 
   return (
     <MainContainer>
@@ -73,8 +85,8 @@ function CheckInEdit() {
       >
         {/* availability */}
         <SectionContainer
-          title="What’s your availability?"
-          description="Let your friends know if you’re up for a chat"
+          title={t('availability.title')}
+          description={t('availability.description')}
         >
           <CheckInAvailability
             availability={checkInForm?.availability}
@@ -83,21 +95,17 @@ function CheckInEdit() {
           />
         </SectionContainer>
         {/* spotify */}
-        <SectionContainer
-          title="Share a song"
-          description="What song describes your mood the best?"
-        >
+        <SectionContainer title={t('song.title')} description={t('song.description')}>
           <CheckInSpotifyMusic
             trackData={trackData}
-            onDelete={() => setTrackData(null)}
-            onSearchMusic={handleSearchMusic}
+            onDelete={() => handleDelete('track_id')}
+            onSelect={(trackId: string) => {
+              handleChange('track_id', trackId);
+            }}
           />
         </SectionContainer>
         {/* mood (emoji & description) */}
-        <SectionContainer
-          title="Share your mood"
-          description="Choose an emoji and enter a short text to describe your day"
-        >
+        <SectionContainer title={t('mood.title')} description={t('mood.description')}>
           <CheckInEmoji
             mood={checkInForm?.mood || ''}
             onDelete={() => handleDelete('mood')}

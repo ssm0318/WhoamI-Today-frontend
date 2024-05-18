@@ -22,9 +22,7 @@ export function ChatRoomSearchInput({ query, setQuery }: Props) {
   return (
     <StyledChatRoomSearchInputArea>
       <Layout.FlexRow w="100%" alignItems="center" bgColor="INPUT_GRAY" ph={8} pv={6} rounded={12}>
-        <Layout.LayoutBase p={12}>
-          <SvgIcon name="search" size={20} fill="MEDIUM_GRAY" />
-        </Layout.LayoutBase>
+        <SvgIcon name="search" size={44} fill="MEDIUM_GRAY" />
         <StyledSearchInput
           placeholder={t('search_placeholder') || undefined}
           name="chat_room_list_search"
