@@ -63,6 +63,7 @@ export function ChatRoomList({ isEditMode, checkList, onClickCheckBox }: Props) 
       <Layout.LayoutBase ph={16}>
         <Typo type="title-medium">{t('title')}</Typo>
       </Layout.LayoutBase>
+      {rooms.state === 'loading' && <Loader />}
       {rooms.data &&
         (rooms.data.length === 0 ? (
           <Layout.FlexCol w="100%" ph={16}>
