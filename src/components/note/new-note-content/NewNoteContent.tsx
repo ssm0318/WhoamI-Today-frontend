@@ -82,31 +82,31 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
 
   return (
     <>
-      <Layout.FlexRow w="100%" ph={DEFAULT_MARGIN} mt={TITLE_HEADER_HEIGHT} pv={12} gap={16}>
-        <ProfileImage
-          imageUrl={myProfile?.profile_image}
-          username={myProfile?.username}
-          size={50}
+      <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} mt={TITLE_HEADER_HEIGHT} pv={12} gap={16}>
+        <Layout.FlexRow w="100%" alignItems="center" gap={8} pv={8}>
+          <ProfileImage
+            imageUrl={myProfile?.profile_image}
+            username={myProfile?.username}
+            size={50}
+          />
+          <Font.Body type="18_semibold">{myProfile?.username}</Font.Body>
+        </Layout.FlexRow>
+        <NoteInput
+          value={noteInfo.content}
+          placeholder={PLACE_HOLDER}
+          onChange={handleChangeInput}
+          onKeyDown={handleKeyDownInput}
         />
-        <Layout.FlexCol w="100%" gap={8} pv={8}>
-          <Font.Body type="16_semibold">{myProfile?.username}</Font.Body>
-          <NoteInput
-            value={noteInfo.content}
-            placeholder={PLACE_HOLDER}
-            onChange={handleChangeInput}
-            onKeyDown={handleKeyDownInput}
-          />
-          <SvgIcon name="chat_media_image" size={30} onClick={onClickAdd} />
-          <input
-            ref={inputRef}
-            type="file"
-            accept="image/jpeg, image/png"
-            onChange={onImageAdd}
-            multiple={false}
-            style={{ display: 'none' }}
-          />
-        </Layout.FlexCol>
-      </Layout.FlexRow>
+        <SvgIcon name="chat_media_image" size={30} onClick={onClickAdd} />
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/jpeg, image/png"
+          onChange={onImageAdd}
+          multiple={false}
+          style={{ display: 'none' }}
+        />
+      </Layout.FlexCol>
       {isEditVisible ? (
         <NoteImageEdit
           image={editImageUrl}
