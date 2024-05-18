@@ -1,5 +1,6 @@
 import { MouseEvent, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { usePreventScroll } from '@hooks/usePreventScroll';
 import * as S from './AlertDialog.styled';
 
 interface AlertDialogProps {
@@ -21,6 +22,8 @@ function AlertDialog({
     e.stopPropagation();
     onClickDimmed?.();
   };
+
+  usePreventScroll(visible);
 
   if (!visible) return null;
   return createPortal(

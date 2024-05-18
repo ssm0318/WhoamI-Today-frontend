@@ -2,6 +2,7 @@
 import React, { MouseEvent, useEffect, useRef, useState } from 'react';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { ColorKeys } from '@design-system';
+import { usePreventScroll } from '@hooks/usePreventScroll';
 import * as S from './BottomModal.styled';
 
 interface BottomModalProps {
@@ -36,6 +37,8 @@ function BottomModal({
       setHeight(Math.min(bodyHeight, maxHeight));
     }
   }, [maxHeight, visible]);
+
+  usePreventScroll(visible);
 
   const onCloseModal = (e: MouseEvent) => {
     e.stopPropagation();
