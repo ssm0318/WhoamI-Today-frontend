@@ -33,7 +33,7 @@ export const Font = styled.span<FontSettings & TextPropsBase>`
   text-align: ${({ textAlign = 'left' }) => textAlign};
   ${({ m, mh, mv, mt, mr, mb, ml }) =>
     getStyle('margin', toMarginPaddingString(m, mh, mv, mt, mr, mb, ml))}
-  white-space: ${({ pre }) => (pre ? 'pre' : 'normal')};
+  white-space: ${({ pre }) => (pre ? 'pre-wrap' : 'normal')};
   text-decoration: ${({ lineThrough, underline }) => getTextDecoration({ lineThrough, underline })};
 
   ${({ numberOfLines, fontSize, lineHeight }) =>
@@ -62,7 +62,7 @@ export const StyledFont = styled.span<FontAttrs & TypoPropBase>`
   text-align: ${({ textAlign = 'left' }) => textAlign};
   ${({ m, mh, mv, mt, mr, mb, ml }) =>
     getStyle('margin', toMarginPaddingString(m, mh, mv, mt, mr, mb, ml))}
-  white-space: ${({ pre }) => (pre ? 'pre' : 'normal')};
+  white-space: ${({ pre }) => (pre ? 'pre-wrap' : 'normal')};
   text-decoration: ${({ lineThrough, underline }) => getTextDecoration({ lineThrough, underline })};
 
   ${({ numberOfLines, fontSize, lineHeight = 1.4 }) =>

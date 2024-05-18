@@ -32,7 +32,7 @@ export function NoteDetail() {
   return (
     <MainContainer>
       <SubHeader title={t('title', { username })} />
-      <Layout.FlexCol w="100%" alignItems="center" mt={TITLE_HEADER_HEIGHT + 12}>
+      <Layout.FlexCol w="100%" alignItems="center" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
         <NoteItem note={noteDetail} isMyPage={isMyPage} enableCollapse={false} type="DETAIL" />
       </Layout.FlexCol>
       <Layout.FlexCol w="100%" flex={1}>

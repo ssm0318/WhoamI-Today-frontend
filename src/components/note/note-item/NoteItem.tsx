@@ -37,10 +37,10 @@ function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: Note
   };
 
   useEffect(() => {
-    if (content.length > MAX_NOTE_CONTENT_LENGTH) {
+    if (type === 'LIST' && content.length > MAX_NOTE_CONTENT_LENGTH) {
       setOverflowActive(true);
     }
-  }, [content]);
+  }, [content, type]);
 
   return (
     <>
