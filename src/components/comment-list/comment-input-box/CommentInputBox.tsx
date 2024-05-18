@@ -10,7 +10,9 @@ import * as S from './CommentInputBox.styled';
 interface CommentInputBoxProps {
   isReply?: boolean;
   replyTo?: Comment | null;
-  setReplyTo?: () => void;
+  isPrivate: boolean;
+  setIsPrivate?: () => void;
+  resetReplyTo?: () => void;
   postType: 'Response' | 'Comment' | 'Note';
   post: Response | Comment | Note;
   reloadComments?: () => void;
@@ -18,8 +20,10 @@ interface CommentInputBoxProps {
 
 function CommentInputBox({
   isReply,
+  isPrivate,
+  setIsPrivate,
   replyTo,
-  setReplyTo,
+  resetReplyTo,
   postType,
   post,
   reloadComments,
@@ -27,7 +31,6 @@ function CommentInputBox({
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const myProfile = useBoundStore((state) => state.myProfile);
   const [content, setContent] = useState('');
-  const [isPrivate, setIsPrivate] = useState(false);
   const commentTargetAuthor =
     isReply && replyTo ? replyTo.author_detail.username : post?.author_detail.username;
 
@@ -65,15 +68,11 @@ function CommentInputBox({
     handleSubmitComment();
   };
 
-  const togglePrivate = () => {
-    setIsPrivate((prev) => !prev);
-  };
-
   return (
-    <Layout.FlexCol gap={10} w="100%" pv={12} ph={16} outline="LIGHT_GRAY">
+    <Layout.FlexCol gap={10} w="100%" pv={12} ph={16} outline="LIGHT_GRAY" bgColor="WHITE">
       {/* isPrivate */}
       <Layout.FlexRow gap={4} alignItems="center">
-        <CheckBox name={t('private_comment') || ''} onChange={togglePrivate} checked={isPrivate} />
+        <CheckBox name={t('private_comment') || ''} onChange={setIsPrivate} checked={isPrivate} />
         <SvgIcon
           name={isPrivate ? 'private_comment_active' : 'private_comment_inactive'}
           size={17}
@@ -96,7 +95,7 @@ function CommentInputBox({
                   username: commentTargetAuthor,
                 })}
               </Typo>
-              <SvgIcon name="close_comment" size={24} onClick={setReplyTo} />
+              <SvgIcon name="close_comment" size={24} onClick={resetReplyTo} />
             </Layout.FlexRow>
           )}
           <S.CommentInput
