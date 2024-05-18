@@ -41,9 +41,9 @@ function NoteSection({ username }: NoteSectionProps) {
         </Typo>
       </Layout.FlexRow>
       <Layout.FlexCol w="100%" pr={12}>
-        <Layout.FlexCol gap={16} mt={10} h="100%">
+        <Layout.FlexCol gap={8} mt={10} w="100%" h="100%">
           {noteList.length === 0 ? (
-            <Layout.FlexRow alignItems="center" h="100%">
+            <Layout.FlexRow alignItems="center" w="100%" h="100%">
               <NoContents title={t('no_contents.notes')} />
             </Layout.FlexRow>
           ) : (

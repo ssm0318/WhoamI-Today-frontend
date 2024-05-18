@@ -5,7 +5,6 @@ import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
-import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { Note } from '@models/post';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
@@ -46,7 +45,7 @@ function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: Note
   return (
     <>
       <Layout.FlexCol
-        w={SCREEN_WIDTH - 12 * 2}
+        w="100%"
         p={12}
         gap={8}
         outline="LIGHT"
