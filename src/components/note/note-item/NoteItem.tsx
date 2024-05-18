@@ -74,7 +74,7 @@ function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: Note
           </Layout.FlexRow>
         </Layout.FlexRow>
         <Layout.FlexCol>
-          <Typo type="body-large" color="BLACK">
+          <Typo type="body-large" color="BLACK" pre={type === 'DETAIL'}>
             {enableCollapse && overflowActive ? (
               <>
                 {`${content.slice(0, MAX_NOTE_CONTENT_LENGTH)}...`}

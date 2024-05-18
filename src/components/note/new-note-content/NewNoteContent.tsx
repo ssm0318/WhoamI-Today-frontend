@@ -1,10 +1,10 @@
-import React, { ChangeEvent, KeyboardEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ImageSlider from '@components/_common/image-slider/ImageSlider';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import NoteImageEdit from '@components/note/note-image-edit/NoteImageEdit';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Font, Layout, SvgIcon } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
@@ -71,13 +71,6 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
     }));
   };
 
-  const handleKeyDownInput = (e: KeyboardEvent) => {
-    if (e.nativeEvent.isComposing || e.key !== 'Enter') return;
-    if (e.shiftKey) return;
-
-    e.preventDefault();
-  };
-
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
   return (
@@ -89,13 +82,12 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
             username={myProfile?.username}
             size={50}
           />
-          <Font.Body type="18_semibold">{myProfile?.username}</Font.Body>
+          <Typo type="title-medium">{myProfile?.username}</Typo>
         </Layout.FlexRow>
         <NoteInput
           value={noteInfo.content}
           placeholder={PLACE_HOLDER}
           onChange={handleChangeInput}
-          onKeyDown={handleKeyDownInput}
         />
         <SvgIcon name="chat_media_image" size={30} onClick={onClickAdd} />
         <input

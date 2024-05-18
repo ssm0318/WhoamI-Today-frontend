@@ -85,7 +85,7 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: Re
             </Layout.FlexRow>
           </Layout.FlexRow>
           <Layout.FlexCol w="100%" mb={8}>
-            <Typo type="body-large" color="BLACK">
+            <Typo type="body-large" color="BLACK" pre={type === 'DETAIL'}>
               {overflowActive ? (
                 <>
                   {`${content.slice(0, MAX_RESPONSE_CONTENT_LENGTH)}...`}
