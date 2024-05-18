@@ -1,4 +1,5 @@
 import { SignUpParams } from '@models/api/user';
+import { sliceResetFns } from './resetSlices';
 import { SliceStateCreator } from './useBoundStore';
 
 interface SignUpInfoState {
@@ -21,13 +22,16 @@ const initialState = {
 
 export type SignUpInfoSlice = SignUpInfoState & SignupInfoAction;
 
-export const createSignUpInfoSlice: SliceStateCreator<SignUpInfoSlice> = (set) => ({
-  ...initialState,
-  setSignUpInfo: (signUpInfo) =>
-    set(
-      (state) => ({ signUpInfo: { ...state.signUpInfo, ...signUpInfo } }),
-      false,
-      'signUpInfo/setSignUpInfo',
-    ),
-  resetSignUpInfo: () => set(initialState),
-});
+export const createSignUpInfoSlice: SliceStateCreator<SignUpInfoSlice> = (set) => {
+  sliceResetFns.add(() => set(initialState));
+  return {
+    ...initialState,
+    setSignUpInfo: (signUpInfo) =>
+      set(
+        (state) => ({ signUpInfo: { ...state.signUpInfo, ...signUpInfo } }),
+        false,
+        'signUpInfo/setSignUpInfo',
+      ),
+    resetSignUpInfo: () => set(initialState),
+  };
+};

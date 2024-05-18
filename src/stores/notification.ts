@@ -1,3 +1,4 @@
+import { sliceResetFns } from './resetSlices';
 import { SliceStateCreator } from './useBoundStore';
 
 interface NotificationState {
@@ -13,11 +14,14 @@ const initialState = {
 
 export type NotificationSlice = NotificationState & NotificationAction;
 
-export const createNotificationSlice: SliceStateCreator<NotificationSlice> = (set) => ({
-  ...initialState,
-  setAppNotiPermission: async (permission) => {
-    set(() => ({
-      appNotiPermission: permission,
-    }));
-  },
-});
+export const createNotificationSlice: SliceStateCreator<NotificationSlice> = (set) => {
+  sliceResetFns.add(() => set(initialState));
+  return {
+    ...initialState,
+    setAppNotiPermission: async (permission) => {
+      set(() => ({
+        appNotiPermission: permission,
+      }));
+    },
+  };
+};

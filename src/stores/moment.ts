@@ -1,5 +1,6 @@
 import { TodayMoment } from '@models/moment';
 import { getTodayMoment } from '@utils/apis/moment';
+import { sliceResetFns } from './resetSlices';
 import { SliceStateCreator } from './useBoundStore';
 
 interface MomentState {
@@ -20,26 +21,29 @@ const initialState = {
 
 export type MomentSlice = MomentState & MomentAction;
 
-export const createMomentSlice: SliceStateCreator<MomentSlice> = (set) => ({
-  ...initialState,
-  fetchTodayMoment: async () => {
-    const moment = await getTodayMoment();
-    const todayMoment: TodayMoment = {
-      mood: moment?.mood || null,
-      photo: moment?.photo || null,
-      description: moment?.description || null,
-    };
-    set(() => ({
-      todayMoment: todayMoment || initialState,
-    }));
-    return todayMoment;
-  },
-  setTodayMoment: async (moment) => {
-    set((state) => ({
-      todayMoment: {
-        ...state.todayMoment,
-        ...moment,
-      },
-    }));
-  },
-});
+export const createMomentSlice: SliceStateCreator<MomentSlice> = (set) => {
+  sliceResetFns.add(() => set(initialState));
+  return {
+    ...initialState,
+    fetchTodayMoment: async () => {
+      const moment = await getTodayMoment();
+      const todayMoment: TodayMoment = {
+        mood: moment?.mood || null,
+        photo: moment?.photo || null,
+        description: moment?.description || null,
+      };
+      set(() => ({
+        todayMoment: todayMoment || initialState,
+      }));
+      return todayMoment;
+    },
+    setTodayMoment: async (moment) => {
+      set((state) => ({
+        todayMoment: {
+          ...state.todayMoment,
+          ...moment,
+        },
+      }));
+    },
+  };
+};
