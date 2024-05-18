@@ -34,7 +34,7 @@ function CommentList({ postType, post }: CommentListProps) {
     const { results, next } = await getCommentList(postType, post.id, page);
     if (!results) return;
     setNextPage(next);
-    setComments([...comments, ...results]);
+    setComments(results);
     setIsLoading(false);
   };
 
@@ -83,6 +83,7 @@ function CommentList({ postType, post }: CommentListProps) {
             resetReplyTo={() => {
               setReplyTo(null);
             }}
+            reloadComments={() => fetchComments(nextPage ?? null)}
           />
         </Layout.FlexRow>
       </StyledCommentListFooter>

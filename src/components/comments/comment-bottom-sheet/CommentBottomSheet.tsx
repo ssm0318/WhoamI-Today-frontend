@@ -36,7 +36,7 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
   const fetchComments = async (page: string | null) => {
     const { results } = await getCommentList(postType, post.id, page);
     if (!results) return;
-    setComments([...comments, ...results]);
+    setComments(results);
   };
 
   useAsyncEffect(async () => {
@@ -96,6 +96,7 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
           resetReplyTo={() => {
             setReplyTo(null);
           }}
+          reloadComments={() => fetchComments(null)}
         />
       </CommentBottomFooterWrapper>
     </BottomModal>,
