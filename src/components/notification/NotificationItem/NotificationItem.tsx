@@ -51,7 +51,7 @@ function NotificationItem({ item }: NotificationItemProps) {
       </Layout.FlexRow>
       <Layout.FlexRow ml={4}>
         <Typo type="label-small" color="MEDIUM_GRAY">
-          {convertTimeDiffByString(currentDate, createdAt, 'yyyy.MM.dd HH:mm', true)}
+          {convertTimeDiffByString({ now: currentDate, day: createdAt, isShortFormat: true })}
         </Typo>
       </Layout.FlexRow>
     </S.NotificationContainer>

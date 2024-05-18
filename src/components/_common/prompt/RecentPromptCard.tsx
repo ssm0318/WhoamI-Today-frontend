@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import { Layout, SvgIcon, Typo } from '@design-system';
-import { ActorDetail } from '@models/notification';
 import { DailyQuestion, Question } from '@models/post';
 import ProfileImage from '../profile-image/ProfileImage';
 import { StyledRecentPromptCard } from './RecentPromptCard.styled';
@@ -11,9 +10,9 @@ import SendPromptModal from './SendPromptModal';
 
 interface PromptCardProps {
   question: Question | DailyQuestion;
-  sentBy?: ActorDetail;
+  requesterName?: string;
 }
-function RecentPromptCard({ question, sentBy }: PromptCardProps) {
+function RecentPromptCard({ question, requesterName }: PromptCardProps) {
   const [t] = useTranslation('translation');
   const navigate = useNavigate();
 
@@ -38,11 +37,11 @@ function RecentPromptCard({ question, sentBy }: PromptCardProps) {
       <StyledRecentPromptCard w="100%" ph={16} pv={10} rounded={12} gap={8} bgColor="LIGHT">
         <Layout.FlexRow w="100%" alignItems="center" gap={8}>
           <Layout.FlexCol w="100%" gap={8}>
-            {sentBy && (
+            {requesterName && (
               <Layout.FlexRow w="100%" gap={8}>
                 <SvgIcon name="sent_by" size={16} color="MEDIUM_GRAY" />
                 <Typo type="label-medium" color="MEDIUM_GRAY">
-                  {t('notifications.received_prompts.sent_by', { username: sentBy.username })}
+                  {t('notifications.received_prompts.sent_by', { username: requesterName })}
                 </Typo>
               </Layout.FlexRow>
             )}

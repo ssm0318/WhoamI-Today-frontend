@@ -16,18 +16,25 @@ type DateFormat = typeof DEFAULT_FORMAT | 'yyyy.MM.dd HH:mm';
  * @param day 기준 날짜
  * @returns
  */
-export const convertTimeDiffByString = (
-  now: Date,
-  day: Date,
-  dateFormat?: DateFormat,
+export const convertTimeDiffByString = ({
+  now = new Date(),
+  day,
+  dateFormat = 'yyyy.MM.dd HH:mm',
   isShortFormat = false,
-) => {
+  useSoonText = true,
+}: {
+  now?: Date;
+  day: Date;
+  dateFormat?: DateFormat;
+  useSoonText?: boolean;
+  isShortFormat?: boolean;
+}) => {
   const diffMins = differenceInMinutes(now, day);
   const diffHours = differenceInHours(now, day);
   const diffDays = Math.floor(diffHours / 24);
   const diffWeeks = Math.floor(diffHours / 24 / 7);
 
-  if (diffMins < 1) {
+  if (diffMins < 1 && useSoonText) {
     return i18n.t('time.just_a_moment_ago');
   }
 

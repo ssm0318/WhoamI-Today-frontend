@@ -1,4 +1,5 @@
 import { PaginationResponse } from '@models/api/common';
+import { ResponseRequest } from '@models/api/question';
 import { MyProfile } from '@models/api/user';
 import { Note, Response } from '@models/post';
 import { UserProfile } from '@models/user';
@@ -80,6 +81,14 @@ export const getMyNotes = async (page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Note[]>>(
     `/user/me/notes/${!requestPage ? '' : `?page=${requestPage}`}`,
+  );
+  return data;
+};
+
+export const getReceivedPrompts = async (page: string | null) => {
+  const requestPage = page ? page.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<ResponseRequest[]>>(
+    `/user/me/response-requests/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
 };

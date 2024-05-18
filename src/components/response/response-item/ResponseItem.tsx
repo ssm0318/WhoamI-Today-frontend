@@ -75,7 +75,7 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: Re
               <Layout.FlexRow alignItems="center" gap={8}>
                 <Typo type="title-medium">{username}</Typo>
                 <Typo type="label-medium" color="MEDIUM_GRAY">
-                  {convertTimeDiffByString(new Date(), new Date(created_at))}
+                  {convertTimeDiffByString({ day: new Date(created_at) })}
                 </Typo>
               </Layout.FlexRow>
             </Layout.FlexRow>

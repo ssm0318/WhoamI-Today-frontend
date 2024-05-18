@@ -28,7 +28,7 @@ function NoteListItem({ note }: NoteListItemProps) {
     <S.NoteListItemWrapper p={12} gap={8} w="100%">
       <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
         <Typo type="label-medium" color="MEDIUM_GRAY">
-          {convertTimeDiffByString(new Date(), new Date(created_at))}
+          {convertTimeDiffByString({ day: new Date(created_at) })}
         </Typo>
         <Icon name="dots_menu" size={24} onClick={handleClickMore} />
       </Layout.FlexRow>
