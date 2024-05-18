@@ -73,7 +73,11 @@ function CommentList({ postType, post }: CommentListProps) {
             setIsPrivate={() => {
               setIsPrivate((prev) => !prev);
             }}
+            isReply={!!replyTo}
             replyTo={replyTo}
+            resetReplyTo={() => {
+              setReplyTo(null);
+            }}
           />
         </Layout.FlexRow>
       </StyledCommentListFooter>
