@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAlert';
 import Loader from '@components/_common/loader/Loader';
 import { Layout } from '@design-system';
@@ -8,6 +8,7 @@ import { deleteComment } from '@utils/apis/comments';
 import CommentInputBox from './comment-input-box/CommentInputBox';
 import CommentItem from './comment-item/CommentItem';
 import { getCommentList } from './CommentList.helper';
+import { StyledCommentListFooter } from './CommentList.styled';
 
 interface CommentListProps {
   postType: 'Response' | 'Note';
@@ -15,6 +16,7 @@ interface CommentListProps {
 }
 
 function CommentList({ postType, post }: CommentListProps) {
+  const footerRef = useRef<HTMLDivElement>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
@@ -49,7 +51,7 @@ function CommentList({ postType, post }: CommentListProps) {
 
   return (
     <Layout.FlexCol w="100%" h="100%" pt={24}>
-      <Layout.FlexCol w="100%" gap={2} ph={16}>
+      <Layout.FlexCol w="100%" gap={2} ph={16} mb={footerRef.current?.offsetHeight}>
         {comments.map((comment) => (
           <CommentItem
             key={comment.id}
@@ -58,11 +60,11 @@ function CommentList({ postType, post }: CommentListProps) {
           />
         ))}
       </Layout.FlexCol>
-      <Layout.Fixed b={0} w="100%" bgColor="WHITE">
+      <StyledCommentListFooter ref={footerRef} b={0} w="100%" bgColor="WHITE">
         <Layout.FlexRow w="100%">
           <CommentInputBox post={post} postType={postType} replyTo={replyTo} />
         </Layout.FlexRow>
-      </Layout.Fixed>
+      </StyledCommentListFooter>
       <DeleteAlert
         visible={!!deleteTarget}
         close={closeDeleteAlert}
