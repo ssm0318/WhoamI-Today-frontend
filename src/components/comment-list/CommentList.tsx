@@ -17,6 +17,7 @@ interface CommentListProps {
 function CommentList({ postType, post }: CommentListProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
@@ -54,13 +55,21 @@ function CommentList({ postType, post }: CommentListProps) {
           <CommentItem
             key={comment.id}
             comment={comment}
-            onClickReplyBtn={() => setReplyTo(comment)}
+            onClickReplyBtn={() => {
+              setReplyTo(comment);
+              setIsPrivate(comment.is_private);
+            }}
           />
         ))}
       </Layout.FlexCol>
       <Layout.Fixed b={0} w="100%" bgColor="WHITE">
         <Layout.FlexRow w="100%">
-          <CommentInputBox post={post} postType={postType} replyTo={replyTo} />
+          <CommentInputBox
+            post={post}
+            postType={postType}
+            isPrivate={isPrivate}
+            replyTo={replyTo}
+          />
         </Layout.FlexRow>
       </Layout.Fixed>
       <DeleteAlert
