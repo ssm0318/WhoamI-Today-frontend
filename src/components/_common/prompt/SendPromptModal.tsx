@@ -220,7 +220,7 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
         )}
       </SendPromptModalContainer>
     </BottomModal>,
-    document.getElementById('root-container') || document.body,
+    document.getElementById('modal-container') || document.body,
   );
 }
 
