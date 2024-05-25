@@ -30,6 +30,12 @@ export const getCommentsOfResponse = async (responseId: number, page: string | n
 
 export const getResponse = async (responseId: number | string) => {
   const { data } = await axios.get<GetResponseDetailResponse>(`/qna/responses/${responseId}/`);
+  const { id, current_user_read } = data;
+
+  if (!current_user_read) {
+    readResponse([id]);
+  }
+
   return data;
 };
 
@@ -49,4 +55,8 @@ export const getReactionList = async (
 // POST Reaction
 export const postReaction = async (postType: ReactionPostType, postId: number, emoji: string) => {
   await axios.post(`/reactions/${postType}/${postId}`, { emoji });
+};
+
+export const readResponse = async (ids: number[]) => {
+  await axios.patch('/qna/responses/read/', { ids });
 };

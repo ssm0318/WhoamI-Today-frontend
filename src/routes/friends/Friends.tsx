@@ -169,8 +169,8 @@ function Friends() {
                     <UpdatedFriendItem
                       key={user.id}
                       {...user}
-                      new_chat={23}
                       updateFavoriteCallback={updateFavoriteCallback(user)}
+                      new_chat={user.unread_cnt}
                       fetchAllTypeFriends={fetchAllTypeFriends}
                     />
                   ))}

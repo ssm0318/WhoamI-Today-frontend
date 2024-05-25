@@ -112,7 +112,7 @@ function UpdatedFriendItem({
           </StyledUpdatedItemWrapper>
           <StyledUpdatedItemWrapper>
             <Icon name="friend_updates_chat" size={28} onClick={handleClickChat} />
-            {new_chat && (
+            {new_chat > 0 && (
               <UpdatedChatNumber type="label-small" color="PRIMARY">
                 {new_chat}
               </UpdatedChatNumber>

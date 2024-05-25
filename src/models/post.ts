@@ -72,6 +72,7 @@ export interface Response extends ContentsCommon {
   question_id: number;
   comment_count: number | null;
   like_user_sample: User[];
+  current_user_read: boolean;
 }
 
 export interface Note extends ContentsCommon {
@@ -80,6 +81,7 @@ export interface Note extends ContentsCommon {
   comment_count: number | null;
   like_user_sample: User[];
   comments: Comment[];
+  current_user_read: boolean;
 }
 
 // 질문에 대한 답변 리스트

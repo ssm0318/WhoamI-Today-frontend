@@ -9,6 +9,7 @@ import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { FetchState } from '@models/api/common';
 import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getNoteDetail } from '@utils/apis/note';
@@ -17,27 +18,40 @@ export function NoteDetail() {
   const { noteId } = useParams();
   const [t] = useTranslation('translation', { keyPrefix: 'note_detail' });
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
-  const [noteDetail, setNoteDetail] = useState<Note | null>(null);
-  const isMyPage = noteDetail?.author_detail.id === myProfile?.id;
+  const [noteDetail, setNoteDetail] = useState<FetchState<Note>>({ state: 'loading' });
 
   useAsyncEffect(async () => {
     if (!noteId) return;
-    setNoteDetail(await getNoteDetail(Number(noteId)));
+
+    try {
+      const data = await getNoteDetail(Number(noteId));
+      setNoteDetail({ state: 'hasValue', data });
+    } catch (e) {
+      // TODO
+      setNoteDetail({ state: 'hasError' });
+    }
   }, [noteId]);
-
-  if (!noteDetail) return <Loader />;
-
-  const { username } = noteDetail.author_detail;
 
   return (
     <MainContainer>
-      <SubHeader title={t('title', { username })} />
-      <Layout.FlexCol w="100%" alignItems="center" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
-        <NoteItem note={noteDetail} isMyPage={isMyPage} enableCollapse={false} type="DETAIL" />
-      </Layout.FlexCol>
-      <Layout.FlexCol w="100%" flex={1}>
-        <CommentList postType="Note" post={noteDetail} />
-      </Layout.FlexCol>
+      {noteDetail.state === 'loading' && <Loader />}
+      {noteDetail.state === 'hasValue' && (
+        <>
+          <SubHeader title={t('title', { username: noteDetail.data.author_detail.username })} />
+          <Layout.FlexCol w="100%" alignItems="center" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
+            <NoteItem
+              note={noteDetail.data}
+              isMyPage={noteDetail.data.author_detail.id === myProfile?.id}
+              enableCollapse={false}
+              type="DETAIL"
+            />
+          </Layout.FlexCol>
+          <Layout.FlexCol w="100%" flex={1}>
+            <CommentList postType="Note" post={noteDetail.data} />
+          </Layout.FlexCol>
+        </>
+      )}
+      {/* TODO: 에러 대응(접근 불가) */}
     </MainContainer>
   );
 }
