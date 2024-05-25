@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import { Layout, SvgIcon, Typo } from '@design-system';
-import { DailyQuestion, Question } from '@models/post';
+import { Question } from '@models/post';
 import ProfileImage from '../profile-image/ProfileImage';
 import { StyledRecentPromptCard } from './RecentPromptCard.styled';
 import SendPromptModal from './SendPromptModal';
 
 interface PromptCardProps {
-  question: Question | DailyQuestion;
+  question: Pick<Question, 'id' | 'content'>;
   requesterName?: string;
 }
 function RecentPromptCard({ question, requesterName }: PromptCardProps) {

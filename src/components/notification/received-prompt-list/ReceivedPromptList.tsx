@@ -39,20 +39,14 @@ interface ReceivedPromptItemProps {
 }
 
 function ReceivedPromptItem({ responseRequest, currDate }: ReceivedPromptItemProps) {
-  const { id, created_at, question_id } = responseRequest;
+  const { id, created_at, question_id, requester_username, question_content } = responseRequest;
   return (
     <Layout.FlexRow w="100%" key={id} gap={4} alignItems="center">
-      {/* TODO: question 필드가 없어서 임시로 임의로 question을 만들어서 넘겨줌. 나중에 수정 필요! */}
       <RecentPromptCard
-        requesterName="User!!"
+        requesterName={requester_username}
         question={{
-          type: 'Question',
           id: question_id,
-          content: 'What was a funny thing that happened today?',
-          created_at,
-          is_admin_question: false,
-          selected_dates: ['2024-05-10'],
-          selected: false,
+          content: question_content,
         }}
       />
       <Layout.FlexCol w={21} alignItems="flex-end" gap={2}>
