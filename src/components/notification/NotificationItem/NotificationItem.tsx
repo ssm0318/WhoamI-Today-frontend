@@ -42,7 +42,7 @@ function NotificationItem({ item }: NotificationItemProps) {
     <S.NotificationContainer w="100%" onClick={handleClickNotification} pv={9} alignItems="center">
       <S.NotificationContent alignItems="center" justifyContent="center">
         <ProfileImageList images={recent_actors.map((a) => a.profile_image)} size={40} />
-        <Layout.Absolute r={0} b={-10}>
+        <Layout.Absolute r={0} b={-10} z={2}>
           <SvgIcon name={getNotiIconName()} size={20} />
         </Layout.Absolute>
       </S.NotificationContent>
