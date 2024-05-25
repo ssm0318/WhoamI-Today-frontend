@@ -83,6 +83,12 @@ function CommentList({ postType, post }: CommentListProps) {
             resetReplyTo={() => {
               setReplyTo(null);
             }}
+            resetCommentTo={() => {
+              setCommentTo(post);
+            }}
+            resetCommentType={() => {
+              setCommentToType(postType);
+            }}
             reloadComments={() => fetchComments(nextPage ?? null)}
           />
         </Layout.FlexRow>

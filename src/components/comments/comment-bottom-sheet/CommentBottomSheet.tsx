@@ -96,6 +96,12 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
           resetReplyTo={() => {
             setReplyTo(null);
           }}
+          resetCommentTo={() => {
+            setCommentTo(post);
+          }}
+          resetCommentType={() => {
+            setCommentToType(postType);
+          }}
           reloadComments={() => fetchComments(null)}
         />
       </CommentBottomFooterWrapper>

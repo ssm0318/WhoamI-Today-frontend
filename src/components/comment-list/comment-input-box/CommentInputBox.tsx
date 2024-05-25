@@ -13,6 +13,8 @@ interface CommentInputBoxProps {
   isPrivate: boolean;
   setIsPrivate?: () => void;
   resetReplyTo?: () => void;
+  resetCommentTo: () => void;
+  resetCommentType: () => void;
   postType: 'Response' | 'Comment' | 'Note';
   post: Response | Comment | Note;
   reloadComments?: () => void;
@@ -24,6 +26,8 @@ function CommentInputBox({
   setIsPrivate,
   replyTo,
   resetReplyTo,
+  resetCommentTo,
+  resetCommentType,
   postType,
   post,
   reloadComments,
@@ -53,6 +57,8 @@ function CommentInputBox({
     }).then(() => {
       setContent('');
       reloadComments?.();
+      resetCommentTo();
+      resetCommentType();
     });
   };
 
