@@ -56,7 +56,7 @@ function Likes() {
             query={query}
             setQuery={setQuery}
             fontSize={16}
-            placeholder={t('search_friends') || undefined}
+            placeholder={t('search') || undefined}
             cancelText={t('cancel') || undefined}
           />
         </Layout.LayoutBase>

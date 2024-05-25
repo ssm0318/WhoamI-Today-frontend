@@ -225,6 +225,11 @@
     "title": "{{name}}'s Response",
     "error_title": "Response"
   },
+  "likes": {
+    "title": "Likes",
+    "search": "Search Friends",
+    "cancel": "Cancel"
+  },
   "post_more_modal": {
     "menu": {
       "report": "Report"
