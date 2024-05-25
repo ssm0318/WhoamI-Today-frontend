@@ -13,6 +13,8 @@ export const StyledRectCheckBox = styled.div`
     appearance: none;
     width: 20px;
     height: 20px;
+    flex-shrink: 0;
+    border-radius: 0px;
 
     background-image: url('/icons/checkbox_rectangle_default.svg');
 
