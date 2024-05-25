@@ -467,5 +467,8 @@
       "description": "이모지를 선택하고 하루를 설명하는 짧은 텍스트를 입력해주세요"
     },
     "description_placeholder": "하루를 설명하는 짧은 텍스트를 입력해주세요..."
+  },
+  "my": {
+    "whats_on_your_mind": "{{username}}님의 지금 드는 생각은?"
   }
 }

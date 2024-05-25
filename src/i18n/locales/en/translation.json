@@ -475,5 +475,8 @@
       "description": "Choose an emoji and enter a short text to describe your day"
     },
     "description_placeholder": "Share a short text to describe your day..."
+  }, 
+  "my": {
+    "whats_on_your_mind": "What's on your mind, {{username}}?"
   }
 }
