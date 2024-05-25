@@ -13,6 +13,12 @@ export const getNoteList = async (page: string | null) => {
 
 export const getNoteDetail = async (noteId: number) => {
   const { data } = await axios.get<Note>(`/notes/${noteId}/`);
+  const { id, current_user_read } = data;
+
+  if (!current_user_read) {
+    readNote([id]);
+  }
+
   return data;
 };
 
@@ -47,4 +53,8 @@ export const getNoteComments = async (noteId: number, page: string | null) => {
     `/notes/${noteId}/comments${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
+};
+
+export const readNote = async (ids: number[]) => {
+  await axios.patch('/notes/read/', { ids });
 };

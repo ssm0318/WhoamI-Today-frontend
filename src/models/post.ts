@@ -80,6 +80,7 @@ export interface Note extends ContentsCommon {
   comment_count: number | null;
   like_user_sample: User[];
   comments: Comment[];
+  current_user_read: boolean;
 }
 
 // 질문에 대한 답변 리스트
