@@ -59,6 +59,7 @@ function CommentInputBox({
       reloadComments?.();
       resetCommentTo();
       resetCommentType();
+      resetReplyTo?.();
     });
   };
 
