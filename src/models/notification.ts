@@ -1,3 +1,5 @@
+import { ActorDetail } from './post';
+
 export interface Notification {
   id: number;
   created_at: string;
@@ -20,10 +22,3 @@ export type NotificationType =
   | 'Response'
   | 'User'
   | 'other';
-
-export interface ActorDetail {
-  id: number;
-  username: string;
-  profile_image: string | null;
-  profile_pic: string;
-}

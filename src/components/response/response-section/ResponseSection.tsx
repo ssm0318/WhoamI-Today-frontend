@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import NoContents from '@components/_common/no-contents/NoContents';
+import SelectPromptSheet from '@components/prompt/select-prompt-sheet/SelectPromptSheet';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { Response } from '@models/post';
@@ -21,6 +22,7 @@ function ResponseSection({ username }: ResponseSectionProps) {
   const [responses, setResponses] = useState<Response[]>([]);
   const [t] = useTranslation('translation');
   const navigate = useNavigate();
+  const [selectPrompt, setSelectPrompt] = useState(false);
 
   const fetchResponses = useCallback(async () => {
     const { results } = username ? await getUserResponses(username) : await getMyResponses(null);
@@ -44,7 +46,23 @@ function ResponseSection({ username }: ResponseSectionProps) {
       </Layout.FlexRow>
       <S.ResponseSectionWrapper w="100%" pr={12}>
         <Layout.FlexRow h="100%" mt={12}>
-          <Layout.FlexRow w="100%" gap={8}>
+          <Layout.FlexRow w="100%" gap={8} h="100%">
+            {!username && (
+              <Layout.FlexCol
+                gap={8}
+                w={100}
+                p={12}
+                h="100%"
+                alignItems="center"
+                justifyContent="center"
+                onClick={() => setSelectPrompt(true)}
+              >
+                <Icon name="new_add" size={44} />
+                <Typo type="button-small" color="DARK_GRAY" textAlign="center">
+                  {t('responses.new_response')}
+                </Typo>
+              </Layout.FlexCol>
+            )}
             {responses.length === 0 ? (
               <Layout.FlexRow alignItems="center" h="100%" justifyContent="center" w="100%">
                 <NoContents text={t('no_contents.responses')} />
@@ -58,6 +76,9 @@ function ResponseSection({ username }: ResponseSectionProps) {
           <MoreResponseButton username={username} />
         </Layout.FlexRow>
       </S.ResponseSectionWrapper>
+      {selectPrompt && (
+        <SelectPromptSheet visible={selectPrompt} closeBottomSheet={() => setSelectPrompt(false)} />
+      )}
     </>
   );
 }

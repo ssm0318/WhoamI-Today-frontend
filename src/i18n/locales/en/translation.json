@@ -216,7 +216,8 @@
     "title": "Responses",
     "comments": "comments",
     "likes": "likes",
-    "more": "More"
+    "more": "More",
+    "new_response": "New Response"
   },
   "all_responses": {
     "title": "{{username}}'s Responses"
@@ -224,6 +225,11 @@
   "response_detail": {
     "title": "{{name}}'s Response",
     "error_title": "Response"
+  },
+  "likes": {
+    "title": "Likes",
+    "search": "Search Friends",
+    "cancel": "Cancel"
   },
   "post_more_modal": {
     "menu": {
@@ -469,5 +475,8 @@
       "description": "Choose an emoji and enter a short text to describe your day"
     },
     "description_placeholder": "Share a short text to describe your day..."
+  }, 
+  "my": {
+    "whats_on_your_mind": "What's on your mind, {{username}}?"
   }
 }

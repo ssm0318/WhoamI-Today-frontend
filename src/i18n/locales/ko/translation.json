@@ -213,7 +213,8 @@
     "title": "답변",
     "comments": "댓글",
     "likes": "좋아요",
-    "more": "더보기"
+    "more": "더보기",
+    "new_response": "새 답변"
   },
   "all_responses": {
     "title": "{{username}}의 답변들"
@@ -221,6 +222,11 @@
   "response_detail": {
     "title": "{{name}}의 답변",
     "error_title": "답변"
+  },
+  "likes": {
+    "title": "좋아요",
+    "search": "친구 검색",
+    "cancel": "취소"
   },
   "post_more_modal": {
     "menu": {
@@ -461,5 +467,8 @@
       "description": "이모지를 선택하고 하루를 설명하는 짧은 텍스트를 입력해주세요"
     },
     "description_placeholder": "하루를 설명하는 짧은 텍스트를 입력해주세요..."
+  },
+  "my": {
+    "whats_on_your_mind": "{{username}}님의 지금 드는 생각은?"
   }
 }

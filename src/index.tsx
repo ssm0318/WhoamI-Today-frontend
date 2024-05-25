@@ -24,6 +24,7 @@ import EditFriends from './routes/friends/EditFriends';
 import ExploreFriends from './routes/friends/ExploreFriends';
 import Friends from './routes/friends/Friends';
 import Intro from './routes/Intro';
+import Likes from './routes/Likes';
 import My from './routes/My';
 import AllNotes from './routes/notes/AllNotes';
 import NewNote from './routes/notes/NewNote';
@@ -138,13 +139,17 @@ const router = createBrowserRouter([
     children: [
       { path: '', element: <AllNotes /> },
       { path: ':noteId', element: <NoteDetail /> },
+      { path: ':noteId/likes', element: <Likes /> },
       { path: 'new', element: <NewNote /> },
     ],
   },
   {
     path: 'responses',
     loader: checkIfSignIn,
-    children: [{ path: ':responseId', element: <ResponseDetail /> }],
+    children: [
+      { path: ':responseId', element: <ResponseDetail /> },
+      { path: ':responseId/likes', element: <Likes /> },
+    ],
   },
   {
     path: 'settings',
