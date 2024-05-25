@@ -17,7 +17,7 @@ function ProfileImageList({ images, size = 25, maxCount = 3, order = 'desc' }: P
         return (
           <Layout.FlexRow
             key={key}
-            ml={index === 0 ? 0 : -10}
+            ml={index === 0 ? 0 : -(size - 10)}
             z={order === 'asc' ? images.length - index : index}
           >
             <ProfileImage imageUrl={image} size={size} />

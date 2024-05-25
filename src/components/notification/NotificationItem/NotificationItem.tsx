@@ -24,17 +24,22 @@ function NotificationItem({ item }: NotificationItemProps) {
     await readNotification([item.id]);
   };
 
-  // TODO fix this if other notis are added
-  const getNotiIconName = (): IconNames => {
+  const getNotiIconName = (): IconNames | null => {
     switch (notification_type) {
       case 'Like':
         return 'noti_icon_like';
       case 'Comment':
         return 'noti_icon_public_comment';
       case 'Response':
+      case 'ResponseRequest':
         return 'noti_icon_prompt';
+      // User, FriendRequest는 어차피 profile image가 있어서 icon은 필요 없음
+      // other의 경우는 아직 없는 케이스라 icon 없음
+      case 'User':
+      case 'FriendRequest':
+      case 'other':
       default:
-        return 'noti_icon_prompt';
+        return null;
     }
   };
 
@@ -42,9 +47,11 @@ function NotificationItem({ item }: NotificationItemProps) {
     <S.NotificationContainer w="100%" onClick={handleClickNotification} pv={9} alignItems="center">
       <S.NotificationContent alignItems="center" justifyContent="center">
         <ProfileImageList images={recent_actors.map((a) => a.profile_image)} size={40} />
-        <Layout.Absolute r={0} b={-10}>
-          <SvgIcon name={getNotiIconName()} size={20} />
-        </Layout.Absolute>
+        {!!getNotiIconName() && (
+          <Layout.Absolute r={0} b={-10} z={2}>
+            <SvgIcon name={getNotiIconName() as IconNames} size={20} />
+          </Layout.Absolute>
+        )}
       </S.NotificationContent>
       <Layout.FlexRow flex={1} ml={4}>
         <Typo type="body-medium">{message}</Typo>

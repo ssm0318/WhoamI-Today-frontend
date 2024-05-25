@@ -18,6 +18,7 @@ export type NotificationType =
   | 'Like'
   | 'Comment'
   | 'Response'
+  | 'User'
   | 'other';
 
 export interface ActorDetail {
