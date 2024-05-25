@@ -37,9 +37,11 @@ function PostFooter({ likedUserList, isMyPage, post, showComments }: PostFooterP
     <Layout.FlexCol gap={8}>
       <Layout.FlexRow gap={16} alignItems="center">
         {isMyPage ? (
-          <button type="button" onClick={handleClickLikes}>
-            <ProfileImageList images={likedUserList.map((user) => user.profile_image)} />
-          </button>
+          likedUserList.length > 0 && (
+            <button type="button" onClick={handleClickLikes}>
+              <ProfileImageList images={likedUserList.map((user) => user.profile_image)} />
+            </button>
+          )
         ) : (
           <LikeButton postType={type} post={post} iconSize={23} m={0} />
         )}
