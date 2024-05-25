@@ -2,6 +2,7 @@ import { FetchState } from '@models/api/common';
 import { MyProfile } from '@models/api/user';
 import { User } from '@models/user';
 import { getFriendList } from '@utils/apis/user';
+import { sliceResetFns } from './resetSlices';
 import { BoundState, SliceStateCreator } from './useBoundStore';
 
 interface UserState {
@@ -27,36 +28,39 @@ const initialState: UserState = {
   fcmToken: undefined,
 };
 
-export const createUserSlice: SliceStateCreator<UserSlice> = (set, get) => ({
-  ...initialState,
-  setMyProfile: (myProfile) => set(() => ({ myProfile }), false, 'user/setMyProfile'),
-  updateMyProfile: (myProfileInfo) =>
-    set(
-      (state) => ({
-        myProfile: {
-          ...state.myProfile,
-          myProfileInfo,
-        },
-      }),
-      false,
-      'user/updateMyProfile',
-    ),
-  resetMyProfile: () => set(initialState),
-  getFriendList: async () => {
-    try {
-      const friendList = await getFriendList();
+export const createUserSlice: SliceStateCreator<UserSlice> = (set, get) => {
+  sliceResetFns.add(() => set(initialState));
+  return {
+    ...initialState,
+    setMyProfile: (myProfile) => set(() => ({ myProfile }), false, 'user/setMyProfile'),
+    updateMyProfile: (myProfileInfo) =>
       set(
-        () => ({ friendList: { state: 'hasValue', data: friendList.results } }),
+        (state) => ({
+          myProfile: {
+            ...state.myProfile,
+            myProfileInfo,
+          },
+        }),
         false,
-        'user/getFriendList',
-      );
-    } catch {
-      set(() => ({ friendList: { state: 'hasError' } }));
-    }
-  },
-  isUserAuthor: (authorId) => get().myProfile?.id === authorId,
-  setFcmToken: (fcmToken) => set(() => ({ fcmToken }), false, 'user/setFcmToken'),
-});
+        'user/updateMyProfile',
+      ),
+    resetMyProfile: () => set(initialState),
+    getFriendList: async () => {
+      try {
+        const friendList = await getFriendList();
+        set(
+          () => ({ friendList: { state: 'hasValue', data: friendList.results } }),
+          false,
+          'user/getFriendList',
+        );
+      } catch {
+        set(() => ({ friendList: { state: 'hasError' } }));
+      }
+    },
+    isUserAuthor: (authorId) => get().myProfile?.id === authorId,
+    setFcmToken: (fcmToken) => set(() => ({ fcmToken }), false, 'user/setFcmToken'),
+  };
+};
 
 export const UserSelector = (state: BoundState) => ({
   myProfile: state.myProfile,

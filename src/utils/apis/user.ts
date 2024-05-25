@@ -16,6 +16,7 @@ import {
 } from '@models/api/user';
 import { Note, Response } from '@models/post';
 import { User, UserProfile } from '@models/user';
+import { resetBoundStores } from '@stores/resetSlices';
 import { useBoundStore } from '@stores/useBoundStore';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 import { getMe, syncTimeZone } from './my';
@@ -48,6 +49,7 @@ export const checkIfSignIn = async () => {
     useBoundStore.getState().setMyProfile({ ...user, timezone: currentTimezone });
     return user;
   } catch {
+    resetBoundStores();
     return redirect('/signin');
   }
 };
