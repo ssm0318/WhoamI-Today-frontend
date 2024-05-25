@@ -216,7 +216,8 @@
     "title": "Responses",
     "comments": "comments",
     "likes": "likes",
-    "more": "More"
+    "more": "More",
+    "new_response": "New Response"
   },
   "all_responses": {
     "title": "{{username}}'s Responses"
