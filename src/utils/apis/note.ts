@@ -28,7 +28,6 @@ export const postNote = async (noteData: Partial<Note>) => {
   }
 
   const { data } = await axiosFormDataInstance.post(`notes/`, formData);
-  console.log(data, formData);
   return data;
 };
 
