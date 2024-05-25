@@ -64,7 +64,7 @@ export const readResponse = async (ids: number[]) => {
 export const getResponseDetailLikes = async (responseId: number, page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Like[]>>(
-    `/qna/responses/${responseId}/likes${!requestPage ? '' : `?page=${requestPage}`}`,
+    `/qna/responses/${responseId}/likes/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
 };
