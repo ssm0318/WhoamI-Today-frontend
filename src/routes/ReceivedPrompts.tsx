@@ -38,7 +38,7 @@ export default function ReceivedPrompts() {
   return (
     <MainContainer>
       <SubHeader title="Received Prompts" />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" ph={16}>
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" ph={16} pb={16}>
         <ReceivedPromptList
           title={t('last_7_days')}
           responseRequests={recentRequests}
