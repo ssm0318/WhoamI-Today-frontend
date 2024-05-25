@@ -108,3 +108,19 @@ export type Reaction = {
 };
 
 export type ReactionPostType = 'response';
+
+export interface ActorDetail {
+  id: number;
+  username: string;
+  profile_image: string | null;
+  profile_pic: string;
+}
+
+export type Like = {
+  id: number;
+  target_id: number;
+  target_type: POST_TYPE;
+  type: 'Like';
+  user: string;
+  user_detail: ActorDetail;
+};

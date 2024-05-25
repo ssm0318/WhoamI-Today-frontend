@@ -1,5 +1,6 @@
 import { MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Layout, Typo } from '@design-system';
 import { Note, POST_TYPE, Response } from '@models/post';
 import { User } from '@models/user';
@@ -16,6 +17,7 @@ type PostFooterProps = {
 
 function PostFooter({ likedUserList, isMyPage, post, showComments }: PostFooterProps) {
   const { comment_count, type } = post;
+  const navigate = useNavigate();
 
   const [t] = useTranslation('translation', {
     keyPrefix: post.type === POST_TYPE.RESPONSE ? 'responses' : 'notes',
@@ -26,11 +28,18 @@ function PostFooter({ likedUserList, isMyPage, post, showComments }: PostFooterP
     showComments();
   };
 
+  const handleClickLikes = (e: MouseEvent) => {
+    e.stopPropagation();
+    navigate(type === 'Response' ? `/responses/${post.id}/likes` : `/notes/${post.id}/likes`);
+  };
+
   return (
     <Layout.FlexCol gap={8}>
       <Layout.FlexRow gap={16} alignItems="center">
         {isMyPage ? (
-          <ProfileImageList images={likedUserList.map((user) => user.profile_image)} />
+          <button type="button" onClick={handleClickLikes}>
+            <ProfileImageList images={likedUserList.map((user) => user.profile_image)} />
+          </button>
         ) : (
           <LikeButton postType={type} post={post} iconSize={23} m={0} />
         )}
