@@ -8,11 +8,11 @@ import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { ResponseRequest } from '@models/api/question';
-import { getReceivedPrompts } from '@utils/apis/my';
+import { getResponseRequests } from '@utils/apis/my';
 
 export default function ReceivedPrompts() {
   const [t] = useTranslation('translation', { keyPrefix: 'notifications' });
-  const [receivedPrompts, setReceivedPrompts] = useState<ResponseRequest[]>([]);
+  const [responseRequests, setResponseRequests] = useState<ResponseRequest[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
@@ -21,32 +21,32 @@ export default function ReceivedPrompts() {
   });
 
   const fetchReceivedPrompts = async (page: string | null) => {
-    const { results, next } = await getReceivedPrompts(page);
+    const { results, next } = await getResponseRequests(page);
     if (!results) return;
 
     setNextPage(next);
-    setReceivedPrompts((prev) => {
+    setResponseRequests((prev) => {
       return [...prev, ...results];
     });
     setIsLoading(false);
   };
 
-  const recentPrompts = receivedPrompts.filter((n) => n.is_recent);
-  const restPrompts = receivedPrompts.filter((n) => !n.is_recent);
+  const recentRequests = responseRequests.filter((n) => n.is_recent);
+  const restRequests = responseRequests.filter((n) => !n.is_recent);
   const [currentDate] = useState(() => new Date());
 
   return (
     <MainContainer>
       <SubHeader title="Received Prompts" />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" ph={16}>
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" ph={16} pb={16}>
         <ReceivedPromptList
           title={t('last_7_days')}
-          prompts={recentPrompts}
+          responseRequests={recentRequests}
           currDate={currentDate}
         />
         <ReceivedPromptList
           title={t('last_30_days')}
-          prompts={restPrompts}
+          responseRequests={restRequests}
           currDate={currentDate}
         />
       </Layout.FlexCol>
