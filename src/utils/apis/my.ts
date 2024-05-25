@@ -85,7 +85,7 @@ export const getMyNotes = async (page: string | null) => {
   return data;
 };
 
-export const getReceivedPrompts = async (page: string | null) => {
+export const getResponseRequests = async (page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<ResponseRequest[]>>(
     `/user/me/response-requests/${!requestPage ? '' : `?page=${requestPage}`}`,

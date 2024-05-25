@@ -5,12 +5,16 @@ import { convertTimeDiffByString } from '@utils/timeHelpers';
 
 interface ReceivedPromptListProps {
   title: string;
-  prompts: ResponseRequest[];
+  responseRequests: ResponseRequest[];
   currDate: Date;
 }
 
-export default function ReceivedPromptList({ title, prompts, currDate }: ReceivedPromptListProps) {
-  if (!prompts.length) return null;
+export default function ReceivedPromptList({
+  title,
+  responseRequests,
+  currDate,
+}: ReceivedPromptListProps) {
+  if (!responseRequests.length) return null;
   return (
     <Layout.FlexCol w="100%">
       <Layout.FlexCol w="100%" pv={8}>
@@ -20,8 +24,8 @@ export default function ReceivedPromptList({ title, prompts, currDate }: Receive
           </Typo>
         </Layout.FlexRow>
         <Layout.FlexCol w="100%" gap={12}>
-          {prompts.map((n) => (
-            <ReceivedPromptItem prompt={n} currDate={currDate} />
+          {responseRequests.map((n) => (
+            <ReceivedPromptItem responseRequest={n} currDate={currDate} />
           ))}
         </Layout.FlexCol>
       </Layout.FlexCol>
@@ -30,12 +34,12 @@ export default function ReceivedPromptList({ title, prompts, currDate }: Receive
 }
 
 interface ReceivedPromptItemProps {
-  prompt: ResponseRequest;
+  responseRequest: ResponseRequest;
   currDate: Date;
 }
 
-function ReceivedPromptItem({ prompt, currDate }: ReceivedPromptItemProps) {
-  const { id, created_at, question_id } = prompt;
+function ReceivedPromptItem({ responseRequest, currDate }: ReceivedPromptItemProps) {
+  const { id, created_at, question_id } = responseRequest;
   return (
     <Layout.FlexRow w="100%" key={id} gap={4} alignItems="center">
       {/* TODO: question 필드가 없어서 임시로 임의로 question을 만들어서 넘겨줌. 나중에 수정 필요! */}
