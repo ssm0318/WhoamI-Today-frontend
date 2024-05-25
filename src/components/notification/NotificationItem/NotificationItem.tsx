@@ -33,6 +33,8 @@ function NotificationItem({ item }: NotificationItemProps) {
       case 'Response':
       case 'ResponseRequest':
         return 'noti_icon_prompt';
+      // User, FriendRequest는 어차피 profile image가 있어서 icon은 필요 없음
+      // other의 경우는 아직 없는 케이스라 icon 없음
       case 'User':
       case 'FriendRequest':
       case 'other':
