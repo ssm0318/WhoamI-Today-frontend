@@ -43,19 +43,27 @@ function Notifications() {
           <TopContainer type="PromptsReceived" />
         </Layout.FlexCol>
         {/* Last 7 days */}
-        <Layout.FlexRow pv={8}>
-          <Typo type="title-medium">{t('last_7_days')}</Typo>
-        </Layout.FlexRow>
-        {recentNotifications.map((noti) => (
-          <NotificationItem item={noti} key={noti.id} />
-        ))}
+        {recentNotifications.length > 0 && (
+          <>
+            <Layout.FlexRow pv={8}>
+              <Typo type="title-medium">{t('last_7_days')}</Typo>
+            </Layout.FlexRow>
+            {recentNotifications.map((noti) => (
+              <NotificationItem item={noti} key={noti.id} />
+            ))}
+          </>
+        )}
         {/* Rest of notifications */}
-        <Layout.FlexRow mt={8} pv={8}>
-          <Typo type="title-medium">{t('last_30_days')}</Typo>
-        </Layout.FlexRow>
-        {restNotifications.map((noti) => (
-          <NotificationItem item={noti} key={noti.id} />
-        ))}
+        {restNotifications.length > 0 && (
+          <>
+            <Layout.FlexRow mt={8} pv={8}>
+              <Typo type="title-medium">{t('last_30_days')}</Typo>
+            </Layout.FlexRow>
+            {restNotifications.map((noti) => (
+              <NotificationItem item={noti} key={noti.id} />
+            ))}
+          </>
+        )}
         <div ref={targetRef} />
         {isLoading && (
           <Layout.FlexRow w="100%" h={40}>
