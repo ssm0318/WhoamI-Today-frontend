@@ -209,7 +209,8 @@
     "more": "more"
   },
   "note_detail": {
-    "title": "{{username}}'s Note"
+    "title": "{{username}}'s Note",
+    "error_title": "Note"
   },
   "responses": {
     "title": "Responses",
@@ -221,7 +222,8 @@
     "title": "{{username}}'s Responses"
   },
   "response_detail": {
-    "title": "{{name}}'s Response"
+    "title": "{{name}}'s Response",
+    "error_title": "Response"
   },
   "post_more_modal": {
     "menu": {
@@ -332,7 +334,10 @@
       "title": "Something's Wrong.",
       "text": "Please try again."
     },
-    "question": "No questions found."
+    "question": "No questions found.",
+    "forbidden_post": "This post is not accessible.",
+    "not_found_post": "This post does not exist."
+
   },
   "chats": {
     "title": "Chats",

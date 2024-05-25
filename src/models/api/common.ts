@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios';
+
 export interface Response<T> {
   count: number;
   detail?: string;
@@ -32,4 +34,5 @@ export type FetchState<T> =
   | {
       state: 'hasError';
       data?: undefined;
+      error?: AxiosError;
     };
