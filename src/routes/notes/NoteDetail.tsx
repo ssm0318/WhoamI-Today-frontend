@@ -1,8 +1,11 @@
+import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import CommonError from '@components/_common/common-error/CommonError';
 import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import NoContents from '@components/_common/no-contents/NoContents';
 import CommentList from '@components/comment-list/CommentList';
 import NoteItem from '@components/note/note-item/NoteItem';
 import SubHeader from '@components/sub-header/SubHeader';
@@ -16,7 +19,9 @@ import { getNoteDetail } from '@utils/apis/note';
 
 export function NoteDetail() {
   const { noteId } = useParams();
-  const [t] = useTranslation('translation', { keyPrefix: 'note_detail' });
+
+  const [t] = useTranslation('translation');
+
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const [noteDetail, setNoteDetail] = useState<FetchState<Note>>({ state: 'loading' });
 
@@ -26,8 +31,11 @@ export function NoteDetail() {
     try {
       const data = await getNoteDetail(Number(noteId));
       setNoteDetail({ state: 'hasValue', data });
-    } catch (e) {
-      // TODO
+    } catch (error) {
+      if (isAxiosError(error)) {
+        setNoteDetail({ state: 'hasError', error });
+        return;
+      }
       setNoteDetail({ state: 'hasError' });
     }
   }, [noteId]);
@@ -37,7 +45,9 @@ export function NoteDetail() {
       {noteDetail.state === 'loading' && <Loader />}
       {noteDetail.state === 'hasValue' && (
         <>
-          <SubHeader title={t('title', { username: noteDetail.data.author_detail.username })} />
+          <SubHeader
+            title={t('note_detail.title', { username: noteDetail.data.author_detail.username })}
+          />
           <Layout.FlexCol w="100%" alignItems="center" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
             <NoteItem
               note={noteDetail.data}
@@ -51,7 +61,24 @@ export function NoteDetail() {
           </Layout.FlexCol>
         </>
       )}
-      {/* TODO: 에러 대응(접근 불가) */}
+      {noteDetail.state === 'hasError' && (
+        <>
+          <SubHeader title={t('note_detail.error_title', { username: '' })} />
+          <Layout.FlexCol w="100%" alignItems="center" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
+            {!noteDetail.error || noteDetail.error.response?.status === 500 ? (
+              <CommonError />
+            ) : (
+              <NoContents
+                title={
+                  noteDetail.error.response?.status === 403
+                    ? t('no_contents.forbidden_post')
+                    : t('no_contents.not_found_post')
+                }
+              />
+            )}
+          </Layout.FlexCol>
+        </>
+      )}
     </MainContainer>
   );
 }

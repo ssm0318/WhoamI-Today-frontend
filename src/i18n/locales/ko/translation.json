@@ -206,7 +206,8 @@
     "more": "더보기"
   },
   "note_detail": {
-    "title": "{{username}}의 노트"
+    "title": "{{username}}의 노트",
+    "error_title": "노트"
   },
   "responses": {
     "title": "답변",
@@ -218,7 +219,8 @@
     "title": "{{username}}의 답변들"
   },
   "response_detail": {
-    "title": "{{name}}의 답변"
+    "title": "{{name}}의 답변",
+    "error_title": "답변"
   },
   "post_more_modal": {
     "menu": {
@@ -325,7 +327,9 @@
       "title": "데이터를 불러올 수 없습니다.",
       "text": "잠시 후 다시 시도해주세요."
     },
-    "question": "선택한 질문을 찾지 못했습니다."
+    "question": "선택한 질문을 찾지 못했습니다.",
+    "forbidden_post": "접근이 불가능한 게시글입니다.",
+    "not_found_post": "존재하지 않는 게시글입니다."
   },
   "chats": {
     "title": "채팅",
