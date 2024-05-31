@@ -33,14 +33,15 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
   const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
   const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
 
-  const fetchComments = async (page: string | null) => {
+  const fetchComments = async (page: string | null, reload: boolean) => {
     const { results } = await getCommentList(postType, post.id, page);
     if (!results) return;
-    setComments(results);
+    if (reload) setComments(results);
+    else setComments([...comments, ...results]);
   };
 
   useAsyncEffect(async () => {
-    await fetchComments(null);
+    await fetchComments(null, false);
   }, []);
 
   const handleClick = () => {
@@ -102,7 +103,7 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
           resetCommentType={() => {
             setCommentToType(postType);
           }}
-          reloadComments={() => fetchComments(null)}
+          reloadComments={() => fetchComments(null, true)}
         />
       </CommentBottomFooterWrapper>
     </BottomModal>,

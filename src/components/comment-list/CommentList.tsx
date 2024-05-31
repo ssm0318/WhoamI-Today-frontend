@@ -27,14 +27,15 @@ function CommentList({ postType, post }: CommentListProps) {
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextPage === null) return setIsLoading(false);
-    await fetchComments(nextPage ?? null);
+    await fetchComments(nextPage ?? null, false);
   });
 
-  const fetchComments = async (page: string | null) => {
+  const fetchComments = async (page: string | null, reload: boolean) => {
     const { results, next } = await getCommentList(postType, post.id, page);
     if (!results) return;
     setNextPage(next);
-    setComments(results);
+    if (reload) setComments(results);
+    else setComments([...comments, ...results]);
     setIsLoading(false);
   };
 
@@ -47,7 +48,7 @@ function CommentList({ postType, post }: CommentListProps) {
   const confirmDeleteAlert = () => {
     if (!deleteTarget) return;
     deleteComment(deleteTarget.id)
-      .then(() => fetchComments(null))
+      .then(() => fetchComments(null, false))
       .catch(() => console.log('TODO: 삭제 실패 알림'))
       .finally(() => closeDeleteAlert());
     closeDeleteAlert();
@@ -89,7 +90,7 @@ function CommentList({ postType, post }: CommentListProps) {
             resetCommentType={() => {
               setCommentToType(postType);
             }}
-            reloadComments={() => fetchComments(nextPage ?? null)}
+            reloadComments={() => fetchComments(nextPage ?? null, true)}
           />
         </Layout.FlexRow>
       </StyledCommentListFooter>
