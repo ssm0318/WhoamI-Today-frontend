@@ -6,19 +6,15 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { MessageInputBox } from '@components/chat-room/message-input-box/MessageInputBox';
 import { MessageList } from '@components/chat-room/message-list/MessageList';
 import { MessageNotiSettingDialog } from '@components/chat-room/message-noti-setting-dialog/MessageNotiSettingDialog';
-import { Z_INDEX } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { ChatRoom as ChatRoomType, ResponseMessageAction } from '@models/api/chat';
+import { ModalContainer } from '@styles/wrappers';
 import { getChatMessages, getChatRoomInfo } from '@utils/apis/chat';
 import { useChatRoomAutoScroll } from 'src/routes/chat-room/_hooks/useChatRoomAutoScroll';
 import { useChatRoomSocketProvider } from 'src/routes/chat-room/_hooks/useChatRoomSocketProvider';
-import {
-  ChatRoomContainer,
-  ChatRoomHeaderWrapper,
-  MessageListScrollContainer,
-} from './ChatRoom.styled';
+import { ChatRoomHeaderWrapper, MessageListScrollContainer } from './ChatRoom.styled';
 
 export function ChatRoom() {
   const { roomId } = useParams();
@@ -101,14 +97,7 @@ export function ChatRoom() {
   };
 
   return (
-    <ChatRoomContainer
-      t={0}
-      w="100%"
-      h="100%"
-      z={Z_INDEX.MODAL_CONTAINER}
-      bgColor="WHITE"
-      alignItems="center"
-    >
+    <ModalContainer>
       <ChatRoomHeaderWrapper>
         <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center">
           <Icon name="arrow_left" size={36} color="BLACK" onClick={handleClickGoBack} />
@@ -149,6 +138,6 @@ export function ChatRoom() {
         onClickMute={setMuteOn}
         onClose={closeNotiSettingDialog}
       />
-    </ChatRoomContainer>
+    </ModalContainer>
   );
 }

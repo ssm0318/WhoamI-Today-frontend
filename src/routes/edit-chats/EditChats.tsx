@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ChatRoomList } from '@components/chats/chat-room-list/ChatRoomList';
 import SubHeader from '@components/sub-header/SubHeader';
-import { Z_INDEX } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import { ModalContainer } from '@styles/wrappers';
 import {
   EditChatsScrollContainer,
   StyledBottomArea,
@@ -49,14 +49,7 @@ export function EditChats() {
   };
 
   return (
-    <Layout.Fixed
-      t={0}
-      w="100%"
-      h="100%"
-      z={Z_INDEX.MODAL_CONTAINER}
-      bgColor="WHITE"
-      alignItems="center"
-    >
+    <ModalContainer>
       <SubHeader
         title={t('header.title')}
         RightComponent={
@@ -71,7 +64,7 @@ export function EditChats() {
         <ChatRoomList isEditMode onClickCheckBox={handleClickCheckBox} checkList={checkList} />
       </EditChatsScrollContainer>
       <StyledBottomArea w="100%" b={0} pv={15} ph={8} bgColor="WHITE">
-        <Layout.FlexRow w="100%" gap={5}>
+        <Layout.FlexRow w="100%" gap={5} justifyContent="center">
           <StyledMuteButton type="button" onClick={handleClickMute} disabled={!hasCheckList}>
             <Typo type="button-large">
               {[t('button.mute'), hasCheckList && `(${checkListLength})`].filter(Boolean).join(' ')}
@@ -86,6 +79,6 @@ export function EditChats() {
           </StyledDeleteButton>
         </Layout.FlexRow>
       </StyledBottomArea>
-    </Layout.Fixed>
+    </ModalContainer>
   );
 }
