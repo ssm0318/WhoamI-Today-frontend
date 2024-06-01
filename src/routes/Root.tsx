@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import NotiPermissionBanner, {
-  HEIGHT,
+  NOTI_PERMISSION_BANNER_HEIGHT,
 } from '@components/_common/noti-permission-banner/NotiPermissionBanner';
 import Header from '@components/header/Header';
 import Tab from '@components/tab/Tab';
@@ -40,7 +40,9 @@ function Root() {
         <MainWrapper
           alignItems="center"
           pt={TOP_NAVIGATION_HEIGHT}
-          pb={BOTTOM_TABBAR_HEIGHT + (showNotificationPermission ? HEIGHT : 0)}
+          pb={
+            BOTTOM_TABBAR_HEIGHT + (showNotificationPermission ? NOTI_PERMISSION_BANNER_HEIGHT : 0)
+          }
         >
           <Outlet />
           {/* 데스크톱 웹만 노출 */}
