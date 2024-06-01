@@ -51,7 +51,7 @@ function My() {
           <Typo type="body-medium" color="DARK_GRAY">
             {t('whats_on_your_mind', { username: myProfile?.username })}
           </Typo>
-          <Icon name="chat_media_image" size={24} />
+          <Icon name="chat_media_image" size={24} fill="DARK_GRAY" />
         </Layout.FlexRow>
       </Layout.FlexRow>
       <Layout.FlexCol pl={12} pb="default" w="100%" bgColor="WHITE" rounded="0px 0px 8px 8px">

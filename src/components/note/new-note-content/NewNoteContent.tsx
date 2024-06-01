@@ -90,7 +90,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
           placeholder={PLACE_HOLDER}
           onChange={handleChangeInput}
         />
-        <SvgIcon name="chat_media_image" size={30} onClick={onClickAdd} />
+        <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
         <input
           ref={inputRef}
           type="file"

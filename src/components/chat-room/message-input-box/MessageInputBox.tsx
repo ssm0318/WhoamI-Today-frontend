@@ -52,26 +52,29 @@ export function MessageInputBox({ participants, sendSocketData }: Props) {
     setInputValue('');
   };
 
+  const [isFocused, setIsFocused] = useState(false);
+
   return (
     <StyledMessageInputBox>
-      <Layout.FlexRow w="100%" justifyContent="center" alignItems="center">
+      <Layout.FlexRow w="100%" justifyContent="center" alignItems="center" gap={8}>
+        {!isFocused && !inputValue && <Icon name="chat_media_image" size={24} fill="DARK_GRAY" />}
         <MessageInput
           value={inputValue}
           placeholder={PLACE_HOLDER}
           onChange={handleChangeInput}
           onKeyDown={handleKeyDownInput}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
       </Layout.FlexRow>
-      <Layout.LayoutBase>
-        {inputValue ? (
-          <Icon name="question_send" size={24} onClick={handleClickSendMsg} />
-        ) : (
-          <Layout.FlexRow w="100%">
-            <Icon name="chat_media_image" size={24} />
-            <Icon name="chat_media_gif" size={24} />
-          </Layout.FlexRow>
-        )}
-      </Layout.LayoutBase>
+      {(isFocused || !!inputValue) && (
+        <Layout.FlexRow w="100%" justifyContent="space-between">
+          <Icon name="chat_media_image" size={24} fill="DARK_GRAY" />
+          {inputValue && (
+            <Icon name="question_send" size={24} onClick={handleClickSendMsg} color="PRIMARY" />
+          )}
+        </Layout.FlexRow>
+      )}
     </StyledMessageInputBox>
   );
 }
