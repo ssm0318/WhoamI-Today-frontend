@@ -33,7 +33,7 @@ function CommentList({ postType, post }: CommentListProps) {
   const fetchComments = async (page: string | null, reload: boolean) => {
     const { results, next } = await getCommentList(postType, post.id, page);
     if (!results) return;
-    setNextPage(next);
+    setNextPage(next ?? null);
     if (reload) setComments(results);
     else setComments([...comments, ...results]);
     setIsLoading(false);
