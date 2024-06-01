@@ -5,9 +5,14 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 interface SpotifyMusicProps {
   track: Track;
   containerStyle?: React.CSSProperties;
+  onClick?: () => void;
 }
 
-function SpotifyMusic({ track, containerStyle }: SpotifyMusicProps) {
+function SpotifyMusic({ track, containerStyle, onClick }: SpotifyMusicProps) {
+  const handleClick = () => {
+    onClick?.();
+  };
+
   return (
     <Layout.FlexRow
       outline="SPOTIFY_GREEN"
@@ -20,6 +25,7 @@ function SpotifyMusic({ track, containerStyle }: SpotifyMusicProps) {
       style={{
         ...containerStyle,
       }}
+      onClick={handleClick}
     >
       <img
         src={track.album.images[0].url}
