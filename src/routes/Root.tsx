@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import NotiPermissionBanner from '@components/_common/noti-permission-banner/NotiPermissionBanner';
+import NotiPermissionBanner, {
+  HEIGHT,
+} from '@components/_common/noti-permission-banner/NotiPermissionBanner';
 import Header from '@components/header/Header';
 import Tab from '@components/tab/Tab';
 import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
@@ -15,6 +17,8 @@ function Root() {
   const { isMobile } = getMobileDeviceInfo();
   const { initializeFcm } = useFcm();
   const postMessage = usePostAppMessage();
+
+  const showNotificationPermission = !isMobile;
 
   useAsyncEffect(async () => {
     if (isMobile) return;
@@ -31,13 +35,17 @@ function Root() {
 
   return (
     <Layout.FlexRow justifyContent="center" bgColor="BLACK" h="100vh" w="100%">
-      <RootContainer w="100%" h="100vh" bgColor="WHITE" id="root-container">
+      <RootContainer w="100%" h="100vh" bgColor="WHITE" id="root-container" outline="ERROR">
         <Header />
-        <MainWrapper alignItems="center" pt={TOP_NAVIGATION_HEIGHT} pb={BOTTOM_TABBAR_HEIGHT}>
+        <MainWrapper
+          alignItems="center"
+          pt={TOP_NAVIGATION_HEIGHT}
+          pb={BOTTOM_TABBAR_HEIGHT + (showNotificationPermission ? HEIGHT : 0)}
+        >
           <Outlet />
+          {/* 데스크톱 웹만 노출 */}
+          {showNotificationPermission && <NotiPermissionBanner />}
         </MainWrapper>
-        {/* 데스크톱 웹만 노출 */}
-        {!isMobile && <NotiPermissionBanner />}
         <Tab />
       </RootContainer>
     </Layout.FlexRow>
