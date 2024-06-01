@@ -22,14 +22,12 @@ function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: Note
   const navigate = useNavigate();
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
-  const [reload, setReload] = useState<boolean>(false);
 
   const { username, profile_image } = author_detail;
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
 
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
-    //
   };
 
   const handleClickNote = () => {
@@ -104,8 +102,6 @@ function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: Note
           post={note}
           visible={bottomSheet}
           closeBottomSheet={() => setBottomSheet(false)}
-          reload={reload}
-          setReload={() => setReload(true)}
         />
       )}
     </>

@@ -58,12 +58,7 @@ export function NoteDetail() {
             />
           </Layout.FlexCol>
           <Layout.FlexCol w="100%" flex={1}>
-            <CommentList
-              postType="Note"
-              post={noteDetail.data}
-              reload={reload}
-              setReload={() => setReload(true)}
-            />
+            <CommentList postType="Note" post={noteDetail.data} setReload={setReload} />
           </Layout.FlexCol>
         </>
       )}

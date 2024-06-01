@@ -4,11 +4,12 @@ import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import Divider from '@components/_common/divider/Divider';
 import Icon from '@components/_common/icon/Icon';
+import Loader from '@components/_common/loader/Loader';
 import CommentInputBox from '@components/comment-list/comment-input-box/CommentInputBox';
 import CommentItem from '@components/comment-list/comment-item/CommentItem';
 import { getCommentList } from '@components/comment-list/CommentList.helper';
 import { Layout, Typo } from '@design-system';
-import useAsyncEffect from '@hooks/useAsyncEffect';
+import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Comment, Note, Response } from '@models/post';
 import {
   CommentBottomContentWrapper,
@@ -21,37 +22,32 @@ interface Props {
   post: Response | Note;
   visible: boolean;
   closeBottomSheet: () => void;
-  reload: boolean;
-  setReload: () => void;
 }
 
-function CommentBottomSheet({
-  postType,
-  post,
-  visible,
-  closeBottomSheet,
-  reload,
-  setReload,
-}: Props) {
+function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
   const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
   const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
 
-  const fetchComments = async (page: string | null) => {
-    const { results } = await getCommentList(postType, post.id, page);
-    if (!results) return;
-    if (reload) setComments(results);
-    else setComments([...comments, ...results]);
-  };
+  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
+    if (nextPage === null) return setIsLoading(false);
+    await fetchComments(nextPage ?? null, false);
+  });
 
-  useAsyncEffect(async () => {
-    await fetchComments(null);
-  }, []);
+  const fetchComments = async (page: string | null, update: boolean) => {
+    const { results, next } = await getCommentList(postType, post.id, page);
+    if (!results) return;
+    setNextPage(next);
+    if (update) setComments(results);
+    else setComments([...comments, ...results]);
+    setIsLoading(false);
+  };
 
   const handleClick = () => {
     closeBottomSheet();
@@ -112,10 +108,15 @@ function CommentBottomSheet({
           resetCommentType={() => {
             setCommentToType(postType);
           }}
-          reloadComments={() => fetchComments(null)}
-          setReload={setReload}
+          reloadComments={() => fetchComments(null, true)}
         />
       </CommentBottomFooterWrapper>
+      <div ref={targetRef} />
+      {isLoading && (
+        <Layout.FlexRow w="100%" h={40}>
+          <Loader />
+        </Layout.FlexRow>
+      )}
     </BottomModal>,
     document.getElementById('root-container') || document.body,
   );

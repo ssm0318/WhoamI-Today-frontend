@@ -18,7 +18,7 @@ interface CommentInputBoxProps {
   postType: 'Response' | 'Comment' | 'Note';
   post: Response | Comment | Note;
   reloadComments?: () => void;
-  setReload: () => void;
+  setReload?: (reload: boolean) => void;
 }
 
 function CommentInputBox({
@@ -62,7 +62,7 @@ function CommentInputBox({
       resetCommentTo();
       resetCommentType();
       resetReplyTo?.();
-      setReload();
+      setReload?.(false);
     });
   };
 
@@ -75,6 +75,7 @@ function CommentInputBox({
     if (e.shiftKey) return;
 
     e.preventDefault();
+    setReload?.(true);
     handleSubmitComment();
   };
 
