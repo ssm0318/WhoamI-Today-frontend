@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import ToastBar from '@components/_common/toast-bar/ToastBar';
-import { ChatRoomList } from '@components/chats/chat-room-list/ChatRoomList';
 import ErrorPage from '@components/error-page/ErrorPage';
 import { Colors, Typo } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
 import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
+import { MainWrapper } from '@styles/wrappers';
 import { checkIfSignIn } from '@utils/apis/user';
 import { ChatRoom } from 'src/routes/chat-room/ChatRoom';
 import './i18n';
@@ -62,12 +62,17 @@ const router = createBrowserRouter([
         path: 'chats',
         element: <Chats />,
         children: [
-          { path: '', element: <ChatRoomList /> },
+          { path: 'edit', element: <EditChats /> },
           { path: ':roomId', element: <ChatRoom /> },
         ],
       },
       {
         path: 'my',
+        element: (
+          <MainWrapper>
+            <Outlet />
+          </MainWrapper>
+        ),
         children: [
           { path: '', element: <My /> },
           { path: 'responses', element: <AllResponses /> },
@@ -75,6 +80,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'friends',
+        element: (
+          <MainWrapper>
+            <Outlet />
+          </MainWrapper>
+        ),
         children: [
           { path: '', element: <Friends /> },
           { path: 'explore', element: <ExploreFriends /> },
@@ -115,7 +125,6 @@ const router = createBrowserRouter([
       { path: 'prompts', element: <ReceivedPrompts /> },
     ],
   },
-  { path: 'chats/edit', element: <EditChats /> },
   {
     path: 'users/:username',
     loader: checkIfSignIn,
