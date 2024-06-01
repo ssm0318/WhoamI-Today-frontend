@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import NotiPermissionBanner, {
   NOTI_PERMISSION_BANNER_HEIGHT,
@@ -18,8 +18,6 @@ function Root() {
   const { initializeFcm } = useFcm();
   const postMessage = usePostAppMessage();
 
-  const showNotificationPermission = !isMobile;
-
   useAsyncEffect(async () => {
     if (isMobile) return;
     // 데스크톱인 경우에만 initializeFcm
@@ -34,20 +32,10 @@ function Root() {
   }, [postMessage]);
 
   return (
-    <Layout.FlexRow justifyContent="center" bgColor="BLACK" h="100vh" w="100%">
-      <RootContainer w="100%" h="100vh" bgColor="WHITE" id="root-container" outline="ERROR">
+    <Layout.FlexRow justifyContent="center" bgColor="BLACK" w="100%">
+      <RootContainer w="100%" bgColor="WHITE" id="root-container">
         <Header />
-        <MainWrapper
-          alignItems="center"
-          pt={TOP_NAVIGATION_HEIGHT}
-          pb={
-            BOTTOM_TABBAR_HEIGHT + (showNotificationPermission ? NOTI_PERMISSION_BANNER_HEIGHT : 0)
-          }
-        >
-          <Outlet />
-          {/* 데스크톱 웹만 노출 */}
-          {showNotificationPermission && <NotiPermissionBanner />}
-        </MainWrapper>
+        <Outlet />
         <Tab />
       </RootContainer>
     </Layout.FlexRow>
@@ -55,3 +43,25 @@ function Root() {
 }
 
 export default Root;
+
+interface MainScrollContainerProps {
+  children?: ReactNode;
+}
+
+export function MainScrollContainer({ children }: MainScrollContainerProps) {
+  const { isMobile } = getMobileDeviceInfo();
+  const showNotificationPermission = !isMobile;
+
+  return (
+    <MainWrapper
+      alignItems="center"
+      pt={TOP_NAVIGATION_HEIGHT}
+      pb={BOTTOM_TABBAR_HEIGHT + (showNotificationPermission ? NOTI_PERMISSION_BANNER_HEIGHT : 0)}
+    >
+      {children}
+      <Outlet />
+      {/* 데스크톱 웹만 노출 */}
+      {showNotificationPermission && <NotiPermissionBanner />}
+    </MainWrapper>
+  );
+}

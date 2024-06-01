@@ -6,16 +6,19 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { MessageInputBox } from '@components/chat-room/message-input-box/MessageInputBox';
 import { MessageList } from '@components/chat-room/message-list/MessageList';
 import { MessageNotiSettingDialog } from '@components/chat-room/message-noti-setting-dialog/MessageNotiSettingDialog';
-import { TOP_NAVIGATION_HEIGHT, Z_INDEX } from '@constants/layout';
+import { Z_INDEX } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { ChatRoom as ChatRoomType, ResponseMessageAction } from '@models/api/chat';
-import { MainWrapper } from '@styles/wrappers';
 import { getChatMessages, getChatRoomInfo } from '@utils/apis/chat';
 import { useChatRoomAutoScroll } from 'src/routes/chat-room/_hooks/useChatRoomAutoScroll';
 import { useChatRoomSocketProvider } from 'src/routes/chat-room/_hooks/useChatRoomSocketProvider';
-import { ChatRoomContainer, ChatRoomHeaderWrapper } from './ChatRoom.styled';
+import {
+  ChatRoomContainer,
+  ChatRoomHeaderWrapper,
+  MessageListScrollContainer,
+} from './ChatRoom.styled';
 
 export function ChatRoom() {
   const { roomId } = useParams();
@@ -128,7 +131,7 @@ export function ChatRoom() {
         </Layout.FlexRow>
       </ChatRoomHeaderWrapper>
       <Layout.FlexCol w="100%" h="100%">
-        <MainWrapper alignItems="center" pt={TOP_NAVIGATION_HEIGHT} ref={scrollRef}>
+        <MessageListScrollContainer ref={scrollRef}>
           <div ref={targetRef} />
           {isLoading && <Loader />}
           {chatRoom ? (
@@ -136,7 +139,7 @@ export function ChatRoom() {
           ) : (
             <Loader />
           )}
-        </MainWrapper>
+        </MessageListScrollContainer>
         <Layout.LayoutBase w="100%" ph={17} pv={13}>
           <MessageInputBox participants={chatRoom?.participants} sendSocketData={sendSocketData} />
         </Layout.LayoutBase>

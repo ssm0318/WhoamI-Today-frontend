@@ -1,6 +1,13 @@
 import styled from 'styled-components';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
+import { MainWrapper } from '@styles/wrappers';
+
+export const EditChatsScrollContainer = styled(MainWrapper)`
+  align-items: center;
+  padding-top: 54px;
+  margin-bottom: 85px;
+`;
 
 export const StyledBottomArea = styled(Layout.Fixed)`
   box-shadow: 0px -4px 12px 0px rgba(0, 0, 0, 0.16);

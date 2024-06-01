@@ -27,20 +27,22 @@ export function MessageList({ room, messages, sendSocketData }: Props) {
   };
 
   return (
-    <Layout.FlexCol w="100%" gap={48} pv={15}>
-      {messages.map((msg, index) => {
-        const key = `${msg.timestamp}_${index}`;
-        return (
-          <MessageItem
-            key={key}
-            room={room}
-            message={msg}
-            like={likeMsg}
-            removeLike={removeLikeMsg}
-          />
-        );
-      })}
+    <>
+      <Layout.FlexCol w="100%" gap={48} pv={15}>
+        {messages.map((msg, index) => {
+          const key = `${msg.timestamp}_${index}`;
+          return (
+            <MessageItem
+              key={key}
+              room={room}
+              message={msg}
+              like={likeMsg}
+              removeLike={removeLikeMsg}
+            />
+          );
+        })}
+      </Layout.FlexCol>
       <div ref={bottomRef} />
-    </Layout.FlexCol>
+    </>
   );
 }

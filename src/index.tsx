@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import ToastBar from '@components/_common/toast-bar/ToastBar';
-import { ChatRoomList } from '@components/chats/chat-room-list/ChatRoomList';
 import ErrorPage from '@components/error-page/ErrorPage';
 import { Colors, Typo } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
@@ -34,7 +33,7 @@ import ReceivedPrompts from './routes/ReceivedPrompts';
 import AllResponses from './routes/responses/AllResponses';
 import NewResponse from './routes/responses/NewResponse';
 import ResponseDetail from './routes/responses/ResponseDetail';
-import Root from './routes/Root';
+import Root, { MainScrollContainer } from './routes/Root';
 import ConfirmPassword from './routes/settings/ConfirmPassword';
 import DeleteAccount from './routes/settings/DeleteAccount';
 import EditProfile from './routes/settings/EditProfile';
@@ -62,12 +61,13 @@ const router = createBrowserRouter([
         path: 'chats',
         element: <Chats />,
         children: [
-          { path: '', element: <ChatRoomList /> },
+          { path: 'edit', element: <EditChats /> },
           { path: ':roomId', element: <ChatRoom /> },
         ],
       },
       {
         path: 'my',
+        element: <MainScrollContainer />,
         children: [
           { path: '', element: <My /> },
           { path: 'responses', element: <AllResponses /> },
@@ -75,6 +75,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'friends',
+        element: <MainScrollContainer />,
         children: [
           { path: '', element: <Friends /> },
           { path: 'explore', element: <ExploreFriends /> },
@@ -115,7 +116,6 @@ const router = createBrowserRouter([
       { path: 'prompts', element: <ReceivedPrompts /> },
     ],
   },
-  { path: 'chats/edit', element: <EditChats /> },
   {
     path: 'users/:username',
     loader: checkIfSignIn,

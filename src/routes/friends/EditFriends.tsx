@@ -76,7 +76,6 @@ function EditFriends() {
       <SubHeader title={t('friends.edit_friends.title')} />
       <Layout.FlexCol
         w="100%"
-        h="100vh"
         justifyContent="flex-start"
         bgColor="WHITE"
         pv={12}
