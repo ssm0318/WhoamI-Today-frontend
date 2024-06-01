@@ -10,7 +10,6 @@ function Chats() {
   return (
     <Layout.FlexCol
       w="100%"
-      h="100vh"
       justifyContent="flex-start"
       bgColor="WHITE"
       mb={BOTTOM_TABBAR_HEIGHT + 10}
