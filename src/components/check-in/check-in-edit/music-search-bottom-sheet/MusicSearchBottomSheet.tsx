@@ -73,7 +73,7 @@ function MusicSearchBottomSheet({
             />
           </Layout.FlexRow>
           {/* Song Results */}
-          <Layout.FlexCol mt={12} gap={12} w="100%">
+          <Layout.FlexCol mt={12} gap={12} mb={CONFIRM_BUTTON_CONTAINER_HEIGHT + 12} w="100%">
             {!!trackList.length && (
               <Typo type="title-medium" color="MEDIUM_GRAY">
                 {t('all_results')}
@@ -91,7 +91,13 @@ function MusicSearchBottomSheet({
           </Layout.FlexCol>
         </Layout.FlexCol>
         <Layout.Fixed b={0} w="100%" bgColor="WHITE">
-          <S.ConfirmButtonContainer w="100%" pt={16} pb={20} ph={12}>
+          <S.ConfirmButtonContainer
+            w="100%"
+            pt={16}
+            pb={20}
+            ph={12}
+            h={CONFIRM_BUTTON_CONTAINER_HEIGHT}
+          >
             <BottomModalActionButton
               status={selected ? 'normal' : 'disabled'}
               text={t('confirm')}
@@ -103,5 +109,7 @@ function MusicSearchBottomSheet({
     </BottomModal>
   );
 }
+
+const CONFIRM_BUTTON_CONTAINER_HEIGHT = 80;
 
 export default MusicSearchBottomSheet;
