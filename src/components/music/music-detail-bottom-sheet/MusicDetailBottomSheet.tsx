@@ -18,7 +18,7 @@ interface Props {
 }
 
 function MusicDetailBottomSheet({ track, sharer, visible, closeBottomSheet }: Props) {
-  const [t] = useTranslation('translation', { keyPrefix: 'music-detail' });
+  const [t] = useTranslation('translation', { keyPrefix: 'music_detail' });
   const postMessage = usePostAppMessage();
 
   const handleClickGoToSpotify = () => {
@@ -46,7 +46,7 @@ function MusicDetailBottomSheet({ track, sharer, visible, closeBottomSheet }: Pr
                 {sharer.username}
               </Typo>
               <Typo type="label-large" color="DARK_GRAY">
-                shared a song
+                {t('shared_a_song')}
               </Typo>
             </Layout.FlexRow>
             <Divider width={1} />
@@ -75,7 +75,7 @@ function MusicDetailBottomSheet({ track, sharer, visible, closeBottomSheet }: Pr
           <S.GoToSpotifyButtonContainer w="100%" pt={16} pb={20} ph={12}>
             <BottomModalActionButton
               status="normal"
-              text={t('Listen on Spotify')}
+              text={t('listen_on_spotify')}
               onClick={handleClickGoToSpotify}
             />
           </S.GoToSpotifyButtonContainer>

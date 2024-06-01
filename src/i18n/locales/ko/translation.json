@@ -470,5 +470,9 @@
   },
   "my": {
     "whats_on_your_mind": "{{username}}님의 지금 드는 생각은?"
+  },
+  "music_detail": {
+    "shared_a_song": "님이 노래를 공유했습니다",
+    "listen_on_spotify": "Spotify에서 듣기"
   }
 }
