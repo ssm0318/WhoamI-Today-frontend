@@ -1,5 +1,5 @@
 import { PaginationResponse } from '@models/api/common';
-import { Comment, Like, Note } from '@models/post';
+import { Comment, Like, NewNoteForm, Note } from '@models/post';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 import { objectFormDataSerializer } from '@utils/validateHelpers';
 
@@ -22,14 +22,14 @@ export const getNoteDetail = async (noteId: number) => {
   return data;
 };
 
-export const postNote = async (noteData: Partial<Note>) => {
+export const postNote = async (noteData: NewNoteForm) => {
   const formData = new FormData();
   if (noteData.content) {
     formData.append('content', noteData.content);
   }
   if (noteData.images) {
-    noteData.images.forEach((element) => {
-      formData.append('images', element);
+    noteData.images.forEach((img, index) => {
+      formData.append('images', img.file, `${index}`);
     });
   }
 

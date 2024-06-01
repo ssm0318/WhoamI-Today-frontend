@@ -5,14 +5,14 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import NoteImageEdit from '@components/note/note-image-edit/NoteImageEdit';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, SvgIcon, Typo } from '@design-system';
-import { Note } from '@models/post';
+import { NewNoteForm } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { NoteInput } from './NoteInputBox.styled';
 
 interface NoteInformationProps {
-  noteInfo: Partial<Note>;
-  setNoteInfo: React.Dispatch<React.SetStateAction<Partial<Note>>>;
+  noteInfo: NewNoteForm;
+  setNoteInfo: React.Dispatch<React.SetStateAction<NewNoteForm>>;
 }
 
 function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
@@ -52,7 +52,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const onCompleteImageCrop = (croppedImage: CroppedImg) => {
     setNoteInfo((prevNoteInfo) => ({
       ...prevNoteInfo,
-      images: [...(prevNoteInfo?.images || []), croppedImage.url],
+      images: [...(prevNoteInfo?.images || []), croppedImage],
     }));
   };
 
@@ -108,7 +108,11 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
         />
       ) : noteInfo?.images?.length ? (
         <Layout.FlexCol alignItems="center" w="100%">
-          <ImageSlider images={noteInfo.images} rounded={17} onDeleteImage={handleDeleteImage} />
+          <ImageSlider
+            images={noteInfo.images.map((img) => img.url)}
+            rounded={17}
+            onDeleteImage={handleDeleteImage}
+          />
         </Layout.FlexCol>
       ) : null}
     </>

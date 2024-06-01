@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Layout, Typo } from '@design-system';
-import { Note } from '@models/post';
+import { NewNoteForm } from '@models/post';
 import { postNote } from '@utils/apis/note';
 import { NewNoteHeaderWrapper } from './NewNoteHeader.styled';
 
 interface NewNoteHeaderProps {
   title: string;
-  noteInfo: Partial<Note>;
+  noteInfo: NewNoteForm;
 }
 
 function NewNoteHeader({ title, noteInfo }: NewNoteHeaderProps) {
