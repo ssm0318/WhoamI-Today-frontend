@@ -35,7 +35,7 @@ class SpotifyManager {
     try {
       const result = (await this.spotifyApi.makeRequest(
         'GET',
-        `search?q=${query}&type=track&limit=${limit}&ffset=${offset}`,
+        `search?q=${query}&type=track&limit=${limit}&offset=${offset}`,
       )) as { tracks: { items: Track[] } };
       return result.tracks.items;
     } catch (error) {
