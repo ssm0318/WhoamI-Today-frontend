@@ -227,9 +227,7 @@
     "error_title": "Response"
   },
   "likes": {
-    "title": "Likes",
-    "search": "Search Friends",
-    "cancel": "Cancel"
+    "title": "Likes"
   },
   "post_more_modal": {
     "menu": {

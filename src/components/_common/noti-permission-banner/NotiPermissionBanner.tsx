@@ -18,7 +18,7 @@ function NotiPermissionBanner() {
     <S.Container
       justifyContent="center"
       bgColor="GRAY_10"
-      h="50px"
+      h={NOTI_PERMISSION_BANNER_HEIGHT}
       w="100%"
       onClick={handleRequest}
     >
@@ -30,5 +30,7 @@ function NotiPermissionBanner() {
     </S.Container>
   );
 }
+
+export const NOTI_PERMISSION_BANNER_HEIGHT = 50;
 
 export default NotiPermissionBanner;

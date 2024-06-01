@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { BOTTOM_TABBAR_HEIGHT, MAX_WINDOW_WIDTH, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
+import { MAX_WINDOW_WIDTH } from '@constants/layout';
 import { Layout } from '@design-system';
 
 export const RootContainer = styled(Layout.FlexCol)`
@@ -16,7 +16,4 @@ export const MainWrapper = styled(Layout.FlexCol)`
   height: 100%;
   width: 100%;
   overflow-y: auto;
-  align-items: center;
-  padding-top: ${TOP_NAVIGATION_HEIGHT}px;
-  padding-bottom: ${BOTTOM_TABBAR_HEIGHT}px;
 `;

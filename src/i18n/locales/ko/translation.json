@@ -224,9 +224,7 @@
     "error_title": "답변"
   },
   "likes": {
-    "title": "좋아요",
-    "search": "친구 검색",
-    "cancel": "취소"
+    "title": "좋아요"
   },
   "post_more_modal": {
     "menu": {

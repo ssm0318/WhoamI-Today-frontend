@@ -4,7 +4,8 @@ import { Layout } from '@design-system';
 import { MainWrapper } from '@styles/wrappers';
 
 export const EditChatsScrollContainer = styled(MainWrapper)`
-  margin-top: 10px;
+  align-items: center;
+  padding-top: 54px;
   margin-bottom: 85px;
 `;
 

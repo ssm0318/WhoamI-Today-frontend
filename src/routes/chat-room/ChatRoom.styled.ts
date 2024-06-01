@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { SubHeaderWrapper } from '@components/sub-header/SubHeader.styled';
-import { MAX_WINDOW_WIDTH } from '@constants/layout';
+import { MAX_WINDOW_WIDTH, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import { MainWrapper } from '@styles/wrappers';
 
@@ -13,5 +13,6 @@ export const ChatRoomHeaderWrapper = styled(SubHeaderWrapper)`
 `;
 
 export const MessageListScrollContainer = styled(MainWrapper)`
-  padding-bottom: 0px;
+  align-items: center;
+  padding-top: ${TOP_NAVIGATION_HEIGHT}px;
 `;

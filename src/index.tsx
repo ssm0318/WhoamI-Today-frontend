@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import ToastBar from '@components/_common/toast-bar/ToastBar';
 import ErrorPage from '@components/error-page/ErrorPage';
@@ -8,7 +8,6 @@ import { Colors, Typo } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
 import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
-import { MainWrapper } from '@styles/wrappers';
 import { checkIfSignIn } from '@utils/apis/user';
 import { ChatRoom } from 'src/routes/chat-room/ChatRoom';
 import './i18n';
@@ -34,7 +33,7 @@ import ReceivedPrompts from './routes/ReceivedPrompts';
 import AllResponses from './routes/responses/AllResponses';
 import NewResponse from './routes/responses/NewResponse';
 import ResponseDetail from './routes/responses/ResponseDetail';
-import Root from './routes/Root';
+import Root, { MainScrollContainer } from './routes/Root';
 import ConfirmPassword from './routes/settings/ConfirmPassword';
 import DeleteAccount from './routes/settings/DeleteAccount';
 import EditProfile from './routes/settings/EditProfile';
@@ -68,11 +67,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'my',
-        element: (
-          <MainWrapper>
-            <Outlet />
-          </MainWrapper>
-        ),
+        element: <MainScrollContainer />,
         children: [
           { path: '', element: <My /> },
           { path: 'responses', element: <AllResponses /> },
@@ -80,11 +75,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'friends',
-        element: (
-          <MainWrapper>
-            <Outlet />
-          </MainWrapper>
-        ),
+        element: <MainScrollContainer />,
         children: [
           { path: '', element: <Friends /> },
           { path: 'explore', element: <ExploreFriends /> },

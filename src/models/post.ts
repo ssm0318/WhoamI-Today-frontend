@@ -1,3 +1,4 @@
+import { CroppedImg } from '@utils/getCroppedImg';
 import { GetMomentResponse } from './api/moment';
 import { User } from './user';
 
@@ -84,6 +85,10 @@ export interface Note extends ContentsCommon {
   current_user_read: boolean;
 }
 
+export interface NewNoteForm {
+  content: string;
+  images?: CroppedImg[];
+}
 // 질문에 대한 답변 리스트
 /** deprecated */
 export interface DayQuestion extends Omit<Question, 'selected_dates' | 'selected'> {
