@@ -16,7 +16,7 @@ export const MainWrapper = styled(Layout.FlexCol)`
   height: 100%;
   width: 100%;
   overflow-y: auto;
-  align-items: 'center';
+  align-items: center;
   padding-top: ${TOP_NAVIGATION_HEIGHT}px;
   padding-bottom: ${BOTTOM_TABBAR_HEIGHT}px;
 `;
