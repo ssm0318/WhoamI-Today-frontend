@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import MainContainer from '@components/_common/main-container/MainContainer';
 import { ChatRoomList } from '@components/chats/chat-room-list/ChatRoomList';
 import SubHeader from '@components/sub-header/SubHeader';
-import { TITLE_HEADER_HEIGHT } from '@constants/layout';
+import { Z_INDEX } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
-import { StyledBottomArea, StyledDeleteButton, StyledMuteButton } from './EditChats.styled';
+import {
+  EditChatsScrollContainer,
+  StyledBottomArea,
+  StyledDeleteButton,
+  StyledMuteButton,
+} from './EditChats.styled';
 
 export function EditChats() {
   const [t] = useTranslation('translation', { keyPrefix: 'chats.edit_room_list' });
@@ -45,7 +49,14 @@ export function EditChats() {
   };
 
   return (
-    <MainContainer>
+    <Layout.Fixed
+      t={0}
+      w="100%"
+      h="100%"
+      z={Z_INDEX.MODAL_CONTAINER}
+      bgColor="WHITE"
+      alignItems="center"
+    >
       <SubHeader
         title={t('header.title')}
         RightComponent={
@@ -56,9 +67,9 @@ export function EditChats() {
           </button>
         }
       />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 8} mb={80} w="100%">
+      <EditChatsScrollContainer>
         <ChatRoomList isEditMode onClickCheckBox={handleClickCheckBox} checkList={checkList} />
-      </Layout.FlexCol>
+      </EditChatsScrollContainer>
       <StyledBottomArea w="100%" b={0} pv={15} ph={8} bgColor="WHITE">
         <Layout.FlexRow w="100%" gap={5}>
           <StyledMuteButton type="button" onClick={handleClickMute} disabled={!hasCheckList}>
@@ -75,6 +86,6 @@ export function EditChats() {
           </StyledDeleteButton>
         </Layout.FlexRow>
       </StyledBottomArea>
-    </MainContainer>
+    </Layout.Fixed>
   );
 }
