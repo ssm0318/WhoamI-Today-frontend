@@ -26,7 +26,7 @@ function MusicDetailBottomSheet({ track, sharer, visible, closeBottomSheet }: Pr
     const uri = track.external_urls.spotify;
     if (window.ReactNativeWebView) {
       postMessage('OPEN_BROWSER', {
-        uri,
+        uri: `spotify://spotify:track:${track.id}`,
       });
     } else {
       window.open(uri, '_blank');
