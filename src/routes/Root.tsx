@@ -30,8 +30,8 @@ function Root() {
   }, [postMessage]);
 
   return (
-    <Layout.FlexRow justifyContent="center" bgColor="BLACK" h="100vh" w="100%">
-      <RootContainer w="100%" h="100vh" bgColor="WHITE" id="root-container">
+    <Layout.FlexRow justifyContent="center" bgColor="BLACK" w="100%">
+      <RootContainer w="100%" bgColor="WHITE" id="root-container">
         <Header />
         <MainWrapper alignItems="center" pt={TOP_NAVIGATION_HEIGHT} pb={BOTTOM_TABBAR_HEIGHT}>
           <Outlet />
