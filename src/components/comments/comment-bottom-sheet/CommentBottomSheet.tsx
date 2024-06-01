@@ -21,9 +21,18 @@ interface Props {
   post: Response | Note;
   visible: boolean;
   closeBottomSheet: () => void;
+  reload: boolean;
+  setReload: () => void;
 }
 
-function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props) {
+function CommentBottomSheet({
+  postType,
+  post,
+  visible,
+  closeBottomSheet,
+  reload,
+  setReload,
+}: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
 
   const [comments, setComments] = useState<Comment[]>([]);
@@ -33,7 +42,7 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
   const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
   const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
 
-  const fetchComments = async (page: string | null, reload: boolean) => {
+  const fetchComments = async (page: string | null) => {
     const { results } = await getCommentList(postType, post.id, page);
     if (!results) return;
     if (reload) setComments(results);
@@ -41,7 +50,7 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
   };
 
   useAsyncEffect(async () => {
-    await fetchComments(null, false);
+    await fetchComments(null);
   }, []);
 
   const handleClick = () => {
@@ -103,7 +112,8 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
           resetCommentType={() => {
             setCommentToType(postType);
           }}
-          reloadComments={() => fetchComments(null, true)}
+          reloadComments={() => fetchComments(null)}
+          setReload={setReload}
         />
       </CommentBottomFooterWrapper>
     </BottomModal>,

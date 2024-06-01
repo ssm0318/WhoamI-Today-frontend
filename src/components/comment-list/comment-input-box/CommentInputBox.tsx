@@ -18,6 +18,7 @@ interface CommentInputBoxProps {
   postType: 'Response' | 'Comment' | 'Note';
   post: Response | Comment | Note;
   reloadComments?: () => void;
+  setReload: () => void;
 }
 
 function CommentInputBox({
@@ -31,6 +32,7 @@ function CommentInputBox({
   postType,
   post,
   reloadComments,
+  setReload,
 }: CommentInputBoxProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const myProfile = useBoundStore((state) => state.myProfile);
@@ -60,6 +62,7 @@ function CommentInputBox({
       resetCommentTo();
       resetCommentType();
       resetReplyTo?.();
+      setReload();
     });
   };
 

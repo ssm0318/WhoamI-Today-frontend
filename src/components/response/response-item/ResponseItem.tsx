@@ -25,6 +25,7 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: Re
   const { username, profile_image } = author_detail;
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
+  const [reload, setReload] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
@@ -117,6 +118,8 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: Re
           post={response}
           visible={bottomSheet}
           closeBottomSheet={() => setBottomSheet(false)}
+          reload={reload}
+          setReload={() => setReload(true)}
         />
       )}
     </>

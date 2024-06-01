@@ -13,9 +13,11 @@ import { StyledCommentListFooter } from './CommentList.styled';
 interface CommentListProps {
   postType: 'Response' | 'Note';
   post: Response | Note;
+  reload: boolean;
+  setReload: () => void;
 }
 
-function CommentList({ postType, post }: CommentListProps) {
+function CommentList({ postType, post, reload, setReload }: CommentListProps) {
   const footerRef = useRef<HTMLDivElement>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
@@ -27,10 +29,10 @@ function CommentList({ postType, post }: CommentListProps) {
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextPage === null) return setIsLoading(false);
-    await fetchComments(nextPage ?? null, false);
+    await fetchComments(nextPage ?? null);
   });
 
-  const fetchComments = async (page: string | null, reload: boolean) => {
+  const fetchComments = async (page: string | null) => {
     const { results, next } = await getCommentList(postType, post.id, page);
     if (!results) return;
     setNextPage(next);
@@ -48,7 +50,7 @@ function CommentList({ postType, post }: CommentListProps) {
   const confirmDeleteAlert = () => {
     if (!deleteTarget) return;
     deleteComment(deleteTarget.id)
-      .then(() => fetchComments(null, false))
+      .then(() => fetchComments(null))
       .catch(() => console.log('TODO: 삭제 실패 알림'))
       .finally(() => closeDeleteAlert());
     closeDeleteAlert();
@@ -90,7 +92,8 @@ function CommentList({ postType, post }: CommentListProps) {
             resetCommentType={() => {
               setCommentToType(postType);
             }}
-            reloadComments={() => fetchComments(nextPage ?? null, true)}
+            reloadComments={() => fetchComments(nextPage ?? null)}
+            setReload={setReload}
           />
         </Layout.FlexRow>
       </StyledCommentListFooter>
