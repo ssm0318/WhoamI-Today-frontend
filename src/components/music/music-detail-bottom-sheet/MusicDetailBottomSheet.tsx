@@ -6,6 +6,7 @@ import Divider from '@components/_common/divider/Divider';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Layout, Typo } from '@design-system';
+import { usePostAppMessage } from '@hooks/useAppMessage';
 import { User } from '@models/user';
 import * as S from './MusicDetailBottomSheet.styled';
 
@@ -18,13 +19,19 @@ interface Props {
 
 function MusicDetailBottomSheet({ track, sharer, visible, closeBottomSheet }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'music-detail' });
-  //   const navigate = useNavigate();
+  const postMessage = usePostAppMessage();
 
   const handleClickGoToSpotify = () => {
-    //
+    if (!track) return;
+    const uri = track.external_urls.spotify;
+    if (window.ReactNativeWebView) {
+      postMessage('OPEN_BROWSER', {
+        uri,
+      });
+    } else {
+      window.open(uri, '_blank');
+    }
   };
-
-  console.log(track);
 
   return (
     <BottomModal visible={visible} onClose={closeBottomSheet} maxHeight={650}>
