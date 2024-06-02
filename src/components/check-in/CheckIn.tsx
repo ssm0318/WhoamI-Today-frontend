@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
+import MusicDetailBottomSheet from '@components/music/music-detail-bottom-sheet/MusicDetailBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
@@ -40,6 +41,7 @@ function CheckIn({ user }: CheckInProps) {
 
   const [trackData, setTrackData] = useState<Track | null>(null);
   const [currentDate] = useState(() => new Date());
+  const [showMusicDetail, setShowMusicDetail] = useState(false);
   const navigate = useNavigate();
 
   const handleClickEditCheckIn = () => {
@@ -48,6 +50,10 @@ function CheckIn({ user }: CheckInProps) {
 
   const handleClickViewMore = () => {
     // TODO 친구 페이지에서 check-in 더보기
+  };
+
+  const handelClickMusic = () => {
+    setShowMusicDetail(true);
   };
 
   useEffect(() => {
@@ -72,7 +78,7 @@ function CheckIn({ user }: CheckInProps) {
               {/* availability */}
               {availability && <AvailabilityChip availability={availability} />}
               {/* spotify */}
-              {trackData && <SpotifyMusic track={trackData} />}
+              {trackData && <SpotifyMusic track={trackData} onClick={handelClickMusic} />}
             </Layout.FlexRow>
             {/* more */}
             {isMyPage ? (
@@ -130,6 +136,14 @@ function CheckIn({ user }: CheckInProps) {
       ) : (
         <AddNewCheckIn />
       )}
+      <MusicDetailBottomSheet
+        visible={showMusicDetail}
+        closeBottomSheet={() => {
+          setShowMusicDetail(false);
+        }}
+        sharer={user}
+        track={trackData}
+      />
     </Layout.FlexCol>
   );
 }

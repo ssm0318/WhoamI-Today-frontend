@@ -476,5 +476,9 @@
   }, 
   "my": {
     "whats_on_your_mind": "What's on your mind, {{username}}?"
+  },
+  "music_detail": {
+    "shared_a_song": "shared a song",
+    "listen_on_spotify": "Listen on Spotify"
   }
 }
