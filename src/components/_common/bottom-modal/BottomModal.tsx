@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { MouseEvent, useEffect, useRef, useState } from 'react';
-import { DEFAULT_MARGIN } from '@constants/layout';
+import { DEFAULT_MARGIN, SCREEN_HEIGHT } from '@constants/layout';
 import { ColorKeys } from '@design-system';
 import { usePreventScroll } from '@hooks/usePreventScroll';
 import * as S from './BottomModal.styled';
@@ -22,8 +22,8 @@ function BottomModal({
   children,
   bgColor = 'rgba(0, 0, 0, 0.7)',
   containerBgColor = 'WHITE',
-  h,
-  maxHeight = 650,
+  h = SCREEN_HEIGHT - 50,
+  maxHeight = 750,
   TopComponent,
 }: BottomModalProps) {
   const bodyRef = useRef<HTMLDivElement>(null);

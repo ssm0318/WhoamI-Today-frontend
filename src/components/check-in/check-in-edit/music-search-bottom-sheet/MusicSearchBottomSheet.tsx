@@ -5,7 +5,6 @@ import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
 import Icon from '@components/_common/icon/Icon';
 import SearchInput from '@components/_common/search-input/SearchInput';
-import { SCREEN_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
@@ -57,7 +56,7 @@ function MusicSearchBottomSheet({
 
   if (!trackList) return null;
   return (
-    <BottomModal visible={visible} onClose={closeBottomSheet} h={SCREEN_HEIGHT - 30}>
+    <BottomModal visible={visible} onClose={closeBottomSheet}>
       <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
         <Typo type="title-large">{t('title')}</Typo>
