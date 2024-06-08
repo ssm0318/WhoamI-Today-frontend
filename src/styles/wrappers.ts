@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { MAX_WINDOW_WIDTH } from '@constants/layout';
+import { MAX_WINDOW_WIDTH, Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
 
 export const RootContainer = styled(Layout.FlexCol)`
@@ -16,4 +16,14 @@ export const MainWrapper = styled(Layout.FlexCol)`
   height: 100%;
   width: 100%;
   overflow-y: auto;
+`;
+
+export const ModalContainer = styled(Layout.Fixed)`
+  width: 100%;
+  max-width: ${MAX_WINDOW_WIDTH}px;
+  height: 100%;
+  top: 0;
+  z-index: ${Z_INDEX.MODAL_CONTAINER};
+  background-color: ${({ theme }) => theme.WHITE};
+  align-items: center;
 `;
