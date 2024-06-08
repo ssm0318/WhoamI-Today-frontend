@@ -22,7 +22,7 @@ export type Padding = {
 };
 
 export type Border = {
-  rounded?: number;
+  rounded?: number | string;
   outline?: ColorKeys;
 };
 

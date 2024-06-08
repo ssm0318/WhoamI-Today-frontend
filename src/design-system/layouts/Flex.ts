@@ -3,7 +3,7 @@ import { BgColor, Border, BoxStyle, Flex } from './layout.types';
 import { getStyle, toMarginPaddingString } from './layout.utils';
 
 /**
- * @prop {number} `rounded` border radius
+ * @prop {number | string} `rounded` border radius
  * @prop {number} `m`, `p` margin, padding
  * @prop {number} `mv`, `pv` vertical
  * @prop {number} `mh`, `ph` horizontal

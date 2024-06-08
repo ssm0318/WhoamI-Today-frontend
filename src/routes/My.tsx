@@ -37,7 +37,7 @@ function My() {
         <ResponseSection />
       </Layout.FlexCol>
       <Divider width={8} bgColor="LIGHT" />
-      <Layout.FlexRow ph={15} pv={10} bgColor="WHITE" w="100%">
+      <Layout.FlexRow ph={15} pv={10} bgColor="WHITE" w="100%" rounded="8px 8px 0px 0px">
         <Layout.FlexRow
           rounded={30}
           alignItems="center"
@@ -51,11 +51,10 @@ function My() {
           <Typo type="body-medium" color="DARK_GRAY">
             {t('whats_on_your_mind', { username: myProfile?.username })}
           </Typo>
-          <Icon name="chat_media_image" size={24} />
+          <Icon name="chat_media_image" size={24} fill="DARK_GRAY" />
         </Layout.FlexRow>
       </Layout.FlexRow>
-      <Divider width={8} bgColor="LIGHT" />
-      <Layout.FlexCol pt={12} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
+      <Layout.FlexCol pl={12} pb="default" w="100%" bgColor="WHITE" rounded="0px 0px 8px 8px">
         <NoteSection />
       </Layout.FlexCol>
     </Layout.FlexCol>
