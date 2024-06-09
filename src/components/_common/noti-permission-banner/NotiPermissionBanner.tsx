@@ -1,3 +1,4 @@
+import { Z_INDEX } from '@constants/layout';
 import { Font } from '@design-system';
 import useNotiPermission from '@hooks/useNotiPermission';
 import { requestPermission } from '@utils/firebaseHelpers';
@@ -21,6 +22,7 @@ function NotiPermissionBanner() {
       h={NOTI_PERMISSION_BANNER_HEIGHT}
       w="100%"
       onClick={handleRequest}
+      z={Z_INDEX.NOTI_PERMISSION_BANNER}
     >
       {descriptions.map((desc) => (
         <Font.Body type="14_regular" key={desc}>
