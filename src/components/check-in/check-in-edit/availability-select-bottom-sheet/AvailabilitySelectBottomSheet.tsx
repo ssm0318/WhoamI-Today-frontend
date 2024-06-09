@@ -34,7 +34,7 @@ function AvailabilitySelectBottomSheet({
   };
 
   return (
-    <BottomModal visible={visible} onClose={closeBottomSheet} h={300}>
+    <BottomModal visible={visible} onClose={closeBottomSheet}>
       <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
         <Typo type="title-large">{t('title')}</Typo>

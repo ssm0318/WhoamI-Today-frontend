@@ -15,7 +15,7 @@ function SelectPromptSheet({ visible, closeBottomSheet }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'prompts' });
 
   return createPortal(
-    <BottomModal visible={visible} onClose={closeBottomSheet}>
+    <BottomModal visible={visible} onClose={closeBottomSheet} heightMode="full">
       <Layout.FlexCol alignItems="center" pb={34} w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
         <Typo type="title-large">{t('select_a_prompt')}</Typo>
