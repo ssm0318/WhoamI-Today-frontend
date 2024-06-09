@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import Divider from '@components/_common/divider/Divider';
 import Icon from '@components/_common/icon/Icon';
-import { Font, Layout, Typo } from '@design-system';
+import { Font, Layout, SvgIcon, Typo } from '@design-system';
 import { IconNames } from 'src/design-system/SvgIcon/SvgIcon.types';
 
 interface MenuItem {
@@ -53,7 +53,7 @@ function NewPostBottomSheet({ visible, closeBottomSheet, setSelectPrompt }: Prop
                 style={{ padding: '0 25px' }}
               >
                 <Layout.FlexRow alignItems="center" gap={15}>
-                  <Icon name={menu.icon} size={34} />
+                  <SvgIcon name={menu.icon} size={34} />
                   <Font.Body type="18_regular">{t(menu.key)}</Font.Body>
                 </Layout.FlexRow>
               </button>
