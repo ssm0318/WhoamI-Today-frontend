@@ -34,7 +34,7 @@ function MusicDetailBottomSheet({ track, sharer, visible, closeBottomSheet }: Pr
   };
 
   return (
-    <BottomModal visible={visible} onClose={closeBottomSheet} maxHeight={650}>
+    <BottomModal visible={visible} onClose={closeBottomSheet}>
       <Layout.FlexCol alignItems="center" pb={100} w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
         {/* sharer info */}

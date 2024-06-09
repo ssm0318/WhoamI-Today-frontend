@@ -39,7 +39,7 @@ function NewPostBottomSheet({ visible, closeBottomSheet, setSelectPrompt }: Prop
   };
 
   return (
-    <BottomModal visible={visible} onClose={closeBottomSheet} maxHeight={650}>
+    <BottomModal visible={visible} onClose={closeBottomSheet}>
       <Layout.FlexCol alignItems="center" pb={34} w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
         <Typo type="title-large">Create</Typo>

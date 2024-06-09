@@ -45,7 +45,7 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
   };
 
   return createPortal(
-    <BottomModal visible={visible} onClose={closeBottomSheet} h={650} maxHeight={650}>
+    <BottomModal visible={visible} onClose={closeBottomSheet}>
       <CommentBottomHeaderWrapper>
         <Layout.FlexRow w="100%" justifyContent="center">
           <Icon name="home_indicator" />
