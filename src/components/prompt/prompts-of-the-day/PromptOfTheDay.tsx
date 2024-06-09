@@ -5,7 +5,11 @@ import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { TodayQuestionsSelector } from '@stores/todaysQuestions';
 import { useBoundStore } from '@stores/useBoundStore';
-import { StyledPromptsOfTheDay, StyledRecentPromptsOfTheDay } from './PromptsOfTheDay.styled';
+import {
+  StyledPromptsOfTheDay,
+  StyledPromptsOfTheDayContainer,
+  StyledRecentPromptsOfTheDay,
+} from './PromptsOfTheDay.styled';
 
 function PromptsOfTheDay() {
   const [t] = useTranslation('translation', { keyPrefix: 'prompts' });
@@ -18,15 +22,21 @@ function PromptsOfTheDay() {
   if (!todaysQuestions) return null;
 
   return (
-    <Layout.FlexCol w="100%" p={26}>
-      <Typo type="title-medium">{t('prompts_of_the_day.title')}</Typo>
-      <StyledPromptsOfTheDay gap={16} pl={12} pb={26} pr={50} w="100%" alignItems="center">
-        {todaysQuestions.map((question) => (
-          <PromptCard key={question.id} question={question} />
-        ))}
-      </StyledPromptsOfTheDay>
-      <Typo type="title-medium">{t('recent_prompts')}</Typo>
-      <StyledRecentPromptsOfTheDay gap={16} pl={12} pb={26} pr={50} w="100%" alignItems="center">
+    <Layout.FlexCol w="100%">
+      <Layout.FlexRow ml={16}>
+        <Typo type="title-medium">{t('prompts_of_the_day.title')}</Typo>
+      </Layout.FlexRow>
+      <StyledPromptsOfTheDayContainer w="100%">
+        <StyledPromptsOfTheDay gap={16} mt={10} pl={16} pb={16}>
+          {todaysQuestions.map((question) => (
+            <PromptCard key={question.id} question={question} />
+          ))}
+        </StyledPromptsOfTheDay>
+      </StyledPromptsOfTheDayContainer>
+      <Layout.FlexRow ml={16}>
+        <Typo type="title-medium">{t('recent_prompts')}</Typo>
+      </Layout.FlexRow>
+      <StyledRecentPromptsOfTheDay gap={16} w="100%" alignItems="center">
         {todaysQuestions.slice(0, 5).map((question) => (
           <RecentPromptCard key={question.id} question={question} />
         ))}

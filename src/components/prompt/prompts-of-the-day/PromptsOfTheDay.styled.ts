@@ -1,13 +1,22 @@
 import styled from 'styled-components';
 import { Layout } from '@design-system';
 
+export const StyledPromptsOfTheDayContainer = styled(Layout.FlexRow)`
+  overflow-x: scroll;
+  overflow-y: visible;
+  position: relative;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
 export const StyledPromptsOfTheDay = styled(Layout.FlexRow)`
-  overflow-y: scroll;
+  padding-right: 16px;
 `;
 
 export const StyledRecentPromptsOfTheDay = styled(Layout.FlexCol)`
-  overflow-y: scroll;
-  padding: 10px 0px;
+  padding: 10px 16px;
 `;
 
 export const StyledPromptMoreButton = styled.button`
