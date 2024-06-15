@@ -4,13 +4,13 @@ import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Layout, SvgIcon, Typo } from '@design-system';
-import { Comment } from '@models/post';
+import { Comment, CommentContentsCommon } from '@models/post';
 import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 
 interface CommentItemProps {
-  comment: Comment;
+  comment: Comment | CommentContentsCommon;
   replyAvailable?: boolean;
   onClickReplyBtn?: () => void;
 }

@@ -1,12 +1,19 @@
 import { MouseEvent, useState } from 'react';
 import { Layout, SvgIcon } from '@design-system';
-import { Comment, MomentPost, Note, QuestionResponse, Response } from '@models/post';
+import {
+  Comment,
+  CommentContentsCommon,
+  MomentPost,
+  Note,
+  QuestionResponse,
+  Response,
+} from '@models/post';
 import { deleteLike, postLike } from '@utils/apis/likes';
 import * as S from './LikeButton.styled';
 
 interface LikeButtonProps {
-  postType: 'Moment' | 'Response' | 'Comment' | 'Note';
-  post: MomentPost | QuestionResponse | Response | Comment | Note;
+  postType: 'Moment' | 'Response' | 'Comment' | 'Note' | 'CommentContentsCommon';
+  post: MomentPost | QuestionResponse | Response | Comment | Note | CommentContentsCommon;
   m?: number;
   iconSize: number;
 }

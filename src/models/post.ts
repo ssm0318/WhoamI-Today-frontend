@@ -29,13 +29,13 @@ export interface DailyQuestion extends Question {
 }
 
 export interface ContentsCommon {
-  id?: number;
+  id: number;
   content: string;
   author: string | null;
-  author_detail?: User;
+  author_detail: User;
   like_count: number | null;
   current_user_like_id: number | null;
-  created_at?: string;
+  created_at: string;
 }
 
 // 댓글
@@ -48,6 +48,9 @@ export interface Comment extends ContentsCommon {
   type: 'Comment';
   user_tags: UserTag[];
 }
+
+export type CommentContentsCommon = Omit<Comment, 'id' | 'author' | 'author_detail'> &
+  Pick<Partial<ContentsCommon>, 'id' | 'author' | 'author_detail'>;
 
 // 유저 태그
 export interface UserTag {
