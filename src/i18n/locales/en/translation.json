@@ -233,7 +233,9 @@
   },
   "post_more_modal": {
     "menu": {
-      "report": "Report"
+      "report": "Report",
+      "edit": "Edit",
+      "delete": "Delete"
     },
     "report": {
       "title": "Report This Post?",

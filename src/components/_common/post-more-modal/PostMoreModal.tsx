@@ -56,11 +56,28 @@ function PostMoreModal({
     closeMoreModal();
   };
 
+  const handleClickEditPost = () => {
+    //
+  };
+
+  const handleClickDeletePost = () => {
+    //
+  };
+
   return (
     <>
       <BottomMenuDialog visible={isVisible} onClickClose={closeMoreModal}>
         {/* TODO isMyPage인 경우 필요한 메뉴 추가 */}
-        {isMyPage ? null : (
+        {isMyPage ? (
+          <>
+            <button type="button" onClick={handleClickEditPost}>
+              <Typo type="button-large">{t('menu.edit')}</Typo>
+            </button>
+            <button type="button" onClick={handleClickDeletePost}>
+              <Typo type="button-large">{t('menu.delete')}</Typo>
+            </button>
+          </>
+        ) : (
           <button type="button" onClick={handleClickReportUser}>
             <Typo type="button-large" color="WARNING">
               {t('menu.report')}
