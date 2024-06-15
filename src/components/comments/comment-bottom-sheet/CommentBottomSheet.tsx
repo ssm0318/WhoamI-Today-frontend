@@ -29,14 +29,16 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
   const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
   const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
 
-  const fetchComments = async (page: string | null, reload: boolean) => {
-    const { results } = await getCommentList(postType, post.id, page);
+  const fetchComments = async (page: string | null, update: boolean) => {
+    const { results, next } = await getCommentList(postType, post.id, page);
     if (!results) return;
-    if (reload) setComments(results);
+    setNextPage(next);
+    if (update) setComments(results);
     else setComments([...comments, ...results]);
   };
 
@@ -103,7 +105,7 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
           resetCommentType={() => {
             setCommentToType(postType);
           }}
-          reloadComments={() => fetchComments(null, true)}
+          reloadComments={() => fetchComments(nextPage ?? null, true)}
         />
       </CommentBottomFooterWrapper>
     </BottomModal>,

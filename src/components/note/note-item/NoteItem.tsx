@@ -28,7 +28,6 @@ function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: Note
 
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
-    //
   };
 
   const handleClickNote = () => {
