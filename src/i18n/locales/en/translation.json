@@ -242,6 +242,12 @@
       "content": "By reporting, we will automatically hide this post from you as well.",
       "cancel": "Cancel",
       "report": "Report"
+    },
+    "delete": {
+      "title": "Delete This Post?",
+      "content": "This post will be deleted permanently",
+      "cancel": "Cancel",
+      "delete": "Delete"
     }
   },
   "settings": {

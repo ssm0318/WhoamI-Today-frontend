@@ -61,7 +61,18 @@ function PostMoreModal({
   };
 
   const handleClickDeletePost = () => {
-    //
+    setShowAlert({
+      title: t('delete.title'),
+      content: t('delete.content'),
+      confirmText: t('delete.delete'),
+      cancelText: t('delete.cancel'),
+      onClickConfirm: async () => {
+        // await reportContent(post.id, post.type);
+        // onConfirmReport?.();
+        // handleOnConfirmAlert();
+      },
+    });
+    closeMoreModal();
   };
 
   return (
