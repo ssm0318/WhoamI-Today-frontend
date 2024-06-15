@@ -25,6 +25,7 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
 
   const isUserAuthor = useBoundStore((state) => state.isUserAuthor);
   const isCommentAuthor = author_detail ? isUserAuthor((author_detail as User).id) : false;
+  const privateComment = 'This comment is privated and can only be seen by the original poster.';
 
   const handleReplyInput = () => {
     onClickReplyBtn?.();
@@ -51,7 +52,7 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
             <Layout.FlexRow w="100%" alignItems="center">
               {is_private && <Icon name="private_comment" size={16} />}
               <Typo ml={3} type="label-medium">
-                {username}
+                {username ?? 'Anonymous'}
               </Typo>
               <Layout.FlexRow ml={8}>
                 <Typo type="label-small" color="MEDIUM_GRAY">
@@ -63,7 +64,12 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
                 </Typo>
               </Layout.FlexRow>
             </Layout.FlexRow>
-            <Typo pre type="body-medium">{`${comment.content}`}</Typo>
+            <Typo
+              pre
+              type="body-medium"
+              italic={!comment.content}
+              color={!comment.content ? 'DARK_GRAY' : 'BLACK'}
+            >{`${comment.content ?? privateComment}`}</Typo>
             {/* Reply & Message buttons */}
             <Layout.FlexRow w="100%" gap={7} alignItems="center">
               {replyAvailable && (
