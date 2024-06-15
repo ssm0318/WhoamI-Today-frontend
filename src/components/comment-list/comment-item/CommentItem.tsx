@@ -18,13 +18,14 @@ interface CommentItemProps {
 function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const { author_detail, created_at, is_private, replies } = comment;
-  const { username, profile_image } = author_detail;
+  const { username, profile_image } = author_detail ?? {};
 
-  const [createdAt] = useState(() => new Date(created_at));
+  const [createdAt] = useState(() => new Date(created_at ?? Date.now()));
   const [currentDate] = useState(() => new Date());
 
   const isUserAuthor = useBoundStore((state) => state.isUserAuthor);
-  const isCommentAuthor = isUserAuthor((author_detail as User).id);
+  // const isCommentAuthor = isUserAuthor((author_detail as User).id);
+  const isCommentAuthor = author_detail ? isUserAuthor((author_detail as User).id) : false;
 
   const handleReplyInput = () => {
     onClickReplyBtn?.();
@@ -100,8 +101,8 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
       </Layout.FlexRow>
       {/* replies */}
       <Layout.FlexCol w="100%" gap={8} pl={20} mt={14}>
-        {replies.map((reply) => (
-          <CommentItem key={reply.id} comment={reply} replyAvailable={false} />
+        {replies?.map((reply) => (
+          <CommentItem key={reply.id ?? 0} comment={reply} replyAvailable={false} />
         ))}
       </Layout.FlexCol>
     </Layout.FlexCol>

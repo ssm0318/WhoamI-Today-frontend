@@ -17,7 +17,7 @@ function LikeButton({ postType, post, iconSize, m = 6 }: LikeButtonProps) {
   const [likeId, setLikeId] = useState<number | null>(current_user_like_id);
 
   const like = () => {
-    postLike({ target_id: id, target_type: postType }).then(({ id: like_id }) => {
+    postLike({ target_id: id ?? 0, target_type: postType }).then(({ id: like_id }) => {
       setLikeId(like_id);
     });
   };

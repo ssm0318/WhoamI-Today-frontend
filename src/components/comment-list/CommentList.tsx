@@ -28,7 +28,7 @@ function CommentList({ postType, post }: CommentListProps) {
   });
 
   const fetchComments = async (page: string | null) => {
-    const { results, next } = await getCommentList(postType, post.id, page);
+    const { results, next } = await getCommentList(postType, post.id ?? 0, page);
     if (!results) return;
     setNextPage(next);
     setComments([...comments, ...results]);
@@ -43,7 +43,7 @@ function CommentList({ postType, post }: CommentListProps) {
 
   const confirmDeleteAlert = () => {
     if (!deleteTarget) return;
-    deleteComment(deleteTarget.id)
+    deleteComment(deleteTarget.id ?? 0)
       .then(() => fetchComments(null))
       .catch(() => console.log('TODO: 삭제 실패 알림'))
       .finally(() => closeDeleteAlert());

@@ -22,7 +22,7 @@ interface ResponseItemProps {
 function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
   const { content, created_at, author_detail, question, like_user_sample } = response;
-  const { username, profile_image } = author_detail;
+  const { username, profile_image } = author_detail ?? {};
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
 
@@ -78,7 +78,7 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: Re
               <Layout.FlexRow alignItems="center" gap={8}>
                 <Typo type="title-medium">{username}</Typo>
                 <Typo type="label-medium" color="MEDIUM_GRAY">
-                  {convertTimeDiffByString({ day: new Date(created_at) })}
+                  {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
                 </Typo>
               </Layout.FlexRow>
             </Layout.FlexRow>

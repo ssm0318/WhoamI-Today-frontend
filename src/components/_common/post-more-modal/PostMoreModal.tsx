@@ -48,7 +48,7 @@ function PostMoreModal({
       confirmText: t('report.report'),
       cancelText: t('report.cancel'),
       onClickConfirm: async () => {
-        await reportContent(post.id, post.type);
+        await reportContent(post.id ?? 0, post.type);
         onConfirmReport?.();
         handleOnConfirmAlert();
       },

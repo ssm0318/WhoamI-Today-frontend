@@ -33,7 +33,7 @@ export const getResponse = async (responseId: number | string) => {
   const { id, current_user_read } = data;
 
   if (!current_user_read) {
-    readResponse([id]);
+    readResponse([id ?? 0]);
   }
 
   return data;

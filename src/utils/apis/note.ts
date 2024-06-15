@@ -16,7 +16,7 @@ export const getNoteDetail = async (noteId: number) => {
   const { id, current_user_read } = data;
 
   if (!current_user_read) {
-    readNote([id]);
+    readNote([id ?? 0]);
   }
 
   return data;

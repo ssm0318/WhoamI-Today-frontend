@@ -29,13 +29,13 @@ export interface DailyQuestion extends Question {
 }
 
 export interface ContentsCommon {
-  id: number;
+  id?: number;
   content: string;
   author: string | null;
-  author_detail: User;
+  author_detail?: User;
   like_count: number | null;
   current_user_like_id: number | null;
-  created_at: string;
+  created_at?: string;
 }
 
 // 댓글

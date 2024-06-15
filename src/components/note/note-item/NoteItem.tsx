@@ -23,7 +23,7 @@ function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: Note
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
 
-  const { username, profile_image } = author_detail;
+  const { username, profile_image } = author_detail ?? {};
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
 
   const handleClickMore = (e: MouseEvent) => {
@@ -64,7 +64,7 @@ function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: Note
             <Layout.FlexRow alignItems="center" gap={8}>
               <Typo type="title-medium">{username}</Typo>
               <Typo type="label-medium" color="MEDIUM_GRAY">
-                {convertTimeDiffByString({ day: new Date(created_at) })}
+                {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
               </Typo>
             </Layout.FlexRow>
           </Layout.FlexRow>
