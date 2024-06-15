@@ -1,11 +1,8 @@
 import styled from 'styled-components';
+import { Layout } from '@design-system';
 
-export const UpdatedFriendItemWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4px 16px;
+export const StyledUpdatedFriendItem = styled(Layout.FlexRow)`
+  padding-bottom: 4px;
   border-bottom: 1px ${({ theme }) => theme.LIGHT} solid;
 
   &:last-child {
@@ -13,6 +10,10 @@ export const UpdatedFriendItemWrapper = styled.div`
   }
 `;
 
-export const StyledUpdatedItemWrapper = styled.div`
-  position: relative;
+export const StyledProfileArea = styled.button`
+  display: flex;
+  width: 100%;
+  max-width: 50%;
+  justify-content: space-between;
+  align-items: center;
 `;

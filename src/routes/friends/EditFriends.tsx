@@ -4,7 +4,6 @@ import AlertDialog from '@components/_common/alert-dialog/AlertDialog';
 import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import { UpdatedFriendItemWrapper } from '@components/friends/updated-friend-item/UpdatedFriendItem.styled';
 import SubHeader from '@components/sub-header/SubHeader';
 import UserRelatedAlert, { Alert } from '@components/user-page/UserRelatedAlert';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
@@ -14,6 +13,7 @@ import { addFriendToFavorite, deleteFavorite, hideFriend, unHideFriend } from '@
 import { breakFriend } from '@utils/apis/user';
 import updateFriendsList from '@utils/updateFriendsList';
 import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
+import { StyledFriendItemWrapper } from './EditFriends.styled';
 
 function EditFriends() {
   const [t] = useTranslation('translation');
@@ -86,7 +86,7 @@ function EditFriends() {
           <>
             {allFriends.data?.results?.map(
               ({ id, username, profile_image, is_hidden, is_favorite }) => (
-                <UpdatedFriendItemWrapper key={username}>
+                <StyledFriendItemWrapper key={username}>
                   <Layout.FlexRow gap={8}>
                     {is_hidden ? (
                       <Icon
@@ -118,7 +118,7 @@ function EditFriends() {
                     />
                     <Icon name="close" size={16} padding={14} onClick={handleClickDelete(id)} />
                   </Layout.FlexRow>
-                </UpdatedFriendItemWrapper>
+                </StyledFriendItemWrapper>
               ),
             )}
             {isLoadingMoreAllFriends && allFriends.data.next && <Loader />}

@@ -110,7 +110,7 @@ function Friends() {
                 fontType="body-medium"
               />
             </Layout.FlexRow>
-            <Layout.FlexCol w="100%">
+            <Layout.FlexCol w="100%" pv={8} gap={4}>
               {allFriends.data.results?.length ? (
                 <>
                   {allFriends.data.results.map((user) => (
@@ -118,7 +118,6 @@ function Friends() {
                       key={user.id}
                       {...user}
                       updateFavoriteCallback={updateFavoriteCallback(user)}
-                      new_chat={user.unread_cnt}
                       fetchAllTypeFriends={fetchAllTypeFriends}
                     />
                   ))}

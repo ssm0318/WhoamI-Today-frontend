@@ -1,19 +1,17 @@
 import { useNavigate } from 'react-router-dom';
-import { UpdatedDot } from '@common-components/updated-dot/UpdatedDot.styled';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
-import { getChatRoomIdByUserId } from '@utils/apis/chat';
 import { addFriendToFavorite, deleteFavorite, hideFriend } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
-import { UpdatedChatNumber } from '../friend-list/FriendProfile.styled';
-import { StyledUpdatedItemWrapper, UpdatedFriendItemWrapper } from './UpdatedFriendItem.styled';
+import SpotifyMusic from '../spotify-music/SpotifyMusic';
+import UpdatedLabel from '../updated-label/UpdatedLabel';
+import { StyledProfileArea, StyledUpdatedFriendItem } from './UpdatedFriendItem.styled';
 
 interface UpdatedFriendItemProps extends UpdatedProfile {
-  new_chat: number;
   updateFavoriteCallback?: () => void;
   fetchAllTypeFriends: () => void;
 }
@@ -26,8 +24,11 @@ function UpdatedFriendItem({
   updateFavoriteCallback,
   current_user_read,
   fetchAllTypeFriends,
-  new_chat,
 }: UpdatedFriendItemProps) {
+  // NOTE: api 필드 수정전 임시 값
+  const bio = 'bio bio bio!! bio bio bio!! bio bio bio!! bio bio bio!!';
+  const track_id = '24DefNCFiWTP8OjYWiXuYe';
+
   const navigate = useNavigate();
   const handleClickProfile = () => {
     navigate(`/users/${username}`);
@@ -55,12 +56,6 @@ function UpdatedFriendItem({
     breakFriend(id).then(() => {
       fetchAllTypeFriends();
     });
-  };
-
-  const handleClickChat = async () => {
-    const roomId = await getChatRoomIdByUserId(id);
-    if (!roomId) return;
-    navigate(`/chats/${roomId}`);
   };
 
   return (
@@ -100,26 +95,27 @@ function UpdatedFriendItem({
             ]
       }
     >
-      <UpdatedFriendItemWrapper>
-        <Layout.FlexRow alignItems="center" gap={8}>
-          <ProfileImage imageUrl={profile_image} username={username} size={44} />
-          <Typo type="label-large">{username}</Typo>
-        </Layout.FlexRow>
-        <Layout.FlexRow alignItems="center" gap={24} pr={8}>
-          <StyledUpdatedItemWrapper>
-            {!current_user_read && <UpdatedDot top={-6} left={-7} />}
-            <Icon name="friend_updates_profile" size={28} onClick={handleClickProfile} />
-          </StyledUpdatedItemWrapper>
-          <StyledUpdatedItemWrapper>
-            <Icon name="friend_updates_chat" size={28} onClick={handleClickChat} />
-            {new_chat > 0 && (
-              <UpdatedChatNumber type="label-small" color="PRIMARY">
-                {new_chat}
-              </UpdatedChatNumber>
-            )}
-          </StyledUpdatedItemWrapper>
-        </Layout.FlexRow>
-      </UpdatedFriendItemWrapper>
+      <Layout.FlexRow w="100%" ph={16} gap={16}>
+        <StyledUpdatedFriendItem w="100%" alignItems="center" justifyContent="space-between">
+          <StyledProfileArea type="button" onClick={handleClickProfile}>
+            <Layout.FlexRow alignItems="center" gap={7}>
+              <ProfileImage imageUrl={profile_image} username={username} size={44} />
+              <Layout.FlexCol>
+                <Layout.FlexRow gap={4} alignItems="center">
+                  <Typo type="label-large">{username}</Typo>
+                  {!current_user_read && <UpdatedLabel />}
+                </Layout.FlexRow>
+                {bio && (
+                  <Typo type="label-medium" color="MEDIUM_GRAY" numberOfLines={1}>
+                    {bio}
+                  </Typo>
+                )}
+              </Layout.FlexCol>
+            </Layout.FlexRow>
+          </StyledProfileArea>
+          {track_id && <SpotifyMusic track_id={track_id} />}
+        </StyledUpdatedFriendItem>
+      </Layout.FlexRow>
     </SwipeLayout>
   );
 }
