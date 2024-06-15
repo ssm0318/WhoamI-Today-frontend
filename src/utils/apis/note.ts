@@ -33,7 +33,7 @@ export const postNote = async (noteData: NewNoteForm) => {
     });
   }
 
-  const { data } = await axiosFormDataInstance.post(`notes/`, formData);
+  const { data } = await axiosFormDataInstance.post<Note>(`notes/`, formData);
   return data;
 };
 
