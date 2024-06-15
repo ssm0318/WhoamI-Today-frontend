@@ -67,8 +67,8 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
             <Typo
               pre
               type="body-medium"
-              italic={comment.is_private}
-              color={comment.is_private ? 'DARK_GRAY' : 'BLACK'}
+              italic={comment.is_private && !comment.content}
+              color={comment.is_private && !comment.content ? 'DARK_GRAY' : 'BLACK'}
             >{`${comment.content ?? t('private_placeholder')}`}</Typo>
             {/* Reply & Message buttons */}
             <Layout.FlexRow w="100%" gap={7} alignItems="center">
