@@ -32,7 +32,7 @@ function CommentInputBox({
   const myProfile = useBoundStore((state) => state.myProfile);
   const [content, setContent] = useState('');
   const commentTargetAuthor =
-    isReply && replyTo ? replyTo.author_detail.username : post?.author_detail.username;
+    isReply && replyTo ? replyTo.author_detail?.username : post?.author_detail?.username;
 
   const placeholder =
     isReply && replyTo

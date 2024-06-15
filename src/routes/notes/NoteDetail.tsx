@@ -46,12 +46,12 @@ export function NoteDetail() {
       {noteDetail.state === 'hasValue' && (
         <>
           <SubHeader
-            title={t('note_detail.title', { username: noteDetail.data.author_detail.username })}
+            title={t('note_detail.title', { username: noteDetail.data.author_detail?.username })}
           />
           <Layout.FlexCol w="100%" alignItems="center" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
             <NoteItem
               note={noteDetail.data}
-              isMyPage={noteDetail.data.author_detail.id === myProfile?.id}
+              isMyPage={noteDetail.data.author_detail?.id === myProfile?.id}
               enableCollapse={false}
               type="DETAIL"
             />

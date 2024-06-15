@@ -4,13 +4,13 @@ import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Layout, SvgIcon, Typo } from '@design-system';
-import { Comment } from '@models/post';
+import { Comment, PrivateComment } from '@models/post';
 import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 
 interface CommentItemProps {
-  comment: Comment;
+  comment: Comment | PrivateComment;
   replyAvailable?: boolean;
   onClickReplyBtn?: () => void;
 }
@@ -18,13 +18,13 @@ interface CommentItemProps {
 function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const { author_detail, created_at, is_private, replies } = comment;
-  const { username, profile_image } = author_detail;
+  const { username, profile_image } = author_detail ?? {};
 
-  const [createdAt] = useState(() => new Date(created_at));
+  const [createdAt] = useState(() => (created_at ? new Date(created_at) : null));
   const [currentDate] = useState(() => new Date());
 
   const isUserAuthor = useBoundStore((state) => state.isUserAuthor);
-  const isCommentAuthor = isUserAuthor((author_detail as User).id);
+  const isCommentAuthor = author_detail ? isUserAuthor((author_detail as User).id) : false;
 
   const handleReplyInput = () => {
     onClickReplyBtn?.();
@@ -51,19 +51,25 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
             <Layout.FlexRow w="100%" alignItems="center">
               {is_private && <Icon name="private_comment" size={16} />}
               <Typo ml={3} type="label-medium">
-                {username}
+                {username ?? 'Anonymous'}
               </Typo>
               <Layout.FlexRow ml={8}>
                 <Typo type="label-small" color="MEDIUM_GRAY">
-                  {convertTimeDiffByString({
-                    now: currentDate,
-                    day: createdAt,
-                    isShortFormat: true,
-                  })}
+                  {createdAt &&
+                    convertTimeDiffByString({
+                      now: currentDate,
+                      day: createdAt,
+                      isShortFormat: true,
+                    })}
                 </Typo>
               </Layout.FlexRow>
             </Layout.FlexRow>
-            <Typo pre type="body-medium">{`${comment.content}`}</Typo>
+            <Typo
+              pre
+              type="body-medium"
+              italic={comment.is_private && !comment.content}
+              color={comment.is_private && !comment.content ? 'DARK_GRAY' : 'BLACK'}
+            >{`${comment.content ?? t('private_placeholder')}`}</Typo>
             {/* Reply & Message buttons */}
             <Layout.FlexRow w="100%" gap={7} alignItems="center">
               {replyAvailable && (
@@ -100,7 +106,7 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
       </Layout.FlexRow>
       {/* replies */}
       <Layout.FlexCol w="100%" gap={8} pl={20} mt={14}>
-        {replies.map((reply) => (
+        {replies?.map((reply) => (
           <CommentItem key={reply.id} comment={reply} replyAvailable={false} />
         ))}
       </Layout.FlexCol>

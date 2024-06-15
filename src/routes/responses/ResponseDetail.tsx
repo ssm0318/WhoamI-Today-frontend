@@ -48,14 +48,14 @@ function ResponseDetail() {
         <>
           <SubHeader
             title={t('response_detail.title', {
-              name: responseDetail.data?.author_detail.username,
+              name: responseDetail.data?.author_detail?.username,
             })}
           />
           <Layout.FlexCol w="100%" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
             <ResponseItem
               response={responseDetail.data}
               type="DETAIL"
-              isMyPage={responseDetail.data.author_detail.id === myProfile?.id}
+              isMyPage={responseDetail.data.author_detail?.id === myProfile?.id}
             />
           </Layout.FlexCol>
           <Layout.FlexCol w="100%" flex={1}>

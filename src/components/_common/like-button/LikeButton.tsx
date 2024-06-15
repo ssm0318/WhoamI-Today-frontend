@@ -1,12 +1,19 @@
 import { MouseEvent, useState } from 'react';
 import { Layout, SvgIcon } from '@design-system';
-import { Comment, MomentPost, Note, QuestionResponse, Response } from '@models/post';
+import {
+  Comment,
+  MomentPost,
+  Note,
+  PrivateComment,
+  QuestionResponse,
+  Response,
+} from '@models/post';
 import { deleteLike, postLike } from '@utils/apis/likes';
 import * as S from './LikeButton.styled';
 
 interface LikeButtonProps {
-  postType: 'Moment' | 'Response' | 'Comment' | 'Note';
-  post: MomentPost | QuestionResponse | Response | Comment | Note;
+  postType: 'Moment' | 'Response' | 'Comment' | 'Note' | 'PrivateComment';
+  post: MomentPost | QuestionResponse | Response | Comment | Note | PrivateComment;
   m?: number;
   iconSize: number;
 }
@@ -17,6 +24,7 @@ function LikeButton({ postType, post, iconSize, m = 6 }: LikeButtonProps) {
   const [likeId, setLikeId] = useState<number | null>(current_user_like_id);
 
   const like = () => {
+    if (!id) return;
     postLike({ target_id: id, target_type: postType }).then(({ id: like_id }) => {
       setLikeId(like_id);
     });
@@ -37,9 +45,11 @@ function LikeButton({ postType, post, iconSize, m = 6 }: LikeButtonProps) {
 
   return (
     <Layout.FlexRow alignItems="center">
-      <S.IconButton type="button" m={m} onClick={toggleLike} size={iconSize}>
-        <SvgIcon name={likeId ? 'like_filled' : 'like'} size={iconSize} />
-      </S.IconButton>
+      {id && (
+        <S.IconButton type="button" m={m} onClick={toggleLike} size={iconSize}>
+          <SvgIcon name={likeId ? 'like_filled' : 'like'} size={iconSize} />
+        </S.IconButton>
+      )}
     </Layout.FlexRow>
   );
 }

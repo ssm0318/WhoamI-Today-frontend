@@ -49,6 +49,9 @@ export interface Comment extends ContentsCommon {
   user_tags: UserTag[];
 }
 
+export type PrivateComment = Omit<Comment, 'id' | 'author' | 'author_detail'> &
+  Pick<Partial<ContentsCommon>, 'id' | 'author' | 'author_detail'>;
+
 // 유저 태그
 export interface UserTag {
   id: number;
