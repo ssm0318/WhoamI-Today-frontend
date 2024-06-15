@@ -29,15 +29,21 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
-  const fetchComments = async (page: string | null) => {
-    const { results } = await getCommentList(postType, post.id, page);
+  const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
+  const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
+
+  const fetchComments = async (page: string | null, update: boolean) => {
+    const { results, next } = await getCommentList(postType, post.id, page);
     if (!results) return;
-    setComments([...comments, ...results]);
+    setNextPage(next);
+    if (update) setComments(results);
+    else setComments([...comments, ...results]);
   };
 
   useAsyncEffect(async () => {
-    await fetchComments(null);
+    await fetchComments(null, false);
   }, []);
 
   const handleClick = () => {
@@ -73,6 +79,8 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
             onClickReplyBtn={() => {
               setReplyTo(comment);
               setIsPrivate(comment.is_private);
+              setCommentTo(comment);
+              setCommentToType('Comment');
             }}
           />
         ))}
@@ -80,8 +88,8 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
 
       <CommentBottomFooterWrapper>
         <CommentInputBox
-          post={post}
-          postType={postType}
+          post={commentTo}
+          postType={commentToType}
           isPrivate={isPrivate}
           setIsPrivate={() => {
             setIsPrivate((prev) => !prev);
@@ -91,6 +99,13 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
           resetReplyTo={() => {
             setReplyTo(null);
           }}
+          resetCommentTo={() => {
+            setCommentTo(post);
+          }}
+          resetCommentType={() => {
+            setCommentToType(postType);
+          }}
+          reloadComments={() => fetchComments(nextPage ?? null, true)}
         />
       </CommentBottomFooterWrapper>
     </BottomModal>,

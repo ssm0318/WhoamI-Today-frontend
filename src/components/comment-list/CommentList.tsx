@@ -13,25 +13,31 @@ import { StyledCommentListFooter } from './CommentList.styled';
 interface CommentListProps {
   postType: 'Response' | 'Note';
   post: Response | Note;
+  setReload: (reload: boolean) => void;
 }
 
-function CommentList({ postType, post }: CommentListProps) {
+function CommentList({ postType, post, setReload }: CommentListProps) {
   const footerRef = useRef<HTMLDivElement>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
+  const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
+  const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
+
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextPage === null) return setIsLoading(false);
-    await fetchComments(nextPage ?? null);
+    await fetchComments(nextPage ?? null, false);
   });
 
-  const fetchComments = async (page: string | null) => {
+  const fetchComments = async (page: string | null, update: boolean) => {
     const { results, next } = await getCommentList(postType, post.id, page);
     if (!results) return;
-    setNextPage(next);
-    setComments([...comments, ...results]);
+
+    setNextPage(next ?? null);
+    if (update) setComments(results);
+    else setComments([...comments, ...results]);
     setIsLoading(false);
   };
 
@@ -44,7 +50,7 @@ function CommentList({ postType, post }: CommentListProps) {
   const confirmDeleteAlert = () => {
     if (!deleteTarget) return;
     deleteComment(deleteTarget.id)
-      .then(() => fetchComments(null))
+      .then(() => fetchComments(null, true))
       .catch(() => console.log('TODO: 삭제 실패 알림'))
       .finally(() => closeDeleteAlert());
     closeDeleteAlert();
@@ -60,6 +66,8 @@ function CommentList({ postType, post }: CommentListProps) {
             onClickReplyBtn={() => {
               setReplyTo(comment);
               setIsPrivate(comment.is_private);
+              setCommentTo(comment);
+              setCommentToType('Comment');
             }}
           />
         ))}
@@ -67,8 +75,8 @@ function CommentList({ postType, post }: CommentListProps) {
       <StyledCommentListFooter ref={footerRef} b={0} w="100%" bgColor="WHITE">
         <Layout.FlexRow w="100%">
           <CommentInputBox
-            post={post}
-            postType={postType}
+            post={commentTo}
+            postType={commentToType}
             isPrivate={isPrivate}
             setIsPrivate={() => {
               setIsPrivate((prev) => !prev);
@@ -78,6 +86,14 @@ function CommentList({ postType, post }: CommentListProps) {
             resetReplyTo={() => {
               setReplyTo(null);
             }}
+            resetCommentTo={() => {
+              setCommentTo(post);
+            }}
+            resetCommentType={() => {
+              setCommentToType(postType);
+            }}
+            reloadComments={() => fetchComments(nextPage ?? null, true)}
+            setReload={setReload}
           />
         </Layout.FlexRow>
       </StyledCommentListFooter>

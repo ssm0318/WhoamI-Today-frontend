@@ -1,5 +1,5 @@
 import { isAxiosError } from 'axios';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import CommonError from '@components/_common/common-error/CommonError';
@@ -22,10 +22,11 @@ function ResponseDetail() {
 
   const [t] = useTranslation('translation');
 
-  const [responseDetail, setResponseDetail] = useState<FetchState<Response>>({ state: 'loading' });
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+  const [responseDetail, setResponseDetail] = useState<FetchState<Response>>({ state: 'loading' });
+  const [reload, setReload] = useState<boolean>(false);
 
-  const getResponseDetail = useCallback(async () => {
+  useAsyncEffect(async () => {
     if (!responseId) return;
     try {
       const data = await getResponse(Number(responseId));
@@ -37,9 +38,7 @@ function ResponseDetail() {
       }
       setResponseDetail({ state: 'hasError' });
     }
-  }, [responseId]);
-
-  useAsyncEffect(getResponseDetail, [getResponseDetail]);
+  }, [responseId, reload]);
 
   return (
     <MainContainer>
@@ -59,7 +58,7 @@ function ResponseDetail() {
             />
           </Layout.FlexCol>
           <Layout.FlexCol w="100%" flex={1}>
-            <CommentList postType="Response" post={responseDetail.data} />
+            <CommentList postType="Response" post={responseDetail.data} setReload={setReload} />
           </Layout.FlexCol>
         </>
       )}

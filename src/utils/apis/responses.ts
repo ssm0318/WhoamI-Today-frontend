@@ -22,7 +22,7 @@ export const deleteResponse = async (responseId: number) => {
 export const getCommentsOfResponse = async (responseId: number, page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Comment[]>>(
-    `/qna/responses/${responseId}/comments${!requestPage ? '' : `?page=${requestPage}`}`,
+    `/qna/responses/${responseId}/comments${!requestPage ? '' : `?page=${requestPage}`}/`,
   );
 
   return data;

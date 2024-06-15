@@ -13,9 +13,12 @@ interface CommentInputBoxProps {
   isPrivate: boolean;
   setIsPrivate?: () => void;
   resetReplyTo?: () => void;
+  resetCommentTo: () => void;
+  resetCommentType: () => void;
   postType: 'Response' | 'Comment' | 'Note';
   post: Response | Comment | Note;
   reloadComments?: () => void;
+  setReload?: (reload: boolean) => void;
 }
 
 function CommentInputBox({
@@ -24,9 +27,12 @@ function CommentInputBox({
   setIsPrivate,
   replyTo,
   resetReplyTo,
+  resetCommentTo,
+  resetCommentType,
   postType,
   post,
   reloadComments,
+  setReload,
 }: CommentInputBoxProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const myProfile = useBoundStore((state) => state.myProfile);
@@ -53,6 +59,10 @@ function CommentInputBox({
     }).then(() => {
       setContent('');
       reloadComments?.();
+      resetCommentTo();
+      resetCommentType();
+      resetReplyTo?.();
+      setReload?.(false);
     });
   };
 
@@ -65,6 +75,7 @@ function CommentInputBox({
     if (e.shiftKey) return;
 
     e.preventDefault();
+    setReload?.(true);
     handleSubmitComment();
   };
 
