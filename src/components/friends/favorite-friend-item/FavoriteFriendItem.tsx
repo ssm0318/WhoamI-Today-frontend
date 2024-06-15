@@ -6,6 +6,7 @@ import { Layout, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
 import { getChatRoomIdByUserId } from '@utils/apis/chat';
 import SpotifyMusic from '../spotify-music/SpotifyMusic';
+import UpdatedLabel from '../updated-label/UpdatedLabel';
 
 interface UpdatedFriendItemProps extends UpdatedProfile {}
 
@@ -46,19 +47,7 @@ function FavoriteFriendItem({
         <Typo type="label-large" color="DARK">
           {username}
         </Typo>
-        {!current_user_read && (
-          <Layout.LayoutBase
-            ph={4}
-            justifyContent="center"
-            alignItems="center"
-            bgColor="UPDATED"
-            rounded={4}
-          >
-            <Typo type="label-small" color="WHITE">
-              UP
-            </Typo>
-          </Layout.LayoutBase>
-        )}
+        {!current_user_read && <UpdatedLabel />}
       </Layout.FlexRow>
       {track_id && <SpotifyMusic track_id={track_id} />}
       {bio && (
