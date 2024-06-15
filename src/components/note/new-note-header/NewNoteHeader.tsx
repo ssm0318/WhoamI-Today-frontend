@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Layout, Typo } from '@design-system';
 import { NewNoteForm } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
 import { postNote } from '@utils/apis/note';
 import { NewNoteHeaderWrapper } from './NewNoteHeader.styled';
 
@@ -11,21 +12,28 @@ interface NewNoteHeaderProps {
 }
 
 function NewNoteHeader({ title, noteInfo }: NewNoteHeaderProps) {
+  const [t] = useTranslation('translation', { keyPrefix: 'notes' });
+
   const navigate = useNavigate();
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
   const cancelPost = () => {
     navigate('/my');
   };
 
-  // TODO: 게시물 업로드 toast message 추가
-  const confirmPost = () => {
+  const confirmPost = async () => {
+    const { id: newNoteId } = await postNote(noteInfo);
+
     navigate('/my');
-    postNote(noteInfo);
+    openToast({
+      message: t('posted'),
+      actionText: t('view'),
+      action: () => navigate(`/notes/${newNoteId}`),
+    });
   };
 
   const canPost = !!noteInfo.content;
 
-  const [t] = useTranslation('translation', { keyPrefix: 'notes' });
   return (
     <NewNoteHeaderWrapper>
       <Layout.FlexRow justifyContent="space-between" w="100%" h="100%" alignItems="center">
