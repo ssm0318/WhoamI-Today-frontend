@@ -20,7 +20,7 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
   const { author_detail, created_at, is_private, replies } = comment;
   const { username, profile_image } = author_detail ?? {};
 
-  const [createdAt] = useState(() => new Date(created_at ?? Date.now()));
+  const [createdAt] = useState(() => (created_at ? new Date(created_at) : null));
   const [currentDate] = useState(() => new Date());
 
   const isUserAuthor = useBoundStore((state) => state.isUserAuthor);
@@ -51,19 +51,25 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
             <Layout.FlexRow w="100%" alignItems="center">
               {is_private && <Icon name="private_comment" size={16} />}
               <Typo ml={3} type="label-medium">
-                {username}
+                {username ?? 'Anonymous'}
               </Typo>
               <Layout.FlexRow ml={8}>
                 <Typo type="label-small" color="MEDIUM_GRAY">
-                  {convertTimeDiffByString({
-                    now: currentDate,
-                    day: createdAt,
-                    isShortFormat: true,
-                  })}
+                  {createdAt &&
+                    convertTimeDiffByString({
+                      now: currentDate,
+                      day: createdAt,
+                      isShortFormat: true,
+                    })}
                 </Typo>
               </Layout.FlexRow>
             </Layout.FlexRow>
-            <Typo pre type="body-medium">{`${comment.content}`}</Typo>
+            <Typo
+              pre
+              type="body-medium"
+              italic={comment.is_private && !comment.content}
+              color={comment.is_private && !comment.content ? 'DARK_GRAY' : 'BLACK'}
+            >{`${comment.content ?? t('private_placeholder')}`}</Typo>
             {/* Reply & Message buttons */}
             <Layout.FlexRow w="100%" gap={7} alignItems="center">
               {replyAvailable && (
