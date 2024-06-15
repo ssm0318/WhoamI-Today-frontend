@@ -31,7 +31,7 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
 
   const fetchComments = async (page: string | null) => {
-    const { results } = await getCommentList(postType, post.id ?? 0, page);
+    const { results } = await getCommentList(postType, post.id, page);
     if (!results) return;
     setComments([...comments, ...results]);
   };

@@ -101,7 +101,7 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
       {/* replies */}
       <Layout.FlexCol w="100%" gap={8} pl={20} mt={14}>
         {replies?.map((reply) => (
-          <CommentItem key={reply.id ?? 0} comment={reply} replyAvailable={false} />
+          <CommentItem key={reply.id} comment={reply} replyAvailable={false} />
         ))}
       </Layout.FlexCol>
     </Layout.FlexCol>

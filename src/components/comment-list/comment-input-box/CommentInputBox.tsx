@@ -46,7 +46,7 @@ function CommentInputBox({
   const handleSubmitComment = () => {
     if (!content) return;
     postComment({
-      target_id: post.id ?? 0,
+      target_id: post.id,
       target_type: postType,
       content: content.trim(),
       is_private: isPrivate,
