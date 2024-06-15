@@ -17,7 +17,8 @@ function LikeButton({ postType, post, iconSize, m = 6 }: LikeButtonProps) {
   const [likeId, setLikeId] = useState<number | null>(current_user_like_id);
 
   const like = () => {
-    postLike({ target_id: id ?? 0, target_type: postType }).then(({ id: like_id }) => {
+    if (!id) return;
+    postLike({ target_id: id, target_type: postType }).then(({ id: like_id }) => {
       setLikeId(like_id);
     });
   };
@@ -37,9 +38,11 @@ function LikeButton({ postType, post, iconSize, m = 6 }: LikeButtonProps) {
 
   return (
     <Layout.FlexRow alignItems="center">
-      <S.IconButton type="button" m={m} onClick={toggleLike} size={iconSize}>
-        <SvgIcon name={likeId ? 'like_filled' : 'like'} size={iconSize} />
-      </S.IconButton>
+      {id && (
+        <S.IconButton type="button" m={m} onClick={toggleLike} size={iconSize}>
+          <SvgIcon name={likeId ? 'like_filled' : 'like'} size={iconSize} />
+        </S.IconButton>
+      )}
     </Layout.FlexRow>
   );
 }
