@@ -230,13 +230,21 @@
   },
   "post_more_modal": {
     "menu": {
-      "report": "신고"
+      "report": "신고",
+      "edit": "수정",
+      "delete": "삭제"
     },
     "report": {
       "title": "이 게시물을 신고하시겠습니까?",
       "content": "신고하면 이 게시물이 자동으로 숨겨집니다.",
       "cancel": "취소",
       "report": "신고"
+    },
+    "delete": {
+      "title": "이 게시물을 삭제하시겠습니까?",
+      "content": "삭제하시면 해당 게시물은 영구적으로 사라집니다",
+      "cancel": "취소",
+      "delete": "삭제"
     }
   },
   "settings": {
@@ -317,6 +325,7 @@
     "comment_place_holder": "{{username}}에게 댓글을 입력하세요.",
     "reply_place_holder": "{{username}}에게 답글을 입력하세요.",
     "private_comment": "비밀 댓글",
+    "private_placeholder": "해당 댓글은 비공개이며 작성자만 볼 수 있습니다.",
     "replying_to": "{{username}}에게 답글 작성중"
   },
   "no_contents": {
