@@ -20,7 +20,7 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
   const { author_detail, created_at, is_private, replies } = comment;
   const { username, profile_image } = author_detail ?? {};
 
-  const [createdAt] = useState(() => new Date(created_at ?? Date.now()));
+  const [createdAt] = useState(() => (created_at ? new Date(created_at) : null));
   const [currentDate] = useState(() => new Date());
 
   const isUserAuthor = useBoundStore((state) => state.isUserAuthor);
@@ -56,11 +56,12 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
               </Typo>
               <Layout.FlexRow ml={8}>
                 <Typo type="label-small" color="MEDIUM_GRAY">
-                  {convertTimeDiffByString({
-                    now: currentDate,
-                    day: createdAt,
-                    isShortFormat: true,
-                  })}
+                  {createdAt &&
+                    convertTimeDiffByString({
+                      now: currentDate,
+                      day: createdAt,
+                      isShortFormat: true,
+                    })}
                 </Typo>
               </Layout.FlexRow>
             </Layout.FlexRow>
