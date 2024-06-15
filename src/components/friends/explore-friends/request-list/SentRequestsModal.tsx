@@ -54,7 +54,7 @@ export function SentRequestsModal({ visible, onClose }: Props) {
   const contentHeight = window.innerHeight - 20;
 
   return (
-    <BottomModal visible={visible} onClose={onClose} maxHeight={contentHeight}>
+    <BottomModal visible={visible} onClose={onClose}>
       <Layout.FlexCol w="100%">
         <Layout.FlexCol w="100%" h={contentHeight}>
           <StyledModalHeader w="100%" pv={12} bgColor="WHITE">

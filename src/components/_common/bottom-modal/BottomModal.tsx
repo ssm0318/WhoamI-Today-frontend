@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { MouseEvent, useEffect, useRef, useState } from 'react';
 import { DEFAULT_MARGIN, SCREEN_HEIGHT } from '@constants/layout';
 import { ColorKeys } from '@design-system';
@@ -11,8 +10,7 @@ interface BottomModalProps {
   children: React.ReactNode;
   bgColor?: string;
   containerBgColor?: ColorKeys;
-  h?: number;
-  maxHeight?: number; // 바텀 모달의 최대 높이
+  heightMode?: 'content' | 'full';
   TopComponent?: React.ReactNode; // 바텀 모달 위 컴포넌트
 }
 
@@ -22,22 +20,26 @@ function BottomModal({
   children,
   bgColor = 'rgba(0, 0, 0, 0.7)',
   containerBgColor = 'WHITE',
-  h = SCREEN_HEIGHT - 50,
-  maxHeight = 750,
+  heightMode = 'content',
   TopComponent,
 }: BottomModalProps) {
   const bodyRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
+  const maxHeight = SCREEN_HEIGHT - 50;
 
-  // Body안의 height을 계산 후 Container에 그 값을 넣어줌 -> 자동 높이 계산
   useEffect(() => {
     if (!visible) return;
     if (bodyRef.current) {
       const bodyHeight = bodyRef.current.scrollHeight;
-      if (h) return setHeight(h);
-      setHeight(Math.min(bodyHeight, maxHeight));
+      if (heightMode === 'content') {
+        return setHeight(bodyHeight > maxHeight ? maxHeight : bodyHeight);
+      }
+
+      if (heightMode === 'full') {
+        return setHeight(maxHeight);
+      }
     }
-  }, [maxHeight, visible, h]);
+  }, [visible, heightMode, maxHeight]);
 
   usePreventScroll(visible);
 

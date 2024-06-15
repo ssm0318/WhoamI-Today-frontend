@@ -15,12 +15,12 @@ function SelectPromptSheet({ visible, closeBottomSheet }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'prompts' });
 
   return createPortal(
-    <BottomModal visible={visible} onClose={closeBottomSheet}>
-      <Layout.FlexCol alignItems="center" pb={34} w="100%" bgColor="WHITE">
+    <BottomModal visible={visible} onClose={closeBottomSheet} heightMode="full">
+      <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
         <Typo type="title-large">{t('select_a_prompt')}</Typo>
-        <Layout.FlexCol gap={12} pt={24} pb={24} w="100%">
-          <Divider width={1} />
+        <Divider width={1} margin={16} />
+        <Layout.FlexCol gap={16} w="100%">
           <PromptsOfTheDay />
         </Layout.FlexCol>
       </Layout.FlexCol>
