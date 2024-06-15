@@ -24,7 +24,6 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
   const [currentDate] = useState(() => new Date());
 
   const isUserAuthor = useBoundStore((state) => state.isUserAuthor);
-  // const isCommentAuthor = isUserAuthor((author_detail as User).id);
   const isCommentAuthor = author_detail ? isUserAuthor((author_detail as User).id) : false;
 
   const handleReplyInput = () => {
