@@ -17,6 +17,15 @@ jobs:
     - name: Install dependencies
       run: yarn install
 
+    - name: Upload key.ts file
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_KEY }}
+        source: "src/key.ts"
+        target: "~/WhoAmI-Today-frontend/src/key.ts"
+
     - name: Build production
       run: yarn run build --prod
 
