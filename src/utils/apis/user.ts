@@ -25,15 +25,23 @@ export const signIn = ({
   signInInfo,
   onSuccess,
   onError,
+  retry = false,
 }: {
   signInInfo: SignInParams;
   onSuccess: () => void;
   onError: (errorMsg: string) => void;
+  retry?: boolean;
 }) => {
   axios
     .post<SignInResponse>('/user/login/', signInInfo)
     .then(() => onSuccess())
     .catch((e: AxiosError<SignInError>) => {
+      if (e.response?.status === 401 && !retry) {
+        // NOTE: access_token이 만료되거나 잘못된 경우, 1번 더 다시 로그인 시도
+        document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        signIn({ signInInfo, onSuccess, onError, retry: true });
+        return;
+      }
       if (e.response?.data.detail) {
         onError(e.response?.data.detail);
         return;
