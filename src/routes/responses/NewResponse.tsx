@@ -27,6 +27,9 @@ function NewResponse() {
 
   const [t] = useTranslation('translation');
   const [question, setQuestion] = useState<FetchState<Question>>({ state: 'loading' });
+  const title = !location.state
+    ? t('question.response.new_response')
+    : t('question.response.edit_response');
 
   useAsyncEffect(async () => {
     if (!isValidQuestionId(questionId)) {
@@ -76,7 +79,7 @@ function NewResponse() {
   return (
     <MainContainer>
       <SubHeader
-        title={t('question.response.new_response')}
+        title={title}
         LeftComponent={
           <button type="button" onClick={handleClickCancel}>
             <Typo type="title-large">{t('question.response.cancel')}</Typo>
