@@ -47,7 +47,7 @@ function FavoriteFriendItem({ user }: Props) {
         </Typo>
         {!current_user_read && <UpdatedLabel />}
       </Layout.FlexRow>
-      {track_id && <SpotifyMusic track={track_id} sharer={user} />}
+      {track_id && <SpotifyMusic track={track_id} sharer={user} useDetailBottomSheet />}
       {bio && (
         <Layout.FlexRow
           pv={4}

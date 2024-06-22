@@ -107,7 +107,7 @@ function UpdatedFriendItem({ user, updateFavoriteCallback, fetchAllTypeFriends }
               </Layout.FlexCol>
             </Layout.FlexRow>
           </StyledProfileArea>
-          {track_id && <SpotifyMusic track={track_id} sharer={user} />}
+          {track_id && <SpotifyMusic track={track_id} sharer={user} useDetailBottomSheet />}
         </StyledUpdatedFriendItem>
       </Layout.FlexRow>
     </SwipeLayout>

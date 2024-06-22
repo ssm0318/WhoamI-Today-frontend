@@ -63,7 +63,14 @@ function CheckIn({ user }: CheckInProps) {
               {/* availability */}
               {availability && <AvailabilityChip availability={availability} />}
               {/* spotify */}
-              {track_id && <SpotifyMusic track={track_id} />}
+              {track_id && (
+                <SpotifyMusic
+                  track={track_id}
+                  useDetailBottomSheet
+                  useAlbumImg
+                  fontType="label-large"
+                />
+              )}
             </Layout.FlexRow>
             {/* more */}
             {isMyPage ? (

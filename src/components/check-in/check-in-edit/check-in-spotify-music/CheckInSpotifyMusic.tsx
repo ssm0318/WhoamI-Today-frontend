@@ -1,8 +1,8 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { useState } from 'react';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
+import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import { Layout } from '@design-system';
-import SpotifyMusic from '../../spotify-music/SpotifyMusic';
 import CheckInSpotifySearchInput from '../check-in-spotify-search-input/CheckInSpotifySearchInput';
 import SongSearchBottomSheet from '../music-search-bottom-sheet/MusicSearchBottomSheet';
 
@@ -26,9 +26,11 @@ function CheckInSpotifyMusic({ trackData, onDelete, onSelect }: CheckInSpotifyMu
           <>
             <SpotifyMusic
               track={trackData}
+              fontType="label-large"
               containerStyle={{
                 padding: 8,
               }}
+              useAlbumImg
             />
             <DeleteButton onClick={onDelete} size={32} />
           </>
