@@ -33,7 +33,7 @@ function PromptsOfTheDay() {
       <StyledPromptsOfTheDayContainer w="100%" {...events} ref={ref}>
         <StyledPromptsOfTheDay gap={16} mt={10} pl={16} pb={16}>
           {todaysQuestions.slice(0, 5).map((question) => (
-            <RecentPromptCard key={question.id} question={question} />
+            <PromptCard key={question.id} question={question} />
           ))}
         </StyledPromptsOfTheDay>
       </StyledPromptsOfTheDayContainer>
@@ -42,7 +42,7 @@ function PromptsOfTheDay() {
       </Layout.FlexRow>
       <StyledRecentPromptsOfTheDay gap={16} w="100%" alignItems="center">
         {todaysQuestions.map((question) => (
-          <PromptCard key={question.id} question={question} />
+          <RecentPromptCard key={question.id} question={question} />
         ))}
       </StyledRecentPromptsOfTheDay>
     </Layout.FlexCol>
