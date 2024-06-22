@@ -18,6 +18,8 @@ type ResponseSectionProps = {
   username?: string;
 };
 
+const RESPONSE_VIEW_MAX_COUNT = 10;
+
 function ResponseSection({ username }: ResponseSectionProps) {
   const [responses, setResponses] = useState<Response[]>([]);
   const [t] = useTranslation('translation');
@@ -29,6 +31,8 @@ function ResponseSection({ username }: ResponseSectionProps) {
     if (!results) return;
     setResponses(results);
   }, [username]);
+
+  const isMoreButtonVisible = responses.length > RESPONSE_VIEW_MAX_COUNT;
 
   const handleClickMore = () => {
     navigate(username ? `/users/${username}/responses` : '/my/responses');
@@ -42,10 +46,10 @@ function ResponseSection({ username }: ResponseSectionProps) {
         <Typo type="title-large" color="BLACK">
           {t('responses.title')}
         </Typo>
-        <Icon onClick={handleClickMore} name="arrow_right" />
+        {isMoreButtonVisible && <Icon onClick={handleClickMore} name="arrow_right" />}
       </Layout.FlexRow>
       <S.ResponseSectionWrapper w="100%" pr={12}>
-        <Layout.FlexRow h="100%" mt={12}>
+        <Layout.FlexRow h="100%" mt={12} w={responses.length === 0 ? '100%' : undefined}>
           <Layout.FlexRow w="100%" gap={8} h="100%">
             {!username && (
               <Layout.FlexCol
@@ -65,15 +69,17 @@ function ResponseSection({ username }: ResponseSectionProps) {
             )}
             {responses.length === 0 ? (
               <Layout.FlexRow alignItems="center" h="100%" justifyContent="center" w="100%">
-                <NoContents text={t('no_contents.responses')} />
+                <NoContents text={t('no_contents.responses')} pv={20} />
               </Layout.FlexRow>
             ) : (
-              responses.map((response) => (
-                <ResponseItem key={response.id} response={response} isMyPage={!username} />
-              ))
+              responses
+                .slice(0, RESPONSE_VIEW_MAX_COUNT)
+                .map((response) => (
+                  <ResponseItem key={response.id} response={response} isMyPage={!username} />
+                ))
             )}
           </Layout.FlexRow>
-          <MoreResponseButton username={username} />
+          {isMoreButtonVisible && <MoreResponseButton username={username} />}
         </Layout.FlexRow>
       </S.ResponseSectionWrapper>
       {selectPrompt && (
