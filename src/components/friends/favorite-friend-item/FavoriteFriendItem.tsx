@@ -2,10 +2,10 @@ import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import { Layout, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
 import { getChatRoomIdByUserId } from '@utils/apis/chat';
-import SpotifyMusic from '../spotify-music/SpotifyMusic';
 import UpdatedLabel from '../updated-label/UpdatedLabel';
 
 interface Props {
@@ -47,7 +47,7 @@ function FavoriteFriendItem({ user }: Props) {
         </Typo>
         {!current_user_read && <UpdatedLabel />}
       </Layout.FlexRow>
-      {track_id && <SpotifyMusic track_id={track_id} sharer={user} />}
+      {track_id && <SpotifyMusic track={track_id} sharer={user} />}
       {bio && (
         <Layout.FlexRow
           pv={4}

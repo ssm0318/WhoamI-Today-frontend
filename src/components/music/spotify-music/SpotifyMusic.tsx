@@ -7,18 +7,20 @@ import { User } from '@models/user';
 import { StyledSpotifyMusic } from './SpotifyMusic.styled';
 
 interface Props {
-  track_id: string | undefined;
+  /* track id 또는 track data 전달. */
+  track?: string | Track | null;
   sharer?: User;
 }
 
-function SpotifyMusic({ track_id, sharer }: Props) {
+function SpotifyMusic({ track, sharer }: Props) {
   const [trackData, setTrackData] = useState<Track | null>(null);
   const spotifyManager = SpotifyManager.getInstance();
 
   useEffect(() => {
-    if (!track_id) return setTrackData(null);
-    spotifyManager.getTrack(track_id).then(setTrackData);
-  }, [spotifyManager, track_id]);
+    if (!track) return setTrackData(null);
+    if (typeof track !== 'string') return setTrackData(track);
+    spotifyManager.getTrack(track).then(setTrackData);
+  }, [spotifyManager, track]);
 
   const [showMusicDetail, setShowMusicDetail] = useState(false);
 

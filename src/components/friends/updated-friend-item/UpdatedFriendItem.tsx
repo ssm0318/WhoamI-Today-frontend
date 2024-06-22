@@ -3,11 +3,11 @@ import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
+import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
 import { addFriendToFavorite, deleteFavorite, hideFriend } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
-import SpotifyMusic from '../spotify-music/SpotifyMusic';
 import UpdatedLabel from '../updated-label/UpdatedLabel';
 import { StyledProfileArea, StyledUpdatedFriendItem } from './UpdatedFriendItem.styled';
 
@@ -107,7 +107,7 @@ function UpdatedFriendItem({ user, updateFavoriteCallback, fetchAllTypeFriends }
               </Layout.FlexCol>
             </Layout.FlexRow>
           </StyledProfileArea>
-          {track_id && <SpotifyMusic track_id={track_id} sharer={user} />}
+          {track_id && <SpotifyMusic track={track_id} sharer={user} />}
         </StyledUpdatedFriendItem>
       </Layout.FlexRow>
     </SwipeLayout>
