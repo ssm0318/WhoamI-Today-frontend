@@ -35,7 +35,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build": "CI=false craco build",
     "test": "craco test",
     "eject": "craco eject",
     "prepare": "husky install"
@@ -62,6 +62,7 @@
     "styled-components": "^5"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@craco/craco": "^7.1.0",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.26",
