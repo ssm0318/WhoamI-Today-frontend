@@ -14,6 +14,7 @@ export const Colors = {
   LIGHT: '#ECEBEC',
   WHITE: '#FFFFFF',
   INPUT_GRAY: '#EFEFEF',
+  UPDATED: '#0072EC',
   /**
    * @deprecated
    */

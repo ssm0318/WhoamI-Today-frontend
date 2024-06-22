@@ -1,4 +1,5 @@
 import { Track } from '@spotify/web-api-ts-sdk';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
@@ -33,7 +34,7 @@ function MusicDetailBottomSheet({ track, sharer, visible, closeBottomSheet }: Pr
     }
   };
 
-  return (
+  return createPortal(
     <BottomModal visible={visible} onClose={closeBottomSheet}>
       <Layout.FlexCol alignItems="center" pb={100} w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
@@ -81,7 +82,8 @@ function MusicDetailBottomSheet({ track, sharer, visible, closeBottomSheet }: Pr
           </S.GoToSpotifyButtonContainer>
         </Layout.Fixed>
       </Layout.FlexCol>
-    </BottomModal>
+    </BottomModal>,
+    document.getElementById('modal-container') || document.body,
   );
 }
 

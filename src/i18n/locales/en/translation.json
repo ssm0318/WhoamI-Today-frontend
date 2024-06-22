@@ -344,7 +344,6 @@
     "question": "No questions found.",
     "forbidden_post": "This post is not accessible.",
     "not_found_post": "This post does not exist."
-
   },
   "chats": {
     "title": "Chats",
@@ -443,7 +442,7 @@
     "friend_requests_desc": "See friend requests & recommended friends",
     "favorites": "Favorites",
     "add_favorite": "Add your friends to Favorites and see their content at the top of your feed!",
-    "all_friends": "All Friends"
+    "all_friends": "Friends"
   },
   "error": {
     "temporary_error": "An error has occurred temporarily. Please try again later.",
@@ -476,7 +475,7 @@
       "description": "Choose an emoji and enter a short text to describe your day"
     },
     "description_placeholder": "Share a short text to describe your day..."
-  }, 
+  },
   "my": {
     "whats_on_your_mind": "What's on your mind, {{username}}?"
   },
