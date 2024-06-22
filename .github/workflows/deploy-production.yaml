@@ -17,6 +17,14 @@ jobs:
     - name: Install dependencies
       run: yarn install
 
+    - name: Create key.ts from secrets
+      run: |
+        echo "export const SPOTIFY_CLIENT_ID = '${{ secrets.SPOTIFY_CLIENT_ID }}';" > src/key.ts
+        echo "export const SPOTIFY_CLIENT_SECRET = '${{ secrets.SPOTIFY_CLIENT_SECRET }}';" >> src/key.ts
+
+    - name: Verify key.ts exists
+      run: ls -l src/key.ts
+
     - name: Upload key.ts file
       uses: appleboy/scp-action@master
       with:
