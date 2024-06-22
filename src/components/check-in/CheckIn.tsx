@@ -42,10 +42,6 @@ function CheckIn({ user }: CheckInProps) {
     return navigate('/check-in/edit');
   };
 
-  const handleClickViewMore = () => {
-    // TODO 친구 페이지에서 check-in 더보기
-  };
-
   useAsyncEffect(async () => {
     if (!isMyPage) return;
     const myCheckIn = await fetchCheckIn();
@@ -73,15 +69,13 @@ function CheckIn({ user }: CheckInProps) {
               )}
             </Layout.FlexRow>
             {/* more */}
-            {isMyPage ? (
+            {isMyPage && (
               <SvgIcon
                 name="edit_filled"
                 fill="DARK_GRAY"
                 size={24}
                 onClick={handleClickEditCheckIn}
               />
-            ) : (
-              <SvgIcon name="dots_menu" color="BLACK" size={24} onClick={handleClickViewMore} />
             )}
           </Layout.FlexRow>
           {(!!mood || !!description) && (
