@@ -13,10 +13,7 @@ interface Props {
 }
 
 function FavoriteFriendItem({ user }: Props) {
-  // NOTE: api 필드 수정전 임시 값
-  const bio = 'bio bio bio!! bio bio bio!! bio bio bio!! bio bio bio!!';
-  const track_id = '24DefNCFiWTP8OjYWiXuYe';
-  const { id, profile_image, username, current_user_read } = user;
+  const { id, profile_image, username, current_user_read, track_id, bio } = user;
 
   const navigate = useNavigate();
   const handleClickProfile = () => {

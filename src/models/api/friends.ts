@@ -19,6 +19,7 @@ export interface UpdatedProfile extends User {
   is_hidden: boolean;
   current_user_read: boolean;
   unread_cnt: number;
+  track_id?: string;
 }
 
 export type GetAllFriendsResponse = PaginationResponse<UpdatedProfile[]>;

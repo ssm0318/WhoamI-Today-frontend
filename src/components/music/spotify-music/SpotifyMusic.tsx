@@ -61,10 +61,10 @@ function SpotifyMusic({
           >
             {useAlbumImg ? (
               <img
-                src={trackData?.album.images[0].url}
+                src={trackData.album.images[0].url}
                 width={16}
                 height={16}
-                alt={`${trackData?.name}-album`}
+                alt={`${trackData.name}-album`}
                 style={{
                   borderRadius: 4,
                 }}
