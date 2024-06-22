@@ -8,17 +8,15 @@ import { getChatRoomIdByUserId } from '@utils/apis/chat';
 import SpotifyMusic from '../spotify-music/SpotifyMusic';
 import UpdatedLabel from '../updated-label/UpdatedLabel';
 
-interface UpdatedFriendItemProps extends UpdatedProfile {}
+interface Props {
+  user: UpdatedProfile;
+}
 
-function FavoriteFriendItem({
-  id,
-  profile_image,
-  username,
-  current_user_read,
-}: UpdatedFriendItemProps) {
+function FavoriteFriendItem({ user }: Props) {
   // NOTE: api 필드 수정전 임시 값
   const bio = 'bio bio bio!! bio bio bio!! bio bio bio!! bio bio bio!!';
   const track_id = '24DefNCFiWTP8OjYWiXuYe';
+  const { id, profile_image, username, current_user_read } = user;
 
   const navigate = useNavigate();
   const handleClickProfile = () => {
@@ -49,7 +47,7 @@ function FavoriteFriendItem({
         </Typo>
         {!current_user_read && <UpdatedLabel />}
       </Layout.FlexRow>
-      {track_id && <SpotifyMusic track_id={track_id} />}
+      {track_id && <SpotifyMusic track_id={track_id} sharer={user} />}
       {bio && (
         <Layout.FlexRow
           pv={4}

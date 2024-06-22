@@ -74,7 +74,7 @@ function Friends() {
               justifyContent="space-evenly"
             >
               {favoriteFriends.data.length ? (
-                favoriteFriends.data.map((user) => <FavoriteFriendItem key={user.id} {...user} />)
+                favoriteFriends.data.map((user) => <FavoriteFriendItem key={user.id} user={user} />)
               ) : (
                 <Layout.FlexCol alignItems="center" ph={75} gap={8}>
                   <Typo type="label-medium" color="DARK_GRAY">
@@ -116,7 +116,7 @@ function Friends() {
                   {allFriends.data.results.map((user) => (
                     <UpdatedFriendItem
                       key={user.id}
-                      {...user}
+                      user={user}
                       updateFavoriteCallback={updateFavoriteCallback(user)}
                       fetchAllTypeFriends={fetchAllTypeFriends}
                     />

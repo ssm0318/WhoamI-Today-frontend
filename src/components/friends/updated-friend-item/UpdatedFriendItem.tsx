@@ -11,23 +11,17 @@ import SpotifyMusic from '../spotify-music/SpotifyMusic';
 import UpdatedLabel from '../updated-label/UpdatedLabel';
 import { StyledProfileArea, StyledUpdatedFriendItem } from './UpdatedFriendItem.styled';
 
-interface UpdatedFriendItemProps extends UpdatedProfile {
+interface Props {
+  user: UpdatedProfile;
   updateFavoriteCallback?: () => void;
   fetchAllTypeFriends: () => void;
 }
 
-function UpdatedFriendItem({
-  id,
-  profile_image,
-  username,
-  is_favorite,
-  updateFavoriteCallback,
-  current_user_read,
-  fetchAllTypeFriends,
-}: UpdatedFriendItemProps) {
+function UpdatedFriendItem({ user, updateFavoriteCallback, fetchAllTypeFriends }: Props) {
   // NOTE: api 필드 수정전 임시 값
   const bio = 'bio bio bio!! bio bio bio!! bio bio bio!! bio bio bio!!';
   const track_id = '24DefNCFiWTP8OjYWiXuYe';
+  const { id, profile_image, username, is_favorite, current_user_read } = user;
 
   const navigate = useNavigate();
   const handleClickProfile = () => {
@@ -113,7 +107,7 @@ function UpdatedFriendItem({
               </Layout.FlexCol>
             </Layout.FlexRow>
           </StyledProfileArea>
-          {track_id && <SpotifyMusic track_id={track_id} />}
+          {track_id && <SpotifyMusic track_id={track_id} sharer={user} />}
         </StyledUpdatedFriendItem>
       </Layout.FlexRow>
     </SwipeLayout>
