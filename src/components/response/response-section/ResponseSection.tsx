@@ -18,6 +18,8 @@ type ResponseSectionProps = {
   username?: string;
 };
 
+const RESPONSE_VIEW_MAX_COUNT = 10;
+
 function ResponseSection({ username }: ResponseSectionProps) {
   const [responses, setResponses] = useState<Response[]>([]);
   const [t] = useTranslation('translation');
@@ -27,7 +29,7 @@ function ResponseSection({ username }: ResponseSectionProps) {
   const fetchResponses = useCallback(async () => {
     const { results } = username ? await getUserResponses(username) : await getMyResponses(null);
     if (!results) return;
-    setResponses(results);
+    setResponses(results.slice(0, RESPONSE_VIEW_MAX_COUNT));
   }, [username]);
 
   const handleClickMore = () => {
