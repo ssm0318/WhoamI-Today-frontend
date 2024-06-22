@@ -47,7 +47,9 @@ const GlobalStyle = createGlobalStyle`
     body {
         background-color: #000000;
         scrollbar-gutter: stable;
-
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-smooth: never;
     }
 
     input {
