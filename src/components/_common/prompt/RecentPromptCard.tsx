@@ -21,7 +21,7 @@ function RecentPromptCard({ question, requesterName }: PromptCardProps) {
   const [sendPromptModalVisible, setSendPromptBottomModalVisible] = useState(false);
 
   const handleClickRespond = () => {
-    navigate(`questions/${id}/new`);
+    navigate(`/questions/${id}/new`);
   };
 
   const handleClickSend = () => {
