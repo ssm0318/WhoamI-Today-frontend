@@ -69,7 +69,7 @@ function CheckIn({ user }: CheckInProps) {
               )}
             </Layout.FlexRow>
             {/* more */}
-            {isMyPage && (
+            {(!!availability || !!track_id) && isMyPage && (
               <SvgIcon
                 name="edit_filled"
                 fill="DARK_GRAY"
@@ -78,34 +78,44 @@ function CheckIn({ user }: CheckInProps) {
               />
             )}
           </Layout.FlexRow>
-          {(!!mood || !!description) && (
-            <Layout.FlexRow
-              w="100%"
-              gap={8}
-              bgColor="WHITE"
-              alignItems="center"
-              outline="GRAY_1"
-              ph={8}
-              pv={4}
-              rounded={12}
-            >
-              {/* emoji */}
-              {mood && (
-                <EmojiItem
-                  emojiString={mood}
-                  size={24}
-                  bgColor="TRANSPARENT"
-                  outline="TRANSPARENT"
-                />
-              )}
-              {/* description */}
-              {description && (
-                <Typo type="label-large" numberOfLines={2}>
-                  {description}
-                </Typo>
-              )}
-            </Layout.FlexRow>
-          )}
+          <Layout.FlexRow w="100%" alignItems="center" gap={8}>
+            {(!!mood || !!description) && (
+              <Layout.FlexRow
+                w="100%"
+                gap={8}
+                bgColor="WHITE"
+                alignItems="center"
+                outline="GRAY_1"
+                ph={8}
+                pv={4}
+                rounded={12}
+              >
+                {/* emoji */}
+                {mood && (
+                  <EmojiItem
+                    emojiString={mood}
+                    size={24}
+                    bgColor="TRANSPARENT"
+                    outline="TRANSPARENT"
+                  />
+                )}
+                {/* description */}
+                {description && (
+                  <Typo type="label-large" numberOfLines={2}>
+                    {description}
+                  </Typo>
+                )}
+              </Layout.FlexRow>
+            )}
+            {!availability && !track_id && isMyPage && (
+              <SvgIcon
+                name="edit_filled"
+                fill="DARK_GRAY"
+                size={24}
+                onClick={handleClickEditCheckIn}
+              />
+            )}
+          </Layout.FlexRow>
 
           {/* check in time */}
           <Layout.FlexRow w="100%" justifyContent="flex-end">
