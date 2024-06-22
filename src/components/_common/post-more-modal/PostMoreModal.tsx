@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { BottomMenuDialog } from '@components/_common/alert-dialog/bottom-menu-dialog/BottomMenuDialog';
 import CommonDialog, {
   CommonDialogProps,
@@ -7,6 +8,7 @@ import CommonDialog, {
 import { Typo } from '@design-system';
 import { Note, Response } from '@models/post';
 import { reportContent } from '@utils/apis/common';
+import { deleteResponse } from '@utils/apis/responses';
 
 interface PostMoreModalProps {
   isVisible: boolean;
@@ -30,6 +32,8 @@ function PostMoreModal({
 }: PostMoreModalProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'post_more_modal' });
   const [showAlert, setShowAlert] = useState<AlertProps>();
+
+  const navigate = useNavigate();
 
   const closeMoreModal = () => {
     setIsVisible(false);
@@ -57,7 +61,7 @@ function PostMoreModal({
   };
 
   const handleClickEditPost = () => {
-    //
+    navigate(`/questions/${post.id}/new`, { state: { post } });
   };
 
   const handleClickDeletePost = () => {
@@ -67,9 +71,9 @@ function PostMoreModal({
       confirmText: t('delete.delete'),
       cancelText: t('delete.cancel'),
       onClickConfirm: async () => {
-        // await reportContent(post.id, post.type);
-        // onConfirmReport?.();
-        // handleOnConfirmAlert();
+        await deleteResponse(post.id);
+        onConfirmReport?.();
+        handleOnConfirmAlert();
       },
     });
     closeMoreModal();

@@ -75,7 +75,12 @@ function ResponseSection({ username }: ResponseSectionProps) {
               responses
                 .slice(0, RESPONSE_VIEW_MAX_COUNT)
                 .map((response) => (
-                  <ResponseItem key={response.id} response={response} isMyPage={!username} />
+                  <ResponseItem
+                    key={response.id}
+                    response={response}
+                    isMyPage={!username}
+                    refresh={fetchResponses}
+                  />
                 ))
             )}
           </Layout.FlexRow>

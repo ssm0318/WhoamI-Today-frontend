@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
@@ -20,7 +20,9 @@ const isValidQuestionId = (questionId?: string): questionId is string =>
   !!questionId && /^\d+$/.test(questionId);
 
 function NewResponse() {
+  const location = useLocation();
   const { questionId } = useParams();
+  const content = location.state?.post.content || '';
   const currentUser = useBoundStore.getState().myProfile;
 
   const [t] = useTranslation('translation');
@@ -41,7 +43,7 @@ function NewResponse() {
       });
   }, []);
 
-  const [newResponse, setNewResponse] = useState('');
+  const [newResponse, setNewResponse] = useState(content);
   const handleChangeResponse = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setNewResponse(e.target.value);
   };
