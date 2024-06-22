@@ -43,6 +43,22 @@ export const updateNote = async (noteId: number, noteData: Partial<Note>) => {
   return data;
 };
 
+export const patchNote = async (noteId: number, noteData: NewNoteForm) => {
+  const formData = new FormData();
+
+  if (noteData.content) {
+    formData.append('content', noteData.content);
+  }
+  if (noteData.images) {
+    noteData.images.forEach((img, index) => {
+      formData.append('images', img.file, `${index}`);
+    });
+  }
+
+  const { data } = await axiosFormDataInstance.patch<Note>(`notes/${noteId}`, formData);
+  return data;
+};
+
 export const deleteNote = async (noteId: number) => {
   await axios.delete(`/notes/${noteId}/`);
 };

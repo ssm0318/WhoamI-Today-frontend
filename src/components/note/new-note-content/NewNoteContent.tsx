@@ -11,12 +11,11 @@ import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { NoteInput } from './NoteInputBox.styled';
 
 interface NoteInformationProps {
-  status: boolean;
   noteInfo: NewNoteForm;
   setNoteInfo: React.Dispatch<React.SetStateAction<NewNoteForm>>;
 }
 
-function NewNoteContent({ status, noteInfo, setNoteInfo }: NoteInformationProps) {
+function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
   const PLACE_HOLDER = t('whats_on_your_mind');
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
@@ -110,7 +109,7 @@ function NewNoteContent({ status, noteInfo, setNoteInfo }: NoteInformationProps)
       ) : noteInfo?.images?.length ? (
         <Layout.FlexCol alignItems="center" w="100%">
           <ImageSlider
-            images={status ? noteInfo.images.map((img) => img.url) : noteInfo.images}
+            images={noteInfo.images.map((img) => img.url)}
             rounded={17}
             onDeleteImage={handleDeleteImage}
           />
