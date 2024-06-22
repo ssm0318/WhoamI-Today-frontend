@@ -24,13 +24,13 @@ function MusicDetailBottomSheet({ track, sharer, visible, closeBottomSheet }: Pr
 
   const handleClickGoToSpotify = () => {
     if (!track) return;
-    const uri = track.external_urls.spotify;
+    const url = track.external_urls.spotify;
     if (window.ReactNativeWebView) {
       postMessage('OPEN_BROWSER', {
-        uri: `spotify://spotify:track:${track.id}`,
+        url,
       });
     } else {
-      window.open(uri, '_blank');
+      window.open(url, '_blank');
     }
   };
 
@@ -55,7 +55,14 @@ function MusicDetailBottomSheet({ track, sharer, visible, closeBottomSheet }: Pr
         )}
         {/* music info */}
         {track && (
-          <Layout.FlexRow pt={17} ph={20} gap={12} alignItems="center">
+          <Layout.FlexRow
+            pt={17}
+            ph={20}
+            gap={12}
+            alignItems="center"
+            justifyContent="space-between"
+            w="100%"
+          >
             <img
               src={track.album.images[0].url}
               width={MUSIC_THUMBNAIL_SIZE}
@@ -65,7 +72,7 @@ function MusicDetailBottomSheet({ track, sharer, visible, closeBottomSheet }: Pr
                 borderRadius: 4,
               }}
             />
-            <Layout.FlexCol gap={5}>
+            <Layout.FlexCol gap={5} w="100%">
               <Typo type="title-medium">{track.name}</Typo>
               <Typo type="label-medium">{track.artists[0].name}</Typo>
             </Layout.FlexCol>
