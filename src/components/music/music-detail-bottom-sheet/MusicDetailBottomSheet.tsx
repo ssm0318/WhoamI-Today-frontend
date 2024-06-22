@@ -23,13 +23,13 @@ function MusicDetailBottomSheet({ track, sharer, visible, closeBottomSheet }: Pr
 
   const handleClickGoToSpotify = () => {
     if (!track) return;
-    const uri = track.external_urls.spotify;
+    const url = track.external_urls.spotify;
     if (window.ReactNativeWebView) {
       postMessage('OPEN_BROWSER', {
-        uri,
+        url,
       });
     } else {
-      window.open(uri, '_blank');
+      window.open(url, '_blank');
     }
   };
 
