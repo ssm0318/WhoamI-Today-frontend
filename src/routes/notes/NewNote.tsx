@@ -18,7 +18,7 @@ function NewNote() {
   return (
     <MainContainer>
       <NewNoteHeader title={title} noteInfo={noteInfo} />
-      <NewNoteContent noteInfo={noteInfo} setNoteInfo={setNoteInfo} />
+      <NewNoteContent status={!location.state} noteInfo={noteInfo} setNoteInfo={setNoteInfo} />
     </MainContainer>
   );
 }

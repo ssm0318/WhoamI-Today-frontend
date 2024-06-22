@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { CroppedImg } from '@utils/getCroppedImg';
 import { Border } from 'src/design-system/layouts/layout.types';
 import * as S from './ImageSlider.styled';
 
 interface ImageSliderProps extends Border {
-  images: string[];
+  images: string[] | CroppedImg[];
   onDeleteImage?: (imgIndex: number) => void;
 }
 
