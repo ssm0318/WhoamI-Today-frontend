@@ -197,9 +197,9 @@
     "likes": "likes",
     "title": "Notes",
     "new_note": "New Note",
-    "new_note_header": {
+    "note_header": {
       "new_note": "New Note",
-      "new_response": "New Response"
+      "edit_note": "Edit Note"
     },
     "posted": "Posted🎉",
     "view": "View",

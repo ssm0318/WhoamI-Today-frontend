@@ -25,12 +25,21 @@ function NoteSection({ username }: NoteSectionProps) {
     await fetchNotes(nextPage ?? null);
   });
 
-  const fetchNotes = async (page: string | null) => {
+  const fetchNotes = async (page: string | null, isRefresh?: boolean) => {
     const { results, next } = username ? await getUserNotes(username) : await getMyNotes(page);
     if (!results) return;
     setNextPage(next);
-    setNoteList([...noteList, ...results]);
+    if (isRefresh) {
+      setNoteList(results);
+    } else {
+      setNoteList([...noteList, ...results]);
+    }
     setIsLoading(false);
+  };
+
+  // Refetch responses
+  const handleRefetch = async () => {
+    await fetchNotes(null, true);
   };
 
   return (
@@ -47,7 +56,9 @@ function NoteSection({ username }: NoteSectionProps) {
               <NoContents title={t('no_contents.notes')} />
             </Layout.FlexRow>
           ) : (
-            noteList.map((note) => <NoteItem key={note.id} note={note} isMyPage={!username} />)
+            noteList.map((note) => (
+              <NoteItem key={note.id} note={note} isMyPage={!username} refresh={handleRefetch} />
+            ))
           )}
         </Layout.FlexCol>
         <div ref={targetRef} />

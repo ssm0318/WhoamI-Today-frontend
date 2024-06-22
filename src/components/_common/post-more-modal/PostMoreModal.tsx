@@ -8,6 +8,7 @@ import CommonDialog, {
 import { Typo } from '@design-system';
 import { Note, Response } from '@models/post';
 import { reportContent } from '@utils/apis/common';
+import { deleteNote } from '@utils/apis/note';
 import { deleteResponse } from '@utils/apis/responses';
 
 interface PostMoreModalProps {
@@ -61,7 +62,12 @@ function PostMoreModal({
   };
 
   const handleClickEditPost = () => {
-    navigate(`/questions/${post.id}/new`, { state: { post } });
+    console.log(post);
+    if (post.type === 'Note') {
+      navigate(`/notes/new`, { state: { post } });
+    } else if (post.type === 'Response') {
+      navigate(`/questions/${post.id}/new`, { state: { post } });
+    }
   };
 
   const handleClickDeletePost = () => {
@@ -71,7 +77,11 @@ function PostMoreModal({
       confirmText: t('delete.delete'),
       cancelText: t('delete.cancel'),
       onClickConfirm: async () => {
-        await deleteResponse(post.id);
+        if (post.type === 'Note') {
+          await deleteNote(post.id);
+        } else if (post.type === 'Response') {
+          await deleteResponse(post.id);
+        }
         onConfirmReport?.();
         handleOnConfirmAlert();
       },

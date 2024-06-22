@@ -194,9 +194,9 @@
     "likes": "좋아요",
     "title": "노트",
     "new_note": "새로운 노트",
-    "new_note_header": {
+    "note_header": {
       "new_note": "새 노트 작성",
-      "new_response": "새 답변 작성"
+      "edit_note": "노트 편집"
     },
     "posted": "업로드 완료🎉",
     "view": "보기",

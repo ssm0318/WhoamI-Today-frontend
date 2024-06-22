@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
+import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import { Layout, Typo } from '@design-system';
@@ -15,19 +16,28 @@ interface NoteItemProps {
   isMyPage: boolean;
   enableCollapse?: boolean;
   type?: 'LIST' | 'DETAIL';
+  refresh?: () => Promise<void>;
 }
 
-function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: NoteItemProps) {
+function NoteItem({
+  note,
+  isMyPage,
+  enableCollapse = true,
+  type = 'LIST',
+  refresh,
+}: NoteItemProps) {
   const { content, created_at, id, author_detail, images, like_user_sample } = note;
   const navigate = useNavigate();
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
+  const [showMore, setShowMore] = useState(false);
 
   const { username, profile_image } = author_detail ?? {};
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
 
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
+    setShowMore(true);
   };
 
   const handleClickNote = () => {
@@ -51,6 +61,13 @@ function NoteItem({ note, isMyPage, enableCollapse = true, type = 'LIST' }: Note
         rounded={12}
         onClick={handleClickNote}
       >
+        <PostMoreModal
+          isVisible={showMore}
+          setIsVisible={setShowMore}
+          post={note}
+          isMyPage={isMyPage}
+          onConfirmReport={refresh}
+        />
         <Layout.FlexRow
           w="100%"
           alignItems="center"
