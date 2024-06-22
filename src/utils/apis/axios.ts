@@ -1,7 +1,10 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import i18n from '@i18n/index';
 
-export const API_BASE_URL = 'http://localhost:8000/api/';
+export const API_BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://diivers.world/api/'
+    : 'http://localhost:8000/api/';
 
 const JSON_DEFAULT_OPTIONS: AxiosRequestConfig = {
   baseURL: API_BASE_URL,
