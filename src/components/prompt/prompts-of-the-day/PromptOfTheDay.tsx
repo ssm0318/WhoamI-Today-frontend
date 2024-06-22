@@ -32,8 +32,8 @@ function PromptsOfTheDay() {
       </Layout.FlexRow>
       <StyledPromptsOfTheDayContainer w="100%" {...events} ref={ref}>
         <StyledPromptsOfTheDay gap={16} mt={10} pl={16} pb={16}>
-          {todaysQuestions.map((question) => (
-            <PromptCard key={question.id} question={question} />
+          {todaysQuestions.slice(0, 5).map((question) => (
+            <RecentPromptCard key={question.id} question={question} />
           ))}
         </StyledPromptsOfTheDay>
       </StyledPromptsOfTheDayContainer>
@@ -41,8 +41,8 @@ function PromptsOfTheDay() {
         <Typo type="title-medium">{t('recent_prompts')}</Typo>
       </Layout.FlexRow>
       <StyledRecentPromptsOfTheDay gap={16} w="100%" alignItems="center">
-        {todaysQuestions.slice(0, 5).map((question) => (
-          <RecentPromptCard key={question.id} question={question} />
+        {todaysQuestions.map((question) => (
+          <PromptCard key={question.id} question={question} />
         ))}
       </StyledRecentPromptsOfTheDay>
     </Layout.FlexCol>
