@@ -1,4 +1,6 @@
+import { MutableRefObject, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDraggable } from 'react-use-draggable-scroll';
 import PromptCard from '@components/_common/prompt/PromptCard';
 import RecentPromptCard from '@components/_common/prompt/RecentPromptCard';
 import { Layout, Typo } from '@design-system';
@@ -14,6 +16,8 @@ import {
 function PromptsOfTheDay() {
   const [t] = useTranslation('translation', { keyPrefix: 'prompts' });
   const { todaysQuestions, fetchTodaysQuestions } = useBoundStore(TodayQuestionsSelector);
+  const ref = useRef<HTMLDivElement>() as MutableRefObject<HTMLInputElement>;
+  const { events } = useDraggable(ref);
 
   useAsyncEffect(async () => {
     await fetchTodaysQuestions();
@@ -26,7 +30,7 @@ function PromptsOfTheDay() {
       <Layout.FlexRow ml={16}>
         <Typo type="title-medium">{t('prompts_of_the_day.title')}</Typo>
       </Layout.FlexRow>
-      <StyledPromptsOfTheDayContainer w="100%">
+      <StyledPromptsOfTheDayContainer w="100%" {...events} ref={ref}>
         <StyledPromptsOfTheDay gap={16} mt={10} pl={16} pb={16}>
           {todaysQuestions.map((question) => (
             <PromptCard key={question.id} question={question} />
