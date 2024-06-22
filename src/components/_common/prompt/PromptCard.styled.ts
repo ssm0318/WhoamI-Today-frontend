@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { Layout } from '@design-system';
 
 export const StyledPromptCard = styled(Layout.FlexCol)`
-  width: 250px;
   height: 154.5px;
   padding: 16px;
   align-items: flex-start;

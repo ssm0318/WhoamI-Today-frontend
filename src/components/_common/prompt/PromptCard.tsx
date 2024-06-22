@@ -9,8 +9,9 @@ import SendPromptModal from './SendPromptModal';
 
 interface PromptCardProps {
   question: Question | DailyQuestion;
+  widthMode?: 'full' | 'normal';
 }
-function PromptCard({ question }: PromptCardProps) {
+function PromptCard({ question, widthMode = 'normal' }: PromptCardProps) {
   const navigate = useNavigate();
 
   const { id, content } = question;
@@ -29,7 +30,7 @@ function PromptCard({ question }: PromptCardProps) {
 
   return (
     <>
-      <StyledPromptCard>
+      <StyledPromptCard w={widthMode === 'full' ? '100%' : 250}>
         <Layout.FlexRow gap={8} alignItems="center">
           <ProfileImage imageUrl="/whoami-profile.svg" username="Whoami Today" size={28} />
           <Typo type="title-medium">Whoami Today</Typo>
