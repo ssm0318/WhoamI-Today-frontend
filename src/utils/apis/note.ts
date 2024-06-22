@@ -55,7 +55,7 @@ export const patchNote = async (noteId: number, noteData: NewNoteForm) => {
     });
   }
 
-  const { data } = await axiosFormDataInstance.patch<Note>(`notes/${noteId}`, formData);
+  const { data } = await axiosFormDataInstance.patch<Note>(`notes/${noteId}/`, formData);
   return data;
 };
 
