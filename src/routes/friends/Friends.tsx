@@ -80,7 +80,7 @@ function Friends() {
                   <Typo type="label-medium" color="DARK_GRAY">
                     {t('add_favorite')}
                   </Typo>
-                  <Icon name="add_default" />
+                  <Icon name="add_default" onClick={handleClickEditFriends} />
                 </Layout.FlexCol>
               )}
             </Layout.FlexRow>
