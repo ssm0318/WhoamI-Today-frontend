@@ -6,7 +6,7 @@ import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledFriendItem } from '@components/friends/explore-friends/friend-item/FriendItem.styled';
 import { Button, Layout, Typo } from '@design-system';
-import { User } from '@models/user';
+import { areFriends, User, UserProfile } from '@models/user';
 import {
   acceptFriendRequest,
   blockRecommendation,
@@ -18,7 +18,7 @@ import {
 
 interface Props {
   type: 'sent_requests' | 'requests' | 'recommended' | 'search';
-  user: User;
+  user: User | UserProfile;
   disableRequest?: boolean;
   onClickConfirm?: () => void;
   onClickDelete?: () => void;
@@ -104,13 +104,15 @@ function FriendItem({
       )}
       {(type === 'recommended' || type === 'search' || type === 'sent_requests') && (
         <Layout.FlexRow gap={16} alignItems="center">
-          <Button.Primary
-            status={
-              disableRequest ? (type === 'sent_requests' ? 'completed' : 'disabled') : 'normal'
-            }
-            text={type === 'sent_requests' ? t('requested') : t('request')}
-            onClick={handleClickRequest}
-          />
+          {!areFriends(user) && (
+            <Button.Primary
+              status={
+                disableRequest ? (type === 'sent_requests' ? 'completed' : 'disabled') : 'normal'
+              }
+              text={type === 'sent_requests' ? t('requested') : t('request')}
+              onClick={handleClickRequest}
+            />
+          )}
           <Icon name="close" size={16} onClick={handleClickDelete} />
         </Layout.FlexRow>
       )}

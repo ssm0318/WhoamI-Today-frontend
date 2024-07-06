@@ -18,3 +18,6 @@ export interface UserProfile extends User {
   mutuals: User[];
   is_favorite: boolean;
 }
+
+export const areFriends = (user: User | UserProfile): user is UserProfile =>
+  (user as UserProfile).are_friends === true;
