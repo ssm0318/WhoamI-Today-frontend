@@ -7,6 +7,7 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledFriendItem } from '@components/friends/explore-friends/friend-item/FriendItem.styled';
 import { Button, Layout, Typo } from '@design-system';
 import { areFriends, User, UserProfile } from '@models/user';
+import { useBoundStore } from '@stores/useBoundStore';
 import {
   acceptFriendRequest,
   blockRecommendation,
@@ -36,6 +37,7 @@ function FriendItem({
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.friend_item' });
 
   const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
   const handleClickConfirm = async (e: MouseEvent) => {
     e.stopPropagation();
@@ -73,7 +75,11 @@ function FriendItem({
 
   const handleClickRequest = async (e: MouseEvent) => {
     e.stopPropagation();
-    await requestFriend(user.id);
+    await requestFriend({
+      userId: user.id,
+      onSuccess: () => openToast({ message: t('friend_request_success') }),
+      onError: () => openToast({ message: t('temporary_error') }),
+    });
     onClickRequest?.();
   };
 

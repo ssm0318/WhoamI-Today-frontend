@@ -241,14 +241,25 @@ export const getUserProfile = async (username: string) => {
   return data;
 };
 
-export const requestFriend = async (userId: number) => {
+export const requestFriend = async ({
+  userId,
+  onSuccess,
+  onError,
+}: {
+  userId: number;
+  onSuccess: () => void;
+  onError: () => void;
+}) => {
   const currentUser = useBoundStore.getState().myProfile;
   if (!currentUser) return;
 
-  await axios.post('/user/friend-requests/', {
-    requester_id: currentUser.id,
-    requestee_id: userId,
-  });
+  axios
+    .post('/user/friend-requests/', {
+      requester_id: currentUser.id,
+      requestee_id: userId,
+    })
+    .then(() => onSuccess())
+    .catch(() => onError());
 };
 
 export const cancelFriendRequest = async (userId: number) => {
