@@ -10,12 +10,18 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 
 interface CommentItemProps {
+  isPostAuthor?: boolean;
   comment: Comment | PrivateComment;
   replyAvailable?: boolean;
   onClickReplyBtn?: () => void;
 }
 
-function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: CommentItemProps) {
+function CommentItem({
+  isPostAuthor,
+  comment,
+  onClickReplyBtn,
+  replyAvailable = true,
+}: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const { author_detail, created_at, is_private, replies } = comment;
   const { username, profile_image } = author_detail ?? {};
@@ -82,14 +88,16 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
                   </Layout.FlexRow>
                 </button>
               )}
-              <button type="button" onClick={handleSendMessage}>
-                <Layout.FlexRow gap={4} alignItems="center">
-                  <SvgIcon name="comment_message" size={24} />
-                  <Typo type="label-medium" color="DARK_GRAY">
-                    {t('message')}
-                  </Typo>
-                </Layout.FlexRow>
-              </button>
+              {!isCommentAuthor && isPostAuthor && (
+                <button type="button" onClick={handleSendMessage}>
+                  <Layout.FlexRow gap={4} alignItems="center">
+                    <SvgIcon name="comment_message" size={24} />
+                    <Typo type="label-medium" color="DARK_GRAY">
+                      {t('message')}
+                    </Typo>
+                  </Layout.FlexRow>
+                </button>
+              )}
             </Layout.FlexRow>
           </Layout.FlexCol>
         </Layout.FlexCol>
@@ -107,7 +115,12 @@ function CommentItem({ comment, onClickReplyBtn, replyAvailable = true }: Commen
       {/* replies */}
       <Layout.FlexCol w="100%" gap={8} pl={20} mt={14}>
         {replies?.map((reply) => (
-          <CommentItem key={reply.id} comment={reply} replyAvailable={false} />
+          <CommentItem
+            key={reply.id}
+            isPostAuthor={isPostAuthor}
+            comment={reply}
+            replyAvailable={false}
+          />
         ))}
       </Layout.FlexCol>
     </Layout.FlexCol>

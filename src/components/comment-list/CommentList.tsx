@@ -4,6 +4,7 @@ import Loader from '@components/_common/loader/Loader';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Comment, Note, Response } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
 import { deleteComment } from '@utils/apis/comments';
 import CommentInputBox from './comment-input-box/CommentInputBox';
 import CommentItem from './comment-item/CommentItem';
@@ -25,6 +26,8 @@ function CommentList({ postType, post, setReload }: CommentListProps) {
 
   const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
   const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
+
+  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextPage === null) return setIsLoading(false);
@@ -62,6 +65,7 @@ function CommentList({ postType, post, setReload }: CommentListProps) {
         {comments.map((comment) => (
           <CommentItem
             key={comment.id}
+            isPostAuthor={myProfile?.id === post.author_detail.id}
             comment={comment}
             onClickReplyBtn={() => {
               setReplyTo(comment);

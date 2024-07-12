@@ -10,6 +10,7 @@ import { getCommentList } from '@components/comment-list/CommentList.helper';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { Comment, Note, Response } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
 import {
   CommentBottomContentWrapper,
   CommentBottomFooterWrapper,
@@ -33,6 +34,8 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
 
   const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
   const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
+
+  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
   const fetchComments = async (page: string | null, update: boolean) => {
     const { results, next } = await getCommentList(postType, post.id, page);
@@ -75,6 +78,7 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
         {comments.map((comment) => (
           <CommentItem
             key={comment.id}
+            isPostAuthor={myProfile?.id === post.author_detail.id}
             comment={comment}
             onClickReplyBtn={() => {
               setReplyTo(comment);
