@@ -119,7 +119,7 @@ function CommentItem({
             key={reply.id}
             isPostAuthor={isPostAuthor}
             comment={reply}
-            replyAvailable={false}
+            onClickReplyBtn={onClickReplyBtn}
           />
         ))}
       </Layout.FlexCol>
