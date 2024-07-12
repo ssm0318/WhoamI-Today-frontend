@@ -91,6 +91,7 @@
       "send_question_to_friends_now": "Send the question to friends now?",
       "send_question": "Send to Friends",
       "new_response": "New Response",
+      "edit_response": "Edit Response",
       "cancel": "Cancel",
       "what_is_your_response": "What's your response?",
       "posting": "Posting...",
@@ -197,9 +198,9 @@
     "likes": "likes",
     "title": "Notes",
     "new_note": "New Note",
-    "new_note_header": {
+    "note_header": {
       "new_note": "New Note",
-      "new_response": "New Response"
+      "edit_note": "Edit Note"
     },
     "posted": "Posted🎉",
     "view": "View",
@@ -233,13 +234,21 @@
   },
   "post_more_modal": {
     "menu": {
-      "report": "Report"
+      "report": "Report",
+      "edit": "Edit",
+      "delete": "Delete"
     },
     "report": {
       "title": "Report This Post?",
       "content": "By reporting, we will automatically hide this post from you as well.",
       "cancel": "Cancel",
       "report": "Report"
+    },
+    "delete": {
+      "title": "Delete This Post?",
+      "content": "This post will be deleted permanently",
+      "cancel": "Cancel",
+      "delete": "Delete"
     }
   },
   "settings": {

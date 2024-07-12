@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { BottomMenuDialog } from '@components/_common/alert-dialog/bottom-menu-dialog/BottomMenuDialog';
 import CommonDialog, {
   CommonDialogProps,
@@ -7,6 +8,8 @@ import CommonDialog, {
 import { Typo } from '@design-system';
 import { Note, Response } from '@models/post';
 import { reportContent } from '@utils/apis/common';
+import { deleteNote } from '@utils/apis/note';
+import { deleteResponse } from '@utils/apis/responses';
 
 interface PostMoreModalProps {
   isVisible: boolean;
@@ -30,6 +33,8 @@ function PostMoreModal({
 }: PostMoreModalProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'post_more_modal' });
   const [showAlert, setShowAlert] = useState<AlertProps>();
+
+  const navigate = useNavigate();
 
   const closeMoreModal = () => {
     setIsVisible(false);
@@ -56,11 +61,47 @@ function PostMoreModal({
     closeMoreModal();
   };
 
+  const handleClickEditPost = () => {
+    if (post.type === 'Note') {
+      navigate(`/notes/new`, { state: { post } });
+    } else if (post.type === 'Response') {
+      navigate(`/questions/${post.id}/new`, { state: { post } });
+    }
+  };
+
+  const handleClickDeletePost = () => {
+    setShowAlert({
+      title: t('delete.title'),
+      content: t('delete.content'),
+      confirmText: t('delete.delete'),
+      cancelText: t('delete.cancel'),
+      onClickConfirm: async () => {
+        if (post.type === 'Note') {
+          await deleteNote(post.id);
+        } else if (post.type === 'Response') {
+          await deleteResponse(post.id);
+        }
+        onConfirmReport?.();
+        handleOnConfirmAlert();
+      },
+    });
+    closeMoreModal();
+  };
+
   return (
     <>
       <BottomMenuDialog visible={isVisible} onClickClose={closeMoreModal}>
         {/* TODO isMyPage인 경우 필요한 메뉴 추가 */}
-        {isMyPage ? null : (
+        {isMyPage ? (
+          <>
+            <button type="button" onClick={handleClickEditPost}>
+              <Typo type="button-large">{t('menu.edit')}</Typo>
+            </button>
+            <button type="button" onClick={handleClickDeletePost}>
+              <Typo type="button-large">{t('menu.delete')}</Typo>
+            </button>
+          </>
+        ) : (
           <button type="button" onClick={handleClickReportUser}>
             <Typo type="button-large" color="WARNING">
               {t('menu.report')}

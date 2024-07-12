@@ -3,15 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { Layout, Typo } from '@design-system';
 import { NewNoteForm } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
-import { postNote } from '@utils/apis/note';
+import { patchNote, postNote } from '@utils/apis/note';
 import { NewNoteHeaderWrapper } from './NewNoteHeader.styled';
 
 interface NewNoteHeaderProps {
+  noteId: number;
   title: string;
   noteInfo: NewNoteForm;
 }
 
-function NewNoteHeader({ title, noteInfo }: NewNoteHeaderProps) {
+function NewNoteHeader({ noteId, title, noteInfo }: NewNoteHeaderProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
 
   const navigate = useNavigate();
@@ -22,7 +23,9 @@ function NewNoteHeader({ title, noteInfo }: NewNoteHeaderProps) {
   };
 
   const confirmPost = async () => {
-    const { id: newNoteId } = await postNote(noteInfo);
+    const { id: newNoteId } = !noteId
+      ? await postNote(noteInfo)
+      : await patchNote(noteId, noteInfo);
 
     navigate('/my');
     openToast({
