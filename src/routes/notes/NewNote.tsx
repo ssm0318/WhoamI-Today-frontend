@@ -12,7 +12,7 @@ function NewNote() {
   const [t] = useTranslation('translation', { keyPrefix: 'notes.note_header' });
 
   const title = !location.state ? t('new_note') : t('edit_note');
-  const noteid = location.state?.post.id || '';
+  const noteId = location.state?.post.id || '';
   const content = location.state?.post.content || '';
   const images = useMemo(() => location.state?.post.images || [], [location.state?.post.images]);
 
@@ -46,7 +46,7 @@ function NewNote() {
 
   return (
     <MainContainer>
-      <NewNoteHeader noteid={noteid} title={title} noteInfo={noteInfo} />
+      <NewNoteHeader noteId={noteId} title={title} noteInfo={noteInfo} />
       <NewNoteContent noteInfo={noteInfo} setNoteInfo={setNoteInfo} />
     </MainContainer>
   );

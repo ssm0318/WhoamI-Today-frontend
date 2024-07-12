@@ -5,7 +5,6 @@ interface NoteImageListProps {
 }
 
 function NoteImageList({ images }: NoteImageListProps) {
-  console.log('img', images);
   if (!images.length) return null;
   return <ImageSlider images={images} />;
 }

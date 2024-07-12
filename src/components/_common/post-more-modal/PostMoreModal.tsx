@@ -62,7 +62,6 @@ function PostMoreModal({
   };
 
   const handleClickEditPost = () => {
-    console.log(post);
     if (post.type === 'Note') {
       navigate(`/notes/new`, { state: { post } });
     } else if (post.type === 'Response') {
