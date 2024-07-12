@@ -113,13 +113,13 @@ function CommentItem({
         </Layout.FlexCol>
       </Layout.FlexRow>
       {/* replies */}
-      <Layout.FlexCol w="100%" gap={8} pl={20} mt={14}>
+      <Layout.FlexCol w="100%" gap={8} pl={34} mt={14}>
         {replies?.map((reply) => (
           <CommentItem
             key={reply.id}
             isPostAuthor={isPostAuthor}
             comment={reply}
-            replyAvailable={false}
+            onClickReplyBtn={onClickReplyBtn}
           />
         ))}
       </Layout.FlexCol>
