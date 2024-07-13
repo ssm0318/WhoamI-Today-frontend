@@ -123,3 +123,5 @@ const getCroppedImg = async (
 };
 
 export default getCroppedImg;
+
+export const CROP_MIN_ZOOM = 0.1;

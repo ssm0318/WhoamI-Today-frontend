@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import SubHeader from '@components/sub-header/SubHeader';
 import { NOTE_IMAGE_CROP_HEIGHT, NOTE_IMAGE_CROP_WIDTH } from '@constants/size';
 import { Typo } from '@design-system';
-import getCroppedImg, { CroppedImg } from '@utils/getCroppedImg';
+import getCroppedImg, { CROP_MIN_ZOOM, CroppedImg } from '@utils/getCroppedImg';
 
 const cropContainerStyle = {
   backgroundColor: '#7F7F7F',
@@ -68,6 +68,8 @@ function NoteImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileImag
         image={image}
         crop={crop}
         zoom={zoom}
+        minZoom={CROP_MIN_ZOOM}
+        restrictPosition={false}
         showGrid
         cropSize={{ width: NOTE_IMAGE_CROP_WIDTH, height: NOTE_IMAGE_CROP_HEIGHT }}
         onCropChange={setCrop}
