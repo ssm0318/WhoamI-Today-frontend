@@ -72,7 +72,7 @@ export function ChatRoom() {
   const { sendSocketData } = useChatRoomSocketProvider({ roomId, onSocketMessage });
 
   const handleClickGoBack = () => {
-    navigate('/chats');
+    navigate(-1);
   };
 
   const handleClickMsgSearch = () => {
