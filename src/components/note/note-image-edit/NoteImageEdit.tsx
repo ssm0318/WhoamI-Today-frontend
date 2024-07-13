@@ -51,7 +51,7 @@ function NoteImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileImag
       <SubHeader
         title={t('crop_photo')}
         LeftComponent={
-          <button type="button" onClick={handleClickComplete}>
+          <button type="button" onClick={handleClickCancel}>
             <Typo type="title-medium">{t('cancel')}</Typo>
           </button>
         }
@@ -63,13 +63,11 @@ function NoteImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileImag
           </button>
         }
         typo="title-large"
-        onGoBack={handleClickCancel}
       />
       <Cropper
         image={image}
         crop={crop}
         zoom={zoom}
-        aspect={1}
         showGrid
         cropSize={{ width: NOTE_IMAGE_CROP_WIDTH, height: NOTE_IMAGE_CROP_HEIGHT }}
         onCropChange={setCrop}
