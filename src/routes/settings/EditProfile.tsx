@@ -23,13 +23,12 @@ function EditProfile() {
     updateMyProfile: state.updateMyProfile,
     openToast: state.openToast,
   }));
-  const [draft, setDraft] = useState<Pick<MyProfile, 'bio' | 'username' | 'pronouns'>>(
-    myProfile || {
-      bio: '',
-      username: '',
-      pronouns: '',
-    },
-  );
+
+  const [draft, setDraft] = useState<Pick<MyProfile, 'bio' | 'username' | 'pronouns'>>({
+    bio: myProfile?.bio ?? '',
+    username: myProfile?.username ?? '',
+    pronouns: myProfile?.pronouns ?? '',
+  });
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -57,8 +56,7 @@ function EditProfile() {
       setOriginalImageFileURL(imageDataUrl);
       setIsEditModalVisible(true);
     } catch (error) {
-      // TODO
-      console.error(error);
+      openToast({ message: t('temporary_error') });
     }
   };
 
@@ -74,15 +72,17 @@ function EditProfile() {
 
   const handleClickSave = async () => {
     if (!myProfile) return;
+
+    const profileData = {
+      ...draft,
+      ...(croppedImg ? { profile_image: croppedImg.file } : {}),
+    };
+
     editProfile({
-      profile: {
-        ...draft,
-        ...(croppedImg ? { profile_image: croppedImg.file } : {}),
-      },
+      profile: profileData,
       onSuccess: (data: MyProfile) => {
         updateMyProfile({ ...data });
         openToast({ message: t('response.updated') });
-        navigate('/settings');
       },
     });
   };
