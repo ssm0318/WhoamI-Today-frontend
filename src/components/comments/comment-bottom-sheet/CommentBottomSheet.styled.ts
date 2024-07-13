@@ -3,6 +3,7 @@ import {
   BOTTOMSHEET_HEADER_HEIGHT,
   DEFAULT_MARGIN,
   MAX_WINDOW_WIDTH,
+  SCREEN_HEIGHT,
   Z_INDEX,
 } from '@constants/layout';
 import { Layout } from '@design-system';
@@ -21,7 +22,7 @@ export const CommentBottomHeaderWrapper = styled(Layout.Fixed)`
 
 export const CommentBottomContentWrapper = styled(Layout.FlexCol)`
   width: 100%;
-  height: 465px;
+  height: ${SCREEN_HEIGHT - BOTTOMSHEET_HEADER_HEIGHT - 128}px;
   padding: 15px;
   margin-top: ${BOTTOMSHEET_HEADER_HEIGHT}px;
   overflow: auto;
