@@ -12,7 +12,7 @@ interface NotificationItemProps {
 }
 
 function NotificationItem({ item }: NotificationItemProps) {
-  const { message, created_at, recent_actors, redirect_url, notification_type } = item;
+  const { message, created_at, recent_actors, redirect_url, notification_type, is_read } = item;
 
   const navigate = useNavigate();
 
@@ -44,7 +44,13 @@ function NotificationItem({ item }: NotificationItemProps) {
   };
 
   return (
-    <S.NotificationContainer w="100%" onClick={handleClickNotification} pv={9} alignItems="center">
+    <S.NotificationContainer
+      w="100%"
+      onClick={handleClickNotification}
+      pv={9}
+      alignItems="center"
+      bgColor={is_read ? 'WHITE' : 'GRAY_10'}
+    >
       <S.NotificationContent alignItems="center" justifyContent="center">
         <ProfileImageList images={recent_actors.map((a) => a.profile_image)} size={40} />
         {!!getNotiIconName() && (
