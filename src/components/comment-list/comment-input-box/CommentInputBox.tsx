@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
@@ -37,6 +37,25 @@ function CommentInputBox({
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const myProfile = useBoundStore((state) => state.myProfile);
   const [content, setContent] = useState('');
+  const initialIsPrivateRef = useRef(isPrivate);
+  const [initialIsPrivate, setInitialIsPrivate] = useState(initialIsPrivateRef.current);
+
+  useEffect(() => {
+    initialIsPrivateRef.current = isPrivate;
+  }, [isPrivate]);
+
+  useEffect(() => {
+    if (isReply) {
+      setInitialIsPrivate(initialIsPrivateRef.current);
+    }
+  }, [isReply, replyTo]);
+
+  const handleCheckboxChange = () => {
+    if (!initialIsPrivate) {
+      setIsPrivate?.();
+    }
+  };
+
   const commentTargetAuthor =
     isReply && replyTo ? replyTo.author_detail?.username : post?.author_detail?.username;
 
@@ -83,7 +102,12 @@ function CommentInputBox({
     <Layout.FlexCol gap={10} w="100%" pv={12} ph={16} outline="LIGHT_GRAY" bgColor="WHITE">
       {/* isPrivate */}
       <Layout.FlexRow gap={4} alignItems="center">
-        <CheckBox name={t('private_comment') || ''} onChange={setIsPrivate} checked={isPrivate} />
+        <CheckBox
+          name={t('private_comment') || ''}
+          onChange={handleCheckboxChange}
+          checked={isPrivate}
+          disabled={initialIsPrivate}
+        />
         <SvgIcon
           name={isPrivate ? 'private_comment_active' : 'private_comment_inactive'}
           size={17}
