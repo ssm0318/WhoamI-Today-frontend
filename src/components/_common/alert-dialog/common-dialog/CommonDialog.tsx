@@ -4,7 +4,7 @@ import { StyledCommonDialog } from './CommonDialog.styled';
 export interface CommonDialogProps {
   visible: boolean;
   title: string;
-  content: string;
+  content?: string | null;
   cancelText: string;
   confirmText: string;
   confirmTextColor?: ColorKeys;
@@ -29,9 +29,11 @@ function CommonDialog({
           <Typo type="title-large" textAlign="center">
             {title}
           </Typo>
-          <Typo type="body-medium" textAlign="center">
-            {content}
-          </Typo>
+          {content && (
+            <Typo type="body-medium" textAlign="center">
+              {content}
+            </Typo>
+          )}
         </Layout.FlexCol>
         <Layout.FlexRow w="100%" h="100%">
           <button type="button" onClick={onClickClose}>

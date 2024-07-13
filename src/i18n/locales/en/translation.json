@@ -440,7 +440,14 @@
           "content": "{{user}} will not see your friend request anymore and will not be notified.",
           "cancel": "Cancel",
           "confirm": "Delete"
-        }
+        },
+        "break_friends_dialog": {
+          "title": "Are you sure you want to delete your friend?",
+          "cancel": "Cancel",
+          "confirm": "Delete"
+        },
+        "friend_request_success": "Your friend request has been completed.",
+        "temporary_error": "An error has occurred temporarily. Please try again later."
       }
     },
     "edit_friends": {

@@ -430,9 +430,16 @@
         "delete_request_dialog": {
           "title": "친구 요청을 삭제하시겠습니까?",
           "content": "{{user}}의 친구 요청 목록에 더이상 노출되지 않고, 요청 삭제에 대한 알림은 가지 않습니다.",
-          "cancel": "Cancel",
-          "confirm": "Delete"
-        }
+          "cancel": "취소",
+          "confirm": "삭제"
+        },
+        "break_friends_dialog": {
+          "title": "정말로 친구를 삭제하시겠습니까?",
+          "cancel": "취소",
+          "confirm": "삭제"
+        },
+        "friend_request_success": "친구 요청이 완료되었습니다.",
+        "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
       }
     },
     "edit_friends": {
