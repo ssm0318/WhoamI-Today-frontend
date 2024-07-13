@@ -44,14 +44,14 @@ function Notifications() {
         </Layout.FlexCol>
         {/* Last 7 days */}
         {recentNotifications.length > 0 && (
-          <Layout.FlexCol>
+          <>
             <Layout.FlexRow pv={8} ph={16}>
               <Typo type="title-medium">{t('last_7_days')}</Typo>
             </Layout.FlexRow>
             {recentNotifications.map((noti) => (
               <NotificationItem item={noti} key={noti.id} />
             ))}
-          </Layout.FlexCol>
+          </>
         )}
         {/* Rest of notifications */}
         {restNotifications.length > 0 && (
