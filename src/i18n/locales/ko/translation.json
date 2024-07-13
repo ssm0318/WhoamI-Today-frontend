@@ -149,6 +149,7 @@
   "user_page": {
     "this_user_do_not_exist": "존재하지 않는 사용자입니다 :(",
     "request_a_friend": "친구 요청",
+    "are_you_sure_you_want_to_delete_this_friend": "정말로 이 친구를 삭제하시겠습니까?",
     "more_modal": {
       "menu": {
         "add_to_favorite": "즐겨찾기",
