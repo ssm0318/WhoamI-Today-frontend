@@ -35,8 +35,8 @@ function Notifications() {
   return (
     <MainContainer>
       <SubHeader title={t('title')} />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" ph={16}>
-        <Layout.FlexCol mt={12} mb={4} w="100%">
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%">
+        <Layout.FlexCol mt={12} mb={4} w="100%" ph={16}>
           {/* See Friend Requests */}
           <TopContainer type="FriendRequest" />
           {/* See Prompts Received */}
@@ -44,19 +44,19 @@ function Notifications() {
         </Layout.FlexCol>
         {/* Last 7 days */}
         {recentNotifications.length > 0 && (
-          <>
-            <Layout.FlexRow pv={8}>
+          <Layout.FlexCol>
+            <Layout.FlexRow pv={8} ph={16}>
               <Typo type="title-medium">{t('last_7_days')}</Typo>
             </Layout.FlexRow>
             {recentNotifications.map((noti) => (
               <NotificationItem item={noti} key={noti.id} />
             ))}
-          </>
+          </Layout.FlexCol>
         )}
         {/* Rest of notifications */}
         {restNotifications.length > 0 && (
           <>
-            <Layout.FlexRow mt={8} pv={8}>
+            <Layout.FlexRow mt={8} pv={8} ph={16}>
               <Typo type="title-medium">{t('last_30_days')}</Typo>
             </Layout.FlexRow>
             {restNotifications.map((noti) => (

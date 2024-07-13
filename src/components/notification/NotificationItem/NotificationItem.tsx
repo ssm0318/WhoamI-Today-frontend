@@ -44,30 +44,32 @@ function NotificationItem({ item }: NotificationItemProps) {
   };
 
   return (
-    <S.NotificationContainer
+    <Layout.FlexRow
       w="100%"
       onClick={handleClickNotification}
-      pv={9}
+      ph={16}
       alignItems="center"
-      bgColor={is_read ? 'WHITE' : 'GRAY_10'}
+      bgColor={is_read ? 'WHITE' : 'LIGHT'}
     >
-      <S.NotificationContent alignItems="center" justifyContent="center">
-        <ProfileImageList images={recent_actors.map((a) => a.profile_image)} size={40} />
-        {!!getNotiIconName() && (
-          <Layout.Absolute r={0} b={-10} z={2}>
-            <SvgIcon name={getNotiIconName() as IconNames} size={20} />
-          </Layout.Absolute>
-        )}
+      <S.NotificationContent alignItems="center" pb={9} w="100%">
+        <S.NotificationProfileContainer alignItems="center" justifyContent="center" h={50}>
+          <ProfileImageList images={recent_actors.map((a) => a.profile_image)} size={40} />
+          {!!getNotiIconName() && (
+            <Layout.Absolute r={0} b={-5} z={2}>
+              <SvgIcon name={getNotiIconName() as IconNames} size={20} />
+            </Layout.Absolute>
+          )}
+        </S.NotificationProfileContainer>
+        <Layout.FlexRow flex={1} ml={4}>
+          <Typo type="body-medium">{message}</Typo>
+        </Layout.FlexRow>
+        <Layout.FlexRow ml={4}>
+          <Typo type="label-small" color="MEDIUM_GRAY">
+            {convertTimeDiffByString({ now: currentDate, day: createdAt, isShortFormat: true })}
+          </Typo>
+        </Layout.FlexRow>
       </S.NotificationContent>
-      <Layout.FlexRow flex={1} ml={4}>
-        <Typo type="body-medium">{message}</Typo>
-      </Layout.FlexRow>
-      <Layout.FlexRow ml={4}>
-        <Typo type="label-small" color="MEDIUM_GRAY">
-          {convertTimeDiffByString({ now: currentDate, day: createdAt, isShortFormat: true })}
-        </Typo>
-      </Layout.FlexRow>
-    </S.NotificationContainer>
+    </Layout.FlexRow>
   );
 }
 
