@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -25,7 +26,7 @@ function CommentItem({
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const { author_detail, created_at, is_private, replies } = comment;
   const { username, profile_image } = author_detail ?? {};
-
+  const navigate = useNavigate();
   const [createdAt] = useState(() => (created_at ? new Date(created_at) : null));
   const [currentDate] = useState(() => new Date());
 
@@ -44,12 +45,16 @@ function CommentItem({
     // TBU
   };
 
+  const navigateToProfile = () => {
+    navigate(`/users/${username}`);
+  };
+
   return (
     <Layout.FlexCol w="100%">
       <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="flex-start" gap={8}>
         {/* Author Profile */}
         <Layout.FlexCol w={30}>
-          <ProfileImage imageUrl={profile_image} size={30} />
+          <ProfileImage imageUrl={profile_image} size={30} onClick={navigateToProfile} />
         </Layout.FlexCol>
         {/* Author name, time, content */}
         <Layout.FlexCol flex={1} alignItems="center">

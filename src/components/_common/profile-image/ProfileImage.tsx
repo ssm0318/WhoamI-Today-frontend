@@ -11,11 +11,19 @@ interface ProfileImageProps {
    * 강제로 이미지 업데이트가 필요한 경우 사용(e.g 설정>프로필 이미지 변경 이후 설정 페이지로 돌아온 경우)
    */
   ts?: number;
+  onClick?: () => void;
 }
 
-function ProfileImage({ imageUrl, username, className, ts, size = 36 }: ProfileImageProps) {
+function ProfileImage({
+  imageUrl,
+  username,
+  className,
+  ts,
+  size = 36,
+  onClick,
+}: ProfileImageProps) {
   return (
-    <NonShrinkWrapper>
+    <NonShrinkWrapper onClick={onClick}>
       <Layout.LayoutBase w={size} h={size} rounded={size / 2} className={className}>
         {imageUrl ? (
           <img
