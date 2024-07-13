@@ -23,6 +23,7 @@ function EditProfile() {
     updateMyProfile: state.updateMyProfile,
     openToast: state.openToast,
   }));
+
   const [draft, setDraft] = useState<Pick<MyProfile, 'bio' | 'username' | 'pronouns'>>(
     myProfile || {
       bio: '',
@@ -57,8 +58,7 @@ function EditProfile() {
       setOriginalImageFileURL(imageDataUrl);
       setIsEditModalVisible(true);
     } catch (error) {
-      // TODO
-      console.error(error);
+      openToast({ message: t('temporary_error') });
     }
   };
 
@@ -82,7 +82,6 @@ function EditProfile() {
       onSuccess: (data: MyProfile) => {
         updateMyProfile({ ...data });
         openToast({ message: t('response.updated') });
-        navigate('/settings');
       },
     });
   };
