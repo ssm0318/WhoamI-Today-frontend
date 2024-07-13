@@ -52,8 +52,8 @@ function RecentPromptCard({ question, requesterName }: PromptCardProps) {
             <Typo type="body-large">{content}</Typo>
           </Layout.FlexCol>
           <Layout.FlexCol gap={12} justifyContent="space-between">
-            <Icon name="question_respond" size={22} onClick={handleClickRespond} />
             <Icon name="question_send" size={22} onClick={handleClickSend} />
+            <Icon name="question_respond" size={22} onClick={handleClickRespond} />
           </Layout.FlexCol>
         </Layout.FlexRow>
       </StyledRecentPromptCard>
