@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
@@ -37,13 +37,18 @@ function CommentInputBox({
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const myProfile = useBoundStore((state) => state.myProfile);
   const [content, setContent] = useState('');
-  const [initialIsPrivate, setInitialIsPrivate] = useState<boolean | undefined>(undefined);
+  const initialIsPrivateRef = useRef(isPrivate);
+  const [initialIsPrivate, setInitialIsPrivate] = useState(initialIsPrivateRef.current);
+
+  useEffect(() => {
+    initialIsPrivateRef.current = isPrivate;
+  }, [isPrivate]);
 
   useEffect(() => {
     if (isReply) {
-      setInitialIsPrivate(isPrivate);
+      setInitialIsPrivate(initialIsPrivateRef.current);
     }
-  }, [isReply, replyTo, isPrivate]);
+  }, [isReply, replyTo]);
 
   const handleCheckboxChange = () => {
     if (!initialIsPrivate) {
