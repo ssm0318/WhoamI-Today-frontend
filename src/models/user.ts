@@ -21,3 +21,9 @@ export interface UserProfile extends User {
 
 export const areFriends = (user: User | UserProfile): user is UserProfile =>
   (user as UserProfile).are_friends === true;
+
+export const sentFriendRequest = (user: User | UserProfile) =>
+  (user as UserProfile).sent_friend_request_to === true;
+
+export const receivedFriendRequest = (user: User | UserProfile) =>
+  (user as UserProfile).received_friend_request_from === true;

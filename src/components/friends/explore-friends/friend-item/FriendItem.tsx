@@ -6,7 +6,13 @@ import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledFriendItem } from '@components/friends/explore-friends/friend-item/FriendItem.styled';
 import { Button, Layout, Typo } from '@design-system';
-import { areFriends, User, UserProfile } from '@models/user';
+import {
+  areFriends,
+  receivedFriendRequest,
+  sentFriendRequest,
+  User,
+  UserProfile,
+} from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import {
   acceptFriendRequest,
@@ -132,7 +138,12 @@ function FriendItem({
               onClick={handleClickRequest}
             />
           )}
-          <Icon name="close" size={16} onClick={handleClickDelete} />
+          {(type === 'recommended' ||
+            areFriends(user) ||
+            sentFriendRequest(user) ||
+            receivedFriendRequest(user)) && (
+            <Icon name="close" size={16} onClick={handleClickDelete} />
+          )}
         </Layout.FlexRow>
       )}
       {isBreakFriendDialogVisible && (
