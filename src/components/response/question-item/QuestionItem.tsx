@@ -17,8 +17,9 @@ function QuestionItem({ question, onSend }: QuestionItemProps) {
   const { id, content } = question;
 
   const [sendPromptModalVisible, setSendPromptBottomModalVisible] = useState(false);
-  const handleClickRespond = () => {
-    navigate(`questions/${id}/new`);
+  const handleClickRespond = (e: MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/questions/${id}/new`);
   };
 
   const handleClickSend = (e: MouseEvent) => {
