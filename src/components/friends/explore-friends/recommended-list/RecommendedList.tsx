@@ -19,10 +19,6 @@ export default function RecommendedList() {
   }, []);
   useAsyncEffect(fetchFriends, [fetchFriends]);
 
-  const updateList = () => {
-    console.log('TODO: updateList');
-  };
-
   if (!recommendedList) return <Loader />;
   return (
     <Layout.FlexCol w="100%" pv={12} ph={16} gap={4}>
@@ -38,7 +34,7 @@ export default function RecommendedList() {
               key={friend.id}
               type="recommended"
               user={friend}
-              onClickConfirm={updateList}
+              onClickRequest={fetchFriends}
               onClickDelete={fetchFriends}
             />
           ))}
