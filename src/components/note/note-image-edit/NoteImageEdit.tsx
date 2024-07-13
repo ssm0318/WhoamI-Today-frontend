@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import SubHeader from '@components/sub-header/SubHeader';
 import { NOTE_IMAGE_CROP_HEIGHT, NOTE_IMAGE_CROP_WIDTH } from '@constants/size';
 import { Typo } from '@design-system';
-import getCroppedImg, { CroppedImg } from '@utils/getCroppedImg';
+import getCroppedImg, { CROP_MIN_ZOOM, CroppedImg } from '@utils/getCroppedImg';
 
 const cropContainerStyle = {
   backgroundColor: '#7F7F7F',
@@ -51,7 +51,7 @@ function NoteImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileImag
       <SubHeader
         title={t('crop_photo')}
         LeftComponent={
-          <button type="button" onClick={handleClickComplete}>
+          <button type="button" onClick={handleClickCancel}>
             <Typo type="title-medium">{t('cancel')}</Typo>
           </button>
         }
@@ -63,13 +63,13 @@ function NoteImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileImag
           </button>
         }
         typo="title-large"
-        onGoBack={handleClickCancel}
       />
       <Cropper
         image={image}
         crop={crop}
         zoom={zoom}
-        aspect={1}
+        minZoom={CROP_MIN_ZOOM}
+        restrictPosition={false}
         showGrid
         cropSize={{ width: NOTE_IMAGE_CROP_WIDTH, height: NOTE_IMAGE_CROP_HEIGHT }}
         onCropChange={setCrop}

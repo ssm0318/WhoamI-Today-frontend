@@ -3,7 +3,7 @@ import Cropper, { Area } from 'react-easy-crop';
 import { useTranslation } from 'react-i18next';
 import SubHeader from '@components/sub-header/SubHeader';
 import { Typo } from '@design-system';
-import getCroppedImg, { CroppedImg } from '@utils/getCroppedImg';
+import getCroppedImg, { CROP_MIN_ZOOM, CroppedImg } from '@utils/getCroppedImg';
 
 const cropContainerStyle = {
   width: '100%',
@@ -73,6 +73,8 @@ function ProfileImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileI
         image={image}
         crop={crop}
         zoom={zoom}
+        minZoom={CROP_MIN_ZOOM}
+        restrictPosition={false}
         aspect={1}
         showGrid
         onCropChange={setCrop}
