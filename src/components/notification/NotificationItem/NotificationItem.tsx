@@ -51,7 +51,7 @@ function NotificationItem({ item }: NotificationItemProps) {
       alignItems="center"
       bgColor={is_read ? 'WHITE' : 'LIGHT'}
     >
-      <S.NotificationContent alignItems="center" pb={9} w="100%">
+      <S.NotificationContent alignItems="center" pb={9} w="100%" border={!is_read}>
         <S.NotificationProfileContainer alignItems="center" justifyContent="center" h={50}>
           <ProfileImageList images={recent_actors.map((a) => a.profile_image)} size={40} />
           {!!getNotiIconName() && (
