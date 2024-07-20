@@ -7,6 +7,7 @@ import CommonDialog, {
 } from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import { Typo } from '@design-system';
 import { Note, Response } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
 import { reportContent } from '@utils/apis/common';
 import { deleteNote } from '@utils/apis/note';
 import { deleteResponse } from '@utils/apis/responses';
@@ -33,6 +34,8 @@ function PostMoreModal({
 }: PostMoreModalProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'post_more_modal' });
   const [showAlert, setShowAlert] = useState<AlertProps>();
+
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
   const navigate = useNavigate();
 
@@ -77,12 +80,26 @@ function PostMoreModal({
       cancelText: t('delete.cancel'),
       onClickConfirm: async () => {
         if (post.type === 'Note') {
-          await deleteNote(post.id);
+          await deleteNote({
+            noteId: post.id,
+            onSuccess: () => {
+              onConfirmReport?.();
+              handleOnConfirmAlert();
+              openToast({ message: t('delete.success_title') });
+            },
+            onError: () => openToast({ message: t('delete.error_title') }),
+          });
         } else if (post.type === 'Response') {
-          await deleteResponse(post.id);
+          await deleteResponse({
+            responseId: post.id,
+            onSuccess: () => {
+              onConfirmReport?.();
+              handleOnConfirmAlert();
+              openToast({ message: t('delete.success_title') });
+            },
+            onError: () => openToast({ message: t('delete.error_title') }),
+          });
         }
-        onConfirmReport?.();
-        handleOnConfirmAlert();
       },
     });
     closeMoreModal();

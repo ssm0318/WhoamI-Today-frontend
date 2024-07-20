@@ -15,8 +15,19 @@ export const getDayQuestions = async ({ year, month, day }: DateRequestParams) =
   return data;
 };
 
-export const deleteResponse = async (responseId: number) => {
-  return axios.delete(`/qna/responses/${responseId}/`);
+export const deleteResponse = async ({
+  responseId,
+  onSuccess,
+  onError,
+}: {
+  responseId: number;
+  onSuccess: () => void;
+  onError: () => void;
+}) => {
+  return axios
+    .delete(`/qna/responses/${responseId}/`)
+    .then(() => onSuccess())
+    .catch(() => onError());
 };
 
 export const getCommentsOfResponse = async (responseId: number, page: string | null) => {

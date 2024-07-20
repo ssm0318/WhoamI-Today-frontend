@@ -59,8 +59,19 @@ export const patchNote = async (noteId: number, noteData: NewNoteForm) => {
   return data;
 };
 
-export const deleteNote = async (noteId: number) => {
-  await axios.delete(`/notes/${noteId}/`);
+export const deleteNote = async ({
+  noteId,
+  onSuccess,
+  onError,
+}: {
+  noteId: number;
+  onSuccess: () => void;
+  onError: () => void;
+}) => {
+  await axios
+    .delete(`/notes/${noteId}/`)
+    .then(() => onSuccess())
+    .catch(() => onError());
 };
 
 export const getNoteComments = async (noteId: number, page: string | null) => {
