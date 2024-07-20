@@ -26,7 +26,9 @@ function NoteSection({ username }: NoteSectionProps) {
   });
 
   const fetchNotes = async (page: string | null, isRefresh?: boolean) => {
-    const { results, next } = username ? await getUserNotes(username) : await getMyNotes(page);
+    const { results, next } = username
+      ? await getUserNotes(username, page)
+      : await getMyNotes(page);
     if (!results) return;
     setNextPage(next);
     if (isRefresh) {
