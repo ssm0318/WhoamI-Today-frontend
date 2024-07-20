@@ -15,7 +15,7 @@ interface NoteItemProps {
   note: Note;
   isMyPage: boolean;
   enableCollapse?: boolean;
-  type?: 'LIST' | 'DETAIL';
+  commentType?: 'LIST' | 'DETAIL';
   refresh?: () => Promise<void>;
 }
 
@@ -23,7 +23,7 @@ function NoteItem({
   note,
   isMyPage,
   enableCollapse = true,
-  type = 'LIST',
+  commentType = 'LIST',
   refresh,
 }: NoteItemProps) {
   const { content, created_at, id, author_detail, images, like_user_sample } = note;
@@ -41,15 +41,15 @@ function NoteItem({
   };
 
   const handleClickNote = () => {
-    if (type === 'DETAIL') return;
+    if (commentType === 'DETAIL') return;
     return navigate(`/notes/${id}`);
   };
 
   useEffect(() => {
-    if (type === 'LIST' && content.length > MAX_NOTE_CONTENT_LENGTH) {
+    if (commentType === 'LIST' && content.length > MAX_NOTE_CONTENT_LENGTH) {
       setOverflowActive(true);
     }
-  }, [content, type]);
+  }, [content, commentType]);
 
   return (
     <>
@@ -90,7 +90,7 @@ function NoteItem({
           </Layout.FlexRow>
         </Layout.FlexRow>
         <Layout.FlexCol>
-          <Typo type="body-large" color="BLACK" pre={type === 'DETAIL'}>
+          <Typo type="body-large" color="BLACK" pre={commentType === 'DETAIL'}>
             {enableCollapse && overflowActive ? (
               <>
                 {`${content.slice(0, MAX_NOTE_CONTENT_LENGTH)}...`}
@@ -111,6 +111,7 @@ function NoteItem({
           isMyPage={isMyPage}
           post={note}
           showComments={() => setBottomSheet(true)}
+          commentType={commentType}
         />
       </Layout.FlexCol>
       {bottomSheet && (

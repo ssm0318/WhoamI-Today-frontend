@@ -12,10 +12,17 @@ type PostFooterProps = {
   likedUserList: User[];
   isMyPage: boolean;
   post: Response | Note;
+  commentType?: 'LIST' | 'DETAIL';
   showComments: () => void;
 };
 
-function PostFooter({ likedUserList, isMyPage, post, showComments }: PostFooterProps) {
+function PostFooter({
+  likedUserList,
+  isMyPage,
+  post,
+  commentType = 'LIST',
+  showComments,
+}: PostFooterProps) {
   const { comment_count, type } = post;
   const navigate = useNavigate();
 
@@ -48,7 +55,7 @@ function PostFooter({ likedUserList, isMyPage, post, showComments }: PostFooterP
         <Icon name="add_comment" size={23} onClick={handleClickComment} />
       </Layout.FlexRow>
 
-      {!!comment_count && (
+      {!!comment_count && commentType === 'LIST' && (
         <Layout.FlexRow>
           <button type="button" onClick={handleClickComment}>
             <Typo type="label-large" color="BLACK" underline>

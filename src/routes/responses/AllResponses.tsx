@@ -64,7 +64,7 @@ function AllResponses() {
             key={response.id}
             response={response}
             isMyPage={!username}
-            type="DETAIL"
+            commentType="DETAIL"
             refresh={handleRefetch}
           />
         ))}
