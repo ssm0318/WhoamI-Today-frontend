@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
@@ -21,10 +21,11 @@ interface Props {
   postType: 'Response' | 'Note';
   post: Response | Note;
   visible: boolean;
+  commentRef?: React.RefObject<HTMLTextAreaElement>;
   closeBottomSheet: () => void;
 }
 
-function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props) {
+function CommentBottomSheet({ postType, post, visible, commentRef, closeBottomSheet }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
 
   const [comments, setComments] = useState<Comment[]>([]);
@@ -94,6 +95,7 @@ function CommentBottomSheet({ postType, post, visible, closeBottomSheet }: Props
         <CommentInputBox
           post={commentTo}
           postType={commentToType}
+          commentRef={commentRef}
           isPrivate={isPrivate}
           setIsPrivate={() => {
             setIsPrivate((prev) => !prev);

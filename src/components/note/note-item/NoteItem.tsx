@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
@@ -34,6 +34,8 @@ function NoteItem({
 
   const { username, profile_image } = author_detail ?? {};
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
+
+  const commentRef = useRef<HTMLTextAreaElement>(null);
 
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
@@ -119,6 +121,7 @@ function NoteItem({
           postType="Note"
           post={note}
           visible={bottomSheet}
+          commentRef={commentRef}
           closeBottomSheet={() => setBottomSheet(false)}
         />
       )}
