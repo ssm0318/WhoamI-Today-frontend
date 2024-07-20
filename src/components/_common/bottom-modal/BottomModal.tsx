@@ -1,4 +1,4 @@
-import React, { MouseEvent, useEffect, useRef, useState } from 'react';
+import React, { MouseEvent, TouchEvent, useEffect, useRef, useState } from 'react';
 import { DEFAULT_MARGIN, SCREEN_HEIGHT } from '@constants/layout';
 import { ColorKeys } from '@design-system';
 import { usePreventScroll } from '@hooks/usePreventScroll';
@@ -27,6 +27,9 @@ function BottomModal({
   const [height, setHeight] = useState(0);
   const maxHeight = SCREEN_HEIGHT - 50;
 
+  const [startY, setStartY] = useState<number | null>(null);
+  const [currentY, setCurrentY] = useState<number | null>(null);
+
   useEffect(() => {
     if (!visible) return;
     if (bodyRef.current) {
@@ -43,13 +46,34 @@ function BottomModal({
 
   usePreventScroll(visible);
 
-  const onCloseModal = (e: MouseEvent) => {
+  // NOTE: 모달 아래 클릭 영역이 있을 때 이벤트 전파 방지
+  const onClickModal = (e: MouseEvent) => e.stopPropagation();
+
+  const onCloseModal = (e: MouseEvent | TouchEvent) => {
     e.stopPropagation();
     onClose?.();
   };
 
-  // NOTE: 모달 아래 클릭 영역이 있을 때 이벤트 전파 방지
-  const onClickModal = (e: MouseEvent) => e.stopPropagation();
+  const handleTouchStart = (e: TouchEvent) => {
+    setStartY(e.touches[0].clientY);
+    setCurrentY(e.touches[0].clientY);
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    setCurrentY(e.touches[0].clientY);
+  };
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    if (startY !== null && currentY !== null) {
+      const distance = currentY - startY;
+      const isDownwardSwipe = distance > 40; // adjust this value as needed
+      if (isDownwardSwipe) {
+        onCloseModal(e);
+      }
+    }
+    setStartY(null);
+    setCurrentY(null);
+  };
 
   return (
     <>
@@ -68,7 +92,14 @@ function BottomModal({
           )}
         </S.Background>
       )}
-      <S.Container visible={visible} height={height} bgColor={containerBgColor}>
+      <S.Container
+        visible={visible}
+        height={height}
+        bgColor={containerBgColor}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         <S.Body ref={bodyRef} onClick={onClickModal}>
           {children}
         </S.Body>
