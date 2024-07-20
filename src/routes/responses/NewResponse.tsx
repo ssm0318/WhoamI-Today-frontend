@@ -13,7 +13,7 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { Question } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getQuestionDetail, postResponse } from '@utils/apis/question';
+import { getQuestionDetail, patchResponse, postResponse } from '@utils/apis/question';
 import { FlexRow, LayoutBase } from 'src/design-system/layouts';
 
 const isValidQuestionId = (questionId?: string): questionId is string =>
@@ -63,10 +63,16 @@ function NewResponse() {
     navigate('/my');
     openToast({ message: t('question.response.posting') });
 
-    const { id: newResponseId } = await postResponse({
-      question_id: Number(questionId),
-      content: newResponse,
-    });
+    const { id: newResponseId } =
+      status !== 'edit'
+        ? await postResponse({
+            question_id: Number(questionId),
+            content: newResponse,
+          })
+        : await patchResponse({
+            question_id: Number(questionId),
+            content: newResponse,
+          });
 
     openToast({
       message: t(status === 'edit' ? 'question.response.edited' : 'question.response.posted'),

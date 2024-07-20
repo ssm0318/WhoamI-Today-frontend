@@ -75,7 +75,7 @@ function PostMoreModal({
     if (post.type === 'Note') {
       navigate(`/notes/new`, { state: { post, status: 'edit' } });
     } else if (post.type === 'Response') {
-      navigate(`/questions/${post.id}/new`, { state: { post, status: 'edit' } });
+      navigate(`/questions/${post.question.id}/new`, { state: { post, status: 'edit' } });
     }
   };
 
