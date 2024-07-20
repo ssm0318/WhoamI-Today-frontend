@@ -21,18 +21,22 @@ type ResponseSectionProps = {
 const RESPONSE_VIEW_MAX_COUNT = 10;
 
 function ResponseSection({ username }: ResponseSectionProps) {
+  const [totalResponseCount, setTotalResponseCount] = useState(0);
   const [responses, setResponses] = useState<Response[]>([]);
   const [t] = useTranslation('translation');
   const navigate = useNavigate();
   const [selectPrompt, setSelectPrompt] = useState(false);
 
   const fetchResponses = useCallback(async () => {
-    const { results } = username ? await getUserResponses(username) : await getMyResponses(null);
+    const { results, count } = username
+      ? await getUserResponses(username)
+      : await getMyResponses(null);
     if (!results) return;
     setResponses(results);
+    setTotalResponseCount(count);
   }, [username]);
 
-  const isMoreButtonVisible = responses.length > RESPONSE_VIEW_MAX_COUNT;
+  const isMoreButtonVisible = totalResponseCount > RESPONSE_VIEW_MAX_COUNT;
 
   const handleClickMore = () => {
     navigate(username ? `/users/${username}/responses` : '/my/responses');
