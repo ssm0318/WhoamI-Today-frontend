@@ -22,6 +22,7 @@ const isValidQuestionId = (questionId?: string): questionId is string =>
 function NewResponse() {
   const location = useLocation();
   const { questionId } = useParams();
+  const status = location.state?.status;
   const content = location.state?.post.content || '';
   const currentUser = useBoundStore.getState().myProfile;
 
@@ -68,7 +69,7 @@ function NewResponse() {
     });
 
     openToast({
-      message: t('question.response.posted'),
+      message: t(status === 'edit' ? 'question.response.edited' : 'question.response.posted'),
       actionText: t('question.response.view'),
       action: () => navigate(`/responses/${newResponseId}`),
     });

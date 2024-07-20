@@ -63,9 +63,9 @@ function PostMoreModal({
 
   const handleClickEditPost = () => {
     if (post.type === 'Note') {
-      navigate(`/notes/new`, { state: { post } });
+      navigate(`/notes/new`, { state: { post, status: 'edit' } });
     } else if (post.type === 'Response') {
-      navigate(`/questions/${post.id}/new`, { state: { post } });
+      navigate(`/questions/${post.id}/new`, { state: { post, status: 'edit' } });
     }
   };
 
