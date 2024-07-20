@@ -12,7 +12,7 @@ interface NotificationItemProps {
 }
 
 function NotificationItem({ item }: NotificationItemProps) {
-  const { message, created_at, recent_actors, redirect_url, notification_type } = item;
+  const { message, created_at, recent_actors, redirect_url, notification_type, is_read } = item;
 
   const navigate = useNavigate();
 
@@ -44,24 +44,32 @@ function NotificationItem({ item }: NotificationItemProps) {
   };
 
   return (
-    <S.NotificationContainer w="100%" onClick={handleClickNotification} pv={9} alignItems="center">
-      <S.NotificationContent alignItems="center" justifyContent="center">
-        <ProfileImageList images={recent_actors.map((a) => a.profile_image)} size={40} />
-        {!!getNotiIconName() && (
-          <Layout.Absolute r={0} b={-10} z={2}>
-            <SvgIcon name={getNotiIconName() as IconNames} size={20} />
-          </Layout.Absolute>
-        )}
+    <Layout.FlexRow
+      w="100%"
+      onClick={handleClickNotification}
+      ph={16}
+      alignItems="center"
+      bgColor={is_read ? 'WHITE' : 'LIGHT'}
+    >
+      <S.NotificationContent alignItems="center" pb={9} w="100%" border={!is_read}>
+        <S.NotificationProfileContainer alignItems="center" justifyContent="center" h={50}>
+          <ProfileImageList images={recent_actors.map((a) => a.profile_image)} size={40} />
+          {!!getNotiIconName() && (
+            <Layout.Absolute r={0} b={-5} z={2}>
+              <SvgIcon name={getNotiIconName() as IconNames} size={20} />
+            </Layout.Absolute>
+          )}
+        </S.NotificationProfileContainer>
+        <Layout.FlexRow flex={1} ml={4}>
+          <Typo type="body-medium">{message}</Typo>
+        </Layout.FlexRow>
+        <Layout.FlexRow ml={4}>
+          <Typo type="label-small" color="MEDIUM_GRAY">
+            {convertTimeDiffByString({ now: currentDate, day: createdAt, isShortFormat: true })}
+          </Typo>
+        </Layout.FlexRow>
       </S.NotificationContent>
-      <Layout.FlexRow flex={1} ml={4}>
-        <Typo type="body-medium">{message}</Typo>
-      </Layout.FlexRow>
-      <Layout.FlexRow ml={4}>
-        <Typo type="label-small" color="MEDIUM_GRAY">
-          {convertTimeDiffByString({ now: currentDate, day: createdAt, isShortFormat: true })}
-        </Typo>
-      </Layout.FlexRow>
-    </S.NotificationContainer>
+    </Layout.FlexRow>
   );
 }
 
