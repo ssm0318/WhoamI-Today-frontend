@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import { Layout, SvgIcon, Typo } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import { Comment, PrivateComment } from '@models/post';
 import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -82,25 +82,19 @@ function CommentItem({
               color={comment.is_private && !comment.content ? 'DARK_GRAY' : 'BLACK'}
             >{`${comment.content ?? t('private_placeholder')}`}</Typo>
             {/* Reply & Message buttons */}
-            <Layout.FlexRow w="100%" gap={7} alignItems="center">
+            <Layout.FlexRow w="100%" gap={16} alignItems="center">
               {replyAvailable && (
                 <button type="button" onClick={handleReplyInput}>
-                  <Layout.FlexRow gap={4} alignItems="center">
-                    <SvgIcon name="comment_reply" size={24} />
-                    <Typo type="label-medium" color="DARK_GRAY">
-                      {t('reply')}
-                    </Typo>
-                  </Layout.FlexRow>
+                  <Typo type="label-medium" color="DARK_GRAY">
+                    {t('reply')}
+                  </Typo>
                 </button>
               )}
               {!isCommentAuthor && isPostAuthor && (
                 <button type="button" onClick={handleSendMessage}>
-                  <Layout.FlexRow gap={4} alignItems="center">
-                    <SvgIcon name="comment_message" size={24} />
-                    <Typo type="label-medium" color="DARK_GRAY">
-                      {t('message')}
-                    </Typo>
-                  </Layout.FlexRow>
+                  <Typo type="label-medium" color="DARK_GRAY">
+                    {t('message')}
+                  </Typo>
                 </button>
               )}
             </Layout.FlexRow>
