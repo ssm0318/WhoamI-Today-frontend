@@ -238,7 +238,14 @@ export const getFriendList = async (next?: string | null) => {
 
 export const getUserProfile = async (username: string) => {
   const { data } = await axios.get<UserProfile>(`/user/${username}/profile/`);
+
+  const { are_friends } = data;
+  if (are_friends) markAllAsRead(username);
   return data;
+};
+
+const markAllAsRead = async (username: string) => {
+  await axios.patch('/user/mark-all-as-read/', { username });
 };
 
 export const requestFriend = async ({
