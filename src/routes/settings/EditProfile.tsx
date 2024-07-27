@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
@@ -36,6 +36,19 @@ function EditProfile() {
   const [croppedImg, setCroppedImg] = useState<CroppedImg>();
 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+
+  const [imageChanged, setImageChanged] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
+
+  useEffect(() => {
+    const hasDraftChanged =
+      draft.username !== (myProfile?.username ?? '') ||
+      draft.pronouns !== (myProfile?.pronouns ?? '') ||
+      draft.bio !== (myProfile?.bio ?? '') ||
+      imageChanged;
+
+    setHasChanges(hasDraftChanged);
+  }, [draft, imageChanged, myProfile]);
 
   const handleClickUpdate = () => {
     inputRef.current?.click();
@@ -114,8 +127,8 @@ function EditProfile() {
           </button>
         }
         RightComponent={
-          <button type="button" onClick={handleClickSave}>
-            <Typo type="title-large" color="PRIMARY">
+          <button type="button" onClick={handleClickSave} disabled={!hasChanges}>
+            <Typo type="title-large" color={hasChanges ? 'PRIMARY' : 'LIGHT_GRAY'}>
               {t('done')}
             </Typo>
           </button>
@@ -173,6 +186,7 @@ function EditProfile() {
           setIsVisible={setIsEditModalVisible}
           image={originalImageFileUrl}
           onCompleteImageCrop={handleCompleteImageCrop}
+          setImageChanged={setImageChanged}
         />
       )}
     </MainContainer>

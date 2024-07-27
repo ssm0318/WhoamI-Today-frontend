@@ -23,9 +23,15 @@ interface ProfileImageEditProps {
   setIsVisible: (visible: boolean) => void;
   image?: string;
   onCompleteImageCrop: (img: CroppedImg) => void;
+  setImageChanged?: (visible: boolean) => void;
 }
 
-function ProfileImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileImageEditProps) {
+function ProfileImageEdit({
+  image,
+  setIsVisible,
+  onCompleteImageCrop,
+  setImageChanged,
+}: ProfileImageEditProps) {
   const [t] = useTranslation('translation');
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -54,6 +60,7 @@ function ProfileImageEdit({ image, setIsVisible, onCompleteImageCrop }: ProfileI
     if (!croppedImage) return;
     onCompleteImageCrop(croppedImage);
     setIsVisible(false);
+    setImageChanged?.(true);
   };
 
   return (
