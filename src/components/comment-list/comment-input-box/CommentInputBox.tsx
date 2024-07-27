@@ -17,6 +17,7 @@ interface CommentInputBoxProps {
   resetCommentType: () => void;
   postType: 'Response' | 'Comment' | 'Note';
   post: Response | Comment | Note;
+  inputFocus?: boolean;
   commentRef?: React.RefObject<HTMLTextAreaElement>;
   reloadComments?: () => void;
   setReload?: (reload: boolean) => void;
@@ -32,6 +33,7 @@ function CommentInputBox({
   resetCommentType,
   postType,
   post,
+  inputFocus,
   commentRef,
   reloadComments,
   setReload,
@@ -43,8 +45,8 @@ function CommentInputBox({
   const [initialIsPrivate, setInitialIsPrivate] = useState(initialIsPrivateRef.current);
 
   useEffect(() => {
-    if (commentRef) commentRef.current?.focus();
-  }, [commentRef]);
+    if (inputFocus) commentRef?.current?.focus();
+  }, [inputFocus, commentRef]);
 
   useEffect(() => {
     initialIsPrivateRef.current = isPrivate;

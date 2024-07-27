@@ -21,11 +21,19 @@ interface Props {
   postType: 'Response' | 'Note';
   post: Response | Note;
   visible: boolean;
+  inputFocus?: boolean;
   commentRef?: React.RefObject<HTMLTextAreaElement>;
   closeBottomSheet: () => void;
 }
 
-function CommentBottomSheet({ postType, post, visible, commentRef, closeBottomSheet }: Props) {
+function CommentBottomSheet({
+  postType,
+  post,
+  visible,
+  inputFocus,
+  commentRef,
+  closeBottomSheet,
+}: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
 
   const [comments, setComments] = useState<Comment[]>([]);
@@ -95,6 +103,7 @@ function CommentBottomSheet({ postType, post, visible, commentRef, closeBottomSh
         <CommentInputBox
           post={commentTo}
           postType={commentToType}
+          inputFocus={inputFocus}
           commentRef={commentRef}
           isPrivate={isPrivate}
           setIsPrivate={() => {

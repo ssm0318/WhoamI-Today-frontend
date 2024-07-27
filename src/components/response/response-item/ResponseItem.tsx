@@ -30,6 +30,7 @@ function ResponseItem({
   const { username, profile_image } = author_detail ?? {};
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
+  const [inputFocus, setInputFocus] = useState(false);
 
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
@@ -115,6 +116,7 @@ function ResponseItem({
             isMyPage={isMyPage}
             post={response}
             showComments={() => setBottomSheet(true)}
+            setInputFocus={() => setInputFocus(true)}
             commentType={commentType}
           />
         </Layout.FlexCol>
@@ -124,8 +126,12 @@ function ResponseItem({
           postType="Response"
           post={response}
           visible={bottomSheet}
+          inputFocus={inputFocus}
           commentRef={commentRef}
-          closeBottomSheet={() => setBottomSheet(false)}
+          closeBottomSheet={() => {
+            setBottomSheet(false);
+            setInputFocus(false);
+          }}
         />
       )}
     </>

@@ -31,6 +31,7 @@ function NoteItem({
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [showMore, setShowMore] = useState(false);
+  const [inputFocus, setInputFocus] = useState(false);
 
   const { username, profile_image } = author_detail ?? {};
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
@@ -113,6 +114,7 @@ function NoteItem({
           isMyPage={isMyPage}
           post={note}
           showComments={() => setBottomSheet(true)}
+          setInputFocus={() => setInputFocus(true)}
           commentType={commentType}
         />
       </Layout.FlexCol>
@@ -121,8 +123,12 @@ function NoteItem({
           postType="Note"
           post={note}
           visible={bottomSheet}
+          inputFocus={inputFocus}
           commentRef={commentRef}
-          closeBottomSheet={() => setBottomSheet(false)}
+          closeBottomSheet={() => {
+            setBottomSheet(false);
+            setInputFocus(false);
+          }}
         />
       )}
     </>
