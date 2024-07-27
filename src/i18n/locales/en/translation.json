@@ -296,6 +296,9 @@
       "update": "Update",
       "response": {
         "updated": "Profile Updated🎉"
+      },
+      "error": {
+        "read_file_error": "A temporary error occurred while uploading the image. Please try again later."
       }
     }
   },
