@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAlert';
-import Loader from '@components/_common/loader/Loader';
+import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
@@ -65,26 +65,23 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
   return (
     <Layout.FlexCol w="100%" h="100%" pt={24}>
       <Layout.FlexCol w="100%" gap={2} ph={16} mb={footerRef.current?.offsetHeight}>
-        {comments.map((comment) => (
-          <CommentItem
-            key={comment.id}
-            isPostAuthor={myProfile?.id === post.author_detail.id}
-            comment={comment}
-            onClickReplyBtn={() => {
-              setInputFocus(true);
-              setReplyTo(comment);
-              setIsPrivate(comment.is_private);
-              setCommentTo(comment);
-              setCommentToType('Comment');
-            }}
-          />
-        ))}
-        <div ref={targetRef} />
-        {isLoading && comments.length !== 0 && (
-          <Layout.FlexRow w="100%" h={40}>
-            <Loader />
-          </Layout.FlexRow>
-        )}
+        <SwipeLayoutList>
+          {comments.map((comment) => (
+            <CommentItem
+              key={comment.id}
+              isPostAuthor={myProfile?.id === post.author_detail.id}
+              comment={comment}
+              onClickReplyBtn={() => {
+                setInputFocus(true);
+                setReplyTo(comment);
+                setIsPrivate(comment.is_private);
+                setCommentTo(comment);
+                setCommentToType('Comment');
+              }}
+              onDeleteComplete={deleteComment}
+            />
+          ))}
+        </SwipeLayoutList>
       </Layout.FlexCol>
       <StyledCommentListFooter ref={footerRef} b={BOTTOM_TABBAR_HEIGHT} w="100%" bgColor="WHITE">
         <Layout.FlexRow w="100%">
@@ -118,6 +115,12 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
         close={closeDeleteAlert}
         onClickConfirm={confirmDeleteAlert}
       />
+      <div ref={targetRef} />
+      {isLoading && (
+        <Layout.FlexRow w="100%" h={40}>
+          <Loader />
+        </Layout.FlexRow>
+      )}
     </Layout.FlexCol>
   );
 }

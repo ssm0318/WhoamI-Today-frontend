@@ -347,7 +347,8 @@
     "reply_place_holder": "{{username}}에게 답글을 입력하세요.",
     "private_comment": "비밀 댓글",
     "private_placeholder": "해당 댓글은 비공개이며 작성자만 볼 수 있습니다.",
-    "replying_to": "{{username}}에게 답글 작성중"
+    "replying_to": "{{username}}에게 답글 작성중",
+    "report": "신고"
   },
   "no_contents": {
     "the_day_detail": "업로드한 모먼트나 답변이 없습니다.",
