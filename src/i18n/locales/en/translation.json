@@ -288,8 +288,8 @@
     "are_you_sure": "Are you sure?\nThis cannot be done.",
     "edit_profile": {
       "title": "Edit Profile",
-      "cancel": "Cancel",
-      "save": "Save",
+      "back": "Back",
+      "done": "Done",
       "change_picture": "Change Picture",
       "username": "Username",
       "email": "Email",

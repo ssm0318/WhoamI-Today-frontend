@@ -109,14 +109,14 @@ function EditProfile() {
         LeftComponent={
           <button type="button" onClick={handleClickCancel}>
             <Typo type="title-large" color="DARK">
-              {t('cancel')}
+              {t('back')}
             </Typo>
           </button>
         }
         RightComponent={
           <button type="button" onClick={handleClickSave}>
             <Typo type="title-large" color="PRIMARY">
-              {t('save')}
+              {t('done')}
             </Typo>
           </button>
         }
