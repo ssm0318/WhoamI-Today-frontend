@@ -18,19 +18,15 @@ import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
 function Friends() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends' });
 
-  const {
-    isLoadingMoreAllFriends,
-    allFriends,
-    fetchAllFriends,
-    replaceFriendOnUpdateFavorite,
-    targetRef,
-  } = useInfiniteFetchFriends({ filterHidden: true });
+  const { targetRef, allFriends, isAllFriendsLoading, isLoadingMoreAllFriends } =
+    useInfiniteFetchFriends({
+      filterHidden: true,
+    });
   const [favoriteFriends, setFavoriteFriends] = useState<FetchState<UpdatedProfile[]>>({
     state: 'loading',
   });
 
   const fetchAllTypeFriends = async () => {
-    fetchAllFriends();
     getFavoriteFriends()
       .then((results) => {
         setFavoriteFriends({ state: 'hasValue', data: results });
@@ -51,12 +47,13 @@ function Friends() {
     getFavoriteFriends().then((results) => {
       setFavoriteFriends({ state: 'hasValue', data: results });
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const updatedTargetProfile = results.find((profile) => profile.id === friendProfile.id);
-      replaceFriendOnUpdateFavorite(updatedTargetProfile, friendProfile);
+      // replaceFriendOnUpdateFavorite(updatedTargetProfile, friendProfile);
     });
   };
 
-  if (allFriends.state === 'loading' || favoriteFriends.state === 'loading') return <Loader />;
+  if (isAllFriendsLoading && favoriteFriends.state === 'loading') return <Loader />;
 
   return (
     <Layout.FlexCol w="100%">
@@ -90,56 +87,56 @@ function Friends() {
       {/* Friend Requests */}
       <Divider width={1} marginLeading={9} />
       {/* All Friends */}
-      {allFriends.state === 'hasValue' && (
-        <SwipeLayoutList>
-          <Layout.FlexCol w="100%">
-            <Layout.FlexRow
-              w="100%"
-              ph={16}
-              pv={12}
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typo type="title-medium">{t('all_friends')}</Typo>
-              <Button.Tertiary
-                status="normal"
-                text={t('edit_friends.title')}
-                onClick={handleClickEditFriends}
-                icon={<SvgIcon name="edit_filled" size={16} />}
-                iconPosition="left"
-                fontType="body-medium"
-              />
-            </Layout.FlexRow>
-            <Layout.FlexCol w="100%" pv={8} gap={4}>
-              {allFriends.data.results?.length ? (
-                <>
-                  {allFriends.data.results.map((user) => (
+      <SwipeLayoutList>
+        <Layout.FlexCol w="100%">
+          <Layout.FlexRow
+            w="100%"
+            ph={16}
+            pv={12}
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typo type="title-medium">{t('all_friends')}</Typo>
+            <Button.Tertiary
+              status="normal"
+              text={t('edit_friends.title')}
+              onClick={handleClickEditFriends}
+              icon={<SvgIcon name="edit_filled" size={16} />}
+              iconPosition="left"
+              fontType="body-medium"
+            />
+          </Layout.FlexRow>
+          <Layout.FlexCol w="100%" pv={8} gap={4}>
+            {allFriends ? (
+              <>
+                {allFriends.map(({ results }) =>
+                  results?.map((user) => (
                     <UpdatedFriendItem
                       key={user.id}
                       user={user}
                       updateFavoriteCallback={updateFavoriteCallback(user)}
                       fetchAllTypeFriends={fetchAllTypeFriends}
                     />
-                  ))}
-                  <div ref={targetRef} />
-                  {isLoadingMoreAllFriends && allFriends.data.next && <Loader />}
-                </>
-              ) : (
-                <Layout.FlexCol alignItems="center" ph={75} gap={8}>
-                  <Typo type="label-medium" color="DARK_GRAY">
-                    {t('add_favorite')}
-                  </Typo>
-                  <Icon
-                    name="add_user"
-                    background="LIGHT_GRAY"
-                    onClick={() => navigate('/friends/explore')}
-                  />
-                </Layout.FlexCol>
-              )}
-            </Layout.FlexCol>
+                  )),
+                )}
+                <div ref={targetRef} />
+                {isLoadingMoreAllFriends && <Loader />}
+              </>
+            ) : (
+              <Layout.FlexCol alignItems="center" ph={75} gap={8}>
+                <Typo type="label-medium" color="DARK_GRAY">
+                  {t('add_favorite')}
+                </Typo>
+                <Icon
+                  name="add_user"
+                  background="LIGHT_GRAY"
+                  onClick={() => navigate('/friends/explore')}
+                />
+              </Layout.FlexCol>
+            )}
           </Layout.FlexCol>
-        </SwipeLayoutList>
-      )}
+        </Layout.FlexCol>
+      </SwipeLayoutList>
     </Layout.FlexCol>
   );
 }

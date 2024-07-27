@@ -1,78 +1,54 @@
-import { useState } from 'react';
+import useSWRInfinite from 'swr/infinite';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
-import { FetchState } from '@models/api/common';
-import { GetUpdatedProfileResponse, UpdatedProfile } from '@models/api/friends';
+import { GetUpdatedProfileResponse } from '@models/api/friends';
 import { getAllFriends, getFriendsOptions } from '@utils/apis/friends';
 
+const getKey = (pageIndex: number, previousPageData: GetUpdatedProfileResponse) => {
+  if (previousPageData && !previousPageData.next) return null; // 끝에 도달
+  return `/user/friends/?type=all&page=${pageIndex + 1}`; // SWR 키
+};
+
 const useInfiniteFetchFriends = (options?: getFriendsOptions) => {
-  const [allFriends, setAllFriends] = useState<FetchState<GetUpdatedProfileResponse>>({
-    state: 'loading',
+  const { data, size, setSize, isLoading } = useSWRInfinite(getKey, (url) => {
+    return getAllFriends({ filterHidden: options?.filterHidden, next: url });
   });
+  const isEndPage = data && !data[size - 1]?.next;
+  const isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined');
 
-  const fetchAllFriends = async (next?: string) => {
-    try {
-      const data = await getAllFriends({ filterHidden: options?.filterHidden, next });
-      setAllFriends((prev) => {
-        // NOTE: 첫 로딩 시, useEffect가 두번 실행되는데, 첫 로딩에서 연속 두 페이지 요청할 때 에러 핸들링을 위함
-        if (prev.data && !next) return prev;
-
-        return next
-          ? {
-              state: 'hasValue',
-              data: {
-                ...data,
-                results: prev?.data?.results
-                  ? [...prev.data.results, ...(data.results ?? [])]
-                  : data.results,
-                next: data.next,
-              },
-            }
-          : { state: 'hasValue', data };
-      });
-    } catch {
-      setAllFriends({ state: 'hasError' });
-    }
+  const fetchAllFriends = () => {
+    if (isEndPage) return;
+    setSize((prevSize) => prevSize + 1);
   };
 
-  const replaceFriendOnUpdateFavorite = (
-    updatedTargetProfile: UpdatedProfile | undefined,
-    targetProfile: UpdatedProfile,
-  ) => {
-    setAllFriends((prev) => {
-      const { state, data } = prev;
-      if (state !== 'hasValue' || !data?.results?.length) return prev;
+  // const replaceFriendOnUpdateFavorite = (
+  //   updatedTargetProfile: UpdatedProfile | undefined,
+  //   targetProfile: UpdatedProfile,
+  // ) => {
+  //   setAllFriends((prev) => {
+  //     const { state, data } = prev;
+  //     if (state !== 'hasValue' || !data?.results?.length) return prev;
 
-      const targetId = updatedTargetProfile ? updatedTargetProfile.id : targetProfile.id;
-      const findIndex = data.results.findIndex((profile) => profile.id === targetId);
-      if (findIndex === -1) return prev;
+  //     const targetId = updatedTargetProfile ? updatedTargetProfile.id : targetProfile.id;
+  //     const findIndex = data.results.findIndex((profile) => profile.id === targetId);
+  //     if (findIndex === -1) return prev;
 
-      const profile = updatedTargetProfile ?? { ...targetProfile, is_favorite: false };
-      data.results.splice(findIndex, 1, profile);
-      return prev;
-    });
-  };
+  //     const profile = updatedTargetProfile ?? { ...targetProfile, is_favorite: false };
+  //     data.results.splice(findIndex, 1, profile);
+  //     return prev;
+  //   });
+  // };
 
-  const {
-    isLoading: isLoadingMoreAllFriends,
-    targetRef,
-    setIsLoading: setIsLoadingMoreAllFriends,
-  } = useInfiniteScroll<HTMLDivElement>(async () => {
-    if (allFriends?.data?.next) {
-      await fetchAllFriends(allFriends.data.next);
-      setIsLoadingMoreAllFriends(true);
-      return;
-    }
-
-    setIsLoadingMoreAllFriends(false);
+  const { targetRef } = useInfiniteScroll<HTMLDivElement>(() => {
+    fetchAllFriends();
   });
 
   return {
-    isLoadingMoreAllFriends,
-    allFriends,
-    setAllFriends,
-    fetchAllFriends,
+    isLoadingMoreAllFriends: isLoadingMore,
     targetRef,
-    replaceFriendOnUpdateFavorite,
+    allFriends: data,
+    isAllFriendsLoading: isLoading,
+    isEndPage,
+    // replaceFriendOnUpdateFavorite,
   };
 };
 
