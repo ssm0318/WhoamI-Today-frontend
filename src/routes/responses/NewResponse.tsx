@@ -62,7 +62,6 @@ function NewResponse() {
     if (!questionId) return;
     navigate('/my');
     openToast({ message: t('question.response.posting') });
-
     const { id: newResponseId } =
       status !== 'edit'
         ? await postResponse({
@@ -70,7 +69,7 @@ function NewResponse() {
             content: newResponse,
           })
         : await patchResponse({
-            question_id: Number(questionId),
+            post_id: location.state?.post.id,
             content: newResponse,
           });
 
