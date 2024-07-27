@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Icon from '@components/_common/icon/Icon';
 import { Noti } from '../Header.styled';
 import MainHeader from '../MainHeader';
+import NewFloatingButton from '../new-floating-button/NewFloatingButton';
 import SideMenu from '../side-menu/SideMenu';
 
 interface CommonHeaderProps {
@@ -31,6 +32,7 @@ function CommonHeader({ title }: CommonHeaderProps) {
         }
       />
       {showSideMenu && <SideMenu closeSideMenu={() => setShowSideMenu(false)} />}
+      <NewFloatingButton />
     </>
   );
 }
