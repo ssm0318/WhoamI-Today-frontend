@@ -6,6 +6,10 @@ import NewPostBottomSheet from '../bottom-sheet/NewPostBottomSheet';
 import MainHeader from '../MainHeader';
 import SideMenu from '../side-menu/SideMenu';
 
+/**
+ *
+ * TODO: 삭제 필요
+ */
 function MyHeader() {
   const [t] = useTranslation('translation', { keyPrefix: 'header' });
 

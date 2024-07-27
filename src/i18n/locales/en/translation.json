@@ -72,7 +72,7 @@
     },
     "header": {
       "side_menu": {
-        "friends": "Friends",
+        "explore_friends": "Explore Friends",
         "questions": "Questions",
         "settings": "Settings"
       },

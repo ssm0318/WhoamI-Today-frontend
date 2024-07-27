@@ -7,6 +7,10 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { Noti } from '../Header.styled';
 import MainHeader from '../MainHeader';
 
+/**
+ *
+ * TODO: 삭제 필요
+ */
 function FriendsHeader() {
   const [t] = useTranslation('translation', { keyPrefix: 'nav_tab' });
   const navigate = useNavigate();
