@@ -29,7 +29,7 @@ function ResponseItem({
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
   const { content, created_at, author_detail, question, like_user_sample, updated_at } = response;
   const { username, profile_image } = author_detail ?? {};
-  const [overflowActive, setOverflowActive] = useState<boolean>(false);
+  const [overflowSummary, setOverflowSummary] = useState<string>();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [inputFocus, setInputFocus] = useState(false);
 
@@ -49,9 +49,13 @@ function ResponseItem({
   };
 
   useEffect(() => {
-    if (commentType === 'LIST' && content.length > MAX_RESPONSE_CONTENT_LENGTH) {
-      setOverflowActive(true);
-    }
+    if (commentType !== 'LIST') return;
+    if (content.length > MAX_RESPONSE_CONTENT_LENGTH)
+      setOverflowSummary(content.slice(0, MAX_RESPONSE_CONTENT_LENGTH));
+
+    const contentArrWithNewLine = content.split('\n');
+    if (contentArrWithNewLine.length > MAX_RESPONSE_NEW_LINE)
+      setOverflowSummary(contentArrWithNewLine.slice(0, MAX_RESPONSE_NEW_LINE).join('\n'));
   }, [content, commentType]);
 
   return (
@@ -97,10 +101,10 @@ function ResponseItem({
             </Layout.FlexRow>
           </Layout.FlexRow>
           <Layout.FlexCol w="100%" mb={8}>
-            <Typo type="body-large" color="BLACK" pre={commentType === 'DETAIL'}>
-              {overflowActive ? (
+            <Typo type="body-large" color="BLACK" pre>
+              {overflowSummary ? (
                 <>
-                  {`${content.slice(0, MAX_RESPONSE_CONTENT_LENGTH)}...`}
+                  {`${overflowSummary}...`}
                   <Typo type="body-medium" color="BLACK" italic underline ml={3}>
                     {t('more').toLowerCase()}
                   </Typo>
@@ -156,3 +160,4 @@ export const RESPONSE_WIDTH = SCREEN_WIDTH - 4 * RESPONSE_MARGIN - RESPONSE_GAP 
 export const RESPONSE_HEIGHT = 368;
 
 const MAX_RESPONSE_CONTENT_LENGTH = 140;
+const MAX_RESPONSE_NEW_LINE = 5;
