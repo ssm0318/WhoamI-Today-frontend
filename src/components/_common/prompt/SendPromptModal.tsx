@@ -104,7 +104,10 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
       questionId,
       selectedFriends,
       message: messageInput,
-      onSuccess: () => onClose,
+      onSuccess: () => {
+        openToast({ message: t('prompts.sent_success') });
+        onClose();
+      },
       onError: (errorMsg) => openToast({ message: errorMsg ?? t('error.temporary_error') }),
     });
   };
