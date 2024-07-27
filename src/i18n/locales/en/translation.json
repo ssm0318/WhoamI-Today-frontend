@@ -96,6 +96,7 @@
       "what_is_your_response": "What's your response?",
       "posting": "Posting...",
       "posted": "Posted🎉",
+      "edited": "Updated🎉",
       "view": "View"
     },
     "send": {
@@ -204,6 +205,7 @@
       "edit_note": "Edit Note"
     },
     "posted": "Posted🎉",
+    "edited": "Updated🎉",
     "view": "View",
     "cancel": "Cancel",
     "post": "Post",
