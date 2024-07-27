@@ -12,10 +12,19 @@ type PostFooterProps = {
   likedUserList: User[];
   isMyPage: boolean;
   post: Response | Note;
+  commentType?: 'LIST' | 'DETAIL';
   showComments: () => void;
+  setInputFocus: () => void;
 };
 
-function PostFooter({ likedUserList, isMyPage, post, showComments }: PostFooterProps) {
+function PostFooter({
+  likedUserList,
+  isMyPage,
+  post,
+  commentType = 'LIST',
+  showComments,
+  setInputFocus,
+}: PostFooterProps) {
   const { comment_count, type } = post;
   const navigate = useNavigate();
 
@@ -23,9 +32,15 @@ function PostFooter({ likedUserList, isMyPage, post, showComments }: PostFooterP
     keyPrefix: post.type === POST_TYPE.RESPONSE ? 'responses' : 'notes',
   });
 
-  const handleClickComment = (e: MouseEvent) => {
+  const handleClickCommentText = (e: MouseEvent) => {
     e.stopPropagation();
     showComments();
+  };
+
+  const handleClickCommentIcon = (e: MouseEvent) => {
+    e.stopPropagation();
+    showComments();
+    setInputFocus();
   };
 
   const handleClickLikes = (e: MouseEvent) => {
@@ -45,12 +60,12 @@ function PostFooter({ likedUserList, isMyPage, post, showComments }: PostFooterP
         ) : (
           <LikeButton postType={type} post={post} iconSize={23} m={0} />
         )}
-        <Icon name="add_comment" size={23} onClick={handleClickComment} />
+        <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
       </Layout.FlexRow>
 
-      {!!comment_count && (
+      {!!comment_count && commentType === 'LIST' && (
         <Layout.FlexRow>
-          <button type="button" onClick={handleClickComment}>
+          <button type="button" onClick={handleClickCommentText}>
             <Typo type="label-large" color="BLACK" underline>
               {comment_count || 0} {t('comments')}
             </Typo>

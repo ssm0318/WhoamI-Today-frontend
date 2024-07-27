@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
@@ -17,6 +17,8 @@ interface CommentInputBoxProps {
   resetCommentType: () => void;
   postType: 'Response' | 'Comment' | 'Note';
   post: Response | Comment | Note;
+  inputFocus?: boolean;
+  commentRef?: React.RefObject<HTMLTextAreaElement>;
   reloadComments?: () => void;
   setReload?: (reload: boolean) => void;
 }
@@ -31,6 +33,8 @@ function CommentInputBox({
   resetCommentType,
   postType,
   post,
+  inputFocus,
+  commentRef,
   reloadComments,
   setReload,
 }: CommentInputBoxProps) {
@@ -39,6 +43,10 @@ function CommentInputBox({
   const [content, setContent] = useState('');
   const initialIsPrivateRef = useRef(isPrivate);
   const [initialIsPrivate, setInitialIsPrivate] = useState(initialIsPrivateRef.current);
+
+  useEffect(() => {
+    if (inputFocus) commentRef?.current?.focus();
+  }, [inputFocus, commentRef]);
 
   useEffect(() => {
     initialIsPrivateRef.current = isPrivate;
@@ -134,6 +142,7 @@ function CommentInputBox({
             </Layout.FlexRow>
           )}
           <S.CommentInput
+            ref={commentRef}
             placeholder={placeholder}
             onChange={handleChangeInput}
             value={content}

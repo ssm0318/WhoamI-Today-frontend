@@ -53,7 +53,7 @@ function ResponseDetail() {
           <Layout.FlexCol w="100%" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
             <ResponseItem
               response={responseDetail.data}
-              type="DETAIL"
+              commentType="DETAIL"
               isMyPage={responseDetail.data.author_detail?.id === myProfile?.id}
             />
           </Layout.FlexCol>
