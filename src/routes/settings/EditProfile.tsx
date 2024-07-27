@@ -50,13 +50,15 @@ function EditProfile() {
       const imageDataUrl = await readFile(image);
 
       if (typeof imageDataUrl !== 'string') {
-        throw new Error('read file error');
+        throw new Error(t('error.read_file_error') || '');
       }
 
       setOriginalImageFileURL(imageDataUrl);
       setIsEditModalVisible(true);
     } catch (error) {
-      openToast({ message: t('temporary_error') });
+      const errMsg = (error as Error)?.message;
+      if (!errMsg) return;
+      openToast({ message: errMsg });
     }
   };
 
