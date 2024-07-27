@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAlert';
 import Loader from '@components/_common/loader/Loader';
+import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Comment, Note, Response } from '@models/post';
@@ -61,20 +62,22 @@ function CommentList({ postType, post, setReload }: CommentListProps) {
 
   return (
     <Layout.FlexCol w="100%" h="100%" pt={24}>
-      <Layout.FlexCol w="100%" gap={2} ph={16} mb={footerRef.current?.offsetHeight}>
-        {comments.map((comment) => (
-          <CommentItem
-            key={comment.id}
-            isPostAuthor={myProfile?.id === post.author_detail.id}
-            comment={comment}
-            onClickReplyBtn={() => {
-              setReplyTo(comment);
-              setIsPrivate(comment.is_private);
-              setCommentTo(comment);
-              setCommentToType('Comment');
-            }}
-          />
-        ))}
+      <Layout.FlexCol w="100%" gap={2} mb={footerRef.current?.offsetHeight}>
+        <SwipeLayoutList>
+          {comments.map((comment) => (
+            <CommentItem
+              key={comment.id}
+              isPostAuthor={myProfile?.id === post.author_detail.id}
+              comment={comment}
+              onClickReplyBtn={() => {
+                setReplyTo(comment);
+                setIsPrivate(comment.is_private);
+                setCommentTo(comment);
+                setCommentToType('Comment');
+              }}
+            />
+          ))}
+        </SwipeLayoutList>
       </Layout.FlexCol>
       <StyledCommentListFooter ref={footerRef} b={0} w="100%" bgColor="WHITE">
         <Layout.FlexRow w="100%">

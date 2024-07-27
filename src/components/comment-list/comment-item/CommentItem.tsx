@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
+import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import { Layout, Typo } from '@design-system';
 import { Comment, PrivateComment } from '@models/post';
 import { User } from '@models/user';
@@ -41,8 +43,12 @@ function CommentItem({
     // TODO : 채팅방으로 이동
   };
 
-  const handleClickMore = () => {
+  const handleClickDelete = () => {
     // TBU
+  };
+
+  const handleClickReport = () => {
+    // TODO
   };
 
   const navigateToProfile = () => {
@@ -51,66 +57,84 @@ function CommentItem({
 
   return (
     <Layout.FlexCol w="100%">
-      <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="flex-start" gap={8}>
-        {/* Author Profile */}
-        <Layout.FlexCol w={30}>
-          <ProfileImage imageUrl={profile_image} size={30} onClick={navigateToProfile} />
-        </Layout.FlexCol>
-        {/* Author name, time, content */}
-        <Layout.FlexCol flex={1} alignItems="center">
-          <Layout.FlexCol w="100%" gap={4}>
-            <Layout.FlexRow w="100%" alignItems="center">
-              {is_private && <Icon name="private_comment" size={16} />}
-              <Typo ml={3} type="label-medium">
-                {username ?? 'Anonymous'}
+      <SwipeLayout
+        rightContent={[
+          isCommentAuthor ? (
+            <StyledSwipeButton key="hide" backgroundColor="ERROR" onClick={handleClickDelete}>
+              <Typo type="body-medium" color="WHITE" textAlign="center">
+                {t('delete')}
               </Typo>
-              <Layout.FlexRow ml={8}>
-                <Typo type="label-small" color="MEDIUM_GRAY">
-                  {createdAt &&
-                    convertTimeDiffByString({
-                      now: currentDate,
-                      day: createdAt,
-                      isShortFormat: true,
-                    })}
-                </Typo>
-              </Layout.FlexRow>
-            </Layout.FlexRow>
-            <Typo
-              pre
-              type="body-medium"
-              italic={comment.is_private && !comment.content}
-              color={comment.is_private && !comment.content ? 'DARK_GRAY' : 'BLACK'}
-            >{`${comment.content ?? t('private_placeholder')}`}</Typo>
-            {/* Reply & Message buttons */}
-            <Layout.FlexRow w="100%" gap={16} alignItems="center">
-              {replyAvailable && (
-                <button type="button" onClick={handleReplyInput}>
-                  <Typo type="label-medium" color="DARK_GRAY">
-                    {t('reply')}
-                  </Typo>
-                </button>
-              )}
-              {!isCommentAuthor && isPostAuthor && (
-                <button type="button" onClick={handleSendMessage}>
-                  <Typo type="label-medium" color="DARK_GRAY">
-                    {t('message')}
-                  </Typo>
-                </button>
-              )}
-            </Layout.FlexRow>
-          </Layout.FlexCol>
-        </Layout.FlexCol>
-        {/* more button / like button */}
-        <Layout.FlexCol w={24}>
-          {isCommentAuthor ? (
-            <Layout.FlexRow>
-              <Icon name="dots_menu" size={24} onClick={handleClickMore} />
-            </Layout.FlexRow>
+            </StyledSwipeButton>
           ) : (
-            <LikeButton postType="Comment" post={comment} iconSize={15} />
-          )}
-        </Layout.FlexCol>
-      </Layout.FlexRow>
+            <StyledSwipeButton key="hide" backgroundColor="ERROR" onClick={handleClickReport}>
+              <Typo type="body-medium" color="WHITE" textAlign="center">
+                {t('report')}
+              </Typo>
+            </StyledSwipeButton>
+          ),
+        ]}
+      >
+        <Layout.FlexRow
+          w="100%"
+          justifyContent="space-between"
+          alignItems="flex-start"
+          gap={8}
+          ph={16}
+        >
+          {/* Author Profile */}
+          <Layout.FlexCol w={30}>
+            <ProfileImage imageUrl={profile_image} size={30} onClick={navigateToProfile} />
+          </Layout.FlexCol>
+          {/* Author name, time, content */}
+          <Layout.FlexCol flex={1} alignItems="center">
+            <Layout.FlexCol w="100%" gap={4}>
+              <Layout.FlexRow w="100%" alignItems="center">
+                {is_private && <Icon name="private_comment" size={16} />}
+                <Typo ml={3} type="label-medium">
+                  {username ?? 'Anonymous'}
+                </Typo>
+                <Layout.FlexRow ml={8}>
+                  <Typo type="label-small" color="MEDIUM_GRAY">
+                    {createdAt &&
+                      convertTimeDiffByString({
+                        now: currentDate,
+                        day: createdAt,
+                        isShortFormat: true,
+                      })}
+                  </Typo>
+                </Layout.FlexRow>
+              </Layout.FlexRow>
+              <Typo
+                pre
+                type="body-medium"
+                italic={comment.is_private && !comment.content}
+                color={comment.is_private && !comment.content ? 'DARK_GRAY' : 'BLACK'}
+              >{`${comment.content ?? t('private_placeholder')}`}</Typo>
+              {/* Reply & Message buttons */}
+              <Layout.FlexRow w="100%" gap={16} alignItems="center">
+                {replyAvailable && (
+                  <button type="button" onClick={handleReplyInput}>
+                    <Typo type="label-medium" color="DARK_GRAY">
+                      {t('reply')}
+                    </Typo>
+                  </button>
+                )}
+                {!isCommentAuthor && isPostAuthor && (
+                  <button type="button" onClick={handleSendMessage}>
+                    <Typo type="label-medium" color="DARK_GRAY">
+                      {t('message')}
+                    </Typo>
+                  </button>
+                )}
+              </Layout.FlexRow>
+            </Layout.FlexCol>
+          </Layout.FlexCol>
+          {/* like button */}
+          <Layout.FlexCol w={24}>
+            {!isCommentAuthor && <LikeButton postType="Comment" post={comment} iconSize={15} />}
+          </Layout.FlexCol>
+        </Layout.FlexRow>
+      </SwipeLayout>
       {/* replies */}
       <Layout.FlexCol w="100%" gap={8} pl={34} mt={14}>
         {replies?.map((reply) => (

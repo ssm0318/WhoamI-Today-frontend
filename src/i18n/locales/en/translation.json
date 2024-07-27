@@ -342,7 +342,8 @@
     "reply_place_holder": "Add a reply to {{username}}",
     "private_comment": "Private Comment",
     "private_placeholder": "This comment is privated and can only be seen by the original poster.",
-    "replying_to": "Replying to {{username}}"
+    "replying_to": "Replying to {{username}}",
+    "report": "Report"
   },
   "no_contents": {
     "the_day_detail": "No moment or responses.",
