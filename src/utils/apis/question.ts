@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { PaginationResponse } from '@models/api/common';
 import { ResponseQuestionRequestParams } from '@models/api/question';
 import { DailyQuestion, Question, Response } from '@models/post';
@@ -37,7 +38,7 @@ export const requestResponse = async ({
   selectedFriends: number[];
   message?: string;
   onSuccess: () => void;
-  onError: () => void;
+  onError: (errorMsg?: string) => void;
 }) => {
   Promise.all(
     selectedFriends.map((friend) =>
@@ -50,7 +51,9 @@ export const requestResponse = async ({
     ),
   )
     .then(() => onSuccess())
-    .catch(() => onError());
+    .catch((error: AxiosError<{ detail: string }>) => {
+      onError(error?.response?.data?.detail);
+    });
 };
 
 export const responseQuestion = async ({
