@@ -386,7 +386,8 @@
     "search_friends": "Search",
     "cancel": "Cancel",
     "write_a_message": "Write a message...",
-    "send_separately": "Send separately"
+    "send_separately": "Send separately",
+    "sent_success": "The prompt sent successfully :)"
   },
   "chat_room": {
     "noti_setting_dialog": {

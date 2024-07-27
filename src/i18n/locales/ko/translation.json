@@ -386,7 +386,8 @@
     "send_this_prompt_to": "질문 보내기",
     "search_friends": "검색",
     "write_a_message": "메시지를 작성해주세요...",
-    "send_separately": "보내기"
+    "send_separately": "보내기",
+     "sent_success": "질문이 성공적으로 전송되었습니다 :)"
   },
   "friends": {
     "explore_friends": {
