@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NotificationItem from '@components/notification/NotificationItem/NotificationItem';
@@ -7,19 +8,27 @@ import TopContainer from '@components/notification/TopContainer/TopContainer';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Notification } from '@models/notification';
+import { useBoundStore } from '@stores/useBoundStore';
+import { getResponseRequests } from '@utils/apis/my';
 import { getNotifications } from '@utils/apis/notification';
+import { getFriendRequests } from '@utils/apis/user';
 
 function Notifications() {
+  const navigate = useNavigate();
+
   const [t] = useTranslation('translation', { keyPrefix: 'notifications' });
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
-
+  const [friendRequests, setFriendRequests] = useState<number | null>(null);
+  const [responseRequests, setResponseRequests] = useState<number | null>(null);
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextPage === null) return setIsLoading(false);
     await fetchNotifications(nextPage ?? null);
   });
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
   const fetchNotifications = async (page: string | null) => {
     const { results, next } = await getNotifications(page);
@@ -32,15 +41,38 @@ function Notifications() {
   const recentNotifications = notifications.filter((n) => n.is_recent);
   const restNotifications = notifications.filter((n) => !n.is_recent);
 
+  useAsyncEffect(async () => {
+    try {
+      const { count: friendRequestCount } = await getFriendRequests();
+      setFriendRequests(friendRequestCount);
+
+      const { count: responseRequestCount } = await getResponseRequests(null);
+      setResponseRequests(responseRequestCount);
+    } catch (error) {
+      console.error('Error fetching requests:', error);
+      openToast({ message: t('temporary_error') });
+    }
+  }, []);
+
   return (
     <MainContainer>
       <SubHeader title={t('title')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%">
         <Layout.FlexCol mt={12} mb={4} w="100%" ph={16}>
           {/* See Friend Requests */}
-          <TopContainer type="FriendRequest" />
+          <TopContainer
+            title={t('see_friend_requests')}
+            icon="friend_requests"
+            value={friendRequests !== null ? friendRequests : 0}
+            onClick={() => navigate('/friends/explore')}
+          />
           {/* See Prompts Received */}
-          <TopContainer type="PromptsReceived" />
+          <TopContainer
+            title={t('see_prompts_received')}
+            icon="prompts"
+            value={responseRequests !== null ? responseRequests : 0}
+            onClick={() => navigate('/notifications/prompts')}
+          />
         </Layout.FlexCol>
         {/* Last 7 days */}
         {recentNotifications.length > 0 && (
