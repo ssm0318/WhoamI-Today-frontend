@@ -329,7 +329,8 @@
     "see_prompts_received": "See Prompts Received",
     "received_prompts": {
       "sent_by": "Sent by {{username}}"
-    }
+    },
+    "temporary_error": "An error has occurred temporarily. Please try again later."
   },
   "comment": {
     "reply": "Reply",

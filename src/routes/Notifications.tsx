@@ -11,12 +11,14 @@ import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Notification } from '@models/notification';
+import { useBoundStore } from '@stores/useBoundStore';
 import { getResponseRequests } from '@utils/apis/my';
 import { getNotifications } from '@utils/apis/notification';
 import { getFriendRequests } from '@utils/apis/user';
 
 function Notifications() {
   const navigate = useNavigate();
+
   const [t] = useTranslation('translation', { keyPrefix: 'notifications' });
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
@@ -26,6 +28,7 @@ function Notifications() {
     if (nextPage === null) return setIsLoading(false);
     await fetchNotifications(nextPage ?? null);
   });
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
   const fetchNotifications = async (page: string | null) => {
     const { results, next } = await getNotifications(page);
@@ -39,11 +42,16 @@ function Notifications() {
   const restNotifications = notifications.filter((n) => !n.is_recent);
 
   useAsyncEffect(async () => {
-    const { count: friendRequestCount } = await getFriendRequests();
-    setFriendRequests(friendRequestCount);
+    try {
+      const { count: friendRequestCount } = await getFriendRequests();
+      setFriendRequests(friendRequestCount);
 
-    const { count: responseRequestCount } = await getResponseRequests(null);
-    setResponseRequests(responseRequestCount);
+      const { count: responseRequestCount } = await getResponseRequests(null);
+      setResponseRequests(responseRequestCount);
+    } catch (error) {
+      console.error('Error fetching requests:', error);
+      openToast({ message: t('temporary_error') });
+    }
   }, []);
 
   return (
