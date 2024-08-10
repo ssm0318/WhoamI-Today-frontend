@@ -82,6 +82,25 @@ const router = createBrowserRouter([
           { path: 'edit', element: <EditFriends /> },
         ],
       },
+      {
+        path: 'notifications',
+        loader: checkIfSignIn,
+        children: [
+          { path: '', element: <Notifications /> },
+          { path: 'prompts', element: <ReceivedPrompts /> },
+        ],
+      },
+      {
+        path: 'users/:username',
+        loader: checkIfSignIn,
+        children: [
+          { path: '', element: <FriendPage /> },
+          {
+            path: 'responses',
+            element: <AllResponses />,
+          },
+        ],
+      },
     ],
   },
   { path: 'signin', element: <SignIn /> },
@@ -108,26 +127,6 @@ const router = createBrowserRouter([
       { path: ':questionId/new', element: <NewResponse /> },
     ],
   },
-  {
-    path: 'notifications',
-    loader: checkIfSignIn,
-    children: [
-      { path: '', element: <Notifications /> },
-      { path: 'prompts', element: <ReceivedPrompts /> },
-    ],
-  },
-  {
-    path: 'users/:username',
-    loader: checkIfSignIn,
-    children: [
-      { path: '', element: <FriendPage /> },
-      {
-        path: 'responses',
-        element: <AllResponses />,
-      },
-    ],
-  },
-
   {
     path: 'check-in',
     loader: checkIfSignIn,

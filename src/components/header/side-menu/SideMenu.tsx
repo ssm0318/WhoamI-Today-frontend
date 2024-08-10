@@ -2,9 +2,10 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Z_INDEX } from '@constants/layout';
-import { Font, Layout, SvgIcon } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 
 const SIDE_MENU_LIST = [
+  { key: 'explore_friends', path: '/friends/explore' },
   { key: 'questions', path: '/questions' },
   { key: 'settings', path: '/settings' },
 ];
@@ -35,7 +36,7 @@ function SideMenu({ closeSideMenu }: Props) {
           <Layout.FlexCol gap={12} pt={30}>
             {SIDE_MENU_LIST.map((menu) => (
               <button type="button" key={menu.key} onClick={handleClickMenu(menu.path)}>
-                <Font.Display type="24_bold">{t(menu.key)}</Font.Display>
+                <Typo type="head-line">{t(menu.key)}</Typo>
               </button>
             ))}
           </Layout.FlexCol>
