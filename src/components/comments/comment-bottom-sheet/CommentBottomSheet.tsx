@@ -6,9 +6,8 @@ import Divider from '@components/_common/divider/Divider';
 import Icon from '@components/_common/icon/Icon';
 import CommentInputBox from '@components/comment-list/comment-input-box/CommentInputBox';
 import CommentItem from '@components/comment-list/comment-item/CommentItem';
-import { getCommentList } from '@components/comment-list/CommentList.helper';
 import { Layout, Typo } from '@design-system';
-import useAsyncEffect from '@hooks/useAsyncEffect';
+import useCommentList from '@hooks/useCommentList';
 import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import {
@@ -38,55 +37,18 @@ function CommentBottomSheet({
 }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
 
-  const [comments, setComments] = useState<Comment[]>([]);
+  const { comments, fetchComments, nextPage, deleteComment } = useCommentList(post);
+
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
-  const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
   const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
   const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
 
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
-  const fetchComments = async (page: string | null, update: boolean) => {
-    const { results, next } = await getCommentList(postType, post.id, page);
-    if (!results) return;
-    setNextPage(next);
-    if (update) setComments(results);
-    else setComments([...comments, ...results]);
-  };
-
-  useAsyncEffect(async () => {
-    await fetchComments(null, false);
-  }, []);
-
   const handleClick = () => {
     closeBottomSheet();
-  };
-
-  const deleteComment = (commentId: number) => {
-    // 삭제 대상이 댓글인 경우
-    const targetComment = comments.findIndex(({ id }) => id === commentId);
-    if (targetComment !== -1) {
-      setComments((prev) => [...prev.slice(0, targetComment), ...prev.slice(targetComment + 1)]);
-      return;
-    }
-
-    // 삭제 대상이 답글인 경우
-    const targetCommentOfReply = comments.findIndex(({ replies }) =>
-      replies.some(({ id }) => id === commentId),
-    );
-
-    if (targetCommentOfReply === -1) return;
-
-    setComments((prev) => [
-      ...prev.slice(0, targetCommentOfReply),
-      {
-        ...prev[targetCommentOfReply],
-        replies: [...prev[targetCommentOfReply].replies.filter(({ id }) => id !== commentId)],
-      },
-      ...prev.slice(targetCommentOfReply + 1),
-    ]);
   };
 
   return createPortal(
@@ -127,7 +89,6 @@ function CommentBottomSheet({
           />
         ))}
       </CommentBottomContentWrapper>
-
       <CommentBottomFooterWrapper>
         <CommentInputBox
           post={commentTo}

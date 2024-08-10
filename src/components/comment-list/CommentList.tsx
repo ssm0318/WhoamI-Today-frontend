@@ -3,12 +3,12 @@ import Loader from '@components/_common/loader/Loader';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
+import useCommentList from '@hooks/useCommentList';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import CommentInputBox from './comment-input-box/CommentInputBox';
 import CommentItem from './comment-item/CommentItem';
-import { getCommentList } from './CommentList.helper';
 import { StyledCommentListFooter } from './CommentList.styled';
 
 interface CommentListProps {
@@ -21,10 +21,11 @@ interface CommentListProps {
 
 function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: CommentListProps) {
   const footerRef = useRef<HTMLDivElement>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
+
+  const { comments, fetchComments, nextPage, deleteComment } = useCommentList(post);
+
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
-  const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
   const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
   const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
@@ -35,41 +36,6 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
     if (nextPage === null) return setIsLoading(false);
     await fetchComments(nextPage ?? null, false);
   });
-
-  const fetchComments = async (page: string | null, update: boolean) => {
-    const { results, next } = await getCommentList(postType, post.id, page);
-    if (!results) return;
-
-    setNextPage(next ?? null);
-    if (update) setComments(results);
-    else setComments([...comments, ...results]);
-    setIsLoading(false);
-  };
-
-  const deleteComment = (commentId: number) => {
-    // 삭제 대상이 댓글인 경우
-    const targetComment = comments.findIndex(({ id }) => id === commentId);
-    if (targetComment !== -1) {
-      setComments((prev) => [...prev.slice(0, targetComment), ...prev.slice(targetComment + 1)]);
-      return;
-    }
-
-    // 삭제 대상이 답글인 경우
-    const targetCommentOfReply = comments.findIndex(({ replies }) =>
-      replies.some(({ id }) => id === commentId),
-    );
-
-    if (targetCommentOfReply === -1) return;
-
-    setComments((prev) => [
-      ...prev.slice(0, targetCommentOfReply),
-      {
-        ...prev[targetCommentOfReply],
-        replies: [...prev[targetCommentOfReply].replies.filter(({ id }) => id !== commentId)],
-      },
-      ...prev.slice(targetCommentOfReply + 1),
-    ]);
-  };
 
   return (
     <Layout.FlexCol w="100%" h="100%" pt={24}>
