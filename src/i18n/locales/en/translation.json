@@ -468,7 +468,8 @@
     "friend_requests_desc": "See friend requests & recommended friends",
     "favorites": "Favorites",
     "add_favorite": "Add your friends to Favorites and see their content at the top of your feed!",
-    "all_friends": "Friends"
+    "all_friends": "Friends",
+    "no_friends": "Add friends to view their profiles on your feed."
   },
   "error": {
     "temporary_error": "An error has occurred temporarily. Please try again later.",

@@ -133,9 +133,9 @@ function Friends() {
                     {isLoadingMoreAllFriends && allFriends.data.next && <Loader />}
                   </>
                 ) : (
-                  <Layout.FlexCol alignItems="center" ph={75} gap={8}>
+                  <Layout.FlexCol alignItems="center" ph={75} gap={8} w="100%">
                     <Typo type="label-medium" color="DARK_GRAY">
-                      {t('add_favorite')}
+                      {t('no_friends')}
                     </Typo>
                     <Icon
                       name="add_user"
