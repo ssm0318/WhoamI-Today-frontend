@@ -64,6 +64,31 @@ function CommentBottomSheet({
     closeBottomSheet();
   };
 
+  const deleteComment = (commentId: number) => {
+    // 삭제 대상이 댓글인 경우
+    const targetComment = comments.findIndex(({ id }) => id === commentId);
+    if (targetComment !== -1) {
+      setComments((prev) => [...prev.slice(0, targetComment), ...prev.slice(targetComment + 1)]);
+      return;
+    }
+
+    // 삭제 대상이 답글인 경우
+    const targetCommentOfReply = comments.findIndex(({ replies }) =>
+      replies.some(({ id }) => id === commentId),
+    );
+
+    if (targetCommentOfReply === -1) return;
+
+    setComments((prev) => [
+      ...prev.slice(0, targetCommentOfReply),
+      {
+        ...prev[targetCommentOfReply],
+        replies: [...prev[targetCommentOfReply].replies.filter(({ id }) => id !== commentId)],
+      },
+      ...prev.slice(targetCommentOfReply + 1),
+    ]);
+  };
+
   return createPortal(
     <BottomModal visible={visible} onClose={closeBottomSheet} heightMode="full">
       <CommentBottomHeaderWrapper>
@@ -98,6 +123,7 @@ function CommentBottomSheet({
               setCommentTo(comment);
               setCommentToType('Comment');
             }}
+            onDeleteComplete={deleteComment}
           />
         ))}
       </CommentBottomContentWrapper>

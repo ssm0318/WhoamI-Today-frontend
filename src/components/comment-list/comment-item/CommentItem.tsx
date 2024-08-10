@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAlert';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import { Layout, Typo } from '@design-system';
+import useDeleteCommentAlert from '@hooks/useDeleteCommentAlert';
 import { Comment, PrivateComment } from '@models/post';
 import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -17,12 +19,14 @@ interface CommentItemProps {
   comment: Comment | PrivateComment;
   replyAvailable?: boolean;
   onClickReplyBtn?: () => void;
+  onDeleteComplete: (commentId: number) => void;
 }
 
 function CommentItem({
   isPostAuthor,
   comment,
   onClickReplyBtn,
+  onDeleteComplete,
   replyAvailable = true,
 }: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
@@ -39,12 +43,17 @@ function CommentItem({
     onClickReplyBtn?.();
   };
 
-  // const handleSendMessage = () => {
-  //   // TODO : 채팅방으로 이동
-  // };
+  const handleSendMessage = () => {
+    // TODO : 채팅방으로 이동
+  };
+
+  const { deleteTarget, setDeleteTarget, confirmDeleteAlert, closeDeleteAlert } =
+    useDeleteCommentAlert({
+      onDeleteComplete,
+    });
 
   const handleClickDelete = () => {
-    // TBU
+    setDeleteTarget(comment);
   };
 
   const handleClickReport = () => {
@@ -143,9 +152,15 @@ function CommentItem({
             isPostAuthor={isPostAuthor}
             comment={reply}
             onClickReplyBtn={onClickReplyBtn}
+            onDeleteComplete={onDeleteComplete}
           />
         ))}
       </Layout.FlexCol>
+      <DeleteAlert
+        visible={!!deleteTarget}
+        close={closeDeleteAlert}
+        onClickConfirm={confirmDeleteAlert}
+      />
     </Layout.FlexCol>
   );
 }

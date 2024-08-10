@@ -1,12 +1,11 @@
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
-import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAlert';
+import Loader from '@components/_common/loader/Loader';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
-import { deleteComment } from '@utils/apis/comments';
 import CommentInputBox from './comment-input-box/CommentInputBox';
 import CommentItem from './comment-item/CommentItem';
 import { getCommentList } from './CommentList.helper';
@@ -47,19 +46,29 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
     setIsLoading(false);
   };
 
-  const [deleteTarget, setDeleteTarget] = useState<Comment>();
+  const deleteComment = (commentId: number) => {
+    // 삭제 대상이 댓글인 경우
+    const targetComment = comments.findIndex(({ id }) => id === commentId);
+    if (targetComment !== -1) {
+      setComments((prev) => [...prev.slice(0, targetComment), ...prev.slice(targetComment + 1)]);
+      return;
+    }
 
-  const closeDeleteAlert = () => {
-    setDeleteTarget(undefined);
-  };
+    // 삭제 대상이 답글인 경우
+    const targetCommentOfReply = comments.findIndex(({ replies }) =>
+      replies.some(({ id }) => id === commentId),
+    );
 
-  const confirmDeleteAlert = () => {
-    if (!deleteTarget) return;
-    deleteComment(deleteTarget.id)
-      .then(() => fetchComments(null, true))
-      .catch(() => console.log('TODO: 삭제 실패 알림'))
-      .finally(() => closeDeleteAlert());
-    closeDeleteAlert();
+    if (targetCommentOfReply === -1) return;
+
+    setComments((prev) => [
+      ...prev.slice(0, targetCommentOfReply),
+      {
+        ...prev[targetCommentOfReply],
+        replies: [...prev[targetCommentOfReply].replies.filter(({ id }) => id !== commentId)],
+      },
+      ...prev.slice(targetCommentOfReply + 1),
+    ]);
   };
 
   return (
@@ -110,11 +119,6 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
           />
         </Layout.FlexRow>
       </StyledCommentListFooter>
-      <DeleteAlert
-        visible={!!deleteTarget}
-        close={closeDeleteAlert}
-        onClickConfirm={confirmDeleteAlert}
-      />
       <div ref={targetRef} />
       {isLoading && (
         <Layout.FlexRow w="100%" h={40}>
