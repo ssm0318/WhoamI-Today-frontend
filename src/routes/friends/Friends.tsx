@@ -9,6 +9,7 @@ import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import FavoriteFriendItem from '@components/friends/favorite-friend-item/FavoriteFriendItem';
 import UpdatedFriendItem from '@components/friends/updated-friend-item/UpdatedFriendItem';
+import { StyledUpdatedFriendItem } from '@components/friends/updated-friend-item/UpdatedFriendItem.styled';
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
@@ -60,6 +61,8 @@ function Friends() {
   const handleRefresh = async () => {
     await fetchAllTypeFriends();
   };
+
+  const handleClickExploreFriends = () => navigate('/friends/explore');
 
   if (allFriends.state === 'loading' || favoriteFriends.state === 'loading') return <Loader />;
 
@@ -121,6 +124,28 @@ function Friends() {
               <Layout.FlexCol w="100%" pv={8} gap={4}>
                 {allFriends.data.results?.length ? (
                   <>
+                    {/* Explore Friends */}
+                    <Layout.FlexRow w="100%" ph={16} gap={16}>
+                      <StyledUpdatedFriendItem
+                        w="100%"
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <Layout.FlexRow
+                          alignItems="center"
+                          gap={7}
+                          onClick={handleClickExploreFriends}
+                        >
+                          <Icon name="add_user" background="LIGHT_GRAY" size={44} />
+                          <Layout.FlexCol>
+                            <Layout.FlexRow gap={4} alignItems="center">
+                              <Typo type="label-large">{t('explore_friends.title')}</Typo>
+                            </Layout.FlexRow>
+                          </Layout.FlexCol>
+                        </Layout.FlexRow>
+                      </StyledUpdatedFriendItem>
+                    </Layout.FlexRow>
+                    {/* 친구 목록 */}
                     {allFriends.data.results.map((user) => (
                       <UpdatedFriendItem
                         key={user.id}
