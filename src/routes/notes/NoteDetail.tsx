@@ -1,7 +1,7 @@
 import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CommonError from '@components/_common/common-error/CommonError';
 import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
@@ -21,6 +21,7 @@ export function NoteDetail() {
   const { noteId } = useParams();
 
   const [t] = useTranslation('translation');
+  const navigate = useNavigate();
 
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const [noteDetail, setNoteDetail] = useState<FetchState<Note>>({ state: 'loading' });
@@ -41,6 +42,10 @@ export function NoteDetail() {
     }
   }, [noteId, reload]);
 
+  const handleGoBack = () => {
+    navigate('/my');
+  };
+
   return (
     <MainContainer>
       {noteDetail.state === 'loading' && <Loader />}
@@ -48,6 +53,7 @@ export function NoteDetail() {
         <>
           <SubHeader
             title={t('note_detail.title', { username: noteDetail.data.author_detail?.username })}
+            onGoBack={handleGoBack}
           />
           <Layout.FlexCol w="100%" alignItems="center" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
             <NoteItem
