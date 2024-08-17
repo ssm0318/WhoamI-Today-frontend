@@ -3,7 +3,7 @@ import i18n from '@i18n/index';
 
 export const API_BASE_URL =
   process.env.NODE_ENV === 'production'
-    ? 'https://diivers.world/api/'
+    ? 'https://whoami.gina-park.site/api/'
     : 'http://localhost:8000/api/';
 
 const JSON_DEFAULT_OPTIONS: AxiosRequestConfig = {
