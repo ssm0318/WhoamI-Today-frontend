@@ -85,6 +85,7 @@ function EditProfile() {
       onSuccess: (data: MyProfile) => {
         updateMyProfile({ ...data });
         openToast({ message: t('response.updated') });
+        navigate('/my');
       },
     });
   };
