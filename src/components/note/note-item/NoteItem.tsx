@@ -8,6 +8,7 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import { Layout, Typo } from '@design-system';
 import { Note } from '@models/post';
+import { isUpdated } from '@utils/isUpdatedPost';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import NoteImageList from '../note-image-list/NoteImageList';
 
@@ -26,7 +27,7 @@ function NoteItem({
   commentType = 'LIST',
   refresh,
 }: NoteItemProps) {
-  const { content, created_at, id, author_detail, images, like_user_sample } = note;
+  const { content, created_at, id, author_detail, images, like_user_sample, updated_at } = note;
   const navigate = useNavigate();
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
@@ -105,9 +106,14 @@ function NoteItem({
               content
             )}
           </Typo>
-          <Layout.FlexRow w="100%" mv={10}>
-            <NoteImageList images={images} />
-          </Layout.FlexRow>
+          {/* 이미지 */}
+          <NoteImageList images={images} />
+          {/* (수정됨) */}
+          {isUpdated(created_at, updated_at) && (
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              {`(${t('edited')})`}
+            </Typo>
+          )}
         </Layout.FlexCol>
         <PostFooter
           likedUserList={like_user_sample}

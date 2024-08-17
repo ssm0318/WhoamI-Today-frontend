@@ -205,14 +205,15 @@
       "edit_note": "Edit Note"
     },
     "posted": "Posted🎉",
-    "edited": "Updated🎉",
+    "updated": "Updated🎉",
     "view": "View",
     "cancel": "Cancel",
     "post": "Post",
     "whats_on_your_mind": "What's on your mind?",
     "crop_photo": "Crop Photo",
     "done": "Done",
-    "more": "more"
+    "more": "more",
+    "edited": "edited"
   },
   "note_detail": {
     "title": "{{username}}'s Note",

@@ -30,7 +30,7 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
 
     navigate('/my');
     openToast({
-      message: t(status === 'edit' ? 'edited' : 'posted'),
+      message: t(status === 'edit' ? 'updated' : 'posted'),
       actionText: t('view'),
       action: () => navigate(`/notes/${newNoteId}`),
     });
