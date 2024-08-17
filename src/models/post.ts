@@ -36,6 +36,7 @@ export interface ContentsCommon {
   like_count: number | null;
   current_user_like_id: number | null;
   created_at: string;
+  updated_at: string;
 }
 
 // 댓글
