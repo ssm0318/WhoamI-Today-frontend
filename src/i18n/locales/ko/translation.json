@@ -221,7 +221,8 @@
     "comments": "댓글",
     "likes": "좋아요",
     "more": "더보기",
-    "new_response": "새 답변"
+    "new_response": "새 답변",
+    "edited": "수정됨"
   },
   "all_responses": {
     "title": "{{username}}의 답변들"

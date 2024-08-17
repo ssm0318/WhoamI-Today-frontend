@@ -224,7 +224,8 @@
     "comments": "comments",
     "likes": "likes",
     "more": "More",
-    "new_response": "New Response"
+    "new_response": "New Response",
+    "edited": "edited"
   },
   "all_responses": {
     "title": "{{username}}'s Responses"
