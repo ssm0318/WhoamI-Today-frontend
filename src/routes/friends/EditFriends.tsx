@@ -12,6 +12,7 @@ import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
 import { addFriendToFavorite, deleteFavorite, hideFriend, unHideFriend } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
 import { StyledFriendItemWrapper } from 'src/routes/friends/EditFriends.styled';
+import { MainScrollContainer } from 'src/routes/Root';
 
 function EditFriends() {
   const [t] = useTranslation('translation');
@@ -68,7 +69,7 @@ function EditFriends() {
   const handleOnCloseBreakFriendsAlert = () => setShowBreakFriendsAlert(undefined);
 
   return (
-    <>
+    <MainScrollContainer>
       <SubHeader title={t('friends.edit_friends.title')} />
       <Layout.FlexCol
         w="100%"
@@ -137,7 +138,7 @@ function EditFriends() {
           {t('error.temporary_error')}
         </AlertDialog>
       )}
-    </>
+    </MainScrollContainer>
   );
 }
 

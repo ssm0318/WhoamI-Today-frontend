@@ -10,6 +10,7 @@ import FavoriteFriendItem from '@components/friends/favorite-friend-item/Favorit
 import UpdatedFriendItem from '@components/friends/updated-friend-item/UpdatedFriendItem';
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import { getFavoriteFriends } from '@utils/apis/friends';
+import { MainScrollContainer } from 'src/routes/Root';
 import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
 
 function Friends() {
@@ -36,91 +37,93 @@ function Friends() {
   if (isAllFriendsLoading && isFavoriteFriendsLoading) return <Loader />;
 
   return (
-    <Layout.FlexCol w="100%">
-      {/* Favorites */}
-      {favoriteFriends && (
-        <Collapse
-          title={`${t('favorites')} (${favoriteFriends.length})`}
-          collapsedItem={
+    <MainScrollContainer>
+      <Layout.FlexCol w="100%">
+        {/* Favorites */}
+        {favoriteFriends && (
+          <Collapse
+            title={`${t('favorites')} (${favoriteFriends.length})`}
+            collapsedItem={
+              <Layout.FlexRow
+                w="100%"
+                gap={10}
+                pv={12}
+                ph={8}
+                style={{ flexWrap: 'wrap', rowGap: '20px' }}
+                justifyContent="space-evenly"
+              >
+                {favoriteFriends.length ? (
+                  favoriteFriends.map((user) => <FavoriteFriendItem key={user.id} user={user} />)
+                ) : (
+                  <Layout.FlexCol alignItems="center" ph={75} gap={8}>
+                    <Typo type="label-medium" color="DARK_GRAY">
+                      {t('add_favorite')}
+                    </Typo>
+                    <Icon name="add_default" onClick={handleClickEditFriends} />
+                  </Layout.FlexCol>
+                )}
+              </Layout.FlexRow>
+            }
+          />
+        )}
+        {/* Friend Requests */}
+        <Divider width={1} marginLeading={9} />
+        {/* All Friends */}
+        <SwipeLayoutList>
+          <Layout.FlexCol w="100%">
             <Layout.FlexRow
               w="100%"
-              gap={10}
+              ph={16}
               pv={12}
-              ph={8}
-              style={{ flexWrap: 'wrap', rowGap: '20px' }}
-              justifyContent="space-evenly"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              {favoriteFriends.length ? (
-                favoriteFriends.map((user) => <FavoriteFriendItem key={user.id} user={user} />)
+              <Typo type="title-medium">{t('all_friends')}</Typo>
+              <Button.Tertiary
+                status="normal"
+                text={t('edit_friends.title')}
+                onClick={handleClickEditFriends}
+                icon={<SvgIcon name="edit_filled" size={16} />}
+                iconPosition="left"
+                fontType="body-medium"
+              />
+            </Layout.FlexRow>
+            <Layout.FlexCol w="100%" pv={8} gap={4}>
+              {allFriends ? (
+                <>
+                  {allFriends.map(({ results }) =>
+                    results?.map((user) => {
+                      if (user.is_hidden) return null;
+                      return (
+                        <UpdatedFriendItem
+                          key={`friends_${user.id}`}
+                          user={user}
+                          updateFriendList={updateFriendList}
+                          updateFavoriteFriendList={updateFavoriteFriendList}
+                        />
+                      );
+                    }),
+                  )}
+                  <div ref={targetRef} />
+                  {isLoadingMoreAllFriends && <Loader />}
+                </>
               ) : (
                 <Layout.FlexCol alignItems="center" ph={75} gap={8}>
                   <Typo type="label-medium" color="DARK_GRAY">
                     {t('add_favorite')}
                   </Typo>
-                  <Icon name="add_default" onClick={handleClickEditFriends} />
+                  <Icon
+                    name="add_user"
+                    background="LIGHT_GRAY"
+                    onClick={() => navigate('/friends/explore')}
+                  />
                 </Layout.FlexCol>
               )}
-            </Layout.FlexRow>
-          }
-        />
-      )}
-      {/* Friend Requests */}
-      <Divider width={1} marginLeading={9} />
-      {/* All Friends */}
-      <SwipeLayoutList>
-        <Layout.FlexCol w="100%">
-          <Layout.FlexRow
-            w="100%"
-            ph={16}
-            pv={12}
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typo type="title-medium">{t('all_friends')}</Typo>
-            <Button.Tertiary
-              status="normal"
-              text={t('edit_friends.title')}
-              onClick={handleClickEditFriends}
-              icon={<SvgIcon name="edit_filled" size={16} />}
-              iconPosition="left"
-              fontType="body-medium"
-            />
-          </Layout.FlexRow>
-          <Layout.FlexCol w="100%" pv={8} gap={4}>
-            {allFriends ? (
-              <>
-                {allFriends.map(({ results }) =>
-                  results?.map((user) => {
-                    if (user.is_hidden) return null;
-                    return (
-                      <UpdatedFriendItem
-                        key={`friends_${user.id}`}
-                        user={user}
-                        updateFriendList={updateFriendList}
-                        updateFavoriteFriendList={updateFavoriteFriendList}
-                      />
-                    );
-                  }),
-                )}
-                <div ref={targetRef} />
-                {isLoadingMoreAllFriends && <Loader />}
-              </>
-            ) : (
-              <Layout.FlexCol alignItems="center" ph={75} gap={8}>
-                <Typo type="label-medium" color="DARK_GRAY">
-                  {t('add_favorite')}
-                </Typo>
-                <Icon
-                  name="add_user"
-                  background="LIGHT_GRAY"
-                  onClick={() => navigate('/friends/explore')}
-                />
-              </Layout.FlexCol>
-            )}
+            </Layout.FlexCol>
           </Layout.FlexCol>
-        </Layout.FlexCol>
-      </SwipeLayoutList>
-    </Layout.FlexCol>
+        </SwipeLayoutList>
+      </Layout.FlexCol>
+    </MainScrollContainer>
   );
 }
 

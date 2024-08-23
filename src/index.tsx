@@ -75,7 +75,6 @@ const router = createBrowserRouter([
       },
       {
         path: 'friends',
-        element: <MainScrollContainer />,
         children: [
           { path: '', element: <Friends /> },
           { path: 'explore', element: <ExploreFriends /> },
