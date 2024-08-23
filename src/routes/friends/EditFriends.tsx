@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AlertDialog from '@components/_common/alert-dialog/AlertDialog';
 import Icon from '@components/_common/icon/Icon';
@@ -17,7 +17,7 @@ function EditFriends() {
   const [t] = useTranslation('translation');
 
   const { isLoadingMoreAllFriends, allFriends, isAllFriendsLoading, targetRef, updateFriendList } =
-    useInfiniteFetchFriends({ filterHidden: false });
+    useInfiniteFetchFriends();
 
   const [showTemporalErrorAlert, setShowTemporalErrorAlert] = useState(false);
   const handleOnCloseTemporalErrorAlert = () => setShowTemporalErrorAlert(false);
@@ -25,12 +25,12 @@ function EditFriends() {
   const handleToggleFavorite = (userId: number, is_favorite: boolean) => async () => {
     try {
       if (is_favorite) {
-        updateFriendList({ userId, type: 'is_favorite', value: false });
         await deleteFavorite(userId);
+        updateFriendList({ userId, type: 'is_favorite', value: false });
         return;
       }
-      updateFriendList({ userId, type: 'is_favorite', value: true });
       await addFriendToFavorite(userId);
+      updateFriendList({ userId, type: 'is_favorite', value: true });
     } catch {
       setShowTemporalErrorAlert(true);
     }
@@ -39,12 +39,12 @@ function EditFriends() {
   const handleToggleHide = (userId: number, is_hidden: boolean) => async () => {
     try {
       if (is_hidden) {
-        updateFriendList({ userId, type: 'is_hidden', value: false });
         await unHideFriend(userId);
+        updateFriendList({ userId, type: 'is_hidden', value: false });
         return;
       }
-      updateFriendList({ userId, type: 'is_hidden', value: true });
       await hideFriend(userId);
+      updateFriendList({ userId, type: 'is_hidden', value: true });
     } catch {
       setShowTemporalErrorAlert(true);
     }
@@ -67,6 +67,9 @@ function EditFriends() {
   };
   const handleOnCloseBreakFriendsAlert = () => setShowBreakFriendsAlert(undefined);
 
+  useEffect(() => {
+    console.log('allFriends', allFriends);
+  }, [allFriends]);
   return (
     <>
       <SubHeader title={t('friends.edit_friends.title')} />

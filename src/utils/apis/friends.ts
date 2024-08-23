@@ -37,10 +37,6 @@ export const getAllFriends = async (options: getFriendsOptions) => {
   const { data } = await axios.get<GetUpdatedProfileResponse>(
     options?.next ?? '/user/friends/?type=all',
   );
-
-  if (options?.filterHidden) {
-    return { ...data, results: filterHiddenFriends(data.results ?? []) };
-  }
   return data;
 };
 

@@ -1,7 +1,7 @@
 import useSWRInfinite from 'swr/infinite';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { GetUpdatedProfileResponse } from '@models/api/friends';
-import { getAllFriends, getFriendsOptions } from '@utils/apis/friends';
+import { getAllFriends } from '@utils/apis/friends';
 
 interface BreakFriendsParams {
   type: 'break_friends';
@@ -20,9 +20,9 @@ const getKey = (pageIndex: number, previousPageData: GetUpdatedProfileResponse) 
   return `/user/friends/?type=all&page=${pageIndex + 1}`; // SWR 키
 };
 
-const useInfiniteFetchFriends = (options?: getFriendsOptions) => {
+const useInfiniteFetchFriends = () => {
   const { data, size, setSize, isLoading, mutate } = useSWRInfinite(getKey, (url) => {
-    return getAllFriends({ filterHidden: options?.filterHidden, next: url });
+    return getAllFriends({ next: url });
   });
   const isEndPage = data && !data[size - 1]?.next;
   const isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined');

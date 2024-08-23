@@ -19,9 +19,7 @@ function Friends() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends' });
 
   const { targetRef, allFriends, isAllFriendsLoading, isLoadingMoreAllFriends, updateFriendList } =
-    useInfiniteFetchFriends({
-      filterHidden: true,
-    });
+    useInfiniteFetchFriends();
   const [favoriteFriends, setFavoriteFriends] = useState<FetchState<UpdatedProfile[]>>({
     state: 'loading',
   });
@@ -100,14 +98,17 @@ function Friends() {
             {allFriends ? (
               <>
                 {allFriends.map(({ results }) =>
-                  results?.map((user) => (
-                    <UpdatedFriendItem
-                      key={user.id}
-                      user={user}
-                      updateFriendList={updateFriendList}
-                      fetchAllTypeFriends={fetchAllTypeFriends}
-                    />
-                  )),
+                  results?.map((user) => {
+                    if (user.is_hidden) return null;
+                    return (
+                      <UpdatedFriendItem
+                        key={user.id}
+                        user={user}
+                        updateFriendList={updateFriendList}
+                        fetchAllTypeFriends={fetchAllTypeFriends}
+                      />
+                    );
+                  }),
                 )}
                 <div ref={targetRef} />
                 {isLoadingMoreAllFriends && <Loader />}
