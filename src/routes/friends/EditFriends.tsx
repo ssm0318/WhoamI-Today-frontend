@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AlertDialog from '@components/_common/alert-dialog/AlertDialog';
 import Icon from '@components/_common/icon/Icon';
@@ -67,9 +67,6 @@ function EditFriends() {
   };
   const handleOnCloseBreakFriendsAlert = () => setShowBreakFriendsAlert(undefined);
 
-  useEffect(() => {
-    console.log('allFriends', allFriends);
-  }, [allFriends]);
   return (
     <>
       <SubHeader title={t('friends.edit_friends.title')} />
