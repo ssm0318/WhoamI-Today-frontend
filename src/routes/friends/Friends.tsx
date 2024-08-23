@@ -18,7 +18,7 @@ import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
 function Friends() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends' });
 
-  const { targetRef, allFriends, isAllFriendsLoading, isLoadingMoreAllFriends } =
+  const { targetRef, allFriends, isAllFriendsLoading, isLoadingMoreAllFriends, updateFriendList } =
     useInfiniteFetchFriends({
       filterHidden: true,
     });
@@ -27,7 +27,7 @@ function Friends() {
   });
 
   const fetchAllTypeFriends = async () => {
-    getFavoriteFriends()
+    return getFavoriteFriends()
       .then((results) => {
         setFavoriteFriends({ state: 'hasValue', data: results });
       })
@@ -41,16 +41,6 @@ function Friends() {
   const navigate = useNavigate();
   const handleClickEditFriends = () => {
     navigate('edit');
-  };
-
-  const updateFavoriteCallback = (friendProfile: UpdatedProfile) => () => {
-    getFavoriteFriends().then((results) => {
-      setFavoriteFriends({ state: 'hasValue', data: results });
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const updatedTargetProfile = results.find((profile) => profile.id === friendProfile.id);
-      // replaceFriendOnUpdateFavorite(updatedTargetProfile, friendProfile);
-    });
   };
 
   if (isAllFriendsLoading && favoriteFriends.state === 'loading') return <Loader />;
@@ -114,7 +104,7 @@ function Friends() {
                     <UpdatedFriendItem
                       key={user.id}
                       user={user}
-                      updateFavoriteCallback={updateFavoriteCallback(user)}
+                      updateFriendList={updateFriendList}
                       fetchAllTypeFriends={fetchAllTypeFriends}
                     />
                   )),

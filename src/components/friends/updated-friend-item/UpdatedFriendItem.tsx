@@ -5,6 +5,7 @@ import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { UpdateFriendListParams } from '@hooks/useInfiniteFetchFriends';
 import { UpdatedProfile } from '@models/api/friends';
 import { addFriendToFavorite, deleteFavorite, hideFriend } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
@@ -13,11 +14,11 @@ import { StyledProfileArea, StyledUpdatedFriendItem } from './UpdatedFriendItem.
 
 interface Props {
   user: UpdatedProfile;
-  updateFavoriteCallback?: () => void;
-  fetchAllTypeFriends: () => void;
+  updateFriendList: (params: UpdateFriendListParams) => void;
+  fetchAllTypeFriends: () => Promise<void>;
 }
 
-function UpdatedFriendItem({ user, updateFavoriteCallback, fetchAllTypeFriends }: Props) {
+function UpdatedFriendItem({ user, updateFriendList, fetchAllTypeFriends }: Props) {
   const { id, profile_image, username, is_favorite, current_user_read, track_id, bio } = user;
 
   const navigate = useNavigate();
@@ -26,26 +27,30 @@ function UpdatedFriendItem({ user, updateFavoriteCallback, fetchAllTypeFriends }
   };
 
   const handleDeleteFavorite = () => {
-    deleteFavorite(id).then(() => {
-      updateFavoriteCallback?.();
+    deleteFavorite(id).then(async () => {
+      await fetchAllTypeFriends();
+      updateFriendList({ type: 'is_favorite', userId: id, value: false });
     });
   };
 
   const handleAddFavorite = () => {
-    addFriendToFavorite(id).then(() => {
-      updateFavoriteCallback?.();
+    addFriendToFavorite(id).then(async () => {
+      await fetchAllTypeFriends();
+      updateFriendList({ type: 'is_favorite', userId: id, value: true });
     });
   };
 
   const handleHide = () => {
-    hideFriend(id).then(() => {
-      fetchAllTypeFriends();
+    hideFriend(id).then(async () => {
+      await fetchAllTypeFriends();
+      updateFriendList({ type: 'is_hidden', userId: id, value: true });
     });
   };
 
   const handleUnfriend = () => {
-    breakFriend(id).then(() => {
-      fetchAllTypeFriends();
+    breakFriend(id).then(async () => {
+      await fetchAllTypeFriends();
+      updateFriendList({ type: 'break_friends', userId: id });
     });
   };
 

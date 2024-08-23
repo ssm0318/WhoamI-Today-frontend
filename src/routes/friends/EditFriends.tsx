@@ -1,65 +1,70 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AlertDialog from '@components/_common/alert-dialog/AlertDialog';
+import Icon from '@components/_common/icon/Icon';
+import { Loader } from '@components/_common/loader/Loader.styled';
+import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SubHeader from '@components/sub-header/SubHeader';
 import UserRelatedAlert, { Alert } from '@components/user-page/UserRelatedAlert';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
-import { Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
+import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
+import { addFriendToFavorite, deleteFavorite, hideFriend, unHideFriend } from '@utils/apis/friends';
+import { breakFriend } from '@utils/apis/user';
+import { StyledFriendItemWrapper } from 'src/routes/friends/EditFriends.styled';
 
 function EditFriends() {
   const [t] = useTranslation('translation');
 
-  // const { isLoadingMoreAllFriends, allFriends, setAllFriends, targetRef } = useInfiniteFetchFriends(
-  //   { filterHidden: false },
-  // );
+  const { isLoadingMoreAllFriends, allFriends, isAllFriendsLoading, targetRef, updateFriendList } =
+    useInfiniteFetchFriends({ filterHidden: false });
 
   const [showTemporalErrorAlert, setShowTemporalErrorAlert] = useState(false);
   const handleOnCloseTemporalErrorAlert = () => setShowTemporalErrorAlert(false);
 
-  // const handleToggleFavorite = (userId: number, is_favorite: boolean) => async () => {
-  //   try {
-  //     if (is_favorite) {
-  //       updateFriendsList({ userId, type: 'is_favorite', value: false, setAllFriends });
-  //       await deleteFavorite(userId);
-  //       return;
-  //     }
-  //     updateFriendsList({ userId, type: 'is_favorite', value: true, setAllFriends });
-  //     await addFriendToFavorite(userId);
-  //   } catch {
-  //     setShowTemporalErrorAlert(true);
-  //   }
-  // };
+  const handleToggleFavorite = (userId: number, is_favorite: boolean) => async () => {
+    try {
+      if (is_favorite) {
+        updateFriendList({ userId, type: 'is_favorite', value: false });
+        await deleteFavorite(userId);
+        return;
+      }
+      updateFriendList({ userId, type: 'is_favorite', value: true });
+      await addFriendToFavorite(userId);
+    } catch {
+      setShowTemporalErrorAlert(true);
+    }
+  };
 
-  // const handleToggleHide = (userId: number, is_hidden: boolean) => async () => {
-  //   try {
-  //     if (is_hidden) {
-  //       updateFriendsList({ userId, type: 'is_hidden', value: false, setAllFriends });
-  //       await unHideFriend(userId);
-  //       return;
-  //     }
-  //     updateFriendsList({ userId, type: 'is_hidden', value: true, setAllFriends });
-  //     await hideFriend(userId);
-  //   } catch {
-  //     setShowTemporalErrorAlert(true);
-  //   }
-  // };
+  const handleToggleHide = (userId: number, is_hidden: boolean) => async () => {
+    try {
+      if (is_hidden) {
+        updateFriendList({ userId, type: 'is_hidden', value: false });
+        await unHideFriend(userId);
+        return;
+      }
+      updateFriendList({ userId, type: 'is_hidden', value: true });
+      await hideFriend(userId);
+    } catch {
+      setShowTemporalErrorAlert(true);
+    }
+  };
 
   const [showBreakFriendsAlert, setShowBreakFriendsAlert] = useState<Alert>();
-  // const handleClickDelete = (userId: number) => () => {
-  //   setShowBreakFriendsAlert({
-  //     onClickConfirm: async () => {
-  //       try {
-  //         handleOnCloseBreakFriendsAlert();
-  //         updateFriendsList({ userId, type: 'break_friends', setAllFriends });
-  //         await breakFriend(userId);
-  //       } catch {
-  //         setShowTemporalErrorAlert(true);
-  //       }
-  //     },
-  //     confirmMsg: t('user_page.are_you_sure_you_want_to_delete_this_friend'),
-  //   });
-  // };
+  const handleClickDelete = (userId: number) => () => {
+    setShowBreakFriendsAlert({
+      onClickConfirm: async () => {
+        try {
+          handleOnCloseBreakFriendsAlert();
+          updateFriendList({ userId, type: 'break_friends' });
+          await breakFriend(userId);
+        } catch {
+          setShowTemporalErrorAlert(true);
+        }
+      },
+      confirmMsg: t('user_page.are_you_sure_you_want_to_delete_this_friend'),
+    });
+  };
   const handleOnCloseBreakFriendsAlert = () => setShowBreakFriendsAlert(undefined);
 
   return (
@@ -72,11 +77,11 @@ function EditFriends() {
         pv={12}
         mb={BOTTOM_TABBAR_HEIGHT + 10}
       >
-        {/* {allFriends.state === 'loading' && <Loader />} */}
-        {/* {allFriends.state === 'hasValue' && (
+        {isAllFriendsLoading && <Loader />}
+        {allFriends && (
           <>
-            {allFriends.data?.results?.map(
-              ({ id, username, profile_image, is_hidden, is_favorite }) => (
+            {allFriends.map(({ results }) =>
+              results?.map(({ id, username, profile_image, is_hidden, is_favorite }) => (
                 <StyledFriendItemWrapper key={username}>
                   <Layout.FlexRow gap={8}>
                     {is_hidden ? (
@@ -110,12 +115,12 @@ function EditFriends() {
                     <Icon name="close" size={16} padding={14} onClick={handleClickDelete(id)} />
                   </Layout.FlexRow>
                 </StyledFriendItemWrapper>
-              ),
+              )),
             )}
-            {isLoadingMoreAllFriends && allFriends.data.next && <Loader />}
+            {isLoadingMoreAllFriends && <Loader />}
             <div ref={targetRef} />
           </>
-        )} */}
+        )}
       </Layout.FlexCol>
       {showBreakFriendsAlert && (
         <UserRelatedAlert
