@@ -66,7 +66,7 @@ const useInfiniteFetchFriends = () => {
       });
     }
 
-    mutate(next);
+    mutate(next, { revalidate: false });
   };
 
   return {

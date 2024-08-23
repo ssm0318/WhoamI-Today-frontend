@@ -25,12 +25,12 @@ function EditFriends() {
   const handleToggleFavorite = (userId: number, is_favorite: boolean) => async () => {
     try {
       if (is_favorite) {
-        await deleteFavorite(userId);
         updateFriendList({ userId, type: 'is_favorite', value: false });
+        await deleteFavorite(userId);
         return;
       }
-      await addFriendToFavorite(userId);
       updateFriendList({ userId, type: 'is_favorite', value: true });
+      await addFriendToFavorite(userId);
     } catch {
       setShowTemporalErrorAlert(true);
     }
@@ -39,12 +39,12 @@ function EditFriends() {
   const handleToggleHide = (userId: number, is_hidden: boolean) => async () => {
     try {
       if (is_hidden) {
-        await unHideFriend(userId);
         updateFriendList({ userId, type: 'is_hidden', value: false });
+        await unHideFriend(userId);
         return;
       }
-      await hideFriend(userId);
       updateFriendList({ userId, type: 'is_hidden', value: true });
+      await hideFriend(userId);
     } catch {
       setShowTemporalErrorAlert(true);
     }

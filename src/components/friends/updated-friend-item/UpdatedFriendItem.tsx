@@ -15,10 +15,10 @@ import { StyledProfileArea, StyledUpdatedFriendItem } from './UpdatedFriendItem.
 interface Props {
   user: UpdatedProfile;
   updateFriendList: (params: UpdateFriendListParams) => void;
-  fetchAllTypeFriends: () => Promise<void>;
+  updateFavoriteFriendList: () => void;
 }
 
-function UpdatedFriendItem({ user, updateFriendList, fetchAllTypeFriends }: Props) {
+function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }: Props) {
   const { id, profile_image, username, is_favorite, current_user_read, track_id, bio } = user;
 
   const navigate = useNavigate();
@@ -27,29 +27,29 @@ function UpdatedFriendItem({ user, updateFriendList, fetchAllTypeFriends }: Prop
   };
 
   const handleDeleteFavorite = () => {
-    deleteFavorite(id).then(async () => {
-      await fetchAllTypeFriends();
+    deleteFavorite(id).then(() => {
+      updateFavoriteFriendList();
       updateFriendList({ type: 'is_favorite', userId: id, value: false });
     });
   };
 
   const handleAddFavorite = () => {
-    addFriendToFavorite(id).then(async () => {
-      await fetchAllTypeFriends();
+    addFriendToFavorite(id).then(() => {
+      updateFavoriteFriendList();
       updateFriendList({ type: 'is_favorite', userId: id, value: true });
     });
   };
 
   const handleHide = () => {
-    hideFriend(id).then(async () => {
-      await fetchAllTypeFriends();
+    hideFriend(id).then(() => {
+      updateFavoriteFriendList();
       updateFriendList({ type: 'is_hidden', userId: id, value: true });
     });
   };
 
   const handleUnfriend = () => {
-    breakFriend(id).then(async () => {
-      await fetchAllTypeFriends();
+    breakFriend(id).then(() => {
+      updateFavoriteFriendList();
       updateFriendList({ type: 'break_friends', userId: id });
     });
   };
