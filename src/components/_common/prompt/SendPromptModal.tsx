@@ -2,7 +2,6 @@ import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Button, Layout, StyledCheckBox, Typo } from '@design-system';
-import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { FetchState } from '@models/api/common';
@@ -35,14 +34,8 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
   const {
     isLoadingMoreAllFriends,
     allFriends,
-    fetchAllFriends,
     targetRef: allFriendsTargetRef,
-  } = useInfiniteFetchFriends({ filterHidden: true });
-
-  useAsyncEffect(async () => {
-    if (!visible) return;
-    fetchAllFriends();
-  }, [visible]);
+  } = useInfiniteFetchFriends();
 
   const [searchedFriendsList, setSearchFriendsList] = useState<FetchState<UserProfile[]>>({
     state: 'loading',
@@ -169,33 +162,32 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
             </>
           ) : (
             <>
-              {allFriends.state === 'loading' && <Loader />}
-              {allFriends.state === 'hasValue' && allFriends.data.results && (
-                <>
-                  {allFriends.data.results.map((friend) => {
-                    const { username, profile_image } = friend;
-                    const checked = !!selectedFriends.find((id) => id === friend.id);
-                    return (
-                      <Layout.FlexRow
-                        key={username}
-                        alignItems="center"
-                        justifyContent="space-between"
-                        pv={12}
-                        w="100%"
-                        onClick={handleChangeCheckBox(friend)}
-                      >
-                        <Layout.FlexRow gap={8} alignItems="center">
-                          <ProfileImage imageUrl={profile_image} username={username} size={30} />
-                          <Typo type="title-medium">{username}</Typo>
-                        </Layout.FlexRow>
-                        <StyledCheckBox onChange={handleChangeCheckBox(friend)} checked={checked} />
+              {/** TODO: 친구 없는 케이스 추가 */}
+              {allFriends?.map(({ results }) =>
+                results?.map((friend) => {
+                  if (friend.is_hidden) return null;
+                  const { username, profile_image } = friend;
+                  const checked = !!selectedFriends.find((id) => id === friend.id);
+                  return (
+                    <Layout.FlexRow
+                      key={username}
+                      alignItems="center"
+                      justifyContent="space-between"
+                      pv={12}
+                      w="100%"
+                      onClick={handleChangeCheckBox(friend)}
+                    >
+                      <Layout.FlexRow gap={8} alignItems="center">
+                        <ProfileImage imageUrl={profile_image} username={username} size={30} />
+                        <Typo type="title-medium">{username}</Typo>
                       </Layout.FlexRow>
-                    );
-                  })}
-                  <div ref={allFriendsTargetRef} />
-                  {isLoadingMoreAllFriends && allFriends.data.next && <Loader />}
-                </>
+                      <StyledCheckBox onChange={handleChangeCheckBox(friend)} checked={checked} />
+                    </Layout.FlexRow>
+                  );
+                }),
               )}
+              <div ref={allFriendsTargetRef} />
+              {isLoadingMoreAllFriends && <Loader />}
             </>
           )}
         </SendPromptModalFriendList>

@@ -47,11 +47,13 @@ function QuestionItem({ question, onSend }: QuestionItemProps) {
           <Icon name="question_send" size={22} onClick={handleClickSend} />
         </Layout.FlexRow>
       </QuestionItemWrapper>
-      <SendPromptModal
-        visible={sendPromptModalVisible}
-        onClose={onCloseSendBottomModal}
-        questionId={question.id}
-      />
+      {sendPromptModalVisible && (
+        <SendPromptModal
+          visible={sendPromptModalVisible}
+          onClose={onCloseSendBottomModal}
+          questionId={question.id}
+        />
+      )}
     </>
   );
 }
