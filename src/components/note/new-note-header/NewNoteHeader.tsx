@@ -7,12 +7,13 @@ import { patchNote, postNote } from '@utils/apis/note';
 import { NewNoteHeaderWrapper } from './NewNoteHeader.styled';
 
 interface NewNoteHeaderProps {
+  status?: string;
   noteId: number;
   title: string;
   noteInfo: NewNoteForm;
 }
 
-function NewNoteHeader({ noteId, title, noteInfo }: NewNoteHeaderProps) {
+function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
 
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ function NewNoteHeader({ noteId, title, noteInfo }: NewNoteHeaderProps) {
 
     navigate('/my');
     openToast({
-      message: t('posted'),
+      message: t(status === 'edit' ? 'edited' : 'posted'),
       actionText: t('view'),
       action: () => navigate(`/notes/${newNoteId}`),
     });

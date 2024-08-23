@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { Layout } from '@design-system';
 
 export const StyledPromptCard = styled(Layout.FlexCol)`
-  height: 154.5px;
   padding: 16px;
   align-items: flex-start;
   gap: 8px;
@@ -14,7 +13,6 @@ export const StyledPromptCard = styled(Layout.FlexCol)`
 `;
 
 export const StyledPromptCardButtons = styled(Layout.FlexRow)`
-  position: absolute;
   bottom: 16px;
 `;
 

@@ -97,8 +97,11 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
       questionId,
       selectedFriends,
       message: messageInput,
-      onSuccess: () => onClose,
-      onError: () => openToast({ message: t('error.temporary_error') }),
+      onSuccess: () => {
+        openToast({ message: t('prompts.sent_success') });
+        onClose();
+      },
+      onError: (errorMsg) => openToast({ message: errorMsg ?? t('error.temporary_error') }),
     });
   };
 
@@ -137,22 +140,14 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
               {searchedFriendsList.state === 'hasValue' && (
                 <>
                   {searchedFriendsList.data.map((friend) => {
-                    const { username, profile_image } = friend;
                     const checked = !!selectedFriends.find((id) => id === friend.id);
                     return (
-                      <Layout.FlexRow
-                        key={username}
-                        alignItems="center"
-                        justifyContent="space-between"
-                        pv={12}
-                        w="100%"
-                      >
-                        <Layout.FlexRow gap={8} alignItems="center">
-                          <ProfileImage imageUrl={profile_image} username={username} size={30} />
-                          <Typo type="title-medium">{username}</Typo>
-                        </Layout.FlexRow>
-                        <StyledCheckBox onChange={handleChangeCheckBox(friend)} checked={checked} />
-                      </Layout.FlexRow>
+                      <SelectFriendItem
+                        key={friend.id}
+                        friend={friend}
+                        checked={checked}
+                        handleChangeCheckBox={handleChangeCheckBox}
+                      />
                     );
                   })}
                   <div ref={searchFriendsTargetRef} />
@@ -166,23 +161,14 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
               {allFriends?.map(({ results }) =>
                 results?.map((friend) => {
                   if (friend.is_hidden) return null;
-                  const { username, profile_image } = friend;
                   const checked = !!selectedFriends.find((id) => id === friend.id);
                   return (
-                    <Layout.FlexRow
-                      key={username}
-                      alignItems="center"
-                      justifyContent="space-between"
-                      pv={12}
-                      w="100%"
-                      onClick={handleChangeCheckBox(friend)}
-                    >
-                      <Layout.FlexRow gap={8} alignItems="center">
-                        <ProfileImage imageUrl={profile_image} username={username} size={30} />
-                        <Typo type="title-medium">{username}</Typo>
-                      </Layout.FlexRow>
-                      <StyledCheckBox onChange={handleChangeCheckBox(friend)} checked={checked} />
-                    </Layout.FlexRow>
+                    <SelectFriendItem
+                      key={friend.id}
+                      friend={friend}
+                      checked={checked}
+                      handleChangeCheckBox={handleChangeCheckBox}
+                    />
                   );
                 }),
               )}
@@ -213,6 +199,36 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
       </SendPromptModalContainer>
     </BottomModal>,
     document.getElementById('modal-container') || document.body,
+  );
+}
+
+interface SelectFriendItemProps {
+  friend: UpdatedProfile | UserProfile;
+  checked: boolean;
+  handleChangeCheckBox: (friend: UpdatedProfile | UserProfile) => () => void;
+}
+
+function SelectFriendItem({ friend, checked, handleChangeCheckBox }: SelectFriendItemProps) {
+  const { username, profile_image } = friend;
+  return (
+    <Layout.FlexRow
+      key={username}
+      alignItems="center"
+      justifyContent="space-between"
+      pv={12}
+      w="100%"
+      onClick={handleChangeCheckBox(friend)}
+    >
+      <Layout.FlexRow gap={8} alignItems="center">
+        <ProfileImage imageUrl={profile_image} username={username} size={30} />
+        <Typo type="title-medium">{username}</Typo>
+      </Layout.FlexRow>
+      <StyledCheckBox
+        onClick={(e) => e.stopPropagation()}
+        onChange={handleChangeCheckBox(friend)}
+        checked={checked}
+      />
+    </Layout.FlexRow>
   );
 }
 

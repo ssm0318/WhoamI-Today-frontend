@@ -11,6 +11,7 @@ function NewNote() {
   const location = useLocation();
   const [t] = useTranslation('translation', { keyPrefix: 'notes.note_header' });
 
+  const status = location.state?.status;
   const title = !location.state ? t('new_note') : t('edit_note');
   const noteId = location.state?.post.id || '';
   const content = location.state?.post.content || '';
@@ -26,7 +27,7 @@ function NewNote() {
 
   return (
     <MainContainer>
-      <NewNoteHeader noteId={noteId} title={title} noteInfo={noteInfo} />
+      <NewNoteHeader noteId={noteId} title={title} noteInfo={noteInfo} status={status} />
       <NewNoteContent noteInfo={noteInfo} setNoteInfo={setNoteInfo} />
     </MainContainer>
   );

@@ -72,7 +72,7 @@
     },
     "header": {
       "side_menu": {
-        "friends": "Friends",
+        "explore_friends": "Explore Friends",
         "questions": "Questions",
         "settings": "Settings"
       },
@@ -96,6 +96,7 @@
       "what_is_your_response": "What's your response?",
       "posting": "Posting...",
       "posted": "Posted🎉",
+      "edited": "Updated🎉",
       "view": "View"
     },
     "send": {
@@ -204,6 +205,7 @@
       "edit_note": "Edit Note"
     },
     "posted": "Posted🎉",
+    "edited": "Updated🎉",
     "view": "View",
     "cancel": "Cancel",
     "post": "Post",
@@ -296,6 +298,9 @@
       "update": "Update",
       "response": {
         "updated": "Profile Updated🎉"
+      },
+      "error": {
+        "read_file_error": "A temporary error occurred while uploading the image. Please try again later."
       }
     }
   },
@@ -324,7 +329,8 @@
     "see_prompts_received": "See Prompts Received",
     "received_prompts": {
       "sent_by": "Sent by {{username}}"
-    }
+    },
+    "temporary_error": "An error has occurred temporarily. Please try again later."
   },
   "comment": {
     "reply": "Reply",
@@ -386,7 +392,8 @@
     "search_friends": "Search",
     "cancel": "Cancel",
     "write_a_message": "Write a message...",
-    "send_separately": "Send separately"
+    "send_separately": "Send separately",
+    "sent_success": "The prompt sent successfully :)"
   },
   "chat_room": {
     "noti_setting_dialog": {
@@ -461,7 +468,8 @@
     "friend_requests_desc": "See friend requests & recommended friends",
     "favorites": "Favorites",
     "add_favorite": "Add your friends to Favorites and see their content at the top of your feed!",
-    "all_friends": "Friends"
+    "all_friends": "Friends",
+    "no_friends": "Add friends to view their profiles on your feed."
   },
   "error": {
     "temporary_error": "An error has occurred temporarily. Please try again later.",

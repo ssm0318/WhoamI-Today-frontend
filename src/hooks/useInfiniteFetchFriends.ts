@@ -76,6 +76,7 @@ const useInfiniteFetchFriends = () => {
     isAllFriendsLoading: isLoading,
     isEndPage,
     updateFriendList,
+    refetchAllFriends: mutate,
   };
 };
 

@@ -54,7 +54,7 @@ export function NoteDetail() {
               note={noteDetail.data}
               isMyPage={noteDetail.data.author_detail?.id === myProfile?.id}
               enableCollapse={false}
-              type="DETAIL"
+              commentType="DETAIL"
             />
           </Layout.FlexCol>
           <Layout.FlexCol w="100%" flex={1}>

@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
@@ -15,7 +15,7 @@ interface NoteItemProps {
   note: Note;
   isMyPage: boolean;
   enableCollapse?: boolean;
-  type?: 'LIST' | 'DETAIL';
+  commentType?: 'LIST' | 'DETAIL';
   refresh?: () => Promise<void>;
 }
 
@@ -23,7 +23,7 @@ function NoteItem({
   note,
   isMyPage,
   enableCollapse = true,
-  type = 'LIST',
+  commentType = 'LIST',
   refresh,
 }: NoteItemProps) {
   const { content, created_at, id, author_detail, images, like_user_sample } = note;
@@ -31,9 +31,12 @@ function NoteItem({
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [showMore, setShowMore] = useState(false);
+  const [inputFocus, setInputFocus] = useState(false);
 
   const { username, profile_image } = author_detail ?? {};
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
+
+  const commentRef = useRef<HTMLTextAreaElement>(null);
 
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
@@ -41,15 +44,15 @@ function NoteItem({
   };
 
   const handleClickNote = () => {
-    if (type === 'DETAIL') return;
+    if (commentType === 'DETAIL') return;
     return navigate(`/notes/${id}`);
   };
 
   useEffect(() => {
-    if (type === 'LIST' && content.length > MAX_NOTE_CONTENT_LENGTH) {
+    if (commentType === 'LIST' && content.length > MAX_NOTE_CONTENT_LENGTH) {
       setOverflowActive(true);
     }
-  }, [content, type]);
+  }, [content, commentType]);
 
   return (
     <>
@@ -90,7 +93,7 @@ function NoteItem({
           </Layout.FlexRow>
         </Layout.FlexRow>
         <Layout.FlexCol>
-          <Typo type="body-large" color="BLACK" pre={type === 'DETAIL'}>
+          <Typo type="body-large" color="BLACK" pre={commentType === 'DETAIL'}>
             {enableCollapse && overflowActive ? (
               <>
                 {`${content.slice(0, MAX_NOTE_CONTENT_LENGTH)}...`}
@@ -111,6 +114,8 @@ function NoteItem({
           isMyPage={isMyPage}
           post={note}
           showComments={() => setBottomSheet(true)}
+          setInputFocus={() => setInputFocus(true)}
+          commentType={commentType}
         />
       </Layout.FlexCol>
       {bottomSheet && (
@@ -118,7 +123,12 @@ function NoteItem({
           postType="Note"
           post={note}
           visible={bottomSheet}
-          closeBottomSheet={() => setBottomSheet(false)}
+          inputFocus={inputFocus}
+          commentRef={commentRef}
+          closeBottomSheet={() => {
+            setBottomSheet(false);
+            setInputFocus(false);
+          }}
         />
       )}
     </>

@@ -1,17 +1,18 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import ChatsHeader from './chats-header/ChatsHeader';
-import FriendsHeader from './friends-header/FriendHeader';
-import MyHeader from './my-header/MyHeader';
+import CommonHeader from './common-header/CommonHeader';
 
 function Header() {
   const location = useLocation();
+  const [t] = useTranslation('translation');
 
   switch (location.pathname) {
     case '/friends':
-      return <FriendsHeader />;
+      return <CommonHeader title={t('nav_tab.friends')} />;
     case '/my':
-      return <MyHeader />;
+      return <CommonHeader title={t('header.my')} />;
     case '/chats':
       return <ChatsHeader />;
     default:

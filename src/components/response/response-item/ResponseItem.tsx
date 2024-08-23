@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
@@ -15,19 +15,27 @@ import QuestionItem from '../question-item/QuestionItem';
 interface ResponseItemProps {
   response: Response;
   isMyPage?: boolean;
-  type?: 'LIST' | 'DETAIL';
+  commentType?: 'LIST' | 'DETAIL';
   refresh?: () => Promise<void>;
 }
 
-function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: ResponseItemProps) {
+function ResponseItem({
+  response,
+  isMyPage = false,
+  commentType = 'LIST',
+  refresh,
+}: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
   const { content, created_at, author_detail, question, like_user_sample } = response;
   const { username, profile_image } = author_detail ?? {};
   const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
+  const [inputFocus, setInputFocus] = useState(false);
 
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
+
+  const commentRef = useRef<HTMLTextAreaElement>(null);
 
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
@@ -35,15 +43,15 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: Re
   };
 
   const handleClickDetail = () => {
-    if (type === 'DETAIL') return;
+    if (commentType === 'DETAIL') return;
     navigate(`/responses/${response.id}`);
   };
 
   useEffect(() => {
-    if (type === 'LIST' && content.length > MAX_RESPONSE_CONTENT_LENGTH) {
+    if (commentType === 'LIST' && content.length > MAX_RESPONSE_CONTENT_LENGTH) {
       setOverflowActive(true);
     }
-  }, [content, type]);
+  }, [content, commentType]);
 
   return (
     <>
@@ -51,7 +59,7 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: Re
         p={WRAPPER_PADDING}
         rounded={12}
         outline="LIGHT"
-        w={type === 'LIST' ? RESPONSE_WIDTH : '100%'}
+        w={commentType === 'LIST' ? RESPONSE_WIDTH : '100%'}
         onClick={handleClickDetail}
       >
         <PostMoreModal
@@ -88,7 +96,7 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: Re
             </Layout.FlexRow>
           </Layout.FlexRow>
           <Layout.FlexCol w="100%" mb={8}>
-            <Typo type="body-large" color="BLACK" pre={type === 'DETAIL'}>
+            <Typo type="body-large" color="BLACK" pre={commentType === 'DETAIL'}>
               {overflowActive ? (
                 <>
                   {`${content.slice(0, MAX_RESPONSE_CONTENT_LENGTH)}...`}
@@ -108,6 +116,8 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: Re
             isMyPage={isMyPage}
             post={response}
             showComments={() => setBottomSheet(true)}
+            setInputFocus={() => setInputFocus(true)}
+            commentType={commentType}
           />
         </Layout.FlexCol>
       </Layout.FlexRow>
@@ -116,7 +126,12 @@ function ResponseItem({ response, isMyPage = false, type = 'LIST', refresh }: Re
           postType="Response"
           post={response}
           visible={bottomSheet}
-          closeBottomSheet={() => setBottomSheet(false)}
+          inputFocus={inputFocus}
+          commentRef={commentRef}
+          closeBottomSheet={() => {
+            setBottomSheet(false);
+            setInputFocus(false);
+          }}
         />
       )}
     </>
