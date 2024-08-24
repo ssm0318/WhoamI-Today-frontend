@@ -143,6 +143,7 @@ function ResponseItem({
           post={response}
           visible={bottomSheet}
           inputFocus={inputFocus}
+          setInputFocus={setInputFocus}
           closeBottomSheet={() => {
             setBottomSheet(false);
             setInputFocus(false);

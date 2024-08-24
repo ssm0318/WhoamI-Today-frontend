@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
@@ -21,13 +21,21 @@ interface Props {
   postType: 'Response' | 'Note';
   post: Response | Note;
   visible: boolean;
-  inputFocus?: boolean;
+  inputFocus: boolean;
+  setInputFocus: Dispatch<SetStateAction<boolean>>;
   closeBottomSheet: () => void;
 }
 
 const BOTTOM_MODAL_ANIMATION_DURATION = 300;
 
-function CommentBottomSheet({ postType, post, visible, inputFocus, closeBottomSheet }: Props) {
+function CommentBottomSheet({
+  postType,
+  post,
+  visible,
+  inputFocus,
+  setInputFocus,
+  closeBottomSheet,
+}: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
 
   const [comments, setComments] = useState<Comment[]>([]);
@@ -84,7 +92,7 @@ function CommentBottomSheet({ postType, post, visible, inputFocus, closeBottomSh
             isPostAuthor={myProfile?.id === post.author_detail.id}
             comment={comment}
             onClickReplyBtn={() => {
-              // TODO: input focus
+              setInputFocus(true);
               setReplyTo(comment);
               setIsPrivate(comment.is_private);
               setCommentTo(comment);
@@ -99,6 +107,7 @@ function CommentBottomSheet({ postType, post, visible, inputFocus, closeBottomSh
           post={commentTo}
           postType={commentToType}
           inputFocus={inputFocus}
+          setInputFocus={setInputFocus}
           inputFocusDuration={BOTTOM_MODAL_ANIMATION_DURATION}
           isPrivate={isPrivate}
           setIsPrivate={() => {

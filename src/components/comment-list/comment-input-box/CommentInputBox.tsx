@@ -1,4 +1,12 @@
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  KeyboardEvent,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { useIsVirtualKeyboardOpenInIOS } from '@components/comment-list/comment-input-box/_hooks/useIsVirtualKeyboardOpenInIOS';
@@ -18,8 +26,9 @@ interface CommentInputBoxProps {
   resetCommentType: () => void;
   postType: 'Response' | 'Comment' | 'Note';
   post: Response | Comment | Note;
-  inputFocus?: boolean;
   inputFocusDuration?: number;
+  inputFocus?: boolean;
+  setInputFocus?: Dispatch<SetStateAction<boolean>>;
   reloadComments?: () => void;
   setReload?: (reload: boolean) => void;
 }
@@ -34,8 +43,9 @@ function CommentInputBox({
   resetCommentType,
   postType,
   post,
-  inputFocus,
   inputFocusDuration = 0,
+  inputFocus,
+  setInputFocus,
   reloadComments,
   setReload,
 }: CommentInputBoxProps) {
@@ -51,8 +61,9 @@ function CommentInputBox({
     if (!inputFocus) return;
     setTimeout(() => {
       commentRef?.current?.focus();
+      setInputFocus?.(false);
     }, inputFocusDuration);
-  }, [inputFocus, commentRef, inputFocusDuration]);
+  }, [inputFocus, commentRef, inputFocusDuration, setInputFocus]);
 
   useEffect(() => {
     initialIsPrivateRef.current = isPrivate;

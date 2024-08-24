@@ -116,6 +116,7 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
           post={note}
           visible={bottomSheet}
           inputFocus={inputFocus}
+          setInputFocus={setInputFocus}
           closeBottomSheet={() => {
             setBottomSheet(false);
             setInputFocus(false);
