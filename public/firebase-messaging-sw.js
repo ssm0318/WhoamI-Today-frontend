@@ -35,25 +35,22 @@ self.addEventListener('notificationclick', (e) => {
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  const { message_en, message_ko, url, tag, type } = payload.data;
-  const title = 'Diivers';
+  const { message_en, message_ko, url, tag } = payload.data;
+  const title = 'WhoAmI Today';
 
   const options = {
     body: self.navigator.language === 'ko' ? message_ko : message_en,
     tag,
-    icon: 'https://diivers.world/whoami192.png',
+    icon: 'https://whoami.gina-park.site/whoami192.png',
     data: {
       url,
     },
   };
 
-  if (type === 'new') {
-    self.registration.showNotification(title, options);
-    return;
-  }
-
   self.registration.getNotifications().then((notifications) => {
-    const prev = notifications.filter((notification) => notification.tag === payload.data.tag);
+    const prev = notifications.filter(
+      (notification) => notification.data.FCM_MSG.data.tag === tag,
+    );
 
     if (prev.length > 0) {
       self.registration.showNotification(title, options);
