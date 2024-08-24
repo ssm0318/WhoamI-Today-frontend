@@ -100,6 +100,9 @@ function EditProfile() {
         openToast({ message: t('response.updated') });
         navigate('/my');
       },
+      onError: (error) => {
+        openToast({ message: error });
+      },
     });
   };
 
