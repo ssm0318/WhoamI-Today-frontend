@@ -22,8 +22,7 @@ function TabItem({ to, type, size = 48 }: TabItemProps) {
         <StyledTabItem w="100%" alignItems="center" pt={10}>
           {type === 'my' && myProfile?.profile_image ? (
             <img
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              src={myProfile.profile_image!}
+              src={myProfile.profile_image}
               width={32}
               height={32}
               alt={`${myProfile?.username ?? 'user'}-profile`}
