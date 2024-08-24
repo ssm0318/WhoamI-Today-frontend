@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAlert';
 import Loader from '@components/_common/loader/Loader';
+import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Comment, Note, Response } from '@models/post';
@@ -76,7 +77,7 @@ function CommentList({ postType, post, setReload }: CommentListProps) {
           />
         ))}
       </Layout.FlexCol>
-      <StyledCommentListFooter ref={footerRef} b={0} w="100%" bgColor="WHITE">
+      <StyledCommentListFooter ref={footerRef} b={BOTTOM_TABBAR_HEIGHT} w="100%" bgColor="WHITE">
         <Layout.FlexRow w="100%">
           <CommentInputBox
             post={commentTo}
