@@ -69,6 +69,7 @@ function CommentList({ postType, post, setReload }: CommentListProps) {
             isPostAuthor={myProfile?.id === post.author_detail.id}
             comment={comment}
             onClickReplyBtn={() => {
+              // TODO: input focus
               setReplyTo(comment);
               setIsPrivate(comment.is_private);
               setCommentTo(comment);

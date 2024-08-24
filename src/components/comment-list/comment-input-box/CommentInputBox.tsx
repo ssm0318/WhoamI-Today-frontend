@@ -1,6 +1,7 @@
-import React, { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import { useIsVirtualKeyboardOpenInIOS } from '@components/comment-list/comment-input-box/_hooks/useIsVirtualKeyboardOpenInIOS';
 import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
 import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -18,7 +19,7 @@ interface CommentInputBoxProps {
   postType: 'Response' | 'Comment' | 'Note';
   post: Response | Comment | Note;
   inputFocus?: boolean;
-  commentRef?: React.RefObject<HTMLTextAreaElement>;
+  inputFocusDuration?: number;
   reloadComments?: () => void;
   setReload?: (reload: boolean) => void;
 }
@@ -34,19 +35,24 @@ function CommentInputBox({
   postType,
   post,
   inputFocus,
-  commentRef,
+  inputFocusDuration = 0,
   reloadComments,
   setReload,
 }: CommentInputBoxProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
+
   const myProfile = useBoundStore((state) => state.myProfile);
   const [content, setContent] = useState('');
+  const commentRef = useRef<HTMLTextAreaElement>(null);
   const initialIsPrivateRef = useRef(isPrivate);
   const [initialIsPrivate, setInitialIsPrivate] = useState(initialIsPrivateRef.current);
 
   useEffect(() => {
-    if (inputFocus) commentRef?.current?.focus();
-  }, [inputFocus, commentRef]);
+    if (!inputFocus) return;
+    setTimeout(() => {
+      commentRef?.current?.focus();
+    }, inputFocusDuration);
+  }, [inputFocus, commentRef, inputFocusDuration]);
 
   useEffect(() => {
     initialIsPrivateRef.current = isPrivate;
@@ -118,6 +124,23 @@ function CommentInputBox({
     setReload?.(true);
     handleSubmitComment();
   };
+
+  const isVirtualKeyboardOpen = useIsVirtualKeyboardOpenInIOS();
+
+  useEffect(() => {
+    const blurInputOnTouchMoveOutside = (e: Event) => {
+      if (!isVirtualKeyboardOpen) return;
+
+      if (commentRef.current && !commentRef.current.contains(e.target as Node)) {
+        commentRef?.current?.blur();
+      }
+    };
+
+    document.addEventListener('touchmove', blurInputOnTouchMoveOutside);
+    return () => {
+      document.removeEventListener('touchmove', blurInputOnTouchMoveOutside);
+    };
+  }, [isVirtualKeyboardOpen]);
 
   return (
     <S.CommentInputWrapper gap={10} w="100%" pv={12} ph={16} bgColor="WHITE">

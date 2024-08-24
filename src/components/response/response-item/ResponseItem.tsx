@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
@@ -35,8 +35,6 @@ function ResponseItem({
 
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
-
-  const commentRef = useRef<HTMLTextAreaElement>(null);
 
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
@@ -145,7 +143,6 @@ function ResponseItem({
           post={response}
           visible={bottomSheet}
           inputFocus={inputFocus}
-          commentRef={commentRef}
           closeBottomSheet={() => {
             setBottomSheet(false);
             setInputFocus(false);
