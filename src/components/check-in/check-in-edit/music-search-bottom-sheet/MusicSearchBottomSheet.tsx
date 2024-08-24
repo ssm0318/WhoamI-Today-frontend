@@ -66,6 +66,7 @@ function MusicSearchBottomSheet({
             <SearchInput
               query={query}
               setQuery={setQuery}
+              autoFocus
               fontSize={16}
               placeholder={t('search_placeholder') || undefined}
               cancelText={t('cancel') || undefined}

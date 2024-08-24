@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import { Layout, SvgIcon } from '@design-system';
 import * as S from './SearchInput.styled';
@@ -6,12 +6,20 @@ import * as S from './SearchInput.styled';
 interface Props {
   query: string;
   setQuery: Dispatch<SetStateAction<string>>;
+  autoFocus?: boolean;
   fontSize?: number;
   placeholder?: string;
   cancelText?: string;
 }
 
-export default function SearchInput({ query, setQuery, fontSize, placeholder, cancelText }: Props) {
+export default function SearchInput({
+  query,
+  setQuery,
+  autoFocus,
+  fontSize,
+  placeholder,
+  cancelText,
+}: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchMode, setSearchMode] = useState(false);
 
@@ -30,6 +38,11 @@ export default function SearchInput({ query, setQuery, fontSize, placeholder, ca
     setSearchMode(false);
     setQuery('');
   };
+
+  useEffect(() => {
+    if (!autoFocus) return;
+    inputRef.current?.focus();
+  }, [autoFocus]);
 
   return (
     <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
