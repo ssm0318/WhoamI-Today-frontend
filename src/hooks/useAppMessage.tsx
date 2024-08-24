@@ -4,8 +4,8 @@ import { isApp } from '@utils/getUserAgent';
 
 type MessageDataType = Extract<PostMessageDataType, { key: PostMessageKeyType }>;
 
-const isPostMessageData = (data: any): data is PostMessageDataType => {
-  return data;
+const isPostMessageData = (data: unknown): data is PostMessageDataType => {
+  return typeof data === 'object' && data !== null && 'key' in data;
 };
 
 // 앱 -> 웹 메시지 수신 (GET)
@@ -21,12 +21,17 @@ export const useGetAppMessage = <K extends PostMessageKeyType>({
     const handleMessage = (event: MessageEvent) => {
       const { data } = event;
       if (data.type) return;
-      const parsedData = JSON.parse(data);
-      if (!parsedData.key || parsedData.key !== key) return;
-      if (!isPostMessageData(parsedData.data)) return;
+      try {
+        const parsedData = JSON.parse(data);
+        if (!parsedData.key || parsedData.key !== key) return;
+        if (!isPostMessageData(parsedData.data)) return;
 
-      const messageData = parsedData.data as PostMessageKeyToData[K];
-      cb(messageData);
+        const messageData = parsedData.data as PostMessageKeyToData[K];
+        cb(messageData);
+      } catch (error) {
+        // Handle parsing error silently
+        console.error('Error parsing message data:', error);
+      }
     };
 
     window.addEventListener('message', handleMessage);
