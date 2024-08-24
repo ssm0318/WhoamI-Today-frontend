@@ -48,6 +48,10 @@ function ResponseItem({
     navigate(`/responses/${response.id}`);
   };
 
+  const navigateToProfile = () => {
+    navigate(`/users/${username}`);
+  };
+
   useEffect(() => {
     if (commentType !== 'LIST') return;
     if (content.length > MAX_RESPONSE_CONTENT_LENGTH)
@@ -86,6 +90,7 @@ function ResponseItem({
                 imageUrl={profile_image}
                 username={username}
                 size={PROFILE_IMAGE_SIZE}
+                onClick={navigateToProfile}
               />
               {/* author, created_at 정보 */}
               <Layout.FlexRow alignItems="center" gap={8}>
