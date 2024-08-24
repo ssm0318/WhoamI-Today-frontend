@@ -51,8 +51,10 @@ import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
 
 const router = createBrowserRouter([
+  // intro route
   { path: '', element: <Intro />, loader: checkIfSignIn },
   {
+    // authorized routes
     path: '/',
     element: <Root />,
     errorElement: <ErrorPage />,
@@ -153,6 +155,7 @@ const router = createBrowserRouter([
     ],
   },
   {
+    // non-authorized routes
     path: '/',
     element: (
       <MainContainer mb={0}>
