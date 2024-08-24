@@ -76,21 +76,33 @@ function CommentInputBox({
           username: commentTargetAuthor,
         });
 
+  const [isPostingComment, setIsPostingComment] = useState(false);
+
   const handleSubmitComment = () => {
-    if (!content) return;
+    if (isPostingComment) return;
+    if (!content) {
+      setIsPostingComment(false);
+      return;
+    }
+
+    setIsPostingComment(true);
     postComment({
       target_id: post.id,
       target_type: postType,
       content: content.trim(),
       is_private: isPrivate,
-    }).then(() => {
-      setContent('');
-      reloadComments?.();
-      resetCommentTo();
-      resetCommentType();
-      resetReplyTo?.();
-      setReload?.(false);
-    });
+    })
+      .then(() => {
+        setContent('');
+        reloadComments?.();
+        resetCommentTo();
+        resetCommentType();
+        resetReplyTo?.();
+        setReload?.(false);
+      })
+      .finally(() => {
+        setIsPostingComment(false);
+      });
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
