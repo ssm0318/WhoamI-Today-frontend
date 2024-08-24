@@ -73,8 +73,8 @@ function Notifications() {
   return (
     <MainContainer>
       <SubHeader title={t('title')} />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%">
-        <Layout.FlexCol mt={12} mb={4} w="100%" ph={16}>
+      <Layout.FlexCol w="100%">
+        <Layout.FlexCol mb={4} mt={TITLE_HEADER_HEIGHT + 12} w="100%" ph={16}>
           {/* See Friend Requests */}
           <TopContainer
             title={t('see_friend_requests')}

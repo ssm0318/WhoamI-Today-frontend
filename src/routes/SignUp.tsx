@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation } from 'react-router-dom';
-import MainContainer from '@components/_common/main-container/MainContainer';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
@@ -18,12 +17,12 @@ function SignUp() {
   }, [pathname, t]);
 
   return (
-    <MainContainer>
+    <>
       <SubHeader title={title} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 80} w="100%" ph={24} alignItems="center">
         <Outlet />
       </Layout.FlexCol>
-    </MainContainer>
+    </>
   );
 }
 
