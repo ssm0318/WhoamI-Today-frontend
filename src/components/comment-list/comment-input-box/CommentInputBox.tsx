@@ -162,7 +162,11 @@ function CommentInputBox({
           />
         </Layout.FlexCol>
 
-        <Button.Primary text={t('post')} status="normal" onClick={handleSubmitComment} />
+        <Button.Primary
+          text={t('post')}
+          status={content ? 'normal' : 'disabled'}
+          onClick={handleSubmitComment}
+        />
       </Layout.FlexRow>
     </Layout.FlexCol>
   );
