@@ -120,7 +120,7 @@ function CommentInputBox({
   };
 
   return (
-    <Layout.FlexCol gap={10} w="100%" pv={12} ph={16} outline="LIGHT_GRAY" bgColor="WHITE">
+    <S.CommentInputWrapper gap={10} w="100%" pv={12} ph={16} bgColor="WHITE">
       {/* isPrivate */}
       <Layout.FlexRow gap={4} alignItems="center">
         <CheckBox
@@ -169,7 +169,7 @@ function CommentInputBox({
           onClick={handleSubmitComment}
         />
       </Layout.FlexRow>
-    </Layout.FlexCol>
+    </S.CommentInputWrapper>
   );
 }
 
