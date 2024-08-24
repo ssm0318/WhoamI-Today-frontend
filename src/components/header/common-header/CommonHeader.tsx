@@ -14,7 +14,9 @@ interface CommonHeaderProps {
 
 function CommonHeader({ title }: CommonHeaderProps) {
   const [showSideMenu, setShowSideMenu] = useState(false);
-  const currentUser = useBoundStore((state) => state.myProfile);
+  const { myProfile } = useBoundStore((state) => ({
+    myProfile: state.myProfile,
+  }));
 
   const handleClickHamburger = () => {
     setShowSideMenu(true);
@@ -29,7 +31,7 @@ function CommonHeader({ title }: CommonHeaderProps) {
             <Noti to="/notifications">
               <Icon name="notification" size={44} />
               <Layout.Absolute t={4} r={4}>
-                {currentUser?.unread_noti && <IconNudge />}
+                {myProfile?.unread_noti && <IconNudge />}
               </Layout.Absolute>
             </Noti>
             <Icon name="hamburger" size={44} onClick={handleClickHamburger} />

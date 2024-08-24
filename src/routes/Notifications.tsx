@@ -28,7 +28,10 @@ function Notifications() {
     if (nextPage === null) return setIsLoading(false);
     await fetchNotifications(nextPage ?? null);
   });
-  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
+  const { openToast, updateMyProfile } = useBoundStore((state) => ({
+    openToast: state.openToast,
+    updateMyProfile: state.updateMyProfile,
+  }));
 
   const fetchNotifications = async (page: string | null) => {
     const { results, next } = await getNotifications(page);
@@ -42,6 +45,9 @@ function Notifications() {
     try {
       await readAllNotifications();
       setNotifications(notifications.map((n) => ({ ...n, is_read: true })));
+      updateMyProfile({
+        unread_noti: false,
+      });
     } catch (error) {
       console.error('Error marking all notifications as read:', error);
       openToast({ message: t('temporary_error') });
