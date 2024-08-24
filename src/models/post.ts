@@ -78,6 +78,7 @@ export interface Response extends ContentsCommon {
   comment_count: number | null;
   like_user_sample: User[];
   current_user_read: boolean;
+  is_edited: boolean;
 }
 
 export interface Note extends ContentsCommon {
@@ -87,6 +88,7 @@ export interface Note extends ContentsCommon {
   like_user_sample: User[];
   comments: Comment[];
   current_user_read: boolean;
+  is_edited: boolean;
 }
 
 export interface NewNoteForm {

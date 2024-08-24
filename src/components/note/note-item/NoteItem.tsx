@@ -8,7 +8,6 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import { Layout, Typo } from '@design-system';
 import { Note } from '@models/post';
-import { isUpdated } from '@utils/isUpdatedPost';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import NoteImageList from '../note-image-list/NoteImageList';
 
@@ -20,7 +19,7 @@ interface NoteItemProps {
 }
 
 function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemProps) {
-  const { content, created_at, id, author_detail, images, like_user_sample, updated_at } = note;
+  const { content, created_at, id, author_detail, images, like_user_sample, is_edited } = note;
   const navigate = useNavigate();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [showMore, setShowMore] = useState(false);
@@ -97,7 +96,7 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
           {/* 이미지 */}
           <NoteImageList images={images} />
           {/* (수정됨) */}
-          {isUpdated(created_at, updated_at) && (
+          {is_edited && (
             <Typo type="label-medium" color="MEDIUM_GRAY">
               {`(${t('edited')})`}
             </Typo>

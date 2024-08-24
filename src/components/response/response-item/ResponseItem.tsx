@@ -9,7 +9,6 @@ import CommentBottomSheet from '@components/comments/comment-bottom-sheet/Commen
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { Response } from '@models/post';
-import { isUpdated } from '@utils/isUpdatedPost';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
@@ -27,7 +26,7 @@ function ResponseItem({
   refresh,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
-  const { content, created_at, author_detail, question, like_user_sample, updated_at } = response;
+  const { content, created_at, author_detail, question, like_user_sample, is_edited } = response;
   const { username, profile_image } = author_detail ?? {};
   const [overflowSummary, setOverflowSummary] = useState<string>();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
@@ -121,7 +120,7 @@ function ResponseItem({
               )}
             </Typo>
             {/* (수정됨) */}
-            {isUpdated(created_at, updated_at) && (
+            {is_edited && (
               <Typo type="label-medium" color="MEDIUM_GRAY">
                 {`(${t('edited')})`}
               </Typo>
