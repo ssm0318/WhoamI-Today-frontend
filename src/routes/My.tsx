@@ -33,7 +33,7 @@ function My() {
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>
-      <Layout.FlexCol w="100%" bgColor="LIGHT">
+      <Layout.FlexCol w="100%">
         <Divider width={8} bgColor="LIGHT" />
         <Layout.FlexRow
           w="100%"
