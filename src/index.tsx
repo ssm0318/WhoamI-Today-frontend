@@ -100,6 +100,48 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: 'questions',
+        loader: checkIfSignIn,
+        children: [
+          { path: '', element: <AllQuestions /> },
+          { path: ':questionId/new', element: <NewResponse /> },
+        ],
+      },
+      {
+        path: 'check-in',
+        loader: checkIfSignIn,
+        children: [{ path: 'edit', element: <CheckInEdit /> }],
+      },
+      {
+        path: 'notes',
+        loader: checkIfSignIn,
+        children: [
+          { path: '', element: <AllNotes /> },
+          { path: ':noteId', element: <NoteDetail /> },
+          { path: ':noteId/likes', element: <Likes /> },
+          { path: 'new', element: <NewNote /> },
+        ],
+      },
+      {
+        path: 'responses',
+        loader: checkIfSignIn,
+        children: [
+          { path: ':responseId', element: <ResponseDetail /> },
+          { path: ':responseId/likes', element: <Likes /> },
+        ],
+      },
+      {
+        path: 'settings',
+        loader: checkIfSignIn,
+        children: [
+          { path: '', element: <Settings /> },
+          { path: 'edit-profile', element: <EditProfile /> },
+          { path: 'confirm-password', element: <ConfirmPassword /> },
+          { path: 'reset-password', element: <ResetPassword /> },
+          { path: 'delete-account', element: <DeleteAccount /> },
+        ],
+      },
     ],
   },
   { path: 'signin', element: <SignIn /> },
@@ -118,48 +160,6 @@ const router = createBrowserRouter([
     ],
   },
   { path: 'forgot-password', element: <ForgotPassword /> },
-  {
-    path: 'questions',
-    loader: checkIfSignIn,
-    children: [
-      { path: '', element: <AllQuestions /> },
-      { path: ':questionId/new', element: <NewResponse /> },
-    ],
-  },
-  {
-    path: 'check-in',
-    loader: checkIfSignIn,
-    children: [{ path: 'edit', element: <CheckInEdit /> }],
-  },
-  {
-    path: 'notes',
-    loader: checkIfSignIn,
-    children: [
-      { path: '', element: <AllNotes /> },
-      { path: ':noteId', element: <NoteDetail /> },
-      { path: ':noteId/likes', element: <Likes /> },
-      { path: 'new', element: <NewNote /> },
-    ],
-  },
-  {
-    path: 'responses',
-    loader: checkIfSignIn,
-    children: [
-      { path: ':responseId', element: <ResponseDetail /> },
-      { path: ':responseId/likes', element: <Likes /> },
-    ],
-  },
-  {
-    path: 'settings',
-    loader: checkIfSignIn,
-    children: [
-      { path: '', element: <Settings /> },
-      { path: 'edit-profile', element: <EditProfile /> },
-      { path: 'confirm-password', element: <ConfirmPassword /> },
-      { path: 'reset-password', element: <ResetPassword /> },
-      { path: 'delete-account', element: <DeleteAccount /> },
-    ],
-  },
 ]);
 
 function App() {
