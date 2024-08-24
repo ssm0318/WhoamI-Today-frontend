@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import Loader from '@components/_common/loader/Loader';
+import MainContainer from '@components/_common/main-container/MainContainer';
 import ResponseItem from '@components/response/response-item/ResponseItem';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
@@ -51,7 +52,7 @@ function AllResponses() {
   };
 
   return (
-    <>
+    <MainContainer>
       <SubHeader title={t('title', { username: username || myProfile?.username })} />
       <Layout.FlexCol
         w="100%"
@@ -75,7 +76,7 @@ function AllResponses() {
           </Layout.FlexRow>
         )}
       </Layout.FlexCol>
-    </>
+    </MainContainer>
   );
 }
 
