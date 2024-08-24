@@ -332,6 +332,7 @@
     "received_prompts": {
       "sent_by": "Sent by {{username}}"
     },
+    "read_all": "Mark all as read",
     "temporary_error": "An error has occurred temporarily. Please try again later."
   },
   "comment": {

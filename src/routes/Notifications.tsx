@@ -13,7 +13,7 @@ import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Notification } from '@models/notification';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getResponseRequests } from '@utils/apis/my';
-import { getNotifications } from '@utils/apis/notification';
+import { getNotifications, readAllNotifications } from '@utils/apis/notification';
 import { getFriendRequests } from '@utils/apis/user';
 
 function Notifications() {
@@ -28,7 +28,10 @@ function Notifications() {
     if (nextPage === null) return setIsLoading(false);
     await fetchNotifications(nextPage ?? null);
   });
-  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
+  const { openToast, updateMyProfile } = useBoundStore((state) => ({
+    openToast: state.openToast,
+    updateMyProfile: state.updateMyProfile,
+  }));
 
   const fetchNotifications = async (page: string | null) => {
     const { results, next } = await getNotifications(page);
@@ -36,6 +39,19 @@ function Notifications() {
     setNextPage(next);
     setNotifications([...notifications, ...results]);
     setIsLoading(false);
+  };
+
+  const handleReadAll = async () => {
+    try {
+      await readAllNotifications();
+      setNotifications(notifications.map((n) => ({ ...n, is_read: true })));
+      updateMyProfile({
+        unread_noti: false,
+      });
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+      openToast({ message: t('temporary_error') });
+    }
   };
 
   const recentNotifications = notifications.filter((n) => n.is_recent);
@@ -74,6 +90,15 @@ function Notifications() {
             onClick={() => navigate('/notifications/prompts')}
           />
         </Layout.FlexCol>
+        {/* 노티 전체 읽음 버튼 */}
+        <Layout.FlexRow w="100%" justifyContent="flex-end" pr="default" pv={8}>
+          <button type="button" onClick={handleReadAll}>
+            <Typo type="button-medium" color="PRIMARY">
+              {t('read_all')}
+            </Typo>
+          </button>
+        </Layout.FlexRow>
+
         {/* Last 7 days */}
         {recentNotifications.length > 0 && (
           <>
