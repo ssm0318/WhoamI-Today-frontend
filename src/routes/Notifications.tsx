@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Loader from '@components/_common/loader/Loader';
+import MainContainer from '@components/_common/main-container/MainContainer';
 import NotificationItem from '@components/notification/NotificationItem/NotificationItem';
 import TopContainer from '@components/notification/TopContainer/TopContainer';
 import SubHeader from '@components/sub-header/SubHeader';
+import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
@@ -13,7 +15,6 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { getResponseRequests } from '@utils/apis/my';
 import { getNotifications, readAllNotifications } from '@utils/apis/notification';
 import { getFriendRequests } from '@utils/apis/user';
-import { MainScrollContainer } from './Root';
 
 function Notifications() {
   const navigate = useNavigate();
@@ -70,10 +71,10 @@ function Notifications() {
   }, []);
 
   return (
-    <MainScrollContainer>
+    <MainContainer>
       <SubHeader title={t('title')} />
       <Layout.FlexCol w="100%">
-        <Layout.FlexCol mt={12} mb={4} w="100%" ph={16}>
+        <Layout.FlexCol mb={4} mt={TITLE_HEADER_HEIGHT + 12} w="100%" ph={16}>
           {/* See Friend Requests */}
           <TopContainer
             title={t('see_friend_requests')}
@@ -127,7 +128,7 @@ function Notifications() {
           </Layout.FlexRow>
         )}
       </Layout.FlexCol>
-    </MainScrollContainer>
+    </MainContainer>
   );
 }
 

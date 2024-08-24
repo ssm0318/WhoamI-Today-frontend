@@ -1,7 +1,6 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import MainContainer from '@components/_common/main-container/MainContainer';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
 import { DEFAULT_REDIRECTION_PATH } from '@constants/url';
@@ -41,7 +40,7 @@ function SignIn() {
   };
 
   return (
-    <MainContainer>
+    <>
       <Layout.FlexCol w="100%" alignItems="center" mt={100}>
         <img width="75px" src="/whoami-logo.svg" alt="who_am_i" />
       </Layout.FlexCol>
@@ -83,7 +82,7 @@ function SignIn() {
           </a>
         </Layout.FlexRow>
       </Layout.Absolute>
-    </MainContainer>
+    </>
   );
 }
 

@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+import MainContainer from '@components/_common/main-container/MainContainer';
 import ToastBar from '@components/_common/toast-bar/ToastBar';
 import ErrorPage from '@components/error-page/ErrorPage';
 import { Colors, Typo } from '@design-system';
@@ -151,22 +152,32 @@ const router = createBrowserRouter([
       },
     ],
   },
-  { path: 'signin', element: <SignIn /> },
   {
-    path: 'signup',
-    element: <SignUp />,
+    path: '/',
+    element: (
+      <MainContainer mb={0}>
+        <Outlet />
+      </MainContainer>
+    ),
     children: [
-      { path: 'email', element: <Email /> },
-      { path: 'password', element: <Password /> },
-      { path: 'research-intro', element: <ResearchIntro /> },
-      { path: 'research-consent-form', element: <ResearchConsentForm /> },
-      { path: 'username', element: <UserName /> },
-      { path: 'profile-image', element: <AddProfileImage /> },
-      { path: 'noti-settings', element: <NotiSettings /> },
-      { path: '', element: <Navigate replace to="email" /> },
+      { path: 'signin', element: <SignIn /> },
+      {
+        path: 'signup',
+        element: <SignUp />,
+        children: [
+          { path: 'email', element: <Email /> },
+          { path: 'password', element: <Password /> },
+          { path: 'research-intro', element: <ResearchIntro /> },
+          { path: 'research-consent-form', element: <ResearchConsentForm /> },
+          { path: 'username', element: <UserName /> },
+          { path: 'profile-image', element: <AddProfileImage /> },
+          { path: 'noti-settings', element: <NotiSettings /> },
+          { path: '', element: <Navigate replace to="email" /> },
+        ],
+      },
+      { path: 'forgot-password', element: <ForgotPassword /> },
     ],
   },
-  { path: 'forgot-password', element: <ForgotPassword /> },
 ]);
 
 function App() {
