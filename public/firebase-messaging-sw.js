@@ -49,7 +49,7 @@ messaging.onBackgroundMessage((payload) => {
 
   self.registration.getNotifications().then((notifications) => {
     const prev = notifications.filter(
-      (notification) => notification.data.FCM_MSG.data.tag === payload.data.tag,
+      (notification) => notification.data.FCM_MSG.data.tag === tag,
     );
 
     if (prev.length > 0) {
