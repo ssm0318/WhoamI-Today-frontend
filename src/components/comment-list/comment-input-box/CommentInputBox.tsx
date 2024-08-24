@@ -76,21 +76,34 @@ function CommentInputBox({
           username: commentTargetAuthor,
         });
 
+  const isPosingCommentRef = useRef(false);
+
   const handleSubmitComment = () => {
-    if (!content) return;
+    if (isPosingCommentRef.current) return;
+    if (!content) {
+      isPosingCommentRef.current = false;
+      return;
+    }
+
+    isPosingCommentRef.current = true;
+
     postComment({
       target_id: post.id,
       target_type: postType,
       content: content.trim(),
       is_private: isPrivate,
-    }).then(() => {
-      setContent('');
-      reloadComments?.();
-      resetCommentTo();
-      resetCommentType();
-      resetReplyTo?.();
-      setReload?.(false);
-    });
+    })
+      .then(() => {
+        setContent('');
+        reloadComments?.();
+        resetCommentTo();
+        resetCommentType();
+        resetReplyTo?.();
+        setReload?.(false);
+      })
+      .finally(() => {
+        isPosingCommentRef.current = false;
+      });
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -150,7 +163,11 @@ function CommentInputBox({
           />
         </Layout.FlexCol>
 
-        <Button.Primary text={t('post')} status="normal" onClick={handleSubmitComment} />
+        <Button.Primary
+          text={t('post')}
+          status={content ? 'normal' : 'disabled'}
+          onClick={handleSubmitComment}
+        />
       </Layout.FlexRow>
     </Layout.FlexCol>
   );
