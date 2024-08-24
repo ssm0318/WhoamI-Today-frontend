@@ -13,7 +13,7 @@ import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Notification } from '@models/notification';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getResponseRequests } from '@utils/apis/my';
-import { getNotifications } from '@utils/apis/notification';
+import { getNotifications, readAllNotifications } from '@utils/apis/notification';
 import { getFriendRequests } from '@utils/apis/user';
 
 function Notifications() {
@@ -36,6 +36,16 @@ function Notifications() {
     setNextPage(next);
     setNotifications([...notifications, ...results]);
     setIsLoading(false);
+  };
+
+  const handleReadAll = async () => {
+    try {
+      await readAllNotifications();
+      setNotifications(notifications.map((n) => ({ ...n, is_read: true })));
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+      openToast({ message: t('temporary_error') });
+    }
   };
 
   const recentNotifications = notifications.filter((n) => n.is_recent);
@@ -74,6 +84,15 @@ function Notifications() {
             onClick={() => navigate('/notifications/prompts')}
           />
         </Layout.FlexCol>
+        {/* 노티 전체 읽음 버튼 */}
+        <Layout.FlexRow w="100%" justifyContent="flex-end" pr="default" pv={8}>
+          <button type="button" onClick={handleReadAll}>
+            <Typo type="button-medium" color="PRIMARY">
+              {t('read_all')}
+            </Typo>
+          </button>
+        </Layout.FlexRow>
+
         {/* Last 7 days */}
         {recentNotifications.length > 0 && (
           <>

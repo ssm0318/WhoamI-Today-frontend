@@ -33,3 +33,8 @@ export const activateFirebaseNotification = async ({
     active,
   });
 };
+
+// PATCH notification/mark-all-read (노티 전체 읽음 처리)
+export const readAllNotifications = async () => {
+  await axios.patch<Notification[]>(`/notifications/mark-all-read/`);
+};
