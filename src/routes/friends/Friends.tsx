@@ -27,11 +27,10 @@ function Friends() {
     refetchAllFriends,
   } = useInfiniteFetchFriends();
 
-  const {
-    data: favoriteFriends,
-    isLoading: isFavoriteFriendsLoading,
-    mutate: refetchFavoriteFriends,
-  } = useSWR('/user/friends/?type=favorites', getFavoriteFriends);
+  const { data: favoriteFriends, mutate: refetchFavoriteFriends } = useSWR(
+    '/user/friends/?type=favorites',
+    getFavoriteFriends,
+  );
 
   const navigate = useNavigate();
   const handleClickEditFriends = () => {
@@ -44,8 +43,6 @@ function Friends() {
   };
 
   const handleClickExploreFriends = () => navigate('/friends/explore');
-
-  if (isAllFriendsLoading && isFavoriteFriendsLoading) return <Loader />;
 
   return (
     <MainScrollContainer>
@@ -78,11 +75,11 @@ function Friends() {
               }
             />
           )}
-          {/* Friend Requests */}
-          <Divider width={1} marginLeading={9} />
+          {favoriteFriends && allFriends && <Divider width={1} marginLeading={9} />}
           {/* All Friends */}
           <SwipeLayoutList>
             <Layout.FlexCol w="100%">
+              {/* Friend Requests */}
               <Layout.FlexRow
                 w="100%"
                 ph={16}
@@ -101,29 +98,27 @@ function Friends() {
                 />
               </Layout.FlexRow>
               <Layout.FlexCol w="100%" pv={8} gap={4}>
-                {allFriends ? (
-                  <>
-                    {/* Explore Friends */}
-                    <Layout.FlexRow w="100%" ph={16} gap={16}>
-                      <StyledUpdatedFriendItem
-                        w="100%"
-                        alignItems="center"
-                        justifyContent="space-between"
-                      >
-                        <Layout.FlexRow
-                          alignItems="center"
-                          gap={7}
-                          onClick={handleClickExploreFriends}
-                        >
-                          <Icon name="add_user" background="LIGHT_GRAY" size={44} />
-                          <Layout.FlexCol>
-                            <Layout.FlexRow gap={4} alignItems="center">
-                              <Typo type="label-large">{t('explore_friends.title')}</Typo>
-                            </Layout.FlexRow>
-                          </Layout.FlexCol>
+                {/* Explore Friends */}
+                <Layout.FlexRow w="100%" ph={16} gap={16}>
+                  <StyledUpdatedFriendItem
+                    w="100%"
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <Layout.FlexRow alignItems="center" gap={7} onClick={handleClickExploreFriends}>
+                      <Icon name="add_user" background="LIGHT_GRAY" size={44} />
+                      <Layout.FlexCol>
+                        <Layout.FlexRow gap={4} alignItems="center">
+                          <Typo type="label-large">{t('explore_friends.title')}</Typo>
                         </Layout.FlexRow>
-                      </StyledUpdatedFriendItem>
+                      </Layout.FlexCol>
                     </Layout.FlexRow>
+                  </StyledUpdatedFriendItem>
+                </Layout.FlexRow>
+                {isAllFriendsLoading ? (
+                  <Loader />
+                ) : allFriends ? (
+                  <>
                     {/* 친구 목록 */}
                     {allFriends.map(({ results }) =>
                       results?.map((user) => {
