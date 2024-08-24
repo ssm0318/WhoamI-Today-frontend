@@ -99,6 +99,9 @@ function EditProfile() {
         updateMyProfile({ ...data });
         openToast({ message: t('response.updated') });
       },
+      onError: (error) => {
+        openToast({ message: error });
+      },
     });
   };
 

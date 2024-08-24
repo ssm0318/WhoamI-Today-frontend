@@ -42,7 +42,7 @@ export const editProfile = ({
     .patch<MyProfile>('/user/me/', formData)
     .then((res) => onSuccess(res.data))
     .catch((e) => {
-      onError?.(e);
+      onError?.(e.response.data.detail);
     });
 };
 
