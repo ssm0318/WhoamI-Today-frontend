@@ -3,11 +3,12 @@ import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import PromptCard from '@components/_common/prompt/PromptCard';
-import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
+import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Question } from '@models/post';
 import { getAllQuestions } from '@utils/apis/question';
+import { MainScrollContainer } from './Root';
 
 function AllQuestions() {
   const [t] = useTranslation('translation');
@@ -28,8 +29,8 @@ function AllQuestions() {
   };
 
   return (
-    <Layout.FlexCol w="100%">
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} pv={14} w="100%" ph={DEFAULT_MARGIN} gap={20}>
+    <MainScrollContainer>
+      <Layout.FlexCol pv={14} w="100%" ph={DEFAULT_MARGIN} gap={20}>
         {questions.map((question) => (
           <PromptCard question={question} key={question.id} widthMode="full" />
         ))}
@@ -43,7 +44,7 @@ function AllQuestions() {
           <NoContents text={t('no_contents.all_questions')} mv={10} />
         )}
       </Layout.FlexCol>
-    </Layout.FlexCol>
+    </MainScrollContainer>
   );
 }
 
