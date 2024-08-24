@@ -48,6 +48,10 @@ function ResponseItem({
     navigate(`/responses/${response.id}`);
   };
 
+  const navigateToProfile = () => {
+    navigate(`/users/${username}`);
+  };
+
   useEffect(() => {
     if (commentType !== 'LIST') return;
     if (content.length > MAX_RESPONSE_CONTENT_LENGTH)
@@ -86,10 +90,13 @@ function ResponseItem({
                 imageUrl={profile_image}
                 username={username}
                 size={PROFILE_IMAGE_SIZE}
+                onClick={navigateToProfile}
               />
               {/* author, created_at 정보 */}
               <Layout.FlexRow alignItems="center" gap={8}>
-                <Typo type="title-medium">{username}</Typo>
+                <Layout.FlexRow onClick={navigateToProfile}>
+                  <Typo type="title-medium">{username}</Typo>
+                </Layout.FlexRow>
                 <Typo type="label-medium" color="MEDIUM_GRAY">
                   {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
                 </Typo>

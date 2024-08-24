@@ -41,6 +41,10 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
     return navigate(`/notes/${id}`);
   };
 
+  const navigateToProfile = () => {
+    navigate(`/users/${username}`);
+  };
+
   return (
     <>
       <Layout.FlexCol
@@ -65,10 +69,17 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
           h={PROFILE_IMAGE_SIZE}
         >
           <Layout.FlexRow w="100%" alignItems="center" gap={8}>
-            <ProfileImage imageUrl={profile_image} username={username} size={PROFILE_IMAGE_SIZE} />
+            <ProfileImage
+              imageUrl={profile_image}
+              username={username}
+              size={PROFILE_IMAGE_SIZE}
+              onClick={navigateToProfile}
+            />
             {/* author, created_at 정보 */}
             <Layout.FlexRow alignItems="center" gap={8}>
-              <Typo type="title-medium">{username}</Typo>
+              <Layout.FlexRow onClick={navigateToProfile}>
+                <Typo type="title-medium">{username}</Typo>
+              </Layout.FlexRow>
               <Typo type="label-medium" color="MEDIUM_GRAY">
                 {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
               </Typo>
