@@ -37,10 +37,6 @@ export const getAllFriends = async (options: getFriendsOptions) => {
   const { data } = await axios.get<GetUpdatedProfileResponse>(
     options?.next ?? '/user/friends/?type=all',
   );
-
-  if (options?.filterHidden) {
-    return { ...data, results: filterHiddenFriends(data.results ?? []) };
-  }
   return data;
 };
 
@@ -59,7 +55,7 @@ export const getFavoriteFriends = async () => {
 };
 
 export const deleteFavorite = async (userId: number) => {
-  await axios.delete(`/user/friends/${userId}/favorites/ `);
+  await axios.delete(`/user/friends/${userId}/favorites/`);
 };
 
 export const hideFriend = async (userId: number) => {

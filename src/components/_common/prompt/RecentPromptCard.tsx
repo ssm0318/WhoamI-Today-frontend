@@ -57,11 +57,13 @@ function RecentPromptCard({ question, requesterName }: PromptCardProps) {
           </Layout.FlexCol>
         </Layout.FlexRow>
       </StyledRecentPromptCard>
-      <SendPromptModal
-        visible={sendPromptModalVisible}
-        onClose={onCloseSendBottomModal}
-        questionId={question.id}
-      />
+      {sendPromptModalVisible && (
+        <SendPromptModal
+          visible={sendPromptModalVisible}
+          onClose={onCloseSendBottomModal}
+          questionId={question.id}
+        />
+      )}
     </>
   );
 }

@@ -8,20 +8,17 @@ import SubHeader from '@components/sub-header/SubHeader';
 import UserRelatedAlert, { Alert } from '@components/user-page/UserRelatedAlert';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
-import useAsyncEffect from '@hooks/useAsyncEffect';
+import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
 import { addFriendToFavorite, deleteFavorite, hideFriend, unHideFriend } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
-import updateFriendsList from '@utils/updateFriendsList';
-import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
-import { StyledFriendItemWrapper } from './EditFriends.styled';
+import { StyledFriendItemWrapper } from 'src/routes/friends/EditFriends.styled';
+import { MainScrollContainer } from 'src/routes/Root';
 
 function EditFriends() {
   const [t] = useTranslation('translation');
 
-  const { isLoadingMoreAllFriends, allFriends, setAllFriends, fetchAllFriends, targetRef } =
-    useInfiniteFetchFriends({ filterHidden: false });
-
-  useAsyncEffect(fetchAllFriends);
+  const { isLoadingMoreAllFriends, allFriends, isAllFriendsLoading, targetRef, updateFriendList } =
+    useInfiniteFetchFriends();
 
   const [showTemporalErrorAlert, setShowTemporalErrorAlert] = useState(false);
   const handleOnCloseTemporalErrorAlert = () => setShowTemporalErrorAlert(false);
@@ -29,11 +26,11 @@ function EditFriends() {
   const handleToggleFavorite = (userId: number, is_favorite: boolean) => async () => {
     try {
       if (is_favorite) {
-        updateFriendsList({ userId, type: 'is_favorite', value: false, setAllFriends });
+        updateFriendList({ userId, type: 'is_favorite', value: false });
         await deleteFavorite(userId);
         return;
       }
-      updateFriendsList({ userId, type: 'is_favorite', value: true, setAllFriends });
+      updateFriendList({ userId, type: 'is_favorite', value: true });
       await addFriendToFavorite(userId);
     } catch {
       setShowTemporalErrorAlert(true);
@@ -43,11 +40,11 @@ function EditFriends() {
   const handleToggleHide = (userId: number, is_hidden: boolean) => async () => {
     try {
       if (is_hidden) {
-        updateFriendsList({ userId, type: 'is_hidden', value: false, setAllFriends });
+        updateFriendList({ userId, type: 'is_hidden', value: false });
         await unHideFriend(userId);
         return;
       }
-      updateFriendsList({ userId, type: 'is_hidden', value: true, setAllFriends });
+      updateFriendList({ userId, type: 'is_hidden', value: true });
       await hideFriend(userId);
     } catch {
       setShowTemporalErrorAlert(true);
@@ -60,7 +57,7 @@ function EditFriends() {
       onClickConfirm: async () => {
         try {
           handleOnCloseBreakFriendsAlert();
-          updateFriendsList({ userId, type: 'break_friends', setAllFriends });
+          updateFriendList({ userId, type: 'break_friends' });
           await breakFriend(userId);
         } catch {
           setShowTemporalErrorAlert(true);
@@ -72,7 +69,7 @@ function EditFriends() {
   const handleOnCloseBreakFriendsAlert = () => setShowBreakFriendsAlert(undefined);
 
   return (
-    <>
+    <MainScrollContainer>
       <SubHeader title={t('friends.edit_friends.title')} />
       <Layout.FlexCol
         w="100%"
@@ -81,11 +78,11 @@ function EditFriends() {
         pv={12}
         mb={BOTTOM_TABBAR_HEIGHT + 10}
       >
-        {allFriends.state === 'loading' && <Loader />}
-        {allFriends.state === 'hasValue' && (
+        {isAllFriendsLoading && <Loader />}
+        {allFriends && (
           <>
-            {allFriends.data?.results?.map(
-              ({ id, username, profile_image, is_hidden, is_favorite }) => (
+            {allFriends.map(({ results }) =>
+              results?.map(({ id, username, profile_image, is_hidden, is_favorite }) => (
                 <StyledFriendItemWrapper key={username}>
                   <Layout.FlexRow gap={8}>
                     {is_hidden ? (
@@ -119,9 +116,9 @@ function EditFriends() {
                     <Icon name="close" size={16} padding={14} onClick={handleClickDelete(id)} />
                   </Layout.FlexRow>
                 </StyledFriendItemWrapper>
-              ),
+              )),
             )}
-            {isLoadingMoreAllFriends && allFriends.data.next && <Loader />}
+            {isLoadingMoreAllFriends && <Loader />}
             <div ref={targetRef} />
           </>
         )}
@@ -141,7 +138,7 @@ function EditFriends() {
           {t('error.temporary_error')}
         </AlertDialog>
       )}
-    </>
+    </MainScrollContainer>
   );
 }
 

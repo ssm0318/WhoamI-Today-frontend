@@ -2,7 +2,6 @@ import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Button, Layout, StyledCheckBox, Typo } from '@design-system';
-import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { FetchState } from '@models/api/common';
@@ -35,14 +34,8 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
   const {
     isLoadingMoreAllFriends,
     allFriends,
-    fetchAllFriends,
     targetRef: allFriendsTargetRef,
-  } = useInfiniteFetchFriends({ filterHidden: true });
-
-  useAsyncEffect(async () => {
-    if (!visible) return;
-    fetchAllFriends();
-  }, [visible]);
+  } = useInfiniteFetchFriends();
 
   const [searchedFriendsList, setSearchFriendsList] = useState<FetchState<UserProfile[]>>({
     state: 'loading',
@@ -164,24 +157,23 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
             </>
           ) : (
             <>
-              {allFriends.state === 'loading' && <Loader />}
-              {allFriends.state === 'hasValue' && allFriends.data.results && (
-                <>
-                  {allFriends.data.results.map((friend) => {
-                    const checked = !!selectedFriends.find((id) => id === friend.id);
-                    return (
-                      <SelectFriendItem
-                        key={friend.id}
-                        friend={friend}
-                        checked={checked}
-                        handleChangeCheckBox={handleChangeCheckBox}
-                      />
-                    );
-                  })}
-                  <div ref={allFriendsTargetRef} />
-                  {isLoadingMoreAllFriends && allFriends.data.next && <Loader />}
-                </>
+              {/** TODO: 친구 없는 케이스 추가 */}
+              {allFriends?.map(({ results }) =>
+                results?.map((friend) => {
+                  if (friend.is_hidden) return null;
+                  const checked = !!selectedFriends.find((id) => id === friend.id);
+                  return (
+                    <SelectFriendItem
+                      key={friend.id}
+                      friend={friend}
+                      checked={checked}
+                      handleChangeCheckBox={handleChangeCheckBox}
+                    />
+                  );
+                }),
               )}
+              <div ref={allFriendsTargetRef} />
+              {isLoadingMoreAllFriends && <Loader />}
             </>
           )}
         </SendPromptModalFriendList>

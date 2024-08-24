@@ -12,6 +12,7 @@ import SubHeader from '@components/sub-header/SubHeader';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import i18n from '@i18n/index';
+import { MainScrollContainer } from 'src/routes/Root';
 import { Typo } from '../../design-system/Font/index';
 
 const TabList = [
@@ -31,7 +32,7 @@ function ExploreFriends() {
   };
 
   return (
-    <>
+    <MainScrollContainer>
       <SubHeader
         title={t('title')}
         RightComponent={
@@ -70,7 +71,7 @@ function ExploreFriends() {
           </>
         )}
       </Layout.FlexCol>
-    </>
+    </MainScrollContainer>
   );
 }
 
