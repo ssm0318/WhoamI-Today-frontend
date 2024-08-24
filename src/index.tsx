@@ -33,7 +33,7 @@ import ReceivedPrompts from './routes/ReceivedPrompts';
 import AllResponses from './routes/responses/AllResponses';
 import NewResponse from './routes/responses/NewResponse';
 import ResponseDetail from './routes/responses/ResponseDetail';
-import Root, { MainScrollContainer } from './routes/Root';
+import Root from './routes/Root';
 import ConfirmPassword from './routes/settings/ConfirmPassword';
 import DeleteAccount from './routes/settings/DeleteAccount';
 import EditProfile from './routes/settings/EditProfile';
@@ -67,7 +67,6 @@ const router = createBrowserRouter([
       },
       {
         path: 'my',
-        element: <MainScrollContainer />,
         children: [
           { path: '', element: <My /> },
           { path: 'responses', element: <AllResponses /> },
