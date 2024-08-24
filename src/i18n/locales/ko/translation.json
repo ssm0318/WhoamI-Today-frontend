@@ -54,7 +54,8 @@
   "nav_tab": {
     "friends": "친구",
     "my": "나",
-    "chats": "채팅"
+    "chats": "채팅",
+    "questions": "질문"
   },
   "header": {
     "my": "내 프로필"

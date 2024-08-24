@@ -54,7 +54,8 @@
   "nav_tab": {
     "friends": "Friends",
     "my": "My",
-    "chats": "Chats"
+    "chats": "Chats",
+    "questions": "Questions"
   },
   "header": {
     "my": "My Profile"
