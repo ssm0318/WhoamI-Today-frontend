@@ -1,5 +1,4 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { MouseEvent, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
@@ -15,27 +14,18 @@ import NoteImageList from '../note-image-list/NoteImageList';
 interface NoteItemProps {
   note: Note;
   isMyPage: boolean;
-  enableCollapse?: boolean;
   commentType?: 'LIST' | 'DETAIL';
   refresh?: () => Promise<void>;
 }
 
-function NoteItem({
-  note,
-  isMyPage,
-  enableCollapse = true,
-  commentType = 'LIST',
-  refresh,
-}: NoteItemProps) {
+function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemProps) {
   const { content, created_at, id, author_detail, images, like_user_sample, updated_at } = note;
   const navigate = useNavigate();
-  const [overflowActive, setOverflowActive] = useState<boolean>(false);
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [showMore, setShowMore] = useState(false);
   const [inputFocus, setInputFocus] = useState(false);
 
   const { username, profile_image } = author_detail ?? {};
-  const [t] = useTranslation('translation', { keyPrefix: 'notes' });
 
   const commentRef = useRef<HTMLTextAreaElement>(null);
 
@@ -48,12 +38,6 @@ function NoteItem({
     if (commentType === 'DETAIL') return;
     return navigate(`/notes/${id}`);
   };
-
-  useEffect(() => {
-    if (commentType === 'LIST' && content.length > MAX_NOTE_CONTENT_LENGTH) {
-      setOverflowActive(true);
-    }
-  }, [content, commentType]);
 
   return (
     <>
@@ -94,17 +78,8 @@ function NoteItem({
           </Layout.FlexRow>
         </Layout.FlexRow>
         <Layout.FlexCol>
-          <Typo type="body-large" color="BLACK" pre={commentType === 'DETAIL'}>
-            {enableCollapse && overflowActive ? (
-              <>
-                {`${content.slice(0, MAX_NOTE_CONTENT_LENGTH)}...`}
-                <Typo type="body-medium" color="BLACK" italic underline ml={3}>
-                  {t('more')}
-                </Typo>
-              </>
-            ) : (
-              content
-            )}
+          <Typo type="body-large" color="BLACK" pre>
+            {content}
           </Typo>
           {/* 이미지 */}
           <NoteImageList images={images} />
@@ -144,4 +119,3 @@ function NoteItem({
 export default NoteItem;
 
 const PROFILE_IMAGE_SIZE = 44;
-const MAX_NOTE_CONTENT_LENGTH = 140;
