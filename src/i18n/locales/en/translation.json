@@ -249,7 +249,9 @@
       "title": "Report This Post?",
       "content": "By reporting, we will automatically hide this post from you as well.",
       "cancel": "Cancel",
-      "report": "Report"
+      "report": "Report",
+      "success_title": "The post has been successfully reported",
+      "error_title": "An error has occurred temporarily. Please try again later."
     },
     "delete": {
       "title": "Delete This Post?",

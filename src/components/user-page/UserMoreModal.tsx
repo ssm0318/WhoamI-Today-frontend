@@ -6,6 +6,7 @@ import CommonDialog, {
 } from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import { Typo } from '@design-system';
 import { UserProfile } from '@models/user';
+import { useBoundStore } from '@stores/useBoundStore';
 import { addFriendToFavorite, deleteFavorite } from '@utils/apis/friends';
 import { breakFriend, reportUser } from '@utils/apis/user';
 
@@ -23,6 +24,8 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
   const [showAlert, setShowAlert] = useState<AlertProps>();
 
   const { id, username, are_friends, is_favorite } = user;
+
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
   const closeMoreModal = () => {
     setIsVisible(false);
@@ -69,7 +72,13 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
       confirmText: t('menu.block'),
       onClickConfirm: async () => {
         // NOTE: 현재는 차단이 신고와 동일함
-        await reportUser(user.id);
+        await reportUser({
+          userId: user.id,
+          onSuccess: () => {
+            openToast({ message: t('prompts.sent_success') });
+          },
+          onError: () => openToast({ message: t('error.temporary_error') }),
+        });
         callback?.();
         handleOnConfirmAlert();
       },
@@ -83,7 +92,13 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
       content: t('alert.report.content'),
       confirmText: t('menu.block'),
       onClickConfirm: async () => {
-        await reportUser(user.id);
+        await reportUser({
+          userId: user.id,
+          onSuccess: () => {
+            openToast({ message: t('prompts.sent_success') });
+          },
+          onError: () => openToast({ message: t('error.temporary_error') }),
+        });
         callback?.();
         handleOnConfirmAlert();
       },
