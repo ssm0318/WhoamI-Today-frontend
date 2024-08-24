@@ -2,10 +2,7 @@ import { useState } from 'react';
 import SelectPromptSheet from '@components/prompt/select-prompt-sheet/SelectPromptSheet';
 import { SvgIcon } from '@design-system';
 import NewPostBottomSheet from '../bottom-sheet/NewPostBottomSheet';
-import {
-  StyledNewFloatingButton,
-  StyledNewFloatingButtonWrapper,
-} from './NewFloatingButton.styled';
+import { StyledNewFloatingButton } from './NewFloatingButton.styled';
 
 function NewFloatingButton() {
   const [bottomSheet, setBottomSheet] = useState(false);
@@ -17,11 +14,9 @@ function NewFloatingButton() {
 
   return (
     <>
-      <StyledNewFloatingButtonWrapper>
-        <StyledNewFloatingButton onClick={handleNewPost}>
-          <SvgIcon name="add_post" size={44} />
-        </StyledNewFloatingButton>
-      </StyledNewFloatingButtonWrapper>
+      <StyledNewFloatingButton onClick={handleNewPost}>
+        <SvgIcon name="add_post" size={44} />
+      </StyledNewFloatingButton>
       {bottomSheet && (
         <NewPostBottomSheet
           visible={bottomSheet}
