@@ -6,7 +6,7 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 
 const SIDE_MENU_LIST = [
   { key: 'explore_friends', path: '/friends/explore' },
-  { key: 'questions', path: '/questions' },
+  // { key: 'questions', path: '/questions' },
   { key: 'settings', path: '/settings' },
 ];
 
