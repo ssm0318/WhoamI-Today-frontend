@@ -287,8 +287,8 @@
     "are_you_sure": "정말로 계속하시겠습니까?\n한 번 계정을 삭제하면 다시 복구할 수 없습니다.",
     "edit_profile": {
       "title": "프로필 수정",
-      "cancel": "취소",
-      "save": "저장",
+      "back": "뒤로",
+      "done": "완료",
       "change_picture": "사진 변경하기",
       "username": "닉네임",
       "email": "이메일",
