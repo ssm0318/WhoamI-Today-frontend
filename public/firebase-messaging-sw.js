@@ -36,12 +36,12 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
   const { message_en, message_ko, url, tag } = payload.data;
-  const title = 'Diivers';
+  const title = 'WhoAmI Today';
 
   const options = {
     body: self.navigator.language === 'ko' ? message_ko : message_en,
     tag,
-    icon: 'https://diivers.world/whoami192.png',
+    icon: 'https://whoami.gina-park.site/whoami192.png',
     data: {
       url,
     },
