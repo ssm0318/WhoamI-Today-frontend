@@ -75,9 +75,9 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
         await reportUser({
           userId: user.id,
           onSuccess: () => {
-            openToast({ message: t('prompts.sent_success') });
+            openToast({ message: t('alert.report.success_title', { username }) });
           },
-          onError: () => openToast({ message: t('error.temporary_error') }),
+          onError: () => openToast({ message: t('alert.report.error_title') }),
         });
         callback?.();
         handleOnConfirmAlert();
@@ -90,14 +90,14 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
     setShowAlert({
       title: t('alert.report.title', { username }),
       content: t('alert.report.content'),
-      confirmText: t('menu.block'),
+      confirmText: t('menu.report'),
       onClickConfirm: async () => {
         await reportUser({
           userId: user.id,
           onSuccess: () => {
-            openToast({ message: t('prompts.sent_success') });
+            openToast({ message: t('alert.report.success_title', { username }) });
           },
-          onError: () => openToast({ message: t('error.temporary_error') }),
+          onError: () => openToast({ message: t('alert.report.error_title') }),
         });
         callback?.();
         handleOnConfirmAlert();

@@ -288,15 +288,15 @@ export const reportUser = async ({
 }: {
   userId: number;
   onSuccess: () => void;
-  onError: (errorMsg: string) => void;
+  onError: () => void;
 }) => {
   await axios
     .post('/user_reports/', { reported_user_id: userId })
     .then(() => {
       onSuccess();
     })
-    .catch((e) => {
-      onError(e);
+    .catch(() => {
+      onError();
     });
 };
 

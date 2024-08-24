@@ -173,7 +173,9 @@
         },
         "report": {
           "title": "{{username}}을(를) 신고하시겠습니까?",
-          "content": "신고하면 자동으로 유저를 차단합니다."
+          "content": "신고하면 자동으로 유저를 차단합니다.",
+          "success_title": "{{username}}님이 신고되었습니다.",
+          "error_title": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
         },
         "cancel": "Cancel"
       }

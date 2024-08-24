@@ -176,7 +176,9 @@
         },
         "report": {
           "title": "Report {{username}}?",
-          "content": "By reporting, we will automatically block this account from you as well"
+          "content": "By reporting, we will automatically block this account from you as well",
+          "success_title": "Successfully reported {{username}}",
+          "error_title": "An error has occurred temporarily. Please try again later."
         },
         "cancel": "Cancel"
       }
