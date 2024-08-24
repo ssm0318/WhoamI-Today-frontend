@@ -58,7 +58,8 @@
     "questions": "질문"
   },
   "header": {
-    "my": "내 프로필"
+    "my": "내 프로필",
+    "questions": "질문"
   },
   "home": {
     "moment": {

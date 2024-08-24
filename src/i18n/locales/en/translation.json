@@ -58,7 +58,8 @@
     "questions": "Questions"
   },
   "header": {
-    "my": "My Profile"
+    "my": "My Profile",
+    "questions": "Questions"
   },
   "home": {
     "moment": {

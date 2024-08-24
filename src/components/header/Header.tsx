@@ -13,6 +13,8 @@ function Header() {
       return <CommonHeader title={t('nav_tab.friends')} />;
     case '/my':
       return <CommonHeader title={t('header.my')} />;
+    case '/questions':
+      return <CommonHeader title={t('header.questions')} />;
     case '/chats':
       return <ChatsHeader />;
     default:

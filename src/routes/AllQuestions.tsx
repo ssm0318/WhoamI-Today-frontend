@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
-import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import PromptCard from '@components/_common/prompt/PromptCard';
-import SubHeader from '@components/sub-header/SubHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
@@ -30,8 +28,7 @@ function AllQuestions() {
   };
 
   return (
-    <MainContainer>
-      <SubHeader title={t('home.question.all_questions')} />
+    <Layout.FlexCol w="100%">
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} pv={14} w="100%" ph={DEFAULT_MARGIN} gap={20}>
         {questions.map((question) => (
           <PromptCard question={question} key={question.id} widthMode="full" />
@@ -46,7 +43,7 @@ function AllQuestions() {
           <NoContents text={t('no_contents.all_questions')} mv={10} />
         )}
       </Layout.FlexCol>
-    </MainContainer>
+    </Layout.FlexCol>
   );
 }
 
