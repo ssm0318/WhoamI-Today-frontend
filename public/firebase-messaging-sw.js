@@ -35,7 +35,7 @@ self.addEventListener('notificationclick', (e) => {
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  const { message_en, message_ko, url, tag, type } = payload.data;
+  const { message_en, message_ko, url, tag } = payload.data;
   const title = 'Diivers';
 
   const options = {
@@ -47,13 +47,10 @@ messaging.onBackgroundMessage((payload) => {
     },
   };
 
-  if (type === 'new') {
-    self.registration.showNotification(title, options);
-    return;
-  }
-
   self.registration.getNotifications().then((notifications) => {
-    const prev = notifications.filter((notification) => notification.tag === payload.data.tag);
+    const prev = notifications.filter(
+      (notification) => notification.data.FCM_MSG.data.tag === payload.data.tag,
+    );
 
     if (prev.length > 0) {
       self.registration.showNotification(title, options);
