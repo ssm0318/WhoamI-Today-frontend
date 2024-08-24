@@ -76,16 +76,17 @@ function CommentInputBox({
           username: commentTargetAuthor,
         });
 
-  const [isPostingComment, setIsPostingComment] = useState(false);
+  const isPosingCommentRef = useRef(false);
 
   const handleSubmitComment = () => {
-    if (isPostingComment) return;
+    if (isPosingCommentRef.current) return;
     if (!content) {
-      setIsPostingComment(false);
+      isPosingCommentRef.current = false;
       return;
     }
 
-    setIsPostingComment(true);
+    isPosingCommentRef.current = true;
+
     postComment({
       target_id: post.id,
       target_type: postType,
@@ -101,7 +102,7 @@ function CommentInputBox({
         setReload?.(false);
       })
       .finally(() => {
-        setIsPostingComment(false);
+        isPosingCommentRef.current = false;
       });
   };
 
