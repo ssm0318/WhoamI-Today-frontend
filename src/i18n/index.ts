@@ -21,6 +21,10 @@ i18n
       en: { translation: en },
       ko: { translation: ko },
     },
+    detection: {
+      order: ['navigator'],
+      caches: [],
+    },
   });
 
 export default i18n;
