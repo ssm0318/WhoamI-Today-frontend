@@ -111,14 +111,6 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: 'questions',
-        loader: checkIfSignIn,
-        children: [
-          { path: '', element: <AllQuestions /> },
-          { path: ':questionId/new', element: <NewResponse /> },
-        ],
-      },
-      {
         path: 'check-in',
         loader: checkIfSignIn,
         children: [{ path: 'edit', element: <CheckInEdit /> }],
@@ -139,6 +131,7 @@ const router = createBrowserRouter([
         children: [
           { path: ':responseId', element: <ResponseDetail /> },
           { path: ':responseId/likes', element: <Likes /> },
+          { path: ':responseId/edit', element: <NewResponse /> },
         ],
       },
       {

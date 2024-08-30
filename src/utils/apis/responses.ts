@@ -39,7 +39,7 @@ export const getCommentsOfResponse = async (responseId: number, page: string | n
   return data;
 };
 
-export const getResponse = async (responseId: number | string) => {
+export const getResponse = async (responseId: number | string | undefined) => {
   const { data } = await axios.get<GetResponseDetailResponse>(`/qna/responses/${responseId}/`);
   const { id, current_user_read } = data;
 
