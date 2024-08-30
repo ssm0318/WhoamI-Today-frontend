@@ -105,7 +105,7 @@ function NewResponse() {
       actionText: t('question.response.view'),
     });
 
-    navigate(`/responses/${newResponseId}`);
+    navigate(`/responses/${newResponseId}`, { state: 'new' });
     openToast({ message: t('question.response.posting') });
   };
 
