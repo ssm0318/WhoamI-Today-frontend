@@ -1,10 +1,12 @@
 import { Question, Response } from '@models/post';
 
 export interface ResponseQuestionRequestParams {
-  question_id: number;
+  question_id?: number;
+  post_id?: number;
   content: string;
   share_friends?: unknown;
   share_groups?: unknown;
+  share_everyone?: unknown;
 }
 
 export interface GetResponseHistoriesResponse extends Question {

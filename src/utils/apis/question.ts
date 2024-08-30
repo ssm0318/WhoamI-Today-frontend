@@ -57,7 +57,7 @@ export const requestResponse = async ({
     });
 };
 
-export const responseQuestion = async ({
+export const postResponse = async ({
   question_id,
   content,
   share_friends = [],
@@ -68,6 +68,22 @@ export const responseQuestion = async ({
     content,
     share_friends,
     share_groups,
+  });
+  return data;
+};
+
+export const patchResponse = async ({
+  post_id,
+  content,
+  share_friends = [],
+  share_groups = [],
+  share_everyone = false,
+}: ResponseQuestionRequestParams) => {
+  const { data } = await axios.patch<Response>(`/qna/responses/${post_id}/`, {
+    content,
+    share_friends,
+    share_groups,
+    share_everyone,
   });
   return data;
 };
