@@ -28,11 +28,10 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
       ? await postNote(noteInfo)
       : await patchNote(noteId, noteInfo);
 
-    navigate('/my');
+    navigate(`/notes/${newNoteId}`, { state: 'new' });
     openToast({
       message: t(status === 'edit' ? 'updated' : 'posted'),
       actionText: t('view'),
-      action: () => navigate(`/notes/${newNoteId}`),
     });
   };
 

@@ -25,8 +25,11 @@ function SubHeader({
   const navigate = useNavigate();
 
   const handleGoBack = () => {
-    navigate(-1);
-    onGoBack?.();
+    if (onGoBack) {
+      onGoBack();
+    } else {
+      navigate(-1);
+    }
   };
 
   return (
