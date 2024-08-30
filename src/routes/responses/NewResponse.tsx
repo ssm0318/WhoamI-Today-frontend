@@ -52,26 +52,28 @@ function NewResponse() {
   }, []);
 
   useAsyncEffect(async () => {
-    getResponse(responseId).then((data) => {
-      if (data && data.content) {
-        setNewResponse(data.content);
-      }
-      if (data && data.question && data.question.id) {
-        const editQuestionId = data.question.id;
-
-        if (isValidQuestionId(String(editQuestionId))) {
-          getQuestionDetail(String(editQuestionId))
-            .then((questionData) => {
-              setQuestion({ state: 'hasValue', data: questionData });
-            })
-            .catch(() => {
-              setQuestion({ state: 'hasError' });
-            });
-        } else {
-          setQuestion({ state: 'hasError' });
+    if (isEdit && responseId) {
+      getResponse(responseId).then((data) => {
+        if (data && data.content) {
+          setNewResponse(data.content);
         }
-      }
-    });
+        if (data && data.question && data.question.id) {
+          const editQuestionId = data.question.id;
+
+          if (isValidQuestionId(String(editQuestionId))) {
+            getQuestionDetail(String(editQuestionId))
+              .then((questionData) => {
+                setQuestion({ state: 'hasValue', data: questionData });
+              })
+              .catch(() => {
+                setQuestion({ state: 'hasError' });
+              });
+          } else {
+            setQuestion({ state: 'hasError' });
+          }
+        }
+      });
+    }
   }, [isEdit]);
 
   const handleChangeResponse = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -85,16 +87,16 @@ function NewResponse() {
 
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const handleClickPost = async () => {
-    if (!questionId) return;
+    if (!questionId && !responseId) return;
     navigate('/my');
     openToast({ message: t('question.response.posting') });
-    const { id: newResponseId } = isEdit
+    const { id: newResponseId } = !isEdit
       ? await postResponse({
           question_id: Number(questionId),
           content: newResponse || '',
         })
       : await patchResponse({
-          post_id: location.state?.post.id,
+          post_id: Number(responseId),
           content: newResponse || '',
         });
 
