@@ -103,8 +103,10 @@ function NewResponse() {
     openToast({
       message: t(isEdit ? 'question.response.edited' : 'question.response.posted'),
       actionText: t('question.response.view'),
-      action: () => navigate(`/responses/${newResponseId}`),
     });
+
+    navigate(`/responses/${newResponseId}`);
+    openToast({ message: t('question.response.posting') });
   };
 
   const disabledPost = !newResponse?.trim().length;
