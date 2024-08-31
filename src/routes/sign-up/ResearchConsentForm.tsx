@@ -7,6 +7,7 @@ import { Button, CheckBox, CommonInput, Font, Layout } from '@design-system';
 import { Gender } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
+import { LayoutBase } from 'src/design-system/layouts';
 
 const NEED_PARENTAL_PERMISSION_AGE = 18;
 const today = format(new Date(), 'yyyy-MM-dd');
@@ -69,17 +70,19 @@ function ResearchConsentForm() {
   return (
     <>
       {/* Age */}
-      <ValidatedInput
-        label={t('age')}
-        type="numeric"
-        pattern="[0-9]*"
-        name="age"
-        value={ageInput}
-        onChange={handleChangeAge}
-      />
+      <LayoutBase mb={45} w="100%">
+        <ValidatedInput
+          label={t('age')}
+          type="numeric"
+          pattern="[0-9]*"
+          name="age"
+          value={ageInput}
+          onChange={handleChangeAge}
+        />
+      </LayoutBase>
       {/* Parental Permission */}
       {showParentalPermissionRef.current && (
-        <Layout.LayoutBase mb={45} gap={12}>
+        <Layout.LayoutBase mb={45} gap={12} w="100%">
           <Font.Body type="18_regular">{t('parental_permission')}</Font.Body>
           <Font.Body type="14_regular" mb={24}>
             {t('i_agree_to_provide_consent_to_my_child’s_participation_in_the_research')}
