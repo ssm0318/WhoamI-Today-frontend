@@ -85,7 +85,6 @@ const router = createBrowserRouter([
       },
       {
         path: 'questions',
-        loader: checkIfSignIn,
         children: [
           { path: '', element: <AllQuestions /> },
           { path: ':questionId/new', element: <NewResponse /> },
@@ -93,7 +92,6 @@ const router = createBrowserRouter([
       },
       {
         path: 'notifications',
-        loader: checkIfSignIn,
         children: [
           { path: '', element: <Notifications /> },
           { path: 'prompts', element: <ReceivedPrompts /> },
@@ -101,7 +99,6 @@ const router = createBrowserRouter([
       },
       {
         path: 'users/:username',
-        loader: checkIfSignIn,
         children: [
           { path: '', element: <FriendPage /> },
           {
@@ -112,12 +109,10 @@ const router = createBrowserRouter([
       },
       {
         path: 'check-in',
-        loader: checkIfSignIn,
         children: [{ path: 'edit', element: <CheckInEdit /> }],
       },
       {
         path: 'notes',
-        loader: checkIfSignIn,
         children: [
           { path: '', element: <AllNotes /> },
           { path: ':noteId', element: <NoteDetail /> },
@@ -127,7 +122,6 @@ const router = createBrowserRouter([
       },
       {
         path: 'responses',
-        loader: checkIfSignIn,
         children: [
           { path: ':responseId', element: <ResponseDetail /> },
           { path: ':responseId/likes', element: <Likes /> },
@@ -136,7 +130,6 @@ const router = createBrowserRouter([
       },
       {
         path: 'settings',
-        loader: checkIfSignIn,
         children: [
           { path: '', element: <Settings /> },
           { path: 'edit-profile', element: <EditProfile /> },
