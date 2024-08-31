@@ -1,5 +1,6 @@
 import { ReactNode, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
+import { SWRConfig } from 'swr';
 import NotiPermissionBanner, {
   NOTI_PERMISSION_BANNER_HEIGHT,
 } from '@components/_common/noti-permission-banner/NotiPermissionBanner';
@@ -32,13 +33,15 @@ function Root() {
   }, [postMessage]);
 
   return (
-    <Layout.FlexRow justifyContent="center" bgColor="BLACK" w="100%">
-      <RootContainer w="100%" bgColor="WHITE" id="root-container">
-        <Header />
-        <Outlet />
-        <Tab />
-      </RootContainer>
-    </Layout.FlexRow>
+    <SWRConfig value={{ provider: () => new Map() }}>
+      <Layout.FlexRow justifyContent="center" bgColor="BLACK" w="100%">
+        <RootContainer w="100%" bgColor="WHITE" id="root-container">
+          <Header />
+          <Outlet />
+          <Tab />
+        </RootContainer>
+      </Layout.FlexRow>
+    </SWRConfig>
   );
 }
 
