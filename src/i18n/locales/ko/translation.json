@@ -54,10 +54,12 @@
   "nav_tab": {
     "friends": "친구",
     "my": "나",
-    "chats": "채팅"
+    "chats": "채팅",
+    "questions": "질문"
   },
   "header": {
-    "my": "내 프로필"
+    "my": "내 프로필",
+    "questions": "질문"
   },
   "home": {
     "moment": {
@@ -171,7 +173,9 @@
         },
         "report": {
           "title": "{{username}}을(를) 신고하시겠습니까?",
-          "content": "신고하면 자동으로 유저를 차단합니다."
+          "content": "신고하면 자동으로 유저를 차단합니다.",
+          "success_title": "{{username}}님이 신고되었습니다.",
+          "error_title": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
         },
         "cancel": "Cancel"
       }
@@ -244,7 +248,9 @@
       "title": "이 게시물을 신고하시겠습니까?",
       "content": "신고하면 이 게시물이 자동으로 숨겨집니다.",
       "cancel": "취소",
-      "report": "신고"
+      "report": "신고",
+      "success_title":"게시물이 성공적으로 신고되었습니다.",
+      "error_title": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
     },
     "delete": {
       "title": "이 게시물을 삭제하시겠습니까?",
@@ -325,6 +331,7 @@
     "received_prompts": {
       "sent_by": "{{username}}이(가) 보냄"
     },
+    "read_all": "전체 읽음",
     "temporary_error":"일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
   },
   "comment": {

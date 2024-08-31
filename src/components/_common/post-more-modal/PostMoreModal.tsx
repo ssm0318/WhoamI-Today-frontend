@@ -56,7 +56,14 @@ function PostMoreModal({
       confirmText: t('report.report'),
       cancelText: t('report.cancel'),
       onClickConfirm: async () => {
-        await reportContent(post.id, post.type);
+        await reportContent({
+          postId: post.id,
+          postType: post.type,
+          onSuccess: () => {
+            openToast({ message: t('report.success_title') });
+          },
+          onError: () => openToast({ message: t('report.error_title') }),
+        });
         onConfirmReport?.();
         handleOnConfirmAlert();
       },
@@ -68,7 +75,7 @@ function PostMoreModal({
     if (post.type === 'Note') {
       navigate(`/notes/new`, { state: { post, status: 'edit' } });
     } else if (post.type === 'Response') {
-      navigate(`/questions/${post.id}/new`, { state: { post, status: 'edit' } });
+      navigate(`/responses/${post.id}/edit`);
     }
   };
 

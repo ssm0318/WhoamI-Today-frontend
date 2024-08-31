@@ -1,4 +1,4 @@
-import { MouseEvent, useRef, useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
@@ -8,7 +8,6 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import { Layout, Typo } from '@design-system';
 import { Note } from '@models/post';
-import { isUpdated } from '@utils/isUpdatedPost';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import NoteImageList from '../note-image-list/NoteImageList';
 
@@ -20,7 +19,7 @@ interface NoteItemProps {
 }
 
 function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemProps) {
-  const { content, created_at, id, author_detail, images, like_user_sample, updated_at } = note;
+  const { content, created_at, id, author_detail, images, like_user_sample, is_edited } = note;
   const navigate = useNavigate();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [showMore, setShowMore] = useState(false);
@@ -28,8 +27,6 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
 
   const { username, profile_image } = author_detail ?? {};
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
-
-  const commentRef = useRef<HTMLTextAreaElement>(null);
 
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
@@ -39,6 +36,10 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
   const handleClickNote = () => {
     if (commentType === 'DETAIL') return;
     return navigate(`/notes/${id}`);
+  };
+
+  const navigateToProfile = () => {
+    navigate(`/users/${username}`);
   };
 
   return (
@@ -65,10 +66,17 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
           h={PROFILE_IMAGE_SIZE}
         >
           <Layout.FlexRow w="100%" alignItems="center" gap={8}>
-            <ProfileImage imageUrl={profile_image} username={username} size={PROFILE_IMAGE_SIZE} />
+            <ProfileImage
+              imageUrl={profile_image}
+              username={username}
+              size={PROFILE_IMAGE_SIZE}
+              onClick={navigateToProfile}
+            />
             {/* author, created_at 정보 */}
             <Layout.FlexRow alignItems="center" gap={8}>
-              <Typo type="title-medium">{username}</Typo>
+              <Layout.FlexRow onClick={navigateToProfile}>
+                <Typo type="title-medium">{username}</Typo>
+              </Layout.FlexRow>
               <Typo type="label-medium" color="MEDIUM_GRAY">
                 {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
               </Typo>
@@ -86,7 +94,7 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
           {/* 이미지 */}
           <NoteImageList images={images} />
           {/* (수정됨) */}
-          {isUpdated(created_at, updated_at) && (
+          {is_edited && (
             <Typo type="label-medium" color="MEDIUM_GRAY">
               {`(${t('edited')})`}
             </Typo>
@@ -107,7 +115,7 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
           post={note}
           visible={bottomSheet}
           inputFocus={inputFocus}
-          commentRef={commentRef}
+          setInputFocus={setInputFocus}
           closeBottomSheet={() => {
             setBottomSheet(false);
             setInputFocus(false);

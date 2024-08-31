@@ -13,7 +13,8 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { Question } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getQuestionDetail, responseQuestion } from '@utils/apis/question';
+import { getQuestionDetail, patchResponse, postResponse } from '@utils/apis/question';
+import { getResponse } from '@utils/apis/responses';
 import { FlexRow, LayoutBase } from 'src/design-system/layouts';
 
 const isValidQuestionId = (questionId?: string): questionId is string =>
@@ -21,13 +22,16 @@ const isValidQuestionId = (questionId?: string): questionId is string =>
 
 function NewResponse() {
   const location = useLocation();
-  const { questionId } = useParams();
-  const status = location.state?.status;
-  const content = location.state?.post.content || '';
+  const { questionId, responseId } = useParams();
+  const isEdit = location.pathname.includes('/edit');
+
   const currentUser = useBoundStore.getState().myProfile;
 
   const [t] = useTranslation('translation');
   const [question, setQuestion] = useState<FetchState<Question>>({ state: 'loading' });
+
+  const [newResponse, setNewResponse] = useState<string | null>(null);
+
   const title = !location.state
     ? t('question.response.new_response')
     : t('question.response.edit_response');
@@ -47,7 +51,31 @@ function NewResponse() {
       });
   }, []);
 
-  const [newResponse, setNewResponse] = useState(content);
+  useAsyncEffect(async () => {
+    if (isEdit && responseId) {
+      getResponse(responseId).then((data) => {
+        if (data && data.content) {
+          setNewResponse(data.content);
+        }
+        if (data && data.question && data.question.id) {
+          const editQuestionId = data.question.id;
+
+          if (isValidQuestionId(String(editQuestionId))) {
+            getQuestionDetail(String(editQuestionId))
+              .then((questionData) => {
+                setQuestion({ state: 'hasValue', data: questionData });
+              })
+              .catch(() => {
+                setQuestion({ state: 'hasError' });
+              });
+          } else {
+            setQuestion({ state: 'hasError' });
+          }
+        }
+      });
+    }
+  }, [isEdit]);
+
   const handleChangeResponse = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setNewResponse(e.target.value);
   };
@@ -59,23 +87,29 @@ function NewResponse() {
 
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const handleClickPost = async () => {
-    if (!questionId) return;
+    if (!questionId && !responseId) return;
     navigate('/my');
     openToast({ message: t('question.response.posting') });
-
-    const { id: newResponseId } = await responseQuestion({
-      question_id: Number(questionId),
-      content: newResponse,
-    });
+    const { id: newResponseId } = !isEdit
+      ? await postResponse({
+          question_id: Number(questionId),
+          content: newResponse || '',
+        })
+      : await patchResponse({
+          post_id: Number(responseId),
+          content: newResponse || '',
+        });
 
     openToast({
-      message: t(status === 'edit' ? 'question.response.edited' : 'question.response.posted'),
+      message: t(isEdit ? 'question.response.edited' : 'question.response.posted'),
       actionText: t('question.response.view'),
-      action: () => navigate(`/responses/${newResponseId}`),
     });
+
+    navigate(`/responses/${newResponseId}`, { state: 'new' });
+    openToast({ message: t('question.response.posting') });
   };
 
-  const disabledPost = !newResponse.trim().length;
+  const disabledPost = !newResponse?.trim().length;
 
   return (
     <MainContainer>
@@ -111,7 +145,7 @@ function NewResponse() {
           <>
             <TextArea
               placeholder={t('question.response.what_is_your_response') || ''}
-              value={newResponse}
+              value={newResponse || ''}
               onChange={handleChangeResponse}
             />
             <StyledNewResponsePrompt>

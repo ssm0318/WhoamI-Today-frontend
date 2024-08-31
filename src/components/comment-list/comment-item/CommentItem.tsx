@@ -37,9 +37,9 @@ function CommentItem({
     onClickReplyBtn?.();
   };
 
-  const handleSendMessage = () => {
-    // TODO : 채팅방으로 이동
-  };
+  // const handleSendMessage = () => {
+  //   // TODO : 채팅방으로 이동
+  // };
 
   const handleClickMore = () => {
     // TBU
@@ -90,13 +90,13 @@ function CommentItem({
                   </Typo>
                 </button>
               )}
-              {!isCommentAuthor && isPostAuthor && (
+              {/* {!isCommentAuthor && isPostAuthor && (
                 <button type="button" onClick={handleSendMessage}>
                   <Typo type="label-medium" color="DARK_GRAY">
                     {t('message')}
                   </Typo>
                 </button>
-              )}
+              )} */}
             </Layout.FlexRow>
           </Layout.FlexCol>
         </Layout.FlexCol>

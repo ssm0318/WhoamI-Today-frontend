@@ -10,6 +10,7 @@ import ResponseSection from '@components/response/response-section/ResponseSecti
 import { Layout, Typo } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMyNotes, getMyResponses } from '@utils/apis/my';
+import { MainScrollContainer } from './Root';
 
 function My() {
   const { myProfile, fetchCheckIn } = useBoundStore((state) => ({
@@ -32,46 +33,48 @@ function My() {
   }, [fetchCheckIn]);
 
   return (
-    <PullToRefresh onRefresh={handleRefresh}>
-      <Layout.FlexCol w="100%">
-        <Divider width={8} bgColor="LIGHT" />
-        <Layout.FlexRow
-          w="100%"
-          alignItems="center"
-          justifyContent="space-between"
-          p={12}
-          bgColor="WHITE"
-          rounded={8}
-        >
-          <Profile user={myProfile} />
-        </Layout.FlexRow>
-        <Divider width={8} bgColor="LIGHT" />
-        <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
-          <ResponseSection />
-        </Layout.FlexCol>
-        <Divider width={8} bgColor="LIGHT" />
-        <Layout.FlexRow ph={15} pv={10} bgColor="WHITE" w="100%" rounded="8px 8px 0px 0px">
+    <MainScrollContainer>
+      <PullToRefresh onRefresh={handleRefresh}>
+        <Layout.FlexCol w="100%">
+          <Divider width={8} bgColor="LIGHT" />
           <Layout.FlexRow
-            rounded={30}
-            alignItems="center"
             w="100%"
+            alignItems="center"
             justifyContent="space-between"
-            ph={20}
-            pv={10}
-            outline="LIGHT_GRAY"
-            onClick={handleClickNewNote}
+            p={12}
+            bgColor="WHITE"
+            rounded={8}
           >
-            <Typo type="body-medium" color="DARK_GRAY">
-              {t('whats_on_your_mind', { username: myProfile?.username })}
-            </Typo>
-            <Icon name="chat_media_image" size={24} fill="DARK_GRAY" />
+            <Profile user={myProfile} />
           </Layout.FlexRow>
-        </Layout.FlexRow>
-        <Layout.FlexCol pl={12} pb="default" w="100%" bgColor="WHITE" rounded="0px 0px 8px 8px">
-          <NoteSection />
+          <Divider width={8} bgColor="LIGHT" />
+          <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
+            <ResponseSection />
+          </Layout.FlexCol>
+          <Divider width={8} bgColor="LIGHT" />
+          <Layout.FlexRow ph={15} pv={10} bgColor="WHITE" w="100%" rounded="8px 8px 0px 0px">
+            <Layout.FlexRow
+              rounded={30}
+              alignItems="center"
+              w="100%"
+              justifyContent="space-between"
+              ph={20}
+              pv={10}
+              outline="LIGHT_GRAY"
+              onClick={handleClickNewNote}
+            >
+              <Typo type="body-medium" color="DARK_GRAY">
+                {t('whats_on_your_mind', { username: myProfile?.username })}
+              </Typo>
+              <Icon name="chat_media_image" size={24} fill="DARK_GRAY" />
+            </Layout.FlexRow>
+          </Layout.FlexRow>
+          <Layout.FlexCol pl={12} pb="default" w="100%" bgColor="WHITE" rounded="0px 0px 8px 8px">
+            <NoteSection />
+          </Layout.FlexCol>
         </Layout.FlexCol>
-      </Layout.FlexCol>
-    </PullToRefresh>
+      </PullToRefresh>
+    </MainScrollContainer>
   );
 }
 

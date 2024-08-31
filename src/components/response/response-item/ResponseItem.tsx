@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
@@ -9,7 +9,6 @@ import CommentBottomSheet from '@components/comments/comment-bottom-sheet/Commen
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { Response } from '@models/post';
-import { isUpdated } from '@utils/isUpdatedPost';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
@@ -27,7 +26,7 @@ function ResponseItem({
   refresh,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
-  const { content, created_at, author_detail, question, like_user_sample, updated_at } = response;
+  const { content, created_at, author_detail, question, like_user_sample, is_edited } = response;
   const { username, profile_image } = author_detail ?? {};
   const [overflowSummary, setOverflowSummary] = useState<string>();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
@@ -35,8 +34,6 @@ function ResponseItem({
 
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
-
-  const commentRef = useRef<HTMLTextAreaElement>(null);
 
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
@@ -46,6 +43,10 @@ function ResponseItem({
   const handleClickDetail = () => {
     if (commentType === 'DETAIL') return;
     navigate(`/responses/${response.id}`);
+  };
+
+  const navigateToProfile = () => {
+    navigate(`/users/${username}`);
   };
 
   useEffect(() => {
@@ -86,10 +87,13 @@ function ResponseItem({
                 imageUrl={profile_image}
                 username={username}
                 size={PROFILE_IMAGE_SIZE}
+                onClick={navigateToProfile}
               />
               {/* author, created_at 정보 */}
               <Layout.FlexRow alignItems="center" gap={8}>
-                <Typo type="title-medium">{username}</Typo>
+                <Layout.FlexRow onClick={navigateToProfile}>
+                  <Typo type="title-medium">{username}</Typo>
+                </Layout.FlexRow>
                 <Typo type="label-medium" color="MEDIUM_GRAY">
                   {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
                 </Typo>
@@ -114,7 +118,7 @@ function ResponseItem({
               )}
             </Typo>
             {/* (수정됨) */}
-            {isUpdated(created_at, updated_at) && (
+            {is_edited && (
               <Typo type="label-medium" color="MEDIUM_GRAY">
                 {`(${t('edited')})`}
               </Typo>
@@ -138,7 +142,7 @@ function ResponseItem({
           post={response}
           visible={bottomSheet}
           inputFocus={inputFocus}
-          commentRef={commentRef}
+          setInputFocus={setInputFocus}
           closeBottomSheet={() => {
             setBottomSheet(false);
             setInputFocus(false);

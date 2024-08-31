@@ -36,10 +36,7 @@ export const createUserSlice: SliceStateCreator<UserSlice> = (set, get) => {
     updateMyProfile: (myProfileInfo) =>
       set(
         (state) => ({
-          myProfile: {
-            ...state.myProfile,
-            myProfileInfo,
-          },
+          myProfile: state.myProfile ? { ...state.myProfile, ...myProfileInfo } : undefined,
         }),
         false,
         'user/updateMyProfile',

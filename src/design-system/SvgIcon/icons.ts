@@ -114,6 +114,8 @@ const my_active = 'my_active';
 const my_inactive = 'my_inactive';
 const chats_active = 'chats_active';
 const chats_inactive = 'chats_inactive';
+const questions_active = 'questions_active';
+const questions_inactive = 'questions_inactive';
 
 const delete_button = 'delete_button';
 const top_navigation_friend = 'top_navigation_friend';
@@ -221,6 +223,8 @@ export {
   prompts,
   question_respond,
   question_send,
+  questions_active,
+  questions_inactive,
   search,
   search_black,
   sent_by,

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
 import SubHeader from '@components/sub-header/SubHeader';
-import { TITLE_HEADER_HEIGHT } from '@constants/layout';
+import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Layout } from '@design-system';
 import { confirmPassword } from '@utils/apis/user';
 
@@ -40,7 +40,7 @@ function ConfirmPassword() {
           guide={t('sign_up.password_constraints')}
         />
       </Layout.FlexCol>
-      <Layout.Absolute w="100%" b="50px" ph={24} flexDirection="column">
+      <Layout.Absolute w="100%" b={`${BOTTOM_TABBAR_HEIGHT + 50}px`} ph={24} flexDirection="column">
         <Button.Large
           type="filled"
           status="normal"

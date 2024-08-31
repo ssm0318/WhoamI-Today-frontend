@@ -54,10 +54,12 @@
   "nav_tab": {
     "friends": "Friends",
     "my": "My",
-    "chats": "Chats"
+    "chats": "Chats",
+    "questions": "Questions"
   },
   "header": {
-    "my": "My Profile"
+    "my": "My Profile",
+    "questions": "Questions"
   },
   "home": {
     "moment": {
@@ -174,7 +176,9 @@
         },
         "report": {
           "title": "Report {{username}}?",
-          "content": "By reporting, we will automatically block this account from you as well"
+          "content": "By reporting, we will automatically block this account from you as well",
+          "success_title": "Successfully reported {{username}}",
+          "error_title": "An error has occurred temporarily. Please try again later."
         },
         "cancel": "Cancel"
       }
@@ -247,7 +251,9 @@
       "title": "Report This Post?",
       "content": "By reporting, we will automatically hide this post from you as well.",
       "cancel": "Cancel",
-      "report": "Report"
+      "report": "Report",
+      "success_title": "The post has been successfully reported",
+      "error_title": "An error has occurred temporarily. Please try again later."
     },
     "delete": {
       "title": "Delete This Post?",
@@ -332,6 +338,7 @@
     "received_prompts": {
       "sent_by": "Sent by {{username}}"
     },
+    "read_all": "Mark all as read",
     "temporary_error": "An error has occurred temporarily. Please try again later."
   },
   "comment": {

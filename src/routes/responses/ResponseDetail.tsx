@@ -1,7 +1,7 @@
 import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CommonError from '@components/_common/common-error/CommonError';
 import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
@@ -21,10 +21,13 @@ function ResponseDetail() {
   const { responseId } = useParams();
 
   const [t] = useTranslation('translation');
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const [responseDetail, setResponseDetail] = useState<FetchState<Response>>({ state: 'loading' });
   const [reload, setReload] = useState<boolean>(false);
+  const [inputFocus, setInputFocus] = useState(false);
 
   useAsyncEffect(async () => {
     if (!responseId) return;
@@ -40,6 +43,10 @@ function ResponseDetail() {
     }
   }, [responseId, reload]);
 
+  const handleGoBack = () => {
+    navigate('/my');
+  };
+
   return (
     <MainContainer>
       {responseDetail.state === 'loading' && <Loader />}
@@ -49,6 +56,7 @@ function ResponseDetail() {
             title={t('response_detail.title', {
               name: responseDetail.data?.author_detail?.username,
             })}
+            onGoBack={location.state === 'new' ? handleGoBack : undefined}
           />
           <Layout.FlexCol w="100%" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
             <ResponseItem
@@ -58,7 +66,13 @@ function ResponseDetail() {
             />
           </Layout.FlexCol>
           <Layout.FlexCol w="100%" flex={1}>
-            <CommentList postType="Response" post={responseDetail.data} setReload={setReload} />
+            <CommentList
+              postType="Response"
+              post={responseDetail.data}
+              setReload={setReload}
+              inputFocus={inputFocus}
+              setInputFocus={setInputFocus}
+            />
           </Layout.FlexCol>
         </>
       )}

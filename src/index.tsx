@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+import MainContainer from '@components/_common/main-container/MainContainer';
 import ToastBar from '@components/_common/toast-bar/ToastBar';
 import ErrorPage from '@components/error-page/ErrorPage';
 import { Colors, Typo } from '@design-system';
@@ -33,7 +34,7 @@ import ReceivedPrompts from './routes/ReceivedPrompts';
 import AllResponses from './routes/responses/AllResponses';
 import NewResponse from './routes/responses/NewResponse';
 import ResponseDetail from './routes/responses/ResponseDetail';
-import Root, { MainScrollContainer } from './routes/Root';
+import Root from './routes/Root';
 import ConfirmPassword from './routes/settings/ConfirmPassword';
 import DeleteAccount from './routes/settings/DeleteAccount';
 import EditProfile from './routes/settings/EditProfile';
@@ -50,8 +51,10 @@ import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
 
 const router = createBrowserRouter([
+  // intro route
   { path: '', element: <Intro />, loader: checkIfSignIn },
   {
+    // authorized routes
     path: '/',
     element: <Root />,
     errorElement: <ErrorPage />,
@@ -67,7 +70,6 @@ const router = createBrowserRouter([
       },
       {
         path: 'my',
-        element: <MainScrollContainer />,
         children: [
           { path: '', element: <My /> },
           { path: 'responses', element: <AllResponses /> },
@@ -79,6 +81,14 @@ const router = createBrowserRouter([
           { path: '', element: <Friends /> },
           { path: 'explore', element: <ExploreFriends /> },
           { path: 'edit', element: <EditFriends /> },
+        ],
+      },
+      {
+        path: 'questions',
+        loader: checkIfSignIn,
+        children: [
+          { path: '', element: <AllQuestions /> },
+          { path: ':questionId/new', element: <NewResponse /> },
         ],
       },
       {
@@ -100,64 +110,68 @@ const router = createBrowserRouter([
           },
         ],
       },
-    ],
-  },
-  { path: 'signin', element: <SignIn /> },
-  {
-    path: 'signup',
-    element: <SignUp />,
-    children: [
-      { path: 'email', element: <Email /> },
-      { path: 'password', element: <Password /> },
-      { path: 'research-intro', element: <ResearchIntro /> },
-      { path: 'research-consent-form', element: <ResearchConsentForm /> },
-      { path: 'username', element: <UserName /> },
-      { path: 'profile-image', element: <AddProfileImage /> },
-      { path: 'noti-settings', element: <NotiSettings /> },
-      { path: '', element: <Navigate replace to="email" /> },
-    ],
-  },
-  { path: 'forgot-password', element: <ForgotPassword /> },
-  {
-    path: 'questions',
-    loader: checkIfSignIn,
-    children: [
-      { path: '', element: <AllQuestions /> },
-      { path: ':questionId/new', element: <NewResponse /> },
-    ],
-  },
-  {
-    path: 'check-in',
-    loader: checkIfSignIn,
-    children: [{ path: 'edit', element: <CheckInEdit /> }],
-  },
-  {
-    path: 'notes',
-    loader: checkIfSignIn,
-    children: [
-      { path: '', element: <AllNotes /> },
-      { path: ':noteId', element: <NoteDetail /> },
-      { path: ':noteId/likes', element: <Likes /> },
-      { path: 'new', element: <NewNote /> },
+      {
+        path: 'check-in',
+        loader: checkIfSignIn,
+        children: [{ path: 'edit', element: <CheckInEdit /> }],
+      },
+      {
+        path: 'notes',
+        loader: checkIfSignIn,
+        children: [
+          { path: '', element: <AllNotes /> },
+          { path: ':noteId', element: <NoteDetail /> },
+          { path: ':noteId/likes', element: <Likes /> },
+          { path: 'new', element: <NewNote /> },
+        ],
+      },
+      {
+        path: 'responses',
+        loader: checkIfSignIn,
+        children: [
+          { path: ':responseId', element: <ResponseDetail /> },
+          { path: ':responseId/likes', element: <Likes /> },
+          { path: ':responseId/edit', element: <NewResponse /> },
+        ],
+      },
+      {
+        path: 'settings',
+        loader: checkIfSignIn,
+        children: [
+          { path: '', element: <Settings /> },
+          { path: 'edit-profile', element: <EditProfile /> },
+          { path: 'confirm-password', element: <ConfirmPassword /> },
+          { path: 'reset-password', element: <ResetPassword /> },
+          { path: 'delete-account', element: <DeleteAccount /> },
+        ],
+      },
     ],
   },
   {
-    path: 'responses',
-    loader: checkIfSignIn,
+    // non-authorized routes
+    path: '/',
+    element: (
+      <MainContainer mb={0}>
+        <Outlet />
+      </MainContainer>
+    ),
     children: [
-      { path: ':responseId', element: <ResponseDetail /> },
-      { path: ':responseId/likes', element: <Likes /> },
-    ],
-  },
-  {
-    path: 'settings',
-    loader: checkIfSignIn,
-    children: [
-      { path: '', element: <Settings /> },
-      { path: 'edit-profile', element: <EditProfile /> },
-      { path: 'confirm-password', element: <ConfirmPassword /> },
-      { path: 'reset-password', element: <ResetPassword /> },
-      { path: 'delete-account', element: <DeleteAccount /> },
+      { path: 'signin', element: <SignIn /> },
+      {
+        path: 'signup',
+        element: <SignUp />,
+        children: [
+          { path: 'email', element: <Email /> },
+          { path: 'password', element: <Password /> },
+          { path: 'research-intro', element: <ResearchIntro /> },
+          { path: 'research-consent-form', element: <ResearchConsentForm /> },
+          { path: 'username', element: <UserName /> },
+          { path: 'profile-image', element: <AddProfileImage /> },
+          { path: 'noti-settings', element: <NotiSettings /> },
+          { path: '', element: <Navigate replace to="email" /> },
+        ],
+      },
+      { path: 'forgot-password', element: <ForgotPassword /> },
     ],
   },
 ]);

@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import useAsyncEffect from '@hooks/useAsyncEffect';
 import { MyProfile } from '@models/api/user';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
 
@@ -14,6 +17,7 @@ interface ProfileProps {
 function Profile({ user }: ProfileProps) {
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const isMyPage = user?.id === myProfile?.id;
+  const [friendData, setFriendData] = useState<UserProfile | null>(null);
 
   const { username } = useParams();
   const navigate = useNavigate();
@@ -21,6 +25,13 @@ function Profile({ user }: ProfileProps) {
   const handleClickEditProfile = () => {
     return navigate('/settings/edit-profile');
   };
+
+  useAsyncEffect(async () => {
+    if (isMyPage || !username) return;
+    const friend = await getUserProfile(username);
+
+    setFriendData(friend);
+  }, [isMyPage, username]);
 
   if (!user) return null;
 
@@ -30,7 +41,13 @@ function Profile({ user }: ProfileProps) {
         <ProfileImage imageUrl={user?.profile_image} username={username} size={80} />
         <Layout.FlexCol w="100%" gap={8}>
           <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
-            <Typo type="title-large">{isMyPage ? myProfile?.username : username}</Typo>
+            <Layout.FlexRow gap={8} alignItems="center">
+              <Typo type="title-large">{isMyPage ? myProfile?.username : username}</Typo>
+              <Typo type="label-medium">
+                {(isMyPage ? myProfile?.pronouns : friendData?.pronouns) &&
+                  `(${isMyPage ? myProfile?.pronouns : friendData?.pronouns})`}
+              </Typo>
+            </Layout.FlexRow>
             {isMyPage && (
               <SvgIcon
                 name="edit_filled"

@@ -281,8 +281,23 @@ export const rejectFriendRequest = async (userId: number) => {
   await axios.patch(`/user/friend-requests/${userId}/respond/`, { accepted: false });
 };
 
-export const reportUser = async (userId: number) => {
-  await axios.post('/user_reports/', { reported_user_id: userId });
+export const reportUser = async ({
+  userId,
+  onSuccess,
+  onError,
+}: {
+  userId: number;
+  onSuccess: () => void;
+  onError: () => void;
+}) => {
+  await axios
+    .post('/user_reports/', { reported_user_id: userId })
+    .then(() => {
+      onSuccess();
+    })
+    .catch(() => {
+      onError();
+    });
 };
 
 export const breakFriend = async (friendId: number) => {

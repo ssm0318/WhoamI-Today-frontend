@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAlert';
 import Loader from '@components/_common/loader/Loader';
+import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Comment, Note, Response } from '@models/post';
@@ -14,10 +15,12 @@ import { StyledCommentListFooter } from './CommentList.styled';
 interface CommentListProps {
   postType: 'Response' | 'Note';
   post: Response | Note;
+  inputFocus: boolean;
+  setInputFocus: Dispatch<SetStateAction<boolean>>;
   setReload: (reload: boolean) => void;
 }
 
-function CommentList({ postType, post, setReload }: CommentListProps) {
+function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: CommentListProps) {
   const footerRef = useRef<HTMLDivElement>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
@@ -68,6 +71,7 @@ function CommentList({ postType, post, setReload }: CommentListProps) {
             isPostAuthor={myProfile?.id === post.author_detail.id}
             comment={comment}
             onClickReplyBtn={() => {
+              setInputFocus(true);
               setReplyTo(comment);
               setIsPrivate(comment.is_private);
               setCommentTo(comment);
@@ -76,11 +80,13 @@ function CommentList({ postType, post, setReload }: CommentListProps) {
           />
         ))}
       </Layout.FlexCol>
-      <StyledCommentListFooter ref={footerRef} b={0} w="100%" bgColor="WHITE">
+      <StyledCommentListFooter ref={footerRef} b={BOTTOM_TABBAR_HEIGHT} w="100%" bgColor="WHITE">
         <Layout.FlexRow w="100%">
           <CommentInputBox
             post={commentTo}
             postType={commentToType}
+            inputFocus={inputFocus}
+            setInputFocus={setInputFocus}
             isPrivate={isPrivate}
             setIsPrivate={() => {
               setIsPrivate((prev) => !prev);

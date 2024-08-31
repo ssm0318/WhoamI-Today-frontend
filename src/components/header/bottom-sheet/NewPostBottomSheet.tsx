@@ -6,6 +6,7 @@ import Divider from '@components/_common/divider/Divider';
 import Icon from '@components/_common/icon/Icon';
 import { Font, Layout, SvgIcon, Typo } from '@design-system';
 import { IconNames } from 'src/design-system/SvgIcon/SvgIcon.types';
+import { NewPostButton } from './NewPostBottomSheet.styled';
 
 interface MenuItem {
   key: string;
@@ -47,16 +48,12 @@ function NewPostBottomSheet({ visible, closeBottomSheet, setSelectPrompt }: Prop
           {BOTTOM_SHEET_LIST.map((menu) => (
             <React.Fragment key={menu.key}>
               <Divider width={1} />
-              <button
-                type="button"
-                onClick={handleClickMenu(menu.path)}
-                style={{ padding: '0 25px' }}
-              >
+              <NewPostButton type="button" onClick={handleClickMenu(menu.path)}>
                 <Layout.FlexRow alignItems="center" gap={15}>
                   <SvgIcon name={menu.icon} size={34} />
                   <Font.Body type="18_regular">{t(menu.key)}</Font.Body>
                 </Layout.FlexRow>
-              </button>
+              </NewPostButton>
             </React.Fragment>
           ))}
         </Layout.FlexCol>
