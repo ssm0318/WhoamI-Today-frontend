@@ -26,34 +26,6 @@ const firebaseApp = firebase.initializeApp({
 // NOTE: Most importantly, in your service worker add a 'notificationclick' event listener before calling firebase.messaging()
 self.addEventListener('notificationclick', (e) => {
   e.stopImmediatePropagation();
-  e.waitUntil(clients.openWindow(`${self.origin}${e.notification.data.url}`));
+  e.waitUntil(clients.openWindow(`${self.origin}${e.notification.data.FCM_MSG.data.url}`));
   e.notification.close();
-});
-
-// Retrieve an instance of Firebase Messaging so that it can handle background messages.
-// Retrieve firebase messaging
-const messaging = firebase.messaging();
-
-messaging.onBackgroundMessage((payload) => {
-  const { message_en, message_ko, url, tag } = payload.data;
-  const title = 'WhoAmI Today';
-
-  const options = {
-    body: self.navigator.language === 'ko' ? message_ko : message_en,
-    tag,
-    icon: 'https://whoami.gina-park.site/whoami192.png',
-    data: {
-      url,
-    },
-  };
-
-  self.registration.getNotifications().then((notifications) => {
-    const prev = notifications.filter(
-      (notification) => notification.data.FCM_MSG.data.tag === tag,
-    );
-
-    if (prev.length > 0) {
-      self.registration.showNotification(title, options);
-    }
-  });
 });
