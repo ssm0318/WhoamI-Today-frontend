@@ -53,7 +53,7 @@ export default function ToastBar({
         pv={16}
         w={SCREEN_WIDTH - 2 * DEFAULT_MARGIN}
       >
-        <Typo color="DARK_GRAY" type="body-large">
+        <Typo color="DARK_GRAY" type="body-large" pre>
           {text}
         </Typo>
         {RightComponent && RightComponent}
