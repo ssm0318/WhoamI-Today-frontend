@@ -3,13 +3,21 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
+import { DEFAULT_REDIRECTION_PATH } from '@constants/url';
 import { Button, Layout } from '@design-system';
+import { hasMandatorySignUpParams } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { signUp } from '@utils/apis/user';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 function AddProfileImage() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_up' });
+
+  const [signUpInfo, resetSignUpInfo] = useBoundStore((state) => [
+    state.signUpInfo,
+    state.resetSignUpInfo,
+  ]);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -50,7 +58,23 @@ function AddProfileImage() {
 
   const navigate = useNavigate();
   const onClickNextOrSkip = () => {
-    navigate('/signup/noti-settings');
+    if (!hasMandatorySignUpParams(signUpInfo)) {
+      navigate('/signup/email');
+      // TOOO: 에러 메시지 보강
+      return;
+    }
+
+    signUp({
+      signUpInfo,
+      onSuccess: () => {
+        resetSignUpInfo();
+        navigate(DEFAULT_REDIRECTION_PATH);
+      },
+      onError: (e) => {
+        // TODO
+        console.log(e);
+      },
+    });
   };
 
   return (
