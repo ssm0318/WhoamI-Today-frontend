@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
@@ -13,7 +14,11 @@ import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import { getFavoriteFriends } from '@utils/apis/friends';
 import { MainScrollContainer } from 'src/routes/Root';
 import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
-import { AllFriendItemLoader, AllFriendListLoader } from './AllFriendListLoader';
+import {
+  AllFriendItemLoader,
+  AllFriendListLoader,
+  FavoriteFriendListLoader,
+} from './FriendsLoader';
 
 function Friends() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends' });
@@ -27,10 +32,15 @@ function Friends() {
     refetchAllFriends,
   } = useInfiniteFetchFriends();
 
-  const { data: favoriteFriends, mutate: refetchFavoriteFriends } = useSWR(
-    '/user/friends/?type=favorites',
-    getFavoriteFriends,
-  );
+  useEffect(() => {
+    console.log('allFriends', allFriends);
+  }, [allFriends]);
+
+  const {
+    data: favoriteFriends,
+    mutate: refetchFavoriteFriends,
+    isLoading: isFavoriteFriendsLoading,
+  } = useSWR('/user/friends/?type=favorites', getFavoriteFriends);
 
   const navigate = useNavigate();
   const handleClickEditFriends = () => {
@@ -49,33 +59,35 @@ function Friends() {
       <PullToRefresh onRefresh={handleRefresh}>
         <Layout.FlexCol w="100%">
           {/* Favorites */}
-          {favoriteFriends && (
-            <Collapse
-              title={`${t('favorites')} (${favoriteFriends.length})`}
-              collapsedItem={
-                <Layout.FlexRow
-                  w="100%"
-                  gap={10}
-                  pv={12}
-                  ph={8}
-                  style={{ flexWrap: 'wrap', rowGap: '20px' }}
-                  justifyContent="space-evenly"
-                >
-                  {favoriteFriends.length ? (
-                    favoriteFriends.map((user) => <FavoriteFriendItem key={user.id} user={user} />)
-                  ) : (
-                    <Layout.FlexCol alignItems="center" ph={75} gap={8}>
-                      <Typo type="label-medium" color="DARK_GRAY">
-                        {t('add_favorite')}
-                      </Typo>
-                      <Icon name="add_default" onClick={handleClickEditFriends} />
-                    </Layout.FlexCol>
-                  )}
-                </Layout.FlexRow>
-              }
-            />
-          )}
-          {favoriteFriends && allFriends && <Divider width={1} marginLeading={9} />}
+          <Collapse
+            title={[t('favorites'), !!favoriteFriends && `(${favoriteFriends.length})`]
+              .filter(Boolean)
+              .join(' ')}
+            collapsedItem={
+              <Layout.FlexRow
+                w="100%"
+                gap={10}
+                pv={12}
+                ph={8}
+                style={{ flexWrap: 'wrap', rowGap: '20px' }}
+                justifyContent="space-evenly"
+              >
+                {isFavoriteFriendsLoading ? (
+                  <FavoriteFriendListLoader />
+                ) : favoriteFriends && favoriteFriends.length > 0 ? (
+                  favoriteFriends.map((user) => <FavoriteFriendItem key={user.id} user={user} />)
+                ) : (
+                  <Layout.FlexCol alignItems="center" ph={75} gap={8}>
+                    <Typo type="label-medium" color="DARK_GRAY">
+                      {t('add_favorite')}
+                    </Typo>
+                    <Icon name="add_default" onClick={handleClickEditFriends} />
+                  </Layout.FlexCol>
+                )}
+              </Layout.FlexRow>
+            }
+          />
+          <Divider width={1} marginLeading={9} />
           {/* All Friends */}
           <SwipeLayoutList>
             <Layout.FlexCol w="100%">
@@ -98,27 +110,31 @@ function Friends() {
                 />
               </Layout.FlexRow>
               <Layout.FlexCol w="100%" pv={8} gap={4}>
-                {/* Explore Friends */}
-                <Layout.FlexRow w="100%" ph={16} gap={16}>
-                  <StyledUpdatedFriendItem
-                    w="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <Layout.FlexRow alignItems="center" gap={7} onClick={handleClickExploreFriends}>
-                      <Icon name="add_user" background="LIGHT_GRAY" size={44} />
-                      <Layout.FlexCol>
-                        <Layout.FlexRow gap={4} alignItems="center">
-                          <Typo type="label-large">{t('explore_friends.title')}</Typo>
-                        </Layout.FlexRow>
-                      </Layout.FlexCol>
-                    </Layout.FlexRow>
-                  </StyledUpdatedFriendItem>
-                </Layout.FlexRow>
                 {isAllFriendsLoading ? (
                   <AllFriendListLoader />
-                ) : allFriends ? (
+                ) : allFriends?.[0] && allFriends[0].count > 0 ? (
                   <>
+                    {/* Explore Friends */}
+                    <Layout.FlexRow w="100%" ph={16} gap={16}>
+                      <StyledUpdatedFriendItem
+                        w="100%"
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <Layout.FlexRow
+                          alignItems="center"
+                          gap={7}
+                          onClick={handleClickExploreFriends}
+                        >
+                          <Icon name="add_user" background="LIGHT_GRAY" size={44} />
+                          <Layout.FlexCol>
+                            <Layout.FlexRow gap={4} alignItems="center">
+                              <Typo type="label-large">{t('explore_friends.title')}</Typo>
+                            </Layout.FlexRow>
+                          </Layout.FlexCol>
+                        </Layout.FlexRow>
+                      </StyledUpdatedFriendItem>
+                    </Layout.FlexRow>
                     {/* 친구 목록 */}
                     {allFriends.map(({ results }) =>
                       results?.map((user) => {
