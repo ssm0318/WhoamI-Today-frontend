@@ -14,7 +14,6 @@ export const CommonInput = styled.input<CommonInputProps>`
   border-color: ${({ theme }) => theme.MEDIUM_GRAY};
 
   :disabled {
-    background-color: ${({ theme }) => theme.MEDIUM_GRAY};
     color: ${({ theme }) => theme.MEDIUM_GRAY};
     border-radius: 8px;
     border: none;
