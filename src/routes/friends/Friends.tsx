@@ -4,7 +4,6 @@ import useSWR from 'swr';
 import Collapse from '@components/_common/\bcollapse/Collapse';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import Icon from '@components/_common/icon/Icon';
-import Loader from '@components/_common/loader/Loader';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import FavoriteFriendItem from '@components/friends/favorite-friend-item/FavoriteFriendItem';
@@ -14,6 +13,7 @@ import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import { getFavoriteFriends } from '@utils/apis/friends';
 import { MainScrollContainer } from 'src/routes/Root';
 import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
+import { AllFriendItemLoader, AllFriendListLoader } from './AllFriendListLoader';
 
 function Friends() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends' });
@@ -116,7 +116,7 @@ function Friends() {
                   </StyledUpdatedFriendItem>
                 </Layout.FlexRow>
                 {isAllFriendsLoading ? (
-                  <Loader />
+                  <AllFriendListLoader />
                 ) : allFriends ? (
                   <>
                     {/* 친구 목록 */}
@@ -134,7 +134,7 @@ function Friends() {
                       }),
                     )}
                     <div ref={targetRef} />
-                    {isLoadingMoreAllFriends && <Loader />}
+                    {isLoadingMoreAllFriends && <AllFriendItemLoader />}
                   </>
                 ) : (
                   <Layout.FlexCol alignItems="center" ph={75} gap={8} w="100%">
