@@ -56,11 +56,17 @@ function AddProfileImage() {
     setProfileImagePreview(croppedImage.url);
   };
 
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
+
   const navigate = useNavigate();
+  const onSignUpError = () => {
+    openToast({ message: t('error') });
+    navigate('/');
+  };
+
   const onClickNextOrSkip = () => {
     if (!hasMandatorySignUpParams(signUpInfo)) {
-      navigate('/signup/email');
-      // TOOO: 에러 메시지 보강
+      onSignUpError();
       return;
     }
 
@@ -70,9 +76,8 @@ function AddProfileImage() {
         resetSignUpInfo();
         navigate(DEFAULT_REDIRECTION_PATH);
       },
-      onError: (e) => {
-        // TODO
-        console.log(e);
+      onError: () => {
+        onSignUpError();
       },
     });
   };

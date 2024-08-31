@@ -49,7 +49,8 @@
     "noti_time_setting_desc_1": "Once a day, you will write a new WhoAmI.",
     "noti_time_setting_desc_2": "When do you want to get the notification?",
     "noti_time_default_desc": "If you do not set a time, you will be notified at 4 p.m.",
-    "complete": "complete"
+    "complete": "complete",
+    "error": "A temporary error occurred while signing up:( \n Please sign up again."
   },
   "nav_tab": {
     "friends": "Friends",
