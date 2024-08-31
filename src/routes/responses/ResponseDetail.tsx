@@ -27,6 +27,7 @@ function ResponseDetail() {
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const [responseDetail, setResponseDetail] = useState<FetchState<Response>>({ state: 'loading' });
   const [reload, setReload] = useState<boolean>(false);
+  const [inputFocus, setInputFocus] = useState(false);
 
   useAsyncEffect(async () => {
     if (!responseId) return;
@@ -65,7 +66,13 @@ function ResponseDetail() {
             />
           </Layout.FlexCol>
           <Layout.FlexCol w="100%" flex={1}>
-            <CommentList postType="Response" post={responseDetail.data} setReload={setReload} />
+            <CommentList
+              postType="Response"
+              post={responseDetail.data}
+              setReload={setReload}
+              inputFocus={inputFocus}
+              setInputFocus={setInputFocus}
+            />
           </Layout.FlexCol>
         </>
       )}

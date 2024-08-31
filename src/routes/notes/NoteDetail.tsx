@@ -27,6 +27,7 @@ export function NoteDetail() {
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const [noteDetail, setNoteDetail] = useState<FetchState<Note>>({ state: 'loading' });
   const [reload, setReload] = useState<boolean>(false);
+  const [inputFocus, setInputFocus] = useState(false);
 
   useAsyncEffect(async () => {
     if (!noteId) return;
@@ -64,7 +65,13 @@ export function NoteDetail() {
             />
           </Layout.FlexCol>
           <Layout.FlexCol w="100%" flex={1}>
-            <CommentList postType="Note" post={noteDetail.data} setReload={setReload} />
+            <CommentList
+              postType="Note"
+              post={noteDetail.data}
+              setReload={setReload}
+              inputFocus={inputFocus}
+              setInputFocus={setInputFocus}
+            />
           </Layout.FlexCol>
         </>
       )}
