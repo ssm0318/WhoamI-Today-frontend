@@ -5,7 +5,6 @@ import { Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 import { Noti } from '../Header.styled';
 import MainHeader from '../MainHeader';
-import NewFloatingButton from '../new-floating-button/NewFloatingButton';
 import SideMenu from '../side-menu/SideMenu';
 
 interface CommonHeaderProps {
@@ -39,7 +38,6 @@ function CommonHeader({ title }: CommonHeaderProps) {
         }
       />
       {showSideMenu && <SideMenu closeSideMenu={() => setShowSideMenu(false)} />}
-      <NewFloatingButton />
     </>
   );
 }
