@@ -1,4 +1,7 @@
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
+
+import FloatingButton from '@components/header/floating-button/FloatingButton';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 import { NavTabItem, StyledTabItem, TabWrapper } from './Tab.styled';
@@ -48,6 +51,12 @@ function TabItem({ to, type, size = 48 }: TabItemProps) {
 }
 
 export default function Tab() {
+  const location = useLocation();
+  const showFloatingButton =
+    location.pathname === '/friends' ||
+    location.pathname === '/my' ||
+    location.pathname === '/questions';
+
   return (
     <TabWrapper>
       <Layout.FlexRow w="100%" justifyContent="center" alignItems="center" gap={80} pt={4}>
@@ -56,6 +65,7 @@ export default function Tab() {
         {/* <TabItem to="/chats" type="chats" size={28} /> */}
         <TabItem to="/questions" type="questions" size={28} />
       </Layout.FlexRow>
+      {showFloatingButton && <FloatingButton />}
     </TabWrapper>
   );
 }

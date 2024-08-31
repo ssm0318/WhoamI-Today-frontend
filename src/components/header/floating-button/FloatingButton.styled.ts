@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-export const StyledNewFloatingButton = styled.button`
-  position: fixed;
+export const StyledFloatingButton = styled.button`
+  position: absolute;
   z-index: 500;
   bottom: 100px;
   right: 20px;
