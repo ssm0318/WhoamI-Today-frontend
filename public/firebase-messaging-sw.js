@@ -26,6 +26,17 @@ const firebaseApp = firebase.initializeApp({
 // NOTE: Most importantly, in your service worker add a 'notificationclick' event listener before calling firebase.messaging()
 self.addEventListener('notificationclick', (e) => {
   e.stopImmediatePropagation();
-  e.waitUntil(clients.openWindow(`${self.origin}${e.notification.data.FCM_MSG.data.url}`));
+  if (e.notification.data?.FCM_MSG) {
+    e.waitUntil(clients.openWindow(`${self.origin}${e.notification.data.FCM_MSG.data.url}`));
+  } else {
+    e.waitUntil(clients.openWindow(`${self.origin}${e.notification.data.url}`));
+  }
+
   e.notification.close();
 });
+
+// Retrieve an instance of Firebase Messaging so that it can handle background messages.
+// Retrieve firebase messaging
+const messaging = firebase.messaging();
+
+messaging.onBackgroundMessage();
