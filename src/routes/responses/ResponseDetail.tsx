@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CommonError from '@components/_common/common-error/CommonError';
-import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import CommentList from '@components/comment-list/CommentList';
 import ResponseItem from '@components/response/response-item/ResponseItem';
+import ResponseLoader from '@components/response/response-loader/ResponseLoader';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
@@ -49,32 +49,36 @@ function ResponseDetail() {
 
   return (
     <MainContainer>
-      {responseDetail.state === 'loading' && <Loader />}
-      {responseDetail.state === 'hasValue' && (
-        <>
-          <SubHeader
-            title={t('response_detail.title', {
-              name: responseDetail.data?.author_detail?.username,
-            })}
-            onGoBack={location.state === 'new' ? handleGoBack : undefined}
+      <SubHeader
+        title={
+          responseDetail.data
+            ? t('response_detail.title', {
+                name: responseDetail.data?.author_detail?.username,
+              })
+            : ''
+        }
+        onGoBack={location.state === 'new' ? handleGoBack : undefined}
+      />
+      <Layout.FlexCol w="100%" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
+        {responseDetail.state === 'loading' && <ResponseLoader type="DETAIL" />}
+        {responseDetail.state === 'hasValue' && (
+          <ResponseItem
+            response={responseDetail.data}
+            commentType="DETAIL"
+            isMyPage={responseDetail.data.author_detail?.id === myProfile?.id}
           />
-          <Layout.FlexCol w="100%" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
-            <ResponseItem
-              response={responseDetail.data}
-              commentType="DETAIL"
-              isMyPage={responseDetail.data.author_detail?.id === myProfile?.id}
-            />
-          </Layout.FlexCol>
-          <Layout.FlexCol w="100%" flex={1}>
-            <CommentList
-              postType="Response"
-              post={responseDetail.data}
-              setReload={setReload}
-              inputFocus={inputFocus}
-              setInputFocus={setInputFocus}
-            />
-          </Layout.FlexCol>
-        </>
+        )}
+      </Layout.FlexCol>
+      {responseDetail.state === 'hasValue' && (
+        <Layout.FlexCol w="100%" flex={1}>
+          <CommentList
+            postType="Response"
+            post={responseDetail.data}
+            setReload={setReload}
+            inputFocus={inputFocus}
+            setInputFocus={setInputFocus}
+          />
+        </Layout.FlexCol>
       )}
       {responseDetail.state === 'hasError' && (
         <>

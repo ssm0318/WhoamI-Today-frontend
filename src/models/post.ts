@@ -135,3 +135,5 @@ export type Like = {
   user: string;
   user_detail: ActorDetail;
 };
+
+export type POST_DP_TYPE = 'LIST' | 'DETAIL';

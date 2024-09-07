@@ -2,7 +2,7 @@ import { MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Layout, Typo } from '@design-system';
-import { Note, POST_TYPE, Response } from '@models/post';
+import { Note, POST_DP_TYPE, POST_TYPE, Response } from '@models/post';
 import { User } from '@models/user';
 import Icon from '../icon/Icon';
 import LikeButton from '../like-button/LikeButton';
@@ -12,7 +12,7 @@ type PostFooterProps = {
   likedUserList: User[];
   isMyPage: boolean;
   post: Response | Note;
-  commentType?: 'LIST' | 'DETAIL';
+  commentType?: POST_DP_TYPE;
   showComments: () => void;
   setInputFocus: () => void;
 };
