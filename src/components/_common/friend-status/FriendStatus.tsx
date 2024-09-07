@@ -113,62 +113,60 @@ function FriendStatus({
 
   return (
     <>
-      {type === 'requests' || receivedFriendRequest(user) ? (
-        <Layout.FlexRow gap={8} w="100%">
-          <Button.Primary
-            status="normal"
-            text={t('confirm')}
-            sizing="stretch"
-            onClick={handleClickConfirm}
-          />
+      <Layout.FlexRow gap={8} w="100%">
+        {areFriends(user) ? (
           <Button.Secondary
             status="normal"
-            text={t('reject')}
+            text={t('unfriend')}
             sizing="stretch"
-            onClick={handleClickRejectFriendRequest}
+            onClick={handleClickUnfriend}
           />
-        </Layout.FlexRow>
-      ) : (
-        <Layout.FlexRow gap={8} w="100%">
-          {areFriends(user) ? (
+        ) : type === 'requests' || receivedFriendRequest(user) ? (
+          <>
+            <Button.Primary
+              status="normal"
+              text={t('confirm')}
+              sizing="stretch"
+              onClick={handleClickConfirm}
+            />
             <Button.Secondary
               status="normal"
-              text={t('unfriend')}
+              text={t('reject')}
               sizing="stretch"
-              onClick={handleClickUnfriend}
+              onClick={handleClickRejectFriendRequest}
             />
-          ) : (
-            <>
-              {type === 'sent_requests' || sentFriendRequest(user) ? (
-                <>
-                  <Button.Primary status="completed" text={t('requested')} sizing="stretch" />
-                  <Button.Secondary
-                    status="normal"
-                    text={t('cancel')}
-                    sizing="stretch"
-                    onClick={handleClickCancelRequest}
-                  />
-                </>
-              ) : (
-                <Button.Primary
-                  status="normal"
-                  text={t('request')}
-                  sizing="stretch"
-                  onClick={handleClickRequest}
-                />
-              )}
-              {type === 'recommended' && (
+          </>
+        ) : (
+          <>
+            {type === 'sent_requests' || sentFriendRequest(user) ? (
+              <>
+                <Button.Primary status="completed" text={t('requested')} sizing="stretch" />
                 <Button.Secondary
                   status="normal"
-                  text={t('block_recommendation')}
+                  text={t('cancel')}
                   sizing="stretch"
-                  onClick={handleClickDeleteRecommendation}
+                  onClick={handleClickCancelRequest}
                 />
-              )}
-            </>
-          )}
-        </Layout.FlexRow>
-      )}
+              </>
+            ) : (
+              <Button.Primary
+                status="normal"
+                text={t('request')}
+                sizing="stretch"
+                onClick={handleClickRequest}
+              />
+            )}
+            {type === 'recommended' && (
+              <Button.Secondary
+                status="normal"
+                text={t('block_recommendation')}
+                sizing="stretch"
+                onClick={handleClickDeleteRecommendation}
+              />
+            )}
+          </>
+        )}
+      </Layout.FlexRow>
       {isCancelFriendRequestDialogVisible && (
         <CommonDialog
           visible={isCancelFriendRequestDialogVisible}
