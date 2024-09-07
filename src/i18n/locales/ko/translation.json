@@ -449,6 +449,7 @@
         "request": "요청",
         "requested": "요청됨",
         "cancel": "취소",
+        "block_recommendation": "추천 삭제",
         "delete_request_dialog": {
           "title": "친구 요청을 삭제하시겠습니까?",
           "content": "{{user}}의 친구 요청 목록에 더이상 노출되지 않고, 요청 삭제에 대한 알림은 가지 않습니다.",

@@ -2,7 +2,6 @@ import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
-import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledFriendItem } from '@components/friends/explore-friends/friend-item/FriendItem.styled';
 import { Button, Layout, Typo } from '@design-system';
@@ -48,31 +47,7 @@ function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest 
     onClickConfirm?.();
   };
 
-  const handleClickDelete = async (e: MouseEvent) => {
-    e.stopPropagation();
-
-    switch (type) {
-      case 'requests':
-        await rejectFriendRequest(user.id);
-        break;
-      case 'search':
-        if (areFriends(user)) {
-          setIsBreakFriendDialogVisible(true);
-          return;
-        }
-        setIsCancelFriendRequestDialogVisible(true);
-        return;
-      case 'recommended':
-        await blockRecommendation(user.id);
-        break;
-      case 'sent_requests':
-        setIsCancelFriendRequestDialogVisible(true);
-        return;
-      default:
-    }
-
-    onClickDelete?.();
-  };
+  // TODO onClickDelete
 
   const handleClickRejectFriendRequest = (e: MouseEvent) => {
     e.stopPropagation();
@@ -87,6 +62,11 @@ function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest 
   const handleClickCancelRequest = (e: MouseEvent) => {
     e.stopPropagation();
     setIsCancelFriendRequestDialogVisible(true);
+  };
+
+  const handleClickBlockRecommendation = async (e: MouseEvent) => {
+    e.stopPropagation();
+    await blockRecommendation(user.id);
   };
 
   const handleConfirmCancelFriendRequestDialog = async () => {
@@ -164,7 +144,11 @@ function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest 
                 <Button.Primary status="normal" text={t('request')} onClick={handleClickRequest} />
               )}
               {type === 'recommended' && (
-                <Icon name="close" size={16} onClick={handleClickDelete} />
+                <Button.Secondary
+                  status="normal"
+                  text={t('block_recommendation')}
+                  onClick={handleClickBlockRecommendation}
+                />
               )}
             </>
           )}
