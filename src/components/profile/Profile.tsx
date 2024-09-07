@@ -34,6 +34,8 @@ function Profile({ user }: ProfileProps) {
     setFriendData(friend);
   }, [isMyPage, username]);
 
+  const reloadPage = () => window.location.reload();
+
   if (!user) return null;
 
   return (
@@ -66,11 +68,16 @@ function Profile({ user }: ProfileProps) {
           )}
         </Layout.FlexCol>
       </Layout.FlexRow>
-      {/* 친구 목록 */}
       {!isMyPage && (
         <>
-          {/* TODO: 친구 요청 관련 액션 이후 업데이트 로직 추가 */}
-          {!isMyProfile(user) && !areFriends(user) && <FriendStatus type="user" user={user} />}
+          {!isMyProfile(user) && !areFriends(user) && (
+            <FriendStatus
+              type="user"
+              user={user}
+              onClickCancel={reloadPage}
+              onClickRequest={reloadPage}
+            />
+          )}
           <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />
         </>
       )}
