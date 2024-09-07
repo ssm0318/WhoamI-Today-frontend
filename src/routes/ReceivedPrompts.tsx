@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader } from '@components/_common/loader/Loader.styled';
-import MainContainer from '@components/_common/main-container/MainContainer';
 import ReceivedPromptList from '@components/notification/received-prompt-list/ReceivedPromptList';
 import SubHeader from '@components/sub-header/SubHeader';
-import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { ResponseRequest } from '@models/api/question';
 import { getResponseRequests } from '@utils/apis/my';
+import { MainScrollContainer } from './Root';
 
 export default function ReceivedPrompts() {
   const [t] = useTranslation('translation', { keyPrefix: 'notifications' });
@@ -36,9 +35,9 @@ export default function ReceivedPrompts() {
   const [currentDate] = useState(() => new Date());
 
   return (
-    <MainContainer>
+    <MainScrollContainer>
       <SubHeader title="Received Prompts" />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" ph={16} pb={16}>
+      <Layout.FlexCol w="100%" ph={16} pb={16}>
         <ReceivedPromptList
           title={t('last_7_days')}
           responseRequests={recentRequests}
@@ -56,6 +55,6 @@ export default function ReceivedPrompts() {
           <Loader />
         </Layout.FlexRow>
       )}
-    </MainContainer>
+    </MainScrollContainer>
   );
 }
