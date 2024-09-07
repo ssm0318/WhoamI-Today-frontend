@@ -94,7 +94,6 @@ export default function FriendSearchList({ query }: Props) {
                   key={user.id}
                   type="search"
                   user={user}
-                  disableRequest={user.are_friends}
                   onClickDelete={handleClickDelete(user.id)}
                 />
               ))}
@@ -112,7 +111,6 @@ export default function FriendSearchList({ query }: Props) {
                   key={user.id}
                   type="search"
                   user={user}
-                  disableRequest={user.sent_friend_request_to}
                   onClickRequest={handleClickRequest(user.id)}
                 />
               ))}

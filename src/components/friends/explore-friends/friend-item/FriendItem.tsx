@@ -26,20 +26,12 @@ import {
 interface Props {
   type: 'sent_requests' | 'requests' | 'recommended' | 'search';
   user: User | UserProfile;
-  disableRequest?: boolean;
   onClickConfirm?: () => void;
   onClickDelete?: () => void;
   onClickRequest?: () => void;
 }
 
-function FriendItem({
-  type,
-  user,
-  disableRequest,
-  onClickConfirm,
-  onClickDelete,
-  onClickRequest,
-}: Props) {
+function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.friend_item' });
 
   const [isDeleteFriendRequestDialogVisible, setIsDeleteFriendRequestDialogVisible] =
@@ -121,28 +113,29 @@ function FriendItem({
         <ProfileImage imageUrl={user.profile_image} username={user.username} size={44} />
         <Typo type="label-large">{user.username}</Typo>
       </Layout.FlexRow>
-      {type === 'requests' && (
+      {type === 'requests' || receivedFriendRequest(user) ? (
         <Layout.FlexRow gap={8}>
           <Button.Primary status="normal" text={t('confirm')} onClick={handleClickConfirm} />
           <Button.Secondary status="normal" text={t('delete')} onClick={handleClickDelete} />
         </Layout.FlexRow>
-      )}
-      {(type === 'recommended' || type === 'search' || type === 'sent_requests') && (
+      ) : (
         <Layout.FlexRow gap={16} alignItems="center">
-          {!areFriends(user) && (
-            <Button.Primary
-              status={
-                disableRequest ? (type === 'sent_requests' ? 'completed' : 'disabled') : 'normal'
-              }
-              text={type === 'sent_requests' ? t('requested') : t('request')}
-              onClick={handleClickRequest}
-            />
-          )}
-          {(type === 'recommended' ||
-            areFriends(user) ||
-            sentFriendRequest(user) ||
-            receivedFriendRequest(user)) && (
+          {areFriends(user) ? (
             <Icon name="close" size={16} onClick={handleClickDelete} />
+          ) : (
+            <>
+              {type === 'sent_requests' || sentFriendRequest(user) ? (
+                <>
+                  <Button.Primary status="completed" text={t('requested')} />
+                  <Icon name="close" size={16} onClick={handleClickDelete} />
+                </>
+              ) : (
+                <Button.Primary status="normal" text={t('request')} onClick={handleClickRequest} />
+              )}
+              {type === 'recommended' && (
+                <Icon name="close" size={16} onClick={handleClickDelete} />
+              )}
+            </>
           )}
         </Layout.FlexRow>
       )}

@@ -73,7 +73,6 @@ export function SentRequestsModal({ visible, onClose }: Props) {
                     key={requestee_id}
                     type="sent_requests"
                     user={requestee_detail}
-                    disableRequest
                     onClickDelete={updateList(requestee_id)}
                   />
                 ))}
