@@ -1,0 +1,205 @@
+import { MouseEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
+import { Button, Layout } from '@design-system';
+import {
+  areFriends,
+  receivedFriendRequest,
+  sentFriendRequest,
+  User,
+  UserProfile,
+} from '@models/user';
+import { useBoundStore } from '@stores/useBoundStore';
+import {
+  acceptFriendRequest,
+  blockRecommendation,
+  breakFriend,
+  cancelFriendRequest,
+  rejectFriendRequest,
+  requestFriend,
+} from '@utils/apis/user';
+
+interface Props {
+  type: 'sent_requests' | 'requests' | 'recommended' | 'search' | 'user';
+  user: User | UserProfile;
+  /** 친구 요청 수락 */
+  onClickConfirm?: () => void;
+  /** 친구 요청 거절, 친구 삭제, 친구 추천 삭제 */
+  onClickDelete?: () => void;
+  /** 친구 요청 */
+  onClickRequest?: () => void;
+  /** 친구 요청 취소 */
+  onClickCancel?: () => void;
+}
+
+function FriendStatus({
+  type,
+  user,
+  onClickConfirm,
+  onClickDelete,
+  onClickRequest,
+  onClickCancel,
+}: Props) {
+  const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.friend_item' });
+
+  const [isCancelFriendRequestDialogVisible, setIsCancelFriendRequestDialogVisible] =
+    useState(false);
+  const [isRejectFriendRequestDialogVisible, setIsRejectFriendRequestDialogVisible] =
+    useState(false);
+  const [isBreakFriendDialogVisible, setIsBreakFriendDialogVisible] = useState(false);
+
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
+
+  const handleClickConfirm = async (e: MouseEvent) => {
+    e.stopPropagation();
+    await acceptFriendRequest(user.id);
+    onClickConfirm?.();
+  };
+
+  const handleClickRejectFriendRequest = (e: MouseEvent) => {
+    e.stopPropagation();
+    setIsRejectFriendRequestDialogVisible(true);
+  };
+
+  const handleClickUnfriend = (e: MouseEvent) => {
+    e.stopPropagation();
+    setIsBreakFriendDialogVisible(true);
+  };
+
+  const handleClickCancelRequest = (e: MouseEvent) => {
+    e.stopPropagation();
+    setIsCancelFriendRequestDialogVisible(true);
+  };
+
+  const handleClickBlockRecommendation = async (e: MouseEvent) => {
+    e.stopPropagation();
+    await blockRecommendation(user.id);
+    onClickDelete?.();
+  };
+
+  const handleConfirmCancelFriendRequestDialog = async () => {
+    await cancelFriendRequest(user.id);
+    setIsCancelFriendRequestDialogVisible(false);
+    onClickCancel?.();
+  };
+
+  const handleConfirmRejectFriendRequestDialog = async () => {
+    await rejectFriendRequest(user.id);
+    setIsRejectFriendRequestDialogVisible(false);
+    onClickDelete?.();
+  };
+
+  const handleConfirmBreakFriendDialog = async () => {
+    await breakFriend(user.id);
+    setIsBreakFriendDialogVisible(false);
+    onClickDelete?.();
+  };
+
+  const handleClickRequest = async (e: MouseEvent) => {
+    e.stopPropagation();
+    await requestFriend({
+      userId: user.id,
+      onSuccess: () => openToast({ message: t('friend_request_success') }),
+      onError: () => openToast({ message: t('temporary_error') }),
+    });
+    onClickRequest?.();
+  };
+
+  return (
+    <>
+      {type === 'requests' || receivedFriendRequest(user) ? (
+        <Layout.FlexRow gap={8}>
+          <Button.Primary
+            status="normal"
+            text={t('confirm')}
+            sizing="stretch"
+            onClick={handleClickConfirm}
+          />
+          <Button.Secondary
+            status="normal"
+            text={t('reject')}
+            sizing="stretch"
+            onClick={handleClickRejectFriendRequest}
+          />
+        </Layout.FlexRow>
+      ) : (
+        <Layout.FlexRow gap={8}>
+          {areFriends(user) ? (
+            <Button.Secondary
+              status="normal"
+              text={t('unfriend')}
+              sizing="stretch"
+              onClick={handleClickUnfriend}
+            />
+          ) : (
+            <>
+              {type === 'sent_requests' || sentFriendRequest(user) ? (
+                <>
+                  <Button.Primary status="completed" text={t('requested')} sizing="stretch" />
+                  <Button.Secondary
+                    status="normal"
+                    text={t('cancel')}
+                    sizing="stretch"
+                    onClick={handleClickCancelRequest}
+                  />
+                </>
+              ) : (
+                <Button.Primary
+                  status="normal"
+                  text={t('request')}
+                  sizing="stretch"
+                  onClick={handleClickRequest}
+                />
+              )}
+              {type === 'recommended' && (
+                <Button.Secondary
+                  status="normal"
+                  text={t('block_recommendation')}
+                  sizing="stretch"
+                  onClick={handleClickBlockRecommendation}
+                />
+              )}
+            </>
+          )}
+        </Layout.FlexRow>
+      )}
+      {isCancelFriendRequestDialogVisible && (
+        <CommonDialog
+          visible={isCancelFriendRequestDialogVisible}
+          title={t('delete_request_dialog.title')}
+          content={t('delete_request_dialog.content', { user: user.username })}
+          cancelText={t('delete_request_dialog.cancel')}
+          confirmText={t('delete_request_dialog.confirm')}
+          confirmTextColor="WARNING"
+          onClickConfirm={handleConfirmCancelFriendRequestDialog}
+          onClickClose={() => setIsCancelFriendRequestDialogVisible(false)}
+        />
+      )}
+      {isRejectFriendRequestDialogVisible && (
+        <CommonDialog
+          visible={isRejectFriendRequestDialogVisible}
+          title={t('reject_request_dialog.title')}
+          content={t('reject_request_dialog.content', { user: user.username })}
+          cancelText={t('reject_request_dialog.cancel')}
+          confirmText={t('reject_request_dialog.confirm')}
+          confirmTextColor="WARNING"
+          onClickConfirm={handleConfirmRejectFriendRequestDialog}
+          onClickClose={() => setIsRejectFriendRequestDialogVisible(false)}
+        />
+      )}
+      {isBreakFriendDialogVisible && (
+        <CommonDialog
+          visible={isBreakFriendDialogVisible}
+          title={t('break_friends_dialog.title')}
+          cancelText={t('break_friends_dialog.cancel')}
+          confirmText={t('break_friends_dialog.confirm')}
+          confirmTextColor="WARNING"
+          onClickConfirm={handleConfirmBreakFriendDialog}
+          onClickClose={() => setIsBreakFriendDialogVisible(false)}
+        />
+      )}
+    </>
+  );
+}
+
+export default FriendStatus;
