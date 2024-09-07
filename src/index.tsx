@@ -19,7 +19,6 @@ import Chats from './routes/Chats';
 import CheckInEdit from './routes/check-in/CheckInEdit';
 import { EditChats } from './routes/edit-chats/EditChats';
 import ForgotPassword from './routes/ForgotPassword';
-import FriendPage from './routes/FriendPage';
 import EditFriends from './routes/friends/EditFriends';
 import ExploreFriends from './routes/friends/ExploreFriends';
 import Friends from './routes/friends/Friends';
@@ -49,6 +48,7 @@ import ResearchIntro from './routes/sign-up/ResearchIntro';
 import UserName from './routes/sign-up/UserName';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
+import UserPage from './routes/UserPage';
 
 const router = createBrowserRouter([
   // intro route
@@ -100,7 +100,7 @@ const router = createBrowserRouter([
       {
         path: 'users/:username',
         children: [
-          { path: '', element: <FriendPage /> },
+          { path: '', element: <UserPage /> },
           {
             path: 'responses',
             element: <AllResponses />,
