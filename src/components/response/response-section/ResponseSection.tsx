@@ -13,6 +13,7 @@ import { getMyResponses } from '@utils/apis/my';
 import { getUserResponses } from '@utils/apis/user';
 import MoreResponseButton from '../more-response-button/MoreResponseButton';
 import ResponseItem from '../response-item/ResponseItem';
+import ResponseLoader from '../response-loader/ResponseLoader';
 import * as S from './ResponseSection.styled';
 
 type ResponseSectionProps = {
@@ -57,17 +58,14 @@ function ResponseSection({ username }: ResponseSectionProps) {
         </Typo>
         {isMoreButtonVisible && <Icon onClick={handleClickMore} name="arrow_right" />}
       </Layout.FlexRow>
-      {responses.state === 'hasError' && (
-        <S.ResponseSectionWrapper w="100%" pr={12}>
+      <S.ResponseSectionWrapper w="100%" pr={12}>
+        {responses.state === 'hasError' ? (
           <CommonError />
-        </S.ResponseSectionWrapper>
-      )}
-      {responses.state === 'hasValue' && (
-        <S.ResponseSectionWrapper w="100%" pr={12}>
+        ) : (
           <Layout.FlexRow
             h="100%"
             mt={12}
-            w={responses.data.results?.length === 0 ? '100%' : undefined}
+            w={responses?.data?.results?.length === 0 ? '100%' : undefined}
           >
             <Layout.FlexRow w="100%" gap={8} h="100%">
               {!username && (
@@ -86,13 +84,19 @@ function ResponseSection({ username }: ResponseSectionProps) {
                   </Typo>
                 </Layout.FlexCol>
               )}
-              {!responses.data.results?.length ? (
+              {responses.state === 'loading' && (
+                <>
+                  <ResponseLoader />
+                  <ResponseLoader />
+                </>
+              )}
+              {responses.state === 'hasValue' && !responses.data.results?.length ? (
                 <Layout.FlexRow alignItems="center" h="100%" justifyContent="center" w="100%">
                   <NoContents text={t('no_contents.responses')} pv={20} />
                 </Layout.FlexRow>
               ) : (
-                responses.data.results
-                  .slice(0, RESPONSE_VIEW_MAX_COUNT)
+                responses.data?.results
+                  ?.slice(0, RESPONSE_VIEW_MAX_COUNT)
                   .map((response) => (
                     <ResponseItem
                       key={response.id}
@@ -105,8 +109,9 @@ function ResponseSection({ username }: ResponseSectionProps) {
             </Layout.FlexRow>
             {isMoreButtonVisible && <MoreResponseButton username={username} />}
           </Layout.FlexRow>
-        </S.ResponseSectionWrapper>
-      )}
+        )}
+      </S.ResponseSectionWrapper>
+
       {selectPrompt && (
         <SelectPromptSheet visible={selectPrompt} closeBottomSheet={() => setSelectPrompt(false)} />
       )}
