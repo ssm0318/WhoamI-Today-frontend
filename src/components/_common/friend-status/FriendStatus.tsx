@@ -108,7 +108,7 @@ function FriendStatus({
   return (
     <>
       {type === 'requests' || receivedFriendRequest(user) ? (
-        <Layout.FlexRow gap={8}>
+        <Layout.FlexRow gap={8} w="100%">
           <Button.Primary
             status="normal"
             text={t('confirm')}
@@ -123,7 +123,7 @@ function FriendStatus({
           />
         </Layout.FlexRow>
       ) : (
-        <Layout.FlexRow gap={8}>
+        <Layout.FlexRow gap={8} w="100%">
           {areFriends(user) ? (
             <Button.Secondary
               status="normal"

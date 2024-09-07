@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import FriendStatus from '@components/_common/friend-status/FriendStatus';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { MyProfile } from '@models/api/user';
-import { UserProfile } from '@models/user';
+import { areFriends, isMyProfile, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
@@ -66,7 +67,13 @@ function Profile({ user }: ProfileProps) {
         </Layout.FlexCol>
       </Layout.FlexRow>
       {/* 친구 목록 */}
-      {!isMyPage && <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />}
+      {!isMyPage && (
+        <>
+          {/* TODO: 친구 요청 관련 액션 이후 업데이트 로직 추가 */}
+          {!isMyProfile(user) && !areFriends(user) && <FriendStatus type="user" user={user} />}
+          <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />
+        </>
+      )}
       {/* 체크인 */}
       <CheckInSection user={user} />
     </Layout.FlexCol>
