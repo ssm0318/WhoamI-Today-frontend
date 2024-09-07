@@ -456,6 +456,7 @@
         "delete": "Delete",
         "request": "Request",
         "requested": "Requested",
+        "cancel": "Cancel",
         "delete_request_dialog": {
           "title": "Delete request?",
           "content": "{{user}} will not see your friend request anymore and will not be notified.",
