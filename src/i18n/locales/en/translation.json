@@ -451,6 +451,7 @@
       },
       "friend_item": {
         "confirm": "Confirm",
+        "reject": "Reject",
         "delete": "Delete",
         "request": "Request",
         "requested": "Requested",
@@ -459,6 +460,12 @@
           "content": "{{user}} will not see your friend request anymore and will not be notified.",
           "cancel": "Cancel",
           "confirm": "Delete"
+        },
+        "reject_request_dialog": {
+          "title": "Do you want to reject the friend request?",
+          "content": "{{user}} will not know that you rejected the friend request and will not be notified.",
+          "cancel": "Cancel",
+          "confirm": "Reject the friend request"
         },
         "break_friends_dialog": {
           "title": "Are you sure you want to delete your friend?",

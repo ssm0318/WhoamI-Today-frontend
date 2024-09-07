@@ -34,7 +34,9 @@ interface Props {
 function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.friend_item' });
 
-  const [isDeleteFriendRequestDialogVisible, setIsDeleteFriendRequestDialogVisible] =
+  const [isCancelFriendRequestDialogVisible, setIsCancelFriendRequestDialogVisible] =
+    useState(false);
+  const [isRejectFriendRequestDialogVisible, setIsRejectFriendRequestDialogVisible] =
     useState(false);
   const [isBreakFriendDialogVisible, setIsBreakFriendDialogVisible] = useState(false);
 
@@ -58,13 +60,13 @@ function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest 
           setIsBreakFriendDialogVisible(true);
           return;
         }
-        setIsDeleteFriendRequestDialogVisible(true);
+        setIsCancelFriendRequestDialogVisible(true);
         return;
       case 'recommended':
         await blockRecommendation(user.id);
         break;
       case 'sent_requests':
-        setIsDeleteFriendRequestDialogVisible(true);
+        setIsCancelFriendRequestDialogVisible(true);
         return;
       default:
     }
@@ -72,9 +74,20 @@ function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest 
     onClickDelete?.();
   };
 
-  const handleConfirmDeleteFriendRequestDialog = async () => {
+  const handleClickRejectFriendRequest = (e: MouseEvent) => {
+    e.stopPropagation();
+    setIsRejectFriendRequestDialogVisible(true);
+  };
+
+  const handleConfirmCancelFriendRequestDialog = async () => {
     await cancelFriendRequest(user.id);
-    setIsDeleteFriendRequestDialogVisible(false);
+    setIsCancelFriendRequestDialogVisible(false);
+    onClickDelete?.();
+  };
+
+  const handleConfirmRejectFriendRequestDialog = async () => {
+    await rejectFriendRequest(user.id);
+    setIsRejectFriendRequestDialogVisible(false);
     onClickDelete?.();
   };
 
@@ -116,7 +129,11 @@ function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest 
       {type === 'requests' || receivedFriendRequest(user) ? (
         <Layout.FlexRow gap={8}>
           <Button.Primary status="normal" text={t('confirm')} onClick={handleClickConfirm} />
-          <Button.Secondary status="normal" text={t('delete')} onClick={handleClickDelete} />
+          <Button.Secondary
+            status="normal"
+            text={t('reject')}
+            onClick={handleClickRejectFriendRequest}
+          />
         </Layout.FlexRow>
       ) : (
         <Layout.FlexRow gap={16} alignItems="center">
@@ -139,6 +156,30 @@ function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest 
           )}
         </Layout.FlexRow>
       )}
+      {isCancelFriendRequestDialogVisible && (
+        <CommonDialog
+          visible={isCancelFriendRequestDialogVisible}
+          title={t('delete_request_dialog.title')}
+          content={t('delete_request_dialog.content', { user: user.username })}
+          cancelText={t('delete_request_dialog.cancel')}
+          confirmText={t('delete_request_dialog.confirm')}
+          confirmTextColor="WARNING"
+          onClickConfirm={handleConfirmCancelFriendRequestDialog}
+          onClickClose={() => setIsCancelFriendRequestDialogVisible(false)}
+        />
+      )}
+      {isRejectFriendRequestDialogVisible && (
+        <CommonDialog
+          visible={isRejectFriendRequestDialogVisible}
+          title={t('reject_request_dialog.title')}
+          content={t('reject_request_dialog.content', { user: user.username })}
+          cancelText={t('reject_request_dialog.cancel')}
+          confirmText={t('reject_request_dialog.confirm')}
+          confirmTextColor="WARNING"
+          onClickConfirm={handleConfirmRejectFriendRequestDialog}
+          onClickClose={() => setIsRejectFriendRequestDialogVisible(false)}
+        />
+      )}
       {isBreakFriendDialogVisible && (
         <CommonDialog
           visible={isBreakFriendDialogVisible}
@@ -148,19 +189,6 @@ function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest 
           confirmTextColor="WARNING"
           onClickConfirm={handleConfirmBreakFriendDialog}
           onClickClose={() => setIsBreakFriendDialogVisible(false)}
-        />
-      )}
-
-      {isDeleteFriendRequestDialogVisible && (
-        <CommonDialog
-          visible={isDeleteFriendRequestDialogVisible}
-          title={t('delete_request_dialog.title')}
-          content={t('delete_request_dialog.content', { user: user.username })}
-          cancelText={t('delete_request_dialog.cancel')}
-          confirmText={t('delete_request_dialog.confirm')}
-          confirmTextColor="WARNING"
-          onClickConfirm={handleConfirmDeleteFriendRequestDialog}
-          onClickClose={() => setIsDeleteFriendRequestDialogVisible(false)}
         />
       )}
     </StyledFriendItem>

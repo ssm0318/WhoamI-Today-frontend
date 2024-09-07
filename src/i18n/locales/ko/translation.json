@@ -443,6 +443,7 @@
       },
       "friend_item": {
         "confirm": "수락",
+        "reject": "거절",
         "delete": "삭제",
         "request": "요청",
         "requested": "요청됨",
@@ -451,6 +452,12 @@
           "content": "{{user}}의 친구 요청 목록에 더이상 노출되지 않고, 요청 삭제에 대한 알림은 가지 않습니다.",
           "cancel": "취소",
           "confirm": "삭제"
+        },
+        "reject_request_dialog": {
+          "title": "친구 요청을 거절하시겠습니까?",
+          "content": "{{user}}님은 친구 요청을 거절한 사실을 알 수 없으며, 거절에 대한 알림은 가지 않습니다.",
+          "cancel": "취소",
+          "confirm": "친구 요청 거절"
         },
         "break_friends_dialog": {
           "title": "정말로 친구를 삭제하시겠습니까?",
