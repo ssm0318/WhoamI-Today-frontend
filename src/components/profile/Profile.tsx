@@ -74,7 +74,7 @@ function Profile({ user }: ProfileProps) {
             <FriendStatus
               type="user"
               user={user}
-              onClickCancel={reloadPage}
+              onClickCancelRequest={reloadPage}
               onClickRequest={reloadPage}
             />
           )}

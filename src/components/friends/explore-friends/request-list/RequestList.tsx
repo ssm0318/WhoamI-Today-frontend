@@ -75,7 +75,7 @@ export default function RequestList() {
               type="requests"
               user={requester_detail}
               onClickConfirm={updateList(requester_id)}
-              onClickDelete={updateList(requester_id)}
+              onClickReject={updateList(requester_id)}
             />
           ))}
           <div ref={targetRef} />

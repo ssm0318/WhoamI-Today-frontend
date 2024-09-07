@@ -73,7 +73,7 @@ export function SentRequestsModal({ visible, onClose }: Props) {
                     key={requestee_id}
                     type="sent_requests"
                     user={requestee_detail}
-                    onClickCancel={updateList(requestee_id)}
+                    onClickCancelRequest={updateList(requestee_id)}
                   />
                 ))}
                 <div ref={targetRef} />

@@ -61,7 +61,7 @@ export default function FriendSearchList({ query }: Props) {
     });
   };
 
-  const handleClickDelete = (userId: number) => () => {
+  const handleClickUnfriend = (userId: number) => () => {
     setSearchList((prev) => {
       return prev?.reduce<UserProfile[]>((result, curr) => {
         if (curr.id !== userId) {
@@ -110,7 +110,7 @@ export default function FriendSearchList({ query }: Props) {
                   key={user.id}
                   type="search"
                   user={user}
-                  onClickDelete={handleClickDelete(user.id)}
+                  onClickUnfriend={handleClickUnfriend(user.id)}
                 />
               ))}
             </Layout.FlexCol>
@@ -128,7 +128,7 @@ export default function FriendSearchList({ query }: Props) {
                   type="search"
                   user={user}
                   onClickRequest={handleClickRequest(user.id)}
-                  onClickCancel={handleClickCancelRequest(user.id)}
+                  onClickCancelRequest={handleClickCancelRequest(user.id)}
                 />
               ))}
             </Layout.FlexCol>

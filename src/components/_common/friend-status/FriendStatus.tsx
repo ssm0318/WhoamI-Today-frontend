@@ -24,21 +24,27 @@ export interface Props {
   user: User | UserProfile;
   /** 친구 요청 수락 */
   onClickConfirm?: () => void;
-  /** 친구 요청 거절, 친구 삭제, 친구 추천 삭제 */
-  onClickDelete?: () => void;
+  /** 친구 요청 거절 */
+  onClickReject?: () => void;
+  /** 친구 삭제 */
+  onClickUnfriend?: () => void;
+  /** 친구 추천 삭제 */
+  onClickDeleteRecommendation?: () => void;
   /** 친구 요청 */
   onClickRequest?: () => void;
   /** 친구 요청 취소 */
-  onClickCancel?: () => void;
+  onClickCancelRequest?: () => void;
 }
 
 function FriendStatus({
   type,
   user,
   onClickConfirm,
-  onClickDelete,
+  onClickReject,
+  onClickUnfriend,
+  onClickDeleteRecommendation,
   onClickRequest,
-  onClickCancel,
+  onClickCancelRequest,
 }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.friend_item' });
 
@@ -46,7 +52,7 @@ function FriendStatus({
     useState(false);
   const [isRejectFriendRequestDialogVisible, setIsRejectFriendRequestDialogVisible] =
     useState(false);
-  const [isBreakFriendDialogVisible, setIsBreakFriendDialogVisible] = useState(false);
+  const [isUnfriendDialogVisible, setIsUnfriendDialogVisible] = useState(false);
 
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
@@ -63,7 +69,7 @@ function FriendStatus({
 
   const handleClickUnfriend = (e: MouseEvent) => {
     e.stopPropagation();
-    setIsBreakFriendDialogVisible(true);
+    setIsUnfriendDialogVisible(true);
   };
 
   const handleClickCancelRequest = (e: MouseEvent) => {
@@ -71,28 +77,28 @@ function FriendStatus({
     setIsCancelFriendRequestDialogVisible(true);
   };
 
-  const handleClickBlockRecommendation = async (e: MouseEvent) => {
+  const handleClickDeleteRecommendation = async (e: MouseEvent) => {
     e.stopPropagation();
     await blockRecommendation(user.id);
-    onClickDelete?.();
+    onClickDeleteRecommendation?.();
   };
 
   const handleConfirmCancelFriendRequestDialog = async () => {
     await cancelFriendRequest(user.id);
     setIsCancelFriendRequestDialogVisible(false);
-    onClickCancel?.();
+    onClickCancelRequest?.();
   };
 
   const handleConfirmRejectFriendRequestDialog = async () => {
     await rejectFriendRequest(user.id);
     setIsRejectFriendRequestDialogVisible(false);
-    onClickDelete?.();
+    onClickReject?.();
   };
 
-  const handleConfirmBreakFriendDialog = async () => {
+  const handleConfirmUnriendDialog = async () => {
     await breakFriend(user.id);
-    setIsBreakFriendDialogVisible(false);
-    onClickDelete?.();
+    setIsUnfriendDialogVisible(false);
+    onClickUnfriend?.();
   };
 
   const handleClickRequest = async (e: MouseEvent) => {
@@ -156,7 +162,7 @@ function FriendStatus({
                   status="normal"
                   text={t('block_recommendation')}
                   sizing="stretch"
-                  onClick={handleClickBlockRecommendation}
+                  onClick={handleClickDeleteRecommendation}
                 />
               )}
             </>
@@ -187,15 +193,15 @@ function FriendStatus({
           onClickClose={() => setIsRejectFriendRequestDialogVisible(false)}
         />
       )}
-      {isBreakFriendDialogVisible && (
+      {isUnfriendDialogVisible && (
         <CommonDialog
-          visible={isBreakFriendDialogVisible}
+          visible={isUnfriendDialogVisible}
           title={t('break_friends_dialog.title')}
           cancelText={t('break_friends_dialog.cancel')}
           confirmText={t('break_friends_dialog.confirm')}
           confirmTextColor="WARNING"
-          onClickConfirm={handleConfirmBreakFriendDialog}
-          onClickClose={() => setIsBreakFriendDialogVisible(false)}
+          onClickConfirm={handleConfirmUnriendDialog}
+          onClickClose={() => setIsUnfriendDialogVisible(false)}
         />
       )}
     </>
