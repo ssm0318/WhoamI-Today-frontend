@@ -19,7 +19,7 @@ import {
   requestFriend,
 } from '@utils/apis/user';
 
-interface Props {
+export interface Props {
   type: 'sent_requests' | 'requests' | 'recommended' | 'search' | 'user';
   user: User | UserProfile;
   /** 친구 요청 수락 */
