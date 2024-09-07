@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Loader } from '@components/_common/loader/Loader.styled';
+import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import { Layout, Typo } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
