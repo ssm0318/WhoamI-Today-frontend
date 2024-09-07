@@ -25,12 +25,24 @@ import {
 interface Props {
   type: 'sent_requests' | 'requests' | 'recommended' | 'search';
   user: User | UserProfile;
+  /** 친구 요청 수락 */
   onClickConfirm?: () => void;
+  /** 친구 요청 거절, 친구 삭제, 친구 추천 삭제 */
   onClickDelete?: () => void;
+  /** 친구 요청 */
   onClickRequest?: () => void;
+  /** 친구 요청 취소 */
+  onClickCancel?: () => void;
 }
 
-function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest }: Props) {
+function FriendItem({
+  type,
+  user,
+  onClickConfirm,
+  onClickDelete,
+  onClickRequest,
+  onClickCancel,
+}: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.friend_item' });
 
   const [isCancelFriendRequestDialogVisible, setIsCancelFriendRequestDialogVisible] =
@@ -46,8 +58,6 @@ function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest 
     await acceptFriendRequest(user.id);
     onClickConfirm?.();
   };
-
-  // TODO onClickDelete
 
   const handleClickRejectFriendRequest = (e: MouseEvent) => {
     e.stopPropagation();
@@ -67,12 +77,13 @@ function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest 
   const handleClickBlockRecommendation = async (e: MouseEvent) => {
     e.stopPropagation();
     await blockRecommendation(user.id);
+    onClickDelete?.();
   };
 
   const handleConfirmCancelFriendRequestDialog = async () => {
     await cancelFriendRequest(user.id);
     setIsCancelFriendRequestDialogVisible(false);
-    onClickDelete?.();
+    onClickCancel?.();
   };
 
   const handleConfirmRejectFriendRequestDialog = async () => {

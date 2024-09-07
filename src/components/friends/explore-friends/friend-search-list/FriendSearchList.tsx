@@ -77,6 +77,22 @@ export default function FriendSearchList({ query }: Props) {
     });
   };
 
+  const handleClickCancelRequest = (userId: number) => () => {
+    setSearchList((prev) => {
+      return prev?.reduce<UserProfile[]>((result, curr) => {
+        if (curr.id !== userId) {
+          result.push(curr);
+        } else {
+          result.push({
+            ...curr,
+            sent_friend_request_to: false,
+          });
+        }
+        return result;
+      }, []);
+    });
+  };
+
   if (!searchList) return <Loader />;
   return (
     <Layout.FlexCol w="100%" ph={16} gap={8}>
@@ -112,6 +128,7 @@ export default function FriendSearchList({ query }: Props) {
                   type="search"
                   user={user}
                   onClickRequest={handleClickRequest(user.id)}
+                  onClickCancel={handleClickCancelRequest(user.id)}
                 />
               ))}
             </Layout.FlexCol>
