@@ -79,6 +79,11 @@ function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest 
     setIsRejectFriendRequestDialogVisible(true);
   };
 
+  const handleClickUnfriend = (e: MouseEvent) => {
+    e.stopPropagation();
+    setIsBreakFriendDialogVisible(true);
+  };
+
   const handleConfirmCancelFriendRequestDialog = async () => {
     await cancelFriendRequest(user.id);
     setIsCancelFriendRequestDialogVisible(false);
@@ -138,7 +143,7 @@ function FriendItem({ type, user, onClickConfirm, onClickDelete, onClickRequest 
       ) : (
         <Layout.FlexRow gap={16} alignItems="center">
           {areFriends(user) ? (
-            <Icon name="close" size={16} onClick={handleClickDelete} />
+            <Button.Secondary status="normal" text={t('unfriend')} onClick={handleClickUnfriend} />
           ) : (
             <>
               {type === 'sent_requests' || sentFriendRequest(user) ? (

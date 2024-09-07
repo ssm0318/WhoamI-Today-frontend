@@ -159,7 +159,7 @@
         "add_to_favorite": "즐겨찾기",
         "remove_from_favorite": "즐겨찾기 삭제",
         "manage_friend_groups": "친구 그룹 관리",
-        "unfriend": "친구 취소",
+        "unfriend": "친구 삭제",
         "block": "차단",
         "report": "신고"
       },
@@ -444,6 +444,7 @@
       "friend_item": {
         "confirm": "수락",
         "reject": "거절",
+        "unfriend": "친구 삭제",
         "delete": "삭제",
         "request": "요청",
         "requested": "요청됨",

@@ -452,6 +452,7 @@
       "friend_item": {
         "confirm": "Confirm",
         "reject": "Reject",
+        "unfriend": "Unfriend",
         "delete": "Delete",
         "request": "Request",
         "requested": "Requested",
