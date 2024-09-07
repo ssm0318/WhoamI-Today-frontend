@@ -8,14 +8,14 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
-import { Response } from '@models/post';
+import { POST_DP_TYPE, Response } from '@models/post';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
 interface ResponseItemProps {
   response: Response;
   isMyPage?: boolean;
-  commentType?: 'LIST' | 'DETAIL';
+  commentType?: POST_DP_TYPE;
   refresh?: () => Promise<void>;
 }
 
@@ -156,7 +156,7 @@ function ResponseItem({
 export default ResponseItem;
 
 const PROFILE_IMAGE_SIZE = 44;
-const WRAPPER_PADDING = 12;
+export const WRAPPER_PADDING = 12;
 
 const RESPONSE_GAP = 16;
 const RESPONSE_MARGIN = 12;
