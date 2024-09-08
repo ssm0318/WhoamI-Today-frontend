@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
-import Icon from '@components/_common/icon/Icon';
 import AvailabilityChip from '@components/profile/availability-chip/AvailabilityChip';
 import { Layout, Typo } from '@design-system';
 import { Availability } from '@models/checkIn';
@@ -36,7 +35,6 @@ function AvailabilitySelectBottomSheet({
   return (
     <BottomModal visible={visible} onClose={closeBottomSheet}>
       <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE">
-        <Icon name="home_indicator" />
         <Typo type="title-large">{t('title')}</Typo>
         <Layout.FlexRow
           gap={6}

@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
-import Icon from '@components/_common/icon/Icon';
 import SearchInput from '@components/_common/search-input/SearchInput';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -58,7 +57,6 @@ function MusicSearchBottomSheet({
   return (
     <BottomModal visible={visible} onClose={closeBottomSheet} heightMode="full">
       <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE">
-        <Icon name="home_indicator" />
         <Typo type="title-large">{t('title')}</Typo>
         <Layout.FlexCol ph={16} mt={12} w="100%">
           {/* Search Input */}

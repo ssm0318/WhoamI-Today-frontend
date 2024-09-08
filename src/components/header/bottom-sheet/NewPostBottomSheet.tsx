@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import Divider from '@components/_common/divider/Divider';
-import Icon from '@components/_common/icon/Icon';
 import { Font, Layout, SvgIcon, Typo } from '@design-system';
 import { IconNames } from 'src/design-system/SvgIcon/SvgIcon.types';
 import { NewPostButton } from './NewPostBottomSheet.styled';
@@ -42,7 +41,6 @@ function NewPostBottomSheet({ visible, closeBottomSheet, setSelectPrompt }: Prop
   return (
     <BottomModal visible={visible} onClose={closeBottomSheet}>
       <Layout.FlexCol alignItems="center" pb={34} w="100%" bgColor="WHITE">
-        <Icon name="home_indicator" />
         <Typo type="title-large">Create</Typo>
         <Layout.FlexCol gap={12} pt={24} pb={24} w="100%">
           {BOTTOM_SHEET_LIST.map((menu) => (

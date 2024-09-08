@@ -120,7 +120,6 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
   return createPortal(
     <BottomModal visible={visible} onClose={onClose} heightMode="full">
       <SendPromptModalContainer>
-        <Layout.LayoutBase w={75} h={5} bgColor="MEDIUM_GRAY" />
         <SendPromptModalTitle type="title-large">
           {t('prompts.send_this_prompt_to')}
         </SendPromptModalTitle>
