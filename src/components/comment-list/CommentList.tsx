@@ -79,6 +79,12 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
             }}
           />
         ))}
+        <div ref={targetRef} />
+        {isLoading && comments.length !== 0 && (
+          <Layout.FlexRow w="100%" h={40}>
+            <Loader />
+          </Layout.FlexRow>
+        )}
       </Layout.FlexCol>
       <StyledCommentListFooter ref={footerRef} b={BOTTOM_TABBAR_HEIGHT} w="100%" bgColor="WHITE">
         <Layout.FlexRow w="100%">
@@ -112,12 +118,6 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
         close={closeDeleteAlert}
         onClickConfirm={confirmDeleteAlert}
       />
-      <div ref={targetRef} />
-      {isLoading && (
-        <Layout.FlexRow w="100%" h={40}>
-          <Loader />
-        </Layout.FlexRow>
-      )}
     </Layout.FlexCol>
   );
 }

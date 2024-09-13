@@ -7,14 +7,14 @@ import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import { Layout, Typo } from '@design-system';
-import { Note } from '@models/post';
+import { Note, POST_DP_TYPE } from '@models/post';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import NoteImageList from '../note-image-list/NoteImageList';
 
 interface NoteItemProps {
   note: Note;
   isMyPage: boolean;
-  commentType?: 'LIST' | 'DETAIL';
+  commentType?: POST_DP_TYPE;
   refresh?: () => Promise<void>;
 }
 

@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CommonError from '@components/_common/common-error/CommonError';
-import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import CommentList from '@components/comment-list/CommentList';
 import NoteItem from '@components/note/note-item/NoteItem';
+import NoteLoader from '@components/note/note-loader/NoteLoader';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
@@ -50,30 +50,34 @@ export function NoteDetail() {
 
   return (
     <MainContainer>
-      {noteDetail.state === 'loading' && <Loader />}
-      {noteDetail.state === 'hasValue' && (
-        <>
-          <SubHeader
-            title={t('note_detail.title', { username: noteDetail.data.author_detail?.username })}
-            onGoBack={location.state === 'new' ? handleGoBack : undefined}
+      <SubHeader
+        title={
+          noteDetail.data
+            ? t('note_detail.title', { username: noteDetail.data.author_detail?.username })
+            : ''
+        }
+        onGoBack={location.state === 'new' ? handleGoBack : undefined}
+      />
+      <Layout.FlexCol w="100%" alignItems="center" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
+        {noteDetail.state === 'loading' && <NoteLoader />}
+        {noteDetail.state === 'hasValue' && (
+          <NoteItem
+            note={noteDetail.data}
+            isMyPage={noteDetail.data.author_detail?.id === myProfile?.id}
+            commentType="DETAIL"
           />
-          <Layout.FlexCol w="100%" alignItems="center" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
-            <NoteItem
-              note={noteDetail.data}
-              isMyPage={noteDetail.data.author_detail?.id === myProfile?.id}
-              commentType="DETAIL"
-            />
-          </Layout.FlexCol>
-          <Layout.FlexCol w="100%" flex={1}>
-            <CommentList
-              postType="Note"
-              post={noteDetail.data}
-              setReload={setReload}
-              inputFocus={inputFocus}
-              setInputFocus={setInputFocus}
-            />
-          </Layout.FlexCol>
-        </>
+        )}
+      </Layout.FlexCol>
+      {noteDetail.state === 'hasValue' && (
+        <Layout.FlexCol w="100%" flex={1}>
+          <CommentList
+            postType="Note"
+            post={noteDetail.data}
+            setReload={setReload}
+            inputFocus={inputFocus}
+            setInputFocus={setInputFocus}
+          />
+        </Layout.FlexCol>
       )}
       {noteDetail.state === 'hasError' && (
         <>

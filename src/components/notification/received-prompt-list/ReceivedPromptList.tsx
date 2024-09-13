@@ -2,6 +2,7 @@ import RecentPromptCard from '@components/_common/prompt/RecentPromptCard';
 import { Layout, Typo } from '@design-system';
 import { ResponseRequest } from '@models/api/question';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
+import * as S from './ReceivedPromptList.styled';
 
 interface ReceivedPromptListProps {
   title: string;
@@ -41,7 +42,7 @@ interface ReceivedPromptItemProps {
 function ReceivedPromptItem({ responseRequest, currDate }: ReceivedPromptItemProps) {
   const { id, created_at, question_id, requester_username, question_content } = responseRequest;
   return (
-    <Layout.FlexRow w="100%" key={id} gap={4} alignItems="center">
+    <Layout.FlexRow w="100%" key={id} gap={13} alignItems="center">
       <RecentPromptCard
         requesterName={requester_username}
         question={{
@@ -49,7 +50,7 @@ function ReceivedPromptItem({ responseRequest, currDate }: ReceivedPromptItemPro
           content: question_content,
         }}
       />
-      <Layout.FlexCol w={21} alignItems="flex-end" gap={2}>
+      <S.CreatedAtContainer w={30}>
         <Typo type="label-small" color="MEDIUM_GRAY">
           {convertTimeDiffByString({
             now: currDate,
@@ -58,7 +59,7 @@ function ReceivedPromptItem({ responseRequest, currDate }: ReceivedPromptItemPro
             useSoonText: false,
           })}
         </Typo>
-      </Layout.FlexCol>
+      </S.CreatedAtContainer>
     </Layout.FlexRow>
   );
 }

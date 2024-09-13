@@ -8,6 +8,7 @@ import { Note } from '@models/post';
 import { getMyNotes } from '@utils/apis/my';
 import { getUserNotes } from '../../../utils/apis/user';
 import NoteItem from '../note-item/NoteItem';
+import NoteLoader from '../note-loader/NoteLoader';
 
 type NoteSectionProps = {
   /** username이 있으면 username에 대한 response를, 없으면 내 response를 보여줍니다. */
@@ -53,6 +54,7 @@ function NoteSection({ username }: NoteSectionProps) {
       </Layout.FlexRow>
       <Layout.FlexCol w="100%" pr={12}>
         <Layout.FlexCol gap={8} mt={10} w="100%" h="100%">
+          {isLoading && noteList.length === 0 && <NoteLoader />}
           {!isLoading && noteList.length === 0 ? (
             <Layout.FlexRow alignItems="center" w="100%" h="100%">
               <NoContents title={t('no_contents.notes')} />
@@ -64,7 +66,7 @@ function NoteSection({ username }: NoteSectionProps) {
           )}
         </Layout.FlexCol>
         <div ref={targetRef} />
-        {isLoading && (
+        {isLoading && noteList.length !== 0 && (
           <Layout.FlexRow w="100%" h={40}>
             <Loader />
           </Layout.FlexRow>
