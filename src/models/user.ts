@@ -1,3 +1,4 @@
+import { MyProfile } from './api/user';
 import { CheckInBase } from './checkIn';
 
 export interface User {
@@ -27,3 +28,6 @@ export const sentFriendRequest = (user: User | UserProfile) =>
 
 export const receivedFriendRequest = (user: User | UserProfile) =>
   (user as UserProfile).received_friend_request_from === true;
+
+export const isMyProfile = (profile: MyProfile | UserProfile): profile is MyProfile =>
+  (profile as UserProfile).are_friends === undefined;

@@ -62,4 +62,10 @@ export const buttonColorSettings: {
     disabled: { background: 'LIGHT_GRAY', text: 'MEDIUM_GRAY' },
     completed: { background: 'MEDIUM_GRAY', text: 'WHITE' },
   },
+  highlight: {
+    normal: { background: 'PRIMARY', text: 'WHITE' },
+    hovered: { background: 'PRIMARY', text: 'WHITE' },
+    disabled: { background: 'LIGHT_GRAY', text: 'MEDIUM_GRAY' },
+    completed: { background: 'MEDIUM_GRAY', text: 'WHITE' },
+  },
 };

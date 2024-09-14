@@ -61,7 +61,7 @@ export default function FriendSearchList({ query }: Props) {
     });
   };
 
-  const handleClickDelete = (userId: number) => () => {
+  const handleClickUnfriend = (userId: number) => () => {
     setSearchList((prev) => {
       return prev?.reduce<UserProfile[]>((result, curr) => {
         if (curr.id !== userId) {
@@ -70,6 +70,22 @@ export default function FriendSearchList({ query }: Props) {
           result.push({
             ...curr,
             are_friends: false,
+          });
+        }
+        return result;
+      }, []);
+    });
+  };
+
+  const handleClickCancelRequest = (userId: number) => () => {
+    setSearchList((prev) => {
+      return prev?.reduce<UserProfile[]>((result, curr) => {
+        if (curr.id !== userId) {
+          result.push(curr);
+        } else {
+          result.push({
+            ...curr,
+            sent_friend_request_to: false,
           });
         }
         return result;
@@ -94,8 +110,7 @@ export default function FriendSearchList({ query }: Props) {
                   key={user.id}
                   type="search"
                   user={user}
-                  disableRequest={user.are_friends}
-                  onClickDelete={handleClickDelete(user.id)}
+                  onClickUnfriend={handleClickUnfriend(user.id)}
                 />
               ))}
             </Layout.FlexCol>
@@ -112,8 +127,8 @@ export default function FriendSearchList({ query }: Props) {
                   key={user.id}
                   type="search"
                   user={user}
-                  disableRequest={user.sent_friend_request_to}
                   onClickRequest={handleClickRequest(user.id)}
+                  onClickCancelRequest={handleClickCancelRequest(user.id)}
                 />
               ))}
             </Layout.FlexCol>

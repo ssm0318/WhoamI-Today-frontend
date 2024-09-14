@@ -170,6 +170,10 @@ const Confirm = React.memo((props: Omit<ButtonProps, 'type'>) => (
   <Button {...props} type="confirm" />
 ));
 
+const Highlight = React.memo((props: Omit<ButtonProps, 'type'>) => (
+  <Button {...props} type="highlight" />
+));
+
 const buttons: ButtonSetting = {
   primary: {
     ButtonComponent: S.RoundButton,
@@ -187,6 +191,10 @@ const buttons: ButtonSetting = {
     ButtonComponent: S.ConfirmButton,
     fontType: 'button-medium',
   },
+  highlight: {
+    ButtonComponent: S.RoundButton,
+    fontType: 'button-medium',
+  },
 };
 
-export { Confirm, Dialog, Large, Medium, Primary, Secondary, Small, Tertiary };
+export { Confirm, Dialog, Highlight, Large, Medium, Primary, Secondary, Small, Tertiary };

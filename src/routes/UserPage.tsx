@@ -17,7 +17,7 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { readFriendCheckIn } from '@utils/apis/checkIn';
 import { getUserProfile } from '@utils/apis/user';
 
-function FriendPage() {
+function UserPage() {
   const { username } = useParams();
   const [user, setUser] = useState<FetchState<UserProfile>>({ state: 'loading' });
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
@@ -90,4 +90,4 @@ function FriendPage() {
   );
 }
 
-export default FriendPage;
+export default UserPage;
