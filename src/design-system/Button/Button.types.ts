@@ -23,7 +23,7 @@ export type ButtonSetting = {
 
 /** @deprecated */
 export type DeprecatedButtonType = 'filled' | 'outlined' | 'white_fill' | 'gray_fill';
-export type ButtonType = 'primary' | 'secondary' | 'tertiary' | 'confirm';
+export type ButtonType = 'primary' | 'secondary' | 'tertiary' | 'confirm' | 'highlight';
 
 export type ButtonStatus = 'normal' | 'hovered' | 'disabled' | 'completed';
 

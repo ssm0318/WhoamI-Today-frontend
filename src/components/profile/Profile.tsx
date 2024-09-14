@@ -76,6 +76,7 @@ function Profile({ user }: ProfileProps) {
               user={user}
               onClickCancelRequest={reloadPage}
               onClickRequest={reloadPage}
+              isUserPage
             />
           )}
           <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />

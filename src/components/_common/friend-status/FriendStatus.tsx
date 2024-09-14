@@ -22,6 +22,7 @@ import {
 export interface Props {
   type: 'sent_requests' | 'requests' | 'recommended' | 'search' | 'user';
   user: User | UserProfile;
+  isUserPage?: boolean;
   /** 친구 요청 수락 */
   onClickConfirm?: () => void;
   /** 친구 요청 거절 */
@@ -39,6 +40,7 @@ export interface Props {
 function FriendStatus({
   type,
   user,
+  isUserPage,
   onClickConfirm,
   onClickReject,
   onClickUnfriend,
@@ -111,6 +113,8 @@ function FriendStatus({
     onClickRequest?.();
   };
 
+  const PrimaryButton = isUserPage ? Button.Highlight : Button.Primary;
+
   return (
     <>
       <Layout.FlexRow gap={8} w="100%">
@@ -123,7 +127,7 @@ function FriendStatus({
           />
         ) : type === 'requests' || receivedFriendRequest(user) ? (
           <>
-            <Button.Primary
+            <PrimaryButton
               status="normal"
               text={t('confirm')}
               sizing="stretch"
@@ -140,7 +144,7 @@ function FriendStatus({
           <>
             {type === 'sent_requests' || sentFriendRequest(user) ? (
               <>
-                <Button.Primary status="completed" text={t('requested')} sizing="stretch" />
+                <PrimaryButton status="completed" text={t('requested')} sizing="stretch" />
                 <Button.Secondary
                   status="normal"
                   text={t('cancel')}
@@ -149,7 +153,7 @@ function FriendStatus({
                 />
               </>
             ) : (
-              <Button.Primary
+              <PrimaryButton
                 status="normal"
                 text={t('request')}
                 sizing="stretch"
