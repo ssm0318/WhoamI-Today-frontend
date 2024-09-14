@@ -1,32 +1,15 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import PromptCard from '@components/_common/prompt/PromptCard';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout } from '@design-system';
-import useInfiniteScroll from '@hooks/useInfiniteScroll';
-import { Question } from '@models/post';
-import { getAllQuestions } from '@utils/apis/question';
+import useInfiniteFetchQuestions from '@hooks/useInfiniteFetchQuestions';
 import { MainScrollContainer } from './Root';
 
 function AllQuestions() {
   const [t] = useTranslation('translation');
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
-
-  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
-    if (nextPage === null) return setIsLoading(false);
-    await fetchQuestions(nextPage === undefined ? null : nextPage);
-  });
-
-  const fetchQuestions = async (page: string | null) => {
-    const { results, next } = await getAllQuestions(page);
-    if (!results) return;
-    setNextPage(next);
-    setQuestions([...questions, ...results]);
-    setIsLoading(false);
-  };
+  const { questions, targetRef, isLoading } = useInfiniteFetchQuestions();
 
   return (
     <MainScrollContainer>
