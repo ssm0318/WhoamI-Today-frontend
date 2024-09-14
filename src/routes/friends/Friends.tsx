@@ -1,4 +1,3 @@
-import { useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
@@ -11,8 +10,8 @@ import FavoriteFriendItem from '@components/friends/favorite-friend-item/Favorit
 import UpdatedFriendItem from '@components/friends/updated-friend-item/UpdatedFriendItem';
 import { StyledUpdatedFriendItem } from '@components/friends/updated-friend-item/UpdatedFriendItem.styled';
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
+import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { getFavoriteFriends } from '@utils/apis/friends';
-import { getItemFromSessionStorage, setItemToSessionStorage } from '@utils/sessionStorage';
 import { MainScrollContainer } from 'src/routes/Root';
 import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
 import {
@@ -20,12 +19,6 @@ import {
   AllFriendListLoader,
   FavoriteFriendListLoader,
 } from './FriendsLoader';
-
-const SESSION_STORAGE_KEY = 'WHOAMI_TODAY_SCROLL_POSITION';
-
-interface ScrollPositionStore {
-  friendsPage: number;
-}
 
 function Friends() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends' });
@@ -59,27 +52,7 @@ function Friends() {
     navigate('/friends/explore');
   };
 
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const saveScrollPosition = () => {
-    const scrollPosition = scrollRef.current?.scrollTop;
-
-    const prevState = getItemFromSessionStorage<ScrollPositionStore>(SESSION_STORAGE_KEY);
-    setItemToSessionStorage<ScrollPositionStore>(SESSION_STORAGE_KEY, {
-      ...prevState,
-      friendsPage: scrollPosition ?? 0,
-    });
-  };
-
-  // TODO: 공통 훅으로 분리
-  useLayoutEffect(() => {
-    const scrollPositionState = getItemFromSessionStorage<ScrollPositionStore>(SESSION_STORAGE_KEY);
-    scrollRef.current?.scrollTo({ top: scrollPositionState?.friendsPage ?? 0 });
-
-    return () => {
-      saveScrollPosition();
-    };
-  }, []);
+  const { scrollRef } = useRestoreScrollPosition('friendsPage');
 
   return (
     <MainScrollContainer scrollRef={scrollRef}>
