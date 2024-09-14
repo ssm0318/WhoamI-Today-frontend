@@ -76,6 +76,8 @@ function Profile({ user }: ProfileProps) {
               user={user}
               onClickCancelRequest={reloadPage}
               onClickRequest={reloadPage}
+              onClickConfirm={reloadPage}
+              onClickReject={reloadPage}
               isUserPage
             />
           )}
