@@ -73,6 +73,7 @@ const router = createBrowserRouter([
         children: [
           { path: '', element: <My /> },
           { path: 'responses', element: <AllResponses /> },
+          { path: 'comments/:commentId/likes', element: <Likes /> },
         ],
       },
       {
