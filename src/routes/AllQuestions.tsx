@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import useSWRInfinite from 'swr/infinite';
-import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import PromptCard from '@components/_common/prompt/PromptCard';
 import { DEFAULT_MARGIN } from '@constants/layout';
@@ -9,6 +8,7 @@ import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { PaginationResponse } from '@models/api/common';
 import { Question } from '@models/post';
 import { getAllQuestions } from '@utils/apis/question';
+import { AllQuestionsLoader, PromptCardLoader } from 'src/routes/questions/AllQuestionsLoader';
 import { MainScrollContainer } from './Root';
 
 const getKey = (pageIndex: number, previousPageData: PaginationResponse<Question[]>) => {
@@ -45,9 +45,7 @@ function AllQuestions() {
     <MainScrollContainer>
       <Layout.FlexCol pv={14} w="100%" ph={DEFAULT_MARGIN} gap={20}>
         {isLoading ? (
-          <Layout.FlexRow w="100%" h={40}>
-            <Loader />
-          </Layout.FlexRow>
+          <AllQuestionsLoader />
         ) : questions?.[0] && questions[0].count > 0 ? (
           <>
             {questions.map(({ results }) =>
@@ -56,11 +54,7 @@ function AllQuestions() {
               )),
             )}
             <div ref={targetRef} />
-            {isLoadingMore && (
-              <Layout.FlexRow w="100%" h={40}>
-                <Loader />
-              </Layout.FlexRow>
-            )}
+            {isLoadingMore && <PromptCardLoader />}
           </>
         ) : (
           <NoContents text={t('no_contents.all_questions')} mv={10} />
