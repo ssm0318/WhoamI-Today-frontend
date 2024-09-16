@@ -4,7 +4,8 @@ import { getItemFromSessionStorage, setItemToSessionStorage } from '@utils/sessi
 const SESSION_STORAGE_KEY = 'WHOAMI_TODAY_SCROLL_POSITION';
 
 interface ScrollPositionStore {
-  friendsPage: number;
+  friendsPage?: number;
+  questionsPage?: number;
 }
 
 export function useRestoreScrollPosition(key: keyof ScrollPositionStore) {

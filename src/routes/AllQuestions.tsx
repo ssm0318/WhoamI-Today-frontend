@@ -5,6 +5,7 @@ import PromptCard from '@components/_common/prompt/PromptCard';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
+import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { PaginationResponse } from '@models/api/common';
 import { Question } from '@models/post';
 import { getAllQuestions } from '@utils/apis/question';
@@ -41,8 +42,10 @@ function AllQuestions() {
     fetchQuestions();
   });
 
+  const { scrollRef } = useRestoreScrollPosition('questionsPage');
+
   return (
-    <MainScrollContainer>
+    <MainScrollContainer scrollRef={scrollRef}>
       <Layout.FlexCol pv={14} w="100%" ph={DEFAULT_MARGIN} gap={20}>
         {isLoading ? (
           <AllQuestionsLoader />
