@@ -10,11 +10,12 @@ import { Layout, Typo } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { PaginationResponse } from '@models/api/common';
 import { Like } from '@models/post';
+import { getCommentLikes } from '@utils/apis/comments';
 import { getNoteDetailLikes } from '@utils/apis/note';
 import { getResponseDetailLikes } from '@utils/apis/responses';
 
 function Likes() {
-  const { noteId, responseId } = useParams();
+  const { noteId, responseId, commentId } = useParams();
   const navigate = useNavigate();
   const [t] = useTranslation('translation', { keyPrefix: 'likes' });
   const [likes, setLikes] = useState<Like[]>([]);
@@ -26,6 +27,7 @@ function Likes() {
   });
 
   const getLikes = async (page: string | null): Promise<PaginationResponse<Like[]>> => {
+    if (commentId) return getCommentLikes(Number(commentId), page);
     if (noteId) return getNoteDetailLikes(Number(noteId), page);
     if (responseId) return getResponseDetailLikes(Number(responseId), page);
     return { results: [], next: null, previous: null, count: 0 };
