@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
 import FloatingButton from '@components/header/floating-button/FloatingButton';
+import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 import { NavTabItem, StyledTabItem, TabWrapper } from './Tab.styled';
@@ -19,10 +20,18 @@ function TabItem({ to, type, size = 48 }: TabItemProps) {
   // TODO: 안읽은 메시지 개수 얻기
   // const unReadMsgCnt = 15;
 
+  const scrollToTop = (isActive: boolean) => () => {
+    if (!isActive) return;
+
+    const scrollEl = document.getElementById(MAIN_SCROLL_CONTAINER_ID);
+    if (!scrollEl) return;
+    scrollEl.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <NavTabItem to={to}>
       {({ isActive }) => (
-        <StyledTabItem w="100%" alignItems="center" pt={10}>
+        <StyledTabItem w="100%" alignItems="center" pt={10} onClick={scrollToTop(isActive)}>
           {type === 'my' && myProfile?.profile_image ? (
             <img
               src={myProfile.profile_image}
