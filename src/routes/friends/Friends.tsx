@@ -10,6 +10,7 @@ import FavoriteFriendItem from '@components/friends/favorite-friend-item/Favorit
 import UpdatedFriendItem from '@components/friends/updated-friend-item/UpdatedFriendItem';
 import { StyledUpdatedFriendItem } from '@components/friends/updated-friend-item/UpdatedFriendItem.styled';
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
+import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { getFavoriteFriends } from '@utils/apis/friends';
 import { MainScrollContainer } from 'src/routes/Root';
 import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
@@ -47,10 +48,14 @@ function Friends() {
     refetchAllFriends();
   };
 
-  const handleClickExploreFriends = () => navigate('/friends/explore');
+  const handleClickExploreFriends = () => {
+    navigate('/friends/explore');
+  };
+
+  const { scrollRef } = useRestoreScrollPosition('friendsPage');
 
   return (
-    <MainScrollContainer>
+    <MainScrollContainer scrollRef={scrollRef}>
       <PullToRefresh onRefresh={handleRefresh}>
         <Layout.FlexCol w="100%">
           {/* Favorites */}

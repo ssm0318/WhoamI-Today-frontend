@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, RefObject, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 import NotiPermissionBanner, {
@@ -49,14 +49,16 @@ export default Root;
 
 interface MainScrollContainerProps {
   children?: ReactNode;
+  scrollRef?: RefObject<HTMLDivElement>;
 }
 
-export function MainScrollContainer({ children }: MainScrollContainerProps) {
+export function MainScrollContainer({ children, scrollRef }: MainScrollContainerProps) {
   const { isMobile } = getMobileDeviceInfo();
   const showNotificationPermission = !isMobile;
 
   return (
     <MainWrapper
+      ref={scrollRef}
       alignItems="center"
       pt={TOP_NAVIGATION_HEIGHT}
       pb={BOTTOM_TABBAR_HEIGHT + (showNotificationPermission ? NOTI_PERMISSION_BANNER_HEIGHT : 0)}
