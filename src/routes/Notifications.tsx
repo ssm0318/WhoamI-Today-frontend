@@ -113,7 +113,7 @@ function Notifications() {
         {restNotifications.length > 0 && (
           <>
             <Layout.FlexRow mt={8} pv={8} ph={16}>
-              <Typo type="title-medium">{t('last_30_days')}</Typo>
+              <Typo type="title-medium">{t('earlier')}</Typo>
             </Layout.FlexRow>
             {restNotifications.map((noti) => (
               <NotificationItem item={noti} key={noti.id} />
