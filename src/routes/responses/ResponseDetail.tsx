@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CommonError from '@components/_common/common-error/CommonError';
-import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import CommentList from '@components/comment-list/CommentList';
 import ResponseItem from '@components/response/response-item/ResponseItem';
@@ -16,6 +15,7 @@ import { FetchState } from '@models/api/common';
 import { Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getResponse } from '@utils/apis/responses';
+import { MainScrollContainer } from '../Root';
 
 function ResponseDetail() {
   const { responseId } = useParams();
@@ -48,7 +48,7 @@ function ResponseDetail() {
   };
 
   return (
-    <MainContainer>
+    <MainScrollContainer>
       <SubHeader
         title={
           responseDetail.data
@@ -59,7 +59,7 @@ function ResponseDetail() {
         }
         onGoBack={location.state === 'new' ? handleGoBack : undefined}
       />
-      <Layout.FlexCol w="100%" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
+      <Layout.FlexCol w="100%" mt={12} ph={16}>
         {responseDetail.state === 'loading' && <ResponseLoader type="DETAIL" />}
         {responseDetail.state === 'hasValue' && (
           <ResponseItem
@@ -98,7 +98,7 @@ function ResponseDetail() {
           </Layout.FlexCol>
         </>
       )}
-    </MainContainer>
+    </MainScrollContainer>
   );
 }
 
