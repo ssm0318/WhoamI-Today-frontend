@@ -15,7 +15,10 @@ interface Props {
 export function useSWRInfiniteScroll<T>({ key }: Props) {
   const getKey = (pageIndex: number, previousPageData: PaginationResponse<T[]>) => {
     if (previousPageData && !previousPageData.next) return null; // 끝에 도달
-    return `${key}?page=${pageIndex + 1}`; // SWR 키
+
+    const [pathname, search] = key.split('?');
+    const searchParams = [search, `page=${pageIndex + 1}`].join('&');
+    return [pathname, searchParams].join('?'); // SWR 키
   };
 
   const { isLoading, data, size, mutate, setSize } = useSWRInfinite(getKey, fetcher<T>);

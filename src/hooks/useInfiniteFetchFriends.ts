@@ -1,7 +1,5 @@
-import useSWRInfinite from 'swr/infinite';
-import useInfiniteScroll from '@hooks/useInfiniteScroll';
-import { GetUpdatedProfileResponse } from '@models/api/friends';
-import { getAllFriends } from '@utils/apis/friends';
+import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
+import { GetUpdatedProfileResponse, UpdatedProfile } from '@models/api/friends';
 
 interface BreakFriendsParams {
   type: 'break_friends';
@@ -15,26 +13,9 @@ interface UpdateFriendsStateParams {
 
 export type UpdateFriendListParams = BreakFriendsParams | UpdateFriendsStateParams;
 
-const getKey = (pageIndex: number, previousPageData: GetUpdatedProfileResponse) => {
-  if (previousPageData && !previousPageData.next) return null; // 끝에 도달
-  return `/user/friends/?type=all&page=${pageIndex + 1}`; // SWR 키
-};
-
 const useInfiniteFetchFriends = () => {
-  const { data, size, setSize, isLoading, mutate } = useSWRInfinite(getKey, (url) => {
-    return getAllFriends({ next: url });
-  });
-  const isEndPage = data && !data[size - 1]?.next;
-  const isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined');
-
-  const fetchAllFriends = () => {
-    if (isEndPage) return;
-    setSize((prevSize) => prevSize + 1);
-  };
-
-  const { targetRef } = useInfiniteScroll<HTMLDivElement>(() => {
-    fetchAllFriends();
-  });
+  const { targetRef, data, isLoading, mutate, isEndPage, isLoadingMore } =
+    useSWRInfiniteScroll<UpdatedProfile>({ key: '/user/friends/?type=all' });
 
   const updateFriendList = (params: UpdateFriendListParams) => {
     if (!data) return;
