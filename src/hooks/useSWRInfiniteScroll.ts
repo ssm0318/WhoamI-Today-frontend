@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import useSWRInfinite from 'swr/infinite';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { PaginationResponse } from '@models/api/common';
@@ -24,12 +25,17 @@ export function useSWRInfiniteScroll<T>({ key }: Props) {
   const { isLoading, data, size, mutate, setSize } = useSWRInfinite(getKey, fetcher<T>);
 
   const isEndPage = data && !data[size - 1]?.next;
-  const isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined');
+  const isLoadingMore =
+    isLoading ||
+    (size > 0 &&
+      data &&
+      typeof data[size - 1] === 'undefined' &&
+      data[data.length - 1].next !== null);
 
-  const fetchNextData = async () => {
+  const fetchNextData = useCallback(async () => {
     if (isEndPage) return;
     setSize((prevSize) => prevSize + 1);
-  };
+  }, [isEndPage, setSize]);
 
   const { targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(() => {
     fetchNextData();
