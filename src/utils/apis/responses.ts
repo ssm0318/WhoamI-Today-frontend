@@ -58,14 +58,14 @@ export const getReactionList = async (
 ) => {
   const requestPage = next ? next.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Reaction[]>>(
-    `/reactions/${postType}/${postId}/${requestPage ? `?page=${requestPage}` : ''}`,
+    `/reactions/${postType}/${postId}/${requestPage ? `?page=${requestPage}/` : ''}`,
   );
   return data;
 };
 
 // POST Reaction
 export const postReaction = async (postType: ReactionPostType, postId: number, emoji: string) => {
-  await axios.post(`/reactions/${postType}/${postId}`, { emoji });
+  await axios.post(`/reactions/${postType}/${postId}/`, { emoji });
 };
 
 export const readResponse = async (ids: number[]) => {
@@ -75,7 +75,7 @@ export const readResponse = async (ids: number[]) => {
 export const getResponseDetailLikes = async (responseId: number, page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Like[]>>(
-    `/qna/responses/${responseId}/likes/${!requestPage ? '' : `?page=${requestPage}`}`,
+    `/qna/responses/${responseId}/likes/${!requestPage ? '' : `?page=${requestPage}`}/`,
   );
   return data;
 };
