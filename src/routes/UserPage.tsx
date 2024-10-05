@@ -41,7 +41,7 @@ function UserPage() {
     await readFriendCheckIn(user.data.check_in.id);
   };
 
-  useAsyncEffect(updateUser, []);
+  useAsyncEffect(updateUser, [username]);
 
   useAsyncEffect(readCheckIn, [user.data]);
 
