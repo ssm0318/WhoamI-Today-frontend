@@ -77,7 +77,7 @@ export const deleteNote = async ({
 export const getNoteComments = async (noteId: number, page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Comment[]>>(
-    `/notes/${noteId}/comments${!requestPage ? '' : `?page=${requestPage}`}`,
+    `/notes/${noteId}/comments${!requestPage ? '' : `?page=${requestPage}`}/`,
   );
   return data;
 };
@@ -89,7 +89,7 @@ export const readNote = async (ids: number[]) => {
 export const getNoteDetailLikes = async (noteId: number, page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Like[]>>(
-    `/notes/${noteId}/likes/${!requestPage ? '' : `?page=${requestPage}`}`,
+    `/notes/${noteId}/likes/${!requestPage ? '' : `?page=${requestPage}`}/`,
   );
   return data;
 };
