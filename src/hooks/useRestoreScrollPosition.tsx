@@ -3,7 +3,7 @@ import { getItemFromSessionStorage, setItemToSessionStorage } from '@utils/sessi
 
 const SESSION_STORAGE_KEY = 'WHOAMI_TODAY_SCROLL_POSITION';
 
-interface ScrollPositionStore {
+export interface ScrollPositionStore {
   friendsPage?: number;
   questionsPage?: number;
   myPage?: number;
@@ -35,3 +35,12 @@ export function useRestoreScrollPosition(key: keyof ScrollPositionStore) {
     scrollRef,
   };
 }
+
+export const resetScrollPosition = (key: keyof ScrollPositionStore) => {
+  const prevState = getItemFromSessionStorage<ScrollPositionStore>(SESSION_STORAGE_KEY);
+
+  setItemToSessionStorage<ScrollPositionStore>(SESSION_STORAGE_KEY, {
+    ...prevState,
+    [key]: 0,
+  });
+};

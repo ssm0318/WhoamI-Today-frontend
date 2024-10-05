@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import FloatingButton from '@components/header/floating-button/FloatingButton';
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { resetScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
 import { NavTabItem, StyledTabItem, TabWrapper } from './Tab.styled';
 
@@ -26,6 +27,7 @@ function TabItem({ to, type, size = 48 }: TabItemProps) {
     const scrollEl = document.getElementById(MAIN_SCROLL_CONTAINER_ID);
     if (!scrollEl) return;
     scrollEl.scrollTo({ top: 0, behavior: 'smooth' });
+    resetScrollPosition(`${type}Page`);
   };
 
   return (
