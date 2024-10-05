@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import Loader from '@components/_common/loader/Loader';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
-import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useCommentList from '@hooks/useCommentList';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
@@ -22,8 +21,6 @@ interface CommentListProps {
 function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: CommentListProps) {
   const footerRef = useRef<HTMLDivElement>(null);
 
-  const { comments, fetchComments, nextPage, deleteComment } = useCommentList(post);
-
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
 
@@ -36,6 +33,8 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
     if (nextPage === null) return setIsLoading(false);
     await fetchComments(nextPage ?? null, false);
   });
+
+  const { comments, fetchComments, nextPage, deleteComment } = useCommentList(post, setIsLoading);
 
   return (
     <Layout.FlexCol w="100%" h="100%" pt={24}>
@@ -58,7 +57,7 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
           ))}
         </SwipeLayoutList>
       </Layout.FlexCol>
-      <StyledCommentListFooter ref={footerRef} b={BOTTOM_TABBAR_HEIGHT} w="100%" bgColor="WHITE">
+      <StyledCommentListFooter ref={footerRef} b={0} w="100%" bgColor="WHITE">
         <Layout.FlexRow w="100%">
           <CommentInputBox
             post={commentTo}

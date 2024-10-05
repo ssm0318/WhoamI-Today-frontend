@@ -3,7 +3,7 @@ import { getCommentList } from '@components/comment-list/CommentList.helper';
 import { Comment, Note, Response } from '@models/post';
 import useAsyncEffect from './useAsyncEffect';
 
-const useCommentList = (post: Response | Note) => {
+const useCommentList = (post: Response | Note, setIsLoading?: (isLoading: boolean) => void) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 
@@ -13,11 +13,14 @@ const useCommentList = (post: Response | Note) => {
     setNextPage(next);
     if (update) setComments(results);
     else setComments([...comments, ...results]);
+    setIsLoading?.(false);
   };
 
   useAsyncEffect(async () => {
-    await fetchComments(null, false);
-  }, []);
+    if (nextPage !== null) {
+      await fetchComments(nextPage ?? null, false);
+    }
+  }, [nextPage]);
 
   // TODO: pagination 적용 시, 댓/답글 삭제에 따라 nextPage 업데이트가 필요함
   // 혹은 현재 댓글 작성처럼, 삭제된 페이지를 다시 불러오고 이후 페이지는 나중에 다시 불러오는 방식?
