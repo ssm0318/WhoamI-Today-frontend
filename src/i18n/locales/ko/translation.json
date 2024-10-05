@@ -327,6 +327,7 @@
     "title": "알림",
     "last_7_days": "지난 7일",
     "last_30_days": "지난 30일",
+    "earlier": "이전",
     "see_friend_requests": "친구 요청",
     "see_prompts_received": "받은 질문",
     "received_prompts": {

@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CommonError from '@components/_common/common-error/CommonError';
-import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import CommentList from '@components/comment-list/CommentList';
 import NoteItem from '@components/note/note-item/NoteItem';
@@ -16,6 +15,7 @@ import { FetchState } from '@models/api/common';
 import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getNoteDetail } from '@utils/apis/note';
+import { MainScrollContainer } from '../Root';
 
 export function NoteDetail() {
   const { noteId } = useParams();
@@ -49,7 +49,7 @@ export function NoteDetail() {
   };
 
   return (
-    <MainContainer>
+    <MainScrollContainer>
       <SubHeader
         title={
           noteDetail.data
@@ -58,7 +58,7 @@ export function NoteDetail() {
         }
         onGoBack={location.state === 'new' ? handleGoBack : undefined}
       />
-      <Layout.FlexCol w="100%" alignItems="center" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
+      <Layout.FlexCol w="100%" alignItems="center" mt={12} ph={16}>
         {noteDetail.state === 'loading' && <NoteLoader />}
         {noteDetail.state === 'hasValue' && (
           <NoteItem
@@ -97,6 +97,6 @@ export function NoteDetail() {
           </Layout.FlexCol>
         </>
       )}
-    </MainContainer>
+    </MainScrollContainer>
   );
 }
