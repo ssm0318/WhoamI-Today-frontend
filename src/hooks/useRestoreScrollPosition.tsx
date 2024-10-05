@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { getItemFromSessionStorage, setItemToSessionStorage } from '@utils/sessionStorage';
 
 const SESSION_STORAGE_KEY = 'WHOAMI_TODAY_SCROLL_POSITION';
@@ -30,6 +30,17 @@ export function useRestoreScrollPosition(key: keyof ScrollPositionStore) {
       saveScrollPosition();
     };
   }, [key, saveScrollPosition]);
+
+  useEffect(() => {
+    const resetPosition = () => {
+      resetScrollPosition(key);
+    };
+    window.addEventListener('unload', resetPosition);
+
+    return () => {
+      window.removeEventListener('unload', resetPosition);
+    };
+  }, [key]);
 
   return {
     scrollRef,
