@@ -238,14 +238,7 @@ export const getFriendList = async (next?: string | null) => {
 
 export const getUserProfile = async (username: string) => {
   const { data } = await axios.get<UserProfile>(`/user/${username}/profile/`);
-
-  const { are_friends } = data;
-  if (are_friends) markAllAsRead(username);
   return data;
-};
-
-const markAllAsRead = async (username: string) => {
-  await axios.patch('/user/mark-all-as-read/', { username });
 };
 
 export const requestFriend = async ({
@@ -351,6 +344,7 @@ export const getUserNotes = async (username: string, next?: string | null) => {
   const { data } = await axios.get<PaginationResponse<Note[]>>(
     `/user/${username}/notes/${requestPage ? `?page=${requestPage}` : ''}`,
   );
+  if (data.results?.length) axios.patch('/user/mark-all-notes-as-read/', { username });
   return data;
 };
 
@@ -360,5 +354,8 @@ export const getUserResponses = async (username: string, next?: string | null) =
   const { data } = await axios.get<PaginationResponse<Response[]>>(
     `/user/${username}/responses/${requestPage ? `?page=${requestPage}` : ''}`,
   );
+
+  if (data.results?.length) axios.patch('/user/mark-all-responses-as-read/', { username });
+
   return data;
 };
