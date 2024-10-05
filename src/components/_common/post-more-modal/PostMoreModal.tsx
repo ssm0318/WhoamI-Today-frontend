@@ -17,7 +17,7 @@ interface PostMoreModalProps {
   setIsVisible: Dispatch<SetStateAction<boolean>>;
   post: Note | Response;
   isMyPage?: boolean;
-  onConfirmReport?: () => Promise<void>;
+  onConfirmReport?: () => void;
 }
 
 type AlertProps = Pick<

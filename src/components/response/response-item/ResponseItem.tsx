@@ -16,7 +16,7 @@ interface ResponseItemProps {
   response: Response;
   isMyPage?: boolean;
   commentType?: POST_DP_TYPE;
-  refresh?: () => Promise<void>;
+  refresh?: () => void;
 }
 
 function ResponseItem({
