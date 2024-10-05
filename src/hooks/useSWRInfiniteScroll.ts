@@ -18,11 +18,13 @@ export function useSWRInfiniteScroll<T>({ key }: Props) {
     if (previousPageData && !previousPageData.next) return null; // 끝에 도달
 
     const [pathname, search] = key.split('?');
-    const searchParams = [search, `page=${pageIndex + 1}`].join('&');
-    return [pathname, searchParams].join('?'); // SWR 키
+    const searchParams = [search, `page=${pageIndex + 1}`].filter(Boolean).join('&');
+    return [pathname, searchParams].filter(Boolean).join('?'); // SWR 키
   };
 
-  const { isLoading, data, size, mutate, setSize } = useSWRInfinite(getKey, fetcher<T>);
+  const { isLoading, data, size, mutate, setSize } = useSWRInfinite(getKey, fetcher<T>, {
+    revalidateAll: true,
+  });
 
   const isEndPage = data && !data[size - 1]?.next;
   const isLoadingMore =
