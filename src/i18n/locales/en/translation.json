@@ -334,6 +334,7 @@
     "title": "Notifications",
     "last_7_days": "Last 7 days",
     "last_30_days": "Last 30 days",
+    "earlier": "Earlier",
     "see_friend_requests": "See Friend Requests",
     "see_prompts_received": "See Prompts Received",
     "received_prompts": {
