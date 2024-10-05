@@ -8,6 +8,7 @@ import NoteSection from '@components/note/note-section/NoteSection';
 import Profile from '@components/profile/Profile';
 import ResponseSection from '@components/response/response-section/ResponseSection';
 import { Layout, Typo } from '@design-system';
+import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMyNotes, getMyResponses } from '@utils/apis/my';
 import { MainScrollContainer } from './Root';
@@ -32,8 +33,10 @@ function My() {
     await fetchCheckIn();
   }, [fetchCheckIn]);
 
+  const { scrollRef } = useRestoreScrollPosition('myPage');
+
   return (
-    <MainScrollContainer>
+    <MainScrollContainer scrollRef={scrollRef}>
       <PullToRefresh onRefresh={handleRefresh}>
         <Layout.FlexCol w="100%">
           <Divider width={8} bgColor="LIGHT" />

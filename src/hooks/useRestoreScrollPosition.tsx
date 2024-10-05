@@ -6,6 +6,7 @@ const SESSION_STORAGE_KEY = 'WHOAMI_TODAY_SCROLL_POSITION';
 interface ScrollPositionStore {
   friendsPage?: number;
   questionsPage?: number;
+  myPage?: number;
 }
 
 export function useRestoreScrollPosition(key: keyof ScrollPositionStore) {
