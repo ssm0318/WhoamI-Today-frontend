@@ -37,3 +37,6 @@ export const deepEqual = (obj1: any, obj2: any): boolean => {
 
   return keys1.every((key) => deepEqual(obj1[key], obj2[key]));
 };
+
+// string 형식의 id가 유효한지 확인
+export const isValidId = (id: string | undefined) => id && !Number.isNaN(Number(id));
