@@ -66,7 +66,7 @@ function CommentItem({
   };
 
   const handleClickLikes = () => {
-    navigate(`comments/${comment.id}/likes`);
+    navigate(`/comments/${comment.id}/likes`);
   };
 
   return (
