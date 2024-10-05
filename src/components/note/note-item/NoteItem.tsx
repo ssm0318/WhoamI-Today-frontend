@@ -6,6 +6,7 @@ import PostFooter from '@components/_common/post-footer/PostFooter';
 import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
+import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import { Layout, Typo } from '@design-system';
 import { Note, POST_DP_TYPE } from '@models/post';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
@@ -19,7 +20,16 @@ interface NoteItemProps {
 }
 
 function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemProps) {
-  const { content, created_at, id, author_detail, images, like_user_sample, is_edited } = note;
+  const {
+    content,
+    created_at,
+    id,
+    author_detail,
+    images,
+    like_user_sample,
+    is_edited,
+    current_user_read,
+  } = note;
   const navigate = useNavigate();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [showMore, setShowMore] = useState(false);
@@ -80,6 +90,7 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
               <Typo type="label-medium" color="MEDIUM_GRAY">
                 {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
               </Typo>
+              {!current_user_read && <UpdatedLabel />}
             </Layout.FlexRow>
           </Layout.FlexRow>
           {/* 더보기 */}

@@ -6,6 +6,7 @@ import PostFooter from '@components/_common/post-footer/PostFooter';
 import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
+import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { POST_DP_TYPE, Response } from '@models/post';
@@ -26,7 +27,15 @@ function ResponseItem({
   refresh,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
-  const { content, created_at, author_detail, question, like_user_sample, is_edited } = response;
+  const {
+    content,
+    created_at,
+    author_detail,
+    question,
+    like_user_sample,
+    is_edited,
+    current_user_read,
+  } = response;
   const { username, profile_image } = author_detail ?? {};
   const [overflowSummary, setOverflowSummary] = useState<string>();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
@@ -97,6 +106,7 @@ function ResponseItem({
                 <Typo type="label-medium" color="MEDIUM_GRAY">
                   {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
                 </Typo>
+                {!current_user_read && <UpdatedLabel />}
               </Layout.FlexRow>
             </Layout.FlexRow>
             {/* 더보기 */}

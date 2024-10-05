@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
+import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -32,7 +33,7 @@ function CheckIn({ user }: CheckInProps) {
   const [checkIn, setCheckIn] = useState<CheckInBase | null | undefined>(
     isMyPage ? initialCheckIn : user.check_in,
   );
-  const { availability, track_id, mood, description } = checkIn || {};
+  const { availability, track_id, mood, description, current_user_read } = checkIn || {};
   const hasCheckIn = checkIn && (mood || description || availability || track_id);
 
   const [currentDate] = useState(() => new Date());
@@ -118,7 +119,7 @@ function CheckIn({ user }: CheckInProps) {
           </Layout.FlexRow>
 
           {/* check in time */}
-          <Layout.FlexRow w="100%" justifyContent="flex-end">
+          <Layout.FlexRow w="100%" justifyContent="flex-end" gap={4}>
             <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
               {t('checked_in_time', {
                 time: convertTimeDiffByString({
@@ -127,6 +128,7 @@ function CheckIn({ user }: CheckInProps) {
                 }),
               })}
             </Typo>
+            {!current_user_read && <UpdatedLabel />}
           </Layout.FlexRow>
         </>
       ) : (
