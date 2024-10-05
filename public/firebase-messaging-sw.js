@@ -26,11 +26,27 @@ const firebaseApp = firebase.initializeApp({
 // NOTE: Most importantly, in your service worker add a 'notificationclick' event listener before calling firebase.messaging()
 self.addEventListener('notificationclick', (e) => {
   e.stopImmediatePropagation();
+  const notificationId = e.notification.data?.FCM_MSG
+    ? e.notification.data?.FCM_MSG.data.tag
+    : Number(e.notification.tag);
+
   if (e.notification.data?.FCM_MSG) {
     e.waitUntil(clients.openWindow(`${self.origin}${e.notification.data.FCM_MSG.data.url}`));
   } else {
     e.waitUntil(clients.openWindow(`${self.origin}${e.notification.data.url}`));
   }
+
+  // 알림 읽음 처리
+  e.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      clientList.map((client) => {
+        return client.postMessage({
+          type: 'READ_NOTIFICATION',
+          notificationId,
+        });
+      });
+    }),
+  );
 
   e.notification.close();
 });

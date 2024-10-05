@@ -1,6 +1,6 @@
 import { getToken, MessagePayload, Messaging, onMessage } from 'firebase/messaging';
 import i18n from '@i18n/index';
-import { activateFirebaseNotification } from './apis/notification';
+import { activateFirebaseNotification, readNotification } from './apis/notification';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -77,4 +77,19 @@ export const addForegroundMessageEventListener = (messaging: Messaging) => {
       });
     });
   });
+};
+
+// 알림 클릭 이벤트 핸들러
+export const setNotificationClickHandler = () => {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', async (event) => {
+      if (event.data && event.data.type === 'READ_NOTIFICATION') {
+        try {
+          await readNotification([event.data.notificationId]);
+        } catch (error) {
+          console.error('Failed to mark notification as read:', error);
+        }
+      }
+    });
+  }
 };
