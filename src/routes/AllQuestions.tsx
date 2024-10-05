@@ -1,46 +1,23 @@
 import { useTranslation } from 'react-i18next';
-import useSWRInfinite from 'swr/infinite';
 import NoContents from '@components/_common/no-contents/NoContents';
 import PromptCard from '@components/_common/prompt/PromptCard';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout } from '@design-system';
-import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
-import { PaginationResponse } from '@models/api/common';
+import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Question } from '@models/post';
-import { getAllQuestions } from '@utils/apis/question';
 import { AllQuestionsLoader, PromptCardLoader } from 'src/routes/questions/AllQuestionsLoader';
 import { MainScrollContainer } from './Root';
-
-const getKey = (pageIndex: number, previousPageData: PaginationResponse<Question[]>) => {
-  if (previousPageData && !previousPageData.next) return null; // 끝에 도달
-  return `/qna/questions/?page=${pageIndex + 1}`; // SWR 키
-};
 
 function AllQuestions() {
   const [t] = useTranslation('translation');
 
   const {
+    targetRef,
     data: questions,
-    size,
-    setSize,
+    isLoadingMore,
     isLoading,
-  } = useSWRInfinite(getKey, (url) => {
-    return getAllQuestions(url);
-  });
-
-  const isEndPage = questions && !questions[size - 1]?.next;
-  const isLoadingMore =
-    isLoading || (size > 0 && questions && typeof questions[size - 1] === 'undefined');
-
-  const fetchQuestions = async () => {
-    if (isEndPage) return;
-    setSize((prevSize) => prevSize + 1);
-  };
-
-  const { targetRef } = useInfiniteScroll<HTMLDivElement>(() => {
-    fetchQuestions();
-  });
+  } = useSWRInfiniteScroll<Question>({ key: '/qna/questions/' });
 
   const { scrollRef } = useRestoreScrollPosition('questionsPage');
 
