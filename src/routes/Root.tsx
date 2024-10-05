@@ -7,6 +7,7 @@ import NotiPermissionBanner, {
 import Header from '@components/header/Header';
 import Tab from '@components/tab/Tab';
 import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
+import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -58,6 +59,7 @@ export function MainScrollContainer({ children, scrollRef }: MainScrollContainer
 
   return (
     <MainWrapper
+      id={MAIN_SCROLL_CONTAINER_ID}
       ref={scrollRef}
       alignItems="center"
       pt={TOP_NAVIGATION_HEIGHT}
