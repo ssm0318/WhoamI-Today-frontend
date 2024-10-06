@@ -5,6 +5,7 @@ import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAle
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import ProfileImageList from '@components/_common/profile-image-list/ProfileImageList';
 import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import { Layout, Typo } from '@design-system';
@@ -30,7 +31,7 @@ function CommentItem({
   replyAvailable = true,
 }: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
-  const { author_detail, created_at, is_private, replies } = comment;
+  const { author_detail, created_at, is_private, replies, like_user_sample } = comment;
   const { username, profile_image } = author_detail ?? {};
   const navigate = useNavigate();
   const [createdAt] = useState(() => (created_at ? new Date(created_at) : null));
@@ -47,6 +48,10 @@ function CommentItem({
   //   // TODO : 채팅방으로 이동
   // };
 
+  const navigateToProfile = () => {
+    navigate(`/users/${username}`);
+  };
+
   const { deleteTarget, setDeleteTarget, confirmDeleteAlert, closeDeleteAlert } =
     useDeleteCommentAlert({
       onDeleteComplete,
@@ -60,8 +65,8 @@ function CommentItem({
     // TODO
   };
 
-  const navigateToProfile = () => {
-    navigate(`/users/${username}`);
+  const handleClickLikes = () => {
+    navigate(`/comments/${comment.id}/likes`);
   };
 
   return (
@@ -140,7 +145,13 @@ function CommentItem({
           </Layout.FlexCol>
           {/* like button */}
           <Layout.FlexCol w={24}>
-            {!isCommentAuthor && <LikeButton postType="Comment" post={comment} iconSize={15} />}
+            {isCommentAuthor ? (
+              <Layout.FlexRow onClick={handleClickLikes}>
+                <ProfileImageList images={like_user_sample.map((user) => user.profile_image)} />
+              </Layout.FlexRow>
+            ) : (
+              <LikeButton postType="Comment" post={comment} iconSize={15} />
+            )}
           </Layout.FlexCol>
         </Layout.FlexRow>
       </SwipeLayout>
@@ -164,5 +175,4 @@ function CommentItem({
     </Layout.FlexCol>
   );
 }
-
 export default CommentItem;

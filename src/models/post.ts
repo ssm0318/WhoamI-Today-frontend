@@ -48,6 +48,7 @@ export interface Comment extends ContentsCommon {
   target_id: number;
   type: 'Comment';
   user_tags: UserTag[];
+  like_user_sample: User[];
 }
 
 export type PrivateComment = Omit<Comment, 'id' | 'author' | 'author_detail'> &
