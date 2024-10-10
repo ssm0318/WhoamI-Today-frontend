@@ -37,8 +37,7 @@ The WhoAmI Frontend is built with:
 
 To get started with this project, you need to have:
 
-- Node: v16.14.0 or later
-- Yarn: 1.22.19 or later
+- Node: v18 or later
 
 ### Installation
 
@@ -80,5 +79,5 @@ Included scripts in `package.json`:
 
 For any questions or contributions, feel free to contact us:
 
-- Email: [team.whoami.frontend@gmail.com](mailto:team.whoami.frontend@gmail.com)
+- Email: [team.whoami.today@gmail.com](mailto:team.whoami.today@gmail.com)
 
