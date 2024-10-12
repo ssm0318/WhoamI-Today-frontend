@@ -23,7 +23,7 @@ export const CommentBottomHeaderWrapper = styled(Layout.Fixed)`
 export const CommentBottomContentWrapper = styled(Layout.FlexCol)`
   width: 100%;
   height: ${SCREEN_HEIGHT - BOTTOMSHEET_HEADER_HEIGHT - 128}px;
-  padding: 15px;
+  padding: 15px 0;
   margin-top: ${BOTTOMSHEET_HEADER_HEIGHT}px;
   overflow: auto;
 `;

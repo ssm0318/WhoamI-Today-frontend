@@ -5,6 +5,7 @@ import {
   addForegroundMessageEventListener,
   firebaseConfig,
   getFCMRegistrationToken,
+  setNotificationClickHandler,
 } from '../utils/firebaseHelpers';
 
 const useFcm = () => {
@@ -19,6 +20,7 @@ const useFcm = () => {
 
       if (Notification.permission !== 'granted') return;
       addForegroundMessageEventListener(messaging);
+      setNotificationClickHandler();
 
       const token = await getFCMRegistrationToken(messaging);
       setFcmToken(token);

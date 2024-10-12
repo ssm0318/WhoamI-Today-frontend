@@ -237,7 +237,9 @@
     "error_title": "답변"
   },
   "likes": {
-    "title": "좋아요"
+    "title": "좋아요",
+    "forbidden_post_or_comment" : "이 게시물/댓글에 접근할 수 없습니다.",
+    "not_found_post_or_comment" : "존재하지 않는 게시물/댓글입니다."
   },
   "post_more_modal": {
     "menu": {
@@ -347,7 +349,8 @@
     "reply_place_holder": "{{username}}에게 답글을 입력하세요.",
     "private_comment": "비밀 댓글",
     "private_placeholder": "해당 댓글은 비공개이며 작성자만 볼 수 있습니다.",
-    "replying_to": "{{username}}에게 답글 작성중"
+    "replying_to": "{{username}}에게 답글 작성중",
+    "report": "신고"
   },
   "no_contents": {
     "the_day_detail": "업로드한 모먼트나 답변이 없습니다.",
@@ -365,7 +368,9 @@
     },
     "question": "선택한 질문을 찾지 못했습니다.",
     "forbidden_post": "접근이 불가능한 게시글입니다.",
-    "not_found_post": "존재하지 않는 게시글입니다."
+    "not_found_post": "존재하지 않는 게시글입니다.",
+    "forbidden_comment": "접근이 불가능한 댓글입니다.",
+    "not_found_comment": "존재하지 않는 댓글입니다."
   },
   "chats": {
     "title": "채팅",

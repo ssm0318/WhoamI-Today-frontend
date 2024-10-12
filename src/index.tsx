@@ -108,6 +108,10 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: 'comments/:commentId/likes',
+        element: <Likes />,
+      },
+      {
         path: 'check-in',
         children: [{ path: 'edit', element: <CheckInEdit /> }],
       },

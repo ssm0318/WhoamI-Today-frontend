@@ -240,7 +240,9 @@
     "error_title": "Response"
   },
   "likes": {
-    "title": "Likes"
+    "title": "Likes",
+    "forbidden_post_or_comment" : "This Post/comment is not accessible.",
+    "not_found_post_or_comment" : "This Post/comment does not exist."
   },
   "post_more_modal": {
     "menu": {
@@ -354,7 +356,8 @@
     "reply_place_holder": "Add a reply to {{username}}",
     "private_comment": "Private Comment",
     "private_placeholder": "This comment is privated and can only be seen by the original poster.",
-    "replying_to": "Replying to {{username}}"
+    "replying_to": "Replying to {{username}}",
+    "report": "Report"
   },
   "no_contents": {
     "the_day_detail": "No moment or responses.",
@@ -372,7 +375,9 @@
     },
     "question": "No questions found.",
     "forbidden_post": "This post is not accessible.",
-    "not_found_post": "This post does not exist."
+    "not_found_post": "This post does not exist.",
+    "forbidden_comment": "This comment is not accessible.",
+    "not_found_comment": "This comment does not exist."
   },
   "chats": {
     "title": "Chats",
