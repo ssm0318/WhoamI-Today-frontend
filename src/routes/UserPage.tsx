@@ -55,7 +55,7 @@ function UserPage() {
   };
 
   return (
-    <MainContainer>
+    <MainContainer key={username}>
       <UserHeader username={username} onClickMore={handleClickMore} />
       {(user.state === 'hasError' || !username) && <CommonError />}
       {user.state === 'hasValue' && user.data && (
