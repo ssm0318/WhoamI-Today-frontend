@@ -30,7 +30,8 @@ function EmojiPicker({
 
   if (!isVisible) return null;
 
-  const handleSelectEmoji = (emoji: EmojiClickData) => {
+  const handleSelectEmoji = (emoji: EmojiClickData, event: MouseEvent) => {
+    event.stopPropagation();
     onSelectEmoji(emoji);
   };
 
