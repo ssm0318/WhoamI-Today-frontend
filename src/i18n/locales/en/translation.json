@@ -244,6 +244,9 @@
     "forbidden_post_or_comment" : "This Post/comment is not accessible.",
     "not_found_post_or_comment" : "This Post/comment does not exist."
   },
+  "reactions": {
+    "title": "Likes/Emojis"
+  },
   "post_more_modal": {
     "menu": {
       "report": "Report",

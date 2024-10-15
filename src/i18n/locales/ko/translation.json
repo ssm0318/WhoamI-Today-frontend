@@ -241,6 +241,9 @@
     "forbidden_post_or_comment" : "이 게시물/댓글에 접근할 수 없습니다.",
     "not_found_post_or_comment" : "존재하지 않는 게시물/댓글입니다."
   },
+  "reactions": {
+    "title": "좋아요/이모지"
+  },
   "post_more_modal": {
     "menu": {
       "report": "신고",
