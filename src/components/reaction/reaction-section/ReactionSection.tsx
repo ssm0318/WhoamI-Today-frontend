@@ -5,7 +5,7 @@ import { SCREEN_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Font, Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { ReactionPostType } from '@models/post';
-import { getReactionList, postReaction } from '@utils/apis/responses';
+import { getReactionList, postReaction } from '@utils/apis/reaction';
 import EmojiReactionList from '../emoji-reaction-list/EmojiReactionList';
 import EmojiViewPopup from '../emoji-view-popup/EmojiViewPopup';
 
@@ -67,9 +67,7 @@ function ReactionSection({ postType, postId }: ReactionSectionProps) {
       w="100%"
       justifyContent="space-between"
       alignItems="center"
-      ph="default"
       pv={8}
-      outline="BLACK"
       ref={reactionSectionWrapper}
       style={{
         position: 'relative',
@@ -93,7 +91,6 @@ function ReactionSection({ postType, postId }: ReactionSectionProps) {
           toggleButtonRef={seeAllButtonRef}
         />
       </Layout.FlexRow>
-
       <Layout.FlexRow gap={4}>
         {/* 이모지 리액션 */}
         <Layout.FlexCol w="100%">
