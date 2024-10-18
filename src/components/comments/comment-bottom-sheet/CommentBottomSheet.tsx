@@ -1,9 +1,7 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import BottomModal from '@components/_common/bottom-modal/BottomModal';
-import Divider from '@components/_common/divider/Divider';
-import Icon from '@components/_common/icon/Icon';
+import BottomModalWithInput from '@components/_common/bottom-modal-with-input/BottomModalWithInput';
 import CommentInputBox from '@components/comment-list/comment-input-box/CommentInputBox';
 import CommentItem from '@components/comment-list/comment-item/CommentItem';
 import { Layout, Typo } from '@design-system';
@@ -14,6 +12,7 @@ import {
   CommentBottomContentWrapper,
   CommentBottomFooterWrapper,
   CommentBottomHeaderWrapper,
+  CommentBottomTitleWrapper,
 } from './CommentBottomSheet.styled';
 
 interface Props {
@@ -52,26 +51,17 @@ function CommentBottomSheet({
   };
 
   return createPortal(
-    <BottomModal visible={visible} onClose={closeBottomSheet} heightMode="full">
+    <BottomModalWithInput visible={visible} onClose={closeBottomSheet} heightMode="full">
       <CommentBottomHeaderWrapper>
-        <Layout.FlexRow w="100%" justifyContent="center">
-          <Icon name="home_indicator" />
-        </Layout.FlexRow>
-        <Layout.FlexRow w="100%" h="100%">
+        <Layout.FlexRow>
           <Layout.FlexRow onClick={handleClick} pl={20}>
             <Typo type="title-large">{t('cancel')}</Typo>
           </Layout.FlexRow>
-          <Layout.FlexRow
-            style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}
-          >
+          <CommentBottomTitleWrapper>
             <Typo type="title-large">{t('comment')}</Typo>
-          </Layout.FlexRow>
+          </CommentBottomTitleWrapper>
         </Layout.FlexRow>
-        <Layout.FlexCol gap={12} pt={12} w="100%">
-          <Divider width={1} />
-        </Layout.FlexCol>
       </CommentBottomHeaderWrapper>
-
       <CommentBottomContentWrapper>
         {comments.map((comment) => (
           <CommentItem
@@ -114,7 +104,7 @@ function CommentBottomSheet({
           reloadComments={() => fetchComments(nextPage ?? null, true)}
         />
       </CommentBottomFooterWrapper>
-    </BottomModal>,
+    </BottomModalWithInput>,
     document.getElementById('root-container') || document.body,
   );
 }
