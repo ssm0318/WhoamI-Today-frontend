@@ -1,9 +1,9 @@
 import { Layout } from '@design-system';
-import { User } from '@models/user';
+import { ReactionUserSample } from '@models/post';
 import PostReactionItem from '../post-reaction-item/PostReactionItem';
 
 type PostReactionListProps = {
-  user_sample_list: Array<User & { like: boolean; emoji: string | null }>;
+  user_sample_list: ReactionUserSample[];
 };
 
 function PostReactionList({ user_sample_list }: PostReactionListProps) {
@@ -24,7 +24,7 @@ function PostReactionList({ user_sample_list }: PostReactionListProps) {
               imageUrl={user.profile_image}
               size={SIZE}
               like={user.like}
-              emoji={user.emoji}
+              emoji={user.reaction}
             />
           </Layout.FlexRow>
         );

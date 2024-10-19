@@ -40,7 +40,7 @@ function PostFooter({
   const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
   const [pickerPosition, setPickerPosition] = useState<Position>({});
   const postFooterWrapper = useRef<HTMLDivElement>(null);
-  const toggleButtonRef = useRef<HTMLButtonElement>(null);
+  const toggleButtonRef = useRef<HTMLDivElement>(null);
 
   const [t] = useTranslation('translation', {
     keyPrefix: post.type === POST_TYPE.RESPONSE ? 'responses' : 'notes',
@@ -94,7 +94,7 @@ function PostFooter({
         {isMyPage ? (
           // 좋아요나 이모지를 누른 사용자 리스트
           sampleUserList.length > 0 && (
-            <button type="button" onClick={handleClickReactions}>
+            <Layout.FlexRow onClick={handleClickReactions}>
               <PostReactionList
                 user_sample_list={sampleUserList.map((user) => {
                   return {
@@ -104,13 +104,15 @@ function PostFooter({
                   };
                 })}
               />
-            </button>
+            </Layout.FlexRow>
           )
         ) : (
           <>
             <LikeButton postType={type} post={post} iconSize={23} m={0} />
             {(current_user_reaction_id_list || []).length === 0 ? (
-              <EmojiButton post={post} onClick={handleClickEmojiButton} />
+              <Layout.FlexRow ref={toggleButtonRef}>
+                <EmojiButton post={post} onClick={handleClickEmojiButton} />
+              </Layout.FlexRow>
             ) : (
               <PostMyEmojiList
                 emojiList={current_user_reaction_id_list.map((reaction) => reaction.emoji)}

@@ -1,6 +1,6 @@
 import { DateRequestParams, PaginationResponse } from '@models/api/common';
 import { GetResponseDetailResponse, GetResponsesResponse } from '@models/api/response';
-import { Comment, DayQuestion, Like } from '@models/post';
+import { Comment, DayQuestion, PostReaction } from '@models/post';
 import axios from './axios';
 
 export const getResponses = async () => {
@@ -54,10 +54,11 @@ export const readResponse = async (ids: number[]) => {
   await axios.patch('/qna/responses/read/', { ids });
 };
 
-export const getResponseDetailLikes = async (responseId: number, page: string | null) => {
+export const getResponseReactions = async (responseId: number, page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
-  const { data } = await axios.get<PaginationResponse<Like[]>>(
-    `/qna/responses/${responseId}/likes/${!requestPage ? '' : `?page=${requestPage}`}`,
+  const { data } = await axios.get<PaginationResponse<PostReaction[]>>(
+    `/qna/responses/${responseId}/interactions${!requestPage ? '' : `?page=${requestPage}`}/`,
   );
+
   return data;
 };

@@ -146,4 +146,12 @@ export type Like = {
   user_detail: ActorDetail;
 };
 
+export type PostReaction = {
+  id: number;
+  type: 'Reaction' | 'Like';
+  user: string;
+  user_detail: ActorDetail;
+  reaction: string | null;
+};
+
 export type POST_DP_TYPE = 'LIST' | 'DETAIL';
