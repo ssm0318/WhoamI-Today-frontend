@@ -41,7 +41,7 @@ function UserPage() {
     await readFriendCheckIn(user.data.check_in.id);
   };
 
-  useAsyncEffect(updateUser, []);
+  useAsyncEffect(updateUser, [username]);
 
   useAsyncEffect(readCheckIn, [user.data]);
 
@@ -55,8 +55,8 @@ function UserPage() {
   };
 
   return (
-    <MainContainer>
-      <UserHeader user={user.data} onClickMore={handleClickMore} />
+    <MainContainer key={username}>
+      <UserHeader username={username} onClickMore={handleClickMore} />
       {(user.state === 'hasError' || !username) && <CommonError />}
       {user.state === 'hasValue' && user.data && (
         <Layout.FlexCol w="100%" bgColor="LIGHT" mt={TITLE_HEADER_HEIGHT}>

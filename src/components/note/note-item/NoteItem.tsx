@@ -16,7 +16,7 @@ interface NoteItemProps {
   note: Note;
   isMyPage: boolean;
   commentType?: POST_DP_TYPE;
-  refresh?: () => Promise<void>;
+  refresh?: () => void;
 }
 
 function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemProps) {

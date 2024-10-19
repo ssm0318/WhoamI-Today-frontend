@@ -24,7 +24,7 @@ export function FavoriteFriendItemLoader() {
 export function AllFriendListLoader() {
   return (
     <>
-      {[...Array(5)].map((_, index) => {
+      {[...Array(10)].map((_, index) => {
         const key = `all_friend_item_loader_${index}`;
         return <AllFriendItemLoader key={key} />;
       })}

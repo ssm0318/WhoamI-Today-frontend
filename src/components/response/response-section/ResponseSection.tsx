@@ -1,16 +1,15 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import useSWR from 'swr';
 import CommonError from '@components/_common/common-error/CommonError';
 import Icon from '@components/_common/icon/Icon';
 import NoContents from '@components/_common/no-contents/NoContents';
 import SelectPromptSheet from '@components/prompt/select-prompt-sheet/SelectPromptSheet';
 import { Layout, Typo } from '@design-system';
-import useAsyncEffect from '@hooks/useAsyncEffect';
-import { FetchState, PaginationResponse } from '@models/api/common';
+import { PaginationResponse } from '@models/api/common';
 import { Response } from '@models/post';
-import { getMyResponses } from '@utils/apis/my';
-import { getUserResponses } from '@utils/apis/user';
+import axios from '@utils/apis/axios';
 import MoreResponseButton from '../more-response-button/MoreResponseButton';
 import ResponseItem from '../response-item/ResponseItem';
 import ResponseLoader from '../response-loader/ResponseLoader';
@@ -23,32 +22,28 @@ type ResponseSectionProps = {
 
 const RESPONSE_VIEW_MAX_COUNT = 10;
 
+const responseFetcher = async (url: string) => {
+  const { data } = await axios.get<PaginationResponse<Response[]>>(url);
+  return data;
+};
+
 function ResponseSection({ username }: ResponseSectionProps) {
-  const [totalResponseCount, setTotalResponseCount] = useState(0);
-  const [responses, setResponses] = useState<FetchState<PaginationResponse<Response[]>>>({
-    state: 'loading',
-  });
   const [t] = useTranslation('translation');
   const navigate = useNavigate();
   const [selectPrompt, setSelectPrompt] = useState(false);
 
-  const fetchResponses = useCallback(async () => {
-    try {
-      const data = username ? await getUserResponses(username) : await getMyResponses(null);
-      setResponses({ state: 'hasValue', data });
-      setTotalResponseCount(data.count);
-    } catch (error) {
-      setResponses({ state: 'hasError' });
-    }
-  }, [username]);
+  const {
+    data: responses,
+    mutate: refreshResponses,
+    isLoading: isResponsesLoading,
+    error: isResponsesError,
+  } = useSWR(`/user/${username || 'me'}/responses/`, responseFetcher);
 
-  const isMoreButtonVisible = totalResponseCount > RESPONSE_VIEW_MAX_COUNT;
+  const isMoreButtonVisible = responses && responses.count > RESPONSE_VIEW_MAX_COUNT;
 
   const handleClickMore = () => {
     navigate(username ? `/users/${username}/responses` : '/my/responses');
   };
-
-  useAsyncEffect(fetchResponses, [fetchResponses]);
 
   return (
     <>
@@ -59,13 +54,13 @@ function ResponseSection({ username }: ResponseSectionProps) {
         {isMoreButtonVisible && <Icon onClick={handleClickMore} name="arrow_right" />}
       </Layout.FlexRow>
       <S.ResponseSectionWrapper w="100%" pr={12}>
-        {responses.state === 'hasError' ? (
+        {isResponsesError ? (
           <CommonError />
         ) : (
           <Layout.FlexRow
             h="100%"
             mt={12}
-            w={responses?.data?.results?.length === 0 ? '100%' : undefined}
+            w={responses?.results?.length === 0 ? '100%' : undefined}
           >
             <Layout.FlexRow w="100%" gap={8} h="100%">
               {!username && (
@@ -84,25 +79,24 @@ function ResponseSection({ username }: ResponseSectionProps) {
                   </Typo>
                 </Layout.FlexCol>
               )}
-              {responses.state === 'loading' && (
+              {isResponsesLoading ? (
                 <>
                   <ResponseLoader />
                   <ResponseLoader />
                 </>
-              )}
-              {responses.state === 'hasValue' && !responses.data.results?.length ? (
+              ) : !responses?.results?.length ? (
                 <Layout.FlexRow alignItems="center" h="100%" justifyContent="center" w="100%">
                   <NoContents text={t('no_contents.responses')} pv={20} />
                 </Layout.FlexRow>
               ) : (
-                responses.data?.results
+                responses.results
                   ?.slice(0, RESPONSE_VIEW_MAX_COUNT)
                   .map((response) => (
                     <ResponseItem
                       key={response.id}
                       response={response}
                       isMyPage={!username}
-                      refresh={fetchResponses}
+                      refresh={refreshResponses}
                     />
                   ))
               )}

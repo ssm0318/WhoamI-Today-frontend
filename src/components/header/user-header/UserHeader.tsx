@@ -1,14 +1,13 @@
 import Icon from '@components/_common/icon/Icon';
 import SubHeader from '@components/sub-header/SubHeader';
 import { Layout } from '@design-system';
-import { User } from '@models/user';
 
 interface UserHeaderProps {
-  user?: User;
+  username?: string;
   onClickMore: () => void;
 }
 
-function UserHeader({ user, onClickMore }: UserHeaderProps) {
+function UserHeader({ username, onClickMore }: UserHeaderProps) {
   // const handleClickChat = async () => {
   //   if (!user) return;
   //   const roomId = await getChatRoomIdByUserId(user.id);
@@ -20,10 +19,10 @@ function UserHeader({ user, onClickMore }: UserHeaderProps) {
     onClickMore();
   };
 
-  if (!user) return null;
+  if (!username) return null;
   return (
     <SubHeader
-      title={user.username}
+      title={username}
       RightComponent={
         <Layout.FlexRow gap={8} alignItems="center">
           {/* <Icon name="chat_outline" size={44} onClick={handleClickChat} /> */}

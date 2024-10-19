@@ -1,11 +1,12 @@
-import { useCallback, useLayoutEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { getItemFromSessionStorage, setItemToSessionStorage } from '@utils/sessionStorage';
 
 const SESSION_STORAGE_KEY = 'WHOAMI_TODAY_SCROLL_POSITION';
 
-interface ScrollPositionStore {
+export interface ScrollPositionStore {
   friendsPage?: number;
   questionsPage?: number;
+  myPage?: number;
 }
 
 export function useRestoreScrollPosition(key: keyof ScrollPositionStore) {
@@ -30,7 +31,27 @@ export function useRestoreScrollPosition(key: keyof ScrollPositionStore) {
     };
   }, [key, saveScrollPosition]);
 
+  useEffect(() => {
+    const resetPosition = () => {
+      resetScrollPosition(key);
+    };
+    window.addEventListener('unload', resetPosition);
+
+    return () => {
+      window.removeEventListener('unload', resetPosition);
+    };
+  }, [key]);
+
   return {
     scrollRef,
   };
 }
+
+export const resetScrollPosition = (key: keyof ScrollPositionStore) => {
+  const prevState = getItemFromSessionStorage<ScrollPositionStore>(SESSION_STORAGE_KEY);
+
+  setItemToSessionStorage<ScrollPositionStore>(SESSION_STORAGE_KEY, {
+    ...prevState,
+    [key]: 0,
+  });
+};
