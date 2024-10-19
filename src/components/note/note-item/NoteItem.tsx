@@ -43,7 +43,8 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
     setShowMore(true);
   };
 
-  const handleClickNote = () => {
+  const handleClickNote = (e: MouseEvent) => {
+    e.stopPropagation();
     if (commentType === 'DETAIL') return;
 
     if (!isMyPage) {
@@ -54,7 +55,8 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
     return navigate(`/notes/${id}`);
   };
 
-  const navigateToProfile = () => {
+  const navigateToProfile = (e: MouseEvent) => {
+    e.stopPropagation();
     navigate(`/users/${username}`);
   };
 

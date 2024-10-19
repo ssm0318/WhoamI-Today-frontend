@@ -49,7 +49,8 @@ function ResponseItem({
     setShowMore(true);
   };
 
-  const handleClickDetail = () => {
+  const handleClickDetail = (e: MouseEvent) => {
+    e.stopPropagation();
     if (commentType === 'DETAIL') return;
 
     if (!isMyPage) {
@@ -60,7 +61,8 @@ function ResponseItem({
     navigate(`/responses/${response.id}`);
   };
 
-  const navigateToProfile = () => {
+  const navigateToProfile = (e: MouseEvent) => {
+    e.stopPropagation();
     navigate(`/users/${username}`);
   };
 

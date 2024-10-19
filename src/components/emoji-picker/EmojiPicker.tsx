@@ -1,6 +1,6 @@
 import ReactEmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { RefObject, useRef } from 'react';
-import { DEFAULT_MARGIN, SCREEN_WIDTH } from '@constants/layout';
+import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
 import { EMOJI_CATEGORIES } from './EmojiPicker.constants';
@@ -10,8 +10,7 @@ interface EmojiPickerProps {
   onSelectEmoji: (emoji: EmojiClickData) => void;
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
-  pickerPosition?: { top?: number; bottom?: number };
-  toggleButtonRef?: RefObject<HTMLButtonElement>;
+  toggleButtonRef?: RefObject<HTMLDivElement>;
   selectedEmojis?: string[];
 }
 
@@ -19,7 +18,6 @@ function EmojiPicker({
   onSelectEmoji,
   isVisible,
   setIsVisible,
-  pickerPosition,
   toggleButtonRef,
   selectedEmojis,
 }: EmojiPickerProps) {
@@ -37,14 +35,12 @@ function EmojiPicker({
 
   return (
     <Layout.Absolute
-      t={pickerPosition?.top}
-      b={pickerPosition?.bottom}
       ref={emojiPickerWrapper}
       l={DEFAULT_MARGIN}
+      mt={(toggleButtonRef?.current?.getBoundingClientRect().height ?? 0) + 12}
     >
       {selectedEmojis && <EmojiPickerCustomStyle unifiedList={unifiedEmojiList} />}
       <ReactEmojiPicker
-        width={SCREEN_WIDTH - 2 * DEFAULT_MARGIN}
         height={200}
         onEmojiClick={handleSelectEmoji}
         autoFocusSearch={false}

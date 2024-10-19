@@ -14,15 +14,9 @@ interface CheckInEmojiProps {
 
 function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
   const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
-  const emojiSectionWrapper = useRef<HTMLDivElement>(null);
-  const toggleButtonWrapper = useRef<HTMLButtonElement>(null);
-  const [pickerTop, setPickerTop] = useState(0);
+  const toggleButtonRef = useRef<HTMLDivElement>(null);
 
   const handleClickEmoji = () => {
-    if (!emojiSectionWrapper.current) return;
-    const { top } = emojiSectionWrapper.current.getBoundingClientRect();
-    setPickerTop(top + EMOJI_ICON_SIZE);
-
     setEmojiPickerVisible((prev) => !prev);
   };
 
@@ -32,39 +26,37 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
   };
 
   return (
-    <Layout.FlexRow gap={8} mt={8} alignItems="center" ref={emojiSectionWrapper}>
-      <Layout.FlexRow
-        alignItems="center"
-        justifyContent="center"
-        rounded={12}
-        outline={emojiPickerVisible ? 'BLACK' : 'LIGHT_GRAY'}
-        w={EMOJI_ICON_SIZE}
-        h={EMOJI_ICON_SIZE}
-      >
-        {mood ? (
-          <EmojiItem emojiString={mood} size={24} outline="TRANSPARENT" />
-        ) : (
-          <Icon
-            onClick={handleClickEmoji}
-            name={emojiPickerVisible ? 'add_reaction_active' : 'add_reaction_default'}
-            size={24}
-          />
-        )}
+    <Layout.FlexCol w="100%">
+      <Layout.FlexRow gap={8} mt={8} alignItems="center">
+        <Layout.FlexRow
+          alignItems="center"
+          justifyContent="center"
+          rounded={12}
+          outline={emojiPickerVisible ? 'BLACK' : 'LIGHT_GRAY'}
+          w={EMOJI_ICON_SIZE}
+          h={EMOJI_ICON_SIZE}
+          ref={toggleButtonRef}
+        >
+          {mood ? (
+            <EmojiItem emojiString={mood} size={24} outline="TRANSPARENT" />
+          ) : (
+            <Icon
+              onClick={handleClickEmoji}
+              name={emojiPickerVisible ? 'add_reaction_active' : 'add_reaction_default'}
+              size={24}
+            />
+          )}
+        </Layout.FlexRow>
+        {mood && <DeleteButton onClick={onDelete} size={32} />}
       </Layout.FlexRow>
-      {mood && <DeleteButton onClick={onDelete} size={32} />}
       {/* emoji toggle popup */}
-      {emojiPickerVisible && (
-        <EmojiPicker
-          onSelectEmoji={handleSelectEmoji}
-          isVisible={emojiPickerVisible}
-          setIsVisible={setEmojiPickerVisible}
-          toggleButtonRef={toggleButtonWrapper}
-          pickerPosition={{
-            top: pickerTop,
-          }}
-        />
-      )}
-    </Layout.FlexRow>
+      <EmojiPicker
+        onSelectEmoji={handleSelectEmoji}
+        isVisible={emojiPickerVisible}
+        setIsVisible={setEmojiPickerVisible}
+        toggleButtonRef={toggleButtonRef}
+      />
+    </Layout.FlexCol>
   );
 }
 
