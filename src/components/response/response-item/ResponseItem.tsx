@@ -32,7 +32,7 @@ function ResponseItem({
     created_at,
     author_detail,
     question,
-    like_user_sample,
+    like_reaction_user_sample,
     is_edited,
     current_user_read,
   } = response;
@@ -143,7 +143,7 @@ function ResponseItem({
           </Layout.FlexCol>
           <QuestionItem question={question} />
           <PostFooter
-            likedUserList={like_user_sample}
+            reactionSampleUserList={like_reaction_user_sample}
             isMyPage={isMyPage}
             post={response}
             showComments={() => setBottomSheet(true)}

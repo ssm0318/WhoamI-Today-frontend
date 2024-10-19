@@ -26,7 +26,7 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
     id,
     author_detail,
     images,
-    like_user_sample,
+    like_reaction_user_sample,
     is_edited,
     current_user_read,
   } = note;
@@ -118,7 +118,7 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
           )}
         </Layout.FlexCol>
         <PostFooter
-          likedUserList={like_user_sample}
+          reactionSampleUserList={like_reaction_user_sample}
           isMyPage={isMyPage}
           post={note}
           showComments={() => setBottomSheet(true)}
