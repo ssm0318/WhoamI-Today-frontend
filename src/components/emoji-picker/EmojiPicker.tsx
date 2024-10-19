@@ -38,6 +38,7 @@ function EmojiPicker({
       ref={emojiPickerWrapper}
       l={DEFAULT_MARGIN}
       mt={(toggleButtonRef?.current?.getBoundingClientRect().height ?? 0) + 12}
+      z={10}
     >
       {selectedEmojis && <EmojiPickerCustomStyle unifiedList={unifiedEmojiList} />}
       <ReactEmojiPicker
