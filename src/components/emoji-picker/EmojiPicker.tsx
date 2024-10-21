@@ -1,6 +1,6 @@
 import ReactEmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { RefObject, useRef } from 'react';
-import { DEFAULT_MARGIN } from '@constants/layout';
+import { DEFAULT_MARGIN, Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
 import { EMOJI_CATEGORIES } from './EmojiPicker.constants';
@@ -28,8 +28,8 @@ function EmojiPicker({
 
   if (!isVisible) return null;
 
-  const handleSelectEmoji = (emoji: EmojiClickData, event: MouseEvent) => {
-    event.stopPropagation();
+  const handleSelectEmoji = (emoji: EmojiClickData, e: MouseEvent) => {
+    e.stopPropagation();
     onSelectEmoji(emoji);
   };
 
@@ -38,7 +38,7 @@ function EmojiPicker({
       ref={emojiPickerWrapper}
       l={DEFAULT_MARGIN}
       mt={(toggleButtonRef?.current?.getBoundingClientRect().height ?? 0) + 12}
-      z={10}
+      z={Z_INDEX.EMOJI_PICKER}
     >
       {selectedEmojis && <EmojiPickerCustomStyle unifiedList={unifiedEmojiList} />}
       <ReactEmojiPicker
@@ -54,5 +54,4 @@ function EmojiPicker({
     </Layout.Absolute>
   );
 }
-
 export default EmojiPicker;
