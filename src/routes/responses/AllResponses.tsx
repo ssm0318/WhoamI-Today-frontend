@@ -12,7 +12,7 @@ import { Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMyResponses } from '@utils/apis/my';
 import { getUserResponses } from '@utils/apis/user';
-import { MainScrollContainer } from 'src/routes/Root';
+import { MainScrollContainer } from '../Root';
 
 interface Props {
   from: 'my' | 'user';

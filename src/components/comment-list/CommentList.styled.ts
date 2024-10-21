@@ -4,5 +4,5 @@ import { Layout } from '@design-system';
 
 export const StyledCommentListFooter = styled(Layout.Fixed)`
   max-width: ${MAX_WINDOW_WIDTH}px;
-  z-index: ${Z_INDEX.BOTTOM_TAB};
+  z-index: ${Z_INDEX.COMMENT_LIST};
 `;
