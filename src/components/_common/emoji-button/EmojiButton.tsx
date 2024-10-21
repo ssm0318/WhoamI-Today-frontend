@@ -5,7 +5,7 @@ import Icon from '../icon/Icon';
 
 interface EmojiButtonProps {
   post: Response | Note;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 function EmojiButton({ post, onClick }: EmojiButtonProps) {
@@ -13,7 +13,7 @@ function EmojiButton({ post, onClick }: EmojiButtonProps) {
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
-    onClick();
+    onClick?.();
   };
 
   return (

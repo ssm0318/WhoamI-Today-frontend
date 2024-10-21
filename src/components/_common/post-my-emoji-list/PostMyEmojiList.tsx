@@ -1,13 +1,20 @@
+import { MouseEvent } from 'react';
 import { Layout } from '@design-system';
 import EmojiItem from '../emoji-item/EmojiItem';
 
 type PostMyEmojiListProps = {
   emojiList: string[];
+  onClick?: () => void;
 };
 
-function PostMyEmojiList({ emojiList }: PostMyEmojiListProps) {
+function PostMyEmojiList({ emojiList, onClick }: PostMyEmojiListProps) {
+  const handleClick = (e: MouseEvent) => {
+    e.stopPropagation();
+    onClick?.();
+  };
+
   return (
-    <Layout.FlexRow alignItems="center">
+    <Layout.FlexRow alignItems="center" onClick={handleClick}>
       {emojiList.map((emoji, index) => (
         <Layout.FlexRow
           key={emoji}
