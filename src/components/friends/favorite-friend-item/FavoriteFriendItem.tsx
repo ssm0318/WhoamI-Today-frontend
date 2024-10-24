@@ -10,7 +10,7 @@ interface Props {
 }
 
 function FavoriteFriendItem({ user }: Props) {
-  const { profile_image, username, current_user_read, track_id, bio } = user;
+  const { profile_image, username, current_user_read, track_id, description } = user;
 
   const navigate = useNavigate();
   const handleClickProfile = () => {
@@ -42,7 +42,7 @@ function FavoriteFriendItem({ user }: Props) {
         {!current_user_read && <UpdatedLabel />}
       </Layout.FlexRow>
       {track_id && <SpotifyMusic track={track_id} sharer={user} useDetailBottomSheet />}
-      {bio && (
+      {description && (
         <Layout.FlexRow
           pv={4}
           ph={8}
@@ -52,7 +52,7 @@ function FavoriteFriendItem({ user }: Props) {
           outline="LIGHT_GRAY"
         >
           <Typo type="label-medium" color="DARK_GRAY">
-            {bio}
+            {description}
           </Typo>
         </Layout.FlexRow>
       )}

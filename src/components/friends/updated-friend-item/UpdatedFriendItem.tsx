@@ -19,7 +19,8 @@ interface Props {
 }
 
 function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }: Props) {
-  const { id, profile_image, username, is_favorite, current_user_read, track_id, bio } = user;
+  const { id, profile_image, username, is_favorite, current_user_read, track_id, description } =
+    user;
 
   const navigate = useNavigate();
   const handleClickProfile = () => {
@@ -101,9 +102,9 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
                   <Typo type="label-large">{username}</Typo>
                   {!current_user_read && <UpdatedLabel />}
                 </Layout.FlexRow>
-                {bio && (
+                {description && (
                   <Typo type="label-medium" color="MEDIUM_GRAY" numberOfLines={1}>
-                    {bio}
+                    {description}
                   </Typo>
                 )}
               </Layout.FlexCol>
