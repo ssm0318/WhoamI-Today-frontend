@@ -63,8 +63,8 @@ function UserPage() {
     <>
       <MainContainer key={username} visibility={!outlet}>
         <UserHeader username={username} onClickMore={handleClickMore} />
-        {user.state === 'hasError' && <CommonError />}
         <Layout.FlexCol w="100%" bgColor="LIGHT" mt={TITLE_HEADER_HEIGHT}>
+          {user.state === 'hasError' && <CommonError />}
           {user.state === 'hasValue' && user.data && (
             <UserMoreModal
               isVisible={showMore}
