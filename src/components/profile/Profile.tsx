@@ -36,8 +36,6 @@ function Profile({ user }: ProfileProps) {
 
   const reloadPage = () => window.location.reload();
 
-  if (!user) return null;
-
   return (
     <Layout.FlexCol w="100%" gap={16}>
       <Layout.FlexRow w="100%" gap={8}>
@@ -61,14 +59,14 @@ function Profile({ user }: ProfileProps) {
             )}
           </Layout.FlexRow>
           {/* bio */}
-          {user.bio && (
+          {user?.bio && (
             <Typo type="body-medium" numberOfLines={3}>
               {user.bio}
             </Typo>
           )}
         </Layout.FlexCol>
       </Layout.FlexRow>
-      {!isMyPage && (
+      {!isMyPage && user && (
         <>
           {!isMyProfile(user) && !areFriends(user) && (
             <FriendStatus
@@ -85,7 +83,7 @@ function Profile({ user }: ProfileProps) {
         </>
       )}
       {/* 체크인 */}
-      <CheckInSection user={user} />
+      {user && <CheckInSection user={user} />}
     </Layout.FlexCol>
   );
 }

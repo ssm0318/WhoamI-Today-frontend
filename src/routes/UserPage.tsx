@@ -26,7 +26,10 @@ function UserPage() {
   const navigate = useNavigate();
 
   const updateUser = async () => {
-    if (!username) return;
+    if (!username) {
+      setUser({ state: 'hasError' });
+      return;
+    }
 
     try {
       const res = await getUserProfile(username);
@@ -60,35 +63,41 @@ function UserPage() {
     <>
       <MainContainer key={username} visibility={!outlet}>
         <UserHeader username={username} onClickMore={handleClickMore} />
-        {(user.state === 'hasError' || !username) && <CommonError />}
-        {user.state === 'hasValue' && user.data && (
-          <Layout.FlexCol w="100%" bgColor="LIGHT" mt={TITLE_HEADER_HEIGHT}>
+        {user.state === 'hasError' && <CommonError />}
+        <Layout.FlexCol w="100%" bgColor="LIGHT" mt={TITLE_HEADER_HEIGHT}>
+          {user.state === 'hasValue' && user.data && (
             <UserMoreModal
               isVisible={showMore}
               setIsVisible={setShowMore}
               user={user.data}
               callback={updateUser}
             />
-            <Layout.FlexRow
-              w="100%"
-              alignItems="center"
-              justifyContent="space-between"
-              p={12}
-              bgColor="WHITE"
-              rounded={8}
-            >
-              <Profile user={user.data} />
-            </Layout.FlexRow>
-            <Divider width={8} bgColor="LIGHT" />
-            <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
-              <ResponseSection username={username} />
-            </Layout.FlexCol>
-            <Divider width={8} bgColor="LIGHT" />
-            <Layout.FlexCol pt={12} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
-              <NoteSection username={username} />
-            </Layout.FlexCol>
-          </Layout.FlexCol>
-        )}
+          )}
+          {user.state !== 'hasError' && (
+            <>
+              {/** profile section */}
+              <Layout.FlexRow
+                w="100%"
+                alignItems="center"
+                justifyContent="space-between"
+                p={12}
+                bgColor="WHITE"
+                rounded={8}
+              >
+                <Profile user={user.data} />
+              </Layout.FlexRow>
+              {/** responses and notes section */}
+              <Divider width={8} bgColor="LIGHT" />
+              <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
+                <ResponseSection username={username} />
+              </Layout.FlexCol>
+              <Divider width={8} bgColor="LIGHT" />
+              <Layout.FlexCol pt={12} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
+                <NoteSection username={username} />
+              </Layout.FlexCol>
+            </>
+          )}
+        </Layout.FlexCol>
       </MainContainer>
       <Outlet />
     </>
