@@ -45,6 +45,12 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
 
   const handleClickNote = () => {
     if (commentType === 'DETAIL') return;
+
+    if (!isMyPage) {
+      navigate(`./notes/${id}`);
+      return;
+    }
+
     return navigate(`/notes/${id}`);
   };
 

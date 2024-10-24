@@ -51,6 +51,12 @@ function ResponseItem({
 
   const handleClickDetail = () => {
     if (commentType === 'DETAIL') return;
+
+    if (!isMyPage) {
+      navigate(`./responses/${response.id}`);
+      return;
+    }
+
     navigate(`/responses/${response.id}`);
   };
 

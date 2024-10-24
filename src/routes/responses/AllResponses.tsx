@@ -12,8 +12,13 @@ import { Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMyResponses } from '@utils/apis/my';
 import { getUserResponses } from '@utils/apis/user';
+import { MainScrollContainer } from 'src/routes/Root';
 
-function AllResponses() {
+interface Props {
+  isMainContainer?: boolean;
+}
+
+function AllResponses({ isMainContainer = false }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'all_responses' });
   const [responses, setResponses] = useState<Response[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
@@ -51,12 +56,15 @@ function AllResponses() {
     await fetchResponses(null, true);
   };
 
+  const Container = isMainContainer ? MainContainer : MainScrollContainer;
+
   return (
-    <MainContainer>
+    <Container>
       <SubHeader title={t('title', { username: username || myProfile?.username })} />
       <Layout.FlexCol
+        id="all-responses"
         w="100%"
-        mt={(username ? TITLE_HEADER_HEIGHT : 0) + TOP_MARGIN}
+        mt={(isMainContainer ? TITLE_HEADER_HEIGHT : 0) + TOP_MARGIN}
         ph={16}
         gap={12}
       >
@@ -76,7 +84,7 @@ function AllResponses() {
           </Layout.FlexRow>
         )}
       </Layout.FlexCol>
-    </MainContainer>
+    </Container>
   );
 }
 
