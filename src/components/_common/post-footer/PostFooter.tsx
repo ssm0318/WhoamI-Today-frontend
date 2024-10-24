@@ -52,7 +52,7 @@ function PostFooter({
     <Layout.FlexCol gap={8}>
       <Layout.FlexRow gap={16} alignItems="center">
         {isMyPage ? (
-          likedUserList.length > 0 && (
+          likedUserList?.length > 0 && (
             <button type="button" onClick={handleClickLikes}>
               <ProfileImageList images={likedUserList.map((user) => user.profile_image)} />
             </button>
@@ -62,7 +62,6 @@ function PostFooter({
         )}
         <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
       </Layout.FlexRow>
-
       {!!comment_count && commentType === 'LIST' && (
         <Layout.FlexRow>
           <button type="button" onClick={handleClickCommentText}>
