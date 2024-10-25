@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import {
+  BOTTOMSHEET_FOOTER_HEIGHT,
   BOTTOMSHEET_HEADER_HEIGHT,
   DEFAULT_MARGIN,
   MAX_WINDOW_WIDTH,
@@ -22,7 +23,7 @@ export const CommentBottomHeaderWrapper = styled(Layout.Fixed)`
 
 export const CommentBottomContentWrapper = styled(Layout.FlexCol)`
   width: 100%;
-  height: ${SCREEN_HEIGHT - BOTTOMSHEET_HEADER_HEIGHT - 128}px;
+  height: ${SCREEN_HEIGHT - BOTTOMSHEET_HEADER_HEIGHT - BOTTOMSHEET_FOOTER_HEIGHT}px;
   padding: 15px 0;
   margin-top: ${BOTTOMSHEET_HEADER_HEIGHT}px;
   overflow: auto;
@@ -31,5 +32,7 @@ export const CommentBottomContentWrapper = styled(Layout.FlexCol)`
 export const CommentBottomFooterWrapper = styled(Layout.FlexCol)`
   position: fixed;
   width: 100%;
+  height: ${BOTTOMSHEET_FOOTER_HEIGHT - 24}px;
   bottom: 0;
+  z-index: ${Z_INDEX.BOTTOM_TAB};
 `;
