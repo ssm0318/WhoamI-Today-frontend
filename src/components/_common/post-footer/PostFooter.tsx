@@ -1,11 +1,12 @@
-import { EmojiClickData } from 'emoji-picker-react';
-import { MouseEvent, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+/* eslint-disable */
 import EmojiPicker from '@components/emoji-picker/EmojiPicker';
 import { Layout, Typo } from '@design-system';
 import { Note, POST_DP_TYPE, POST_TYPE, ReactionUserSample, Response } from '@models/post';
 import { postReaction } from '@utils/apis/reaction';
+import { EmojiClickData } from 'emoji-picker-react';
+import { MouseEvent, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import EmojiButton from '../emoji-button/EmojiButton';
 import Icon from '../icon/Icon';
 import LikeButton from '../like-button/LikeButton';
@@ -106,6 +107,7 @@ function PostFooter({
         isVisible={emojiPickerVisible}
         setIsVisible={setEmojiPickerVisible}
         toggleButtonRef={toggleButtonRef}
+        height={commentType === 'LIST' ? 200 : 150}
       />
     </Layout.FlexCol>
   );

@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import ReactEmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { RefObject, useRef } from 'react';
 import { DEFAULT_MARGIN, Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
+import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import { EMOJI_CATEGORIES } from './EmojiPicker.constants';
 import { EmojiPickerCustomStyle } from './EmojiPicker.styled';
 
@@ -12,6 +14,7 @@ interface EmojiPickerProps {
   setIsVisible: (isVisible: boolean) => void;
   toggleButtonRef?: RefObject<HTMLDivElement>;
   selectedEmojis?: string[];
+  height?: number;
 }
 
 function EmojiPicker({
@@ -20,18 +23,22 @@ function EmojiPicker({
   setIsVisible,
   toggleButtonRef,
   selectedEmojis,
+  height = 200,
 }: EmojiPickerProps) {
   const emojiPickerWrapper = useRef<HTMLDivElement>(null);
   const unifiedEmojiList = selectedEmojis?.map((e) => e.codePointAt(0)?.toString(16) || '') || [];
+  const { isMobile } = getMobileDeviceInfo();
 
   useClickOutside({ ref: emojiPickerWrapper, toggleButtonRef, onClick: () => setIsVisible(false) });
-
-  if (!isVisible) return null;
 
   const handleSelectEmoji = (emoji: EmojiClickData, e: MouseEvent) => {
     e.stopPropagation();
     onSelectEmoji(emoji);
   };
+
+  if (!isVisible) return null;
+
+  console.log(toggleButtonRef?.current?.getBoundingClientRect());
 
   return (
     <Layout.Absolute
@@ -42,7 +49,7 @@ function EmojiPicker({
     >
       {selectedEmojis && <EmojiPickerCustomStyle unifiedList={unifiedEmojiList} />}
       <ReactEmojiPicker
-        height={200}
+        height={height}
         onEmojiClick={handleSelectEmoji}
         autoFocusSearch={false}
         searchDisabled
