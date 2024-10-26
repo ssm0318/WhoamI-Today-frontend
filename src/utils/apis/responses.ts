@@ -33,7 +33,7 @@ export const deleteResponse = async ({
 export const getCommentsOfResponse = async (responseId: number, page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Comment[]>>(
-    `/qna/responses/${responseId}/comments${!requestPage ? '' : `?page=${requestPage}`}/`,
+    `/qna/responses/${responseId}/comments${!requestPage ? '' : `?page=${requestPage}`}`,
   );
 
   return data;
@@ -58,7 +58,7 @@ export const getReactionList = async (
 ) => {
   const requestPage = next ? next.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Reaction[]>>(
-    `/reactions/${postType}/${postId}/${requestPage ? `?page=${requestPage}/` : ''}`,
+    `/reactions/${postType}/${postId}/${requestPage ? `?page=${requestPage}` : ''}`,
   );
   return data;
 };
