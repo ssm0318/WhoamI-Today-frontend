@@ -1,4 +1,3 @@
-// useClickOutside.ts
 import { RefObject, useCallback, useEffect } from 'react';
 
 type Handler = (event: MouseEvent | TouchEvent) => void;
@@ -26,21 +25,21 @@ function useClickOutside({ ref, toggleButtonRef, onClick, onTouch }: useClickOut
   );
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
       handleOutside(e, onClick);
     };
-    document.addEventListener('mousedown', handleClickOutside, true);
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside, true);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [handleOutside, onClick]);
 
   useEffect(() => {
-    const handleTouchOutside = (e: TouchEvent) => {
+    const handleTouchOutside = (e: MouseEvent | TouchEvent) => {
       handleOutside(e, onTouch ?? onClick);
     };
-    document.addEventListener('touchstart', handleTouchOutside, { passive: true });
+    document.addEventListener('touchstart', handleTouchOutside);
 
     return () => {
       document.removeEventListener('touchstart', handleTouchOutside);
