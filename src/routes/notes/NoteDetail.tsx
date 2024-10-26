@@ -58,7 +58,7 @@ export function NoteDetail() {
         }
         onGoBack={location.state === 'new' ? handleGoBack : undefined}
       />
-      <Layout.FlexCol w="100%" alignItems="center" mt={12} ph={16}>
+      <Layout.FlexCol w="100%" alignItems="center" mt={12} ph={12}>
         {noteDetail.state === 'loading' && <NoteLoader />}
         {noteDetail.state === 'hasValue' && (
           <NoteItem
