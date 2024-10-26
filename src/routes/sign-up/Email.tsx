@@ -23,13 +23,13 @@ function Email() {
 
   const navigate = useNavigate();
   const onClickNext = () => {
-    const username = emailInput.split('@')[0];
     validateEmail({
       email: emailInput,
       onSuccess: () => {
         setSignUpInfo({
           email: emailInput,
-          username,
+          // NOTE: username은 email로 설정
+          username: emailInput,
         });
         navigate('/signup/password');
       },
