@@ -34,6 +34,7 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [showMore, setShowMore] = useState(false);
   const [inputFocus, setInputFocus] = useState(false);
+  const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
 
   const { username, profile_image } = author_detail ?? {};
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
@@ -44,6 +45,10 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
   };
 
   const handleClickNote = (e: MouseEvent) => {
+    if (emojiPickerVisible) {
+      return setEmojiPickerVisible(false);
+    }
+
     e.stopPropagation();
     if (displayType === 'DETAIL') return;
 
@@ -129,6 +134,8 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
           showComments={() => setBottomSheet(true)}
           setInputFocus={() => setInputFocus(true)}
           displayType={displayType}
+          emojiPickerVisible={emojiPickerVisible}
+          setEmojiPickerVisible={setEmojiPickerVisible}
         />
       </Layout.FlexCol>
       {bottomSheet && (

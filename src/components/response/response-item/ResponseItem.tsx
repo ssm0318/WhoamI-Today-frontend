@@ -40,6 +40,7 @@ function ResponseItem({
   const [overflowSummary, setOverflowSummary] = useState<string>();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [inputFocus, setInputFocus] = useState(false);
+  const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
 
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
@@ -50,6 +51,10 @@ function ResponseItem({
   };
 
   const handleClickDetail = (e: MouseEvent) => {
+    if (emojiPickerVisible) {
+      return setEmojiPickerVisible(false);
+    }
+
     e.stopPropagation();
     if (displayType === 'DETAIL') return;
 
@@ -154,6 +159,8 @@ function ResponseItem({
             showComments={() => setBottomSheet(true)}
             setInputFocus={() => setInputFocus(true)}
             displayType={displayType}
+            emojiPickerVisible={emojiPickerVisible}
+            setEmojiPickerVisible={setEmojiPickerVisible}
           />
         </Layout.FlexCol>
       </Layout.FlexRow>

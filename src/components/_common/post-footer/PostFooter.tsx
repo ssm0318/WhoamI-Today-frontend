@@ -19,6 +19,8 @@ type PostFooterProps = {
   displayType?: POST_DP_TYPE;
   showComments: () => void;
   setInputFocus: () => void;
+  emojiPickerVisible: boolean;
+  setEmojiPickerVisible: (isVisible: boolean) => void;
 };
 
 function PostFooter({
@@ -28,10 +30,11 @@ function PostFooter({
   displayType = 'LIST',
   showComments,
   setInputFocus,
+  emojiPickerVisible,
+  setEmojiPickerVisible,
 }: PostFooterProps) {
   const { comment_count, type, current_user_reaction_id_list } = post;
   const navigate = useNavigate();
-  const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
   const toggleButtonRef = useRef<HTMLDivElement>(null);
   const [myReactionList, setMyReactionList] = useState<{ id: number; emoji: string }[]>(
     current_user_reaction_id_list,
