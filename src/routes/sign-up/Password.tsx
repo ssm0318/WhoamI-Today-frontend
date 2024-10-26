@@ -2,21 +2,30 @@ import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
+import { DEFAULT_REDIRECTION_PATH } from '@constants/url';
 import { Button, Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
-import { validatePassword } from '@utils/apis/user';
+import { signUp, validatePassword } from '@utils/apis/user';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 function Password() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_up' });
-
-  const [passwordInput, setPasswordInput] = useState('');
+  const { signUpInfo, resetSignUpInfo, openToast } = useBoundStore((state) => ({
+    signUpInfo: state.signUpInfo,
+    resetSignUpInfo: state.resetSignUpInfo,
+    openToast: state.openToast,
+  }));
+  const [passwordInput, setPasswordInput] = useState(signUpInfo.password || '');
   const [passwordError, setPasswordError] = useState<string | null>(null);
-  const setSignUpInfo = useBoundStore((state) => state.setSignUpInfo);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPasswordInput(e.target.value);
     if (passwordError) setPasswordError(null);
+  };
+
+  const handleOnSignUpError = () => {
+    openToast({ message: t('error') });
+    navigate('/');
   };
 
   const navigate = useNavigate();
@@ -24,8 +33,17 @@ function Password() {
     validatePassword({
       password: passwordInput,
       onSuccess: () => {
-        setSignUpInfo({ password: passwordInput });
-        navigate('/signup/research-intro');
+        signUp({
+          signUpInfo: {
+            ...signUpInfo,
+            password: passwordInput,
+          },
+          onSuccess: () => {
+            resetSignUpInfo();
+            navigate(DEFAULT_REDIRECTION_PATH);
+          },
+          onError: handleOnSignUpError,
+        });
       },
       onError: (e) => setPasswordError(e),
     });
