@@ -9,10 +9,12 @@ import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 function Email() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_up' });
-
-  const [emailInput, setEmailInput] = useState('');
+  const { setSignUpInfo, signUpInfo } = useBoundStore((state) => ({
+    setSignUpInfo: state.setSignUpInfo,
+    signUpInfo: state.signUpInfo,
+  }));
+  const [emailInput, setEmailInput] = useState(signUpInfo.email || '');
   const [emailError, setEmailError] = useState<string | null>(null);
-  const setSignUpInfo = useBoundStore((state) => state.setSignUpInfo);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmailInput(e.target.value);
@@ -21,10 +23,14 @@ function Email() {
 
   const navigate = useNavigate();
   const onClickNext = () => {
+    const username = emailInput.split('@')[0];
     validateEmail({
       email: emailInput,
       onSuccess: () => {
-        setSignUpInfo({ email: emailInput });
+        setSignUpInfo({
+          email: emailInput,
+          username,
+        });
         navigate('/signup/password');
       },
       onError: (e) => setEmailError(e),
