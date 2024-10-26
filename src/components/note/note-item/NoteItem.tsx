@@ -36,9 +36,9 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
   const [showMore, setShowMore] = useState(false);
   const [inputFocus, setInputFocus] = useState(false);
 
-  const { activeTarget, setActiveTarget } = useBoundStore((state) => ({
-    activeTarget: state.activeTarget,
-    setActiveTarget: state.setActiveTarget,
+  const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
+    emojiPickerTarget: state.emojiPickerTarget,
+    setEmojiPickerTarget: state.setEmojiPickerTarget,
   }));
 
   const { username, profile_image } = author_detail ?? {};
@@ -50,8 +50,8 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
   };
 
   const handleClickNote = (e: MouseEvent) => {
-    if (activeTarget) {
-      return setActiveTarget(null);
+    if (emojiPickerTarget) {
+      return setEmojiPickerTarget(null);
     }
 
     e.stopPropagation();

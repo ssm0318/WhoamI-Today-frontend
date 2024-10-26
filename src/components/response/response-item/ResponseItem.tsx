@@ -42,9 +42,9 @@ function ResponseItem({
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [inputFocus, setInputFocus] = useState(false);
 
-  const { activeTarget, setActiveTarget } = useBoundStore((state) => ({
-    activeTarget: state.activeTarget,
-    setActiveTarget: state.setActiveTarget,
+  const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
+    emojiPickerTarget: state.emojiPickerTarget,
+    setEmojiPickerTarget: state.setEmojiPickerTarget,
   }));
 
   const navigate = useNavigate();
@@ -56,8 +56,8 @@ function ResponseItem({
   };
 
   const handleClickDetail = (e: MouseEvent) => {
-    if (activeTarget) {
-      return setActiveTarget(null);
+    if (emojiPickerTarget) {
+      return setEmojiPickerTarget(null);
     }
 
     e.stopPropagation();

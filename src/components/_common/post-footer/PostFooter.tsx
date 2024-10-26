@@ -36,9 +36,9 @@ function PostFooter({
   const [myReactionList, setMyReactionList] = useState<{ id: number; emoji: string }[]>(
     current_user_reaction_id_list,
   );
-  const { activeTarget, setActiveTarget } = useBoundStore((state) => ({
-    activeTarget: state.activeTarget,
-    setActiveTarget: state.setActiveTarget,
+  const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
+    emojiPickerTarget: state.emojiPickerTarget,
+    setEmojiPickerTarget: state.setEmojiPickerTarget,
   }));
   const myEmojiList = myReactionList.map((reaction) => reaction.emoji);
   const [t] = useTranslation('translation', {
@@ -66,7 +66,7 @@ function PostFooter({
   const handleSelectEmoji = async (emoji: EmojiClickData) => {
     const response = await postReaction(post.type, post.id, emoji.emoji);
 
-    setActiveTarget(null);
+    setEmojiPickerTarget(null);
     setMyReactionList([
       ...myReactionList,
       {
@@ -85,16 +85,17 @@ function PostFooter({
   };
 
   const handleClickEmojiButton = () => {
-    const isCurrentlyActive = activeTarget?.type === post.type && activeTarget?.id === post.id;
+    const isCurrentlyActive =
+      emojiPickerTarget?.type === post.type && emojiPickerTarget?.id === post.id;
 
-    setActiveTarget(isCurrentlyActive ? null : { type: post.type, id: post.id });
+    setEmojiPickerTarget(isCurrentlyActive ? null : { type: post.type, id: post.id });
   };
 
   useEffect(() => {
     return () => {
-      setActiveTarget(null);
+      setEmojiPickerTarget(null);
     };
-  }, [setActiveTarget]);
+  }, [setEmojiPickerTarget]);
 
   return (
     <Layout.FlexCol

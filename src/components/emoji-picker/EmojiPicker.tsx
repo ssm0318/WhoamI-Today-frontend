@@ -27,9 +27,9 @@ function EmojiPicker({
   onUnselectEmoji,
   post,
 }: EmojiPickerProps) {
-  const { activeTarget, setActiveTarget } = useBoundStore((state) => ({
-    activeTarget: state.activeTarget,
-    setActiveTarget: state.setActiveTarget,
+  const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
+    emojiPickerTarget: state.emojiPickerTarget,
+    setEmojiPickerTarget: state.setEmojiPickerTarget,
   }));
 
   const unifiedEmojiList = selectedEmojis?.map((e) => getUnifiedEmoji(e)) || [];
@@ -44,20 +44,20 @@ function EmojiPicker({
       onUnselectEmoji?.(emoji);
     }
 
-    setActiveTarget(null);
+    setEmojiPickerTarget(null);
   };
 
   const emojiPickerWrapper = useDetectOutsideClick({
     callback: () => {
-      setActiveTarget(null);
+      setEmojiPickerTarget(null);
     },
-    enabled: !!(activeTarget && activeTarget.type === 'CheckIn'),
+    enabled: !!(emojiPickerTarget && emojiPickerTarget.type === 'CheckIn'),
   });
 
   const isVisible =
-    activeTarget &&
-    (activeTarget.type === 'CheckIn' ||
-      (activeTarget.type === post?.type && activeTarget.id === post?.id));
+    emojiPickerTarget &&
+    (emojiPickerTarget.type === 'CheckIn' ||
+      (emojiPickerTarget.type === post?.type && emojiPickerTarget.id === post?.id));
 
   if (!isVisible) return null;
 

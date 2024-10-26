@@ -14,29 +14,29 @@ interface CheckInEmojiProps {
 }
 
 function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
-  const { activeTarget, setActiveTarget } = useBoundStore((state) => ({
-    activeTarget: state.activeTarget,
-    setActiveTarget: state.setActiveTarget,
+  const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
+    emojiPickerTarget: state.emojiPickerTarget,
+    setEmojiPickerTarget: state.setEmojiPickerTarget,
   }));
   const toggleButtonRef = useRef<HTMLDivElement>(null);
 
   const handleClickEmoji = () => {
-    if (activeTarget) {
-      return setActiveTarget(null);
+    if (emojiPickerTarget) {
+      return setEmojiPickerTarget(null);
     }
-    setActiveTarget({ type: 'CheckIn', id: null });
+    setEmojiPickerTarget({ type: 'CheckIn', id: null });
   };
 
   const handleSelectEmoji = (e: EmojiClickData) => {
     onSelectEmoji(e);
-    setActiveTarget(null);
+    setEmojiPickerTarget(null);
   };
 
   useEffect(() => {
     return () => {
-      setActiveTarget(null);
+      setEmojiPickerTarget(null);
     };
-  }, [setActiveTarget]);
+  }, [setEmojiPickerTarget]);
 
   return (
     <Layout.FlexCol w="100%">
@@ -45,7 +45,7 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
           alignItems="center"
           justifyContent="center"
           rounded={12}
-          outline={activeTarget ? 'BLACK' : 'LIGHT_GRAY'}
+          outline={emojiPickerTarget ? 'BLACK' : 'LIGHT_GRAY'}
           w={EMOJI_ICON_SIZE}
           h={EMOJI_ICON_SIZE}
         >
@@ -54,7 +54,7 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
           ) : (
             <Icon
               onClick={handleClickEmoji}
-              name={activeTarget ? 'add_reaction_active' : 'add_reaction_default'}
+              name={emojiPickerTarget ? 'add_reaction_active' : 'add_reaction_default'}
               size={24}
             />
           )}
