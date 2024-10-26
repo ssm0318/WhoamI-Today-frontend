@@ -74,7 +74,7 @@ function AllResponses({ from }: Props) {
             key={response.id}
             response={response}
             isMyPage={!username}
-            commentType="DETAIL"
+            displayType="DETAIL"
             refresh={handleRefetch}
           />
         ))}

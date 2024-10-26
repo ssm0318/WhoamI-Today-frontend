@@ -16,14 +16,14 @@ import QuestionItem from '../question-item/QuestionItem';
 interface ResponseItemProps {
   response: Response;
   isMyPage?: boolean;
-  commentType?: POST_DP_TYPE;
+  displayType?: POST_DP_TYPE;
   refresh?: () => void;
 }
 
 function ResponseItem({
   response,
   isMyPage = false,
-  commentType = 'LIST',
+  displayType = 'LIST',
   refresh,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
@@ -51,7 +51,7 @@ function ResponseItem({
 
   const handleClickDetail = (e: MouseEvent) => {
     e.stopPropagation();
-    if (commentType === 'DETAIL') return;
+    if (displayType === 'DETAIL') return;
 
     if (!isMyPage) {
       navigate(`./responses/${response.id}`);
@@ -67,14 +67,14 @@ function ResponseItem({
   };
 
   useEffect(() => {
-    if (commentType !== 'LIST') return;
+    if (displayType !== 'LIST') return;
     if (content.length > MAX_RESPONSE_CONTENT_LENGTH)
       setOverflowSummary(content.slice(0, MAX_RESPONSE_CONTENT_LENGTH));
 
     const contentArrWithNewLine = content.split('\n');
     if (contentArrWithNewLine.length > MAX_RESPONSE_NEW_LINE)
       setOverflowSummary(contentArrWithNewLine.slice(0, MAX_RESPONSE_NEW_LINE).join('\n'));
-  }, [content, commentType]);
+  }, [content, displayType]);
 
   return (
     <>
@@ -82,8 +82,11 @@ function ResponseItem({
         p={WRAPPER_PADDING}
         rounded={12}
         outline="LIGHT"
-        w={commentType === 'LIST' ? RESPONSE_WIDTH : '100%'}
+        w={displayType === 'LIST' ? RESPONSE_WIDTH : '100%'}
         onClick={handleClickDetail}
+        style={{
+          overflow: displayType === 'DETAIL' ? 'visible' : undefined,
+        }}
       >
         <PostMoreModal
           isVisible={showMore}
@@ -150,7 +153,7 @@ function ResponseItem({
             post={response}
             showComments={() => setBottomSheet(true)}
             setInputFocus={() => setInputFocus(true)}
-            commentType={commentType}
+            displayType={displayType}
           />
         </Layout.FlexCol>
       </Layout.FlexRow>

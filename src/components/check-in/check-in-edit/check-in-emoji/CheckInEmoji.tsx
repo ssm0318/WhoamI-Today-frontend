@@ -54,7 +54,6 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
         onSelectEmoji={handleSelectEmoji}
         isVisible={emojiPickerVisible}
         setIsVisible={setEmojiPickerVisible}
-        toggleButtonRef={toggleButtonRef}
       />
     </Layout.FlexCol>
   );

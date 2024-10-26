@@ -15,11 +15,11 @@ import NoteImageList from '../note-image-list/NoteImageList';
 interface NoteItemProps {
   note: Note;
   isMyPage: boolean;
-  commentType?: POST_DP_TYPE;
+  displayType?: POST_DP_TYPE;
   refresh?: () => void;
 }
 
-function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemProps) {
+function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemProps) {
   const {
     content,
     created_at,
@@ -45,7 +45,7 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
 
   const handleClickNote = (e: MouseEvent) => {
     e.stopPropagation();
-    if (commentType === 'DETAIL') return;
+    if (displayType === 'DETAIL') return;
 
     if (!isMyPage) {
       navigate(`./notes/${id}`);
@@ -69,6 +69,9 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
         outline="LIGHT"
         rounded={12}
         onClick={handleClickNote}
+        style={{
+          overflow: displayType === 'DETAIL' ? 'visible' : undefined,
+        }}
       >
         <PostMoreModal
           isVisible={showMore}
@@ -125,7 +128,7 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
           post={note}
           showComments={() => setBottomSheet(true)}
           setInputFocus={() => setInputFocus(true)}
-          commentType={commentType}
+          displayType={displayType}
         />
       </Layout.FlexCol>
       {bottomSheet && (

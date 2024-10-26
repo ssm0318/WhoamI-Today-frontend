@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import ReactEmojiPicker, { EmojiClickData } from 'emoji-picker-react';
-import { RefObject, useRef } from 'react';
+import { useRef } from 'react';
 import { DEFAULT_MARGIN, Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
-import useClickOutside from '@hooks/useClickOutside';
-import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import { EMOJI_CATEGORIES } from './EmojiPicker.constants';
 import { EmojiPickerCustomStyle } from './EmojiPicker.styled';
 
@@ -13,25 +11,24 @@ interface EmojiPickerProps {
   onUnselectEmoji?: (emoji: EmojiClickData) => void;
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
-  toggleButtonRef?: RefObject<HTMLDivElement>;
   selectedEmojis?: string[];
   height?: number;
+  left?: number;
+  top?: number;
 }
 
 function EmojiPicker({
   onSelectEmoji,
   isVisible,
   setIsVisible,
-  toggleButtonRef,
   selectedEmojis,
   height = 200,
+  left = DEFAULT_MARGIN,
+  top,
   onUnselectEmoji,
 }: EmojiPickerProps) {
   const emojiPickerWrapper = useRef<HTMLDivElement>(null);
   const unifiedEmojiList = selectedEmojis?.map((e) => e.codePointAt(0)?.toString(16) || '') || [];
-  const { isMobile } = getMobileDeviceInfo();
-
-  useClickOutside({ ref: emojiPickerWrapper, toggleButtonRef, onClick: () => setIsVisible(false) });
 
   const handleSelectEmoji = (emoji: EmojiClickData, e: MouseEvent) => {
     e.stopPropagation();
@@ -46,15 +43,8 @@ function EmojiPicker({
 
   if (!isVisible) return null;
 
-  console.log(toggleButtonRef?.current?.getBoundingClientRect());
-
   return (
-    <Layout.Absolute
-      ref={emojiPickerWrapper}
-      l={DEFAULT_MARGIN}
-      mt={(toggleButtonRef?.current?.getBoundingClientRect().height ?? 0) + 12}
-      z={Z_INDEX.EMOJI_PICKER}
-    >
+    <Layout.Absolute ref={emojiPickerWrapper} l={left} mt={top ?? 0} z={Z_INDEX.EMOJI_PICKER}>
       {selectedEmojis && <EmojiPickerCustomStyle unifiedList={unifiedEmojiList} />}
       <ReactEmojiPicker
         height={height}

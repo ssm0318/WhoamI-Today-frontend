@@ -17,7 +17,7 @@ type PostFooterProps = {
   reactionSampleUserList: ReactionUserSample[];
   isMyPage: boolean;
   post: Response | Note;
-  commentType?: POST_DP_TYPE;
+  displayType?: POST_DP_TYPE;
   showComments: () => void;
   setInputFocus: () => void;
 };
@@ -26,7 +26,7 @@ function PostFooter({
   reactionSampleUserList: sampleUserList,
   isMyPage,
   post,
-  commentType = 'LIST',
+  displayType = 'LIST',
   showComments,
   setInputFocus,
 }: PostFooterProps) {
@@ -86,7 +86,14 @@ function PostFooter({
   };
 
   return (
-    <Layout.FlexCol gap={8} outline="BLACK" w="100%">
+    <Layout.FlexCol
+      gap={8}
+      w="100%"
+      style={{
+        position: displayType === 'DETAIL' ? 'relative' : undefined,
+        overflow: displayType === 'DETAIL' ? 'visible' : undefined,
+      }}
+    >
       <Layout.FlexRow gap={10} alignItems="center">
         {isMyPage ? (
           // 좋아요나 이모지를 누른 사용자 리스트
@@ -109,7 +116,7 @@ function PostFooter({
         )}
         <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
       </Layout.FlexRow>
-      {!!comment_count && commentType === 'LIST' && (
+      {!!comment_count && displayType === 'LIST' && (
         <Layout.FlexRow>
           <button type="button" onClick={handleClickCommentText}>
             <Typo type="label-large" color="BLACK" underline>
@@ -124,8 +131,9 @@ function PostFooter({
         onUnselectEmoji={handleUnselectEmoji}
         isVisible={emojiPickerVisible}
         setIsVisible={setEmojiPickerVisible}
-        toggleButtonRef={toggleButtonRef}
-        height={commentType === 'LIST' ? 200 : 150}
+        height={displayType === 'LIST' ? 200 : 150}
+        left={displayType === 'DETAIL' ? -10 : undefined}
+        top={(toggleButtonRef?.current?.getBoundingClientRect()?.height ?? 0) + 6}
       />
     </Layout.FlexCol>
   );
