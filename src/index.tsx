@@ -72,7 +72,7 @@ const router = createBrowserRouter([
         path: 'my',
         children: [
           { path: '', element: <My /> },
-          { path: 'responses', element: <AllResponses isMainContainer /> },
+          { path: 'responses', element: <AllResponses from="my" /> },
         ],
       },
       {
@@ -107,7 +107,7 @@ const router = createBrowserRouter([
               {
                 path: 'responses',
                 children: [
-                  { path: '', element: <AllResponses /> },
+                  { path: '', element: <AllResponses from="user" /> },
                   { path: ':responseId', element: <ResponseDetail /> },
                   { path: ':responseId/likes', element: <Likes /> },
                 ],

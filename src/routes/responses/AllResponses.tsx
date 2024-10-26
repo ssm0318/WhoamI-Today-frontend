@@ -15,10 +15,10 @@ import { getUserResponses } from '@utils/apis/user';
 import { MainScrollContainer } from 'src/routes/Root';
 
 interface Props {
-  isMainContainer?: boolean;
+  from: 'my' | 'user';
 }
 
-function AllResponses({ isMainContainer = false }: Props) {
+function AllResponses({ from }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'all_responses' });
   const [responses, setResponses] = useState<Response[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
@@ -56,7 +56,8 @@ function AllResponses({ isMainContainer = false }: Props) {
     await fetchResponses(null, true);
   };
 
-  const Container = isMainContainer ? MainContainer : MainScrollContainer;
+  const useMainContainer = from === 'my';
+  const Container = useMainContainer ? MainContainer : MainScrollContainer;
 
   return (
     <Container>
@@ -64,7 +65,7 @@ function AllResponses({ isMainContainer = false }: Props) {
       <Layout.FlexCol
         id="all-responses"
         w="100%"
-        mt={(isMainContainer ? TITLE_HEADER_HEIGHT : 0) + TOP_MARGIN}
+        mt={(useMainContainer ? TITLE_HEADER_HEIGHT : 0) + TOP_MARGIN}
         ph={16}
         gap={12}
       >
