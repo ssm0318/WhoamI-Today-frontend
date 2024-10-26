@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import ReactEmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { useRef } from 'react';
 import { DEFAULT_MARGIN, Z_INDEX } from '@constants/layout';
@@ -10,7 +9,6 @@ interface EmojiPickerProps {
   onSelectEmoji: (emoji: EmojiClickData) => void;
   onUnselectEmoji?: (emoji: EmojiClickData) => void;
   isVisible: boolean;
-  setIsVisible: (isVisible: boolean) => void;
   selectedEmojis?: string[];
   height?: number;
   left?: number;
@@ -20,7 +18,6 @@ interface EmojiPickerProps {
 function EmojiPicker({
   onSelectEmoji,
   isVisible,
-  setIsVisible,
   selectedEmojis,
   height = 200,
   left = DEFAULT_MARGIN,

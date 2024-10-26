@@ -1,12 +1,11 @@
-/* eslint-disable */
-import EmojiPicker from '@components/emoji-picker/EmojiPicker';
-import { Layout, Typo } from '@design-system';
-import { Note, POST_DP_TYPE, POST_TYPE, ReactionUserSample, Response } from '@models/post';
-import { deleteReaction, postReaction } from '@utils/apis/reaction';
 import { EmojiClickData } from 'emoji-picker-react';
 import { MouseEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import EmojiPicker from '@components/emoji-picker/EmojiPicker';
+import { Layout, Typo } from '@design-system';
+import { Note, POST_DP_TYPE, POST_TYPE, ReactionUserSample, Response } from '@models/post';
+import { deleteReaction, postReaction } from '@utils/apis/reaction';
 import EmojiButton from '../emoji-button/EmojiButton';
 import Icon from '../icon/Icon';
 import LikeButton from '../like-button/LikeButton';
@@ -130,7 +129,6 @@ function PostFooter({
         onSelectEmoji={handleSelectEmoji}
         onUnselectEmoji={handleUnselectEmoji}
         isVisible={emojiPickerVisible}
-        setIsVisible={setEmojiPickerVisible}
         height={displayType === 'LIST' ? 200 : 150}
         left={displayType === 'DETAIL' ? -10 : undefined}
         top={(toggleButtonRef?.current?.getBoundingClientRect()?.height ?? 0) + 6}

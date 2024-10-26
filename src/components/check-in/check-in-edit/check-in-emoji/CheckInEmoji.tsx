@@ -50,11 +50,7 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
         {mood && <DeleteButton onClick={onDelete} size={32} />}
       </Layout.FlexRow>
       {/* emoji toggle popup */}
-      <EmojiPicker
-        onSelectEmoji={handleSelectEmoji}
-        isVisible={emojiPickerVisible}
-        setIsVisible={setEmojiPickerVisible}
-      />
+      <EmojiPicker onSelectEmoji={handleSelectEmoji} isVisible={emojiPickerVisible} />
     </Layout.FlexCol>
   );
 }
