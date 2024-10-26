@@ -109,24 +109,17 @@ const router = createBrowserRouter([
                 children: [
                   { path: '', element: <AllResponses from="user" /> },
                   { path: ':responseId', element: <ResponseDetail /> },
-                  { path: ':responseId/likes', element: <Likes /> },
                 ],
               },
               {
                 path: 'notes',
-                children: [
-                  { path: ':noteId', element: <NoteDetail /> },
-                  { path: ':noteId/likes', element: <Likes /> },
-                ],
+                children: [{ path: ':noteId', element: <NoteDetail /> }],
               },
             ],
           },
         ],
       },
-      {
-        path: 'comments/:commentId/likes',
-        element: <Likes />,
-      },
+
       {
         path: 'check-in',
         children: [{ path: 'edit', element: <CheckInEdit /> }],
