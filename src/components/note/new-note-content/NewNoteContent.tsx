@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import ImageSlider from '@components/_common/image-slider/ImageSlider';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, SvgIcon, Typo } from '@design-system';
@@ -8,6 +7,7 @@ import { NewNoteForm } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import NewNoteImageEdit from '../new-note-image-edit/NewNoteImageEdit';
+import { NoteImage } from '../note-image/NoteImage.styled';
 import { NoteInput } from './NoteInputBox.styled';
 
 interface NoteInformationProps {
@@ -52,17 +52,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const onCompleteImageCrop = (croppedImage: CroppedImg) => {
     setNoteInfo((prevNoteInfo) => ({
       ...prevNoteInfo,
-      // TODO: 노트 이미지 1개로 조정 필요
-      images: [...(prevNoteInfo?.images || []), croppedImage],
-    }));
-  };
-
-  const handleDeleteImage = (imgIndex: number) => {
-    if (!noteInfo.images) return;
-
-    setNoteInfo((prevNoteInfo) => ({
-      ...prevNoteInfo,
-      images: prevNoteInfo?.images?.filter((image, index) => index !== imgIndex) || [],
+      images: [croppedImage],
     }));
   };
 
@@ -108,13 +98,8 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
           onCompleteImageCrop={onCompleteImageCrop}
         />
       ) : noteInfo?.images?.length ? (
-        // TODO: 이미지 뷰어
         <Layout.FlexCol alignItems="center" w="100%">
-          <ImageSlider
-            images={noteInfo.images.map((img) => img.url)}
-            rounded={17}
-            onDeleteImage={handleDeleteImage}
-          />
+          {noteInfo.images[0] && <NoteImage src={noteInfo.images[0].url} />}
         </Layout.FlexCol>
       ) : null}
     </>

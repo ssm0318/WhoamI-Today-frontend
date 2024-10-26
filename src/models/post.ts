@@ -94,7 +94,6 @@ export interface Note extends ContentsCommon {
 
 export interface NewNoteForm {
   content: string;
-  // TODO: 노트 이미지 개수 1개로 조정 필요
   images?: CroppedImg[];
 }
 // 질문에 대한 답변 리스트
