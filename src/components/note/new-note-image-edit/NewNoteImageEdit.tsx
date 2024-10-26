@@ -2,12 +2,12 @@ import { SyntheticEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactCrop, { centerCrop, PixelCrop } from 'react-image-crop';
 import SubHeader from '@components/sub-header/SubHeader';
-import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { NOTE_IMAGE_CROP_MIN_SIZE } from '@constants/size';
 import { Layout, Typo } from '@design-system';
 import { CroppedImg, getReactImageCrop } from '@utils/getCroppedImg';
 // NOTE: 이렇게 css 를 직접 로드하지 않으면 로드가 안됨... 확인 필요
 import 'react-image-crop/dist/ReactCrop.css';
+import { StyledNewNoteImage, StyledNewNoteImageWrapper } from './NewNoteImageEdit.styled';
 
 interface NewNoteImageEditProps {
   setIsVisible: (visible: boolean) => void;
@@ -82,21 +82,9 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
             }
             onGoBack={handleClickCancel}
           />
-          <Layout.FlexCol
-            w="100%"
-            h="100%"
-            justifyContent="center"
-            alignItems="center"
-            pt={TOP_NAVIGATION_HEIGHT}
-            pb={BOTTOM_TABBAR_HEIGHT}
-          >
-            {/* TODO: 세로로 긴 이미지도 대응 */}
-            <img
-              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-              src={completeImg.url}
-              alt="cropped img"
-            />
-          </Layout.FlexCol>
+          <StyledNewNoteImageWrapper>
+            <StyledNewNoteImage src={completeImg.url} />
+          </StyledNewNoteImageWrapper>
         </>
       ) : (
         imageUrl && (
@@ -113,34 +101,16 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
               }
               onGoBack={handleClickCancel}
             />
-            <Layout.FlexCol
-              w="100%"
-              h="100%"
-              justifyContent="center"
-              alignItems="center"
-              pt={TOP_NAVIGATION_HEIGHT}
-              pb={BOTTOM_TABBAR_HEIGHT}
-            >
+            <StyledNewNoteImageWrapper>
               <ReactCrop
                 crop={crop}
                 minHeight={NOTE_IMAGE_CROP_MIN_SIZE}
                 minWidth={NOTE_IMAGE_CROP_MIN_SIZE}
                 onChange={onImageCropChange}
               >
-                <img
-                  ref={imgRef}
-                  alt="input img"
-                  src={imageUrl}
-                  onLoad={onImageLoad}
-                  // TODO: 세로로 긴 이미지도 대응
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                  }}
-                />
+                <StyledNewNoteImage ref={imgRef} src={imageUrl} onLoad={onImageLoad} />
               </ReactCrop>
-            </Layout.FlexCol>
+            </StyledNewNoteImageWrapper>
           </>
         )
       )}
