@@ -62,7 +62,6 @@ function PostFooter({
         )}
         <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
       </Layout.FlexRow>
-
       {!!comment_count && commentType === 'LIST' && (
         <Layout.FlexRow>
           <button type="button" onClick={handleClickCommentText}>
