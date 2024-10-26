@@ -10,6 +10,7 @@ import { EmojiPickerCustomStyle } from './EmojiPicker.styled';
 
 interface EmojiPickerProps {
   onSelectEmoji: (emoji: EmojiClickData) => void;
+  onUnselectEmoji?: (emoji: EmojiClickData) => void;
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
   toggleButtonRef?: RefObject<HTMLDivElement>;
@@ -24,6 +25,7 @@ function EmojiPicker({
   toggleButtonRef,
   selectedEmojis,
   height = 200,
+  onUnselectEmoji,
 }: EmojiPickerProps) {
   const emojiPickerWrapper = useRef<HTMLDivElement>(null);
   const unifiedEmojiList = selectedEmojis?.map((e) => e.codePointAt(0)?.toString(16) || '') || [];
@@ -33,7 +35,13 @@ function EmojiPicker({
 
   const handleSelectEmoji = (emoji: EmojiClickData, e: MouseEvent) => {
     e.stopPropagation();
-    onSelectEmoji(emoji);
+
+    const isAlreadySelected = selectedEmojis?.includes(emoji.emoji);
+    if (!isAlreadySelected) {
+      onSelectEmoji(emoji);
+    } else {
+      onUnselectEmoji?.(emoji);
+    }
   };
 
   if (!isVisible) return null;
@@ -57,6 +65,7 @@ function EmojiPicker({
           showPreview: false,
         }}
         categories={EMOJI_CATEGORIES}
+        lazyLoadEmojis
       />
     </Layout.Absolute>
   );

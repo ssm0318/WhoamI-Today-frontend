@@ -4,7 +4,13 @@ import axios from './axios';
 
 // POST Reaction
 export const postReaction = async (postType: ReactionPostType, postId: number, emoji: string) => {
-  await axios.post(`/reactions/${postType}/${postId}/`, { emoji });
+  const res = await axios.post<Reaction>(`/reactions/${postType}/${postId}/`, { emoji });
+  return res.data;
+};
+
+// DELETE Reaction
+export const deleteReaction = async (reactionId: number) => {
+  await axios.delete(`/reactions/${reactionId}/`);
 };
 
 // GET Reaction List

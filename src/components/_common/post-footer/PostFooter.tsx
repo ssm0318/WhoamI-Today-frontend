@@ -2,7 +2,7 @@
 import EmojiPicker from '@components/emoji-picker/EmojiPicker';
 import { Layout, Typo } from '@design-system';
 import { Note, POST_DP_TYPE, POST_TYPE, ReactionUserSample, Response } from '@models/post';
-import { postReaction } from '@utils/apis/reaction';
+import { deleteReaction, postReaction } from '@utils/apis/reaction';
 import { EmojiClickData } from 'emoji-picker-react';
 import { MouseEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -34,7 +34,10 @@ function PostFooter({
   const navigate = useNavigate();
   const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
   const toggleButtonRef = useRef<HTMLDivElement>(null);
-
+  const [myReactionList, setMyReactionList] = useState<{ id: number; emoji: string }[]>(
+    current_user_reaction_id_list,
+  );
+  const myEmojiList = myReactionList.map((reaction) => reaction.emoji);
   const [t] = useTranslation('translation', {
     keyPrefix: post.type === POST_TYPE.RESPONSE ? 'responses' : 'notes',
   });
@@ -58,7 +61,24 @@ function PostFooter({
   };
 
   const handleSelectEmoji = async (emoji: EmojiClickData) => {
-    await postReaction(post.type, post.id, emoji.emoji);
+    const response = await postReaction(post.type, post.id, emoji.emoji);
+
+    setEmojiPickerVisible(false);
+    setMyReactionList([
+      ...myReactionList,
+      {
+        id: response.id,
+        emoji: response.emoji,
+      },
+    ]);
+  };
+
+  const handleUnselectEmoji = async (emoji: EmojiClickData) => {
+    const targetReaction = myReactionList.find((reaction) => reaction.emoji === emoji.emoji);
+
+    if (!targetReaction) return;
+    await deleteReaction(targetReaction.id);
+    setMyReactionList(myReactionList.filter((reaction) => reaction.emoji !== emoji.emoji));
   };
 
   const handleClickEmojiButton = () => {
@@ -79,13 +99,10 @@ function PostFooter({
           <>
             <LikeButton postType={type} post={post} iconSize={23} m={0} />
             <Layout.FlexRow ref={toggleButtonRef}>
-              {(current_user_reaction_id_list || []).length === 0 ? (
+              {(myEmojiList || []).length === 0 ? (
                 <EmojiButton post={post} onClick={handleClickEmojiButton} />
               ) : (
-                <PostMyEmojiList
-                  onClick={handleClickEmojiButton}
-                  emojiList={current_user_reaction_id_list.map((reaction) => reaction.emoji)}
-                />
+                <PostMyEmojiList onClick={handleClickEmojiButton} emojiList={myEmojiList} />
               )}
             </Layout.FlexRow>
           </>
@@ -102,8 +119,9 @@ function PostFooter({
         </Layout.FlexRow>
       )}
       <EmojiPicker
-        selectedEmojis={current_user_reaction_id_list.map((reaction) => reaction.emoji)}
+        selectedEmojis={myEmojiList}
         onSelectEmoji={handleSelectEmoji}
+        onUnselectEmoji={handleUnselectEmoji}
         isVisible={emojiPickerVisible}
         setIsVisible={setEmojiPickerVisible}
         toggleButtonRef={toggleButtonRef}
