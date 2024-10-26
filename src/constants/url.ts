@@ -9,3 +9,4 @@ export const LEARN_MORE_ABOUT_WHOAMI_TODAY_NOTION_URL =
   'https://www.notion.so/jinsungoo/What-is-WhoAmI-Today-TBU-7466713e676a42eca7d7d99c3ac341e9';
 
 export const DEFAULT_REDIRECTION_PATH = '/friends';
+export const AFTER_SIGNUP_PATH = '/settings/edit-profile';

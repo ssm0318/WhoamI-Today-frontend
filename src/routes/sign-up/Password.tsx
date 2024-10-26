@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
-import { DEFAULT_REDIRECTION_PATH } from '@constants/url';
+import { AFTER_SIGNUP_PATH } from '@constants/url';
 import { Button, Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 import { signUp, validatePassword } from '@utils/apis/user';
@@ -40,7 +40,8 @@ function Password() {
           },
           onSuccess: () => {
             resetSignUpInfo();
-            navigate(DEFAULT_REDIRECTION_PATH);
+            // 가입 후 프로필 수정 페이지로 이동
+            navigate(AFTER_SIGNUP_PATH);
           },
           onError: handleOnSignUpError,
         });
