@@ -90,7 +90,6 @@ function PostFooter({
       w="100%"
       style={{
         position: displayType === 'DETAIL' ? 'relative' : undefined,
-        overflow: displayType === 'DETAIL' ? 'visible' : undefined,
       }}
     >
       <Layout.FlexRow gap={10} alignItems="center">
