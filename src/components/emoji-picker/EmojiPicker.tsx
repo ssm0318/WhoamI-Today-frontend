@@ -2,6 +2,7 @@ import ReactEmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { useRef } from 'react';
 import { DEFAULT_MARGIN, Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
+import { getUnifiedEmoji } from '@utils/emojiHelpers';
 import { EMOJI_CATEGORIES } from './EmojiPicker.constants';
 import { EmojiPickerCustomStyle } from './EmojiPicker.styled';
 
@@ -25,7 +26,8 @@ function EmojiPicker({
   onUnselectEmoji,
 }: EmojiPickerProps) {
   const emojiPickerWrapper = useRef<HTMLDivElement>(null);
-  const unifiedEmojiList = selectedEmojis?.map((e) => e.codePointAt(0)?.toString(16) || '') || [];
+
+  const unifiedEmojiList = selectedEmojis?.map((e) => getUnifiedEmoji(e)) || [];
 
   const handleSelectEmoji = (emoji: EmojiClickData, e: MouseEvent) => {
     e.stopPropagation();
