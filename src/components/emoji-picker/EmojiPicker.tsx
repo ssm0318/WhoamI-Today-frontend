@@ -1,7 +1,9 @@
 import ReactEmojiPicker, { EmojiClickData } from 'emoji-picker-react';
-import { useRef } from 'react';
 import { DEFAULT_MARGIN, Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
+import { useDetectOutsideClick } from '@hooks/useDetectOutsideClick';
+import { Note, Response } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
 import { getUnifiedEmoji } from '@utils/emojiHelpers';
 import { EMOJI_CATEGORIES } from './EmojiPicker.constants';
 import { EmojiPickerCustomStyle } from './EmojiPicker.styled';
@@ -9,23 +11,26 @@ import { EmojiPickerCustomStyle } from './EmojiPicker.styled';
 interface EmojiPickerProps {
   onSelectEmoji: (emoji: EmojiClickData) => void;
   onUnselectEmoji?: (emoji: EmojiClickData) => void;
-  isVisible: boolean;
   selectedEmojis?: string[];
   height?: number;
   left?: number;
   top?: number;
+  post?: Response | Note;
 }
 
 function EmojiPicker({
   onSelectEmoji,
-  isVisible,
   selectedEmojis,
   height = 200,
   left = DEFAULT_MARGIN,
   top,
   onUnselectEmoji,
+  post,
 }: EmojiPickerProps) {
-  const emojiPickerWrapper = useRef<HTMLDivElement>(null);
+  const { activeTarget, setActiveTarget } = useBoundStore((state) => ({
+    activeTarget: state.activeTarget,
+    setActiveTarget: state.setActiveTarget,
+  }));
 
   const unifiedEmojiList = selectedEmojis?.map((e) => getUnifiedEmoji(e)) || [];
 
@@ -38,7 +43,21 @@ function EmojiPicker({
     } else {
       onUnselectEmoji?.(emoji);
     }
+
+    setActiveTarget(null);
   };
+
+  const emojiPickerWrapper = useDetectOutsideClick({
+    callback: () => {
+      setActiveTarget(null);
+    },
+    enabled: !!(activeTarget && activeTarget.type === 'CheckIn'),
+  });
+
+  const isVisible =
+    activeTarget &&
+    (activeTarget.type === 'CheckIn' ||
+      (activeTarget.type === post?.type && activeTarget.id === post?.id));
 
   if (!isVisible) return null;
 

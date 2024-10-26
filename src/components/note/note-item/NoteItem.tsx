@@ -9,6 +9,7 @@ import CommentBottomSheet from '@components/comments/comment-bottom-sheet/Commen
 import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import { Layout, Typo } from '@design-system';
 import { Note, POST_DP_TYPE } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import NoteImageList from '../note-image-list/NoteImageList';
 
@@ -34,7 +35,11 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [showMore, setShowMore] = useState(false);
   const [inputFocus, setInputFocus] = useState(false);
-  const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
+
+  const { activeTarget, setActiveTarget } = useBoundStore((state) => ({
+    activeTarget: state.activeTarget,
+    setActiveTarget: state.setActiveTarget,
+  }));
 
   const { username, profile_image } = author_detail ?? {};
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
@@ -45,8 +50,8 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
   };
 
   const handleClickNote = (e: MouseEvent) => {
-    if (emojiPickerVisible) {
-      return setEmojiPickerVisible(false);
+    if (activeTarget) {
+      return setActiveTarget(null);
     }
 
     e.stopPropagation();
@@ -134,8 +139,6 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
           showComments={() => setBottomSheet(true)}
           setInputFocus={() => setInputFocus(true)}
           displayType={displayType}
-          emojiPickerVisible={emojiPickerVisible}
-          setEmojiPickerVisible={setEmojiPickerVisible}
         />
       </Layout.FlexCol>
       {bottomSheet && (

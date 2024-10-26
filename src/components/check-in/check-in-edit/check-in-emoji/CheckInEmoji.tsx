@@ -1,10 +1,11 @@
 import { EmojiClickData } from 'emoji-picker-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import Icon from '@components/_common/icon/Icon';
 import EmojiPicker from '@components/emoji-picker/EmojiPicker';
 import { Layout } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
 
 interface CheckInEmojiProps {
   mood: string | null;
@@ -13,17 +14,29 @@ interface CheckInEmojiProps {
 }
 
 function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
-  const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
+  const { activeTarget, setActiveTarget } = useBoundStore((state) => ({
+    activeTarget: state.activeTarget,
+    setActiveTarget: state.setActiveTarget,
+  }));
   const toggleButtonRef = useRef<HTMLDivElement>(null);
 
   const handleClickEmoji = () => {
-    setEmojiPickerVisible((prev) => !prev);
+    if (activeTarget) {
+      return setActiveTarget(null);
+    }
+    setActiveTarget({ type: 'CheckIn', id: null });
   };
 
   const handleSelectEmoji = (e: EmojiClickData) => {
     onSelectEmoji(e);
-    setEmojiPickerVisible(false);
+    setActiveTarget(null);
   };
+
+  useEffect(() => {
+    return () => {
+      setActiveTarget(null);
+    };
+  }, [setActiveTarget]);
 
   return (
     <Layout.FlexCol w="100%">
@@ -32,17 +45,16 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
           alignItems="center"
           justifyContent="center"
           rounded={12}
-          outline={emojiPickerVisible ? 'BLACK' : 'LIGHT_GRAY'}
+          outline={activeTarget ? 'BLACK' : 'LIGHT_GRAY'}
           w={EMOJI_ICON_SIZE}
           h={EMOJI_ICON_SIZE}
-          ref={toggleButtonRef}
         >
           {mood ? (
             <EmojiItem emojiString={mood} size={24} outline="TRANSPARENT" />
           ) : (
             <Icon
               onClick={handleClickEmoji}
-              name={emojiPickerVisible ? 'add_reaction_active' : 'add_reaction_default'}
+              name={activeTarget ? 'add_reaction_active' : 'add_reaction_default'}
               size={24}
             />
           )}
@@ -50,7 +62,10 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
         {mood && <DeleteButton onClick={onDelete} size={32} />}
       </Layout.FlexRow>
       {/* emoji toggle popup */}
-      <EmojiPicker onSelectEmoji={handleSelectEmoji} isVisible={emojiPickerVisible} />
+      <EmojiPicker
+        onSelectEmoji={handleSelectEmoji}
+        top={(toggleButtonRef.current?.getBoundingClientRect().height ?? 0) + 12}
+      />
     </Layout.FlexCol>
   );
 }

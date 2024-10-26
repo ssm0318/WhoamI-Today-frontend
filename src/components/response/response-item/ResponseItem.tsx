@@ -10,6 +10,7 @@ import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { POST_DP_TYPE, Response } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
@@ -40,7 +41,11 @@ function ResponseItem({
   const [overflowSummary, setOverflowSummary] = useState<string>();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [inputFocus, setInputFocus] = useState(false);
-  const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
+
+  const { activeTarget, setActiveTarget } = useBoundStore((state) => ({
+    activeTarget: state.activeTarget,
+    setActiveTarget: state.setActiveTarget,
+  }));
 
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
@@ -51,8 +56,8 @@ function ResponseItem({
   };
 
   const handleClickDetail = (e: MouseEvent) => {
-    if (emojiPickerVisible) {
-      return setEmojiPickerVisible(false);
+    if (activeTarget) {
+      return setActiveTarget(null);
     }
 
     e.stopPropagation();
@@ -159,8 +164,6 @@ function ResponseItem({
             showComments={() => setBottomSheet(true)}
             setInputFocus={() => setInputFocus(true)}
             displayType={displayType}
-            emojiPickerVisible={emojiPickerVisible}
-            setEmojiPickerVisible={setEmojiPickerVisible}
           />
         </Layout.FlexCol>
       </Layout.FlexRow>

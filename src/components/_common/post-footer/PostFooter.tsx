@@ -1,10 +1,11 @@
 import { EmojiClickData } from 'emoji-picker-react';
-import { MouseEvent, useRef, useState } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import EmojiPicker from '@components/emoji-picker/EmojiPicker';
 import { Layout, Typo } from '@design-system';
 import { Note, POST_DP_TYPE, POST_TYPE, ReactionUserSample, Response } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
 import { deleteReaction, postReaction } from '@utils/apis/reaction';
 import EmojiButton from '../emoji-button/EmojiButton';
 import Icon from '../icon/Icon';
@@ -19,8 +20,6 @@ type PostFooterProps = {
   displayType?: POST_DP_TYPE;
   showComments: () => void;
   setInputFocus: () => void;
-  emojiPickerVisible: boolean;
-  setEmojiPickerVisible: (isVisible: boolean) => void;
 };
 
 function PostFooter({
@@ -30,8 +29,6 @@ function PostFooter({
   displayType = 'LIST',
   showComments,
   setInputFocus,
-  emojiPickerVisible,
-  setEmojiPickerVisible,
 }: PostFooterProps) {
   const { comment_count, type, current_user_reaction_id_list } = post;
   const navigate = useNavigate();
@@ -39,6 +36,10 @@ function PostFooter({
   const [myReactionList, setMyReactionList] = useState<{ id: number; emoji: string }[]>(
     current_user_reaction_id_list,
   );
+  const { activeTarget, setActiveTarget } = useBoundStore((state) => ({
+    activeTarget: state.activeTarget,
+    setActiveTarget: state.setActiveTarget,
+  }));
   const myEmojiList = myReactionList.map((reaction) => reaction.emoji);
   const [t] = useTranslation('translation', {
     keyPrefix: post.type === POST_TYPE.RESPONSE ? 'responses' : 'notes',
@@ -65,7 +66,7 @@ function PostFooter({
   const handleSelectEmoji = async (emoji: EmojiClickData) => {
     const response = await postReaction(post.type, post.id, emoji.emoji);
 
-    setEmojiPickerVisible(false);
+    setActiveTarget(null);
     setMyReactionList([
       ...myReactionList,
       {
@@ -84,8 +85,16 @@ function PostFooter({
   };
 
   const handleClickEmojiButton = () => {
-    setEmojiPickerVisible(!emojiPickerVisible);
+    const isCurrentlyActive = activeTarget?.type === post.type && activeTarget?.id === post.id;
+
+    setActiveTarget(isCurrentlyActive ? null : { type: post.type, id: post.id });
   };
+
+  useEffect(() => {
+    return () => {
+      setActiveTarget(null);
+    };
+  }, [setActiveTarget]);
 
   return (
     <Layout.FlexCol
@@ -130,10 +139,10 @@ function PostFooter({
         selectedEmojis={myEmojiList}
         onSelectEmoji={handleSelectEmoji}
         onUnselectEmoji={handleUnselectEmoji}
-        isVisible={emojiPickerVisible}
         height={displayType === 'LIST' ? 200 : 150}
         left={displayType === 'DETAIL' ? -10 : undefined}
         top={(toggleButtonRef?.current?.getBoundingClientRect()?.height ?? 0) + 6}
+        post={post}
       />
     </Layout.FlexCol>
   );
