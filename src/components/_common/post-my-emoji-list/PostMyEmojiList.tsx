@@ -15,7 +15,7 @@ function PostMyEmojiList({ emojiList, onClick }: PostMyEmojiListProps) {
 
   return (
     <Layout.FlexRow alignItems="center" onClick={handleClick}>
-      {emojiList.map((emoji, index) => (
+      {emojiList.slice(0, 5).map((emoji, index) => (
         <Layout.FlexRow
           key={emoji}
           ml={index === 0 ? 0 : -12}
