@@ -8,6 +8,7 @@ import { MyProfile } from '@models/api/user';
 import { areFriends, isMyProfile, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getUserProfile } from '@utils/apis/user';
+import { shortenUsername } from '@utils/validateHelpers';
 import CheckInSection from '../check-in/CheckIn';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
 
@@ -43,7 +44,9 @@ function Profile({ user }: ProfileProps) {
         <Layout.FlexCol w="100%" gap={8}>
           <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
             <Layout.FlexRow gap={8} alignItems="center">
-              <Typo type="title-large">{isMyPage ? myProfile?.username : username}</Typo>
+              <Typo type="title-large">
+                {shortenUsername(isMyPage ? myProfile?.username || '' : username || '', 20)}
+              </Typo>
               <Typo type="label-medium">
                 {(isMyPage ? myProfile?.pronouns : friendData?.pronouns) &&
                   `(${isMyPage ? myProfile?.pronouns : friendData?.pronouns})`}

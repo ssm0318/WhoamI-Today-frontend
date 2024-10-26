@@ -3,6 +3,7 @@ import FriendStatus, { Props } from '@components/_common/friend-status/FriendSta
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledFriendItem } from '@components/friends/explore-friends/friend-item/FriendItem.styled';
 import { Layout, Typo } from '@design-system';
+import { shortenUsername } from '@utils/validateHelpers';
 
 function FriendItem(props: Props) {
   const { user } = props;
@@ -23,7 +24,7 @@ function FriendItem(props: Props) {
     >
       <Layout.FlexRow alignItems="center" gap={7}>
         <ProfileImage imageUrl={user.profile_image} username={user.username} size={44} />
-        <Typo type="label-large">{user.username}</Typo>
+        <Typo type="label-large">{shortenUsername(user.username)}</Typo>
       </Layout.FlexRow>
       <Layout.LayoutBase>
         <FriendStatus {...props} />

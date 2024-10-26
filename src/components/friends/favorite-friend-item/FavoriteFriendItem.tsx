@@ -3,6 +3,7 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import { Layout, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
+import { shortenUsername } from '@utils/validateHelpers';
 import UpdatedLabel from '../updated-label/UpdatedLabel';
 
 interface Props {
@@ -37,7 +38,7 @@ function FavoriteFriendItem({ user }: Props) {
       </Layout.FlexRow>
       <Layout.FlexRow gap={5} justifyContent="center" alignItems="center">
         <Typo type="label-large" color="DARK">
-          {username}
+          {shortenUsername(username)}
         </Typo>
         {!current_user_read && <UpdatedLabel />}
       </Layout.FlexRow>

@@ -9,6 +9,7 @@ import { UpdateFriendListParams } from '@hooks/useInfiniteFetchFriends';
 import { UpdatedProfile } from '@models/api/friends';
 import { addFriendToFavorite, deleteFavorite, hideFriend } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
+import { shortenUsername } from '@utils/validateHelpers';
 import UpdatedLabel from '../updated-label/UpdatedLabel';
 import { StyledProfileArea, StyledUpdatedFriendItem } from './UpdatedFriendItem.styled';
 
@@ -99,7 +100,7 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
               <ProfileImage imageUrl={profile_image} username={username} size={44} />
               <Layout.FlexCol>
                 <Layout.FlexRow gap={4} alignItems="center">
-                  <Typo type="label-large">{username}</Typo>
+                  <Typo type="label-large">{shortenUsername(username)}</Typo>
                   {!current_user_read && <UpdatedLabel />}
                 </Layout.FlexRow>
                 {description && (

@@ -40,3 +40,8 @@ export const deepEqual = (obj1: any, obj2: any): boolean => {
 
 // string 형식의 id가 유효한지 확인
 export const isValidId = (id: string | undefined) => id && !Number.isNaN(Number(id));
+
+// username을 maxLength 만큼 자르고 ...을 붙여 반환
+export const shortenUsername = (username: string, maxLength = 10) => {
+  return username.length > maxLength ? `${username.slice(0, maxLength)}...` : username;
+};
