@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
@@ -17,6 +17,9 @@ import { editProfile } from '@utils/apis/my';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 
 function EditProfile() {
+  const location = useLocation();
+  const isFromSignUp = !!location.state?.fromSignUp;
+
   const [t] = useTranslation('translation', { keyPrefix: 'settings.edit_profile' });
   const { myProfile, updateMyProfile, openToast } = useBoundStore((state) => ({
     myProfile: state.myProfile,
@@ -82,7 +85,7 @@ function EditProfile() {
   const navigate = useNavigate();
 
   const handleClickCancel = () => {
-    navigate(-1);
+    return isFromSignUp ? navigate('/friends') : navigate(-1);
   };
 
   const handleClickSave = async () => {
@@ -126,7 +129,7 @@ function EditProfile() {
         LeftComponent={
           <button type="button" onClick={handleClickCancel}>
             <Typo type="title-large" color="DARK">
-              {t('back')}
+              {isFromSignUp ? t('cancel') : t('back')}
             </Typo>
           </button>
         }
