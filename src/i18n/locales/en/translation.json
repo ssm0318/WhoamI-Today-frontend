@@ -218,7 +218,8 @@
     "crop_photo": "Crop Photo",
     "done": "Done",
     "more": "more",
-    "edited": "edited"
+    "edited": "edited",
+    "confirm": "Confirm"
   },
   "note_detail": {
     "title": "{{username}}'s Note",

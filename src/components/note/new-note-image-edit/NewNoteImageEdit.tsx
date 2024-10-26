@@ -16,12 +16,12 @@ interface NewNoteImageEditProps {
 }
 
 function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNoteImageEditProps) {
-  const [t] = useTranslation('translation');
+  const [t] = useTranslation('translation', { keyPrefix: 'notes' });
 
   const imgRef = useRef<HTMLImageElement>(null);
 
   const [crop, setCrop] = useState<PixelCrop>();
-  const [completeImg, setCompleteImg] = useState<CroppedImg>();
+  const [croppedImg, setCroppedImage] = useState<CroppedImg>();
 
   const onImageLoad = (e: SyntheticEvent<HTMLImageElement>) => {
     const { width, height } = e.currentTarget;
@@ -43,14 +43,14 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
     setCrop(pixelCrop);
   };
 
-  const handleClickComplete = async () => {
+  const handleCropDone = async () => {
     if (!imageUrl || !imgRef.current || !crop) {
       throw new Error('Crop canvas does not exist');
     }
 
     try {
-      const croppedImg = await getReactImageCrop(imgRef.current, crop);
-      setCompleteImg(croppedImg);
+      const img = await getReactImageCrop(imgRef.current, crop);
+      setCroppedImage(img);
     } catch (err) {
       console.error(err);
     }
@@ -61,29 +61,29 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
   };
 
   const handleClickCheck = () => {
-    if (!completeImg) return;
+    if (!croppedImg) return;
 
     setIsVisible(false);
-    onCompleteImageCrop(completeImg);
+    onCompleteImageCrop(croppedImg);
   };
 
   return (
     <Layout.AbsoluteFullScreen bgColor="DARK">
-      {completeImg ? (
+      {croppedImg ? (
         <>
           {/* 크롭 완료된 이미지 미리보기 */}
           <SubHeader
             RightComponent={
               <button type="button" onClick={handleClickCheck}>
                 <Typo type="title-large" color="PRIMARY">
-                  이미지 확인 완료
+                  {t('confirm')}
                 </Typo>
               </button>
             }
             onGoBack={handleClickCancel}
           />
           <StyledNewNoteImageWrapper>
-            <StyledNewNoteImage src={completeImg.url} />
+            <StyledNewNoteImage src={croppedImg.url} />
           </StyledNewNoteImageWrapper>
         </>
       ) : (
@@ -91,11 +91,11 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
           <>
             {/* 이미지 크롭 */}
             <SubHeader
-              title={t('sign_up.crop_picture')}
+              title={t('crop_photo')}
               RightComponent={
-                <button type="button" onClick={handleClickComplete}>
+                <button type="button" onClick={handleCropDone}>
                   <Typo type="title-large" color="PRIMARY">
-                    {t('common.done')}
+                    {t('done')}
                   </Typo>
                 </button>
               }
