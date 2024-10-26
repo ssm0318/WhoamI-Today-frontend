@@ -1,13 +1,16 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation } from 'react-router-dom';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
 
 function SignUp() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_up' });
-
+  const { resetSignUpInfo } = useBoundStore((state) => ({
+    resetSignUpInfo: state.resetSignUpInfo,
+  }));
   const { pathname } = useLocation();
 
   const title = useMemo(() => {
@@ -15,6 +18,10 @@ function SignUp() {
     if (pathname.includes('profile-image')) return t('add_a_profile_image');
     return t('create_an_account');
   }, [pathname, t]);
+
+  useEffect(() => {
+    resetSignUpInfo();
+  }, [resetSignUpInfo]);
 
   return (
     <>
