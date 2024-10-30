@@ -240,7 +240,7 @@ export const getFriendList = async (next?: string | null) => {
 };
 
 export const getUserProfile = async (username: string) => {
-  const { data } = await axios.get<UserProfile>(`/user/${username}/profile/`);
+  const { data } = await axios.get<UserProfile>(`/user/${encodeURIComponent(username)}/profile/`);
   return data;
 };
 
@@ -345,7 +345,7 @@ export const blockRecommendation = async (userId: number) => {
 export const getUserNotes = async (username: string, next?: string | null) => {
   const requestPage = next ? next.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Note[]>>(
-    `/user/${username}/notes/${requestPage ? `?page=${requestPage}` : ''}`,
+    `/user/${encodeURIComponent(username)}/notes/${requestPage ? `?page=${requestPage}` : ''}`,
   );
   if (data.results?.length) axios.patch('/user/mark-all-notes-as-read/', { username });
   return data;
@@ -355,7 +355,7 @@ export const getUserNotes = async (username: string, next?: string | null) => {
 export const getUserResponses = async (username: string, next?: string | null) => {
   const requestPage = next ? next.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Response[]>>(
-    `/user/${username}/responses/${requestPage ? `?page=${requestPage}` : ''}`,
+    `/user/${encodeURIComponent(username)}/responses/${requestPage ? `?page=${requestPage}` : ''}`,
   );
 
   if (data.results?.length) axios.patch('/user/mark-all-responses-as-read/', { username });
