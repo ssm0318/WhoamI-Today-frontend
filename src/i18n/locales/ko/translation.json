@@ -14,6 +14,15 @@
     "forgot_password": "비밀번호를 잊어버렸어요",
     "sign_up": "회원가입"
   },
+  "forgot_password": {
+    "title": "비밀번호 찾기",
+    "email": "이메일",
+    "description": "비밀번호를 재설정할 수 있는 방법을 이메일로 보내드리겠습니다.",
+    "email_guide": "가입할 때 사용한 정확한 이메일 주소를 입력해야 합니다.",
+    "confirm": "비밀번호 재설정",
+    "email_sent_success": "이메일이 성공적으로 전송되었습니다",
+    "email_sent_failed": "이메일 전송에 실패했습니다"
+  },
   "sign_up": {
     "create_an_account": "새로운 계정 만들기",
     "email": "이메일",
