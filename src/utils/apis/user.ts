@@ -62,6 +62,27 @@ export const checkIfSignIn = async () => {
   }
 };
 
+export const sendResetPasswordEmail = async ({
+  email,
+  onSuccess,
+  onFail,
+}: {
+  email: string;
+  onSuccess: () => void;
+  onFail: () => void;
+}) => {
+  try {
+    axios
+      .post('/user/send-reset-password-email/', {
+        email,
+      })
+      .then(onSuccess);
+  } catch (error) {
+    console.error(error);
+    onFail();
+  }
+};
+
 export const signOut = async (onSuccess: () => void) => {
   axios.get('/user/logout/').then(() => {
     onSuccess();
