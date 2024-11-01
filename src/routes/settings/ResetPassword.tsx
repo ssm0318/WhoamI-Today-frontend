@@ -1,6 +1,6 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
 import SubHeader from '@components/sub-header/SubHeader';
@@ -11,7 +11,7 @@ import { resetPassword } from '@utils/apis/user';
 
 function ResetPassword() {
   const [t] = useTranslation('translation');
-
+  const { id } = useParams();
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
@@ -19,7 +19,10 @@ function ResetPassword() {
     setPasswordInput(e.target.value);
   };
 
-  const myProfile = useBoundStore((state) => state.myProfile);
+  const { myProfile, updateMyProfile } = useBoundStore((state) => ({
+    myProfile: state.myProfile,
+    updateMyProfile: state.updateMyProfile,
+  }));
   const navigate = useNavigate();
   const handleClickConfirm = () => {
     if (!myProfile) return;
@@ -31,6 +34,13 @@ function ResetPassword() {
       onError: (e) => setPasswordError(e),
     });
   };
+
+  useEffect(() => {
+    if (!id) return;
+    updateMyProfile({
+      id: Number(id),
+    });
+  }, [id, updateMyProfile]);
 
   return (
     <MainContainer>

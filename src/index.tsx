@@ -147,7 +147,7 @@ const router = createBrowserRouter([
           { path: '', element: <Settings /> },
           { path: 'edit-profile', element: <EditProfile /> },
           { path: 'confirm-password', element: <ConfirmPassword /> },
-          { path: 'reset-password', element: <ResetPassword /> },
+          { path: 'reset-password/:id/:token', element: <ResetPassword /> },
           { path: 'delete-account', element: <DeleteAccount /> },
         ],
       },
