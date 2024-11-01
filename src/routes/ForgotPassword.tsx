@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
@@ -12,6 +13,7 @@ function ForgotPassword() {
   const [emailInput, setEmailInput] = useState('');
   const [emailError, setEmailError] = useState<string | null>(null);
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmailInput(e.target.value);
@@ -23,6 +25,7 @@ function ForgotPassword() {
       email: emailInput,
       onSuccess: () => {
         openToast({ message: t('email_sent_success') });
+        navigate('/signin');
       },
       onFail: () => {
         openToast({ message: t('email_sent_failed') });
