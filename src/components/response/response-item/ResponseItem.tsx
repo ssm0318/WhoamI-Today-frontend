@@ -1,6 +1,7 @@
 import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import ContentTranslation from '@components/_common/content-translation/ContentTranslation';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
@@ -136,18 +137,22 @@ function ResponseItem({
             </Layout.FlexRow>
           </Layout.FlexRow>
           <Layout.FlexCol w="100%" mb={8}>
-            <Typo type="body-large" color="BLACK" pre>
-              {overflowSummary ? (
-                <>
-                  {`${overflowSummary}...`}
-                  <Typo type="body-medium" color="BLACK" italic underline ml={3}>
-                    {t('more').toLowerCase()}
-                  </Typo>
-                </>
-              ) : (
-                content
-              )}
-            </Typo>
+            {displayType === 'DETAIL' ? (
+              <ContentTranslation content={content} useTranslation={!isMyPage} />
+            ) : (
+              <Typo type="body-large" color="BLACK" pre>
+                {overflowSummary ? (
+                  <>
+                    {`${overflowSummary}...`}
+                    <Typo type="body-medium" color="BLACK" italic underline ml={3}>
+                      {t('more').toLowerCase()}
+                    </Typo>
+                  </>
+                ) : (
+                  content
+                )}
+              </Typo>
+            )}
             {/* (수정됨) */}
             {is_edited && (
               <Typo type="label-medium" color="MEDIUM_GRAY">

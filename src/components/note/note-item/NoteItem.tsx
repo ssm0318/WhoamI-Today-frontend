@@ -1,6 +1,7 @@
 import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import ContentTranslation from '@components/_common/content-translation/ContentTranslation';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
@@ -120,9 +121,10 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
           </Layout.FlexRow>
         </Layout.FlexRow>
         <Layout.FlexCol>
-          <Typo type="body-large" color="BLACK" pre>
-            {content}
-          </Typo>
+          <ContentTranslation
+            content={content}
+            useTranslation={!isMyPage && displayType === 'DETAIL'}
+          />
           {/* 이미지 */}
           <NoteImageList images={images} />
           {/* (수정됨) */}
