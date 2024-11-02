@@ -69,18 +69,16 @@ export const sendResetPasswordEmail = async ({
 }: {
   email: string;
   onSuccess: () => void;
-  onFail: () => void;
+  onFail: (error: any) => void;
 }) => {
-  try {
-    axios
-      .post('/user/send-reset-password-email/', {
-        email,
-      })
-      .then(onSuccess);
-  } catch (error) {
-    console.error(error);
-    onFail();
-  }
+  axios
+    .post('/user/send-reset-password-email/', {
+      email,
+    })
+    .then(onSuccess)
+    .catch((e) => {
+      onFail(e.response.data);
+    });
 };
 
 export const signOut = async (onSuccess: () => void) => {

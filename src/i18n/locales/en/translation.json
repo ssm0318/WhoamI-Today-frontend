@@ -20,7 +20,7 @@
     "description": "We'll email you instructions to reset your password.",
     "email_guide": "You have to enter your exact email address that you used to register.",
     "confirm": "Reset Password",
-    "email_sent_success": "Email sent successfully",
+    "email_sent_success": "Email sent successfully 🎉",
     "email_sent_failed": "Email sent failed"
   },
   "sign_up": {

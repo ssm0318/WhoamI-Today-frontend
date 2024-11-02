@@ -27,8 +27,8 @@ function ForgotPassword() {
         openToast({ message: t('email_sent_success') });
         navigate('/signin');
       },
-      onFail: () => {
-        openToast({ message: t('email_sent_failed') });
+      onFail: (e) => {
+        openToast({ message: e || t('email_sent_failed') });
       },
     });
   };
