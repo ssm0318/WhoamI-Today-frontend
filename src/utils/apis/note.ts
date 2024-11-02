@@ -89,7 +89,7 @@ export const readNote = async (ids: number[]) => {
 export const getNoteReactions = async (noteId: number, page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<PostReaction[]>>(
-    `/notes/${noteId}/interactions${!requestPage ? '' : `?page=${requestPage}`}/`,
+    `/notes/${noteId}/interactions/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
 };

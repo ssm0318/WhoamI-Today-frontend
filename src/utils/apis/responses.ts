@@ -57,7 +57,7 @@ export const readResponse = async (ids: number[]) => {
 export const getResponseReactions = async (responseId: number, page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<PostReaction[]>>(
-    `/qna/responses/${responseId}/interactions${!requestPage ? '' : `?page=${requestPage}`}/`,
+    `/qna/responses/${responseId}/interactions/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
 
   return data;
