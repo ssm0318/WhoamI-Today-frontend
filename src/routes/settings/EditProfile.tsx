@@ -33,6 +33,8 @@ function EditProfile() {
     pronouns: myProfile?.pronouns ?? '',
   });
 
+  const [usernameError, setUsernameError] = useState<string>();
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [originalImageFileUrl, setOriginalImageFileURL] = useState<string>();
@@ -104,7 +106,11 @@ function EditProfile() {
         navigate('/my');
       },
       onError: (error) => {
-        openToast({ message: error });
+        if (error?.username) {
+          return setUsernameError(t('username_valiation_error') || '');
+        }
+
+        if (error.detail) openToast({ message: error.detail });
       },
     });
   };
@@ -112,6 +118,9 @@ function EditProfile() {
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setDraft((prev) => ({ ...prev, [name]: value }));
+    if (usernameError) {
+      setUsernameError('');
+    }
   };
 
   const handleChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -169,7 +178,8 @@ function EditProfile() {
           type="text"
           value={draft.username}
           onChange={handleChangeInput}
-          limit={30}
+          limit={20}
+          error={usernameError}
         />
         {/* pronouns */}
         <ValidatedInput

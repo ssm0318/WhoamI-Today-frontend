@@ -317,6 +317,7 @@
       "cancel": "Cancel",
       "change_picture": "Change Picture",
       "username": "Username",
+      "username_valiation_error": "Use letters, numbers, Korean & _ only (max 20)",
       "email": "Email",
       "bio": "Bio",
       "pronouns": "Pronouns",

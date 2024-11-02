@@ -314,6 +314,7 @@
       "cancel": "취소",
       "change_picture": "사진 변경하기",
       "username": "닉네임",
+      "username_valiation_error": "영문, 한글, 숫자, _ 만 사용 가능 (최대 20자)",
       "email": "이메일",
       "bio": "소개",
       "pronouns": "대명사",
