@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
@@ -11,7 +11,8 @@ import { resetPassword } from '@utils/apis/user';
 
 function ResetPassword() {
   const [t] = useTranslation('translation');
-  const { id } = useParams();
+  // 비밀번호 변경 이메일에서 redirect된 경우 받은 id, token
+  const { id, token } = useParams();
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
@@ -19,28 +20,21 @@ function ResetPassword() {
     setPasswordInput(e.target.value);
   };
 
-  const { myProfile, updateMyProfile } = useBoundStore((state) => ({
+  const { myProfile } = useBoundStore((state) => ({
     myProfile: state.myProfile,
-    updateMyProfile: state.updateMyProfile,
   }));
   const navigate = useNavigate();
   const handleClickConfirm = () => {
     if (!myProfile) return;
 
     resetPassword({
-      userId: myProfile.id,
+      id,
+      token,
       password: passwordInput,
       onSuccess: () => navigate('/settings'),
       onError: (e) => setPasswordError(e),
     });
   };
-
-  useEffect(() => {
-    if (!id) return;
-    updateMyProfile({
-      id: Number(id),
-    });
-  }, [id, updateMyProfile]);
 
   return (
     <MainContainer>

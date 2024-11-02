@@ -224,19 +224,24 @@ export const confirmPassword = ({
     });
 };
 
+// reset password
+// id, token이 있으면 reset-password/:id/:token/로 요청 (from 비밀번호 변경 이메일)
 export const resetPassword = ({
-  userId,
+  id,
+  token,
   password,
   onSuccess,
   onError,
 }: {
-  userId: number;
+  id?: string;
+  token?: string;
   password: string;
   onSuccess: () => void;
   onError: (error: string) => void;
 }) => {
+  const url = id && token ? `/user/reset-password/${id}/${token}/` : `/user/reset-password/`;
   axios
-    .put(`/user/reset-password/${userId}/`, { password })
+    .put(url, { password })
     .then(() => onSuccess())
     .catch((e: AxiosError<PasswordError>) => {
       if (e.response?.data.password[0]) {
