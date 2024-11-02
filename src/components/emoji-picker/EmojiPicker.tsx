@@ -1,50 +1,71 @@
 import ReactEmojiPicker, { EmojiClickData } from 'emoji-picker-react';
-import { RefObject, useRef } from 'react';
-import { DEFAULT_MARGIN, SCREEN_WIDTH } from '@constants/layout';
+import { DEFAULT_MARGIN, Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
-import useClickOutside from '@hooks/useClickOutside';
+import { useDetectOutsideClick } from '@hooks/useDetectOutsideClick';
+import { Note, Response } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
+import { getUnifiedEmoji } from '@utils/emojiHelpers';
 import { EMOJI_CATEGORIES } from './EmojiPicker.constants';
 import { EmojiPickerCustomStyle } from './EmojiPicker.styled';
 
 interface EmojiPickerProps {
   onSelectEmoji: (emoji: EmojiClickData) => void;
-  isVisible: boolean;
-  setIsVisible: (isVisible: boolean) => void;
-  pickerPosition?: { top?: number; bottom?: number };
-  toggleButtonRef?: RefObject<HTMLButtonElement>;
+  onUnselectEmoji?: (emoji: EmojiClickData) => void;
   selectedEmojis?: string[];
+  height?: number;
+  left?: number;
+  top?: number;
+  post?: Response | Note;
 }
 
 function EmojiPicker({
   onSelectEmoji,
-  isVisible,
-  setIsVisible,
-  pickerPosition,
-  toggleButtonRef,
   selectedEmojis,
+  height = 200,
+  left = DEFAULT_MARGIN,
+  top,
+  onUnselectEmoji,
+  post,
 }: EmojiPickerProps) {
-  const emojiPickerWrapper = useRef<HTMLDivElement>(null);
-  const unifiedEmojiList = selectedEmojis?.map((e) => e.codePointAt(0)?.toString(16) || '') || [];
+  const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
+    emojiPickerTarget: state.emojiPickerTarget,
+    setEmojiPickerTarget: state.setEmojiPickerTarget,
+  }));
 
-  useClickOutside({ ref: emojiPickerWrapper, toggleButtonRef, onClick: () => setIsVisible(false) });
+  const unifiedEmojiList = selectedEmojis?.map((e) => getUnifiedEmoji(e)) || [];
+
+  const handleSelectEmoji = (emoji: EmojiClickData, e: MouseEvent) => {
+    e.stopPropagation();
+
+    const isAlreadySelected = selectedEmojis?.includes(emoji.emoji);
+    if (!isAlreadySelected) {
+      onSelectEmoji(emoji);
+    } else {
+      onUnselectEmoji?.(emoji);
+    }
+
+    setEmojiPickerTarget(null);
+  };
+
+  const emojiPickerWrapper = useDetectOutsideClick({
+    callback: () => {
+      setEmojiPickerTarget(null);
+    },
+    enabled: !!(emojiPickerTarget && emojiPickerTarget.type === 'CheckIn'),
+  });
+
+  const isVisible =
+    emojiPickerTarget &&
+    (emojiPickerTarget.type === 'CheckIn' ||
+      (emojiPickerTarget.type === post?.type && emojiPickerTarget.id === post?.id));
 
   if (!isVisible) return null;
 
-  const handleSelectEmoji = (emoji: EmojiClickData) => {
-    onSelectEmoji(emoji);
-  };
-
   return (
-    <Layout.Absolute
-      t={pickerPosition?.top}
-      b={pickerPosition?.bottom}
-      ref={emojiPickerWrapper}
-      l={DEFAULT_MARGIN}
-    >
+    <Layout.Absolute ref={emojiPickerWrapper} l={left} mt={top ?? 0} z={Z_INDEX.EMOJI_PICKER}>
       {selectedEmojis && <EmojiPickerCustomStyle unifiedList={unifiedEmojiList} />}
       <ReactEmojiPicker
-        width={SCREEN_WIDTH - 2 * DEFAULT_MARGIN}
-        height={200}
+        height={height}
         onEmojiClick={handleSelectEmoji}
         autoFocusSearch={false}
         searchDisabled
@@ -52,9 +73,9 @@ function EmojiPicker({
           showPreview: false,
         }}
         categories={EMOJI_CATEGORIES}
+        lazyLoadEmojis
       />
     </Layout.Absolute>
   );
 }
-
 export default EmojiPicker;

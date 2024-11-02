@@ -7,7 +7,7 @@ import { Font, Layout } from '@design-system';
 import useClickOutside from '@hooks/useClickOutside';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Reaction, ReactionPostType } from '@models/post';
-import { getReactionList } from '@utils/apis/responses';
+import { getReactionList } from '@utils/apis/reaction';
 
 interface EmojiViewPopupProps {
   isVisible: boolean;

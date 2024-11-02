@@ -10,20 +10,21 @@ import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { POST_DP_TYPE, Response } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
 interface ResponseItemProps {
   response: Response;
   isMyPage?: boolean;
-  commentType?: POST_DP_TYPE;
+  displayType?: POST_DP_TYPE;
   refresh?: () => void;
 }
 
 function ResponseItem({
   response,
   isMyPage = false,
-  commentType = 'LIST',
+  displayType = 'LIST',
   refresh,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
@@ -32,7 +33,7 @@ function ResponseItem({
     created_at,
     author_detail,
     question,
-    like_user_sample,
+    like_reaction_user_sample,
     is_edited,
     current_user_read,
   } = response;
@@ -40,6 +41,11 @@ function ResponseItem({
   const [overflowSummary, setOverflowSummary] = useState<string>();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [inputFocus, setInputFocus] = useState(false);
+
+  const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
+    emojiPickerTarget: state.emojiPickerTarget,
+    setEmojiPickerTarget: state.setEmojiPickerTarget,
+  }));
 
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
@@ -49,8 +55,13 @@ function ResponseItem({
     setShowMore(true);
   };
 
-  const handleClickDetail = () => {
-    if (commentType === 'DETAIL') return;
+  const handleClickDetail = (e: MouseEvent) => {
+    if (emojiPickerTarget) {
+      return setEmojiPickerTarget(null);
+    }
+
+    e.stopPropagation();
+    if (displayType === 'DETAIL') return;
 
     if (!isMyPage) {
       navigate(`./responses/${response.id}`);
@@ -60,19 +71,20 @@ function ResponseItem({
     navigate(`/responses/${response.id}`);
   };
 
-  const navigateToProfile = () => {
+  const navigateToProfile = (e: MouseEvent) => {
+    e.stopPropagation();
     navigate(`/users/${username}`);
   };
 
   useEffect(() => {
-    if (commentType !== 'LIST') return;
+    if (displayType !== 'LIST') return;
     if (content.length > MAX_RESPONSE_CONTENT_LENGTH)
       setOverflowSummary(content.slice(0, MAX_RESPONSE_CONTENT_LENGTH));
 
     const contentArrWithNewLine = content.split('\n');
     if (contentArrWithNewLine.length > MAX_RESPONSE_NEW_LINE)
       setOverflowSummary(contentArrWithNewLine.slice(0, MAX_RESPONSE_NEW_LINE).join('\n'));
-  }, [content, commentType]);
+  }, [content, displayType]);
 
   return (
     <>
@@ -80,8 +92,11 @@ function ResponseItem({
         p={WRAPPER_PADDING}
         rounded={12}
         outline="LIGHT"
-        w={commentType === 'LIST' ? RESPONSE_WIDTH : '100%'}
+        w={displayType === 'LIST' ? RESPONSE_WIDTH : '100%'}
         onClick={handleClickDetail}
+        style={{
+          overflow: displayType === 'DETAIL' ? 'visible' : undefined,
+        }}
       >
         <PostMoreModal
           isVisible={showMore}
@@ -143,12 +158,12 @@ function ResponseItem({
           </Layout.FlexCol>
           <QuestionItem question={question} />
           <PostFooter
-            likedUserList={like_user_sample}
+            reactionSampleUserList={like_reaction_user_sample}
             isMyPage={isMyPage}
             post={response}
             showComments={() => setBottomSheet(true)}
             setInputFocus={() => setInputFocus(true)}
-            commentType={commentType}
+            displayType={displayType}
           />
         </Layout.FlexCol>
       </Layout.FlexRow>

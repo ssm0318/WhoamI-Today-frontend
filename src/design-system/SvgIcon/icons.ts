@@ -40,6 +40,7 @@ const search = 'search';
 const logo = 'logo';
 const like = 'like';
 const like_filled = 'like_filled';
+const emoji = 'emoji';
 
 // Friends
 const hide_true = 'hide_true';
@@ -180,6 +181,7 @@ export {
   edit_filled_white,
   edit_list,
   edit_outline,
+  emoji,
   error,
   expand_close,
   expand_open,

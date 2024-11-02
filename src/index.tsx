@@ -23,12 +23,12 @@ import EditFriends from './routes/friends/EditFriends';
 import ExploreFriends from './routes/friends/ExploreFriends';
 import Friends from './routes/friends/Friends';
 import Intro from './routes/Intro';
-import Likes from './routes/Likes';
 import My from './routes/My';
 import AllNotes from './routes/notes/AllNotes';
 import NewNote from './routes/notes/NewNote';
 import { NoteDetail } from './routes/notes/NoteDetail';
 import Notifications from './routes/Notifications';
+import Reactions from './routes/Reactions';
 import ReceivedPrompts from './routes/ReceivedPrompts';
 import AllResponses from './routes/responses/AllResponses';
 import NewResponse from './routes/responses/NewResponse';
@@ -109,24 +109,17 @@ const router = createBrowserRouter([
                 children: [
                   { path: '', element: <AllResponses from="user" /> },
                   { path: ':responseId', element: <ResponseDetail /> },
-                  { path: ':responseId/likes', element: <Likes /> },
                 ],
               },
               {
                 path: 'notes',
-                children: [
-                  { path: ':noteId', element: <NoteDetail /> },
-                  { path: ':noteId/likes', element: <Likes /> },
-                ],
+                children: [{ path: ':noteId', element: <NoteDetail /> }],
               },
             ],
           },
         ],
       },
-      {
-        path: 'comments/:commentId/likes',
-        element: <Likes />,
-      },
+
       {
         path: 'check-in',
         children: [{ path: 'edit', element: <CheckInEdit /> }],
@@ -136,7 +129,7 @@ const router = createBrowserRouter([
         children: [
           { path: '', element: <AllNotes /> },
           { path: ':noteId', element: <NoteDetail /> },
-          { path: ':noteId/likes', element: <Likes /> },
+          { path: ':noteId/reactions', element: <Reactions /> },
           { path: 'new', element: <NewNote /> },
         ],
       },
@@ -144,7 +137,7 @@ const router = createBrowserRouter([
         path: 'responses',
         children: [
           { path: ':responseId', element: <ResponseDetail /> },
-          { path: ':responseId/likes', element: <Likes /> },
+          { path: ':responseId/reactions', element: <Reactions /> },
           { path: ':responseId/edit', element: <NewResponse /> },
         ],
       },
