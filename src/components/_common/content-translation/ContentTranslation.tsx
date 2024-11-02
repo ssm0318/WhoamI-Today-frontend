@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyledTranslationButton } from '@components/_common/content-translation/ContentTranslation.styled';
 import { Typo } from '@design-system';
 import i18n from '@i18n/index';
@@ -6,16 +7,17 @@ import { requestTranslateText } from '@utils/apis/translate';
 
 interface Props {
   content: string;
-  useTranslation?: boolean;
+  translateContent?: boolean;
 }
 
-export default function ContentTranslation({ content, useTranslation = true }: Props) {
+export default function ContentTranslation({ content, translateContent = true }: Props) {
+  const [t] = useTranslation('translation', { keyPrefix: 'translation' });
   const [translatedContent, setTranslatedContent] = useState('');
   const [showTranslationBtn, setShowTranslationBtn] = useState(false);
   const [showTranslatedText, setShowTranslatedText] = useState(false);
 
   useEffect(() => {
-    if (!content || !useTranslation) return;
+    if (!content || !translateContent) return;
     requestTranslateText(content, i18n.language)
       .then(({ data }) => {
         setShowTranslationBtn(
@@ -26,7 +28,7 @@ export default function ContentTranslation({ content, useTranslation = true }: P
       .catch(() => {
         setTranslatedContent('');
       });
-  }, [content, useTranslation]);
+  }, [content, translateContent]);
 
   const toggleTranslateText = () => {
     setShowTranslatedText((prev) => !prev);
@@ -41,7 +43,7 @@ export default function ContentTranslation({ content, useTranslation = true }: P
         <StyledTranslationButton
           fontType="body-medium"
           status="normal"
-          text={showTranslatedText ? '원문보기' : '번역보기'}
+          text={showTranslatedText ? t('see_original') : t('see_translation')}
           onClick={toggleTranslateText}
         />
       )}

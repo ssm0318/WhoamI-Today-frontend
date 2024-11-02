@@ -241,8 +241,8 @@
   },
   "likes": {
     "title": "Likes",
-    "forbidden_post_or_comment" : "This Post/comment is not accessible.",
-    "not_found_post_or_comment" : "This Post/comment does not exist."
+    "forbidden_post_or_comment": "This Post/comment is not accessible.",
+    "not_found_post_or_comment": "This Post/comment does not exist."
   },
   "reactions": {
     "title": "Likes/Emojis"
@@ -269,6 +269,10 @@
       "success_title": "The note has been successfully deleted.",
       "error_title": "An error has occurred temporarily. Please try again later."
     }
+  },
+  "translation": {
+    "see_translation": "See translation",
+    "see_original": "See original"
   },
   "settings": {
     "title": "Settings",

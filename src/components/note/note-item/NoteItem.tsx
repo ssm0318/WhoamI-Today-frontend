@@ -123,7 +123,7 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
         <Layout.FlexCol>
           <ContentTranslation
             content={content}
-            useTranslation={!isMyPage && displayType === 'DETAIL'}
+            translateContent={!isMyPage && displayType === 'DETAIL'}
           />
           {/* 이미지 */}
           <NoteImageList images={images} />

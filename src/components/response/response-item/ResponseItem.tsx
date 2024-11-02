@@ -138,7 +138,7 @@ function ResponseItem({
           </Layout.FlexRow>
           <Layout.FlexCol w="100%" mb={8}>
             {displayType === 'DETAIL' ? (
-              <ContentTranslation content={content} useTranslation={!isMyPage} />
+              <ContentTranslation content={content} translateContent={!isMyPage} />
             ) : (
               <Typo type="body-large" color="BLACK" pre>
                 {overflowSummary ? (
