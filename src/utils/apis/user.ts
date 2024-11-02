@@ -239,9 +239,9 @@ export const resetPassword = ({
   onSuccess: () => void;
   onError: (error: string) => void;
 }) => {
-  const url = id && token ? `/user/reset-password/${id}/${token}/` : `/user/reset-password/`;
+  const url = id ? `/user/reset-password/${id}/` : `/user/reset-password/`;
   axios
-    .put(url, { password })
+    .put(url, { password, token })
     .then(() => onSuccess())
     .catch((e: AxiosError<PasswordError>) => {
       if (e.response?.data.password[0]) {
