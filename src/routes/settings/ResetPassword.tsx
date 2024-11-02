@@ -25,12 +25,12 @@ function ResetPassword() {
       token,
       password: passwordInput,
       onSuccess: () => navigate('/settings'),
-      onError: (e) => setPasswordError(e),
+      onError: setPasswordError,
     });
   };
 
   return (
-    <>
+    <Layout.FlexCol w="100%">
       <SubHeader typo="title-large" title={t('settings.reset_password')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 40} w="100%" gap={10} ph={24}>
         <ValidatedPasswordInput
@@ -42,7 +42,7 @@ function ResetPassword() {
           guide={t('sign_up.password_constraints')}
         />
       </Layout.FlexCol>
-      <Layout.Fixed
+      <Layout.Absolute
         l={0}
         b={20 + (id && token ? 0 : BOTTOM_TABBAR_HEIGHT)}
         w="100%"
@@ -55,8 +55,8 @@ function ResetPassword() {
           text={t('settings.confirm')}
           onClick={handleClickConfirm}
         />
-      </Layout.Fixed>
-    </>
+      </Layout.Absolute>
+    </Layout.FlexCol>
   );
 }
 

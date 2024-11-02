@@ -244,11 +244,12 @@ export const resetPassword = ({
     .put(url, { password, token })
     .then(() => onSuccess())
     .catch((e: AxiosError<PasswordError>) => {
-      if (e.response?.data.password[0]) {
+      if (e.response?.data.password?.[0]) {
         onError(e.response.data.password[0]);
-        return;
       }
-      onError(i18n.t('error.temporary_error'));
+      if (e.response?.data) {
+        onError(String(e.response?.data));
+      }
     });
 };
 

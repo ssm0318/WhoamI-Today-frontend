@@ -34,7 +34,7 @@ function ForgotPassword() {
   };
 
   return (
-    <>
+    <Layout.FlexCol w="100%">
       <SubHeader title={t('title')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 40} w="100%" ph={24} alignItems="center" gap={20}>
         <Typo type="body-large">{t('description')}</Typo>
@@ -48,16 +48,16 @@ function ForgotPassword() {
           error={emailError}
           guide={t('email_guide')}
         />
-        <Layout.Fixed l={0} b={20} w="100%" alignItems="center" ph="default">
+        <Layout.Absolute l={0} b={20} w="100%" alignItems="center" ph="default">
           <Button.Confirm
             status={!emailInput || emailError ? 'disabled' : 'normal'}
             text={t('confirm')}
             onClick={handleClickSend}
             sizing="stretch"
           />
-        </Layout.Fixed>
+        </Layout.Absolute>
       </Layout.FlexCol>
-    </>
+    </Layout.FlexCol>
   );
 }
 
