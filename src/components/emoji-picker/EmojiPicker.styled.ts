@@ -10,8 +10,7 @@ ${({ unifiedList, theme }) =>
   unifiedList.map(
     (unified) => `
       .EmojiPickerReact [data-unified='${unified}'] {
-        border: 1px solid ${theme.CALENDAR_TODAY}  !important;
-        background-color: ${theme.BACKGROUND_COLOR} !important;
+        background-color: ${theme.SECONDARY} !important;
       }
     `,
   )}

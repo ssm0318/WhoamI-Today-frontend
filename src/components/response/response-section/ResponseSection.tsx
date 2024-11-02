@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
@@ -41,7 +41,8 @@ function ResponseSection({ username }: ResponseSectionProps) {
 
   const isMoreButtonVisible = responses && responses.count > RESPONSE_VIEW_MAX_COUNT;
 
-  const handleClickMore = () => {
+  const handleClickMore = (e: MouseEvent) => {
+    e.stopPropagation();
     navigate(username ? `/users/${username}/responses` : '/my/responses');
   };
 

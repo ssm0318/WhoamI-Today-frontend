@@ -35,6 +35,10 @@ export interface ContentsCommon {
   author_detail: User;
   like_count: number | null;
   current_user_like_id: number | null;
+  current_user_reaction_id_list: {
+    id: number;
+    emoji: string;
+  }[];
   created_at: string;
   updated_at: string;
 }
@@ -70,6 +74,11 @@ export interface AdminAuthor {
   color_hex: string;
 }
 
+export interface ReactionUserSample extends User {
+  like: boolean;
+  reaction: string | null;
+}
+
 // 답변
 export interface Response extends ContentsCommon {
   type: POST_TYPE.RESPONSE;
@@ -77,7 +86,7 @@ export interface Response extends ContentsCommon {
   question: DailyQuestion;
   question_id: number;
   comment_count: number | null;
-  like_user_sample: User[];
+  like_reaction_user_sample: ReactionUserSample[];
   current_user_read: boolean;
   is_edited: boolean;
 }
@@ -86,7 +95,7 @@ export interface Note extends ContentsCommon {
   type: POST_TYPE.NOTE;
   images: string[];
   comment_count: number | null;
-  like_user_sample: User[];
+  like_reaction_user_sample: ReactionUserSample[];
   comments: Comment[];
   current_user_read: boolean;
   is_edited: boolean;
@@ -119,7 +128,7 @@ export type Reaction = {
   user: User;
 };
 
-export type ReactionPostType = 'response';
+export type ReactionPostType = 'Note' | 'Response';
 
 export interface ActorDetail {
   id: number;
@@ -135,6 +144,14 @@ export type Like = {
   type: 'Like';
   user: string;
   user_detail: ActorDetail;
+};
+
+export type PostReaction = {
+  id: number;
+  type: 'Reaction' | 'Like';
+  user: string;
+  user_detail: ActorDetail;
+  reaction: string | null;
 };
 
 export type POST_DP_TYPE = 'LIST' | 'DETAIL';

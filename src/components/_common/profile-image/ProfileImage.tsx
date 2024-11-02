@@ -1,3 +1,4 @@
+import { MouseEvent } from 'react';
 import { Layout, SvgIcon } from '@design-system';
 import { NonShrinkWrapper } from './ProfileImage.styled';
 
@@ -6,7 +7,7 @@ interface ProfileImageProps {
   size?: number;
   username?: string;
   className?: string;
-  onClick?: () => void;
+  onClick?: (e: MouseEvent) => void;
 }
 
 function ProfileImage({ imageUrl, username, className, size = 36, onClick }: ProfileImageProps) {
