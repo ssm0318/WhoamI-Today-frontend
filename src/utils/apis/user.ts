@@ -244,7 +244,7 @@ export const resetPassword = ({
     .put(url, { password, token })
     .then(() => onSuccess())
     .catch((e: AxiosError<PasswordError>) => {
-      if (e.response?.data.password?.[0]) {
+      if (e.response?.data?.password?.[0]) {
         onError(e.response.data.password[0]);
       }
       if (e.response?.data) {
