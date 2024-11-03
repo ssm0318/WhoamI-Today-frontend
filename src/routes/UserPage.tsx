@@ -61,7 +61,7 @@ function UserPage() {
 
   return (
     <>
-      <MainContainer key={username} visibility={!outlet}>
+      <MainContainer key={username} style={{ display: outlet ? 'none' : 'block' }}>
         <UserHeader username={username} onClickMore={handleClickMore} />
         <Layout.FlexCol w="100%" bgColor="LIGHT" mt={TITLE_HEADER_HEIGHT}>
           {user.state === 'hasError' && <CommonError />}

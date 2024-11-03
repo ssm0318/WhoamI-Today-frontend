@@ -62,6 +62,25 @@ export const checkIfSignIn = async () => {
   }
 };
 
+export const sendResetPasswordEmail = async ({
+  email,
+  onSuccess,
+  onFail,
+}: {
+  email: string;
+  onSuccess: () => void;
+  onFail: (error: any) => void;
+}) => {
+  axios
+    .post('/user/send-reset-password-email/', {
+      email,
+    })
+    .then(onSuccess)
+    .catch((e) => {
+      onFail(e.response.data);
+    });
+};
+
 export const signOut = async (onSuccess: () => void) => {
   axios.get('/user/logout/').then(() => {
     onSuccess();
@@ -205,26 +224,32 @@ export const confirmPassword = ({
     });
 };
 
+// reset password
+// id, token이 있으면 reset-password/:id/:token/로 요청 (from 비밀번호 변경 이메일)
 export const resetPassword = ({
-  userId,
+  id,
+  token,
   password,
   onSuccess,
   onError,
 }: {
-  userId: number;
+  id?: string;
+  token?: string;
   password: string;
   onSuccess: () => void;
   onError: (error: string) => void;
 }) => {
+  const url = id ? `/user/reset-password/${id}/` : `/user/reset-password/`;
   axios
-    .put(`/user/reset-password/${userId}/`, { password })
+    .put(url, { password, token })
     .then(() => onSuccess())
     .catch((e: AxiosError<PasswordError>) => {
-      if (e.response?.data.password[0]) {
+      if (e.response?.data?.password?.[0]) {
         onError(e.response.data.password[0]);
-        return;
       }
-      onError(i18n.t('error.temporary_error'));
+      if (e.response?.data) {
+        onError(String(e.response?.data));
+      }
     });
 };
 
