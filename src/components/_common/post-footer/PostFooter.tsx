@@ -116,11 +116,14 @@ function PostFooter({
         ) : (
           <>
             <LikeButton postType={type} post={post} iconSize={23} m={0} />
-            <Layout.FlexRow ref={toggleButtonRef}>
+            <Layout.FlexRow ref={toggleButtonRef} alignItems="center">
               {(myEmojiList || []).length === 0 ? (
                 <EmojiButton post={post} onClick={handleClickEmojiButton} />
               ) : (
-                <PostMyEmojiList onClick={handleClickEmojiButton} emojiList={myEmojiList} />
+                <>
+                  <PostMyEmojiList emojiList={myEmojiList} />
+                  <EmojiButton post={post} onClick={handleClickEmojiButton} />
+                </>
               )}
             </Layout.FlexRow>
           </>
