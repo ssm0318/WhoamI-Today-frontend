@@ -41,6 +41,7 @@ const logo = 'logo';
 const like = 'like';
 const like_filled = 'like_filled';
 const emoji = 'emoji';
+const add_emoji = 'add_emoji';
 
 // Friends
 const hide_true = 'hide_true';
@@ -139,6 +140,7 @@ const comment_message = 'comment_message';
 export {
   add_comment,
   add_default,
+  add_emoji,
   add_post,
   add_reaction_active,
   add_reaction_default,

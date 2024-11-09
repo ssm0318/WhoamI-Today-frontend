@@ -18,11 +18,16 @@ function PostReactionItem({ imageUrl, size = 23, like, emoji }: PostReactionItem
       }}
     >
       <ProfileImage imageUrl={imageUrl} size={23} />
-      <Layout.Absolute r={0} b={2} z={2}>
+      <Layout.Absolute r={like ? 0 : -3} b={like ? 2 : -6} z={2}>
         {like ? (
           <Icon name="like_filled" size={size / 3} />
         ) : (
-          <EmojiItem emojiString={emoji || ''} size={size / 3} />
+          <EmojiItem
+            emojiString={emoji || ''}
+            size={size / 2}
+            bgColor="TRANSPARENT"
+            outline="TRANSPARENT"
+          />
         )}
       </Layout.Absolute>
     </Layout.FlexRow>
