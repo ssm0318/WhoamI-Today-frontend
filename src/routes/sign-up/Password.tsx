@@ -40,7 +40,8 @@ function Password() {
           },
           onSuccess: () => {
             resetSignUpInfo();
-            // 가입 후 프로필 수정 페이지로 이동
+            openToast({ message: t('success') });
+            // 가입 후 마이페이지로 이동
             navigate(AFTER_SIGNUP_PATH, {
               state: { fromSignUp: true },
             });
