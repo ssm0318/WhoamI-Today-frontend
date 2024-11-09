@@ -11,7 +11,7 @@ import { Layout, Typo } from '@design-system';
 import { Note, POST_DP_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
-import NoteImageList from '../note-image-list/NoteImageList';
+import { NoteImage } from '../note-image/NoteImage.styled';
 
 interface NoteItemProps {
   note: Note;
@@ -123,8 +123,12 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
           <Typo type="body-large" color="BLACK" pre>
             {content}
           </Typo>
-          {/* 이미지 */}
-          <NoteImageList images={images} />
+          {/* 노트 이미지 - 1개만 노출 */}
+          {images[0] && (
+            <Layout.FlexRow w="100%" mv={10}>
+              <NoteImage src={images[0]} />
+            </Layout.FlexRow>
+          )}
           {/* (수정됨) */}
           {is_edited && (
             <Typo type="label-medium" color="MEDIUM_GRAY">
