@@ -11,7 +11,6 @@ import { Layout, Typo } from '@design-system';
 import { Note, POST_DP_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
-import { shortenUsername } from '@utils/validateHelpers';
 import { NoteImage } from '../note-image/NoteImage.styled';
 
 interface NoteItemProps {
@@ -107,7 +106,9 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
             {/* author, created_at 정보 */}
             <Layout.FlexRow alignItems="center" gap={8}>
               <Layout.FlexRow onClick={navigateToProfile}>
-                <Typo type="title-medium">{shortenUsername(username)}</Typo>
+                <Typo type="title-medium" ellipsis={{ enabled: true, maxWidth: 140 }}>
+                  {username}
+                </Typo>
               </Layout.FlexRow>
               <Typo type="label-medium" color="MEDIUM_GRAY">
                 {created_at && convertTimeDiffByString({ day: new Date(created_at) })}

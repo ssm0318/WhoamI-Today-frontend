@@ -81,4 +81,13 @@ export const StyledFont = styled.span<FontAttrs & TypoPropBase>`
     css`
       font-style: italic;
     `}
+
+  ${({ ellipsis }) =>
+    ellipsis?.enabled &&
+    css`
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: ${ellipsis.maxWidth}px;
+    `}
 `;

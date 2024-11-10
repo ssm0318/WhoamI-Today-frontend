@@ -12,7 +12,6 @@ import { Layout, Typo } from '@design-system';
 import { POST_DP_TYPE, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
-import { shortenUsername } from '@utils/validateHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
 interface ResponseItemProps {
@@ -123,7 +122,9 @@ function ResponseItem({
               {/* author, created_at 정보 */}
               <Layout.FlexRow alignItems="center" gap={8}>
                 <Layout.FlexRow onClick={navigateToProfile}>
-                  <Typo type="title-medium">{shortenUsername(username)}</Typo>
+                  <Typo type="title-medium" ellipsis={{ enabled: true, maxWidth: 90 }}>
+                    {username}
+                  </Typo>
                 </Layout.FlexRow>
                 <Typo type="label-medium" color="MEDIUM_GRAY">
                   {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
