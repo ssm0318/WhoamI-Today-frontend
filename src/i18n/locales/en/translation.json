@@ -59,7 +59,8 @@
     "noti_time_setting_desc_2": "When do you want to get the notification?",
     "noti_time_default_desc": "If you do not set a time, you will be notified at 4 p.m.",
     "complete": "complete",
-    "error": "A temporary error occurred while signing up:( \n Please sign up again."
+    "error": "A temporary error occurred while signing up:( \n Please sign up again.",
+    "success": "Sign up successfully 🎉"
   },
   "nav_tab": {
     "friends": "Friends",
@@ -314,8 +315,10 @@
       "title": "Edit Profile",
       "back": "Back",
       "done": "Done",
+      "cancel": "Cancel",
       "change_picture": "Change Picture",
       "username": "Username",
+      "username_valiation_error": "Use letters, numbers, Korean & _ only (max 20)",
       "email": "Email",
       "bio": "Bio",
       "pronouns": "Pronouns",

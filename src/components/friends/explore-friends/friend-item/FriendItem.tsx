@@ -23,7 +23,9 @@ function FriendItem(props: Props) {
     >
       <Layout.FlexRow alignItems="center" gap={7}>
         <ProfileImage imageUrl={user.profile_image} username={user.username} size={44} />
-        <Typo type="label-large">{user.username}</Typo>
+        <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 160 }}>
+          {user.username}
+        </Typo>
       </Layout.FlexRow>
       <Layout.LayoutBase>
         <FriendStatus {...props} />

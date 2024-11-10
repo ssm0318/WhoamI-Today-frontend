@@ -42,13 +42,18 @@ function Profile({ user }: ProfileProps) {
         <ProfileImage imageUrl={user?.profile_image} username={username} size={80} />
         <Layout.FlexCol w="100%" gap={8}>
           <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
+            {/* username / pronouns */}
             <Layout.FlexRow gap={8} alignItems="center">
-              <Typo type="title-large">{isMyPage ? myProfile?.username : username}</Typo>
+              <Typo type="title-large" ellipsis={{ enabled: true, maxWidth: 160 }}>
+                {isMyPage ? myProfile?.username || '' : username || ''}
+              </Typo>
+
               <Typo type="label-medium">
                 {(isMyPage ? myProfile?.pronouns : friendData?.pronouns) &&
                   `(${isMyPage ? myProfile?.pronouns : friendData?.pronouns})`}
               </Typo>
             </Layout.FlexRow>
+            {/* edit icon */}
             {isMyPage && (
               <SvgIcon
                 name="edit_filled"

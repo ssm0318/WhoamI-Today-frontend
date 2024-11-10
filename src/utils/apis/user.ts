@@ -167,35 +167,13 @@ export const signUp = ({
 }) => {
   const formData = new FormData();
 
-  const {
-    email,
-    password,
-    username,
-    profileImage,
-    research_agreement,
-    age,
-    gender,
-    signature,
-    date_of_signature,
-    noti_time,
-  } = signUpInfo;
+  const { email, password, username, noti_time } = signUpInfo;
 
-  if (profileImage) {
-    formData.append('profile_image', profileImage, 'profile_image.png');
-  }
   formData.append('email', email);
   formData.append('username', username);
   formData.append('password', password);
 
   if (noti_time) formData.append('noti_time', noti_time);
-
-  if (research_agreement) {
-    formData.append('research_agreement', `${research_agreement}`);
-    if (age) formData.append('age', `${age}`);
-    if (gender) formData.append('gender', `${gender}`);
-    if (signature) formData.append('signature', `${signature}`);
-    if (date_of_signature) formData.append('date_of_signature', `${date_of_signature}`);
-  }
 
   axiosFormDataInstance
     .post('/user/signup/', formData)
@@ -262,7 +240,7 @@ export const getFriendList = async (next?: string | null) => {
 };
 
 export const getUserProfile = async (username: string) => {
-  const { data } = await axios.get<UserProfile>(`/user/${username}/profile/`);
+  const { data } = await axios.get<UserProfile>(`/user/${encodeURIComponent(username)}/profile/`);
   return data;
 };
 
@@ -367,7 +345,7 @@ export const blockRecommendation = async (userId: number) => {
 export const getUserNotes = async (username: string, next?: string | null) => {
   const requestPage = next ? next.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Note[]>>(
-    `/user/${username}/notes/${requestPage ? `?page=${requestPage}` : ''}`,
+    `/user/${encodeURIComponent(username)}/notes/${requestPage ? `?page=${requestPage}` : ''}`,
   );
   if (data.results?.length) axios.patch('/user/mark-all-notes-as-read/', { username });
   return data;
@@ -377,7 +355,7 @@ export const getUserNotes = async (username: string, next?: string | null) => {
 export const getUserResponses = async (username: string, next?: string | null) => {
   const requestPage = next ? next.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Response[]>>(
-    `/user/${username}/responses/${requestPage ? `?page=${requestPage}` : ''}`,
+    `/user/${encodeURIComponent(username)}/responses/${requestPage ? `?page=${requestPage}` : ''}`,
   );
 
   if (data.results?.length) axios.patch('/user/mark-all-responses-as-read/', { username });

@@ -104,7 +104,9 @@ function EditFriends() {
                     )}
                     <Layout.FlexRow gap={8} alignItems="center">
                       <ProfileImage imageUrl={profile_image} username={username} size={44} />
-                      <Typo type="title-small">{username}</Typo>
+                      <Typo ellipsis={{ enabled: true, maxWidth: 150 }} type="title-small">
+                        {username}
+                      </Typo>
                     </Layout.FlexRow>
                   </Layout.FlexRow>
                   <Layout.FlexRow>
