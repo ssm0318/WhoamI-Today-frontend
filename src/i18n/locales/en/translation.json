@@ -298,6 +298,7 @@
     "notification_settings": "Notification Settings",
     "push_notifications": "Push notifications",
     "daily_noti_time": "Daily Noti Time",
+    "change_daily_noti_time": "Change Daily Noti Time",
     "allow_notification_to_receive_updates_from_friends_as_push_notifications": "Allow notifications to receive updates from friends as push notifications!",
     "click_here_to_check_your_system_preferences": "Click here to check your system preferences for notifications!",
     "push_notifications_are_currently_enabled": "Push notifications are currently enabled.",

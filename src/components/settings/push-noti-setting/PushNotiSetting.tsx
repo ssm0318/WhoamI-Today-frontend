@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { DEFAULT_MARGIN } from '@constants/layout';
-import { Font, Layout } from '@design-system';
+import { useNavigate } from 'react-router-dom';
+import { Font, Layout, SvgIcon, Typo } from '@design-system';
 import useNotiPermission from '@hooks/useNotiPermission';
 import { useBoundStore } from '@stores/useBoundStore';
 import { requestPermission } from '@utils/firebaseHelpers';
@@ -18,6 +18,7 @@ function PushNotiSetting() {
     appNotiPermission: state.appNotiPermission,
     dailyNotiTime: state.myProfile?.noti_time,
   }));
+  const navigate = useNavigate();
 
   const permissionAllowed = isApp ? appNotiPermission : notiPermission === 'granted' || false;
 
@@ -28,6 +29,8 @@ function PushNotiSetting() {
     const permission = await requestPermission();
     setNotiPermission(permission);
   };
+
+  const handleClickChangeDailyNotiTime = () => navigate('/settings/change-daily-noti-time');
 
   return (
     <>
@@ -63,12 +66,23 @@ function PushNotiSetting() {
           </Layout.FlexCol>
         )}
       </Layout.FlexRow>
-      {permissionAllowed && dailyNotiTime && (
-        <Layout.FlexRow ph={DEFAULT_MARGIN} gap={10} w="100%">
-          <Font.Display type="20_bold">{t('daily_noti_time')}</Font.Display>
-          <Font.Body type="18_regular" color="BLACK">
-            {getDailyNotiTime(dailyNotiTime)}
-          </Font.Body>
+      {dailyNotiTime && (
+        <Layout.FlexRow
+          w="100%"
+          alignItems="center"
+          onClick={handleClickChangeDailyNotiTime}
+          justifyContent="space-between"
+        >
+          <Layout.FlexRow gap={8}>
+            <Typo type="title-medium">{t('daily_noti_time')}</Typo>
+            <Typo type="button-medium" color="BLACK">
+              {getDailyNotiTime(dailyNotiTime)}
+            </Typo>
+          </Layout.FlexRow>
+          <SvgIcon name="arrow_right" color="BLACK" size={24} />
+          {/* <Typo type="button-small" color="GRAY_8">
+            {t('change_daily_noti_time')}
+          </Typo> */}
         </Layout.FlexRow>
       )}
     </>

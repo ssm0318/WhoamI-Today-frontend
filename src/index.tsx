@@ -34,6 +34,7 @@ import AllResponses from './routes/responses/AllResponses';
 import NewResponse from './routes/responses/NewResponse';
 import ResponseDetail from './routes/responses/ResponseDetail';
 import Root from './routes/Root';
+import ChangeDailyNotiTime from './routes/settings/ChangeDailyNotiTime';
 import ConfirmPassword from './routes/settings/ConfirmPassword';
 import DeleteAccount from './routes/settings/DeleteAccount';
 import EditProfile from './routes/settings/EditProfile';
@@ -144,6 +145,7 @@ const router = createBrowserRouter([
           { path: 'edit-profile', element: <EditProfile /> },
           { path: 'confirm-password', element: <ConfirmPassword /> },
           { path: 'reset-password', element: <ResetPassword /> },
+          { path: 'change-daily-noti-time', element: <ChangeDailyNotiTime /> },
           { path: 'delete-account', element: <DeleteAccount /> },
         ],
       },
