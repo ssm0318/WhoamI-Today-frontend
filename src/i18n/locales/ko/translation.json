@@ -249,8 +249,8 @@
   },
   "likes": {
     "title": "좋아요",
-    "forbidden_post_or_comment" : "이 게시물/댓글에 접근할 수 없습니다.",
-    "not_found_post_or_comment" : "존재하지 않는 게시물/댓글입니다."
+    "forbidden_post_or_comment": "이 게시물/댓글에 접근할 수 없습니다.",
+    "not_found_post_or_comment": "존재하지 않는 게시물/댓글입니다."
   },
   "reactions": {
     "title": "좋아요/이모지"
@@ -266,7 +266,7 @@
       "content": "신고하면 이 게시물이 자동으로 숨겨집니다.",
       "cancel": "취소",
       "report": "신고",
-      "success_title":"게시물이 성공적으로 신고되었습니다.",
+      "success_title": "게시물이 성공적으로 신고되었습니다.",
       "error_title": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
     },
     "delete": {
@@ -277,6 +277,10 @@
       "success_title": "게시물이 성공적으로 삭제되었습니다.",
       "error_title": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
     }
+  },
+  "translation": {
+    "see_translation": "번역보기",
+    "see_original": "원문보기"
   },
   "settings": {
     "title": "설정",
@@ -352,7 +356,7 @@
       "sent_by": "{{username}}이(가) 보냄"
     },
     "read_all": "전체 읽음",
-    "temporary_error":"일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+    "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
   },
   "comment": {
     "reply": "답글",
@@ -425,7 +429,7 @@
     "search_friends": "검색",
     "write_a_message": "메시지를 작성해주세요...",
     "send_separately": "보내기",
-     "sent_success": "질문이 성공적으로 전송되었습니다 :)"
+    "sent_success": "질문이 성공적으로 전송되었습니다 :)"
   },
   "friends": {
     "explore_friends": {

@@ -104,10 +104,11 @@ type ButtonProps = {
    * SVGIcon 컴포넌트
    */
   icon?: ReactElement;
+  className?: string;
 } & ButtonComponentProps;
 
 function Button(props: ButtonProps) {
-  const { to, width, fontType, iconPosition = 'right', icon, ...buttonProps } = props;
+  const { to, width, fontType, iconPosition = 'right', icon, className, ...buttonProps } = props;
   const { sizing } = buttonProps;
   const { text, color, outline, fill, status, ...handlers } = useButton(buttonProps);
   const { ButtonComponent, fontType: defaultFontType } = buttons[buttonProps.type];
@@ -115,7 +116,13 @@ function Button(props: ButtonProps) {
   const buttonChildren = useMemo(() => {
     if (!text) return null;
     return (
-      <ButtonComponent sizing={sizing} outline={outline} fill={fill} width={width}>
+      <ButtonComponent
+        className="button_component"
+        sizing={sizing}
+        outline={outline}
+        fill={fill}
+        width={width}
+      >
         <Layout.FlexRow gap={4} alignItems="center">
           {iconPosition === 'left' && icon}
           <Typo type={fontType ?? defaultFontType} color={color} textAlign="center">
@@ -140,7 +147,11 @@ function Button(props: ButtonProps) {
   ]);
 
   return (
-    <S.Container sizing={sizing} disabled={status === 'completed' || status === 'disabled'}>
+    <S.Container
+      className={className}
+      sizing={sizing}
+      disabled={status === 'completed' || status === 'disabled'}
+    >
       {to ? (
         <Link to={to} {...handlers}>
           {buttonChildren}
