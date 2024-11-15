@@ -1,5 +1,5 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import { CSSProperties, useEffect, useState } from 'react';
+import { CSSProperties, MouseEvent, useEffect, useState } from 'react';
 import MusicDetailBottomSheet from '@components/music/music-detail-bottom-sheet/MusicDetailBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
@@ -36,7 +36,9 @@ function SpotifyMusic({
 
   const [showMusicDetail, setShowMusicDetail] = useState(false);
 
-  const handleClickMusic = () => {
+  const handleClickMusic = (e: MouseEvent) => {
+    e.stopPropagation();
+
     if (!useDetailBottomSheet) return;
     setShowMusicDetail(true);
   };
