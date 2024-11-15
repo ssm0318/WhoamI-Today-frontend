@@ -58,6 +58,10 @@ export type TypoPropBase = TextPropsBase & {
    * 단위: px
    */
   lineHeight?: number;
+  ellipsis?: {
+    enabled: boolean;
+    maxWidth?: number;
+  };
 };
 
 /**

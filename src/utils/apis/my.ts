@@ -24,7 +24,7 @@ export const editProfile = ({
 }: {
   profile: Pick<MyProfile, 'bio' | 'username' | 'pronouns'> & { profile_image?: File };
   onSuccess: (data: MyProfile) => void;
-  onError?: (error: string) => void;
+  onError?: (error: any) => void;
 }) => {
   const formData = new FormData();
 
@@ -42,7 +42,7 @@ export const editProfile = ({
     .patch<MyProfile>('/user/me/', formData)
     .then((res) => onSuccess(res.data))
     .catch((e) => {
-      onError?.(e.response.data.detail);
+      onError?.(e.response.data);
     });
 };
 

@@ -3,7 +3,7 @@ import { sliceResetFns } from './resetSlices';
 import { SliceStateCreator } from './useBoundStore';
 
 interface SignUpInfoState {
-  signUpInfo: Partial<SignUpParams>;
+  signUpInfo: SignUpParams;
 }
 
 interface SignupInfoAction {
@@ -13,10 +13,10 @@ interface SignupInfoAction {
 
 const initialState = {
   signUpInfo: {
-    email: undefined,
-    username: undefined,
-    password: undefined,
-    profileImage: undefined,
+    email: '',
+    username: '',
+    password: '',
+    noti_time: '16:00',
   },
 };
 

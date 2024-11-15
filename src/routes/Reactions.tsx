@@ -50,7 +50,7 @@ function Reactions() {
       <Layout.FlexCol w="100%" ph={16}>
         {reactions.map((reaction) => {
           const { id, user_detail, reaction: emoji } = reaction;
-          const { username } = user_detail;
+          const { username, profile_image } = user_detail;
           return (
             <Layout.FlexRow
               alignItems="center"
@@ -62,7 +62,7 @@ function Reactions() {
               onClick={() => handleClickFriend(username)}
             >
               <Layout.FlexRow gap={14} alignItems="center">
-                <ProfileImage imageUrl={null} username={username} size={44} />
+                <ProfileImage imageUrl={profile_image} username={username} size={44} />
                 <Typo type="title-medium">{username}</Typo>
               </Layout.FlexRow>
               <Layout.FlexRow>

@@ -123,7 +123,9 @@ function ResponseItem({
               {/* author, created_at 정보 */}
               <Layout.FlexRow alignItems="center" gap={8}>
                 <Layout.FlexRow onClick={navigateToProfile}>
-                  <Typo type="title-medium">{username}</Typo>
+                  <Typo type="title-medium" ellipsis={{ enabled: true, maxWidth: 90 }}>
+                    {username}
+                  </Typo>
                 </Layout.FlexRow>
                 <Typo type="label-medium" color="MEDIUM_GRAY">
                   {created_at && convertTimeDiffByString({ day: new Date(created_at) })}

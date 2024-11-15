@@ -14,6 +14,15 @@
     "forgot_password": "Forgot password",
     "sign_up": "Sign Up"
   },
+  "forgot_password": {
+    "title": "Forgot Password",
+    "email": "Email",
+    "description": "We'll email you instructions to reset your password.",
+    "email_guide": "You have to enter your exact email address that you used to register.",
+    "confirm": "Reset Password",
+    "email_sent_success": "Email sent successfully 🎉",
+    "email_sent_failed": "Email sent failed"
+  },
   "sign_up": {
     "create_an_account": "Create an account",
     "email": "Email",
@@ -50,7 +59,8 @@
     "noti_time_setting_desc_2": "When do you want to get the notification?",
     "noti_time_default_desc": "If you do not set a time, you will be notified at 4 p.m.",
     "complete": "complete",
-    "error": "A temporary error occurred while signing up:( \n Please sign up again."
+    "error": "A temporary error occurred while signing up:( \n Please sign up again.",
+    "success": "Sign up successfully 🎉"
   },
   "nav_tab": {
     "friends": "Friends",
@@ -218,7 +228,8 @@
     "crop_photo": "Crop Photo",
     "done": "Done",
     "more": "more",
-    "edited": "edited"
+    "edited": "edited",
+    "confirm": "Confirm"
   },
   "note_detail": {
     "title": "{{username}}'s Note",
@@ -308,8 +319,10 @@
       "title": "Edit Profile",
       "back": "Back",
       "done": "Done",
+      "cancel": "Cancel",
       "change_picture": "Change Picture",
       "username": "Username",
+      "username_valiation_error": "Use letters, numbers, Korean & _ only (max 20)",
       "email": "Email",
       "bio": "Bio",
       "pronouns": "Pronouns",

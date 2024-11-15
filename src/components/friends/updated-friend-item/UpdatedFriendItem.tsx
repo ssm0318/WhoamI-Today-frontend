@@ -99,7 +99,9 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
               <ProfileImage imageUrl={profile_image} username={username} size={44} />
               <Layout.FlexCol>
                 <Layout.FlexRow gap={4} alignItems="center">
-                  <Typo type="label-large">{username}</Typo>
+                  <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 100 }}>
+                    {username}
+                  </Typo>
                   {!current_user_read && <UpdatedLabel />}
                 </Layout.FlexRow>
                 {description && (

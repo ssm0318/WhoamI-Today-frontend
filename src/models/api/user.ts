@@ -26,12 +26,6 @@ export interface SignUpParams {
   email: string;
   username: string;
   password: string;
-  profileImage?: File;
-  research_agreement: boolean;
-  age?: number;
-  gender?: Gender;
-  signature?: string;
-  date_of_signature?: string;
   /** default: 16:00 */
   noti_time?: string;
 }
@@ -39,10 +33,7 @@ export interface SignUpParams {
 export const hasMandatorySignUpParams = (
   signUpParams: Partial<SignUpParams>,
 ): signUpParams is SignUpParams =>
-  !!signUpParams.email &&
-  !!signUpParams.username &&
-  !!signUpParams.password &&
-  signUpParams.research_agreement !== undefined;
+  !!signUpParams.email && !!signUpParams.username && !!signUpParams.password;
 
 export enum Gender {
   FEMALE,

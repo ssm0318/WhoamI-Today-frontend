@@ -39,13 +39,9 @@ import DeleteAccount from './routes/settings/DeleteAccount';
 import EditProfile from './routes/settings/EditProfile';
 import ResetPassword from './routes/settings/ResetPassword';
 import Settings from './routes/settings/Settings';
-import AddProfileImage from './routes/sign-up/AddProfileImage';
 import Email from './routes/sign-up/Email';
 import NotiSettings from './routes/sign-up/NotiSettings';
 import Password from './routes/sign-up/Password';
-import ResearchConsentForm from './routes/sign-up/ResearchConsentForm';
-import ResearchIntro from './routes/sign-up/ResearchIntro';
-import UserName from './routes/sign-up/UserName';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
 import UserPage from './routes/UserPage';
@@ -169,15 +165,12 @@ const router = createBrowserRouter([
         children: [
           { path: 'email', element: <Email /> },
           { path: 'password', element: <Password /> },
-          { path: 'research-intro', element: <ResearchIntro /> },
-          { path: 'research-consent-form', element: <ResearchConsentForm /> },
-          { path: 'username', element: <UserName /> },
-          { path: 'profile-image', element: <AddProfileImage /> },
           { path: 'noti-settings', element: <NotiSettings /> },
           { path: '', element: <Navigate replace to="email" /> },
         ],
       },
       { path: 'forgot-password', element: <ForgotPassword /> },
+      { path: 'reset-password/:id/:token', element: <ResetPassword /> },
     ],
   },
 ]);

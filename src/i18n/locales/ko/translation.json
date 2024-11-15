@@ -14,6 +14,15 @@
     "forgot_password": "비밀번호를 잊어버렸어요",
     "sign_up": "회원가입"
   },
+  "forgot_password": {
+    "title": "비밀번호 찾기",
+    "email": "이메일",
+    "description": "비밀번호를 재설정할 수 있는 방법을 이메일로 보내드리겠습니다.",
+    "email_guide": "가입할 때 사용한 정확한 이메일 주소를 입력해야 합니다.",
+    "confirm": "비밀번호 재설정",
+    "email_sent_success": "이메일이 성공적으로 전송되었습니다 🎉",
+    "email_sent_failed": "이메일 전송에 실패했습니다"  
+  },
   "sign_up": {
     "create_an_account": "새로운 계정 만들기",
     "email": "이메일",
@@ -50,7 +59,8 @@
     "noti_time_setting_desc_2": "언제 알림을 받을지 설정해볼까요?",
     "noti_time_default_desc": "알림 수신 시간을 설정하지 않으면, 오후 4시에 알림이 전송됩니다",
     "complete": "완료",
-    "error": "회원 가입 중 일시적인 오류가 발생했습니다:( \n 회원 가입을 다시 진행해주세요."
+    "error": "회원 가입 중 일시적인 오류가 발생했습니다:( \n 회원 가입을 다시 진행해주세요.",
+    "success": "회원 가입이 완료되었습니다 🎉"
   },
   "nav_tab": {
     "friends": "친구",
@@ -215,7 +225,8 @@
     "crop_photo": "이미지 자르기",
     "done": "완료",
     "more": "더보기",
-    "edited": "수정됨"
+    "edited": "수정됨",
+    "confirm": "확인"
   },
   "note_detail": {
     "title": "{{username}}의 노트",
@@ -305,8 +316,10 @@
       "title": "프로필 수정",
       "back": "뒤로",
       "done": "완료",
+      "cancel": "취소",
       "change_picture": "사진 변경하기",
       "username": "닉네임",
+      "username_valiation_error": "영문, 한글, 숫자, _ 만 사용 가능 (최대 20자)",
       "email": "이메일",
       "bio": "소개",
       "pronouns": "대명사",

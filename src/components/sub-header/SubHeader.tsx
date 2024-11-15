@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { DEFAULT_MARGIN, SCREEN_WIDTH } from '@constants/layout';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { FontType } from 'src/design-system/Font/Font.types';
 import { SubHeaderWrapper } from './SubHeader.styled';
@@ -49,7 +50,11 @@ function SubHeader({
           </Layout.LayoutBase>
         )}
         {title && (
-          <Typo type={typo} textAlign="center">
+          <Typo
+            type={typo}
+            textAlign="center"
+            ellipsis={{ enabled: true, maxWidth: SCREEN_WIDTH - 2 * DEFAULT_MARGIN }}
+          >
             {title}
           </Typo>
         )}

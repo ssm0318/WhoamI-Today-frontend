@@ -36,7 +36,7 @@ function FavoriteFriendItem({ user }: Props) {
         </Layout.Absolute> */}
       </Layout.FlexRow>
       <Layout.FlexRow gap={5} justifyContent="center" alignItems="center">
-        <Typo type="label-large" color="DARK">
+        <Typo type="label-large" color="DARK" ellipsis={{ enabled: true, maxWidth: 120 }}>
           {username}
         </Typo>
         {!current_user_read && <UpdatedLabel />}
