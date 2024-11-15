@@ -6,7 +6,7 @@ export const StyledUpdatedFriendItem = styled(Layout.FlexRow)`
   border-bottom: 1px ${({ theme }) => theme.LIGHT} solid;
 `;
 
-export const StyledProfileArea = styled.button`
+export const StyledProfileArea = styled.div`
   display: flex;
   width: 100%;
   max-width: 50%;

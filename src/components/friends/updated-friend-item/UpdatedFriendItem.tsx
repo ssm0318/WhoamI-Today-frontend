@@ -93,8 +93,13 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
       }
     >
       <Layout.FlexRow w="100%" ph={16} gap={16}>
-        <StyledUpdatedFriendItem w="100%" alignItems="center" justifyContent="space-between">
-          <StyledProfileArea type="button" onClick={handleClickProfile}>
+        <StyledUpdatedFriendItem
+          w="100%"
+          alignItems="center"
+          justifyContent="space-between"
+          onClick={handleClickProfile}
+        >
+          <StyledProfileArea>
             <Layout.FlexRow alignItems="center" gap={7}>
               <ProfileImage imageUrl={profile_image} username={username} size={44} />
               <Layout.FlexCol>
