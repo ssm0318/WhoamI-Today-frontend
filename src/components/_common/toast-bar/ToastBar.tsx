@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { DEFAULT_MARGIN, SCREEN_WIDTH, Z_INDEX } from '@constants/layout';
+import { BOTTOM_TABBAR_HEIGHT, DEFAULT_MARGIN, SCREEN_WIDTH, Z_INDEX } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { AnimatedToastBarContainer, AnimationState } from './ToastBar.styled';
 
@@ -14,7 +14,7 @@ interface ToastBarProps {
 
 export default function ToastBar({
   text,
-  bottom = 16,
+  bottom = BOTTOM_TABBAR_HEIGHT + 16,
   RightComponent,
   closeToastBar,
   timeout = 3000,
