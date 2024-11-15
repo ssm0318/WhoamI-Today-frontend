@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import useSWR from 'swr';
 import AlertDialog from '@components/_common/alert-dialog/AlertDialog';
 import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
@@ -9,7 +10,13 @@ import UserRelatedAlert, { Alert } from '@components/user-page/UserRelatedAlert'
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
-import { addFriendToFavorite, deleteFavorite, hideFriend, unHideFriend } from '@utils/apis/friends';
+import {
+  addFriendToFavorite,
+  deleteFavorite,
+  getFavoriteFriends,
+  hideFriend,
+  unHideFriend,
+} from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
 import { StyledFriendItemWrapper } from 'src/routes/friends/EditFriends.styled';
 import { MainScrollContainer } from 'src/routes/Root';
@@ -23,15 +30,21 @@ function EditFriends() {
   const [showTemporalErrorAlert, setShowTemporalErrorAlert] = useState(false);
   const handleOnCloseTemporalErrorAlert = () => setShowTemporalErrorAlert(false);
 
+  const { mutate: refetchFavoriteFriends } = useSWR(
+    '/user/friends/?type=favorites',
+    getFavoriteFriends,
+  );
+
   const handleToggleFavorite = (userId: number, is_favorite: boolean) => async () => {
     try {
       if (is_favorite) {
         updateFriendList({ userId, type: 'is_favorite', value: false });
         await deleteFavorite(userId);
-        return;
+      } else {
+        updateFriendList({ userId, type: 'is_favorite', value: true });
+        await addFriendToFavorite(userId);
       }
-      updateFriendList({ userId, type: 'is_favorite', value: true });
-      await addFriendToFavorite(userId);
+      refetchFavoriteFriends();
     } catch {
       setShowTemporalErrorAlert(true);
     }
