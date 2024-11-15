@@ -26,16 +26,16 @@ function EditFriends() {
   const [showTemporalErrorAlert, setShowTemporalErrorAlert] = useState(false);
   const handleOnCloseTemporalErrorAlert = () => setShowTemporalErrorAlert(false);
 
-  const handleToggleFavorite = (friend: UpdatedProfile, is_favorite: boolean) => async () => {
-    const { id: userId } = friend;
+  const handleToggleFavorite = (item: UpdatedProfile, is_favorite: boolean) => async () => {
+    const { id: userId } = item;
     try {
       if (is_favorite) {
-        updateFriendList({ userId, type: 'is_favorite', value: false });
-        updateFavoriteFriendList(friend, false);
+        updateFriendList({ item, type: 'is_favorite', value: false });
+        updateFavoriteFriendList({ item, type: 'is_favorite', value: false });
         await deleteFavorite(userId);
       } else {
-        updateFriendList({ userId, type: 'is_favorite', value: true });
-        updateFavoriteFriendList(friend, true);
+        updateFriendList({ item, type: 'is_favorite', value: true });
+        updateFavoriteFriendList({ item, type: 'is_favorite', value: true });
         await addFriendToFavorite(userId);
       }
     } catch {
@@ -43,14 +43,17 @@ function EditFriends() {
     }
   };
 
-  const handleToggleHide = (userId: number, is_hidden: boolean) => async () => {
+  const handleToggleHide = (item: UpdatedProfile, is_hidden: boolean) => async () => {
+    const { id: userId } = item;
     try {
       if (is_hidden) {
-        updateFriendList({ userId, type: 'is_hidden', value: false });
+        updateFriendList({ item, type: 'is_hidden', value: false });
+        updateFavoriteFriendList({ item, type: 'is_hidden', value: false });
         await unHideFriend(userId);
         return;
       }
-      updateFriendList({ userId, type: 'is_hidden', value: true });
+      updateFriendList({ item, type: 'is_hidden', value: true });
+      updateFavoriteFriendList({ item, type: 'is_hidden', value: true });
       await hideFriend(userId);
     } catch {
       setShowTemporalErrorAlert(true);
@@ -58,12 +61,13 @@ function EditFriends() {
   };
 
   const [showBreakFriendsAlert, setShowBreakFriendsAlert] = useState<Alert>();
-  const handleClickDelete = (userId: number) => () => {
+  const handleClickDelete = (item: UpdatedProfile) => () => {
+    const { id: userId } = item;
     setShowBreakFriendsAlert({
       onClickConfirm: async () => {
         try {
           handleOnCloseBreakFriendsAlert();
-          updateFriendList({ userId, type: 'break_friends' });
+          updateFriendList({ item, type: 'break_friends' });
           await breakFriend(userId);
         } catch {
           setShowTemporalErrorAlert(true);
@@ -89,7 +93,7 @@ function EditFriends() {
           <>
             {allFriends.map(({ results }) =>
               results?.map((friend) => {
-                const { id, username, profile_image, is_hidden, is_favorite } = friend;
+                const { username, profile_image, is_hidden, is_favorite } = friend;
                 return (
                   <StyledFriendItemWrapper key={username}>
                     <Layout.FlexRow gap={8}>
@@ -121,9 +125,14 @@ function EditFriends() {
                       <Icon
                         name={is_hidden ? 'hide_true' : 'hide_false'}
                         size={44}
-                        onClick={handleToggleHide(id, is_hidden)}
+                        onClick={handleToggleHide(friend, is_hidden)}
                       />
-                      <Icon name="close" size={16} padding={14} onClick={handleClickDelete(id)} />
+                      <Icon
+                        name="close"
+                        size={16}
+                        padding={14}
+                        onClick={handleClickDelete(friend)}
+                      />
                     </Layout.FlexRow>
                   </StyledFriendItemWrapper>
                 );

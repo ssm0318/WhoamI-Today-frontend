@@ -30,28 +30,28 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
   const handleDeleteFavorite = () => {
     deleteFavorite(id).then(() => {
       updateFavoriteFriendList();
-      updateFriendList({ type: 'is_favorite', userId: id, value: false });
+      updateFriendList({ type: 'is_favorite', item: user, value: false });
     });
   };
 
   const handleAddFavorite = () => {
     addFriendToFavorite(id).then(() => {
       updateFavoriteFriendList();
-      updateFriendList({ type: 'is_favorite', userId: id, value: true });
+      updateFriendList({ type: 'is_favorite', item: user, value: true });
     });
   };
 
   const handleHide = () => {
     hideFriend(id).then(() => {
       updateFavoriteFriendList();
-      updateFriendList({ type: 'is_hidden', userId: id, value: true });
+      updateFriendList({ type: 'is_hidden', item: user, value: true });
     });
   };
 
   const handleUnfriend = () => {
     breakFriend(id).then(() => {
       updateFavoriteFriendList();
-      updateFriendList({ type: 'break_friends', userId: id });
+      updateFriendList({ type: 'break_friends', item: user });
     });
   };
 
