@@ -298,7 +298,6 @@
     "notification_settings": "Notification Settings",
     "push_notifications": "Push notifications",
     "daily_noti_time": "Daily Noti Time",
-    "change_daily_noti_time": "Change Daily Noti Time",
     "allow_notification_to_receive_updates_from_friends_as_push_notifications": "Allow notifications to receive updates from friends as push notifications!",
     "click_here_to_check_your_system_preferences": "Click here to check your system preferences for notifications!",
     "push_notifications_are_currently_enabled": "Push notifications are currently enabled.",
@@ -334,6 +333,12 @@
       "error": {
         "read_file_error": "A temporary error occurred while uploading the image. Please try again later."
       }
+    },
+    "change_daily_noti_time": {
+      "title": "Change Daily Noti Time",
+      "confirm": "Confirm",
+      "success": "Changed successfully!",
+      "error": "An error has occurred temporarily. Please try again later."
     }
   },
   "time": {
@@ -351,7 +356,9 @@
       "hour": "{{count}}h",
       "day": "{{count}}d",
       "week": "{{count}}w"
-    }
+    },
+    "AM" : "AM",
+    "PM" : "PM"
   },
   "notifications": {
     "title": "Notifications",

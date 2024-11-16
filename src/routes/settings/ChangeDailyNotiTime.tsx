@@ -1,45 +1,55 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
+import TimePicker from '@components/_common/time-picker/TimePicker';
 import SubHeader from '@components/sub-header/SubHeader';
 import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Layout } from '@design-system';
-import { resetPassword } from '@utils/apis/user';
+import { MyProfile } from '@models/api/user';
+import { useBoundStore } from '@stores/useBoundStore';
+import { editProfile } from '@utils/apis/my';
+import { getDailyNotiTime } from '@utils/timeHelpers';
 
 function ChangeDailyNotiTime() {
-  const [t] = useTranslation('translation');
+  const [t] = useTranslation('translation', { keyPrefix: 'settings.change_daily_noti_time' });
   const { id, token } = useParams();
-  const [passwordInput, setPasswordInput] = useState('');
-  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPasswordInput(e.target.value);
+  const { myProfile, updateMyProfile, openToast } = useBoundStore((state) => ({
+    myProfile: state.myProfile,
+    updateMyProfile: state.updateMyProfile,
+    openToast: state.openToast,
+  }));
+
+  const [notiTime, setNotiTime] = useState(myProfile ? getDailyNotiTime(myProfile?.noti_time) : '');
+
+  const handleChange = (time: string) => {
+    setNotiTime(time);
   };
 
-  const navigate = useNavigate();
   const handleClickConfirm = () => {
-    resetPassword({
-      id,
-      token,
-      password: passwordInput,
-      onSuccess: () => navigate('/settings'),
-      onError: setPasswordError,
+    if (!myProfile) return;
+    editProfile({
+      profile: {
+        noti_time: '09:00',
+      },
+      onSuccess: (data: MyProfile) => {
+        updateMyProfile({ ...data });
+        openToast({ message: t('success') });
+        navigate('/settings');
+      },
+      onError: () => {
+        openToast({ message: t('error') });
+      },
     });
   };
 
   return (
     <Layout.FlexCol w="100%">
-      <SubHeader typo="title-large" title={t('settings.reset_password')} />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 40} w="100%" gap={10} ph={24}>
-        <ValidatedPasswordInput
-          label={t('settings.enter_your_new_password')}
-          name="password"
-          value={passwordInput}
-          onChange={handleChange}
-          error={passwordError}
-          guide={t('sign_up.password_constraints')}
-        />
+      <SubHeader typo="title-large" title={t('title')} />
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 40} w="100%" gap={10} ph={24} alignItems="center">
+        {/* time picker */}
+        <TimePicker initialTime={notiTime} onTimeChange={handleChange} />
       </Layout.FlexCol>
       <Layout.Absolute
         l={0}
@@ -51,7 +61,7 @@ function ChangeDailyNotiTime() {
         <Button.Confirm
           status="normal"
           sizing="stretch"
-          text={t('settings.confirm')}
+          text={t('confirm')}
           onClick={handleClickConfirm}
         />
       </Layout.Absolute>
