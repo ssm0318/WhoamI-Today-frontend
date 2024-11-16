@@ -30,7 +30,7 @@ function ChangeDailyNotiTime() {
     if (!myProfile) return;
     editProfile({
       profile: {
-        noti_time: '09:00',
+        noti_time: notiTime,
       },
       onSuccess: (data: MyProfile) => {
         updateMyProfile({ ...data });
