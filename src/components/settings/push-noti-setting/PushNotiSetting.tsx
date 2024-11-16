@@ -67,18 +67,11 @@ function PushNotiSetting() {
         )}
       </Layout.FlexRow>
       {dailyNotiTime && (
-        <Layout.FlexRow
-          w="100%"
-          alignItems="center"
+        <PushNotiTimeSettingButton
+          text={t('daily_noti_time')}
           onClick={handleClickChangeDailyNotiTime}
-          justifyContent="space-between"
-        >
-          <PushNotiTimeSettingButton
-            text={t('daily_noti_time')}
-            onClick={handleClickChangeDailyNotiTime}
-            notiTime={getDailyNotiTime(dailyNotiTime)}
-          />
-        </Layout.FlexRow>
+          notiTime={getDailyNotiTime(dailyNotiTime)}
+        />
       )}
     </>
   );
