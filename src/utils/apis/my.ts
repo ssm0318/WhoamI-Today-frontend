@@ -33,9 +33,7 @@ export const editProfile = ({
       formData.append('profile_image', profile.profile_image, 'profile_image.png');
       return;
     }
-    if (value) {
-      formData.append(key, value as string);
-    }
+    formData.append(key, value as string);
   });
 
   axiosFormDataInstance
