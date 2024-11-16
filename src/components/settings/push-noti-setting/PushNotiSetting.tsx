@@ -66,6 +66,8 @@ function PushNotiSetting() {
           </Layout.FlexCol>
         )}
       </Layout.FlexRow>
+      {/* TODO: 테스트 코드 변경 필요 */}
+      {/* {permissionAllowed && dailyNotiTime && ( */}
       {dailyNotiTime && (
         <PushNotiTimeSettingButton
           text={t('daily_noti_time')}
