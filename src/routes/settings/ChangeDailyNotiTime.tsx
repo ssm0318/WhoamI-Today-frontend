@@ -8,7 +8,6 @@ import { Button, Layout } from '@design-system';
 import { MyProfile } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { editProfile } from '@utils/apis/my';
-import { getDailyNotiTime } from '@utils/timeHelpers';
 
 function ChangeDailyNotiTime() {
   const [t] = useTranslation('translation', { keyPrefix: 'settings.change_daily_noti_time' });
@@ -21,7 +20,7 @@ function ChangeDailyNotiTime() {
     openToast: state.openToast,
   }));
 
-  const [notiTime, setNotiTime] = useState(myProfile ? getDailyNotiTime(myProfile?.noti_time) : '');
+  const [notiTime, setNotiTime] = useState(myProfile ? myProfile?.noti_time : '');
 
   const handleChange = (time: string) => {
     setNotiTime(time);

@@ -57,11 +57,34 @@ export const convertTimeDiffByString = ({
   return format(new Date(day), dateFormat ?? DEFAULT_FORMAT);
 };
 
+// Convert 24-hour format to 12-hour format for initial values
+export const convert24to12Format = (time24: string) => {
+  const [hours24, minutes] = time24.split(':').map(Number);
+  let period = 'AM';
+  let hours12 = hours24;
+
+  if (hours24 >= 12) {
+    period = 'PM';
+    if (hours24 > 12) {
+      hours12 = hours24 - 12;
+    }
+  }
+  if (hours24 === 0) {
+    hours12 = 12;
+  }
+
+  return {
+    hours: hours12,
+    minutes: minutes || 0,
+    period,
+  };
+};
+
 /**
  *
- * @param time HH:MM:ss
+ * @param time HH:MM
  */
 export const getDailyNotiTime = (time: string) => {
-  const timeSplit = time.split(':');
-  return [timeSplit[0], timeSplit[1]].join(':');
+  const { hours, minutes, period } = convert24to12Format(time);
+  return `${hours}:${minutes.toString().padStart(2, '0')} ${period}`;
 };

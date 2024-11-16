@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from '@design-system';
+import { convert24to12Format } from '@utils/timeHelpers';
 import * as S from './TimePicker.styled';
 
 interface TimePickerProps {
@@ -11,9 +12,16 @@ interface TimePickerProps {
 
 function TimePicker({ onTimeChange, initialTime }: TimePickerProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'time' });
-  const [hours, setHours] = useState(parseInt(initialTime.split(':')[0], 10) || 12);
-  const [minutes, setMinutes] = useState(parseInt(initialTime.split(':')[1], 10) || 0);
-  const [period, setPeriod] = useState(parseInt(initialTime.split(':')[1], 10) >= 30 ? 'PM' : 'AM');
+
+  const {
+    hours: initialHours,
+    minutes: initialMinutes,
+    period: initialPeriod,
+  } = convert24to12Format(initialTime);
+
+  const [hours, setHours] = useState(initialHours);
+  const [minutes, setMinutes] = useState(initialMinutes);
+  const [period, setPeriod] = useState(initialPeriod);
 
   const incrementHours = () => {
     const newHours = hours === 12 ? 1 : hours + 1;
