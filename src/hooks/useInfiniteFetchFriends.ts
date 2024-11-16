@@ -3,11 +3,11 @@ import { GetUpdatedProfileResponse, UpdatedProfile } from '@models/api/friends';
 
 interface BreakFriendsParams {
   type: 'break_friends';
-  userId: number;
+  item: UpdatedProfile;
 }
 interface UpdateFriendsStateParams {
   type: 'is_favorite' | 'is_hidden';
-  userId: number;
+  item: UpdatedProfile;
   value: boolean;
 }
 
@@ -19,7 +19,10 @@ const useInfiniteFetchFriends = () => {
 
   const updateFriendList = (params: UpdateFriendListParams) => {
     if (!data) return;
-    const { type, userId } = params;
+    const {
+      type,
+      item: { id: userId },
+    } = params;
 
     let next: GetUpdatedProfileResponse[];
     if (type === 'break_friends') {

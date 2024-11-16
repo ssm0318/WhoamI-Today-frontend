@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import useSWR from 'swr';
 import Collapse from '@components/_common/\bcollapse/Collapse';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import Icon from '@components/_common/icon/Icon';
@@ -10,8 +9,8 @@ import FavoriteFriendItem from '@components/friends/favorite-friend-item/Favorit
 import UpdatedFriendItem from '@components/friends/updated-friend-item/UpdatedFriendItem';
 import { StyledUpdatedFriendItem } from '@components/friends/updated-friend-item/UpdatedFriendItem.styled';
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
+import { useFetchFavoriteFriends } from '@hooks/useFetchFavoriteFriends';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
-import { getFavoriteFriends } from '@utils/apis/friends';
 import { MainScrollContainer } from 'src/routes/Root';
 import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
 import {
@@ -32,11 +31,8 @@ function Friends() {
     refetchAllFriends,
   } = useInfiniteFetchFriends();
 
-  const {
-    data: favoriteFriends,
-    mutate: refetchFavoriteFriends,
-    isLoading: isFavoriteFriendsLoading,
-  } = useSWR('/user/friends/?type=favorites', getFavoriteFriends);
+  const { favoriteFriends, refetchFavoriteFriends, isFavoriteFriendsLoading } =
+    useFetchFavoriteFriends();
 
   const navigate = useNavigate();
   const handleClickEditFriends = () => {

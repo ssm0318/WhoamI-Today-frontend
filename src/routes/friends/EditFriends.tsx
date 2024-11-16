@@ -8,7 +8,9 @@ import SubHeader from '@components/sub-header/SubHeader';
 import UserRelatedAlert, { Alert } from '@components/user-page/UserRelatedAlert';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import { useFetchFavoriteFriends } from '@hooks/useFetchFavoriteFriends';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
+import { UpdatedProfile } from '@models/api/friends';
 import { addFriendToFavorite, deleteFavorite, hideFriend, unHideFriend } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
 import { StyledFriendItemWrapper } from 'src/routes/friends/EditFriends.styled';
@@ -19,32 +21,39 @@ function EditFriends() {
 
   const { isLoadingMoreAllFriends, allFriends, isAllFriendsLoading, targetRef, updateFriendList } =
     useInfiniteFetchFriends();
+  const { updateFavoriteFriendList } = useFetchFavoriteFriends();
 
   const [showTemporalErrorAlert, setShowTemporalErrorAlert] = useState(false);
   const handleOnCloseTemporalErrorAlert = () => setShowTemporalErrorAlert(false);
 
-  const handleToggleFavorite = (userId: number, is_favorite: boolean) => async () => {
+  const handleToggleFavorite = (item: UpdatedProfile, is_favorite: boolean) => async () => {
+    const { id: userId } = item;
     try {
       if (is_favorite) {
-        updateFriendList({ userId, type: 'is_favorite', value: false });
+        updateFriendList({ item, type: 'is_favorite', value: false });
+        updateFavoriteFriendList({ item, type: 'is_favorite', value: false });
         await deleteFavorite(userId);
-        return;
+      } else {
+        updateFriendList({ item, type: 'is_favorite', value: true });
+        updateFavoriteFriendList({ item, type: 'is_favorite', value: true });
+        await addFriendToFavorite(userId);
       }
-      updateFriendList({ userId, type: 'is_favorite', value: true });
-      await addFriendToFavorite(userId);
     } catch {
       setShowTemporalErrorAlert(true);
     }
   };
 
-  const handleToggleHide = (userId: number, is_hidden: boolean) => async () => {
+  const handleToggleHide = (item: UpdatedProfile, is_hidden: boolean) => async () => {
+    const { id: userId } = item;
     try {
       if (is_hidden) {
-        updateFriendList({ userId, type: 'is_hidden', value: false });
+        updateFriendList({ item, type: 'is_hidden', value: false });
+        updateFavoriteFriendList({ item, type: 'is_hidden', value: false });
         await unHideFriend(userId);
         return;
       }
-      updateFriendList({ userId, type: 'is_hidden', value: true });
+      updateFriendList({ item, type: 'is_hidden', value: true });
+      updateFavoriteFriendList({ item, type: 'is_hidden', value: true });
       await hideFriend(userId);
     } catch {
       setShowTemporalErrorAlert(true);
@@ -52,12 +61,13 @@ function EditFriends() {
   };
 
   const [showBreakFriendsAlert, setShowBreakFriendsAlert] = useState<Alert>();
-  const handleClickDelete = (userId: number) => () => {
+  const handleClickDelete = (item: UpdatedProfile) => () => {
+    const { id: userId } = item;
     setShowBreakFriendsAlert({
       onClickConfirm: async () => {
         try {
           handleOnCloseBreakFriendsAlert();
-          updateFriendList({ userId, type: 'break_friends' });
+          updateFriendList({ item, type: 'break_friends' });
           await breakFriend(userId);
         } catch {
           setShowTemporalErrorAlert(true);
@@ -82,43 +92,51 @@ function EditFriends() {
         {allFriends && (
           <>
             {allFriends.map(({ results }) =>
-              results?.map(({ id, username, profile_image, is_hidden, is_favorite }) => (
-                <StyledFriendItemWrapper key={username}>
-                  <Layout.FlexRow gap={8}>
-                    {is_hidden ? (
-                      <Icon
-                        name="star_outline"
-                        size={20}
-                        padding={12}
-                        color="MEDIUM_GRAY"
-                        disabled
-                      />
-                    ) : (
-                      <Icon
-                        name={is_favorite ? 'star' : 'star_outline'}
-                        size={20}
-                        padding={12}
-                        color="NO_STATUS_CHIP"
-                        onClick={handleToggleFavorite(id, is_favorite)}
-                      />
-                    )}
-                    <Layout.FlexRow gap={8} alignItems="center">
-                      <ProfileImage imageUrl={profile_image} username={username} size={44} />
-                      <Typo ellipsis={{ enabled: true, maxWidth: 150 }} type="title-small">
-                        {username}
-                      </Typo>
+              results?.map((friend) => {
+                const { username, profile_image, is_hidden, is_favorite } = friend;
+                return (
+                  <StyledFriendItemWrapper key={username}>
+                    <Layout.FlexRow gap={8}>
+                      {is_hidden ? (
+                        <Icon
+                          name="star_outline"
+                          size={20}
+                          padding={12}
+                          color="MEDIUM_GRAY"
+                          disabled
+                        />
+                      ) : (
+                        <Icon
+                          name={is_favorite ? 'star' : 'star_outline'}
+                          size={20}
+                          padding={12}
+                          color="NO_STATUS_CHIP"
+                          onClick={handleToggleFavorite(friend, is_favorite)}
+                        />
+                      )}
+                      <Layout.FlexRow gap={8} alignItems="center">
+                        <ProfileImage imageUrl={profile_image} username={username} size={44} />
+                        <Typo ellipsis={{ enabled: true, maxWidth: 150 }} type="title-small">
+                          {username}
+                        </Typo>
+                      </Layout.FlexRow>
                     </Layout.FlexRow>
-                  </Layout.FlexRow>
-                  <Layout.FlexRow>
-                    <Icon
-                      name={is_hidden ? 'hide_true' : 'hide_false'}
-                      size={44}
-                      onClick={handleToggleHide(id, is_hidden)}
-                    />
-                    <Icon name="close" size={16} padding={14} onClick={handleClickDelete(id)} />
-                  </Layout.FlexRow>
-                </StyledFriendItemWrapper>
-              )),
+                    <Layout.FlexRow>
+                      <Icon
+                        name={is_hidden ? 'hide_true' : 'hide_false'}
+                        size={44}
+                        onClick={handleToggleHide(friend, is_hidden)}
+                      />
+                      <Icon
+                        name="close"
+                        size={16}
+                        padding={14}
+                        onClick={handleClickDelete(friend)}
+                      />
+                    </Layout.FlexRow>
+                  </StyledFriendItemWrapper>
+                );
+              }),
             )}
             {isLoadingMoreAllFriends && <Loader />}
             <div ref={targetRef} />
