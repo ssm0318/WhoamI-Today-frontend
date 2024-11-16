@@ -13,6 +13,12 @@ export const StyledAccountSettingsButton = styled.button`
   justify-content: space-between;
 `;
 
+export const StyledPushSettingsButton = styled.button`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
+
 export const StyledSettingsAnchor = styled(ExternalAnchor)`
   width: 100%;
   padding: 0 ${DEFAULT_MARGIN}px;

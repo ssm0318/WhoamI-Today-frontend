@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Font, Layout, SvgIcon, Typo } from '@design-system';
+import { Font, Layout } from '@design-system';
 import useNotiPermission from '@hooks/useNotiPermission';
 import { useBoundStore } from '@stores/useBoundStore';
 import { requestPermission } from '@utils/firebaseHelpers';
 import { isApp } from '@utils/getUserAgent';
 import { getDailyNotiTime } from '@utils/timeHelpers';
-import { SettingsToggleButton } from '../SettingsButtons';
+import { PushNotiTimeSettingButton, SettingsToggleButton } from '../SettingsButtons';
 import * as S from './PushNotiSetting.styled';
 
 function PushNotiSetting() {
@@ -73,16 +73,11 @@ function PushNotiSetting() {
           onClick={handleClickChangeDailyNotiTime}
           justifyContent="space-between"
         >
-          <Layout.FlexRow gap={8}>
-            <Typo type="title-medium">{t('daily_noti_time')}</Typo>
-            <Typo type="button-medium" color="BLACK">
-              {getDailyNotiTime(dailyNotiTime)}
-            </Typo>
-          </Layout.FlexRow>
-          <SvgIcon name="arrow_right" color="BLACK" size={24} />
-          {/* <Typo type="button-small" color="GRAY_8">
-            {t('change_daily_noti_time')}
-          </Typo> */}
+          <PushNotiTimeSettingButton
+            text={t('daily_noti_time')}
+            onClick={handleClickChangeDailyNotiTime}
+            notiTime={getDailyNotiTime(dailyNotiTime)}
+          />
         </Layout.FlexRow>
       )}
     </>
