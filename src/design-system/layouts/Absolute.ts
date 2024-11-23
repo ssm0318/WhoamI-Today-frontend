@@ -24,6 +24,8 @@ export const AbsoluteFullScreen = styled.div<BgColor & Flex>`
   background-color: ${({ theme, bgColor }) => theme[bgColor || 'TRANSPARENT']};
   align-items: ${({ alignItems }) => alignItems || 'flex-start'};
   justify-content: ${({ justifyContent }) => justifyContent || 'flex-start'};
+  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
 `;
 
 type AbsoluteStyle = {
