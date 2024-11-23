@@ -11,10 +11,10 @@ interface StyledNoteImageProps {
 }
 
 export const NoteImage = styled.img<StyledNoteImageProps>`
-  width: ${({ isEditMode }) =>
+  max-width: ${({ isEditMode }) =>
     isEditMode ? NOTE_IMAGE_DISPLAY_WIDTH_EDIT_MODE : NOTE_IMAGE_DISPLAY_WIDTH}px;
-  height: ${({ isEditMode }) =>
+  max-height: ${({ isEditMode }) =>
     isEditMode ? NOTE_IMAGE_DISPLAY_HEIGHT_EDIT_MODE : NOTE_IMAGE_DISPLAY_HEIGHT}px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 17px;
 `;
