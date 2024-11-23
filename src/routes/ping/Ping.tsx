@@ -1,7 +1,8 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import PingMessageInput from '@components/ping/ping-message-input/PingMessageInput';
 import PingMessageItem from '@components/ping/ping-message-item/PingMessageItem';
 import SubHeader from '@components/sub-header/SubHeader';
+import { PING_MESSAGE_INPUT_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { PingMessage } from '@models/ping';
 import { MainScrollContainer } from '../Root';
@@ -32,19 +33,11 @@ const MOCK_PING_LIST: PingMessage[] = [
 
 function Ping() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const footerRef = useRef<HTMLDivElement>(null);
-
-  const [listMarginBottom, setListMarginBottom] = useState<number>();
-
-  useLayoutEffect(() => {
-    if (!footerRef.current) return;
-    setListMarginBottom(footerRef.current.offsetHeight);
-  }, []);
 
   useEffect(() => {
-    if (!scrollRef.current || !listMarginBottom) return;
+    if (!scrollRef.current) return;
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
-  }, [listMarginBottom]);
+  }, []);
 
   const handleClickRefresh = () => {
     // TODO: refresh ping
@@ -66,14 +59,14 @@ function Ping() {
       />
       {/** ping list */}
       {MOCK_PING_LIST.length > 1 && (
-        <Layout.FlexCol w="100%" gap={10} p={10} mb={listMarginBottom}>
+        <Layout.FlexCol w="100%" gap={10} p={10} mb={PING_MESSAGE_INPUT_HEIGHT}>
           {MOCK_PING_LIST.map((message) => (
             <PingMessageItem key={message.id} message={message} />
           ))}
         </Layout.FlexCol>
       )}
       {/** ping input */}
-      <PingMessageInput ref={footerRef} />
+      <PingMessageInput />
     </MainScrollContainer>
   );
 }

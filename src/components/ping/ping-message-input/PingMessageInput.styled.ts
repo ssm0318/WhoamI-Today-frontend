@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const StyledMessageInput = styled.input`
+export const StyledTextInput = styled.input`
   outline: 0;
   margin: 0;
   border: 0;
