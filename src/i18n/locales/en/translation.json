@@ -300,6 +300,7 @@
     "notification_settings": "Notification Settings",
     "push_notifications": "Push notifications",
     "daily_noti_time": "Daily Noti Time",
+    "daily_noti_period": "Daily Noti Period",
     "allow_notification_to_receive_updates_from_friends_as_push_notifications": "Allow notifications to receive updates from friends as push notifications!",
     "click_here_to_check_your_system_preferences": "Click here to check your system preferences for notifications!",
     "push_notifications_are_currently_enabled": "Push notifications are currently enabled.",
@@ -339,7 +340,13 @@
     "change_daily_noti_time": {
       "title": "Change Daily Noti Time",
       "confirm": "Confirm",
-      "success": "Changed successfully!",
+      "success": "Time changed successfully! 🎉",
+      "error": "An error has occurred temporarily. Please try again later."
+    },
+    "change_daily_noti_period": {
+      "title": "Change Daily Noti Period",
+      "confirm": "Confirm",
+      "success": "Period changed successfully! 🎉",
       "error": "An error has occurred temporarily. Please try again later."
     }
   },
@@ -360,7 +367,28 @@
       "week": "{{count}}w"
     },
     "AM" : "AM",
-    "PM" : "PM"
+    "PM" : "PM",
+    "day" : {
+      "long" : {
+        "0": "Sunday",
+        "1": "Monday",
+        "2": "Tuesday",
+        "3": "Wednesday",
+        "4": "Thursday",
+        "5": "Friday",
+        "6": "Saturday"
+      },
+      "short" : {
+        "0": "Sun",
+        "1": "Mon",
+        "2": "Tue",
+        "3": "Wed",
+        "4": "Thu",
+        "5": "Fri",
+        "6": "Sat"
+      }
+    },
+    "every_day": "Every day"
   },
   "notifications": {
     "title": "Notifications",
