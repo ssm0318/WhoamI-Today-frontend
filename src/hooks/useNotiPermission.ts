@@ -4,7 +4,7 @@ import { isApp } from '@utils/getUserAgent';
 
 const useNotiPermission = () => {
   const [notiPermission, setNotiPermission] = useState(
-    !isApp ? Notification.permission : undefined,
+    !isApp ? Notification?.permission : undefined,
   );
   const [t] = useTranslation('translation', { keyPrefix: 'settings' });
 

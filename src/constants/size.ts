@@ -3,7 +3,7 @@ import { SCREEN_WIDTH } from './layout';
 /** 노트 이미지 노출 사이즈(임의 설정으로 수정 가능) */
 export const NOTE_IMAGE_CROP_WIDTH = 320;
 /** 노트 이미지 노출 사이즈(임의 설정으로 수정 가능) */
-export const NOTE_IMAGE_CROP_HEIGHT = 180;
+export const NOTE_IMAGE_CROP_HEIGHT = NOTE_IMAGE_CROP_WIDTH;
 
 export const NOTE_IMAGE_RATIO = NOTE_IMAGE_CROP_HEIGHT / NOTE_IMAGE_CROP_WIDTH;
 
