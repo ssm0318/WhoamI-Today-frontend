@@ -13,19 +13,15 @@ export const AbsoluteFill = styled.div<BgColor>`
   background-color: ${({ theme, bgColor }) => theme[bgColor || 'TRANSPARENT']};
 `;
 
-export const AbsoluteFullScreen = styled.div<BgColor & Flex>`
+export const FixedFullScreen = styled.div<BgColor & Flex>`
   width: ${SCREEN_WIDTH}px;
   height: 100%;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+  position: fixed;
+  transform: translate(-50%);
+  left: 50%;
   background-color: ${({ theme, bgColor }) => theme[bgColor || 'TRANSPARENT']};
   align-items: ${({ alignItems }) => alignItems || 'flex-start'};
   justify-content: ${({ justifyContent }) => justifyContent || 'flex-start'};
-  -webkit-overflow-scrolling: touch;
-  overflow: hidden;
 `;
 
 type AbsoluteStyle = {
