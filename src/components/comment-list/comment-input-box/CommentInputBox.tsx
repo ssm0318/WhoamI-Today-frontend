@@ -136,6 +136,12 @@ function CommentInputBox({
     handleSubmitComment();
   };
 
+  const handleClickCloseReply = () => {
+    resetReplyTo?.();
+    resetCommentTo();
+    resetCommentType();
+  };
+
   const isVirtualKeyboardOpen = useIsVirtualKeyboardOpenInIOS();
 
   useEffect(() => {
@@ -185,7 +191,7 @@ function CommentInputBox({
                   username: commentTargetAuthor,
                 })}
               </Typo>
-              <SvgIcon name="close_comment" size={24} onClick={resetReplyTo} />
+              <SvgIcon name="close_comment" size={24} onClick={handleClickCloseReply} />
             </Layout.FlexRow>
           )}
           <S.CommentInput
