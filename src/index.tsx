@@ -11,6 +11,7 @@ import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
 import { checkIfSignIn } from '@utils/apis/user';
 import { ChatRoom } from 'src/routes/chat-room/ChatRoom';
+import Ping from 'src/routes/ping/Ping';
 import './i18n';
 import SpotifyManager from './libs/SpotifyManager';
 import reportWebVitals from './reportWebVitals';
@@ -110,6 +111,10 @@ const router = createBrowserRouter([
               {
                 path: 'notes',
                 children: [{ path: ':noteId', element: <NoteDetail /> }],
+              },
+              {
+                path: 'ping',
+                element: <Ping />,
               },
             ],
           },

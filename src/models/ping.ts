@@ -1,0 +1,9 @@
+import { User } from '@models/user';
+
+// NOTE: 임시 ping 메시지 타입. api 연결시에 응답값에 맞춰서 타입 수정 필요!
+export interface PingMessage {
+  id: number;
+  author_detail: Pick<User, 'username'>;
+  text: string;
+  emoji: string;
+}
