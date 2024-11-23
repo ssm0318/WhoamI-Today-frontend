@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import PingMessageInput from '@components/ping/ping-message-input/PingMessageInput';
 import PingMessageItem from '@components/ping/ping-message-item/PingMessageItem';
 import SubHeader from '@components/sub-header/SubHeader';
-import { Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import { PingMessage } from '@models/ping';
 import { MainScrollContainer } from '../Root';
 
@@ -46,11 +46,24 @@ function Ping() {
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
   }, [listMarginBottom]);
 
-  // TODO: 스타일 반영
+  const handleClickRefresh = () => {
+    // TODO: refresh ping
+  };
+
+  // TODO: 스타일 반영, 다국어 추가
   return (
     <MainScrollContainer scrollRef={scrollRef}>
       {/** title */}
-      <SubHeader title="Ping!" />
+      <SubHeader
+        title="Ping!"
+        RightComponent={
+          <button type="button" onClick={handleClickRefresh}>
+            <Typo type="title-medium" color="PRIMARY">
+              Refresh
+            </Typo>
+          </button>
+        }
+      />
       {/** ping list */}
       {MOCK_PING_LIST.length > 1 && (
         <Layout.FlexCol w="100%" gap={10} p={10} mb={listMarginBottom}>
