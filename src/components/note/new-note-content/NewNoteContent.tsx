@@ -98,7 +98,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
           onCompleteImageCrop={onCompleteImageCrop}
         />
       ) : noteInfo?.images?.length ? (
-        <Layout.FlexCol alignItems="center" w="100%">
+        <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN}>
           {noteInfo.images[0] && <NoteImage src={noteInfo.images[0].url} />}
         </Layout.FlexCol>
       ) : null}
