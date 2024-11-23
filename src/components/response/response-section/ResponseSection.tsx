@@ -1,6 +1,6 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import CommonError from '@components/_common/common-error/CommonError';
 import Icon from '@components/_common/icon/Icon';
@@ -45,6 +45,15 @@ function ResponseSection({ username }: ResponseSectionProps) {
     e.stopPropagation();
     navigate(username ? `/users/${username}/responses` : '/my/responses');
   };
+
+  const { responseId } = useParams();
+
+  // 답변 상세 페이지에서의 변경사항 업데이트
+  useEffect(() => {
+    if (responseId) return;
+    refreshResponses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseId]);
 
   return (
     <>

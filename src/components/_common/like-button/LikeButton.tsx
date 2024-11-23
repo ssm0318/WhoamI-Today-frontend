@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { Layout, SvgIcon } from '@design-system';
 import {
   Comment,
@@ -22,6 +22,10 @@ function LikeButton({ postType, post, iconSize, m = 6 }: LikeButtonProps) {
   const { id, current_user_like_id } = post;
 
   const [likeId, setLikeId] = useState<number | null>(current_user_like_id);
+
+  useEffect(() => {
+    setLikeId(current_user_like_id);
+  }, [current_user_like_id]);
 
   const like = () => {
     if (!id) return;
