@@ -330,7 +330,14 @@
       "error": {
         "read_file_error": "이미지를 불러오는 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
       }
+    },
+    "change_daily_noti_time":{
+      "title": "데일리 노티 시간 변경",
+      "confirm": "확인",
+      "success": "알림 시간이 변경되었습니다.",
+      "error": "오류가 발생했습니다. 잠시 후 다시 시도해주세요."
     }
+
   },
   "time": {
     "just_a_moment_ago": "방금 전",
@@ -343,7 +350,9 @@
       "hour": "{{count}}시간",
       "day": "{{count}}일",
       "week": "{{count}}주"
-    }
+    },
+    "AM": "오전",
+    "PM": "오후"
   },
   "notifications": {
     "title": "알림",

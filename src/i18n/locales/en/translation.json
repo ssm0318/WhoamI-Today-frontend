@@ -333,6 +333,12 @@
       "error": {
         "read_file_error": "A temporary error occurred while uploading the image. Please try again later."
       }
+    },
+    "change_daily_noti_time": {
+      "title": "Change Daily Noti Time",
+      "confirm": "Confirm",
+      "success": "Changed successfully!",
+      "error": "An error has occurred temporarily. Please try again later."
     }
   },
   "time": {
@@ -350,7 +356,9 @@
       "hour": "{{count}}h",
       "day": "{{count}}d",
       "week": "{{count}}w"
-    }
+    },
+    "AM" : "AM",
+    "PM" : "PM"
   },
   "notifications": {
     "title": "Notifications",

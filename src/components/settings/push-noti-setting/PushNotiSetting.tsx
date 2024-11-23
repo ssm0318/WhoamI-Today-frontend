@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { DEFAULT_MARGIN } from '@constants/layout';
+import { useNavigate } from 'react-router-dom';
 import { Font, Layout } from '@design-system';
 import useNotiPermission from '@hooks/useNotiPermission';
 import { useBoundStore } from '@stores/useBoundStore';
 import { requestPermission } from '@utils/firebaseHelpers';
 import { isApp } from '@utils/getUserAgent';
 import { getDailyNotiTime } from '@utils/timeHelpers';
-import { SettingsToggleButton } from '../SettingsButtons';
+import { PushNotiTimeSettingButton, SettingsToggleButton } from '../SettingsButtons';
 import * as S from './PushNotiSetting.styled';
 
 function PushNotiSetting() {
@@ -18,6 +18,7 @@ function PushNotiSetting() {
     appNotiPermission: state.appNotiPermission,
     dailyNotiTime: state.myProfile?.noti_time,
   }));
+  const navigate = useNavigate();
 
   const permissionAllowed = isApp ? appNotiPermission : notiPermission === 'granted' || false;
 
@@ -28,6 +29,8 @@ function PushNotiSetting() {
     const permission = await requestPermission();
     setNotiPermission(permission);
   };
+
+  const handleClickChangeDailyNotiTime = () => navigate('/settings/change-daily-noti-time');
 
   return (
     <>
@@ -64,12 +67,11 @@ function PushNotiSetting() {
         )}
       </Layout.FlexRow>
       {permissionAllowed && dailyNotiTime && (
-        <Layout.FlexRow ph={DEFAULT_MARGIN} gap={10} w="100%">
-          <Font.Display type="20_bold">{t('daily_noti_time')}</Font.Display>
-          <Font.Body type="18_regular" color="BLACK">
-            {getDailyNotiTime(dailyNotiTime)}
-          </Font.Body>
-        </Layout.FlexRow>
+        <PushNotiTimeSettingButton
+          text={t('daily_noti_time')}
+          onClick={handleClickChangeDailyNotiTime}
+          notiTime={getDailyNotiTime(dailyNotiTime)}
+        />
       )}
     </>
   );

@@ -22,7 +22,9 @@ export const editProfile = ({
   onSuccess,
   onError,
 }: {
-  profile: Pick<MyProfile, 'bio' | 'username' | 'pronouns'> & { profile_image?: File };
+  profile: Partial<Pick<MyProfile, 'bio' | 'username' | 'pronouns' | 'noti_time'>> & {
+    profile_image?: File;
+  };
   onSuccess: (data: MyProfile) => void;
   onError?: (error: any) => void;
 }) => {
