@@ -296,7 +296,8 @@
     "confirm": "확인",
     "notification_settings": "알림 설정",
     "push_notifications": "푸시 알림 설정",
-    "daily_noti_time": "데일리 노티 설정",
+    "daily_noti_time": "데일리 노티 시간",
+    "daily_noti_period": "데일리 노티 주기",
     "allow_notification_to_receive_updates_from_friends_as_push_notifications": "알림을 허용해 친구들의 새로운 소식을 푸시 알림으로 받아보세요!",
     "click_here_to_check_your_system_preferences": "여기를 눌러 시스템 알림 설정을 허용해주세요!",
     "push_notifications_are_currently_enabled": "현재 푸시 알림이 허용된 상태입니다.",
@@ -339,7 +340,6 @@
       "success": "알림 시간이 변경되었습니다.",
       "error": "오류가 발생했습니다. 잠시 후 다시 시도해주세요."
     }
-
   },
   "time": {
     "just_a_moment_ago": "방금 전",
@@ -354,7 +354,28 @@
       "week": "{{count}}주"
     },
     "AM": "오전",
-    "PM": "오후"
+    "PM": "오후",
+    "day" : {
+      "long" : {
+        "0": "일요일",
+        "1": "월요일",
+        "2": "화요일",
+        "3": "수요일",
+        "4": "목요일",
+        "5": "금요일",
+        "6": "토요일"
+      },
+      "short" : {
+        "0": "일",
+        "1": "월",
+        "2": "화",
+        "3": "수",
+        "4": "목",
+        "5": "금",
+        "6": "토"
+      }
+    },
+    "every_day": "매일"
   },
   "notifications": {
     "title": "알림",
