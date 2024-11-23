@@ -221,6 +221,8 @@
     },
     "posted": "Posted🎉",
     "updated": "Updated🎉",
+    "temporary_error": "An error has occurred temporarily. Please try again later.",
+    "too_large_file_error": "The image size is too big. Please resize the image and try again.",
     "view": "View",
     "cancel": "Cancel",
     "post": "Post",
