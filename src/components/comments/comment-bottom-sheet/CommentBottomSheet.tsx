@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
@@ -51,6 +51,13 @@ function CommentBottomSheet({
     closeBottomSheet();
   };
 
+  const footerRef = useRef<HTMLDivElement>(null);
+  const [footerHeight, setFooterHeight] = useState<number>();
+
+  useEffect(() => {
+    setFooterHeight(footerRef.current?.offsetHeight);
+  }, [replyTo]);
+
   return createPortal(
     <BottomModal visible={visible} onClose={closeBottomSheet} heightMode="full">
       <CommentBottomHeaderWrapper>
@@ -72,7 +79,7 @@ function CommentBottomSheet({
         </Layout.FlexCol>
       </CommentBottomHeaderWrapper>
 
-      <CommentBottomContentWrapper>
+      <CommentBottomContentWrapper mb={footerHeight}>
         {comments.map((comment) => (
           <CommentItem
             key={comment.id}
@@ -89,7 +96,8 @@ function CommentBottomSheet({
           />
         ))}
       </CommentBottomContentWrapper>
-      <CommentBottomFooterWrapper>
+
+      <CommentBottomFooterWrapper ref={footerRef}>
         <CommentInputBox
           post={commentTo}
           postType={commentToType}
