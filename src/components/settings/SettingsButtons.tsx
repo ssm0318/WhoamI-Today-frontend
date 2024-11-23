@@ -23,7 +23,7 @@ export function AccountSettingButton({ text, onClick }: SettingButtonProps) {
 }
 
 interface PushNotiTimeSettingsButtonProps extends SettingButtonProps {
-  value: string;
+  value?: string;
 }
 
 export function PushNotiSettingButton({ text, onClick, value }: PushNotiTimeSettingsButtonProps) {
