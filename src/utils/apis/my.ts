@@ -22,7 +22,9 @@ export const editProfile = ({
   onSuccess,
   onError,
 }: {
-  profile: Partial<Pick<MyProfile, 'bio' | 'username' | 'pronouns' | 'noti_time'>> & {
+  profile: Partial<
+    Pick<MyProfile, 'bio' | 'username' | 'pronouns' | 'noti_time' | 'noti_period_days'>
+  > & {
     profile_image?: File;
   };
   onSuccess: (data: MyProfile) => void;
@@ -35,6 +37,12 @@ export const editProfile = ({
       formData.append('profile_image', profile.profile_image, 'profile_image.png');
       return;
     }
+
+    if (profile.noti_period_days && key === 'noti_period_days') {
+      formData.append('noti_period_days', JSON.stringify(profile.noti_period_days));
+      return;
+    }
+
     formData.append(key, value as string);
   });
 
