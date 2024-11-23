@@ -7,6 +7,7 @@ import * as S from './BottomModal.styled';
 interface BottomModalProps {
   visible: boolean;
   onClose?: () => void;
+  onTransitionEnd?: () => void;
   children: React.ReactNode;
   bgColor?: string;
   containerBgColor?: ColorKeys;
@@ -17,6 +18,7 @@ interface BottomModalProps {
 function BottomModal({
   visible,
   onClose,
+  onTransitionEnd,
   children,
   bgColor = 'rgba(0, 0, 0, 0.7)',
   containerBgColor = 'WHITE',
@@ -51,6 +53,10 @@ function BottomModal({
   // NOTE: 모달 아래 클릭 영역이 있을 때 이벤트 전파 방지
   const onClickModal = (e: MouseEvent) => e.stopPropagation();
 
+  const handleTransitionEnd = () => {
+    onTransitionEnd?.();
+  };
+
   return (
     <>
       {visible && (
@@ -68,7 +74,12 @@ function BottomModal({
           )}
         </S.Background>
       )}
-      <S.Container visible={visible} height={height} bgColor={containerBgColor}>
+      <S.Container
+        visible={visible}
+        height={height}
+        bgColor={containerBgColor}
+        onTransitionEnd={handleTransitionEnd}
+      >
         <S.Body ref={bodyRef} onClick={onClickModal}>
           {children}
         </S.Body>

@@ -54,9 +54,19 @@ function MusicSearchBottomSheet({
     setSelected(track.id);
   };
 
+  const [autoFocus, setAutoFocus] = useState(false);
+  const autoFocusInput = () => {
+    setAutoFocus(true);
+  };
+
   if (!trackList) return null;
   return (
-    <BottomModal visible={visible} onClose={closeBottomSheet} heightMode="full">
+    <BottomModal
+      visible={visible}
+      onClose={closeBottomSheet}
+      heightMode="full"
+      onTransitionEnd={autoFocusInput}
+    >
       <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
         <Typo type="title-large">{t('title')}</Typo>
@@ -66,7 +76,7 @@ function MusicSearchBottomSheet({
             <SearchInput
               query={query}
               setQuery={setQuery}
-              autoFocus
+              autoFocus={autoFocus}
               fontSize={16}
               placeholder={t('search_placeholder') || undefined}
               cancelText={t('cancel') || undefined}
