@@ -1,6 +1,5 @@
 import { differenceInHours, differenceInMinutes, format } from 'date-fns';
 import i18n from '@i18n/index';
-import { DayOfWeek } from '@models/api/user';
 
 const DEFAULT_FORMAT = 'yyyy.MM.dd HH:mm:ss';
 type DateFormat = typeof DEFAULT_FORMAT | 'yyyy.MM.dd HH:mm';
@@ -88,16 +87,4 @@ export const convert24to12Format = (time24: string) => {
 export const getDailyNotiTime = (time: string) => {
   const { hours, minutes, period } = convert24to12Format(time);
   return `${hours}:${minutes.toString().padStart(2, '0')} ${period}`;
-};
-
-/**
- *
- * @param periodDays DayOfWeek[]
- */
-export const getDailyNotiPeriod = (periodDays: DayOfWeek[]) => {
-  if (periodDays.length === 7) {
-    return i18n.t('time.every_day');
-  }
-  const days = periodDays.map((day) => i18n.t(`time.day.${day}`));
-  return days.join(', ');
 };
