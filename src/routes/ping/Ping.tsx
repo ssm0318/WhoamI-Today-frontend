@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import PingMessageInput from '@components/ping/ping-message-input/PingMessageInput';
 import PingMessageItem from '@components/ping/ping-message-item/PingMessageItem';
 import SubHeader from '@components/sub-header/SubHeader';
 import { Layout } from '@design-system';
@@ -31,12 +32,19 @@ const MOCK_PING_LIST: PingMessage[] = [
 
 function Ping() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
+
+  const [listMarginBottom, setListMarginBottom] = useState<number>();
+
+  useLayoutEffect(() => {
+    if (!footerRef.current) return;
+    setListMarginBottom(footerRef.current.offsetHeight);
+  }, []);
 
   useEffect(() => {
-    if (!scrollRef.current) return;
-
+    if (!scrollRef.current || !listMarginBottom) return;
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
-  }, []);
+  }, [listMarginBottom]);
 
   // TODO: 스타일 반영
   return (
@@ -44,12 +52,15 @@ function Ping() {
       {/** title */}
       <SubHeader title="Ping!" />
       {/** ping list */}
-      <Layout.FlexCol w="100%" gap={10} p={10}>
-        {MOCK_PING_LIST.map((message) => (
-          <PingMessageItem key={message.id} message={message} />
-        ))}
-      </Layout.FlexCol>
+      {MOCK_PING_LIST.length > 1 && (
+        <Layout.FlexCol w="100%" gap={10} p={10} mb={listMarginBottom}>
+          {MOCK_PING_LIST.map((message) => (
+            <PingMessageItem key={message.id} message={message} />
+          ))}
+        </Layout.FlexCol>
+      )}
       {/** ping input */}
+      <PingMessageInput ref={footerRef} />
     </MainScrollContainer>
   );
 }
