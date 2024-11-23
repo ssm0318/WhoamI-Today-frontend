@@ -68,7 +68,7 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
   };
 
   return (
-    <Layout.AbsoluteFullScreen bgColor="DARK">
+    <Layout.FixedFullScreen bgColor="DARK">
       {croppedImg ? (
         <>
           {/* 크롭 완료된 이미지 미리보기 */}
@@ -114,7 +114,7 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
           </>
         )
       )}
-    </Layout.AbsoluteFullScreen>
+    </Layout.FixedFullScreen>
   );
 }
 
