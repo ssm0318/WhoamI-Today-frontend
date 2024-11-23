@@ -7,7 +7,7 @@ import { NewNoteForm } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import NewNoteImageEdit from '../new-note-image-edit/NewNoteImageEdit';
-import { NoteImage } from '../note-image/NoteImage.styled';
+import { NoteImage, NoteImageWrapper } from '../note-image/NoteImage.styled';
 import { NoteInput } from './NoteInputBox.styled';
 
 interface NoteInformationProps {
@@ -63,6 +63,15 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
     }));
   };
 
+  const handleDeleteImage = () => {
+    if (!noteInfo.images) return;
+
+    setNoteInfo((prevNoteInfo) => ({
+      ...prevNoteInfo,
+      images: [],
+    }));
+  };
+
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
   return (
@@ -98,9 +107,12 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
           onCompleteImageCrop={onCompleteImageCrop}
         />
       ) : noteInfo?.images?.length ? (
-        <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN}>
+        <NoteImageWrapper ph={DEFAULT_MARGIN}>
           {noteInfo.images[0] && <NoteImage src={noteInfo.images[0].url} />}
-        </Layout.FlexCol>
+          <Layout.Absolute t={0} r={15}>
+            <SvgIcon name="delete_image" size={50} onClick={handleDeleteImage} />
+          </Layout.Absolute>
+        </NoteImageWrapper>
       ) : null}
     </>
   );
