@@ -33,8 +33,8 @@ function WeekPicker({ onWeekChange, initialDays = [], disabled = false }: WeekPi
   };
 
   return (
-    <S.Container rounded={8} w="100%" justifyContent="center">
-      <S.WeekPickerWrapper justifyContent="center" alignItems="center" gap={8}>
+    <S.Container w="100%" justifyContent="center" p={16} rounded={12}>
+      <S.WeekPickerWrapper w="100%" justifyContent="center" alignItems="center" gap={8}>
         {daysOfWeek.map((day) => (
           <S.DayButton
             key={day}

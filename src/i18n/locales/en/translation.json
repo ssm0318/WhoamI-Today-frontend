@@ -299,8 +299,6 @@
     "confirm": "Confirm",
     "notification_settings": "Notification Settings",
     "push_notifications": "Push notifications",
-    "daily_noti_time": "Daily Noti Time",
-    "daily_noti_period": "Daily Noti Period",
     "allow_notification_to_receive_updates_from_friends_as_push_notifications": "Allow notifications to receive updates from friends as push notifications!",
     "click_here_to_check_your_system_preferences": "Click here to check your system preferences for notifications!",
     "push_notifications_are_currently_enabled": "Push notifications are currently enabled.",
@@ -337,16 +335,12 @@
         "read_file_error": "A temporary error occurred while uploading the image. Please try again later."
       }
     },
-    "change_daily_noti_time": {
-      "title": "Change Daily Noti Time",
+    "daily_noti_setting": {
+      "title": "Daily Noti Setting",
+      "daily_noti_time": "Daily Noti Time",
+      "daily_noti_period": "Daily Noti Period",
       "confirm": "Confirm",
-      "success": "Time changed successfully! 🎉",
-      "error": "An error has occurred temporarily. Please try again later."
-    },
-    "change_daily_noti_period": {
-      "title": "Change Daily Noti Period",
-      "confirm": "Confirm",
-      "success": "Period changed successfully! 🎉",
+      "success": "Changed successfully! 🎉",
       "error": "An error has occurred temporarily. Please try again later."
     }
   },

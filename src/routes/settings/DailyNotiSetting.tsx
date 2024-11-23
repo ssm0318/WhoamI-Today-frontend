@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
+import TimePicker from '@components/_common/time-picker/TimePicker';
 import WeekPicker from '@components/_common/week-picker/WeekPicker';
 import SubHeader from '@components/sub-header/SubHeader';
 import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Button, Layout } from '@design-system';
+import { Button, Layout, Typo } from '@design-system';
 import { DayOfWeek, MyProfile } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { editProfile } from '@utils/apis/my';
 
-function ChangeDailyNotiTime() {
-  const [t] = useTranslation('translation', { keyPrefix: 'settings.change_daily_noti_period' });
+function DailyNotiSetting() {
+  const [t] = useTranslation('translation', { keyPrefix: 'settings.daily_noti_setting' });
   const { id, token } = useParams();
   const navigate = useNavigate();
 
@@ -20,11 +21,16 @@ function ChangeDailyNotiTime() {
     openToast: state.openToast,
   }));
 
+  const [notiTime, setNotiTime] = useState(myProfile ? myProfile?.noti_time : '');
   const [notiPeriodDays, setNotiPeriodDays] = useState<DayOfWeek[]>(
     myProfile ? myProfile?.noti_period_days : [0, 1, 2, 3, 4, 5, 6],
   );
 
-  const handleChange = (period: DayOfWeek[]) => {
+  const handleChangeTime = (time: string) => {
+    setNotiTime(time);
+  };
+
+  const handleChangePeriod = (period: DayOfWeek[]) => {
     setNotiPeriodDays(period);
   };
 
@@ -32,6 +38,7 @@ function ChangeDailyNotiTime() {
     if (!myProfile) return;
     editProfile({
       profile: {
+        noti_time: notiTime,
         noti_period_days: notiPeriodDays,
       },
       onSuccess: (data: MyProfile) => {
@@ -48,9 +55,15 @@ function ChangeDailyNotiTime() {
   return (
     <Layout.FlexCol w="100%">
       <SubHeader typo="title-large" title={t('title')} />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 40} w="100%" gap={10} ph={24} alignItems="center">
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 40} w="100%" gap={20} ph={24} alignItems="center">
+        {/* time picker */}
+        <Typo type="title-medium">{t('daily_noti_time')}</Typo>
+        <TimePicker initialTime={notiTime} onTimeChange={handleChangeTime} />
+      </Layout.FlexCol>
+      <Layout.FlexCol mt={40} w="100%" gap={20} ph={24} alignItems="center">
         {/* week picker */}
-        <WeekPicker initialDays={notiPeriodDays} onWeekChange={handleChange} />
+        <Typo type="title-medium">{t('daily_noti_period')}</Typo>
+        <WeekPicker initialDays={notiPeriodDays} onWeekChange={handleChangePeriod} />
       </Layout.FlexCol>
       <Layout.Absolute
         l={0}
@@ -70,4 +83,4 @@ function ChangeDailyNotiTime() {
   );
 }
 
-export default ChangeDailyNotiTime;
+export default DailyNotiSetting;
