@@ -34,6 +34,7 @@ import AllResponses from './routes/responses/AllResponses';
 import NewResponse from './routes/responses/NewResponse';
 import ResponseDetail from './routes/responses/ResponseDetail';
 import Root from './routes/Root';
+import ChangeDailyNotiPeriod from './routes/settings/ChangeDailyNotiPeriod';
 import ChangeDailyNotiTime from './routes/settings/ChangeDailyNotiTime';
 import ConfirmPassword from './routes/settings/ConfirmPassword';
 import DeleteAccount from './routes/settings/DeleteAccount';
@@ -146,6 +147,7 @@ const router = createBrowserRouter([
           { path: 'confirm-password', element: <ConfirmPassword /> },
           { path: 'reset-password', element: <ResetPassword /> },
           { path: 'change-daily-noti-time', element: <ChangeDailyNotiTime /> },
+          { path: 'change-daily-noti-period', element: <ChangeDailyNotiPeriod /> },
           { path: 'delete-account', element: <DeleteAccount /> },
         ],
       },
