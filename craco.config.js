@@ -17,4 +17,15 @@ module.exports = {
       '@libs': path.resolve(__dirname, 'src/libs'),
     },
   },
+  babel: {
+    plugins: [
+      [
+        'babel-plugin-styled-components',
+        {
+          fileName: false,
+          displayName: true,
+        },
+      ],
+    ],
+  },
 };
