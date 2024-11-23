@@ -23,20 +23,16 @@ export function AccountSettingButton({ text, onClick }: SettingButtonProps) {
 }
 
 interface PushNotiTimeSettingsButtonProps extends SettingButtonProps {
-  notiTime: string;
+  value: string;
 }
 
-export function PushNotiTimeSettingButton({
-  text,
-  onClick,
-  notiTime,
-}: PushNotiTimeSettingsButtonProps) {
+export function PushNotiSettingButton({ text, onClick, value }: PushNotiTimeSettingsButtonProps) {
   return (
     <StyledPushSettingsButton onClick={onClick}>
       <Font.Body type="18_regular">{text}</Font.Body>
       <Layout.FlexRow gap={8}>
         <Font.Body type="18_regular" color="DARK_GRAY">
-          {notiTime}
+          {value}
         </Font.Body>
         <SvgIcon name="arrow_right" color="BLACK" size={24} />
       </Layout.FlexRow>

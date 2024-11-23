@@ -5,8 +5,8 @@ import useNotiPermission from '@hooks/useNotiPermission';
 import { useBoundStore } from '@stores/useBoundStore';
 import { requestPermission } from '@utils/firebaseHelpers';
 import { isApp } from '@utils/getUserAgent';
-import { getDailyNotiTime } from '@utils/timeHelpers';
-import { PushNotiTimeSettingButton, SettingsToggleButton } from '../SettingsButtons';
+import { getDailyNotiPeriod, getDailyNotiTime } from '@utils/timeHelpers';
+import { PushNotiSettingButton, SettingsToggleButton } from '../SettingsButtons';
 import * as S from './PushNotiSetting.styled';
 
 function PushNotiSetting() {
@@ -14,9 +14,14 @@ function PushNotiSetting() {
 
   const { getSettingDescription, notiPermission, setNotiPermission } = useNotiPermission();
 
-  const { dailyNotiTime, appNotiPermission } = useBoundStore((state) => ({
+  const {
+    dailyNotiTime,
+    dailyNotiPeriod = [0, 1, 2, 3, 4, 5, 6],
+    appNotiPermission,
+  } = useBoundStore((state) => ({
     appNotiPermission: state.appNotiPermission,
     dailyNotiTime: state.myProfile?.noti_time,
+    dailyNotiPeriod: state.myProfile?.noti_period_days,
   }));
   const navigate = useNavigate();
 
@@ -31,6 +36,8 @@ function PushNotiSetting() {
   };
 
   const handleClickChangeDailyNotiTime = () => navigate('/settings/change-daily-noti-time');
+
+  const handleClickChangeDailyNotiPeriod = () => navigate('/settings/change-daily-noti-period');
 
   return (
     <>
@@ -67,10 +74,17 @@ function PushNotiSetting() {
         )}
       </Layout.FlexRow>
       {permissionAllowed && dailyNotiTime && (
-        <PushNotiTimeSettingButton
+        <PushNotiSettingButton
           text={t('daily_noti_time')}
           onClick={handleClickChangeDailyNotiTime}
-          notiTime={getDailyNotiTime(dailyNotiTime)}
+          value={getDailyNotiTime(dailyNotiTime)}
+        />
+      )}
+      {dailyNotiPeriod && (
+        <PushNotiSettingButton
+          text={t('daily_noti_period')}
+          onClick={handleClickChangeDailyNotiPeriod}
+          value={getDailyNotiPeriod(dailyNotiPeriod)}
         />
       )}
     </>
