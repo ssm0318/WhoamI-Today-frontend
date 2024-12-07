@@ -27,6 +27,7 @@ function Root() {
   }, [isMobile]);
 
   useEffect(() => {
+    if (!document.cookie) return;
     postMessage('SET_COOKIE', {
       value: document.cookie,
     });
