@@ -14,13 +14,14 @@ import {
   PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_KO,
 } from '@constants/url';
 import { Font, Layout } from '@design-system';
+import { usePostAppMessage } from '@hooks/useAppMessage';
 import { useBoundStore } from '@stores/useBoundStore';
 import { signOut } from '@utils/apis/user';
 import PushNotiSetting from '../../components/settings/push-noti-setting/PushNotiSetting';
 
 function Settings() {
   const [t, i18n] = useTranslation('translation', { keyPrefix: 'settings' });
-
+  const postMessage = usePostAppMessage();
   const { myProfile } = useBoundStore((state) => ({
     myProfile: state.myProfile,
   }));
@@ -41,6 +42,7 @@ function Settings() {
   const handleClickConfirmLogout = async () => {
     await signOut(() => {
       handleOnClose();
+      postMessage('LOGOUT', {});
       navigate('/');
     });
   };

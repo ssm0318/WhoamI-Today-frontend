@@ -30,6 +30,10 @@ export interface OpenBrowserData {
   uri: string;
 }
 
+export interface LogoutData {
+  key: 'LOGOUT';
+}
+
 // 앱, 웹 서로 약속한 키값에 따른 메시지 타입
 export type PostMessageDataType =
   | ScreenNavigateData
@@ -37,7 +41,8 @@ export type PostMessageDataType =
   | OpenSettingData
   | SetMomentDraftData
   | SetCookieData
-  | OpenBrowserData;
+  | OpenBrowserData
+  | LogoutData;
 
 // 앱, 웹 서로 약속한 키값
 export type PostMessageKeyType = PostMessageDataType['key'];
@@ -50,4 +55,5 @@ export type PostMessageKeyToData = {
   SET_MOMENT_DRAFT: SetMomentDraftData;
   SET_COOKIE: SetCookieData;
   OPEN_BROWSER: OpenBrowserData;
+  LOGOUT: LogoutData;
 };
