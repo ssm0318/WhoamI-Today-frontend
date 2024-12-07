@@ -34,10 +34,12 @@ function DeleteAccount() {
   };
 
   const navigate = useNavigate();
-  const handleClickConfirmDeleteAccount = () => {
-    deleteAccount(() => {
-      postMessage('LOGOUT', {});
+
+  const handleClickConfirmDeleteAccount = async () => {
+    await deleteAccount(() => {
+      setShowDeleteAccountModal(false);
       navigate('/');
+      postMessage('LOGOUT', {});
     });
   };
 
