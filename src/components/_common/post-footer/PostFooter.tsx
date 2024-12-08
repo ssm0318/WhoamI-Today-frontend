@@ -92,6 +92,10 @@ function PostFooter({
   };
 
   useEffect(() => {
+    setMyReactionList(current_user_reaction_id_list);
+  }, [current_user_reaction_id_list]);
+
+  useEffect(() => {
     return () => {
       setEmojiPickerTarget(null);
     };
