@@ -218,6 +218,8 @@
     },
     "posted": "업로드 완료🎉",
     "updated": "수정 완료🎉",
+    "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+    "too_large_file_error": "이미지 사이즈가 너무 큽니다. 이미지 사이즈를 조정후 다시 시도해주세요.",
     "view": "보기",
     "cancel": "취소",
     "post": "게시",
@@ -330,7 +332,14 @@
       "error": {
         "read_file_error": "이미지를 불러오는 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
       }
+    },
+    "change_daily_noti_time":{
+      "title": "데일리 노티 시간 변경",
+      "confirm": "확인",
+      "success": "알림 시간이 변경되었습니다.",
+      "error": "오류가 발생했습니다. 잠시 후 다시 시도해주세요."
     }
+
   },
   "time": {
     "just_a_moment_ago": "방금 전",
@@ -343,7 +352,9 @@
       "hour": "{{count}}시간",
       "day": "{{count}}일",
       "week": "{{count}}주"
-    }
+    },
+    "AM": "오전",
+    "PM": "오후"
   },
   "notifications": {
     "title": "알림",

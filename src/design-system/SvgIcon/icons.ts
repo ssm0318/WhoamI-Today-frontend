@@ -42,6 +42,8 @@ const like = 'like';
 const like_filled = 'like_filled';
 const emoji = 'emoji';
 const add_emoji = 'add_emoji';
+const chevron_up = 'chevron_up';
+const chevron_down = 'chevron_down';
 
 // Friends
 const hide_true = 'hide_true';
@@ -166,6 +168,8 @@ export {
   checkbox_default,
   checkbox_rectangle_checked,
   checkbox_rectangle_default,
+  chevron_down,
+  chevron_up,
   circle_check_checked,
   circle_check_unchecked,
   close,

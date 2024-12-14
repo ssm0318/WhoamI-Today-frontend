@@ -1,5 +1,10 @@
 import styled from 'styled-components';
 import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
+import { Layout } from '@design-system';
+
+export const StyledNoteImageEditContainer = styled(Layout.FixedFullScreen)`
+  z-index: 200;
+`;
 
 export const StyledNewNoteImageWrapper = styled.div`
   width: 100%;

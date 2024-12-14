@@ -7,11 +7,13 @@ import ValidatedPasswordInput from '@components/_common/validated-input/Validate
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Font, Layout } from '@design-system';
+import { usePostAppMessage } from '@hooks/useAppMessage';
 import { deleteAccount } from '@utils/apis/my';
 import { confirmPassword } from '@utils/apis/user';
 
 function DeleteAccount() {
   const [t] = useTranslation('translation', { keyPrefix: 'settings' });
+  const postMessage = usePostAppMessage();
 
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
@@ -32,8 +34,13 @@ function DeleteAccount() {
   };
 
   const navigate = useNavigate();
-  const handleClickConfirmDeleteAccount = () => {
-    deleteAccount(() => navigate('/'));
+
+  const handleClickConfirmDeleteAccount = async () => {
+    await deleteAccount(() => {
+      setShowDeleteAccountModal(false);
+      navigate('/');
+      postMessage('LOGOUT', {});
+    });
   };
 
   return (

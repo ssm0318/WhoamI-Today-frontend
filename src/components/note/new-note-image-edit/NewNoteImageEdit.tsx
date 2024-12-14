@@ -3,11 +3,15 @@ import { useTranslation } from 'react-i18next';
 import ReactCrop, { centerCrop, PixelCrop } from 'react-image-crop';
 import SubHeader from '@components/sub-header/SubHeader';
 import { NOTE_IMAGE_CROP_MIN_SIZE } from '@constants/size';
-import { Layout, Typo } from '@design-system';
+import { Typo } from '@design-system';
 import { CroppedImg, getReactImageCrop } from '@utils/getCroppedImg';
 // NOTE: 이렇게 css 를 직접 로드하지 않으면 로드가 안됨... 확인 필요
 import 'react-image-crop/dist/ReactCrop.css';
-import { StyledNewNoteImage, StyledNewNoteImageWrapper } from './NewNoteImageEdit.styled';
+import {
+  StyledNewNoteImage,
+  StyledNewNoteImageWrapper,
+  StyledNoteImageEditContainer,
+} from './NewNoteImageEdit.styled';
 
 interface NewNoteImageEditProps {
   setIsVisible: (visible: boolean) => void;
@@ -68,7 +72,7 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
   };
 
   return (
-    <Layout.AbsoluteFullScreen bgColor="DARK">
+    <StyledNoteImageEditContainer bgColor="DARK">
       {croppedImg ? (
         <>
           {/* 크롭 완료된 이미지 미리보기 */}
@@ -114,7 +118,7 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
           </>
         )
       )}
-    </Layout.AbsoluteFullScreen>
+    </StyledNoteImageEditContainer>
   );
 }
 

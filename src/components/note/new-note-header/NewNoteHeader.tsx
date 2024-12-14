@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Layout, Typo } from '@design-system';
@@ -24,15 +25,25 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
   };
 
   const confirmPost = async () => {
-    const { id: newNoteId } = !noteId
-      ? await postNote(noteInfo)
-      : await patchNote(noteId, noteInfo);
+    try {
+      const { id: newNoteId } = !noteId
+        ? await postNote(noteInfo)
+        : await patchNote(noteId, noteInfo);
 
-    navigate(`/notes/${newNoteId}`, { state: 'new' });
-    openToast({
-      message: t(status === 'edit' ? 'updated' : 'posted'),
-      actionText: t('view'),
-    });
+      navigate(`/notes/${newNoteId}`, { state: 'new' });
+      openToast({
+        message: t(status === 'edit' ? 'updated' : 'posted'),
+        actionText: t('view'),
+      });
+    } catch (e) {
+      openToast({
+        message: t(
+          `${
+            (e as AxiosError)?.response?.status === 413 ? 'too_large_file_error' : 'temporary_error'
+          }`,
+        ),
+      });
+    }
   };
 
   const canPost = !!noteInfo.content;
