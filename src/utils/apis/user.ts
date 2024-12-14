@@ -1,5 +1,7 @@
 import { AxiosError } from 'axios';
 import { redirect } from 'react-router-dom';
+import { SESSION_STORAGE_KEY } from '@constants/sessionStorageKey';
+import { ScrollPositionStore } from '@hooks/useRestoreScrollPosition';
 import i18n from '@i18n/index';
 import { PaginationResponse } from '@models/api/common';
 import {
@@ -19,6 +21,7 @@ import { User, UserProfile } from '@models/user';
 import { resetBoundStores } from '@stores/resetSlices';
 import { useBoundStore } from '@stores/useBoundStore';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
+import { setItemToSessionStorage } from '@utils/sessionStorage';
 import { getMe, syncTimeZone } from './my';
 
 export const signIn = ({
@@ -58,6 +61,7 @@ export const checkIfSignIn = async () => {
     return user;
   } catch {
     resetBoundStores();
+    setItemToSessionStorage<ScrollPositionStore>(SESSION_STORAGE_KEY, {});
     return redirect('/signin');
   }
 };
