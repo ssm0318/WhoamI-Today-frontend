@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import { Layout, Typo } from '@design-system';
@@ -24,6 +26,15 @@ function NoteSection({ username }: NoteSectionProps) {
   } = useSWRInfiniteScroll<Note>({
     key: `/user/${username || 'me'}/notes/`,
   });
+
+  const { noteId } = useParams();
+
+  // 노트 상세 페이지에서의 변경사항 업데이트
+  useEffect(() => {
+    if (noteId) return;
+    refetchNotes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [noteId]);
 
   return (
     <>
