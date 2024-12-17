@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import { NewNoteForm } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
@@ -21,6 +22,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
 
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [editImageUrl, setEditImageUrl] = useState<string>();
+  const postMessage = usePostAppMessage();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -73,6 +75,35 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
 
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
+  const sendCameraPermissionRequest = () => {
+    postMessage('CAMERA_PERMISSION', {});
+  };
+
+  const handleClickImageInput = async () => {
+    sendCameraPermissionRequest();
+  };
+
+  const handleCameraPermissionResult = (data: boolean) => {
+    console.log('Camera permission result:', data);
+    if (data) {
+      console.log('Permission granted');
+      // 권한이 허용되면 파일 선택창 열기
+      inputRef.current?.click();
+    } else {
+      console.log('Permission denied');
+      openToast({
+        message: t('permission_denied_message'), // 사용자에게 권한 거부 알림
+      });
+    }
+  };
+
+  useGetAppMessage({
+    cb: ({ value }) => {
+      handleCameraPermissionResult(value);
+    },
+    key: 'CAMERA_PERMISSION_RESULT',
+  });
+
   return (
     <>
       <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} mt={TITLE_HEADER_HEIGHT} pv={12} gap={16}>
@@ -95,6 +126,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
           type="file"
           accept="image/jpeg, image/png"
           onChange={onImageAdd}
+          onClick={handleClickImageInput}
           multiple={false}
           style={{ display: 'none' }}
         />

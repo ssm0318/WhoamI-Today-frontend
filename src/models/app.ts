@@ -34,6 +34,15 @@ export interface LogoutData {
   key: 'LOGOUT';
 }
 
+export interface CameraPermissionData {
+  key: 'CAMERA_PERMISSION';
+}
+
+export interface CameraPermissionResultData {
+  key: 'CAMERA_PERMISSION_RESULT';
+  value: boolean;
+}
+
 // 앱, 웹 서로 약속한 키값에 따른 메시지 타입
 export type PostMessageDataType =
   | ScreenNavigateData
@@ -42,7 +51,9 @@ export type PostMessageDataType =
   | SetMomentDraftData
   | SetCookieData
   | OpenBrowserData
-  | LogoutData;
+  | LogoutData
+  | CameraPermissionData
+  | CameraPermissionResultData;
 
 // 앱, 웹 서로 약속한 키값
 export type PostMessageKeyType = PostMessageDataType['key'];
@@ -56,4 +67,6 @@ export type PostMessageKeyToData = {
   SET_COOKIE: SetCookieData;
   OPEN_BROWSER: OpenBrowserData;
   LOGOUT: LogoutData;
+  CAMERA_PERMISSION: CameraPermissionData;
+  CAMERA_PERMISSION_RESULT: CameraPermissionResultData;
 };

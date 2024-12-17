@@ -15,16 +15,24 @@ export const useGetAppMessage = <K extends PostMessageKeyType>({
   useEffect(() => {
     if (!isApp) return;
     const handleMessage = (event: MessageEvent) => {
+      console.log('message received');
+
       const { data } = event;
+
+      if (data.type === 'webpackWarnings' || data.type === 'webpackInvalid') return;
+
       try {
         const parsedData = JSON.parse(data);
+        console.log('parsedData');
+        console.log(parsedData);
         if (!parsedData.key || parsedData.key !== key) return;
 
         const messageData = parsedData.data as PostMessageKeyToData[K];
         cb(messageData);
       } catch (error) {
         // Handle parsing error silently
-        console.error('Error parsing message data:', error);
+        console.error('Error parsing message data:');
+        console.error(error);
       }
     };
 
