@@ -336,9 +336,9 @@
       }
     },
     "daily_noti_setting": {
-      "title": "Daily Noti Setting",
-      "daily_noti_time": "Daily Noti Time",
-      "daily_noti_period": "Daily Noti Period",
+      "title": "Daily Notification Setting",
+      "daily_noti_time": "Daily Notification Time",
+      "daily_noti_period": "Daily Notification Period",
       "confirm": "Confirm",
       "success": "Changed successfully! 🎉",
       "error": "An error has occurred temporarily. Please try again later."
