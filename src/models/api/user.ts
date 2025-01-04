@@ -98,7 +98,7 @@ export const UsernameValidateError = {
 export type UsernameValidateErrorType =
   (typeof UsernameValidateError)[keyof typeof UsernameValidateError];
 
-export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6; // 0 = Sunday, 1 = Monday, etc.
+export type DayOfWeek = '0' | '1' | '2' | '3' | '4' | '5' | '6'; // 0 = Sunday, 1 = Monday, etc.
 
 export interface MyProfile extends User {
   email: string;

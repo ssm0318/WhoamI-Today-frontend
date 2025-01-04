@@ -23,7 +23,7 @@ function DailyNotiSetting() {
 
   const [notiTime, setNotiTime] = useState(myProfile ? myProfile?.noti_time : '');
   const [notiPeriodDays, setNotiPeriodDays] = useState<DayOfWeek[]>(
-    myProfile ? myProfile?.noti_period_days : [0, 1, 2, 3, 4, 5, 6],
+    myProfile ? myProfile?.noti_period_days : [],
   );
 
   const handleChangeTime = (time: string) => {

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { DayOfWeek } from '@models/api/user';
 import * as S from './WeekPicker.styled';
-
-export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6; // 0 = Sunday, 1 = Monday, etc.
 
 interface WeekPickerProps {
   onWeekChange: (selectedDays: DayOfWeek[]) => void;
@@ -14,7 +13,7 @@ function WeekPicker({ onWeekChange, initialDays = [], disabled = false }: WeekPi
   const [t] = useTranslation('translation');
   const [selectedDays, setSelectedDays] = useState<DayOfWeek[]>(initialDays);
 
-  const daysOfWeek: DayOfWeek[] = [0, 1, 2, 3, 4, 5, 6];
+  const daysOfWeek: DayOfWeek[] = ['0', '1', '2', '3', '4', '5', '6'] as const;
 
   const toggleDay = (day: DayOfWeek) => {
     if (disabled) return;
