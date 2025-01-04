@@ -13,7 +13,7 @@ function WeekPicker({ onWeekChange, initialDays = [], disabled = false }: WeekPi
   const [t] = useTranslation('translation');
   const [selectedDays, setSelectedDays] = useState<DayOfWeek[]>(initialDays);
 
-  const daysOfWeek: DayOfWeek[] = ['0', '1', '2', '3', '4', '5', '6'] as const;
+  const daysOfWeek: DayOfWeek[] = ['0', '1', '2', '3', '4', '5', '6'];
 
   const toggleDay = (day: DayOfWeek) => {
     if (disabled) return;
