@@ -68,7 +68,7 @@ function PushNotiSetting() {
       </Layout.FlexRow>
       {permissionAllowed && (dailyNotiPeriod || dailyNotiTime) && (
         <PushNotiSettingButton
-          text={t('daily_noti_setting')}
+          text={t('daily_noti_setting.title')}
           onClick={handleClickChangeDailyNotiSetting}
         />
       )}
