@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
-import { Layout, Typo } from '@design-system';
+import { Layout } from '@design-system';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Note } from '@models/post';
 import NoteItem from '../note-item/NoteItem';
@@ -38,11 +38,7 @@ function NoteSection({ username }: NoteSectionProps) {
 
   return (
     <>
-      <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
-        <Typo type="title-large" color="BLACK">
-          {t('notes.title')}
-        </Typo>
-      </Layout.FlexRow>
+      <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" />
       <Layout.FlexCol w="100%" pr={12}>
         <Layout.FlexCol gap={8} mt={10} w="100%" h="100%">
           {isNotesLoading ? (

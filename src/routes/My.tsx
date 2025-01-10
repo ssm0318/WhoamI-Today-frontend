@@ -6,7 +6,6 @@ import Icon from '@components/_common/icon/Icon';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import NoteSection from '@components/note/note-section/NoteSection';
 import Profile from '@components/profile/Profile';
-import ResponseSection from '@components/response/response-section/ResponseSection';
 import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -50,10 +49,6 @@ function My() {
           >
             <Profile user={myProfile} />
           </Layout.FlexRow>
-          <Divider width={8} bgColor="LIGHT" />
-          <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
-            <ResponseSection />
-          </Layout.FlexCol>
           <Divider width={8} bgColor="LIGHT" />
           <Layout.FlexRow ph={15} pv={10} bgColor="WHITE" w="100%" rounded="8px 8px 0px 0px">
             <Layout.FlexRow

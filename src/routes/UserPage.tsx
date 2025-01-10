@@ -6,7 +6,6 @@ import MainContainer from '@components/_common/main-container/MainContainer';
 import UserHeader from '@components/header/user-header/UserHeader';
 import NoteSection from '@components/note/note-section/NoteSection';
 import Profile from '@components/profile/Profile';
-import ResponseSection from '@components/response/response-section/ResponseSection';
 import UserMoreModal from '@components/user-page/UserMoreModal';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
@@ -86,11 +85,6 @@ function UserPage() {
               >
                 <Profile user={user.data} />
               </Layout.FlexRow>
-              {/** responses and notes section */}
-              <Divider width={8} bgColor="LIGHT" />
-              <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
-                <ResponseSection username={username} />
-              </Layout.FlexCol>
               <Divider width={8} bgColor="LIGHT" />
               <Layout.FlexCol pt={12} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
                 <NoteSection username={username} />
