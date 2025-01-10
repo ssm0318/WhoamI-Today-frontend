@@ -10,7 +10,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { useIsVirtualKeyboardOpenInIOS } from '@components/comment-list/comment-input-box/_hooks/useIsVirtualKeyboardOpenInIOS';
-import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
+import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { postComment } from '@utils/apis/comments';
@@ -19,8 +19,6 @@ import * as S from './CommentInputBox.styled';
 interface CommentInputBoxProps {
   isReply?: boolean;
   replyTo?: Comment | null;
-  isPrivate: boolean;
-  setIsPrivate?: () => void;
   resetReplyTo?: () => void;
   resetCommentTo: () => void;
   resetCommentType: () => void;
@@ -35,8 +33,6 @@ interface CommentInputBoxProps {
 
 function CommentInputBox({
   isReply,
-  isPrivate,
-  setIsPrivate,
   replyTo,
   resetReplyTo,
   resetCommentTo,
@@ -54,8 +50,6 @@ function CommentInputBox({
   const myProfile = useBoundStore((state) => state.myProfile);
   const [content, setContent] = useState('');
   const commentRef = useRef<HTMLTextAreaElement>(null);
-  const initialIsPrivateRef = useRef(isPrivate);
-  const [initialIsPrivate, setInitialIsPrivate] = useState(initialIsPrivateRef.current);
 
   useEffect(() => {
     if (!inputFocus) return;
@@ -64,22 +58,6 @@ function CommentInputBox({
       setInputFocus?.(false);
     }, inputFocusDuration);
   }, [inputFocus, commentRef, inputFocusDuration, setInputFocus]);
-
-  useEffect(() => {
-    initialIsPrivateRef.current = isPrivate;
-  }, [isPrivate]);
-
-  useEffect(() => {
-    if (isReply) {
-      setInitialIsPrivate(initialIsPrivateRef.current);
-    }
-  }, [isReply, replyTo]);
-
-  const handleCheckboxChange = () => {
-    if (!initialIsPrivate) {
-      setIsPrivate?.();
-    }
-  };
 
   const commentTargetAuthor =
     isReply && replyTo ? replyTo.author_detail?.username : post?.author_detail?.username;
@@ -108,7 +86,6 @@ function CommentInputBox({
       target_id: post.id,
       target_type: postType,
       content: content.trim(),
-      is_private: isPrivate,
     })
       .then(() => {
         setContent('');
@@ -161,19 +138,6 @@ function CommentInputBox({
 
   return (
     <S.CommentInputWrapper gap={10} w="100%" pv={12} ph={16} bgColor="WHITE">
-      {/* isPrivate */}
-      <Layout.FlexRow gap={4} alignItems="center">
-        <CheckBox
-          name={t('private_comment') || ''}
-          onChange={handleCheckboxChange}
-          checked={isPrivate}
-          disabled={initialIsPrivate}
-        />
-        <SvgIcon
-          name={isPrivate ? 'private_comment_active' : 'private_comment_inactive'}
-          size={17}
-        />
-      </Layout.FlexRow>
       <Layout.FlexRow w="100%" alignItems="flex-end" justifyContent="space-between">
         {myProfile && <ProfileImage imageUrl={myProfile.profile_image} size={36} />}
         <Layout.FlexCol w="100%" ml={4} mr={8} outline="LIGHT_GRAY" rounded={18}>

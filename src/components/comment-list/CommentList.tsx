@@ -23,7 +23,6 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
   const footerRef = useRef<HTMLDivElement>(null);
 
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
-  const [isPrivate, setIsPrivate] = useState<boolean>(false);
 
   const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
   const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
@@ -49,7 +48,6 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
               onClickReplyBtn={() => {
                 setInputFocus(true);
                 setReplyTo(comment);
-                setIsPrivate(comment.is_private);
                 setCommentTo(comment);
                 setCommentToType('Comment');
               }}
@@ -65,10 +63,6 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
             postType={commentToType}
             inputFocus={inputFocus}
             setInputFocus={setInputFocus}
-            isPrivate={isPrivate}
-            setIsPrivate={() => {
-              setIsPrivate((prev) => !prev);
-            }}
             isReply={!!replyTo}
             replyTo={replyTo}
             resetReplyTo={() => {

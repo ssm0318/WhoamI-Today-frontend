@@ -40,7 +40,6 @@ function CommentBottomSheet({
   const { comments, fetchComments, nextPage, deleteComment } = useCommentList(post);
 
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
-  const [isPrivate, setIsPrivate] = useState<boolean>(false);
 
   const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
   const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
@@ -88,7 +87,6 @@ function CommentBottomSheet({
             onClickReplyBtn={() => {
               setInputFocus(true);
               setReplyTo(comment);
-              setIsPrivate(comment.is_private);
               setCommentTo(comment);
               setCommentToType('Comment');
             }}
@@ -104,10 +102,6 @@ function CommentBottomSheet({
           inputFocus={inputFocus}
           setInputFocus={setInputFocus}
           inputFocusDuration={BOTTOM_MODAL_ANIMATION_DURATION}
-          isPrivate={isPrivate}
-          setIsPrivate={() => {
-            setIsPrivate((prev) => !prev);
-          }}
           isReply={!!replyTo}
           replyTo={replyTo}
           resetReplyTo={() => {
