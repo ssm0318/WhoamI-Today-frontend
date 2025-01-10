@@ -5,6 +5,7 @@ import { ThemeProvider } from 'styled-components';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import ToastBar from '@components/_common/toast-bar/ToastBar';
 import ErrorPage from '@components/error-page/ErrorPage';
+import { UserPageContextProvider } from '@components/user-page/UserPage.context';
 import { Colors, Typo } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -100,7 +101,11 @@ const router = createBrowserRouter([
         children: [
           {
             path: '',
-            element: <UserPage />,
+            element: (
+              <UserPageContextProvider>
+                <UserPage />
+              </UserPageContextProvider>
+            ),
             children: [
               {
                 path: 'responses',

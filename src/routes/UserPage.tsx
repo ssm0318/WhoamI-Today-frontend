@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Outlet, useNavigate, useOutlet, useParams } from 'react-router-dom';
 import CommonError from '@components/_common/common-error/CommonError';
 import { Divider } from '@components/_common/divider/Divider.styled';
@@ -8,43 +8,26 @@ import NoteSection from '@components/note/note-section/NoteSection';
 import Profile from '@components/profile/Profile';
 import ResponseSection from '@components/response/response-section/ResponseSection';
 import UserMoreModal from '@components/user-page/UserMoreModal';
+import { UserPageContext } from '@components/user-page/UserPage.context';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { FetchState } from '@models/api/common';
-import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { readFriendCheckIn } from '@utils/apis/checkIn';
-import { getUserProfile } from '@utils/apis/user';
 
 function UserPage() {
   const { username } = useParams();
-  const [user, setUser] = useState<FetchState<UserProfile>>({ state: 'loading' });
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const isMyPage = username === myProfile?.username;
   const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
 
-  const updateUser = async () => {
-    if (!username) {
-      setUser({ state: 'hasError' });
-      return;
-    }
-
-    try {
-      const res = await getUserProfile(username);
-      setUser({ state: 'hasValue', data: res });
-    } catch (error) {
-      setUser({ state: 'hasError' });
-    }
-  };
+  const { user, updateUser } = useContext(UserPageContext);
 
   const readCheckIn = async () => {
     if (!username || !user.data || !user.data.check_in.id) return;
     await readFriendCheckIn(user.data.check_in.id);
   };
-
-  useAsyncEffect(updateUser, [username]);
 
   useAsyncEffect(readCheckIn, [user.data]);
 
