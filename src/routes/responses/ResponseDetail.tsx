@@ -64,7 +64,7 @@ function ResponseDetail() {
         {responseDetail.state === 'hasValue' && (
           <ResponseItem
             response={responseDetail.data}
-            displayType="DETAIL"
+            commentType="DETAIL"
             isMyPage={responseDetail.data.author_detail?.id === myProfile?.id}
           />
         )}

@@ -34,6 +34,7 @@ export function NoteDetail() {
 
     try {
       const data = await getNoteDetail(Number(noteId));
+
       setNoteDetail({ state: 'hasValue', data });
     } catch (error) {
       if (isAxiosError(error)) {
@@ -64,7 +65,7 @@ export function NoteDetail() {
           <NoteItem
             note={noteDetail.data}
             isMyPage={noteDetail.data.author_detail?.id === myProfile?.id}
-            displayType="DETAIL"
+            commentType="DETAIL"
           />
         )}
       </Layout.FlexCol>

@@ -10,37 +10,33 @@ import CommentBottomSheet from '@components/comments/comment-bottom-sheet/Commen
 import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import { Layout, Typo } from '@design-system';
 import { Note, POST_DP_TYPE } from '@models/post';
-import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import { NoteImage } from '../note-image/NoteImage.styled';
 
 interface NoteItemProps {
   note: Note;
   isMyPage: boolean;
-  displayType?: POST_DP_TYPE;
+  commentType?: POST_DP_TYPE;
   refresh?: () => void;
 }
 
-function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemProps) {
+function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemProps) {
   const {
     content,
     created_at,
     id,
     author_detail,
     images,
+    like_user_sample,
     like_reaction_user_sample,
     is_edited,
     current_user_read,
   } = note;
+
   const navigate = useNavigate();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [showMore, setShowMore] = useState(false);
   const [inputFocus, setInputFocus] = useState(false);
-
-  const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
-    emojiPickerTarget: state.emojiPickerTarget,
-    setEmojiPickerTarget: state.setEmojiPickerTarget,
-  }));
 
   const { username, profile_image } = author_detail ?? {};
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
@@ -50,13 +46,8 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
     setShowMore(true);
   };
 
-  const handleClickNote = (e: MouseEvent) => {
-    if (emojiPickerTarget) {
-      return setEmojiPickerTarget(null);
-    }
-
-    e.stopPropagation();
-    if (displayType === 'DETAIL') return;
+  const handleClickNote = () => {
+    if (commentType === 'DETAIL') return;
 
     if (!isMyPage) {
       navigate(`./notes/${id}`);
@@ -66,8 +57,7 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
     return navigate(`/notes/${id}`);
   };
 
-  const navigateToProfile = (e: MouseEvent) => {
-    e.stopPropagation();
+  const navigateToProfile = () => {
     navigate(`/users/${username}`);
   };
 
@@ -80,9 +70,6 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
         outline="LIGHT"
         rounded={12}
         onClick={handleClickNote}
-        style={{
-          overflow: displayType === 'DETAIL' ? 'visible' : undefined,
-        }}
       >
         <PostMoreModal
           isVisible={showMore}
@@ -125,7 +112,7 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
         <Layout.FlexCol>
           <ContentTranslation
             content={content}
-            translateContent={!isMyPage && displayType === 'DETAIL'}
+            translateContent={!isMyPage && commentType === 'DETAIL'}
           />
           {/* 노트 이미지 - 1개만 노출 */}
           {images[0] && (
@@ -141,12 +128,14 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
           )}
         </Layout.FlexCol>
         <PostFooter
-          reactionSampleUserList={like_reaction_user_sample}
+          likedUserList={
+            isMyPage && commentType !== 'DETAIL' ? like_reaction_user_sample : like_user_sample
+          }
           isMyPage={isMyPage}
           post={note}
           showComments={() => setBottomSheet(true)}
           setInputFocus={() => setInputFocus(true)}
-          displayType={displayType}
+          commentType={commentType}
         />
       </Layout.FlexCol>
       {bottomSheet && (

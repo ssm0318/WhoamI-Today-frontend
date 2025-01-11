@@ -11,21 +11,20 @@ import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { POST_DP_TYPE, Response } from '@models/post';
-import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
 interface ResponseItemProps {
   response: Response;
   isMyPage?: boolean;
-  displayType?: POST_DP_TYPE;
+  commentType?: POST_DP_TYPE;
   refresh?: () => void;
 }
 
 function ResponseItem({
   response,
   isMyPage = false,
-  displayType = 'LIST',
+  commentType = 'LIST',
   refresh,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
@@ -34,7 +33,7 @@ function ResponseItem({
     created_at,
     author_detail,
     question,
-    like_reaction_user_sample,
+    like_user_sample,
     is_edited,
     current_user_read,
   } = response;
@@ -42,11 +41,6 @@ function ResponseItem({
   const [overflowSummary, setOverflowSummary] = useState<string>();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [inputFocus, setInputFocus] = useState(false);
-
-  const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
-    emojiPickerTarget: state.emojiPickerTarget,
-    setEmojiPickerTarget: state.setEmojiPickerTarget,
-  }));
 
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
@@ -56,13 +50,8 @@ function ResponseItem({
     setShowMore(true);
   };
 
-  const handleClickDetail = (e: MouseEvent) => {
-    if (emojiPickerTarget) {
-      return setEmojiPickerTarget(null);
-    }
-
-    e.stopPropagation();
-    if (displayType === 'DETAIL') return;
+  const handleClickDetail = () => {
+    if (commentType === 'DETAIL') return;
 
     if (!isMyPage) {
       navigate(`./responses/${response.id}`);
@@ -72,20 +61,19 @@ function ResponseItem({
     navigate(`/responses/${response.id}`);
   };
 
-  const navigateToProfile = (e: MouseEvent) => {
-    e.stopPropagation();
+  const navigateToProfile = () => {
     navigate(`/users/${username}`);
   };
 
   useEffect(() => {
-    if (displayType !== 'LIST') return;
+    if (commentType !== 'LIST') return;
     if (content.length > MAX_RESPONSE_CONTENT_LENGTH)
       setOverflowSummary(content.slice(0, MAX_RESPONSE_CONTENT_LENGTH));
 
     const contentArrWithNewLine = content.split('\n');
     if (contentArrWithNewLine.length > MAX_RESPONSE_NEW_LINE)
       setOverflowSummary(contentArrWithNewLine.slice(0, MAX_RESPONSE_NEW_LINE).join('\n'));
-  }, [content, displayType]);
+  }, [content, commentType]);
 
   return (
     <>
@@ -93,10 +81,10 @@ function ResponseItem({
         p={WRAPPER_PADDING}
         rounded={12}
         outline="LIGHT"
-        w={displayType === 'LIST' ? RESPONSE_WIDTH : '100%'}
+        w={commentType === 'LIST' ? RESPONSE_WIDTH : '100%'}
         onClick={handleClickDetail}
         style={{
-          overflow: displayType === 'DETAIL' ? 'visible' : undefined,
+          overflow: commentType === 'DETAIL' ? 'visible' : undefined,
         }}
       >
         <PostMoreModal
@@ -139,7 +127,7 @@ function ResponseItem({
             </Layout.FlexRow>
           </Layout.FlexRow>
           <Layout.FlexCol w="100%" mb={8}>
-            {displayType === 'DETAIL' ? (
+            {commentType === 'DETAIL' ? (
               <ContentTranslation content={content} translateContent={!isMyPage} />
             ) : (
               <Typo type="body-large" color="BLACK" pre>
@@ -165,12 +153,12 @@ function ResponseItem({
           </Layout.FlexCol>
           <QuestionItem question={question} />
           <PostFooter
-            reactionSampleUserList={like_reaction_user_sample}
+            likedUserList={like_user_sample}
             isMyPage={isMyPage}
             post={response}
             showComments={() => setBottomSheet(true)}
             setInputFocus={() => setInputFocus(true)}
-            displayType={displayType}
+            commentType={commentType}
           />
         </Layout.FlexCol>
       </Layout.FlexRow>

@@ -24,7 +24,7 @@ function NoteSection({ username }: NoteSectionProps) {
     isLoadingMore: isNotesLoadingMore,
     mutate: refetchNotes,
   } = useSWRInfiniteScroll<Note>({
-    key: `/user/${username || 'me'}/notes/`,
+    key: `/user/${username || 'me'}/notes/${!username ? '' : 'default/'}`,
   });
 
   const { noteId } = useParams();
@@ -33,6 +33,7 @@ function NoteSection({ username }: NoteSectionProps) {
   useEffect(() => {
     if (noteId) return;
     refetchNotes();
+    console.log('notes', notes);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [noteId]);
 
