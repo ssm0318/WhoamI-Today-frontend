@@ -63,10 +63,7 @@ function TabItem({ to, type, size = 48 }: TabItemProps) {
 
 export default function Tab() {
   const location = useLocation();
-  const showFloatingButton =
-    location.pathname === '/friends' ||
-    location.pathname === '/my' ||
-    location.pathname === '/questions';
+  const showFloatingButton = location.pathname === '/friends' || location.pathname === '/my';
 
   return (
     <TabWrapper>
@@ -74,7 +71,7 @@ export default function Tab() {
         <TabItem to="/friends" type="friends" size={28} />
         <TabItem to="/my" type="my" size={28} />
         {/* <TabItem to="/chats" type="chats" size={28} /> */}
-        <TabItem to="/questions" type="questions" size={28} />
+        {/* <TabItem to="/questions" type="questions" size={28} /> */}
       </Layout.FlexRow>
       {showFloatingButton && <FloatingButton />}
     </TabWrapper>
