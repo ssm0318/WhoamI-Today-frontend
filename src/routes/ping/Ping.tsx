@@ -1,3 +1,4 @@
+import { isSameDay } from 'date-fns';
 import { useEffect, useMemo, useRef } from 'react';
 import Loader from '@components/_common/loader/Loader';
 import PingMessageInput from '@components/ping/ping-message-input/PingMessageInput';
@@ -5,6 +6,7 @@ import PingMessageItem from '@components/ping/ping-message-item/PingMessageItem'
 import SubHeader from '@components/sub-header/SubHeader';
 import { PING_MESSAGE_INPUT_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import { PingMessage, RefinedPingMessage } from '@models/ping';
 import { MainScrollContainer } from '../Root';
 
 const isLoading = false;
@@ -19,14 +21,14 @@ const pings = [
         id: 1,
         sender: { id: 1, username: 'cherry', url: '' },
         content: 'test',
-        emoji: '',
+        emoji: '😊',
         is_read: true,
         created_at: '2024-03-02T18:41:09.769419+09:00',
       },
       {
         id: 2,
         sender: { id: 1, username: 'cherry', url: '' },
-        content: 'test',
+        content: 'test test test',
         emoji: '',
         is_read: true,
         created_at: '2024-03-01T09:00:09.769419+09:00',
@@ -59,7 +61,7 @@ const pings = [
         id: 6,
         sender: { id: 1, username: 'cherry', url: '' },
         content: 'test',
-        emoji: '',
+        emoji: '😊',
         is_read: true,
         created_at: '2024-02-27T20:41:09.769419+09:00',
       },
@@ -162,17 +164,29 @@ function Ping() {
     console.log('pings', pings);
   }, []);
 
-  const sortedPings = useMemo(() => {
-    if (!pings) return;
-    return [...pings].reverse().map((ping) => {
-      if (!ping.results) return ping;
-      return { ...ping, results: [...ping.results].reverse() };
+  const refinedPings = useMemo((): RefinedPingMessage[] => {
+    if (!pings?.[0] || pings[0].count < 1) return [];
+
+    const flattenAndSortedPings: PingMessage[] = [...pings].reverse().flatMap((ping) => {
+      if (!ping.results) return [];
+      return [...ping.results].reverse();
     });
+
+    return flattenAndSortedPings.reduce<RefinedPingMessage[]>((acc, curr) => {
+      const last = acc[acc.length - 1];
+
+      if (!last || !isSameDay(new Date(last.created_at), new Date(curr.created_at))) {
+        acc.push({ ...curr, show_date: true });
+      } else {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
   }, []);
 
   useEffect(() => {
-    console.log('sortedPings', sortedPings);
-  }, [sortedPings]);
+    console.log('refinedPings', refinedPings);
+  }, [refinedPings]);
 
   // TODO: 스타일 반영, 다국어 추가
   return (
@@ -198,16 +212,14 @@ function Ping() {
       {isLoading ? (
         <Loader />
       ) : (
-        sortedPings?.[0] &&
-        sortedPings[0].count > 0 && (
+        refinedPings.length > 0 && (
           <Layout.FlexCol w="100%" gap={10} p={10} mb={PING_MESSAGE_INPUT_HEIGHT}>
             {/* <div ref={targetRef} /> */}
             {isLoadingMore && <Loader />}
-            {sortedPings.map(({ results }) =>
-              results?.map((message) => {
-                return <PingMessageItem key={message.id} message={message} />;
-              }),
-            )}
+            {refinedPings.map((message) => {
+              // 날짜가 다르면, 날짜 구분선 추가
+              return <PingMessageItem key={message.id} message={message} />;
+            })}
           </Layout.FlexCol>
         )
       )}
