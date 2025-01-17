@@ -1,51 +1,106 @@
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useMemo, useRef } from 'react';
+import Loader from '@components/_common/loader/Loader';
 import PingMessageInput from '@components/ping/ping-message-input/PingMessageInput';
 import PingMessageItem from '@components/ping/ping-message-item/PingMessageItem';
 import SubHeader from '@components/sub-header/SubHeader';
+import { UserPageContext } from '@components/user-page/UserPage.context';
 import { PING_MESSAGE_INPUT_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { PingMessage } from '@models/ping';
+import { getPings } from '@utils/apis/ping';
 import { MainScrollContainer } from '../Root';
 
-// TODO: api 응답 반영
-const MOCK_PING_LIST: PingMessage[] = [
-  { id: 1, author_detail: { username: 'user_1' }, text: 'hi', emoji: '😃' },
-  { id: 2, author_detail: { username: 'me' }, text: 'hi', emoji: '😄' },
-  { id: 3, author_detail: { username: 'user_1' }, text: '', emoji: '🩵' },
-  { id: 4, author_detail: { username: 'user_1' }, text: 'test test test test', emoji: '' },
-  { id: 5, author_detail: { username: 'me' }, text: 'text text', emoji: '🐸' },
-  {
-    id: 6,
-    author_detail: { username: 'me' },
-    text: '?? ?? ?? abcdefg !!! !!! !!!',
-    emoji: '🐸',
-  },
-  { id: 7, author_detail: { username: 'user_1' }, text: 'ping', emoji: '' },
-  { id: 8, author_detail: { username: 'user_1' }, text: 'ping', emoji: '' },
-  { id: 9, author_detail: { username: 'user_1' }, text: 'ping', emoji: '' },
-  { id: 10, author_detail: { username: 'user_1' }, text: '', emoji: '🤑' },
-  { id: 11, author_detail: { username: 'me' }, text: 'ping', emoji: '' },
-  { id: 12, author_detail: { username: 'user_1' }, text: 'bye~', emoji: '👋' },
-  { id: 13, author_detail: { username: 'me' }, text: 'bye~', emoji: '👋' },
-  { id: 14, author_detail: { username: 'me' }, text: '', emoji: '👋' },
-  { id: 15, author_detail: { username: 'me' }, text: '', emoji: '👋' },
-];
-
 function Ping() {
+  const { user } = useContext(UserPageContext);
+
+  const userId = useMemo(() => {
+    if (user.state !== 'hasValue' || !user.data) return;
+    return user.data.id;
+  }, [user.data, user.state]);
+
   const scrollRef = useRef<HTMLDivElement>(null);
+  const initScrollRef = useRef(false);
+  const prevScrollHeightRef = useRef<number>();
+
+  const beforeInfiniteLoad = () => {
+    if (!scrollRef.current) return;
+    console.log('set prev scroll height', scrollRef.current.scrollHeight);
+    prevScrollHeightRef.current = scrollRef.current.scrollHeight;
+  };
+
+  const {
+    targetRef,
+    data: pings,
+    isLoading,
+    isLoadingMore,
+    mutate: refetchPings,
+  } = useSWRInfiniteScroll<PingMessage>({
+    key: userId ? `/ping/user/${userId}/` : '',
+    beforeInfiniteLoad,
+  });
+
+  useEffect(() => {
+    if (!userId) return;
+    console.log('get pings', userId);
+    getPings(userId);
+  }, [userId]);
+
+  const handleClickRefresh = () => {
+    refetchPings();
+  };
 
   useEffect(() => {
     if (!scrollRef.current) return;
-    scrollRef.current.scrollTop = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
-  }, []);
+    if (pings && pings.length > 0) {
+      console.log('scroll info', {
+        scrollHeight: scrollRef.current.scrollHeight,
+        clientHeight: scrollRef.current.clientHeight,
+      });
 
-  const handleClickRefresh = () => {
-    // TODO: refresh ping
-  };
+      if (!initScrollRef.current) {
+        scrollRef.current.scrollTop =
+          scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
+      } else if (prevScrollHeightRef.current)
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeightRef.current;
+
+      // 처음 로딩시 발생하는 스크롤
+      if (
+        (scrollRef.current.scrollHeight === scrollRef.current.clientHeight &&
+          !pings[pings.length - 1].next) ||
+        (scrollRef.current.scrollHeight > scrollRef.current.clientHeight &&
+          pings[pings.length - 1].next)
+      ) {
+        initScrollRef.current = true;
+      }
+    }
+  }, [pings]);
+
+  useEffect(() => {
+    console.log('pings', pings);
+  }, [pings]);
+
+  const sortedPings = useMemo(() => {
+    if (!pings) return;
+    return [...pings].reverse().map((ping) => {
+      if (!ping.results) return ping;
+      return { ...ping, results: [...ping.results].reverse() };
+    });
+  }, [pings]);
+
+  useEffect(() => {
+    console.log('sortedPings', sortedPings);
+  }, [sortedPings]);
 
   // TODO: 스타일 반영, 다국어 추가
   return (
-    <MainScrollContainer scrollRef={scrollRef}>
+    <MainScrollContainer
+      scrollRef={scrollRef}
+      onScroll={(e) => {
+        const { scrollHeight, scrollTop } = e.target as HTMLDivElement;
+        console.log('scroll', { scrollHeight, scrollTop });
+      }}
+    >
       {/** title */}
       <SubHeader
         title="Ping!"
@@ -58,12 +113,21 @@ function Ping() {
         }
       />
       {/** ping list */}
-      {MOCK_PING_LIST.length > 1 && (
-        <Layout.FlexCol w="100%" gap={10} p={10} mb={PING_MESSAGE_INPUT_HEIGHT}>
-          {MOCK_PING_LIST.map((message) => (
-            <PingMessageItem key={message.id} message={message} />
-          ))}
-        </Layout.FlexCol>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        sortedPings?.[0] &&
+        sortedPings[0].count > 0 && (
+          <Layout.FlexCol w="100%" gap={10} p={10} mb={PING_MESSAGE_INPUT_HEIGHT}>
+            <div ref={targetRef} />
+            {isLoadingMore && <Loader />}
+            {sortedPings.map(({ results }) =>
+              results?.map((message) => {
+                return <PingMessageItem key={message.id} message={message} />;
+              }),
+            )}
+          </Layout.FlexCol>
+        )
       )}
       {/** ping input */}
       <PingMessageInput />

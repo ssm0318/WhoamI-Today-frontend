@@ -11,10 +11,12 @@ const fetcher = async <T>(url: string) => {
 
 interface Props {
   key: string;
+  beforeInfiniteLoad?: () => void;
 }
 
-export function useSWRInfiniteScroll<T>({ key }: Props) {
+export function useSWRInfiniteScroll<T>({ key, beforeInfiniteLoad }: Props) {
   const getKey = (pageIndex: number, previousPageData: PaginationResponse<T[]>) => {
+    if (!key) return null;
     if (previousPageData && !previousPageData.next) return null; // 끝에 도달
 
     const [pathname, search] = key.split('?');
@@ -39,8 +41,13 @@ export function useSWRInfiniteScroll<T>({ key }: Props) {
     setSize((prevSize) => prevSize + 1);
   }, [isEndPage, setSize]);
 
+  // const scrollHeightRef = useRef<number>();
   const { targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(() => {
+    console.log('~~~~~~~~~~~~~~~ load more ~~~~~~~~~~~~~~~');
+
+    beforeInfiniteLoad?.();
     fetchNextData();
+
     setIsLoading(false);
   });
 

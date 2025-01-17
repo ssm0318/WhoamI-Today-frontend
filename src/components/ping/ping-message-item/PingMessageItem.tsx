@@ -6,10 +6,10 @@ interface Props {
 }
 
 function PingMessageItem({ message }: Props) {
-  const { author_detail, text, emoji } = message;
+  const { sender, content, emoji } = message;
 
   /** FIXME: 임시로 설정한 작성자 여부 로직 수정 */
-  const isAuthor = author_detail.username === 'me';
+  const isAuthor = sender.username === 'me';
 
   return (
     <Layout.FlexRow w="100%" justifyContent={isAuthor ? 'flex-end' : 'flex-start'}>
@@ -21,9 +21,9 @@ function PingMessageItem({ message }: Props) {
         bgColor={isAuthor ? 'MEDIUM_GRAY' : 'PRIMARY'}
       >
         {emoji && <Typo type="body-medium">{emoji}</Typo>}
-        {text && (
+        {content && (
           <Typo type="body-large" color="LIGHT">
-            {text}
+            {content}
           </Typo>
         )}
       </Layout.FlexRow>
