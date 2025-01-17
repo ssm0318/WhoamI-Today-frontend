@@ -1,4 +1,5 @@
 import { ChangeEvent, useContext, useMemo, useState } from 'react';
+import Icon from '@components/_common/icon/Icon';
 import { StyledTextInput } from '@components/ping/ping-message-input/PingMessageInput.styled';
 import { UserPageContext } from '@components/user-page/UserPage.context';
 import {
@@ -10,8 +11,7 @@ import { Layout } from '@design-system';
 import { postPingMessage } from '@utils/apis/ping';
 
 const MAX_LENGTH = 30;
-const PADDING = 10;
-const INPUT_HEIGHT = PING_MESSAGE_INPUT_HEIGHT - PADDING * 2;
+// const INPUT_HEIGHT = PING_MESSAGE_INPUT_HEIGHT - PADDING * 2;
 
 function PingMessageInput() {
   const { user } = useContext(UserPageContext);
@@ -40,25 +40,32 @@ function PingMessageInput() {
       style={{ maxWidth: MAX_WINDOW_WIDTH }}
       h={PING_MESSAGE_INPUT_HEIGHT}
       b={BOTTOM_TABBAR_HEIGHT}
-      p={PADDING}
-      bgColor="LIGHT"
+      ph={14}
+      pv={10}
+      bgColor="WHITE"
     >
-      <Layout.FlexRow w="100%" gap={10}>
+      <Layout.FlexRow
+        w="100%"
+        gap={10}
+        rounded={13}
+        outline="DARK_GRAY"
+        p={8}
+        alignItems="center"
+        justifyContent="space-between"
+      >
         {/** emoji */}
         {/** TODO: emoji preset 입력 추가 */}
-        <Layout.FlexRow bgColor="PRIMARY" h={INPUT_HEIGHT} rounded={8} p={8}>
-          emoji picker
-        </Layout.FlexRow>
+        <Icon name="ping_emoji_add" size={27} />
         {/** text */}
-        <Layout.FlexRow w="100%" h={INPUT_HEIGHT} bgColor="MEDIUM_GRAY" rounded={8} p={8}>
+        <Layout.FlexRow w="100%" pr={5}>
           <StyledTextInput
             type="text"
             maxLength={MAX_LENGTH}
-            placeholder="text"
+            placeholder="Send Ping .."
             value={messageInput}
             onChange={handleChangeMessage}
           />
-          <Layout.FlexRow onClick={handleClickPost}>Post</Layout.FlexRow>
+          <Icon name="question_send" size={17} onClick={handleClickPost} color="MEDIUM_GRAY" />
         </Layout.FlexRow>
       </Layout.FlexRow>
     </Layout.Fixed>

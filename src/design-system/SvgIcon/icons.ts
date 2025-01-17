@@ -109,6 +109,7 @@ const search_black = 'search_black';
 
 // Pings
 const refresh = 'refresh';
+const ping_emoji_add = 'ping_emoji_add';
 
 // Note
 const delete_image = 'delete_image';
@@ -228,6 +229,7 @@ export {
   noti_icon_public_comment,
   notification,
   notification_mute,
+  ping_emoji_add,
   private_comment,
   private_comment_active,
   private_comment_inactive,

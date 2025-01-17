@@ -20,6 +20,6 @@ export const StyledTextInput = styled.input`
   color: ${({ theme }) => theme.LIGHT};
 
   ::placeholder {
-    color: ${({ theme }) => theme.LIGHT};
+    color: ${({ theme }) => theme.MEDIUM_GRAY};
   }
 `;
