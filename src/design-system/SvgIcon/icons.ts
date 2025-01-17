@@ -107,6 +107,9 @@ const green_dot = 'green_dot';
 const chat_notification_mute = 'chat_notification_mute';
 const search_black = 'search_black';
 
+// Pings
+const refresh = 'refresh';
+
 // Note
 const delete_image = 'delete_image';
 
@@ -233,6 +236,7 @@ export {
   question_send,
   questions_active,
   questions_inactive,
+  refresh,
   search,
   search_black,
   sent_by,

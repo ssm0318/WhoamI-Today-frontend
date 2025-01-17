@@ -1,11 +1,13 @@
 import { isSameDay } from 'date-fns';
 import { useEffect, useMemo, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import Icon from '@components/_common/icon/Icon';
 import Loader from '@components/_common/loader/Loader';
 import PingMessageInput from '@components/ping/ping-message-input/PingMessageInput';
 import PingMessageItem from '@components/ping/ping-message-item/PingMessageItem';
 import SubHeader from '@components/sub-header/SubHeader';
 import { PING_MESSAGE_INPUT_HEIGHT } from '@constants/layout';
-import { Layout, Typo } from '@design-system';
+import { Layout } from '@design-system';
 import { PingMessage, RefinedPingMessage } from '@models/ping';
 import { MainScrollContainer } from '../Root';
 
@@ -102,6 +104,7 @@ const pings = [
 ];
 
 function Ping() {
+  const { username } = useParams();
   // const { user } = useContext(UserPageContext);
 
   // const userId = useMemo(() => {
@@ -199,14 +202,8 @@ function Ping() {
     >
       {/** title */}
       <SubHeader
-        title="Ping!"
-        RightComponent={
-          <button type="button" onClick={handleClickRefresh}>
-            <Typo type="title-medium" color="PRIMARY">
-              Refresh
-            </Typo>
-          </button>
-        }
+        title={username}
+        RightComponent={<Icon name="refresh" size={36} onClick={handleClickRefresh} />}
       />
       {/** ping list */}
       {isLoading ? (
