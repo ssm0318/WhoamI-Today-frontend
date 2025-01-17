@@ -1,53 +1,135 @@
-import { useContext, useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import Loader from '@components/_common/loader/Loader';
 import PingMessageInput from '@components/ping/ping-message-input/PingMessageInput';
 import PingMessageItem from '@components/ping/ping-message-item/PingMessageItem';
 import SubHeader from '@components/sub-header/SubHeader';
-import { UserPageContext } from '@components/user-page/UserPage.context';
 import { PING_MESSAGE_INPUT_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
-import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
-import { PingMessage } from '@models/ping';
-import { getPings } from '@utils/apis/ping';
 import { MainScrollContainer } from '../Root';
 
-function Ping() {
-  const { user } = useContext(UserPageContext);
+const isLoading = false;
+const isLoadingMore = false;
+const pings = [
+  {
+    next: null,
+    previous: null,
+    count: 10,
+    results: [
+      {
+        id: 1,
+        sender: { id: 1, username: 'cherry', url: '' },
+        content: 'test',
+        emoji: '',
+        is_read: true,
+        created_at: '2024-03-02T18:41:09.769419+09:00',
+      },
+      {
+        id: 2,
+        sender: { id: 1, username: 'cherry', url: '' },
+        content: 'test',
+        emoji: '',
+        is_read: true,
+        created_at: '2024-03-01T09:00:09.769419+09:00',
+      },
+      {
+        id: 3,
+        sender: { id: 1, username: 'me', url: '' },
+        content: 'test',
+        emoji: '',
+        is_read: true,
+        created_at: '2024-03-01T08:31:09.769419+09:00',
+      },
+      {
+        id: 4,
+        sender: { id: 1, username: 'cherry', url: '' },
+        content: 'test',
+        emoji: '',
+        is_read: true,
+        created_at: '2024-03-01T01:10:09.769419+09:00',
+      },
+      {
+        id: 5,
+        sender: { id: 1, username: 'me', url: '' },
+        content: 'test',
+        emoji: '',
+        is_read: true,
+        created_at: '2024-02-28T12:41:09.769419+09:00',
+      },
+      {
+        id: 6,
+        sender: { id: 1, username: 'cherry', url: '' },
+        content: 'test',
+        emoji: '',
+        is_read: true,
+        created_at: '2024-02-27T20:41:09.769419+09:00',
+      },
+      {
+        id: 7,
+        sender: { id: 1, username: 'me', url: '' },
+        content: 'test',
+        emoji: '',
+        is_read: true,
+        created_at: '2024-02-27T10:41:09.769419+09:00',
+      },
+      {
+        id: 8,
+        sender: { id: 1, username: 'cherry', url: '' },
+        content: 'test',
+        emoji: '',
+        is_read: true,
+        created_at: '2024-02-27T09:41:09.769419+09:00',
+      },
+      {
+        id: 9,
+        sender: { id: 1, username: 'me', url: '' },
+        content: 'test',
+        emoji: '',
+        is_read: true,
+        created_at: '2024-02-26T14:41:09.769419+09:00',
+      },
+      {
+        id: 10,
+        sender: { id: 1, username: 'cherry', url: '' },
+        content: 'test',
+        emoji: '',
+        is_read: true,
+        created_at: '2024-02-26T14:40:09.769419+09:00',
+      },
+    ],
+  },
+];
 
-  const userId = useMemo(() => {
-    if (user.state !== 'hasValue' || !user.data) return;
-    return user.data.id;
-  }, [user.data, user.state]);
+function Ping() {
+  // const { user } = useContext(UserPageContext);
+
+  // const userId = useMemo(() => {
+  //   if (user.state !== 'hasValue' || !user.data) return;
+  //   return user.data.id;
+  // }, [user.data, user.state]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const initScrollRef = useRef(false);
   const prevScrollHeightRef = useRef<number>();
 
-  const beforeInfiniteLoad = () => {
-    if (!scrollRef.current) return;
-    console.log('set prev scroll height', scrollRef.current.scrollHeight);
-    prevScrollHeightRef.current = scrollRef.current.scrollHeight;
-  };
+  // const beforeInfiniteLoad = () => {
+  //   if (!scrollRef.current) return;
+  //   console.log('set prev scroll height', scrollRef.current.scrollHeight);
+  //   prevScrollHeightRef.current = scrollRef.current.scrollHeight;
+  // };
 
-  const {
-    targetRef,
-    data: pings,
-    isLoading,
-    isLoadingMore,
-    mutate: refetchPings,
-  } = useSWRInfiniteScroll<PingMessage>({
-    key: userId ? `/ping/user/${userId}/` : '',
-    beforeInfiniteLoad,
-  });
-
-  useEffect(() => {
-    if (!userId) return;
-    console.log('get pings', userId);
-    getPings(userId);
-  }, [userId]);
+  // const {
+  //   targetRef,
+  //   data: pings,
+  //   isLoading,
+  //   isLoadingMore,
+  //   mutate: refetchPings,
+  // } = useSWRInfiniteScroll<PingMessage>({
+  //   key: userId ? `/ping/user/${userId}/` : '',
+  //   beforeInfiniteLoad,
+  // });
 
   const handleClickRefresh = () => {
-    refetchPings();
+    // refetchPings();
   };
 
   useEffect(() => {
@@ -74,11 +156,11 @@ function Ping() {
         initScrollRef.current = true;
       }
     }
-  }, [pings]);
+  }, []);
 
   useEffect(() => {
     console.log('pings', pings);
-  }, [pings]);
+  }, []);
 
   const sortedPings = useMemo(() => {
     if (!pings) return;
@@ -86,7 +168,7 @@ function Ping() {
       if (!ping.results) return ping;
       return { ...ping, results: [...ping.results].reverse() };
     });
-  }, [pings]);
+  }, []);
 
   useEffect(() => {
     console.log('sortedPings', sortedPings);
@@ -119,7 +201,7 @@ function Ping() {
         sortedPings?.[0] &&
         sortedPings[0].count > 0 && (
           <Layout.FlexCol w="100%" gap={10} p={10} mb={PING_MESSAGE_INPUT_HEIGHT}>
-            <div ref={targetRef} />
+            {/* <div ref={targetRef} /> */}
             {isLoadingMore && <Loader />}
             {sortedPings.map(({ results }) =>
               results?.map((message) => {

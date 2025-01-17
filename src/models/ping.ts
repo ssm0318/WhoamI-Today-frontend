@@ -7,6 +7,7 @@ export interface PingMessage {
   content: string;
   emoji: string;
   is_read: boolean;
+  created_at: string;
 }
 
 export interface InputPingMessage {

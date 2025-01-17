@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { Layout, Typo } from '@design-system';
 import { PingMessage } from '@models/ping';
 
@@ -6,7 +7,7 @@ interface Props {
 }
 
 function PingMessageItem({ message }: Props) {
-  const { sender, content, emoji } = message;
+  const { sender, content, emoji, created_at } = message;
 
   /** FIXME: 임시로 설정한 작성자 여부 로직 수정 */
   const isAuthor = sender.username === 'me';
@@ -27,6 +28,9 @@ function PingMessageItem({ message }: Props) {
           </Typo>
         )}
       </Layout.FlexRow>
+      <Typo type="body-small" color="LIGHT_GRAY">
+        {format(new Date(created_at), 'h:mm aaa')}
+      </Typo>
     </Layout.FlexRow>
   );
 }
