@@ -1,7 +1,11 @@
 import { ChangeEvent, useContext, useMemo, useState } from 'react';
 import { StyledTextInput } from '@components/ping/ping-message-input/PingMessageInput.styled';
 import { UserPageContext } from '@components/user-page/UserPage.context';
-import { BOTTOM_TABBAR_HEIGHT, PING_MESSAGE_INPUT_HEIGHT } from '@constants/layout';
+import {
+  BOTTOM_TABBAR_HEIGHT,
+  MAX_WINDOW_WIDTH,
+  PING_MESSAGE_INPUT_HEIGHT,
+} from '@constants/layout';
 import { Layout } from '@design-system';
 import { postPingMessage } from '@utils/apis/ping';
 
@@ -33,6 +37,7 @@ function PingMessageInput() {
   return (
     <Layout.Fixed
       w="100%"
+      style={{ maxWidth: MAX_WINDOW_WIDTH }}
       h={PING_MESSAGE_INPUT_HEIGHT}
       b={BOTTOM_TABBAR_HEIGHT}
       p={PADDING}

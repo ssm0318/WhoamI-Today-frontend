@@ -20,7 +20,7 @@ function PingMessageItem({ message }: Props) {
       {show_date && (
         <Layout.FlexRow w="100%" justifyContent="center">
           <Layout.FlexRow>
-            <Typo type="body-medium" color="MEDIUM_GRAY">
+            <Typo type="label-medium" color="MEDIUM_GRAY">
               {format(date, 'y.M.d (E)')}
             </Typo>
           </Layout.FlexRow>
@@ -33,17 +33,21 @@ function PingMessageItem({ message }: Props) {
       >
         <Layout.FlexRow
           w={MESSAGE_WIDTH}
-          rounded={8}
-          pv={6}
-          ph={10}
+          pv={8}
+          ph={13}
           alignItems="center"
           justifyContent="center"
           gap={10}
-          bgColor={isAuthor ? 'MEDIUM_GRAY' : 'PRIMARY'}
+          bgColor={isAuthor ? 'LIGHT' : 'PRIMARY'}
+          style={
+            isAuthor
+              ? { borderRadius: '13px 13px 13px 0px' }
+              : { borderRadius: '13px 13px 0px 13px' }
+          }
         >
           {emoji && <Typo type="body-medium">{emoji}</Typo>}
           {content && (
-            <Typo type="body-large" color="LIGHT">
+            <Typo type="body-large" color={isAuthor ? 'BLACK' : 'WHITE'}>
               {content}
             </Typo>
           )}
@@ -52,7 +56,7 @@ function PingMessageItem({ message }: Props) {
           style={isAuthor ? { left: 'calc(50% + 110px)' } : { right: 'calc(50% + 110px)' }}
           b={0}
         >
-          <Typo type="body-small" color="MEDIUM_GRAY">
+          <Typo type="label-small" color="MEDIUM_GRAY">
             {format(date, 'h:mm aaa')}
           </Typo>
         </Layout.Absolute>

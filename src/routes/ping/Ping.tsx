@@ -213,7 +213,7 @@ function Ping() {
         <Loader />
       ) : (
         refinedPings.length > 0 && (
-          <Layout.FlexCol w="100%" gap={10} p={10} mb={PING_MESSAGE_INPUT_HEIGHT}>
+          <Layout.FlexCol w="100%" gap={15} p={10} mb={PING_MESSAGE_INPUT_HEIGHT}>
             {/* <div ref={targetRef} /> */}
             {isLoadingMore && <Loader />}
             {refinedPings.map((message) => {
