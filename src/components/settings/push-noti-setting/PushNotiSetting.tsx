@@ -5,8 +5,7 @@ import useNotiPermission from '@hooks/useNotiPermission';
 import { useBoundStore } from '@stores/useBoundStore';
 import { requestPermission } from '@utils/firebaseHelpers';
 import { isApp } from '@utils/getUserAgent';
-import { getDailyNotiTime } from '@utils/timeHelpers';
-import { PushNotiTimeSettingButton, SettingsToggleButton } from '../SettingsButtons';
+import { PushNotiSettingButton, SettingsToggleButton } from '../SettingsButtons';
 import * as S from './PushNotiSetting.styled';
 
 function PushNotiSetting() {
@@ -14,9 +13,10 @@ function PushNotiSetting() {
 
   const { getSettingDescription, notiPermission, setNotiPermission } = useNotiPermission();
 
-  const { dailyNotiTime, appNotiPermission } = useBoundStore((state) => ({
+  const { dailyNotiTime, dailyNotiPeriod, appNotiPermission } = useBoundStore((state) => ({
     appNotiPermission: state.appNotiPermission,
     dailyNotiTime: state.myProfile?.noti_time,
+    dailyNotiPeriod: state.myProfile?.noti_period_days,
   }));
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ function PushNotiSetting() {
     setNotiPermission(permission);
   };
 
-  const handleClickChangeDailyNotiTime = () => navigate('/settings/change-daily-noti-time');
+  const handleClickChangeDailyNotiSetting = () => navigate('/settings/daily-noti-setting');
 
   return (
     <>
@@ -66,11 +66,10 @@ function PushNotiSetting() {
           </Layout.FlexCol>
         )}
       </Layout.FlexRow>
-      {permissionAllowed && dailyNotiTime && (
-        <PushNotiTimeSettingButton
-          text={t('daily_noti_time')}
-          onClick={handleClickChangeDailyNotiTime}
-          notiTime={getDailyNotiTime(dailyNotiTime)}
+      {permissionAllowed && (dailyNotiPeriod || dailyNotiTime) && (
+        <PushNotiSettingButton
+          text={t('daily_noti_setting.title')}
+          onClick={handleClickChangeDailyNotiSetting}
         />
       )}
     </>
