@@ -8,6 +8,7 @@ import {
   PING_MESSAGE_INPUT_HEIGHT,
 } from '@constants/layout';
 import { Layout } from '@design-system';
+import { PingEmojiDict } from '@models/ping';
 import { postPingMessage } from '@utils/apis/ping';
 
 const MAX_LENGTH = 30;
@@ -34,6 +35,13 @@ function PingMessageInput() {
     postPingMessage(userId, { content: messageInput, emoji: '' });
     setMessageInput('');
   };
+
+  const [showEmojiList, setShowEmojiList] = useState(false);
+
+  const handleToggleAddEmoji = () => {
+    setShowEmojiList((prev) => !prev);
+  };
+
   return (
     <Layout.Fixed
       w="100%"
@@ -52,10 +60,10 @@ function PingMessageInput() {
         p={8}
         alignItems="center"
         justifyContent="space-between"
+        style={{ position: 'relative' }}
       >
         {/** emoji */}
-        {/** TODO: emoji preset 입력 추가 */}
-        <Icon name="ping_emoji_add" size={27} />
+        <Icon name="ping_emoji_add" size={27} onClick={handleToggleAddEmoji} />
         {/** text */}
         <Layout.FlexRow w="100%" pr={5}>
           <StyledTextInput
@@ -68,6 +76,15 @@ function PingMessageInput() {
           <Icon name="question_send" size={17} onClick={handleClickPost} color="MEDIUM_GRAY" />
         </Layout.FlexRow>
       </Layout.FlexRow>
+      {showEmojiList && (
+        <Layout.Absolute t={-20} l={14} bgColor="LIGHT" rounded={13} pv={4} ph={15}>
+          <Layout.FlexRow gap={7}>
+            {Object.entries(PingEmojiDict).map(([key, value]) => (
+              <div key={key}>{value}</div>
+            ))}
+          </Layout.FlexRow>
+        </Layout.Absolute>
+      )}
     </Layout.Fixed>
   );
 }

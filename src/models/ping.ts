@@ -15,3 +15,19 @@ export interface PingMessage extends InputPingMessage {
 export interface RefinedPingMessage extends PingMessage {
   show_date?: boolean;
 }
+
+export enum PingEmojiType {
+  WAVE = 'wave',
+  SMILE = 'smile',
+  HEART = 'heart',
+  CRY = 'cry',
+  LAUGH = 'laugh',
+}
+
+export const PingEmojiDict = {
+  wave: '👋',
+  smile: '😊',
+  heart: '❤️',
+  cry: '😭',
+  laugh: '🤣',
+};
