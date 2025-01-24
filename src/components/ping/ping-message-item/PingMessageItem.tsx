@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { useParams } from 'react-router-dom';
 import { Layout, Typo } from '@design-system';
 import { RefinedPingMessage } from '@models/ping';
 
@@ -9,10 +10,10 @@ interface Props {
 }
 
 function PingMessageItem({ message }: Props) {
+  const { username } = useParams();
   const { sender, content, emoji, created_at, show_date } = message;
 
-  /** FIXME: 임시로 설정한 작성자 여부 로직 수정 */
-  const isAuthor = sender.username === 'me';
+  const isAuthor = sender.username === username;
   const date = new Date(created_at);
 
   return (
