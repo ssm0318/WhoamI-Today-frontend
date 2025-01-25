@@ -147,7 +147,6 @@ function CommentItem({
           <Layout.FlexCol w={24}>
             {isCommentAuthor ? (
               <Layout.FlexRow onClick={handleClickLikes}>
-                {/* <ProfileImageList images={like_user_sample.map((user) => user.profile_image)} /> */}
                 {like_user_sample.map((user) => (
                   <PostReactionItem
                     key={user.username}
