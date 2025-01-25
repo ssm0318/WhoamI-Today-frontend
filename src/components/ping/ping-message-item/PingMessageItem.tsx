@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { useParams } from 'react-router-dom';
 import { Layout, Typo } from '@design-system';
-import { RefinedPingMessage } from '@models/ping';
+import { PingEmojiDict, RefinedPingMessage } from '@models/ping';
 
 const MESSAGE_WIDTH = 200;
 
@@ -46,7 +46,7 @@ function PingMessageItem({ message }: Props) {
               : { borderRadius: '13px 13px 0px 13px' }
           }
         >
-          {emoji && <Typo type="body-medium">{emoji}</Typo>}
+          {emoji && PingEmojiDict[emoji] && <Typo type="body-medium">{PingEmojiDict[emoji]}</Typo>}
           {content && (
             <Typo type="body-large" color={isAuthor ? 'BLACK' : 'WHITE'}>
               {content}

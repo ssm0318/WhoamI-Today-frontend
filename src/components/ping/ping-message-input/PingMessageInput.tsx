@@ -8,7 +8,7 @@ import {
   PING_MESSAGE_INPUT_HEIGHT,
 } from '@constants/layout';
 import { Layout } from '@design-system';
-import { PingEmojiDict } from '@models/ping';
+import { PingEmojiDict, PingEmojiType } from '@models/ping';
 import { postPingMessage } from '@utils/apis/ping';
 
 const MAX_LENGTH = 30;
@@ -23,6 +23,8 @@ function PingMessageInput() {
   }, [user.data, user.state]);
 
   const [messageInput, setMessageInput] = useState('');
+  const [showEmojiList, setShowEmojiList] = useState(false);
+  const [selectedEmoji, setSelectedEmoji] = useState<PingEmojiType>();
 
   const handleChangeMessage = (e: ChangeEvent<HTMLInputElement>) => {
     setMessageInput(e.target.value);
@@ -32,14 +34,18 @@ function PingMessageInput() {
     if (!messageInput || !userId) return;
     console.log('messageInput', messageInput);
 
-    postPingMessage(userId, { content: messageInput, emoji: '' });
+    postPingMessage(userId, { content: messageInput, emoji: selectedEmoji ?? '' });
     setMessageInput('');
+    setSelectedEmoji(undefined);
   };
-
-  const [showEmojiList, setShowEmojiList] = useState(false);
 
   const handleToggleAddEmoji = () => {
     setShowEmojiList((prev) => !prev);
+  };
+
+  const handleClickEmoji = (emoji: string) => () => {
+    setSelectedEmoji(emoji as PingEmojiType);
+    setShowEmojiList(false);
   };
 
   return (
@@ -63,7 +69,13 @@ function PingMessageInput() {
         style={{ position: 'relative' }}
       >
         {/** emoji */}
-        <Icon name="ping_emoji_add" size={27} onClick={handleToggleAddEmoji} />
+        {selectedEmoji ? (
+          <button type="button" onClick={handleToggleAddEmoji}>
+            <div>{PingEmojiDict[selectedEmoji]}</div>
+          </button>
+        ) : (
+          <Icon name="ping_emoji_add" size={27} onClick={handleToggleAddEmoji} />
+        )}
         {/** text */}
         <Layout.FlexRow w="100%" pr={5}>
           <StyledTextInput
@@ -80,7 +92,9 @@ function PingMessageInput() {
         <Layout.Absolute t={-20} l={14} bgColor="LIGHT" rounded={13} pv={4} ph={15}>
           <Layout.FlexRow gap={7}>
             {Object.entries(PingEmojiDict).map(([key, value]) => (
-              <div key={key}>{value}</div>
+              <button key={key} type="button" onClick={handleClickEmoji(key)}>
+                <span style={{ width: 20, height: 20 }}>{value}</span>
+              </button>
             ))}
           </Layout.FlexRow>
         </Layout.Absolute>

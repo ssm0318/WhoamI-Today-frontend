@@ -17,7 +17,7 @@ export const StyledTextInput = styled.input`
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  color: ${({ theme }) => theme.LIGHT};
+  color: ${({ theme }) => theme.BLACK};
 
   ::placeholder {
     color: ${({ theme }) => theme.MEDIUM_GRAY};

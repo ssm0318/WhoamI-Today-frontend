@@ -1,7 +1,7 @@
 import { User } from '@models/user';
 
 export interface InputPingMessage {
-  emoji: string;
+  emoji: PingEmojiType | '';
   content: string;
 }
 
@@ -24,10 +24,10 @@ export enum PingEmojiType {
   LAUGH = 'laugh',
 }
 
-export const PingEmojiDict = {
-  wave: '👋',
-  smile: '😊',
-  heart: '❤️',
-  cry: '😭',
-  laugh: '🤣',
+export const PingEmojiDict: { [key in PingEmojiType]: string } = {
+  [PingEmojiType.WAVE]: '👋',
+  [PingEmojiType.SMILE]: '😊',
+  [PingEmojiType.HEART]: '❤️',
+  [PingEmojiType.CRY]: '😭',
+  [PingEmojiType.LAUGH]: '🤣',
 };
