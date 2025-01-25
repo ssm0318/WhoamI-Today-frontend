@@ -11,7 +11,7 @@ interface Props {
 
 function PingMessageItem({ message }: Props) {
   const { username } = useParams();
-  const { sender, content, emoji, created_at, show_date } = message;
+  const { sender, content, emoji, created_at, show_date, is_read } = message;
 
   const isAuthor = sender.username !== username;
   const date = new Date(created_at);
@@ -28,6 +28,7 @@ function PingMessageItem({ message }: Props) {
         </Layout.FlexRow>
       )}
       <Layout.FlexRow
+        id={`ping_${message.id}`}
         w="100%"
         justifyContent="center"
         style={{ position: 'relative', overflow: 'visible' }}
@@ -39,7 +40,7 @@ function PingMessageItem({ message }: Props) {
           alignItems="center"
           justifyContent="center"
           gap={10}
-          bgColor={isAuthor ? 'LIGHT' : 'PRIMARY'}
+          bgColor={isAuthor ? 'LIGHT' : is_read ? 'PRIMARY' : 'SECONDARY'}
           style={
             isAuthor
               ? { borderRadius: '13px 13px 0px 13px' }

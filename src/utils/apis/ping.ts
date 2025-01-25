@@ -3,7 +3,7 @@ import { InputPingMessage, PingMessage } from '@models/ping';
 import axios from '@utils/apis/axios';
 
 export const getPings = async (userId: number, page?: string | null) => {
-  const requestPage = page ? page.split('page=')[1] : null;
+  const requestPage = page ? page.split('page=')[1] : 1;
 
   const { data } = await axios.get<PaginationResponse<PingMessage[]>>(
     `/ping/user/${userId}/${!requestPage ? '' : `?page=${requestPage}`}`,
@@ -15,5 +15,5 @@ export const getPings = async (userId: number, page?: string | null) => {
 
 export const postPingMessage = async (userId: number, inputPinMsg: InputPingMessage) => {
   console.log('post', { userId, inputPinMsg });
-  return axios.post(`/ping/user/${userId}/`, inputPinMsg);
+  return axios.post<PingMessage>(`/ping/user/${userId}/`, inputPinMsg);
 };

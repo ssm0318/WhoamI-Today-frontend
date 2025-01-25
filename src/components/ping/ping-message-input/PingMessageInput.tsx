@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext, useMemo, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useContext, useMemo, useState } from 'react';
 import Icon from '@components/_common/icon/Icon';
 import { StyledTextInput } from '@components/ping/ping-message-input/PingMessageInput.styled';
 import { UserPageContext } from '@components/user-page/UserPage.context';
@@ -8,13 +8,17 @@ import {
   PING_MESSAGE_INPUT_HEIGHT,
 } from '@constants/layout';
 import { Layout } from '@design-system';
-import { InputPingMessage, PingEmojiDict, PingEmojiType } from '@models/ping';
+import { InputPingMessage, PingEmojiDict, PingEmojiType, PingMessage } from '@models/ping';
 import { postPingMessage } from '@utils/apis/ping';
 
 const MAX_LENGTH = 30;
 // const INPUT_HEIGHT = PING_MESSAGE_INPUT_HEIGHT - PADDING * 2;
 
-function PingMessageInput() {
+interface Props {
+  insertPing: (ping: PingMessage) => void;
+}
+
+function PingMessageInput({ insertPing }: Props) {
   const { user } = useContext(UserPageContext);
 
   const userId = useMemo(() => {
@@ -30,17 +34,24 @@ function PingMessageInput() {
     setMessageInput(e.target.value);
   };
 
+  const handleKeyDownInput = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleClickPost();
+    }
+  };
+
   const handleClickPost = () => {
     if (!userId) return;
     const inputData: InputPingMessage = { content: messageInput, emoji: selectedEmoji ?? '' };
     console.log('messageInput', inputData);
 
-    postPingMessage(userId, inputData);
-
-    // TODO: 내가 보낸 ping에 대한 응답값을 ping 리스트에 추가 && 스크롤 위치 이동
-
     setMessageInput('');
     setSelectedEmoji(undefined);
+    postPingMessage(userId, inputData).then(({ data: ping }) => {
+      console.log('post ping result', ping);
+      insertPing(ping);
+    });
   };
 
   const handleToggleAddEmoji = () => {
@@ -88,6 +99,7 @@ function PingMessageInput() {
             placeholder="Send Ping .."
             value={messageInput}
             onChange={handleChangeMessage}
+            onKeyDown={handleKeyDownInput}
           />
           <Icon name="question_send" size={17} onClick={handleClickPost} color="MEDIUM_GRAY" />
         </Layout.FlexRow>
