@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: react-app-prod
+    build:
+      context: .
+      target: production
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production 

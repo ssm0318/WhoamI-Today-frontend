@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: react-app-dev
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    command: yarn start 
