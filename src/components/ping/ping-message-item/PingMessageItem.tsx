@@ -13,7 +13,7 @@ function PingMessageItem({ message }: Props) {
   const { username } = useParams();
   const { sender, content, emoji, created_at, show_date } = message;
 
-  const isAuthor = sender.username === username;
+  const isAuthor = sender.username !== username;
   const date = new Date(created_at);
 
   return (
@@ -42,8 +42,8 @@ function PingMessageItem({ message }: Props) {
           bgColor={isAuthor ? 'LIGHT' : 'PRIMARY'}
           style={
             isAuthor
-              ? { borderRadius: '13px 13px 13px 0px' }
-              : { borderRadius: '13px 13px 0px 13px' }
+              ? { borderRadius: '13px 13px 0px 13px' }
+              : { borderRadius: '13px 13px 13px 0px' }
           }
         >
           {emoji && PingEmojiDict[emoji] && <Typo type="body-medium">{PingEmojiDict[emoji]}</Typo>}

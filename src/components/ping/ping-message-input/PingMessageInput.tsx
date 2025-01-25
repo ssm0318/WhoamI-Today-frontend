@@ -8,7 +8,7 @@ import {
   PING_MESSAGE_INPUT_HEIGHT,
 } from '@constants/layout';
 import { Layout } from '@design-system';
-import { PingEmojiDict, PingEmojiType } from '@models/ping';
+import { InputPingMessage, PingEmojiDict, PingEmojiType } from '@models/ping';
 import { postPingMessage } from '@utils/apis/ping';
 
 const MAX_LENGTH = 30;
@@ -31,10 +31,14 @@ function PingMessageInput() {
   };
 
   const handleClickPost = () => {
-    if (!messageInput || !userId) return;
-    console.log('messageInput', messageInput);
+    if (!userId) return;
+    const inputData: InputPingMessage = { content: messageInput, emoji: selectedEmoji ?? '' };
+    console.log('messageInput', inputData);
 
-    postPingMessage(userId, { content: messageInput, emoji: selectedEmoji ?? '' });
+    postPingMessage(userId, inputData);
+
+    // TODO: 내가 보낸 ping에 대한 응답값을 ping 리스트에 추가 && 스크롤 위치 이동
+
     setMessageInput('');
     setSelectedEmoji(undefined);
   };
