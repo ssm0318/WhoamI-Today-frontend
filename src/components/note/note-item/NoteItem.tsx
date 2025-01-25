@@ -61,6 +61,10 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
     navigate(`/users/${username}`);
   };
 
+  // useEffect(() => {
+  //   console.log('WHY', note, commentType);
+  // });
+
   return (
     <>
       <Layout.FlexCol
