@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
@@ -11,7 +11,6 @@ import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getAllFeed } from '@utils/apis/feed';
-import { getMyNotes } from '@utils/apis/my';
 import { MainScrollContainer } from 'src/routes/Root';
 
 function Friends() {
@@ -33,20 +32,11 @@ function Friends() {
     targetRef,
     data: notes,
     isLoading,
-    isLoadingMore: isNotesLoadingMore,
+    isLoadingMore,
     mutate: refetchFeed,
   } = useSWRInfiniteScroll<Note>({
-    // key: `/user/me/notes/`,
     key: `/user/feed/`,
   });
-
-  useEffect(() => {
-    console.log(isLoading, notes);
-
-    const data = getMyNotes(null);
-    const data2 = getAllFeed(null);
-    console.log(data, data2);
-  }, [isLoading, notes]);
 
   return (
     <MainScrollContainer scrollRef={scrollRef}>
@@ -62,7 +52,7 @@ function Friends() {
                 )),
               )}
               <div ref={targetRef} />
-              {isNotesLoadingMore && (
+              {isLoadingMore && (
                 <Layout.FlexRow w="100%" h={40}>
                   <Loader />
                 </Layout.FlexRow>

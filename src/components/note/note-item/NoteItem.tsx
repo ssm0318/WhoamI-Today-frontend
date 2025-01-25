@@ -49,10 +49,11 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
   const handleClickNote = () => {
     if (commentType === 'DETAIL') return;
 
-    if (!isMyPage) {
-      navigate(`./notes/${id}`);
-      return;
-    }
+    // if (!isMyPage) {
+    //   console.log('click');
+    //   navigate(`./notes/${id}`);
+    //   return;
+    // }
 
     return navigate(`/notes/${id}`);
   };
@@ -60,10 +61,6 @@ function NoteItem({ note, isMyPage, commentType = 'LIST', refresh }: NoteItemPro
   const navigateToProfile = () => {
     navigate(`/users/${username}`);
   };
-
-  // useEffect(() => {
-  //   console.log('WHY', note, commentType);
-  // });
 
   return (
     <>
