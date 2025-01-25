@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAlert';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
+import PostReactionItem from '@components/_common/post-reaction-item/PostReactionItem';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import ProfileImageList from '@components/_common/profile-image-list/ProfileImageList';
 import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import { Layout, Typo } from '@design-system';
@@ -147,7 +147,15 @@ function CommentItem({
           <Layout.FlexCol w={24}>
             {isCommentAuthor ? (
               <Layout.FlexRow onClick={handleClickLikes}>
-                <ProfileImageList images={like_user_sample.map((user) => user.profile_image)} />
+                {/* <ProfileImageList images={like_user_sample.map((user) => user.profile_image)} /> */}
+                {like_user_sample.map((user) => (
+                  <PostReactionItem
+                    key={user.username}
+                    imageUrl={user.profile_image}
+                    like
+                    emoji={null}
+                  />
+                ))}
               </Layout.FlexRow>
             ) : (
               <LikeButton postType="Comment" post={comment} iconSize={15} />
