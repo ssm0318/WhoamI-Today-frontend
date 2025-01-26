@@ -1,27 +1,25 @@
 # Base image
 FROM node:18-alpine as base
 WORKDIR /app
-COPY package*.json ./
+COPY package*.json yarn.lock ./
 
 # Development stage
 FROM base as development
 ENV NODE_ENV=development
-RUN npm install
+RUN yarn install
 COPY . .
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
+
+# Production build stage
+FROM base as builder
+# 빌드에 필요한 모든 dependencies 설치
+RUN yarn install
+COPY . .
+RUN yarn build
 
 # Production stage
-FROM base as production
-ENV NODE_ENV=production
-# 캐시 디렉토리 설정 및 정리를 한 번에 수행
-RUN npm ci --only=production && \
-    npm cache clean --force
-COPY . .
-RUN npm run build
-
-# Nginx stage
 FROM nginx:alpine
-COPY --from=production /app/build /usr/share/nginx/html
+COPY --from=builder /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 3000 
+EXPOSE 3000
