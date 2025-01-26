@@ -13,13 +13,18 @@ CMD ["yarn", "start"]
 
 # Production build stage
 FROM base AS builder
-# 빌드에 필요한 모든 dependencies 설치
 RUN yarn install
 COPY . .
 RUN yarn build
 
 # Production stage
 FROM nginx:alpine AS production
-COPY --from=builder /app/build /usr/share/nginx/html
+# SSL 인증서 파일을 위한 디렉토리 생성
+RUN mkdir -p /etc/nginx/ssl
+# Nginx 설정 복사
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 3000
+# 빌드된 파일 복사
+COPY --from=builder /app/build /usr/share/nginx/html
+# SSL 인증서 파일을 위한 볼륨 마운트 포인트
+VOLUME ["/etc/letsencrypt"]
+EXPOSE 80 443
