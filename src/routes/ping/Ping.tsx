@@ -24,7 +24,6 @@ function Ping() {
   }, [user.data, user.state]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
-  const initScrollRef = useRef<boolean>(false);
   const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
 
   const [pings, setPings] = useState<PingMessage[]>([]);
@@ -76,7 +75,6 @@ function Ping() {
     initFetchPingsAndScrollToUnreadMsg(userId);
   }, [initFetchPingsAndScrollToUnreadMsg, userId]);
 
-  // 가장 오래된 안읽은 메시지로 스크롤 이동
   useEffect(() => {
     if (!scrollRef.current) return;
     const el = oldestUnreadPingId ? document.getElementById(`ping_${oldestUnreadPingId}`) : null;
@@ -86,9 +84,7 @@ function Ping() {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
 
-    initScrollRef.current = true;
-
-    setPrevScrollHeight(scrollRef.current.scrollTop);
+    setPrevScrollHeight(scrollRef.current.scrollTop); // 가장 오래된 안읽은 메시지로 스크롤 이동
   }, [oldestUnreadPingId]);
 
   const refinedPings = useMemo((): RefinedPingMessage[] => {
@@ -110,7 +106,7 @@ function Ping() {
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextUrl && userId) {
-      setPrevScrollHeight(scrollRef.current?.scrollHeight);
+      setPrevScrollHeight(scrollRef.current?.scrollHeight); // infinite 스크롤시에 스크롤 위치 유지
       const { next, results } = await getPings(userId, nextUrl);
       setNextUrl(next);
       if (!results) return;
@@ -124,14 +120,9 @@ function Ping() {
   useEffect(() => {
     if (!scrollRef.current) return;
     if (prevScrollHeight) {
-      // infinite 스크롤시에 스크롤 위치 유지
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight;
       setPrevScrollHeight(undefined);
-      return;
     }
-
-    // 새 메시지 추가시 맨 아래로 스크롤 이동
-    scrollRef.current.scrollTop = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pings]);
@@ -146,7 +137,7 @@ function Ping() {
 
   const insertPing = (newPing: PostPingMessageRes) => {
     const { unread_count, ...rest } = newPing;
-    setPrevScrollHeight(undefined);
+    setPrevScrollHeight(scrollRef.current?.clientHeight); // 새 메시지 추가시 맨 아래로 스크롤 이동
     setPings((prev) => [...prev, rest]);
     setUnreadCount(unread_count);
   };
