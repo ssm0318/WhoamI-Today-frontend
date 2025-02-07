@@ -45,12 +45,10 @@ function PingMessageInput({ insertPing, scrollToBottom }: Props) {
   const handleClickPost = () => {
     if (!userId) return;
     const inputData: InputPingMessage = { content: messageInput, emoji: selectedEmoji ?? '' };
-    console.log('messageInput', inputData);
 
     setMessageInput('');
     setSelectedEmoji(undefined);
     postPingMessage(userId, inputData).then(({ data: ping }) => {
-      console.log('post ping result', ping);
       insertPing(ping);
       scrollToBottom();
     });
