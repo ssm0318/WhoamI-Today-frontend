@@ -12,7 +12,6 @@ import { InputPingMessage, PingEmojiDict, PingEmojiType, PostPingMessageRes } fr
 import { postPingMessage } from '@utils/apis/ping';
 
 const MAX_LENGTH = 30;
-// const INPUT_HEIGHT = PING_MESSAGE_INPUT_HEIGHT - PADDING * 2;
 
 interface Props {
   insertPing: (ping: PostPingMessageRes) => void;
