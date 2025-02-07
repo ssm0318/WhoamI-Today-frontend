@@ -24,18 +24,13 @@ function Ping() {
   }, [user.data, user.state]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const initScrollRef = useRef<boolean>(false);
+  const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
 
   const [pings, setPings] = useState<PingMessage[]>([]);
   const [nextUrl, setNextUrl] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [oldestUnreadPingId, setOldestUnreadPingId] = useState<number | undefined>();
-
-  const scrollToBottom = () => {
-    if (!scrollRef.current) return;
-    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  };
-
-  const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
 
   const initFetchPingsAndScrollToUnreadMsg = useCallback(
     async (_userId: number, autoScroll = true) => {
@@ -47,56 +42,49 @@ function Ping() {
         return;
       }
 
-      console.log({ oldestUnreadPage });
-
       let lastNextUrl = next;
-      // 첫 페이지 로드 후 UnreadPage까지 데이터 로드..!
+      // 첫 페이지 로드 후 oldestUnreadPage까지 데이터 로드
       const fetchPingsRecursively = async (
         page: string | null,
         accPings: PingMessage[],
       ): Promise<PingMessage[]> => {
         const pageNum = page ? page.split('page=')[1] : null;
-
-        console.log({ page, accPings });
         if (!pageNum || !oldestUnreadPage || Number(pageNum) > oldestUnreadPage) return accPings;
 
         const { next: _next, results: _results } = await getPings(_userId, page);
         lastNextUrl = _next;
         if (!_results) return accPings;
 
-        console.log('fetch!!!', { _next, _results });
         return fetchPingsRecursively(_next, [...[..._results].reverse(), ...accPings]);
       };
 
       const initPings = [...results].reverse();
       const p = await fetchPingsRecursively(next, initPings);
-      console.log(p);
       setPings(p);
       setNextUrl(lastNextUrl);
 
       if (!autoScroll) return;
 
       const oldestUnreadPing = p.find((ping) => !ping.is_read);
-      console.log('oldestUnreadPing', oldestUnreadPing, `ping_${oldestUnreadPing?.id}`);
       setOldestUnreadPingId(oldestUnreadPing?.id);
     },
     [],
   );
 
   useEffect(() => {
-    console.log('userId', userId);
     if (!userId) return;
-
     initFetchPingsAndScrollToUnreadMsg(userId);
   }, [initFetchPingsAndScrollToUnreadMsg, userId]);
 
-  const initScrollRef = useRef<boolean>(false);
+  const scrollToBottom = () => {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  };
 
   // 가장 오래된 안읽은 메시지로 스크롤 이동
   useEffect(() => {
     if (!scrollRef.current) return;
     const el = oldestUnreadPingId ? document.getElementById(`ping_${oldestUnreadPingId}`) : null;
-    console.log('el', el);
     if (el) {
       el.scrollIntoView({ block: 'center' });
     } else {
@@ -105,21 +93,8 @@ function Ping() {
 
     initScrollRef.current = true;
 
-    console.log('oldestUnreadPingId', {
-      oldestUnreadPingId,
-      scrollHeight: scrollRef.current.scrollHeight,
-      scrollTop: scrollRef.current.scrollTop,
-    });
     setPrevScrollHeight(scrollRef.current.scrollTop);
   }, [oldestUnreadPingId]);
-
-  const handleClickRefresh = () => {
-    if (!userId) return;
-
-    // FIXME: 현재 페이지네이션 정보를 유지한채로 안읽은 메시지가 있는 페이지까지 로드하도록 수정 해보자
-    initFetchPingsAndScrollToUnreadMsg(userId, false);
-    setUnreadCount(0);
-  };
 
   const refinedPings = useMemo((): RefinedPingMessage[] => {
     return pings.reduce<RefinedPingMessage[]>((acc, curr) => {
@@ -134,20 +109,13 @@ function Ping() {
     }, []);
   }, [pings]);
 
-  const insertPing = (newPing: PostPingMessageRes) => {
-    const { unread_count, ...rest } = newPing;
-    setPings((prev) => [...prev, rest]);
-    setUnreadCount(unread_count);
-  };
-
   useEffect(() => {
-    console.log('refinedPings', refinedPings);
+    console.debug('refinedPings', refinedPings);
   }, [refinedPings]);
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextUrl && userId) {
       setPrevScrollHeight(scrollRef.current?.scrollHeight);
-      console.log('infinite scroll', nextUrl);
       const { next, results } = await getPings(userId, nextUrl);
       setNextUrl(next);
       if (!results) return;
@@ -162,26 +130,28 @@ function Ping() {
   useEffect(() => {
     if (!scrollRef.current) return;
     if (prevScrollHeight) {
-      console.log('scroll to prev..', {
-        prevScrollHeight,
-        scrollHeight: scrollRef.current.scrollHeight,
-      });
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight;
       setPrevScrollHeight(undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pings]);
 
+  const handleClickRefresh = () => {
+    if (!userId) return;
+
+    // FIXME: 현재 페이지네이션 정보를 유지한채로 안읽은 메시지가 있는 페이지까지 로드하도록 수정 해보자
+    initFetchPingsAndScrollToUnreadMsg(userId, false);
+    setUnreadCount(0);
+  };
+
+  const insertPing = (newPing: PostPingMessageRes) => {
+    const { unread_count, ...rest } = newPing;
+    setPings((prev) => [...prev, rest]);
+    setUnreadCount(unread_count);
+  };
+
   return (
-    <MainScrollContainer
-      scrollRef={scrollRef}
-      onScroll={() =>
-        console.log('scroll', {
-          scrollTop: scrollRef.current?.scrollTop,
-          scrollHeight: scrollRef.current?.scrollHeight,
-        })
-      }
-    >
+    <MainScrollContainer scrollRef={scrollRef}>
       {/** title */}
       <SubHeader
         title={username}
