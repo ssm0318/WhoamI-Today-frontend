@@ -144,7 +144,7 @@ function Ping() {
         // )
       }
       {/** ping input */}
-      <PingMessageInput insertPing={insertPing} />
+      <PingMessageInput insertPing={insertPing} scrollToBottom={scrollToBottom} />
     </MainScrollContainer>
   );
 }

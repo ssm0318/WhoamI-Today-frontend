@@ -16,9 +16,10 @@ const MAX_LENGTH = 30;
 
 interface Props {
   insertPing: (ping: PostPingMessageRes) => void;
+  scrollToBottom: () => void;
 }
 
-function PingMessageInput({ insertPing }: Props) {
+function PingMessageInput({ insertPing, scrollToBottom }: Props) {
   const { user } = useContext(UserPageContext);
 
   const userId = useMemo(() => {
@@ -51,6 +52,7 @@ function PingMessageInput({ insertPing }: Props) {
     postPingMessage(userId, inputData).then(({ data: ping }) => {
       console.log('post ping result', ping);
       insertPing(ping);
+      scrollToBottom();
     });
   };
 
