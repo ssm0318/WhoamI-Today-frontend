@@ -16,10 +16,9 @@ const MAX_LENGTH = 30;
 
 interface Props {
   insertPing: (ping: PostPingMessageRes) => void;
-  scrollToBottom: () => void;
 }
 
-function PingMessageInput({ insertPing, scrollToBottom }: Props) {
+function PingMessageInput({ insertPing }: Props) {
   const { user } = useContext(UserPageContext);
 
   const userId = useMemo(() => {
@@ -50,7 +49,6 @@ function PingMessageInput({ insertPing, scrollToBottom }: Props) {
     setSelectedEmoji(undefined);
     postPingMessage(userId, inputData).then(({ data: ping }) => {
       insertPing(ping);
-      scrollToBottom();
     });
   };
 

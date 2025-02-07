@@ -76,11 +76,6 @@ function Ping() {
     initFetchPingsAndScrollToUnreadMsg(userId);
   }, [initFetchPingsAndScrollToUnreadMsg, userId]);
 
-  const scrollToBottom = () => {
-    if (!scrollRef.current) return;
-    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  };
-
   // 가장 오래된 안읽은 메시지로 스크롤 이동
   useEffect(() => {
     if (!scrollRef.current) return;
@@ -88,7 +83,7 @@ function Ping() {
     if (el) {
       el.scrollIntoView({ block: 'center' });
     } else {
-      scrollToBottom();
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
 
     initScrollRef.current = true;
@@ -126,13 +121,18 @@ function Ping() {
     setIsLoading(false);
   });
 
-  // infinite 스크롤시에 스크롤 위치 유지
   useEffect(() => {
     if (!scrollRef.current) return;
     if (prevScrollHeight) {
+      // infinite 스크롤시에 스크롤 위치 유지
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight;
       setPrevScrollHeight(undefined);
+      return;
     }
+
+    // 새 메시지 추가시 맨 아래로 스크롤 이동
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pings]);
 
@@ -146,6 +146,7 @@ function Ping() {
 
   const insertPing = (newPing: PostPingMessageRes) => {
     const { unread_count, ...rest } = newPing;
+    setPrevScrollHeight(undefined);
     setPings((prev) => [...prev, rest]);
     setUnreadCount(unread_count);
   };
@@ -173,7 +174,7 @@ function Ping() {
         </Layout.FlexCol>
       )}
       {/** ping input */}
-      <PingMessageInput insertPing={insertPing} scrollToBottom={scrollToBottom} />
+      <PingMessageInput insertPing={insertPing} />
     </MainScrollContainer>
   );
 }
