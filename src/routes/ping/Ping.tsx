@@ -2,12 +2,14 @@ import { isSameDay } from 'date-fns';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
+import { Loader } from '@components/_common/loader/Loader.styled';
 import PingMessageInput from '@components/ping/ping-message-input/PingMessageInput';
 import PingMessageItem from '@components/ping/ping-message-item/PingMessageItem';
 import SubHeader from '@components/sub-header/SubHeader';
 import { UserPageContext } from '@components/user-page/UserPage.context';
 import { PING_MESSAGE_INPUT_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { PingMessage, PostPingMessageRes, RefinedPingMessage } from '@models/ping';
 import { getPings } from '@utils/apis/ping';
 import { MainScrollContainer } from '../Root';
@@ -24,21 +26,30 @@ function Ping() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const [pings, setPings] = useState<PingMessage[]>([]);
+  const [nextUrl, setNextUrl] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState<number>(0);
+  const [oldestUnreadPingId, setOldestUnreadPingId] = useState<number | undefined>();
 
   const scrollToBottom = () => {
     if (!scrollRef.current) return;
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   };
 
+  const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
+
   const initFetchPingsAndScrollToUnreadMsg = useCallback(
     async (_userId: number, autoScroll = true) => {
       // 첫 페이지 로드
       const { oldest_unread_page: oldestUnreadPage, next, results } = await getPings(_userId);
-      if (!results) return;
+      if (!results) {
+        setNextUrl(next);
+        setPings([]);
+        return;
+      }
 
       console.log({ oldestUnreadPage });
 
+      let lastNextUrl = next;
       // 첫 페이지 로드 후 UnreadPage까지 데이터 로드..!
       const fetchPingsRecursively = async (
         page: string | null,
@@ -50,6 +61,7 @@ function Ping() {
         if (!pageNum || !oldestUnreadPage || Number(pageNum) > oldestUnreadPage) return accPings;
 
         const { next: _next, results: _results } = await getPings(_userId, page);
+        lastNextUrl = _next;
         if (!_results) return accPings;
 
         console.log('fetch!!!', { _next, _results });
@@ -60,18 +72,13 @@ function Ping() {
       const p = await fetchPingsRecursively(next, initPings);
       console.log(p);
       setPings(p);
+      setNextUrl(lastNextUrl);
 
-      // 가장 오래된 안읽은 메시지로 스크롤 이동
       if (!autoScroll) return;
+
       const oldestUnreadPing = p.find((ping) => !ping.is_read);
-      console.log('oldestUnreadPing', oldestUnreadPing);
-      const el = oldestUnreadPing ? document.getElementById(`ping_${oldestUnreadPing.id}`) : null;
-      console.log('el', el);
-      if (el) {
-        el.scrollIntoView({ block: 'center' });
-      } else {
-        scrollToBottom();
-      }
+      console.log('oldestUnreadPing', oldestUnreadPing, `ping_${oldestUnreadPing?.id}`);
+      setOldestUnreadPingId(oldestUnreadPing?.id);
     },
     [],
   );
@@ -82,6 +89,29 @@ function Ping() {
 
     initFetchPingsAndScrollToUnreadMsg(userId);
   }, [initFetchPingsAndScrollToUnreadMsg, userId]);
+
+  const initScrollRef = useRef<boolean>(false);
+
+  // 가장 오래된 안읽은 메시지로 스크롤 이동
+  useEffect(() => {
+    if (!scrollRef.current) return;
+    const el = oldestUnreadPingId ? document.getElementById(`ping_${oldestUnreadPingId}`) : null;
+    console.log('el', el);
+    if (el) {
+      el.scrollIntoView({ block: 'center' });
+    } else {
+      scrollToBottom();
+    }
+
+    initScrollRef.current = true;
+
+    console.log('oldestUnreadPingId', {
+      oldestUnreadPingId,
+      scrollHeight: scrollRef.current.scrollHeight,
+      scrollTop: scrollRef.current.scrollTop,
+    });
+    setPrevScrollHeight(scrollRef.current.scrollTop);
+  }, [oldestUnreadPingId]);
 
   const handleClickRefresh = () => {
     if (!userId) return;
@@ -114,8 +144,44 @@ function Ping() {
     console.log('refinedPings', refinedPings);
   }, [refinedPings]);
 
+  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
+    if (nextUrl && userId) {
+      setPrevScrollHeight(scrollRef.current?.scrollHeight);
+      console.log('infinite scroll', nextUrl);
+      const { next, results } = await getPings(userId, nextUrl);
+      setNextUrl(next);
+      if (!results) return;
+      setPings((prev) => [...[...results].reverse(), ...prev]);
+      setIsLoading(false);
+      return;
+    }
+    setIsLoading(false);
+  });
+
+  // infinite 스크롤시에 스크롤 위치 유지
+  useEffect(() => {
+    if (!scrollRef.current) return;
+    if (prevScrollHeight) {
+      console.log('scroll to prev..', {
+        prevScrollHeight,
+        scrollHeight: scrollRef.current.scrollHeight,
+      });
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight;
+      setPrevScrollHeight(undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pings]);
+
   return (
-    <MainScrollContainer scrollRef={scrollRef}>
+    <MainScrollContainer
+      scrollRef={scrollRef}
+      onScroll={() =>
+        console.log('scroll', {
+          scrollTop: scrollRef.current?.scrollTop,
+          scrollHeight: scrollRef.current?.scrollHeight,
+        })
+      }
+    >
       {/** title */}
       <SubHeader
         title={username}
@@ -126,23 +192,16 @@ function Ping() {
           </Layout.FlexRow>
         }
       />
-      {/** TODO: infinite scroll */}
-      {/* <div ref={targetRef} /> */}
       {/** ping list */}
-      {
-        // isLoading ? (
-        //   <Loader />
-        // ) : (
-        refinedPings.length > 0 && (
-          <Layout.FlexCol w="100%" gap={15} p={10} mb={PING_MESSAGE_INPUT_HEIGHT}>
-            {/* {isLoading && <Loader />} */}
-            {refinedPings.map((message) => {
-              return <PingMessageItem key={message.id} message={message} />;
-            })}
-          </Layout.FlexCol>
-        )
-        // )
-      }
+      {refinedPings.length > 0 && (
+        <Layout.FlexCol w="100%" gap={15} p={10} mb={PING_MESSAGE_INPUT_HEIGHT}>
+          <div ref={targetRef} />
+          {isLoading && <Loader />}
+          {refinedPings.map((message) => {
+            return <PingMessageItem key={message.id} message={message} />;
+          })}
+        </Layout.FlexCol>
+      )}
       {/** ping input */}
       <PingMessageInput insertPing={insertPing} scrollToBottom={scrollToBottom} />
     </MainScrollContainer>
