@@ -65,9 +65,7 @@ function Ping() {
       if (!autoScroll) return;
       const oldestUnreadPing = p.find((ping) => !ping.is_read);
       console.log('oldestUnreadPing', oldestUnreadPing);
-      if (!oldestUnreadPing) return;
-
-      const el = document.getElementById(`ping_${oldestUnreadPing.id}`);
+      const el = oldestUnreadPing ? document.getElementById(`ping_${oldestUnreadPing.id}`) : null;
       console.log('el', el);
       if (el) {
         el.scrollIntoView({ block: 'center' });
@@ -87,6 +85,8 @@ function Ping() {
 
   const handleClickRefresh = () => {
     if (!userId) return;
+
+    // FIXME: 현재 페이지네이션 정보를 유지한채로 안읽은 메시지가 있는 페이지까지 로드하도록 수정 해보자
     initFetchPingsAndScrollToUnreadMsg(userId, false);
     setUnreadCount(0);
   };
