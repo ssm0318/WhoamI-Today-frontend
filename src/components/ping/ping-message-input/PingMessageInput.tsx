@@ -8,14 +8,14 @@ import {
   PING_MESSAGE_INPUT_HEIGHT,
 } from '@constants/layout';
 import { Layout } from '@design-system';
-import { InputPingMessage, PingEmojiDict, PingEmojiType, PingMessage } from '@models/ping';
+import { InputPingMessage, PingEmojiDict, PingEmojiType, PostPingMessageRes } from '@models/ping';
 import { postPingMessage } from '@utils/apis/ping';
 
 const MAX_LENGTH = 30;
 // const INPUT_HEIGHT = PING_MESSAGE_INPUT_HEIGHT - PADDING * 2;
 
 interface Props {
-  insertPing: (ping: PingMessage) => void;
+  insertPing: (ping: PostPingMessageRes) => void;
 }
 
 function PingMessageInput({ insertPing }: Props) {

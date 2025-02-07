@@ -12,6 +12,10 @@ export interface PingMessage extends InputPingMessage {
   created_at: string;
 }
 
+export interface PostPingMessageRes extends PingMessage {
+  unread_count: number;
+}
+
 export interface RefinedPingMessage extends PingMessage {
   show_date?: boolean;
 }

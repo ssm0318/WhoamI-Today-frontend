@@ -1,5 +1,5 @@
 import { PaginationResponse } from '@models/api/common';
-import { InputPingMessage, PingMessage } from '@models/ping';
+import { InputPingMessage, PingMessage, PostPingMessageRes } from '@models/ping';
 import axios from '@utils/apis/axios';
 
 export const getPings = async (userId: number, page?: string | null) => {
@@ -15,5 +15,5 @@ export const getPings = async (userId: number, page?: string | null) => {
 
 export const postPingMessage = async (userId: number, inputPinMsg: InputPingMessage) => {
   console.log('post', { userId, inputPinMsg });
-  return axios.post<PingMessage>(`/ping/user/${userId}/`, inputPinMsg);
+  return axios.post<PostPingMessageRes>(`/ping/user/${userId}/`, inputPinMsg);
 };
