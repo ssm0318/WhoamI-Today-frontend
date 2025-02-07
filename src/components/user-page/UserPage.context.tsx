@@ -23,7 +23,6 @@ export function UserPageContextProvider({ children }: Props) {
   const [user, setUser] = useState<FetchState<UserProfile>>({ state: 'loading' });
 
   const updateUser = useCallback(async () => {
-    console.log('update User');
     if (!username) {
       setUser({ state: 'hasError' });
       return;
