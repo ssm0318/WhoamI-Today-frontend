@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import SubHeader from '@components/sub-header/SubHeader';
 import { Layout } from '@design-system';
@@ -8,12 +9,12 @@ interface UserHeaderProps {
 }
 
 function UserHeader({ username, onClickMore }: UserHeaderProps) {
-  // const handleClickChat = async () => {
-  //   if (!user) return;
-  //   const roomId = await getChatRoomIdByUserId(user.id);
-  //   if (!roomId) return;
-  //   navigate(`/chats/${roomId}`);
-  // };
+  const navigate = useNavigate();
+
+  const handleClickPing = async () => {
+    if (!username) return;
+    navigate('ping');
+  };
 
   const handleClickMore = () => {
     onClickMore();
@@ -25,8 +26,8 @@ function UserHeader({ username, onClickMore }: UserHeaderProps) {
       title={username}
       RightComponent={
         <Layout.FlexRow gap={8} alignItems="center">
-          {/* <Icon name="chat_outline" size={44} onClick={handleClickChat} /> */}
           <Icon name="dots_menu" size={44} onClick={handleClickMore} />
+          <Icon name="question_send" size={22} onClick={handleClickPing} />
         </Layout.FlexRow>
       }
     />

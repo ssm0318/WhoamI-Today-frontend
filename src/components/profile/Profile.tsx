@@ -36,10 +36,6 @@ function Profile({ user }: ProfileProps) {
 
   const reloadPage = () => window.location.reload();
 
-  const handleClickPing = () => {
-    navigate('ping');
-  };
-
   return (
     <Layout.FlexCol w="100%" gap={16}>
       <Layout.FlexRow w="100%" gap={8}>
@@ -56,13 +52,6 @@ function Profile({ user }: ProfileProps) {
                 {(isMyPage ? myProfile?.pronouns : friendData?.pronouns) &&
                   `(${isMyPage ? myProfile?.pronouns : friendData?.pronouns})`}
               </Typo>
-
-              {/** FIXME: 임시 ping button */}
-              {!isMyPage && (
-                <button type="button" onClick={handleClickPing}>
-                  Ping!
-                </button>
-              )}
             </Layout.FlexRow>
             {/* edit icon */}
             {isMyPage && (
