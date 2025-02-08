@@ -149,9 +149,15 @@ function Ping() {
       <SubHeader
         title={username}
         RightComponent={
-          <Layout.FlexRow>
+          <Layout.FlexRow w="100%" style={{ position: 'relative' }}>
             <Icon name="refresh" size={36} onClick={handleClickRefresh} />
-            <Typo type="label-medium">{unreadCount}</Typo>
+            {unreadCount > 0 && (
+              <Layout.Absolute bgColor="WARNING" rounded={12} t={4} r={13} ph={3} tl={['100%', 0]}>
+                <Typo type="label-small" color="WHITE">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </Typo>
+              </Layout.Absolute>
+            )}
           </Layout.FlexRow>
         }
       />
