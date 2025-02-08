@@ -29,7 +29,7 @@ function PingMessageInput({ insertPing }: Props) {
 
   const [messageInput, setMessageInput] = useState('');
   const [showEmojiList, setShowEmojiList] = useState(false);
-  const [selectedEmoji, setSelectedEmoji] = useState<PingEmojiType>();
+  const [selectedEmoji, setSelectedEmoji] = useState<PingEmojiType | undefined>();
 
   const handleChangeMessage = (e: ChangeEvent<HTMLInputElement>) => {
     setMessageInput(e.target.value);
@@ -58,7 +58,10 @@ function PingMessageInput({ insertPing }: Props) {
   };
 
   const handleClickEmoji = (emoji: string) => () => {
-    setSelectedEmoji(emoji as PingEmojiType);
+    setSelectedEmoji((prev) => {
+      if (prev === emoji) return undefined;
+      return emoji as PingEmojiType;
+    });
     setShowEmojiList(false);
   };
 
@@ -85,7 +88,7 @@ function PingMessageInput({ insertPing }: Props) {
         {/** emoji */}
         {selectedEmoji ? (
           <button type="button" onClick={handleToggleAddEmoji}>
-            <div>{PingEmojiDict[selectedEmoji]}</div>
+            <div style={{ fontSize: 22, width: 27 }}>{PingEmojiDict[selectedEmoji]}</div>
           </button>
         ) : (
           <Icon name="ping_emoji_add" size={27} onClick={handleToggleAddEmoji} />
@@ -104,11 +107,11 @@ function PingMessageInput({ insertPing }: Props) {
         </Layout.FlexRow>
       </Layout.FlexRow>
       {showEmojiList && (
-        <Layout.Absolute t={-20} l={14} bgColor="LIGHT" rounded={13} pv={4} ph={15}>
+        <Layout.Absolute t={-28} l={14} bgColor="LIGHT" rounded={13} pv={2} ph={15}>
           <Layout.FlexRow gap={7}>
             {Object.entries(PingEmojiDict).map(([key, value]) => (
               <button key={key} type="button" onClick={handleClickEmoji(key)}>
-                <span style={{ width: 20, height: 20 }}>{value}</span>
+                <div style={{ fontSize: 20 }}>{value}</div>
               </button>
             ))}
           </Layout.FlexRow>
