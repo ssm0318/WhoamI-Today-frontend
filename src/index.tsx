@@ -32,6 +32,7 @@ import { NoteDetail } from './routes/notes/NoteDetail';
 import Notifications from './routes/Notifications';
 import Reactions from './routes/Reactions';
 import ReceivedPrompts from './routes/ReceivedPrompts';
+import ResearchIntro from './routes/ResearchIntro';
 import AllResponses from './routes/responses/AllResponses';
 import NewResponse from './routes/responses/NewResponse';
 import ResponseDetail from './routes/responses/ResponseDetail';
@@ -52,6 +53,8 @@ import UserPage from './routes/UserPage';
 const router = createBrowserRouter([
   // intro route
   { path: '', element: <Intro />, loader: checkIfSignIn },
+  // research intro route (for research)
+  { path: 'research-intro', element: <ResearchIntro /> },
   {
     // authorized routes
     path: '/',

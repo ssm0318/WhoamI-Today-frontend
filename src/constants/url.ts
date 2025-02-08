@@ -12,3 +12,6 @@ export const DEFAULT_REDIRECTION_PATH = '/friends';
 export const AFTER_SIGNUP_PATH = '/my';
 
 export const INVITATION_LINK = 'https://whoamitoday.page.link/invite-friend';
+
+// FIXME: 추후 제대로 된 폼 url로 변경 (현재는 mock URL)
+export const RESEARCH_SIGNUP_FORM_URL = 'https://forms.gle/234567890';

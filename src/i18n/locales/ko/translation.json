@@ -7,6 +7,12 @@
     "sign_in": "로그인",
     "sign_up": "회원가입"
   },
+  "research_intro": {
+    "title": "WhoAmI Today 연구 소개",
+    "description": "-description-",
+    "has_account": "이미 계정이 있어요",
+    "has_not_account": "계정이 없어요"
+  },
   "sign_in": {
     "username_or_email": "사용자 이름 또는 이메일",
     "password": "비밀번호",

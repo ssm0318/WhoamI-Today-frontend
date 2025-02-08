@@ -7,6 +7,12 @@
     "sign_in": "Sign In",
     "sign_up": "Sign Up"
   },
+  "research_intro": {
+    "title": "WhoAmI Today Research Introduction",
+    "description": "-description-",
+    "has_account": "Already have an account?",
+    "has_not_account": "Don't have an account?"
+  },
   "sign_in": {
     "username_or_email": "Username or Email",
     "password": "Password",
