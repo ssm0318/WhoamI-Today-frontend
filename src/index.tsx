@@ -25,7 +25,6 @@ import EditFriends from './routes/friends/EditFriends';
 import ExploreFriends from './routes/friends/ExploreFriends';
 import Friends from './routes/friends/Friends';
 import Intro from './routes/Intro';
-import Likes from './routes/Likes';
 import My from './routes/My';
 import AllNotes from './routes/notes/AllNotes';
 import NewNote from './routes/notes/NewNote';
@@ -140,10 +139,6 @@ const router = createBrowserRouter([
           { path: ':noteId/reactions', element: <Reactions /> },
           { path: 'new', element: <NewNote /> },
         ],
-      },
-      {
-        path: 'comments',
-        children: [{ path: ':commentId/likes', element: <Likes /> }],
       },
       {
         path: 'responses',
