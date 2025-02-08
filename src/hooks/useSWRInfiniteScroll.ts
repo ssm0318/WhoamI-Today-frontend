@@ -15,6 +15,7 @@ interface Props {
 
 export function useSWRInfiniteScroll<T>({ key }: Props) {
   const getKey = (pageIndex: number, previousPageData: PaginationResponse<T[]>) => {
+    if (!key) return null;
     if (previousPageData && !previousPageData.next) return null; // 끝에 도달
 
     const [pathname, search] = key.split('?');

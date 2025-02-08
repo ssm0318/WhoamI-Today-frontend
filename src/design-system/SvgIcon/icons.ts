@@ -107,6 +107,10 @@ const green_dot = 'green_dot';
 const chat_notification_mute = 'chat_notification_mute';
 const search_black = 'search_black';
 
+// Pings
+const refresh = 'refresh';
+const ping_emoji_add = 'ping_emoji_add';
+
 // Note
 const delete_image = 'delete_image';
 
@@ -225,6 +229,7 @@ export {
   noti_icon_public_comment,
   notification,
   notification_mute,
+  ping_emoji_add,
   private_comment,
   private_comment_active,
   private_comment_inactive,
@@ -233,6 +238,7 @@ export {
   question_send,
   questions_active,
   questions_inactive,
+  refresh,
   search,
   search_black,
   sent_by,
