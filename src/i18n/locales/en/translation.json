@@ -487,7 +487,8 @@
       "invite": {
         "title": "WhoAmI Today Invitation Link",
         "text": "Invite friends on WhoAmI Today",
-        "copy": "Invitation link copied to clipboard."
+        "copy": "Invitation link copied to clipboard.",
+        "message": "I'm inviting you to WhoAmI Today! 🎉\n\nWhen signing up, make sure to copy and paste my username below!\n\nInvitation link: {{invitation_link}}\nUsername: {{username}}"
       },
       "tab": {
         "requests": "Requests",

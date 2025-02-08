@@ -10,3 +10,5 @@ export const LEARN_MORE_ABOUT_WHOAMI_TODAY_NOTION_URL =
 
 export const DEFAULT_REDIRECTION_PATH = '/friends';
 export const AFTER_SIGNUP_PATH = '/my';
+
+export const INVITATION_LINK = 'https://whoamitoday.page.link/invite-friend';
