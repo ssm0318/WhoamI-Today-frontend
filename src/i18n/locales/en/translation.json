@@ -287,6 +287,9 @@
     "see_translation": "See translation",
     "see_original": "See original"
   },
+  "ping": {
+    "input_placeholder": "Send Ping .."
+  },
   "settings": {
     "title": "Settings",
     "account_settings": "Account Settings",
@@ -360,10 +363,10 @@
       "day": "{{count}}d",
       "week": "{{count}}w"
     },
-    "AM" : "AM",
-    "PM" : "PM",
-    "day" : {
-      "long" : {
+    "AM": "AM",
+    "PM": "PM",
+    "day": {
+      "long": {
         "0": "Sunday",
         "1": "Monday",
         "2": "Tuesday",
@@ -372,7 +375,7 @@
         "5": "Friday",
         "6": "Saturday"
       },
-      "short" : {
+      "short": {
         "0": "Sun",
         "1": "Mon",
         "2": "Tue",

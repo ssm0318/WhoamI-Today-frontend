@@ -1,4 +1,5 @@
 import { ChangeEvent, KeyboardEvent, useContext, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Icon from '@components/_common/icon/Icon';
 import { StyledTextInput } from '@components/ping/ping-message-input/PingMessageInput.styled';
 import { UserPageContext } from '@components/user-page/UserPage.context';
@@ -18,6 +19,7 @@ interface Props {
 }
 
 function PingMessageInput({ insertPing }: Props) {
+  const [t] = useTranslation('translation', { keyPrefix: 'ping' });
   const { user } = useContext(UserPageContext);
 
   const userId = useMemo(() => {
@@ -93,7 +95,7 @@ function PingMessageInput({ insertPing }: Props) {
           <StyledTextInput
             type="text"
             maxLength={MAX_LENGTH}
-            placeholder="Send Ping .."
+            placeholder={t('input_placeholder') || ''}
             value={messageInput}
             onChange={handleChangeMessage}
             onKeyDown={handleKeyDownInput}
