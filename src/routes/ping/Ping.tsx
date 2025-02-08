@@ -91,6 +91,7 @@ function Ping() {
     return pings.reduce<RefinedPingMessage[]>((acc, curr) => {
       const last = acc[acc.length - 1];
 
+      // 메시지를 작성한 날짜 별로 구분할 수 있는 정보 추가
       if (!last || !isSameDay(new Date(last.created_at), new Date(curr.created_at))) {
         acc.push({ ...curr, show_date: true });
       } else {
@@ -120,10 +121,10 @@ function Ping() {
   useEffect(() => {
     if (!scrollRef.current) return;
     if (prevScrollHeight) {
+      // 저장된 이전 위치를 기준으로 스크롤 위치 유지
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight;
       setPrevScrollHeight(undefined);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pings]);
 
