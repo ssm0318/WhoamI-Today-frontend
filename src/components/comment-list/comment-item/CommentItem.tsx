@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAlert';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
-import LikesPopup from '@components/_common/likes-popup/LikesPopup';
 import PostReactionItem from '@components/_common/post-reaction-item/PostReactionItem';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
@@ -15,6 +14,7 @@ import { Comment, PrivateComment } from '@models/post';
 import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
+import CommentLikesPopup from '../comment-likes-popup/CommentLikesPopup';
 
 interface CommentItemProps {
   isPostAuthor?: boolean;
@@ -194,7 +194,7 @@ function CommentItem({
         />
       </Layout.FlexCol>
       {comment.id && (
-        <LikesPopup
+        <CommentLikesPopup
           isOpen={isLikesModalOpen}
           onClose={handleCloseLikesModal}
           commentId={comment.id}

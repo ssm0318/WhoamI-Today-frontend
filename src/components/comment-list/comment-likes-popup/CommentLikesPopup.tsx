@@ -9,14 +9,14 @@ import { PaginationResponse } from '@models/api/common';
 import { Like } from '@models/post';
 import { getCommentLikes } from '@utils/apis/comments';
 
-interface LikesPopupProps {
+interface CommentLikesPopupProps {
   isOpen: boolean;
   onClose: () => void;
   commentId: number;
   onClickUser: (username: string) => void;
 }
 
-function LikesPopup({ isOpen, onClose, commentId, onClickUser }: LikesPopupProps) {
+function CommentLikesPopup({ isOpen, onClose, commentId, onClickUser }: CommentLikesPopupProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'likes' });
   const [reactions, setReactions] = useState<Like[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
@@ -84,4 +84,4 @@ function LikesPopup({ isOpen, onClose, commentId, onClickUser }: LikesPopupProps
   );
 }
 
-export default LikesPopup;
+export default CommentLikesPopup;
