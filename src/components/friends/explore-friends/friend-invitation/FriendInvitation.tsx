@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import ToastMessage from '@components/_common/toast-message/ToastMessage';
 import { INVITATION_LINK } from '@constants/url';
 import { Font, Layout, SvgIcon, Typo } from '@design-system';
-import i18n from '@i18n/index';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import { decodeHTMLEntities } from '@utils/urlHelpers';
@@ -16,24 +15,27 @@ export default function FriendInvitation() {
   const [showToast, setShowToast] = useState(false);
 
   const handleClickLinkShare = () => {
-    const title = i18n.t('friends.explore_friends.invite.title') ?? '';
-    const message = decodeHTMLEntities(
-      t('message', {
-        username: myProfile?.username,
-        invitation_link: INVITATION_LINK,
-      }),
-    );
-
     // desktop 에서는 클립보드에 복사
     if (!isMobile || !navigator.share) {
+      const message = decodeHTMLEntities(
+        t('desktop_message', {
+          username: myProfile?.username,
+          invitation_link: INVITATION_LINK,
+        }),
+      );
       navigator.clipboard.writeText(message);
       setShowToast(true);
       return;
     }
 
     // mobile 에서는 공유하기
+    const message = decodeHTMLEntities(
+      t('mobile_message', {
+        username: myProfile?.username,
+      }),
+    );
     navigator.share({
-      title,
+      title: t('mobile_message_title') || '',
       text: message,
       url: INVITATION_LINK,
     });
