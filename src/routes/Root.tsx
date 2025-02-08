@@ -12,6 +12,8 @@ import { Layout } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useFcm from '@hooks/useFcm';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { MainWrapper, RootContainer } from '@styles/wrappers';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 
@@ -32,6 +34,12 @@ function Root() {
       value: document.cookie,
     });
   }, [postMessage]);
+
+  const { featureFlags } = useBoundStore(UserSelector);
+
+  useEffect(() => {
+    console.debug(`featureFlags`, featureFlags);
+  }, [featureFlags]);
 
   return (
     <SWRConfig value={{ provider: () => new Map() }}>

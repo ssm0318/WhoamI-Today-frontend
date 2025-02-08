@@ -58,6 +58,7 @@ export const checkIfSignIn = async () => {
     const user = await getMe();
     const currentTimezone = await syncTimeZone(user?.timezone);
     useBoundStore.getState().setMyProfile({ ...user, timezone: currentTimezone });
+    useBoundStore.getState().setFeatureFlags();
     return user;
   } catch {
     resetBoundStores();

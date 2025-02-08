@@ -1,5 +1,6 @@
+import { FEATURE_FLAG_MAP_COLLECTION, FeatureFlagMap } from '@constants/featureFlag';
 import { FetchState } from '@models/api/common';
-import { MyProfile } from '@models/api/user';
+import { MyProfile, VersionType } from '@models/api/user';
 import { User } from '@models/user';
 import { getFriendList } from '@utils/apis/user';
 import { sliceResetFns } from './resetSlices';
@@ -9,6 +10,7 @@ interface UserState {
   myProfile: MyProfile | undefined;
   friendList: FetchState<User[]>;
   fcmToken: string | undefined;
+  featureFlags: FeatureFlagMap | undefined;
 }
 
 interface UserAction {
@@ -18,6 +20,7 @@ interface UserAction {
   getFriendList: () => void;
   isUserAuthor: (authorId: number) => boolean;
   setFcmToken: (token: string) => void;
+  setFeatureFlags: () => void;
 }
 
 export type UserSlice = UserState & UserAction;
@@ -26,6 +29,7 @@ const initialState: UserState = {
   myProfile: undefined,
   friendList: { state: 'loading' },
   fcmToken: undefined,
+  featureFlags: undefined,
 };
 
 export const createUserSlice: SliceStateCreator<UserSlice> = (set, get) => {
@@ -56,11 +60,23 @@ export const createUserSlice: SliceStateCreator<UserSlice> = (set, get) => {
     },
     isUserAuthor: (authorId) => get().myProfile?.id === authorId,
     setFcmToken: (fcmToken) => set(() => ({ fcmToken }), false, 'user/setFcmToken'),
+    setFeatureFlags: () => {
+      const currVersion = get().myProfile?.current_ver;
+
+      console.debug('currVersion', currVersion);
+      if (!currVersion) return;
+
+      const featureFlags =
+        FEATURE_FLAG_MAP_COLLECTION[currVersion] ??
+        FEATURE_FLAG_MAP_COLLECTION[VersionType.DEFAULT];
+      set(() => ({ featureFlags }), false, 'user/setFeatureFlags');
+    },
   };
 };
 
 export const UserSelector = (state: BoundState) => ({
   myProfile: state.myProfile,
   friendList: state.friendList,
+  featureFlags: state.featureFlags,
   getFriendList: state.getFriendList,
 });
