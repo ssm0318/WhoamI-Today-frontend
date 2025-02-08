@@ -100,6 +100,11 @@ export type UsernameValidateErrorType =
 
 export type DayOfWeek = '0' | '1' | '2' | '3' | '4' | '5' | '6'; // 0 = Sunday, 1 = Monday, etc.
 
+export enum VersionType {
+  DEFAULT = 'default',
+  EXPERIMENT = 'experiment',
+}
+
 export interface MyProfile extends User {
   email: string;
   date_of_birth: string | null;
@@ -116,6 +121,7 @@ export interface MyProfile extends User {
   unread_noti: boolean;
   timezone?: string;
   check_in?: MyCheckIn;
+  current_ver: VersionType;
 }
 
 export interface FriendRequest {
