@@ -144,7 +144,9 @@ function NewResponse() {
         {question.state === 'hasValue' && (
           <>
             <TextArea
-              placeholder={t('question.response.what_is_your_response') || ''}
+              placeholder={`${t('question.response.what_is_your_response')}\n\n${t(
+                'question.response.content_restriction',
+              )}`}
               value={newResponse || ''}
               onChange={handleChangeResponse}
             />

@@ -17,7 +17,6 @@ interface NoteInformationProps {
 
 function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
-  const PLACE_HOLDER = t('whats_on_your_mind');
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
   const [isEditVisible, setIsEditVisible] = useState(false);
@@ -87,7 +86,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
         </Layout.FlexRow>
         <NoteInput
           value={noteInfo.content}
-          placeholder={PLACE_HOLDER}
+          placeholder={`${t('whats_on_your_mind')}\n\n${t('content_restriction')}`}
           onChange={handleChangeInput}
         />
         <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
