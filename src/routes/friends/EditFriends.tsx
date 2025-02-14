@@ -11,7 +11,7 @@ import { Layout, Typo } from '@design-system';
 import { useFetchFavoriteFriends } from '@hooks/useFetchFavoriteFriends';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
 import { UpdatedProfile } from '@models/api/friends';
-import { addFriendToFavorite, deleteFavorite, hideFriend, unHideFriend } from '@utils/apis/friends';
+import { hideFriend, unHideFriend } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
 import { StyledFriendItemWrapper } from 'src/routes/friends/EditFriends.styled';
 import { MainScrollContainer } from 'src/routes/Root';
@@ -25,23 +25,6 @@ function EditFriends() {
 
   const [showTemporalErrorAlert, setShowTemporalErrorAlert] = useState(false);
   const handleOnCloseTemporalErrorAlert = () => setShowTemporalErrorAlert(false);
-
-  const handleToggleFavorite = (item: UpdatedProfile, is_favorite: boolean) => async () => {
-    const { id: userId } = item;
-    try {
-      if (is_favorite) {
-        updateFriendList({ item, type: 'is_favorite', value: false });
-        updateFavoriteFriendList({ item, type: 'is_favorite', value: false });
-        await deleteFavorite(userId);
-      } else {
-        updateFriendList({ item, type: 'is_favorite', value: true });
-        updateFavoriteFriendList({ item, type: 'is_favorite', value: true });
-        await addFriendToFavorite(userId);
-      }
-    } catch {
-      setShowTemporalErrorAlert(true);
-    }
-  };
 
   const handleToggleHide = (item: UpdatedProfile, is_hidden: boolean) => async () => {
     const { id: userId } = item;
@@ -93,27 +76,10 @@ function EditFriends() {
           <>
             {allFriends.map(({ results }) =>
               results?.map((friend) => {
-                const { username, profile_image, is_hidden, is_favorite } = friend;
+                const { username, profile_image, is_hidden } = friend;
                 return (
                   <StyledFriendItemWrapper key={username}>
                     <Layout.FlexRow gap={8}>
-                      {is_hidden ? (
-                        <Icon
-                          name="star_outline"
-                          size={20}
-                          padding={12}
-                          color="MEDIUM_GRAY"
-                          disabled
-                        />
-                      ) : (
-                        <Icon
-                          name={is_favorite ? 'star' : 'star_outline'}
-                          size={20}
-                          padding={12}
-                          color="NO_STATUS_CHIP"
-                          onClick={handleToggleFavorite(friend, is_favorite)}
-                        />
-                      )}
                       <Layout.FlexRow gap={8} alignItems="center">
                         <ProfileImage imageUrl={profile_image} username={username} size={44} />
                         <Typo ellipsis={{ enabled: true, maxWidth: 150 }} type="title-small">
