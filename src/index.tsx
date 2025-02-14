@@ -18,6 +18,7 @@ import AllQuestions from './routes/AllQuestions';
 import Chats from './routes/Chats';
 import CheckInEdit from './routes/check-in/CheckInEdit';
 import { EditChats } from './routes/edit-chats/EditChats';
+import Feeds from './routes/feeds/Feeds';
 import ForgotPassword from './routes/ForgotPassword';
 import EditFriends from './routes/friends/EditFriends';
 import ExploreFriends from './routes/friends/ExploreFriends';
@@ -69,16 +70,15 @@ const router = createBrowserRouter([
         path: 'my',
         children: [
           { path: '', element: <My /> },
+          { path: 'friends/list', element: <Friends /> },
+          { path: 'friends/explore', element: <ExploreFriends /> },
+          { path: 'friends/edit', element: <EditFriends /> },
           { path: 'responses', element: <AllResponses from="my" /> },
         ],
       },
       {
         path: 'friends',
-        children: [
-          { path: '', element: <Friends /> },
-          { path: 'explore', element: <ExploreFriends /> },
-          { path: 'edit', element: <EditFriends /> },
-        ],
+        children: [{ path: '', element: <Feeds /> }],
       },
       {
         path: 'questions',

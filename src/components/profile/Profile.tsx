@@ -27,6 +27,10 @@ function Profile({ user }: ProfileProps) {
     return navigate('/settings/edit-profile');
   };
 
+  const handleClickFriendList = () => {
+    return navigate('/my/friends/list');
+  };
+
   useAsyncEffect(async () => {
     if (isMyPage || !username) return;
     const friend = await getUserProfile(username);
@@ -64,6 +68,9 @@ function Profile({ user }: ProfileProps) {
             )}
           </Layout.FlexRow>
           {/* bio */}
+          <button type="button" onClick={handleClickFriendList}>
+            Friend List
+          </button>
           {user?.bio && (
             <Typo type="body-medium" numberOfLines={3}>
               {user.bio}

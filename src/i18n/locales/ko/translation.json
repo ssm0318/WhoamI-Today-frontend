@@ -512,6 +512,9 @@
       "title": "친구 목록 편집",
       "save": "저장"
     },
+    "list_friends": {
+      "title": "친구 목록"
+    },
     "updated_profiles": "업데이트한 프로필",
     "friend_requests": "친구 요청",
     "friend_requests_desc": "친구 요청 및 추천 친구 보기",
