@@ -17,7 +17,6 @@ interface MenuItem {
 const BOTTOM_SHEET_LIST: MenuItem[] = [
   { key: 'check-in', path: '/check-in/edit', icon: 'bottomsheet_checkin' },
   { key: 'note', path: '/notes/new', icon: 'bottomsheet_note' },
-  { key: 'prompts', path: '/check-in/prompt', icon: 'bottomsheet_prompt' },
 ];
 
 interface Props {
