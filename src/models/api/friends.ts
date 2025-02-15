@@ -21,6 +21,7 @@ export interface UpdatedProfile extends User {
   unread_cnt: number;
   track_id?: string;
   description: string;
+  unread_ping_count: number;
 }
 
 export type GetAllFriendsResponse = PaginationResponse<UpdatedProfile[]>;

@@ -1,3 +1,4 @@
+import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -19,8 +20,16 @@ interface Props {
 }
 
 function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }: Props) {
-  const { id, profile_image, username, is_favorite, current_user_read, track_id, description } =
-    user;
+  const {
+    id,
+    profile_image,
+    username,
+    is_favorite,
+    current_user_read,
+    unread_ping_count,
+    track_id,
+    description,
+  } = user;
 
   const navigate = useNavigate();
   const handleClickProfile = () => {
@@ -53,6 +62,11 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
       updateFavoriteFriendList();
       updateFriendList({ type: 'break_friends', item: user });
     });
+  };
+
+  const handleClickPing = (e: MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/users/${username}/ping`);
   };
 
   return (
@@ -117,7 +131,32 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
               </Layout.FlexCol>
             </Layout.FlexRow>
           </StyledProfileArea>
-          {track_id && <SpotifyMusic track={track_id} sharer={user} useDetailBottomSheet />}
+          <Layout.FlexRow
+            w="100%"
+            style={{ position: 'relative' }}
+            justifyContent="flex-end"
+            alignItems="center"
+            gap={2}
+          >
+            {track_id && <SpotifyMusic track={track_id} sharer={user} useDetailBottomSheet />}
+            <Icon name="question_send" size={24} onClick={handleClickPing} />
+            {unread_ping_count > 0 && (
+              <Layout.Absolute
+                bgColor="BLACK"
+                alignItems="center"
+                rounded={10}
+                t={-3}
+                r={9}
+                ph={3}
+                pv={1}
+                tl={['100%', 0]}
+              >
+                <Typo type="label-small" color="WHITE" fontSize={7} fontWeight={700}>
+                  {unread_ping_count > 99 ? '99+' : unread_ping_count}
+                </Typo>
+              </Layout.Absolute>
+            )}
+          </Layout.FlexRow>
         </StyledUpdatedFriendItem>
       </Layout.FlexRow>
     </SwipeLayout>

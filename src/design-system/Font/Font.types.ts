@@ -10,6 +10,7 @@ export enum FontWeight {
 }
 
 export enum TypoWeight {
+  BOLD = 700,
   MEDIUM = 500,
   REGULAR = 400,
 }
