@@ -487,9 +487,11 @@
         "more_results": "MORE RESULTS"
       },
       "invite": {
-        "title": "WhoAmI Today Invitation Link",
         "text": "Invite friends on WhoAmI Today",
-        "copy": "Invitation link copied to clipboard."
+        "copy": "Invitation link copied to clipboard.",
+        "desktop_message": "I'm inviting you to WhoAmI Today! 🎉\n\nWhen signing up, make sure to copy and paste my username below!\n\nInvitation link: {{invitation_link}}\nMy username: {{username}}",
+        "mobile_message_title": "I'm inviting you to WhoAmI Today! 🎉\n",
+        "mobile_message": "\nWhen signing up, make sure to copy and paste my username below!\n\nMy username: {{username}}"
       },
       "tab": {
         "requests": "Requests",

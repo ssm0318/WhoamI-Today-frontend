@@ -1,26 +1,42 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ToastMessage from '@components/_common/toast-message/ToastMessage';
+import { INVITATION_LINK } from '@constants/url';
 import { Font, Layout, SvgIcon, Typo } from '@design-system';
-import i18n from '@i18n/index';
+import { useBoundStore } from '@stores/useBoundStore';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
-
-const INVITATION_LINK = 'https://whoamitoday.page.link/invite';
+import { decodeHTMLEntities } from '@utils/urlHelpers';
 
 export default function FriendInvitation() {
+  const myProfile = useBoundStore((state) => state.myProfile);
+
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.invite' });
   const { isMobile } = getMobileDeviceInfo();
   const [showToast, setShowToast] = useState(false);
 
   const handleClickLinkShare = () => {
+    // desktop 에서는 클립보드에 복사
     if (!isMobile || !navigator.share) {
-      navigator.clipboard.writeText(INVITATION_LINK);
+      const message = decodeHTMLEntities(
+        t('desktop_message', {
+          username: myProfile?.username,
+          invitation_link: INVITATION_LINK,
+        }),
+      );
+      navigator.clipboard.writeText(message);
       setShowToast(true);
       return;
     }
+
+    // mobile 에서는 공유하기
+    const message = decodeHTMLEntities(
+      t('mobile_message', {
+        username: myProfile?.username,
+      }),
+    );
     navigator.share({
-      title: i18n.t('friends.explore_friends.invite.title') ?? '',
-      text: i18n.t('friends.explore_friends.invite.text') ?? '',
+      title: t('mobile_message_title') || '',
+      text: message,
       url: INVITATION_LINK,
     });
   };
