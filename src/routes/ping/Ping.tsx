@@ -80,11 +80,10 @@ function Ping() {
     const el = oldestUnreadPingId ? document.getElementById(`ping_${oldestUnreadPingId}`) : null;
     if (el) {
       el.scrollIntoView({ block: 'center' });
+      setPrevScrollHeight(scrollRef.current.scrollTop); // 가장 오래된 안읽은 메시지로 스크롤 이동
     } else {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      setPrevScrollHeight(scrollRef.current?.clientHeight); // 맨 아래로 스크롤 이동
     }
-
-    setPrevScrollHeight(scrollRef.current.scrollTop); // 가장 오래된 안읽은 메시지로 스크롤 이동
   }, [oldestUnreadPingId]);
 
   const refinedPings = useMemo((): RefinedPingMessage[] => {
