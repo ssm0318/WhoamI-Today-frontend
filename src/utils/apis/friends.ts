@@ -1,5 +1,9 @@
 import { PaginationResponse } from '@models/api/common';
-import { GetFriendsTodayResponse, GetUpdatedProfileResponse } from '@models/api/friends';
+import {
+  Connection,
+  GetFriendsTodayResponse,
+  GetUpdatedProfileResponse,
+} from '@models/api/friends';
 import axios from '@utils/apis/axios';
 import { filterHiddenFriends } from '@utils/filterHiddenFriends';
 
@@ -66,4 +70,13 @@ export const hideFriend = async (userId: number) => {
 
 export const unHideFriend = async (userId: number) => {
   await axios.delete(`/user/friends/${userId}/hidden/`);
+};
+
+interface ChangeConnectionOptions {
+  choice: Connection;
+  update_past_posts: boolean;
+}
+
+export const changeConnection = async (userId: number, options: ChangeConnectionOptions) => {
+  await axios.patch<ChangeConnectionOptions>(`/user/connections/${userId}/`, options);
 };

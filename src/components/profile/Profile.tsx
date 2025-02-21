@@ -4,9 +4,11 @@ import FriendStatus from '@components/_common/friend-status/FriendStatus';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { Connection } from '@models/api/friends';
 import { MyProfile } from '@models/api/user';
 import { areFriends, isMyProfile, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { changeConnection } from '@utils/apis/friends';
 import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
@@ -36,6 +38,22 @@ function Profile({ user }: ProfileProps) {
 
   const reloadPage = () => window.location.reload();
 
+  const handleClickPing = () => {
+    navigate('ping');
+  };
+
+  const handleClickChangeConnection = async () => {
+    if (!user || isMyProfile(user) || !areFriends(user)) return;
+
+    await changeConnection(user.id, {
+      choice:
+        user.connection_status === Connection.FRIEND ? Connection.CLOSE_FRIEND : Connection.FRIEND,
+      update_past_posts: false,
+    });
+
+    window.location.reload();
+  };
+
   return (
     <Layout.FlexCol w="100%" gap={16}>
       <Layout.FlexRow w="100%" gap={8}>
@@ -52,6 +70,20 @@ function Profile({ user }: ProfileProps) {
                 {(isMyPage ? myProfile?.pronouns : friendData?.pronouns) &&
                   `(${isMyPage ? myProfile?.pronouns : friendData?.pronouns})`}
               </Typo>
+
+              {/** FIXME: 임시 ping button */}
+              {!isMyPage && (
+                <button type="button" onClick={handleClickPing}>
+                  Ping!
+                </button>
+              )}
+
+              {/** FIXME: 디자인 수정 */}
+              {user && !isMyProfile(user) && areFriends(user) && (
+                <Layout.FlexRow onClick={handleClickChangeConnection}>
+                  {user.connection_status}
+                </Layout.FlexRow>
+              )}
             </Layout.FlexRow>
             {/* edit icon */}
             {isMyPage && (

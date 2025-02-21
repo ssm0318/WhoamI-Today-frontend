@@ -1,3 +1,4 @@
+import { Connection } from '@models/api/friends';
 import { MyProfile } from './api/user';
 import { CheckInBase } from './checkIn';
 
@@ -18,6 +19,7 @@ export interface UserProfile extends User {
   check_in: CheckInBase;
   mutuals: User[];
   is_favorite: boolean;
+  connection_status: Connection | null;
 }
 
 export const areFriends = (user: User | UserProfile): user is UserProfile =>
