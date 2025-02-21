@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import FriendStatus from '@components/_common/friend-status/FriendStatus';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { Connection } from '@models/api/friends';
 import { MyProfile } from '@models/api/user';
 import { areFriends, isMyProfile, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -16,6 +19,8 @@ interface ProfileProps {
 }
 
 function Profile({ user }: ProfileProps) {
+  const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
+
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const isMyPage = user?.id === myProfile?.id;
   const [friendData, setFriendData] = useState<UserProfile | null>(null);
@@ -36,6 +41,16 @@ function Profile({ user }: ProfileProps) {
 
   const reloadPage = () => window.location.reload();
 
+  const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
+
+  const closeEditConnectionsModal = () => setShowEditConnectionsModal(false);
+
+  const handleClickChangeConnection = async () => {
+    if (!user || isMyProfile(user) || !areFriends(user)) return;
+
+    setShowEditConnectionsModal(true);
+  };
+
   return (
     <Layout.FlexCol w="100%" gap={16}>
       <Layout.FlexRow w="100%" gap={8}>
@@ -52,6 +67,33 @@ function Profile({ user }: ProfileProps) {
                 {(isMyPage ? myProfile?.pronouns : friendData?.pronouns) &&
                   `(${isMyPage ? myProfile?.pronouns : friendData?.pronouns})`}
               </Typo>
+              {/** connections */}
+              {user && !isMyProfile(user) && areFriends(user) && (
+                <>
+                  {/** FIXME: 디자인 수정 */}
+                  {user.connection_status && (
+                    <Layout.FlexRow
+                      onClick={handleClickChangeConnection}
+                      bgColor="SECONDARY"
+                      p={4}
+                      rounded={8}
+                    >
+                      <Typo type="label-small" color="DARK_GRAY">
+                        {user.connection_status === Connection.FRIEND
+                          ? t('connection.friend')
+                          : t('connection.close_friend')}{' '}
+                      </Typo>
+                    </Layout.FlexRow>
+                  )}
+                  {showEditConnectionsModal && (
+                    <EditConnectionsBottomSheet
+                      user={user}
+                      visible={showEditConnectionsModal}
+                      closeBottomSheet={closeEditConnectionsModal}
+                    />
+                  )}
+                </>
+              )}
             </Layout.FlexRow>
             {/* edit icon */}
             {isMyPage && (

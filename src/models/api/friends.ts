@@ -26,3 +26,8 @@ export interface UpdatedProfile extends User {
 
 export type GetAllFriendsResponse = PaginationResponse<UpdatedProfile[]>;
 export type GetFavoriteFriendsResponse = PaginationResponse<UpdatedProfile[]>;
+
+export enum Connection {
+  FRIEND = 'friend',
+  CLOSE_FRIEND = 'close_friend',
+}
