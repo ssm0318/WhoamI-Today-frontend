@@ -2,13 +2,12 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import FriendStatus from '@components/_common/friend-status/FriendStatus';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { Connection } from '@models/api/friends';
 import { MyProfile } from '@models/api/user';
 import { areFriends, isMyProfile, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
-import { changeConnection } from '@utils/apis/friends';
 import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
@@ -42,16 +41,14 @@ function Profile({ user }: ProfileProps) {
     navigate('ping');
   };
 
+  const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
+
+  const closeEditConnectionsModal = () => setShowEditConnectionsModal(false);
+
   const handleClickChangeConnection = async () => {
     if (!user || isMyProfile(user) || !areFriends(user)) return;
 
-    await changeConnection(user.id, {
-      choice:
-        user.connection_status === Connection.FRIEND ? Connection.CLOSE_FRIEND : Connection.FRIEND,
-      update_past_posts: false,
-    });
-
-    window.location.reload();
+    setShowEditConnectionsModal(true);
   };
 
   return (
@@ -78,11 +75,21 @@ function Profile({ user }: ProfileProps) {
                 </button>
               )}
 
-              {/** FIXME: 디자인 수정 */}
+              {/** connections */}
               {user && !isMyProfile(user) && areFriends(user) && (
-                <Layout.FlexRow onClick={handleClickChangeConnection}>
-                  {user.connection_status}
-                </Layout.FlexRow>
+                <>
+                  {/** FIXME: 디자인 수정 */}
+                  <Layout.FlexRow onClick={handleClickChangeConnection}>
+                    {user.connection_status}
+                  </Layout.FlexRow>
+                  {showEditConnectionsModal && (
+                    <EditConnectionsBottomSheet
+                      user={user}
+                      visible={showEditConnectionsModal}
+                      closeBottomSheet={closeEditConnectionsModal}
+                    />
+                  )}
+                </>
               )}
             </Layout.FlexRow>
             {/* edit icon */}
