@@ -1,5 +1,6 @@
 import { ChangeEvent, useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import { UserPageContext } from '@components/user-page/UserPage.context';
@@ -16,6 +17,7 @@ interface Props {
 }
 
 function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) {
+  const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
   const { updateUser } = useContext(UserPageContext);
 
   const [connection, setConnection] = useState<Connection>(
@@ -35,7 +37,7 @@ function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) 
 
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
-  const handleConfirmSave = () => {
+  const handleClickEdit = () => {
     changeConnection(user.id, {
       choice: connection,
       update_past_posts: isUpdatePastPosts,
@@ -43,58 +45,52 @@ function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) 
       .then(() => {
         closeBottomSheet();
         updateUser();
-        openToast({ message: 'Connection status updated' });
+        openToast({ message: t('edit_connections.toast.success') });
       })
       .catch(() => {
         closeBottomSheet();
-        openToast({ message: 'Failed to update connection status' });
+        openToast({ message: t('edit_connections.toast.error') });
       });
   };
 
   return createPortal(
     <BottomModal visible={visible} onClose={closeBottomSheet}>
-      <Layout.FlexCol
-        justifyContent="space-between"
-        alignItems="center"
-        w="100%"
-        p={10}
-        gap={4}
-        bgColor="WHITE"
-      >
-        <Layout.FlexRow>
-          <Typo type="title-large">Edit Connections</Typo>
+      <Layout.FlexCol justifyContent="space-between" w="100%" p={10} gap={4} bgColor="WHITE">
+        <Layout.FlexRow justifyContent="center" w="100%">
+          <Typo type="title-large">{t('edit_connections.title')}</Typo>
         </Layout.FlexRow>
         <Divider width={1} />
-        <Layout.FlexCol pv={10} gap={10}>
-          <Layout.FlexRow gap={3}>
-            <Typo type="label-large">Change to: </Typo>
-
-            <label htmlFor={Connection.FRIEND}>
-              {Connection.FRIEND}
-              <input
-                type="radio"
-                name="connections"
-                id={Connection.FRIEND}
-                value={Connection.FRIEND}
-                checked={connection === Connection.FRIEND}
-                onChange={handleChangeConnection}
-              />
-            </label>
-            <label htmlFor={Connection.CLOSE_FRIEND}>
-              {Connection.CLOSE_FRIEND}
-              <input
-                type="radio"
-                name="connections"
-                id={Connection.CLOSE_FRIEND}
-                value={Connection.CLOSE_FRIEND}
-                checked={connection === Connection.CLOSE_FRIEND}
-                onChange={handleChangeConnection}
-              />
-            </label>
-          </Layout.FlexRow>
+        <Layout.FlexCol pv={10} gap={10} w="100%">
+          <Layout.FlexCol gap={3} w="100%" bgColor="LIGHT" p={10} rounded={12}>
+            <Typo type="title-small">{t('edit_connections.choice')}</Typo>
+            <Layout.FlexRow justifyContent="center" w="100%" gap={10} alignItems="center">
+              <label htmlFor={Connection.FRIEND}>
+                <input
+                  type="radio"
+                  name="connections"
+                  id={Connection.FRIEND}
+                  value={Connection.FRIEND}
+                  checked={connection === Connection.FRIEND}
+                  onChange={handleChangeConnection}
+                />
+                <Typo type="title-small">{t('connection.friend')}</Typo>
+              </label>
+              <label htmlFor={Connection.CLOSE_FRIEND}>
+                <input
+                  type="radio"
+                  name="connections"
+                  id={Connection.CLOSE_FRIEND}
+                  value={Connection.CLOSE_FRIEND}
+                  checked={connection === Connection.CLOSE_FRIEND}
+                  onChange={handleChangeConnection}
+                />
+                <Typo type="title-small">{t('connection.close_friend')}</Typo>
+              </label>
+            </Layout.FlexRow>
+          </Layout.FlexCol>
           <Layout.FlexRow>
             <CheckBox
-              name="update past posts"
+              name={t('edit_connections.check_box') || ''}
               onChange={handleChangeCheckBox}
               checked={isUpdatePastPosts}
             />
@@ -102,10 +98,10 @@ function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) 
         </Layout.FlexCol>
 
         <Button.Confirm
-          text="Save"
+          text={t('edit_connections.save')}
           status={isChanged ? 'normal' : 'disabled'}
           sizing="stretch"
-          onClick={handleConfirmSave}
+          onClick={handleClickEdit}
         />
       </Layout.FlexCol>
     </BottomModal>,

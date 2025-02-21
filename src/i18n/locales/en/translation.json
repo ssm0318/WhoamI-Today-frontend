@@ -208,6 +208,20 @@
     },
     "check_in": {
       "checked_in_time": "Checked in {{time}}"
+    },
+    "connection": {
+      "friend": "friend",
+      "close_friend": "close friend"
+    },
+    "edit_connection": {
+      "title": "Edit Connections",
+      "choice": "Select the connection you want to change below.",
+      "save": "Save",
+      "check_box": "update connections to past posts",
+      "toast": {
+        "success": "Connections updated successfully 🎉",
+        "error": "An error has occurred temporarily. Please try again later."
+      }
     }
   },
   "notes": {

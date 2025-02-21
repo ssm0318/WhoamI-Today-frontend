@@ -205,6 +205,20 @@
     },
     "check_in": {
       "checked_in_time": "{{time}}에 체크인"
+    },
+    "connection": {
+      "friend": "친구",
+      "close_friend": "친한 친구"
+    },
+    "edit_connections": {
+      "title": "친구 관계 변경",
+      "choice": "변경할 관계를 선택하세요.",
+      "save": "저장",
+      "check_box": "이전 게시글들에 대해서도 일괄 적용",
+      "toast": {
+        "success": "친구 관계가 변경되었습니다.",
+        "error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+      }
     }
   },
   "notes": {
