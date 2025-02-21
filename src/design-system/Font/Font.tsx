@@ -3,7 +3,7 @@ import { ColorKeys } from '../colors';
 import { Margin } from '../layouts';
 import { BodySettings, DisplaySettings, FontStyle } from './Font.constants';
 import * as S from './Font.styled';
-import { BodyType, DisplayType, FontType } from './Font.types';
+import { BodyType, DisplayType, FontAttrs, FontType } from './Font.types';
 
 /**
  * @deprecated use Typo
@@ -50,7 +50,8 @@ export type TextPropsBase = {
 
 export type TypoProps = {
   type: FontType;
-} & TypoPropBase;
+} & TypoPropBase &
+  Partial<FontAttrs>;
 
 export type TypoPropBase = TextPropsBase & {
   /**

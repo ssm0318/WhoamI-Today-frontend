@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import { Layout, Typo } from '@design-system';
@@ -17,13 +18,9 @@ function FavoriteFriendItem({ user }: Props) {
     navigate(`/users/${username}`);
   };
 
-  // const handleClickChat = async (e: MouseEvent) => {
-  //   e.stopPropagation();
-
-  //   const roomId = await getChatRoomIdByUserId(id);
-  //   if (!roomId) return;
-  //   navigate(`/chats/${roomId}`);
-  // };
+  const handleClickPing = () => {
+    navigate(`/users/${username}/ping`);
+  };
 
   return (
     <Layout.FlexCol alignItems="center" gap={12} style={{ width: '113px' }}>
@@ -31,9 +28,9 @@ function FavoriteFriendItem({ user }: Props) {
         <button type="button" onClick={handleClickProfile}>
           <ProfileImage imageUrl={profile_image} username={username} size={83} />
         </button>
-        {/* <Layout.Absolute rounded={100} bgColor="PRIMARY" p={10} t={-8} r={-19}>
-          <Icon name="friend_updates_chat" size={28} onClick={handleClickChat} fill="WHITE" />
-        </Layout.Absolute> */}
+        <Layout.Absolute rounded={100} bgColor="PRIMARY" p={10} t={-8} r={-19}>
+          <Icon name="favorite_ping" size={28} onClick={handleClickPing} fill="WHITE" />
+        </Layout.Absolute>
       </Layout.FlexRow>
       <Layout.FlexRow gap={5} justifyContent="center" alignItems="center">
         <Typo type="label-large" color="DARK" ellipsis={{ enabled: true, maxWidth: 120 }}>

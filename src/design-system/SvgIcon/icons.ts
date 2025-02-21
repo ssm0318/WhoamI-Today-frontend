@@ -110,6 +110,7 @@ const search_black = 'search_black';
 // Pings
 const refresh = 'refresh';
 const ping_emoji_add = 'ping_emoji_add';
+const favorite_ping = 'favorite_ping';
 
 // Note
 const delete_image = 'delete_image';
@@ -196,6 +197,7 @@ export {
   expand_close,
   expand_open,
   favorite_false,
+  favorite_ping,
   favorite_true,
   friend_requests,
   friend_updates_chat,
