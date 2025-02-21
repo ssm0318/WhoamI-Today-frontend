@@ -41,10 +41,6 @@ function Profile({ user }: ProfileProps) {
 
   const reloadPage = () => window.location.reload();
 
-  const handleClickPing = () => {
-    navigate('ping');
-  };
-
   const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
 
   const closeEditConnectionsModal = () => setShowEditConnectionsModal(false);
@@ -71,7 +67,6 @@ function Profile({ user }: ProfileProps) {
                 {(isMyPage ? myProfile?.pronouns : friendData?.pronouns) &&
                   `(${isMyPage ? myProfile?.pronouns : friendData?.pronouns})`}
               </Typo>
-
               {/** connections */}
               {user && !isMyProfile(user) && areFriends(user) && (
                 <>
@@ -99,15 +94,7 @@ function Profile({ user }: ProfileProps) {
                   )}
                 </>
               )}
-
-              {/** FIXME: 임시 ping button */}
-              {!isMyPage && (
-                <button type="button" onClick={handleClickPing}>
-                  Ping!
-                </button>
-              )}
             </Layout.FlexRow>
-
             {/* edit icon */}
             {isMyPage && (
               <SvgIcon
