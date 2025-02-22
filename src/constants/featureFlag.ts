@@ -14,12 +14,14 @@ export type FeatureFlagMapCollection = {
   [version in VersionType]: FeatureFlagMap;
 };
 
+// 메인버전
 const DEFAULT_FLAGS = {
   [FeatureFlagKey.FRIEND_FEED]: true,
   [FeatureFlagKey.FRIEND_LIST]: false,
   [FeatureFlagKey.FRIEND_REQUEST_TYPE]: false,
 };
 
+// 디폴트버전
 export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
   [VersionType.DEFAULT]: { ...DEFAULT_FLAGS },
   [VersionType.EXPERIMENT]: {

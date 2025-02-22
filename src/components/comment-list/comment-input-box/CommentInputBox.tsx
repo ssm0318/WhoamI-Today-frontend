@@ -13,13 +13,14 @@ import { useIsVirtualKeyboardOpenInIOS } from '@components/comment-list/comment-
 import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
 import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { postComment } from '@utils/apis/comments';
 import * as S from './CommentInputBox.styled';
 
 interface CommentInputBoxProps {
   isReply?: boolean;
   replyTo?: Comment | null;
-  isPrivate: boolean;
+  isPrivate?: boolean;
   setIsPrivate?: () => void;
   resetReplyTo?: () => void;
   resetCommentTo: () => void;
@@ -50,6 +51,7 @@ function CommentInputBox({
   setReload,
 }: CommentInputBoxProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const myProfile = useBoundStore((state) => state.myProfile);
   const [content, setContent] = useState('');
@@ -66,19 +68,18 @@ function CommentInputBox({
   }, [inputFocus, commentRef, inputFocusDuration, setInputFocus]);
 
   useEffect(() => {
+    if (!featureFlags?.privateComment) return;
     initialIsPrivateRef.current = isPrivate;
-  }, [isPrivate]);
+  }, [isPrivate, featureFlags?.privateComment]);
 
   useEffect(() => {
-    if (isReply) {
-      setInitialIsPrivate(initialIsPrivateRef.current);
-    }
-  }, [isReply, replyTo]);
+    if (!featureFlags?.privateComment || !isReply) return;
+    setInitialIsPrivate(initialIsPrivateRef.current);
+  }, [isReply, replyTo, featureFlags?.privateComment]);
 
   const handleCheckboxChange = () => {
-    if (!initialIsPrivate) {
-      setIsPrivate?.();
-    }
+    if (!featureFlags?.privateComment || initialIsPrivate) return;
+    setIsPrivate?.();
   };
 
   const commentTargetAuthor =
@@ -162,18 +163,20 @@ function CommentInputBox({
   return (
     <S.CommentInputWrapper gap={10} w="100%" pv={12} ph={16} bgColor="WHITE">
       {/* isPrivate */}
-      <Layout.FlexRow gap={4} alignItems="center">
-        <CheckBox
-          name={t('private_comment') || ''}
-          onChange={handleCheckboxChange}
-          checked={isPrivate}
-          disabled={initialIsPrivate}
-        />
-        <SvgIcon
-          name={isPrivate ? 'private_comment_active' : 'private_comment_inactive'}
-          size={17}
-        />
-      </Layout.FlexRow>
+      {featureFlags?.privateComment && (
+        <Layout.FlexRow gap={4} alignItems="center">
+          <CheckBox
+            name={t('private_comment') || ''}
+            onChange={handleCheckboxChange}
+            checked={isPrivate}
+            disabled={initialIsPrivate}
+          />
+          <SvgIcon
+            name={isPrivate ? 'private_comment_active' : 'private_comment_inactive'}
+            size={17}
+          />
+        </Layout.FlexRow>
+      )}
       <Layout.FlexRow w="100%" alignItems="flex-end" justifyContent="space-between">
         {myProfile && <ProfileImage imageUrl={myProfile.profile_image} size={36} />}
         <Layout.FlexCol w="100%" ml={4} mr={8} outline="LIGHT_GRAY" rounded={18}>
