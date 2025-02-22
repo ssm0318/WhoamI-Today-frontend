@@ -7,6 +7,7 @@ import useCommentList from '@hooks/useCommentList';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import CommentInputBox from './comment-input-box/CommentInputBox';
 import CommentItem from './comment-item/CommentItem';
 import { StyledCommentListFooter } from './CommentList.styled';
@@ -21,6 +22,7 @@ interface CommentListProps {
 
 function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: CommentListProps) {
   const footerRef = useRef<HTMLDivElement>(null);
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
@@ -49,7 +51,9 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
               onClickReplyBtn={() => {
                 setInputFocus(true);
                 setReplyTo(comment);
-                setIsPrivate(comment.is_private);
+                if (featureFlags?.privateComment) {
+                  setIsPrivate(comment.is_private);
+                }
                 setCommentTo(comment);
                 setCommentToType('Comment');
               }}
@@ -65,10 +69,10 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
             postType={commentToType}
             inputFocus={inputFocus}
             setInputFocus={setInputFocus}
-            isPrivate={isPrivate}
-            setIsPrivate={() => {
-              setIsPrivate((prev) => !prev);
-            }}
+            {...(featureFlags?.privateComment && {
+              isPrivate,
+              setIsPrivate: () => setIsPrivate((prev) => !prev),
+            })}
             isReply={!!replyTo}
             replyTo={replyTo}
             resetReplyTo={() => {

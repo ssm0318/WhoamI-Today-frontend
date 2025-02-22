@@ -4,7 +4,7 @@ import axios from './axios';
 
 interface PostCommentProps extends CommonTarget {
   content: string;
-  is_private: boolean;
+  is_private?: boolean;
 }
 
 export const postComment = async (postInfo: PostCommentProps) => {
