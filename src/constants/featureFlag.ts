@@ -5,6 +5,10 @@ export enum FeatureFlagKey {
   FRIEND_FEED = 'friendFeed',
   /** 친구탭 페이지에서 전체 친구 목록을 노출하는 플래그 */
   FRIEND_LIST = 'friendList',
+  /** 비밀댓글 플래그 */
+  PRIVATE_COMMENT = 'privateComment',
+  /** 일반댓글 플래그 */
+  PUBLIC_COMMENT = 'publicComment',
 }
 
 export type FeatureFlagMap = { [feature in FeatureFlagKey]: boolean };
@@ -12,16 +16,22 @@ export type FeatureFlagMapCollection = {
   [version in VersionType]: FeatureFlagMap;
 };
 
+// 메인버전
 const DEFAULT_FLAGS = {
-  [FeatureFlagKey.FRIEND_FEED]: true,
-  [FeatureFlagKey.FRIEND_LIST]: false,
+  [FeatureFlagKey.FRIEND_FEED]: false,
+  [FeatureFlagKey.FRIEND_LIST]: true,
+  [FeatureFlagKey.PUBLIC_COMMENT]: false,
+  [FeatureFlagKey.PRIVATE_COMMENT]: true,
 };
 
+// 디폴트버전
 export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
   [VersionType.DEFAULT]: { ...DEFAULT_FLAGS },
   [VersionType.EXPERIMENT]: {
     ...DEFAULT_FLAGS,
-    [FeatureFlagKey.FRIEND_FEED]: false,
-    [FeatureFlagKey.FRIEND_LIST]: true,
+    [FeatureFlagKey.FRIEND_FEED]: true,
+    [FeatureFlagKey.FRIEND_LIST]: false,
+    [FeatureFlagKey.PUBLIC_COMMENT]: true,
+    [FeatureFlagKey.PRIVATE_COMMENT]: false,
   },
 };
