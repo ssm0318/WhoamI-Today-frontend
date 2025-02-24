@@ -54,7 +54,7 @@ export const addForegroundMessageEventListener = (messaging: Messaging) => {
     const options = {
       body: i18n.language === 'ko' ? message_ko : message_en,
       tag,
-      icon: 'https://whoami.gina-park.site/whoami192.png',
+      icon: 'https://whoami-test-group.gina-park.site/whoami192.png', // TODO: 배포 후 변경
       data: {
         url,
       },
