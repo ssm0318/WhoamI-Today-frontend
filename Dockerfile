@@ -2,23 +2,24 @@
 FROM node:18-alpine AS base
 WORKDIR /app
 COPY package*.json yarn.lock ./
+RUN yarn install
 
 # Development stage
 FROM base AS development
 ENV NODE_ENV=development
-RUN yarn install
 COPY . .
 EXPOSE 3000
 CMD ["yarn", "start"]
 
 # Production build stage
 FROM base AS builder
-RUN yarn install
+ENV NODE_ENV=production
 COPY . .
 RUN yarn build
 
 # Production stage
 FROM nginx:alpine AS production
+
 # SSL 인증서 파일을 위한 디렉토리 생성
 RUN mkdir -p /etc/nginx/ssl
 
