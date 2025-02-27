@@ -43,7 +43,7 @@ function Root() {
 
   return (
     <SWRConfig value={{ provider: () => new Map() }}>
-      <Layout.FlexRow justifyContent="center" bgColor="BLACK" w="100%">
+      <Layout.FlexRow justifyContent="center" bgColor="WHITE" w="100%">
         <RootContainer w="100%" bgColor="WHITE" id="root-container">
           <Header />
           <Outlet />
