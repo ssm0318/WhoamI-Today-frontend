@@ -495,9 +495,9 @@
       "invite": {
         "text": "WhoAmI Today에 친구를 초대해보세요.",
         "copy": "초대 링크를 클립보드에 복사했습니다.",
-        "desktop_message": "WhoAmI Today에 초대할게! 🎉\n\n가입할 때 아래 내 이름을 꼭 복사해서 붙여넣어 줘!\n\n초대 링크: {{invitation_link}}\n내 이름: {{username}}",
-        "mobile_message_title": "WhoAmI Today에 초대할게! 🎉\n",
-        "mobile_message": "\n가입할 때 아래 내 이름을 꼭 복사해서 붙여넣어 줘!\n\n내 이름: {{username}}"
+        "desktop_message": "WhoAmI Today에 초대할게! 🎉\n\n가입할 때 아래 내 이름을 꼭 복사해서 붙여넣어 줘!\n\n초대 링크: {{invitation_link}}\n\n내 이름: {{username}}",
+        "mobile_message_title": "WhoAmI Today에 초대할게! 🎉",
+        "mobile_message": "가입할 때 아래 내 이름을 꼭 복사해서 붙여넣어 줘!\n\n초대 링크: {{invitation_link}}\n\n내 이름: {{username}}"
       },
       "tab": {
         "requests": "친구 요청",
