@@ -103,12 +103,7 @@ function PingMessageInput({ insertPing }: Props) {
             onChange={handleChangeMessage}
             onKeyDown={handleKeyDownInput}
           />
-          <Icon
-            name="question_send"
-            size={22}
-            onClick={handleClickPost}
-            color={messageInput || selectedEmoji ? 'BLACK' : 'DARK'}
-          />
+          <Icon name="question_send" size={20} onClick={handleClickPost} color="BLACK" />
         </Layout.FlexRow>
       </Layout.FlexRow>
       {showEmojiList && (
