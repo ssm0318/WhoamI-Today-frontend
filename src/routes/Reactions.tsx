@@ -68,7 +68,7 @@ function Reactions() {
                 {emoji ? (
                   <EmojiItem emojiString={emoji || ''} size={20} />
                 ) : (
-                  <SvgIcon name="noti_icon_like" size={24} />
+                  <SvgIcon name="noti_icon_like" size={20} />
                 )}
               </Layout.FlexRow>
             </Layout.FlexRow>
