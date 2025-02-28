@@ -213,7 +213,7 @@
       "friend": "friend",
       "close_friend": "close friend"
     },
-    "edit_connection": {
+    "edit_connections": {
       "title": "Edit Connections",
       "choice": "Select the connection you want to change below.",
       "save": "Save",
