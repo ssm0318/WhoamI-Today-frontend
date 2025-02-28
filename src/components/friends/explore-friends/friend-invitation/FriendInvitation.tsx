@@ -29,15 +29,24 @@ export default function FriendInvitation() {
     }
 
     // mobile 에서는 공유하기
-    const message = decodeHTMLEntities(
-      t('mobile_message', {
-        username: myProfile?.username,
-      }),
-    );
+    // webview의 경우는 title이 포함된 message를 보내야 함
+    const message = window.ReactNativeWebView
+      ? decodeHTMLEntities(
+          `${t('mobile_message_title')}\n\n${t('mobile_message', {
+            username: myProfile?.username,
+            invitation_link: INVITATION_LINK,
+          })}`,
+        )
+      : decodeHTMLEntities(
+          t('mobile_message', {
+            username: myProfile?.username,
+            invitation_link: INVITATION_LINK,
+          }),
+        );
+
     navigator.share({
       title: t('mobile_message_title') || '',
       text: message,
-      url: INVITATION_LINK,
     });
   };
 
