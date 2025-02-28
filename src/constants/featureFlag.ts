@@ -18,8 +18,11 @@ export type FeatureFlagMapCollection = {
 
 // 메인버전
 const DEFAULT_FLAGS = {
-  [FeatureFlagKey.FRIEND_FEED]: false,
-  [FeatureFlagKey.FRIEND_LIST]: true,
+  // for temporal testing default feed
+  [FeatureFlagKey.FRIEND_LIST]: false,
+  [FeatureFlagKey.FRIEND_FEED]: true,
+  // [FeatureFlagKey.FRIEND_FEED]: false,
+  // [FeatureFlagKey.FRIEND_LIST]: true,
   [FeatureFlagKey.PUBLIC_COMMENT]: false,
   [FeatureFlagKey.PRIVATE_COMMENT]: true,
 };

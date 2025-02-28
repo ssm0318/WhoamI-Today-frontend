@@ -51,7 +51,7 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
               onClickReplyBtn={() => {
                 setInputFocus(true);
                 setReplyTo(comment);
-                if (featureFlags?.privateComment) {
+                if (featureFlags?.friendList) {
                   setIsPrivate(comment.is_private);
                 }
                 setCommentTo(comment);
@@ -69,7 +69,7 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
             postType={commentToType}
             inputFocus={inputFocus}
             setInputFocus={setInputFocus}
-            {...(featureFlags?.privateComment && {
+            {...(featureFlags?.friendList && {
               isPrivate,
               setIsPrivate: () => setIsPrivate((prev) => !prev),
             })}
