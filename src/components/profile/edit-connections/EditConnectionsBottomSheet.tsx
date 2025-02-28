@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
@@ -53,6 +53,13 @@ function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) 
       });
   };
 
+  useEffect(() => {
+    // FRIEND 관계일 때 이전 게시글 업데이트 체크박스 비활성화
+    if (connection === Connection.FRIEND) {
+      setIsUpdatePastPosts(false);
+    }
+  }, [connection]);
+
   return createPortal(
     <BottomModal visible={visible} onClose={closeBottomSheet}>
       <Layout.FlexCol justifyContent="space-between" w="100%" p={10} gap={4} bgColor="WHITE">
@@ -93,6 +100,7 @@ function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) 
               name={t('edit_connections.check_box') || ''}
               onChange={handleChangeCheckBox}
               checked={isUpdatePastPosts}
+              disabled={connection === Connection.FRIEND}
             />
           </Layout.FlexRow>
         </Layout.FlexCol>
