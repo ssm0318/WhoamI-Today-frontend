@@ -41,11 +41,11 @@ function PingMessageItem({ message }: Props) {
           justifyContent="center"
           gap={10}
           bgColor={isAuthor ? 'LIGHT' : is_read ? 'PRIMARY' : 'SECONDARY'}
-          style={
-            isAuthor
-              ? { borderRadius: '13px 13px 0px 13px' }
-              : { borderRadius: '13px 13px 13px 0px' }
-          }
+          style={{
+            borderRadius: isAuthor ? '13px 13px 0px 13px' : '13px 13px 13px 0px',
+            wordBreak: 'break-all',
+            whiteSpace: 'pre-wrap',
+          }}
         >
           {emoji && PingEmojiDict[emoji] && <Typo type="body-medium">{PingEmojiDict[emoji]}</Typo>}
           {content && (
