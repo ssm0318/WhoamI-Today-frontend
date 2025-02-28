@@ -12,7 +12,7 @@ import { Layout } from '@design-system';
 import { InputPingMessage, PingEmojiDict, PingEmojiType, PostPingMessageRes } from '@models/ping';
 import { postPingMessage } from '@utils/apis/ping';
 
-const MAX_LENGTH = 30;
+const MAX_LENGTH = 10000;
 
 interface Props {
   insertPing: (ping: PostPingMessageRes) => void;
