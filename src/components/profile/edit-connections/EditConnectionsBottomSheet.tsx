@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import { UserPageContext } from '@components/user-page/UserPage.context';
-import { Button, CheckBox, Layout, Typo } from '@design-system';
+import { Button, CheckBox, Layout, RadioButton, Typo } from '@design-system';
 import { Connection } from '@models/api/friends';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -69,31 +69,25 @@ function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) 
         <Divider width={1} />
         <Layout.FlexCol pv={10} gap={10} w="100%">
           <Layout.FlexCol gap={3} w="100%" bgColor="LIGHT" p={10} rounded={12}>
-            <Typo type="title-small">{t('edit_connections.choice')}</Typo>
-            <Layout.FlexRow justifyContent="center" w="100%" gap={10} alignItems="center">
-              <label htmlFor={Connection.FRIEND}>
-                <input
-                  type="radio"
-                  name="connections"
-                  id={Connection.FRIEND}
-                  value={Connection.FRIEND}
-                  checked={connection === Connection.FRIEND}
-                  onChange={handleChangeConnection}
-                />
-                <Typo type="title-small">{t('connection.friend')}</Typo>
-              </label>
-              <label htmlFor={Connection.CLOSE_FRIEND}>
-                <input
-                  type="radio"
-                  name="connections"
-                  id={Connection.CLOSE_FRIEND}
-                  value={Connection.CLOSE_FRIEND}
-                  checked={connection === Connection.CLOSE_FRIEND}
-                  onChange={handleChangeConnection}
-                />
-                <Typo type="title-small">{t('connection.close_friend')}</Typo>
-              </label>
-            </Layout.FlexRow>
+            <Typo type="title-medium" mb={10}>
+              {t('edit_connections.choice')}
+            </Typo>
+            <Layout.FlexCol justifyContent="flex-start" w="100%" gap={10}>
+              <RadioButton
+                label={t('connection.friend') || ''}
+                name={Connection.FRIEND}
+                value={Connection.FRIEND}
+                checked={connection === Connection.FRIEND}
+                onChange={handleChangeConnection}
+              />
+              <RadioButton
+                label={t('connection.close_friend') || ''}
+                name={Connection.CLOSE_FRIEND}
+                value={Connection.CLOSE_FRIEND}
+                checked={connection === Connection.CLOSE_FRIEND}
+                onChange={handleChangeConnection}
+              />
+            </Layout.FlexCol>
           </Layout.FlexCol>
           <Layout.FlexRow>
             <CheckBox
