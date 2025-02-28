@@ -94,7 +94,7 @@ function PingMessageInput({ insertPing }: Props) {
           <Icon name="ping_emoji_add" size={27} onClick={handleToggleAddEmoji} />
         )}
         {/** text */}
-        <Layout.FlexRow w="100%" pr={5}>
+        <Layout.FlexRow w="100%" pr={5} alignItems="center">
           <StyledTextInput
             type="text"
             maxLength={MAX_LENGTH}
@@ -103,7 +103,12 @@ function PingMessageInput({ insertPing }: Props) {
             onChange={handleChangeMessage}
             onKeyDown={handleKeyDownInput}
           />
-          <Icon name="question_send" size={17} onClick={handleClickPost} color="MEDIUM_GRAY" />
+          <Icon
+            name="question_send"
+            size={22}
+            onClick={handleClickPost}
+            color={messageInput || selectedEmoji ? 'BLACK' : 'DARK'}
+          />
         </Layout.FlexRow>
       </Layout.FlexRow>
       {showEmojiList && (
