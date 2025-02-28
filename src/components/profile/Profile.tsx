@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import FriendStatus from '@components/_common/friend-status/FriendStatus';
+import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
@@ -70,19 +71,24 @@ function Profile({ user }: ProfileProps) {
               {/** connections */}
               {user && !isMyProfile(user) && areFriends(user) && (
                 <>
-                  {/** FIXME: 디자인 수정 */}
                   {user.connection_status && (
                     <Layout.FlexRow
                       onClick={handleClickChangeConnection}
                       bgColor="SECONDARY"
-                      p={4}
+                      pl={10}
+                      pr={8}
+                      pv={5}
                       rounded={8}
+                      gap={5}
+                      alignItems="center"
+                      justifyContent="center"
                     >
-                      <Typo type="label-small" color="DARK_GRAY">
+                      <Typo type="label-large" color="BLACK">
                         {user.connection_status === Connection.FRIEND
                           ? t('connection.friend')
-                          : t('connection.close_friend')}{' '}
+                          : t('connection.close_friend')}
                       </Typo>
+                      <Icon name="chevron_down" size={18} color="BLACK" />
                     </Layout.FlexRow>
                   )}
                   {showEditConnectionsModal && (
