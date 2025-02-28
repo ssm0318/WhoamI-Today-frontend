@@ -1,6 +1,5 @@
-import { Layout } from '@design-system';
+import { Layout, SvgIcon } from '@design-system';
 import EmojiItem from '../emoji-item/EmojiItem';
-import Icon from '../icon/Icon';
 import ProfileImage from '../profile-image/ProfileImage';
 
 type PostReactionItemProps = {
@@ -17,14 +16,14 @@ function PostReactionItem({ imageUrl, size = 23, like, emoji }: PostReactionItem
         position: 'relative',
       }}
     >
-      <ProfileImage imageUrl={imageUrl} size={23} />
-      <Layout.Absolute r={like ? 0 : -3} b={like ? 2 : -6} z={2}>
+      <ProfileImage imageUrl={imageUrl} size={size} />
+      <Layout.Absolute r={like ? -2 : -6} b={like ? -5 : -6} z={2}>
         {like ? (
-          <Icon name="like_filled" size={size / 3} />
+          <SvgIcon name="noti_icon_like" size={size / 2} />
         ) : (
           <EmojiItem
             emojiString={emoji || ''}
-            size={size / 2}
+            size={size / 1.8}
             bgColor="TRANSPARENT"
             outline="TRANSPARENT"
           />
