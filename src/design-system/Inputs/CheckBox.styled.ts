@@ -4,7 +4,7 @@ import { CheckBox } from './CheckBox';
 /**
  * 사각형 형태의 체크박스
  */
-export const StyledRectCheckBox = styled.div`
+export const StyledRectCheckBox = styled.div<{ disabled?: boolean }>`
   display: flex;
   align-items: center;
 
@@ -31,6 +31,13 @@ export const StyledRectCheckBox = styled.div`
     font-size: 14px;
     line-height: 140%;
   }
+
+  ${({ disabled }) =>
+    disabled &&
+    `
+    opacity: 0.5;
+    pointer-events: none;
+  `}
 `;
 
 /**
