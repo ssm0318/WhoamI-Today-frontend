@@ -11,6 +11,7 @@ import ResponseSection from '@components/response/response-section/ResponseSecti
 import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { getMyNotes, getMyResponses } from '@utils/apis/my';
 import { MainScrollContainer } from './Root';
 
@@ -23,6 +24,7 @@ function My() {
     keyPrefix: 'my',
   });
   const navigate = useNavigate();
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const handleClickNewNote = () => {
     return navigate('/notes/new');
@@ -50,10 +52,14 @@ function My() {
             <Profile user={myProfile} />
           </Layout.FlexRow>
           <Divider width={8} bgColor="LIGHT" />
-          <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
-            <ResponseSection />
-          </Layout.FlexCol>
-          <Divider width={8} bgColor="LIGHT" />
+          {featureFlags?.friendList && (
+            <>
+              <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
+                <ResponseSection />
+              </Layout.FlexCol>
+              <Divider width={8} bgColor="LIGHT" />
+            </>
+          )}
           <Layout.FlexRow ph={15} pv={10} bgColor="WHITE" w="100%" rounded="8px 8px 0px 0px">
             <Layout.FlexRow
               rounded={30}

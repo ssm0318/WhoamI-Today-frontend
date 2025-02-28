@@ -90,7 +90,7 @@ function CommentBottomSheet({
             onClickReplyBtn={() => {
               setInputFocus(true);
               setReplyTo(comment);
-              if (featureFlags?.privateComment) {
+              if (featureFlags?.friendList) {
                 setIsPrivate?.(comment.is_private);
               }
               setCommentTo(comment);
@@ -108,7 +108,7 @@ function CommentBottomSheet({
           inputFocus={inputFocus}
           setInputFocus={setInputFocus}
           inputFocusDuration={BOTTOM_MODAL_ANIMATION_DURATION}
-          {...(featureFlags?.privateComment && {
+          {...(featureFlags?.friendList && {
             isPrivate,
             setIsPrivate: () => setIsPrivate((prev) => !prev),
           })}

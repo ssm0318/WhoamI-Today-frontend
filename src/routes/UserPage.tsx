@@ -13,6 +13,7 @@ import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { readFriendCheckIn } from '@utils/apis/checkIn';
 
 function UserPage() {
@@ -21,6 +22,7 @@ function UserPage() {
   const isMyPage = username === myProfile?.username;
   const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const { user, updateUser } = useContext(UserPageContext);
 
@@ -69,11 +71,16 @@ function UserPage() {
               >
                 <Profile user={user.data} />
               </Layout.FlexRow>
-              {/** responses and notes section */}
-              <Divider width={8} bgColor="LIGHT" />
-              <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
-                <ResponseSection username={username} />
-              </Layout.FlexCol>
+              {featureFlags?.friendList && (
+                <>
+                  {/** responses and notes section */}
+                  <Divider width={8} bgColor="LIGHT" />
+                  <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
+                    <ResponseSection username={username} />
+                  </Layout.FlexCol>
+                </>
+              )}
+
               <Divider width={8} bgColor="LIGHT" />
               <Layout.FlexCol pt={12} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
                 <NoteSection username={username} />
