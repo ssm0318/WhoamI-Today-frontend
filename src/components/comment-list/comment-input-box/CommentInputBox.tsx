@@ -68,17 +68,17 @@ function CommentInputBox({
   }, [inputFocus, commentRef, inputFocusDuration, setInputFocus]);
 
   useEffect(() => {
-    if (!featureFlags?.privateComment) return;
+    if (!featureFlags?.friendList) return;
     initialIsPrivateRef.current = isPrivate;
-  }, [isPrivate, featureFlags?.privateComment]);
+  }, [isPrivate, featureFlags?.friendList]);
 
   useEffect(() => {
-    if (!featureFlags?.privateComment || !isReply) return;
+    if (!featureFlags?.friendList || !isReply) return;
     setInitialIsPrivate(initialIsPrivateRef.current);
-  }, [isReply, replyTo, featureFlags?.privateComment]);
+  }, [isReply, replyTo, featureFlags?.friendList]);
 
   const handleCheckboxChange = () => {
-    if (!featureFlags?.privateComment || initialIsPrivate) return;
+    if (!featureFlags?.friendList || initialIsPrivate) return;
     setIsPrivate?.();
   };
 
@@ -163,7 +163,7 @@ function CommentInputBox({
   return (
     <S.CommentInputWrapper gap={10} w="100%" pv={12} ph={16} bgColor="WHITE">
       {/* isPrivate */}
-      {featureFlags?.privateComment && (
+      {featureFlags?.friendList && (
         <Layout.FlexRow gap={4} alignItems="center">
           <CheckBox
             name={t('private_comment') || ''}
