@@ -11,6 +11,8 @@ import { Layout, Typo } from '@design-system';
 import { useFetchFavoriteFriends } from '@hooks/useFetchFavoriteFriends';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
 import { UpdatedProfile } from '@models/api/friends';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { addFriendToFavorite, deleteFavorite, hideFriend, unHideFriend } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
 import { StyledFriendItemWrapper } from 'src/routes/friends/EditFriends.styled';
@@ -18,6 +20,7 @@ import { MainScrollContainer } from 'src/routes/Root';
 
 function EditFriends() {
   const [t] = useTranslation('translation');
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const { isLoadingMoreAllFriends, allFriends, isAllFriendsLoading, targetRef, updateFriendList } =
     useInfiniteFetchFriends();
@@ -97,23 +100,25 @@ function EditFriends() {
                 return (
                   <StyledFriendItemWrapper key={username}>
                     <Layout.FlexRow gap={8}>
-                      {is_hidden ? (
-                        <Icon
-                          name="star_outline"
-                          size={20}
-                          padding={12}
-                          color="MEDIUM_GRAY"
-                          disabled
-                        />
-                      ) : (
-                        <Icon
-                          name={is_favorite ? 'star' : 'star_outline'}
-                          size={20}
-                          padding={12}
-                          color="NO_STATUS_CHIP"
-                          onClick={handleToggleFavorite(friend, is_favorite)}
-                        />
-                      )}
+                      {featureFlags?.friendList &&
+                        (is_hidden ? (
+                          <Icon
+                            name="star_outline"
+                            size={20}
+                            padding={12}
+                            color="MEDIUM_GRAY"
+                            disabled
+                          />
+                        ) : (
+                          <Icon
+                            name={is_favorite ? 'star' : 'star_outline'}
+                            size={20}
+                            padding={12}
+                            color="NO_STATUS_CHIP"
+                            onClick={() => handleToggleFavorite(friend, is_favorite)}
+                          />
+                        ))}
+
                       <Layout.FlexRow gap={8} alignItems="center">
                         <ProfileImage imageUrl={profile_image} username={username} size={44} />
                         <Typo ellipsis={{ enabled: true, maxWidth: 150 }} type="title-small">

@@ -20,7 +20,7 @@ import {
   FavoriteFriendListLoader,
 } from './FriendsLoader';
 
-function Friends() {
+function FriendsList() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends' });
 
   const {
@@ -169,4 +169,4 @@ function Friends() {
   );
 }
 
-export default Friends;
+export default FriendsList;
