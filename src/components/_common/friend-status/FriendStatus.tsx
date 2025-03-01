@@ -97,7 +97,7 @@ function FriendStatus({
     onClickReject?.();
   };
 
-  const handleConfirmUnriendDialog = async () => {
+  const handleConfirmUnfriendDialog = async () => {
     await breakFriend(user.id);
     setIsUnfriendDialogVisible(false);
     onClickUnfriend?.();
@@ -202,7 +202,7 @@ function FriendStatus({
           cancelText={t('break_friends_dialog.cancel')}
           confirmText={t('break_friends_dialog.confirm')}
           confirmTextColor="WARNING"
-          onClickConfirm={handleConfirmUnriendDialog}
+          onClickConfirm={handleConfirmUnfriendDialog}
           onClickClose={() => setIsUnfriendDialogVisible(false)}
         />
       )}
