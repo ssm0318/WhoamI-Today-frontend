@@ -23,7 +23,8 @@ import { EditChats } from './routes/edit-chats/EditChats';
 import ForgotPassword from './routes/ForgotPassword';
 import EditFriends from './routes/friends/EditFriends';
 import ExploreFriends from './routes/friends/ExploreFriends';
-import Friends from './routes/friends/Friends';
+import FriendsFeed from './routes/friends/FriendsFeed';
+import FriendsList from './routes/friends/FriendsList';
 import Intro from './routes/Intro';
 import My from './routes/My';
 import AllNotes from './routes/notes/AllNotes';
@@ -74,13 +75,17 @@ const router = createBrowserRouter([
         path: 'my',
         children: [
           { path: '', element: <My /> },
+          { path: 'friends/list', element: <FriendsFeed /> },
+          { path: 'friends/explore', element: <ExploreFriends /> },
+          { path: 'friends/edit', element: <EditFriends /> },
           { path: 'responses', element: <AllResponses from="my" /> },
         ],
       },
       {
         path: 'friends',
         children: [
-          { path: '', element: <Friends /> },
+          { path: '', element: <FriendsList /> },
+          { path: 'feed', element: <FriendsFeed /> },
           { path: 'explore', element: <ExploreFriends /> },
           { path: 'edit', element: <EditFriends /> },
         ],
