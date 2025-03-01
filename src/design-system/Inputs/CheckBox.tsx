@@ -3,9 +3,9 @@ import { Margin } from '../layouts';
 import { StyledRectCheckBox } from './CheckBox.styled';
 
 export function CheckBox(props: InputHTMLAttributes<HTMLInputElement> & Margin) {
-  const { name, className } = props;
+  const { name, className, disabled } = props;
   return (
-    <StyledRectCheckBox className={className}>
+    <StyledRectCheckBox className={className} disabled={disabled}>
       <input id={name} type="checkbox" {...props} />
       {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label htmlFor={name} />
