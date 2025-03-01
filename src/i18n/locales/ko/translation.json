@@ -90,6 +90,7 @@
         "settings": "설정"
       },
       "bottom_sheet": {
+        "title": "만들기",
         "check-in": "체크인 수정",
         "note": "새 노트 작성",
         "prompts": "새 답변 작성"

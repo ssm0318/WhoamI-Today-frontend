@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Divider from '@components/_common/divider/Divider';
 import Icon from '@components/_common/icon/Icon';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
+import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import NoteSection from '@components/note/note-section/NoteSection';
 import Profile from '@components/profile/Profile';
 import ResponseSection from '@components/response/response-section/ResponseSection';
@@ -38,7 +39,7 @@ function My() {
   return (
     <MainScrollContainer scrollRef={scrollRef}>
       <PullToRefresh onRefresh={handleRefresh}>
-        <Layout.FlexCol w="100%">
+        <Layout.FlexCol w="100%" pb={FLOATING_BUTTON_SIZE + 20}>
           <Divider width={8} bgColor="LIGHT" />
           <Layout.FlexRow
             w="100%"

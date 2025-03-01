@@ -43,7 +43,7 @@ function NewPostBottomSheet({ visible, closeBottomSheet, setSelectPrompt }: Prop
     <BottomModal visible={visible} onClose={closeBottomSheet}>
       <Layout.FlexCol alignItems="center" pb={34} w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
-        <Typo type="title-large">Create</Typo>
+        <Typo type="title-large">{t('title')}</Typo>
         <Layout.FlexCol gap={12} pt={24} pb={24} w="100%">
           {BOTTOM_SHEET_LIST.map((menu) => (
             <React.Fragment key={menu.key}>
