@@ -73,6 +73,7 @@ export const StyledFont = styled.span<FontAttrs & TypoPropBase>`
       overflow: hidden;
       display: -webkit-box;
       -webkit-box-orient: vertical;
+      word-break: break-word;
       max-height: ${fontSize * lineHeight * numberOfLines}px;
     `}
 

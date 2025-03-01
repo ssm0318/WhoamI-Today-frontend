@@ -55,19 +55,18 @@ function Profile({ user }: ProfileProps) {
   return (
     <Layout.FlexCol w="100%" gap={16}>
       <Layout.FlexRow w="100%" gap={8}>
-        <ProfileImage imageUrl={user?.profile_image} username={username} size={80} />
-        <Layout.FlexCol w="100%" gap={8}>
+        <Layout.FlexRow>
+          <ProfileImage imageUrl={user?.profile_image} username={username} size={80} />
+        </Layout.FlexRow>
+        <Layout.FlexCol gap={8} w="100%">
           <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
-            {/* username / pronouns */}
-            <Layout.FlexRow gap={8} alignItems="center">
-              <Typo type="title-large" ellipsis={{ enabled: true, maxWidth: 160 }}>
-                {isMyPage ? myProfile?.username || '' : username || ''}
-              </Typo>
-
-              <Typo type="label-medium">
-                {(isMyPage ? myProfile?.pronouns : friendData?.pronouns) &&
-                  `(${isMyPage ? myProfile?.pronouns : friendData?.pronouns})`}
-              </Typo>
+            <Layout.FlexRow w="100%" gap={8} alignItems="center">
+              <Layout.FlexRow alignItems="center" gap={4}>
+                {/* username */}
+                <Typo type="title-large" numberOfLines={1}>
+                  {isMyPage ? myProfile?.username || '' : username || ''}
+                </Typo>
+              </Layout.FlexRow>
               {/** connections */}
               {user && !isMyProfile(user) && areFriends(user) && (
                 <>
@@ -111,11 +110,23 @@ function Profile({ user }: ProfileProps) {
               />
             )}
           </Layout.FlexRow>
+          {/* pronouns */}
+          {(isMyPage ? myProfile?.pronouns : friendData?.pronouns) && (
+            <Layout.FlexRow alignItems="center">
+              <Typo type="label-medium">(</Typo>
+              <Typo type="label-medium" numberOfLines={1}>
+                {isMyPage ? myProfile?.pronouns : friendData?.pronouns}
+              </Typo>
+              <Typo type="label-medium">)</Typo>
+            </Layout.FlexRow>
+          )}
           {/* bio */}
           {user?.bio && (
-            <Typo type="body-medium" numberOfLines={3}>
-              {user.bio}
-            </Typo>
+            <Layout.FlexCol w="100%">
+              <Typo type="body-medium" numberOfLines={2}>
+                {user.bio}
+              </Typo>
+            </Layout.FlexCol>
           )}
         </Layout.FlexCol>
       </Layout.FlexRow>
