@@ -4,6 +4,7 @@ import { SESSION_STORAGE_KEY } from '@constants/sessionStorageKey';
 import { ScrollPositionStore } from '@hooks/useRestoreScrollPosition';
 import i18n from '@i18n/index';
 import { PaginationResponse } from '@models/api/common';
+import { Connection } from '@models/api/friends';
 import {
   EmailError,
   FriendRequest,
@@ -251,10 +252,12 @@ export const getUserProfile = async (username: string) => {
 
 export const requestFriend = async ({
   userId,
+  friendRequestType,
   onSuccess,
   onError,
 }: {
   userId: number;
+  friendRequestType: Connection;
   onSuccess: () => void;
   onError: () => void;
 }) => {
@@ -265,6 +268,7 @@ export const requestFriend = async ({
     .post('/user/friend-requests/', {
       requester_id: currentUser.id,
       requestee_id: userId,
+      requester_choice: friendRequestType,
     })
     .then(() => onSuccess())
     .catch(() => onError());

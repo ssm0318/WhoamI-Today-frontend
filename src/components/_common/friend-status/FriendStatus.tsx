@@ -1,7 +1,9 @@
 import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
+import { FeatureFlagKey } from '@constants/featureFlag';
 import { Button, Layout } from '@design-system';
+import { Connection } from '@models/api/friends';
 import {
   areFriends,
   receivedFriendRequest,
@@ -10,6 +12,7 @@ import {
   UserProfile,
 } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import {
   acceptFriendRequest,
   blockRecommendation,
@@ -18,6 +21,7 @@ import {
   rejectFriendRequest,
   requestFriend,
 } from '@utils/apis/user';
+import FriendRequestTypeModal from '../friend-type-select-modal/FriendTypeSelectModal';
 
 export interface Props {
   type: 'sent_requests' | 'requests' | 'recommended' | 'search' | 'user';
@@ -49,12 +53,14 @@ function FriendStatus({
   onClickCancelRequest,
 }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.friend_item' });
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const [isCancelFriendRequestDialogVisible, setIsCancelFriendRequestDialogVisible] =
     useState(false);
   const [isRejectFriendRequestDialogVisible, setIsRejectFriendRequestDialogVisible] =
     useState(false);
   const [isUnfriendDialogVisible, setIsUnfriendDialogVisible] = useState(false);
+  const [isFriendRequestTypeModalVisible, setIsFriendRequestTypeModalVisible] = useState(false);
 
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
@@ -103,14 +109,27 @@ function FriendStatus({
     onClickUnfriend?.();
   };
 
-  const handleClickRequest = async (e: MouseEvent) => {
-    e.stopPropagation();
+  const handleConfirmRequestFriend = async (friendType: Connection) => {
     await requestFriend({
       userId: user.id,
+      friendRequestType: friendType,
       onSuccess: () => openToast({ message: t('friend_request_success') }),
       onError: () => openToast({ message: t('temporary_error') }),
     });
     onClickRequest?.();
+  };
+
+  const handleClickRequest = async (e: MouseEvent) => {
+    e.stopPropagation();
+
+    if (featureFlags?.[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
+      // NOTE ver. Q의 경우 옵션 선택 모달이 떠야함
+      setIsFriendRequestTypeModalVisible(true);
+    } else {
+      // NOTE ver. R의 경우 friend로 친구 신청을 보냄
+      await handleConfirmRequestFriend(Connection.FRIEND);
+      onClickRequest?.();
+    }
   };
 
   const PrimaryButton = isUserPage ? Button.Highlight : Button.Primary;
@@ -204,6 +223,13 @@ function FriendStatus({
           confirmTextColor="WARNING"
           onClickConfirm={handleConfirmUnfriendDialog}
           onClickClose={() => setIsUnfriendDialogVisible(false)}
+        />
+      )}
+      {isFriendRequestTypeModalVisible && (
+        <FriendRequestTypeModal
+          visible={isFriendRequestTypeModalVisible}
+          onClickConfirm={handleConfirmRequestFriend}
+          onClickClose={() => setIsFriendRequestTypeModalVisible(false)}
         />
       )}
     </>

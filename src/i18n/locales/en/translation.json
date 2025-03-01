@@ -555,7 +555,16 @@
           "confirm": "Delete"
         },
         "friend_request_success": "Your friend request has been completed.",
-        "temporary_error": "An error has occurred temporarily. Please try again later."
+        "temporary_error": "An error has occurred temporarily. Please try again later.",
+        "friend_request_type_dialog": {
+          "title" : "Send Friend Request",
+          "content": "Choose the connection type.",
+          "friend": "Friend",
+          "close_friend": "Close Friend",
+          "fyi": "They won't be able to see the connection type you choose.",
+          "cancel": "Cancel",
+          "confirm": "Confirm"
+        }
       }
     },
     "edit_friends": {
