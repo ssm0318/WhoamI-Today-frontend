@@ -6,6 +6,7 @@ import NoContents from '@components/_common/no-contents/NoContents';
 import { Layout, Typo } from '@design-system';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Note } from '@models/post';
+import { readUserAllNotes } from '@utils/apis/user';
 import NoteItem from '../note-item/NoteItem';
 import NoteLoader from '../note-loader/NoteLoader';
 
@@ -24,7 +25,7 @@ function NoteSection({ username }: NoteSectionProps) {
     isLoadingMore: isNotesLoadingMore,
     mutate: refetchNotes,
   } = useSWRInfiniteScroll<Note>({
-    key: `/user/${username || 'me'}/notes/`,
+    key: `/user/${encodeURIComponent(username || 'me')}/notes/`,
   });
 
   const { noteId } = useParams();
@@ -33,8 +34,13 @@ function NoteSection({ username }: NoteSectionProps) {
   useEffect(() => {
     if (noteId) return;
     refetchNotes();
+
+    if (username) {
+      readUserAllNotes(username);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [noteId]);
+  }, [noteId, username]);
 
   return (
     <>
