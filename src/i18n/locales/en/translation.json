@@ -555,9 +555,11 @@
           "confirm": "Delete"
         },
         "friend_request_success": "Your friend request has been completed.",
+        "friend_accept_success": "You accepted the friend request.",
         "temporary_error": "An error has occurred temporarily. Please try again later.",
-        "friend_request_type_dialog": {
-          "title" : "Send Friend Request",
+        "friend_type_select_dialog": {
+          "request_title" : "Send Friend Request",
+          "accept_title" : "Accept Friend Request",
           "content": "Choose the connection type.",
           "friend": "Friend",
           "close_friend": "Close Friend",

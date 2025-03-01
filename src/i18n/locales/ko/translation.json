@@ -548,8 +548,9 @@
         },
         "friend_request_success": "친구 요청이 완료되었습니다.",
         "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
-        "friend_request_type_dialog": {
-          "title": "친구 요청 보내기",
+        "friend_type_select_dialog": {
+          "accept_title": "친구 요청 수락",
+          "request_title": "친구 요청 보내기",
           "content": "친구 요청 유형을 선택하세요",
           "friend": "친구",
           "close_friend": "친한 친구",
