@@ -13,6 +13,7 @@ export const StyledTextInput = styled.input`
   background-color: transparent;
 
   width: 100%;
+  min-width: 0;
   font-family: Roboto;
   font-size: 16px;
   font-style: normal;

@@ -12,7 +12,7 @@ import { Layout } from '@design-system';
 import { InputPingMessage, PingEmojiDict, PingEmojiType, PostPingMessageRes } from '@models/ping';
 import { postPingMessage } from '@utils/apis/ping';
 
-const MAX_LENGTH = 30;
+const MAX_LENGTH = 10000;
 
 interface Props {
   insertPing: (ping: PostPingMessageRes) => void;
@@ -94,7 +94,7 @@ function PingMessageInput({ insertPing }: Props) {
           <Icon name="ping_emoji_add" size={27} onClick={handleToggleAddEmoji} />
         )}
         {/** text */}
-        <Layout.FlexRow w="100%" pr={5}>
+        <Layout.FlexRow w="100%" pr={5} alignItems="center">
           <StyledTextInput
             type="text"
             maxLength={MAX_LENGTH}
@@ -103,7 +103,7 @@ function PingMessageInput({ insertPing }: Props) {
             onChange={handleChangeMessage}
             onKeyDown={handleKeyDownInput}
           />
-          <Icon name="question_send" size={17} onClick={handleClickPost} color="MEDIUM_GRAY" />
+          <Icon name="question_send" size={20} onClick={handleClickPost} color="BLACK" />
         </Layout.FlexRow>
       </Layout.FlexRow>
       {showEmojiList && (
