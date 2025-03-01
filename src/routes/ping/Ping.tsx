@@ -13,6 +13,7 @@ import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { PingMessage, PostPingMessageRes, RefinedPingMessage } from '@models/ping';
 import { getPings } from '@utils/apis/ping';
 import { MainScrollContainer } from '../Root';
+import { PingsListLoader } from './PingsLoader';
 
 function Ping() {
   const { username } = useParams();
@@ -30,6 +31,7 @@ function Ping() {
   const [nextUrl, setNextUrl] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [oldestUnreadPingId, setOldestUnreadPingId] = useState<number | undefined>();
+  const [firstLoad, setFirstLoad] = useState(true);
 
   const initFetchPingsAndScrollToUnreadMsg = useCallback(
     async (_userId: number, autoScroll = true) => {
@@ -61,6 +63,7 @@ function Ping() {
       const p = await fetchPingsRecursively(next, initPings);
       setPings(p);
       setNextUrl(lastNextUrl);
+      setFirstLoad(false);
 
       if (!autoScroll) return;
 
@@ -160,6 +163,11 @@ function Ping() {
           </Layout.FlexRow>
         }
       />
+      {firstLoad && (
+        <Layout.FlexCol w="100%" alignItems="center" mt={50}>
+          <PingsListLoader />
+        </Layout.FlexCol>
+      )}
       {/** ping list */}
       {refinedPings.length > 0 && (
         <Layout.FlexCol w="100%" gap={15} p={10} mb={PING_MESSAGE_INPUT_HEIGHT}>
