@@ -278,8 +278,11 @@ export const cancelFriendRequest = async (userId: number) => {
   await axios.delete(`/user/friend-requests/${userId}/`);
 };
 
-export const acceptFriendRequest = async (userId: number) => {
-  await axios.patch(`/user/friend-requests/${userId}/respond/`, { accepted: true });
+export const acceptFriendRequest = async (userId: number, friendType: Connection) => {
+  await axios.patch(`/user/friend-requests/${userId}/respond/`, {
+    accepted: true,
+    requestee_choice: friendType,
+  });
 };
 
 export const rejectFriendRequest = async (userId: number) => {

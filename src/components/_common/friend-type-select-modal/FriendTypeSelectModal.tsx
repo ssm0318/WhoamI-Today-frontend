@@ -9,15 +9,17 @@ interface FriendTypeSelectModalProps {
   visible: boolean;
   onClickConfirm: (friendType: Connection) => void;
   onClickClose: () => void;
+  type: 'accept' | 'request';
 }
 
 function FriendTypeSelectModal({
   visible,
   onClickClose,
   onClickConfirm,
+  type,
 }: FriendTypeSelectModalProps) {
   const [t] = useTranslation('translation', {
-    keyPrefix: 'friends.explore_friends.friend_item.friend_request_type_dialog',
+    keyPrefix: 'friends.explore_friends.friend_item.friend_type_select_dialog',
   });
   // default 값은 friend
   const [friendType, setFriendType] = useState<Connection>(Connection.FRIEND);
@@ -54,7 +56,7 @@ function FriendTypeSelectModal({
       <S.Body className="body" onClick={(e) => e.stopPropagation()}>
         <Layout.FlexCol w="100%" alignItems="center" p={16}>
           <Typo type="title-large" mb={5}>
-            {t('title')}
+            {type === 'accept' ? t('accept_title') : t('request_title')}
           </Typo>
           <Typo type="label-large" textAlign="center">
             {t('content')}
