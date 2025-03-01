@@ -14,7 +14,7 @@ function PostReactionList({ user_sample_list }: PostReactionListProps) {
         return (
           <Layout.FlexRow
             key={key}
-            ml={index === 0 ? 0 : -(SIZE - 10)}
+            ml={index === 0 ? 0 : -(SIZE / 2)}
             z={COUNT - index}
             style={{
               position: 'relative',
@@ -33,7 +33,7 @@ function PostReactionList({ user_sample_list }: PostReactionListProps) {
   );
 }
 
-const SIZE = 25;
+const SIZE = 26;
 const COUNT = 3;
 
 export default PostReactionList;

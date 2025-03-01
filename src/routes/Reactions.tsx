@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
-import Icon from '@components/_common/icon/Icon';
 import Loader from '@components/_common/loader/Loader';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SubHeader from '@components/sub-header/SubHeader';
-import { Layout, Typo } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { PaginationResponse } from '@models/api/common';
 import { PostReaction } from '@models/post';
@@ -69,7 +68,7 @@ function Reactions() {
                 {emoji ? (
                   <EmojiItem emojiString={emoji || ''} size={20} />
                 ) : (
-                  <Icon name="like_filled" size={24} />
+                  <SvgIcon name="noti_icon_like" size={20} />
                 )}
               </Layout.FlexRow>
             </Layout.FlexRow>
