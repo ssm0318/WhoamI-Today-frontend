@@ -11,6 +11,8 @@ function Header() {
   switch (location.pathname) {
     case '/friends':
       return <CommonHeader title={t('nav_tab.friends')} />;
+    case '/friends/feed':
+      return <CommonHeader title={t('nav_tab.friends')} />;
     case '/my':
       return <CommonHeader title={t('header.my')} />;
     case '/questions':
