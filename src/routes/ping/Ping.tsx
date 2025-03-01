@@ -164,7 +164,7 @@ function Ping() {
         }
       />
       {firstLoad && (
-        <Layout.FlexCol w="100%" alignItems="center" mt={50}>
+        <Layout.FlexCol w="100%" alignItems="center" mt={30}>
           <PingsListLoader />
         </Layout.FlexCol>
       )}
