@@ -90,6 +90,7 @@
         "settings": "Settings"
       },
       "bottom_sheet": {
+        "title": "Create",
         "check-in": "Check-in",
         "note": "Note",
         "prompts": "Response to prompts"
