@@ -8,6 +8,7 @@ import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutLis
 import FavoriteFriendItem from '@components/friends/favorite-friend-item/FavoriteFriendItem';
 import UpdatedFriendItem from '@components/friends/updated-friend-item/UpdatedFriendItem';
 import { StyledUpdatedFriendItem } from '@components/friends/updated-friend-item/UpdatedFriendItem.styled';
+import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import { useFetchFavoriteFriends } from '@hooks/useFetchFavoriteFriends';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
@@ -53,7 +54,7 @@ function Friends() {
   return (
     <MainScrollContainer scrollRef={scrollRef}>
       <PullToRefresh onRefresh={handleRefresh}>
-        <Layout.FlexCol w="100%">
+        <Layout.FlexCol w="100%" pb={FLOATING_BUTTON_SIZE + 20}>
           {/* Favorites */}
           <Collapse
             title={[t('favorites'), !!favoriteFriends && `(${favoriteFriends.length})`]
