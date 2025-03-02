@@ -8,10 +8,12 @@
     "sign_up": "Sign Up"
   },
   "research_intro": {
-    "title": "WhoAmI Today Research Introduction",
-    "description": "-description-",
-    "has_account": "Already have an account?",
-    "has_not_account": "Don't have an account?"
+    "title": "University of Washington Social Media for Youth Research",
+    "description": "The current version of the app is still in beta and is only available to participants in our research study. If you’re interested, please use the links below to sign up or log in.",
+    "has_account": "I already signed up and received my account information.",
+    "has_not_account": "Great, I’d like to sign up for the study",
+    "someting_else_title": "Something else?",
+    "someting_else_description": "If you signed up for the study but haven’t received your account information yet, please allow a couple of days for us to get back to you. If you still don’t hear from us, feel free to reach out via:"
   },
   "sign_in": {
     "username_or_email": "Username or Email",
