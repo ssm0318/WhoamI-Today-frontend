@@ -63,7 +63,10 @@ export const checkIfSignIn = async () => {
   } catch {
     resetBoundStores();
     setItemToSessionStorage<ScrollPositionStore>(SESSION_STORAGE_KEY, {});
-    return redirect('/signin');
+
+    // FIXME 연구가 끝나면 기존 /signin 경로로 변경 (아래 주석 해제)
+    return redirect('/research-intro');
+    // return redirect('/signin');
   }
 };
 
