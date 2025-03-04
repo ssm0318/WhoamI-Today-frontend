@@ -16,7 +16,7 @@ function PullToRefresh({
       await onRefresh();
     } catch (error) {
       console.error('Refresh failed:', error);
-      throw error; // 에러를 다시 throw하여 컴포넌트가 적절히 처리하도록 함
+      throw error;
     }
   };
 
