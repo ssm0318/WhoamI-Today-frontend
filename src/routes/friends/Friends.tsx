@@ -41,8 +41,7 @@ function Friends() {
   };
 
   const handleRefresh = async () => {
-    refetchFavoriteFriends();
-    refetchAllFriends();
+    await Promise.all([refetchFavoriteFriends(), refetchAllFriends()]);
   };
 
   const handleClickExploreFriends = () => {

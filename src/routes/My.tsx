@@ -29,9 +29,7 @@ function My() {
   };
 
   const handleRefresh = useCallback(async () => {
-    await getMyResponses(null);
-    await getMyNotes(null);
-    await fetchCheckIn();
+    await Promise.all([getMyResponses(null), getMyNotes(null), fetchCheckIn()]);
   }, [fetchCheckIn]);
 
   const { scrollRef } = useRestoreScrollPosition('myPage');
