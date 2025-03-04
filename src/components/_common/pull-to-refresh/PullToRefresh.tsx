@@ -11,11 +11,23 @@ function PullToRefresh({
   onRefresh,
   children,
 }: React.PropsWithChildren<Props & { children: React.ReactElement }>) {
+  const handleRefresh = async () => {
+    try {
+      await onRefresh();
+    } catch (error) {
+      console.error('Refresh failed:', error);
+      throw error;
+    }
+  };
+
   return (
     <Layout.FlexCol w="100%">
       <DefaultPullToRefresh
-        onRefresh={onRefresh}
-        pullDownThreshold={20}
+        onRefresh={handleRefresh}
+        pullDownThreshold={100}
+        resistance={2.5}
+        fetchMoreThreshold={100}
+        maxPullDownDistance={100}
         isPullable
         pullingContent=""
       >
