@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import NoContents from '@components/_common/no-contents/NoContents';
 import PromptCard from '@components/_common/prompt/PromptCard';
+import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
@@ -23,7 +24,7 @@ function AllQuestions() {
 
   return (
     <MainScrollContainer scrollRef={scrollRef}>
-      <Layout.FlexCol pv={14} w="100%" ph={DEFAULT_MARGIN} gap={20}>
+      <Layout.FlexCol pv={14} w="100%" ph={DEFAULT_MARGIN} gap={20} pb={FLOATING_BUTTON_SIZE + 20}>
         {isLoading ? (
           <AllQuestionsLoader />
         ) : questions?.[0] && questions[0].count > 0 ? (
