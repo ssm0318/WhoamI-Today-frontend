@@ -356,6 +356,10 @@ export const getUserNotes = async (username: string, next?: string | null) => {
   return data;
 };
 
+export const readUserAllNotes = async (username: string) => {
+  await axios.patch('/user/mark-all-notes-as-read/', { username });
+};
+
 // users responses
 export const getUserResponses = async (username: string, next?: string | null) => {
   const requestPage = next ? next.split('page=')[1] : null;
@@ -366,4 +370,8 @@ export const getUserResponses = async (username: string, next?: string | null) =
   if (data.results?.length) axios.patch('/user/mark-all-responses-as-read/', { username });
 
   return data;
+};
+
+export const readUserAllResponses = async (username: string) => {
+  await axios.patch('/user/mark-all-responses-as-read/', { username });
 };

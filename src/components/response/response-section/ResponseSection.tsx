@@ -10,6 +10,7 @@ import { Layout, Typo } from '@design-system';
 import { PaginationResponse } from '@models/api/common';
 import { Response } from '@models/post';
 import axios from '@utils/apis/axios';
+import { readUserAllResponses } from '@utils/apis/user';
 import MoreResponseButton from '../more-response-button/MoreResponseButton';
 import ResponseItem from '../response-item/ResponseItem';
 import ResponseLoader from '../response-loader/ResponseLoader';
@@ -37,7 +38,7 @@ function ResponseSection({ username }: ResponseSectionProps) {
     mutate: refreshResponses,
     isLoading: isResponsesLoading,
     error: isResponsesError,
-  } = useSWR(`/user/${username || 'me'}/responses/`, responseFetcher);
+  } = useSWR(`/user/${encodeURIComponent(username || 'me')}/responses/`, responseFetcher);
 
   const isMoreButtonVisible = responses && responses.count > RESPONSE_VIEW_MAX_COUNT;
 
@@ -52,8 +53,13 @@ function ResponseSection({ username }: ResponseSectionProps) {
   useEffect(() => {
     if (responseId) return;
     refreshResponses();
+
+    if (username) {
+      readUserAllResponses(username);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [responseId]);
+  }, [responseId, username]);
 
   return (
     <>
