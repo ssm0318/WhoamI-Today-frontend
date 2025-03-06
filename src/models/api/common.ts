@@ -10,6 +10,7 @@ export interface PaginationResponse<T> extends Response<T> {
   next: string | null;
   previous: string | null;
   oldest_unread_page?: number;
+  username?: string;
 }
 
 export interface DateRequestParams {
