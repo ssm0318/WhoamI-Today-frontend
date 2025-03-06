@@ -11,7 +11,7 @@ interface Props {
 }
 
 function FavoriteFriendItem({ user }: Props) {
-  const { profile_image, username, current_user_read, track_id, description } = user;
+  const { profile_image, id: userId, username, current_user_read, track_id, description } = user;
 
   const navigate = useNavigate();
   const handleClickProfile = () => {
@@ -19,7 +19,7 @@ function FavoriteFriendItem({ user }: Props) {
   };
 
   const handleClickPing = () => {
-    navigate(`/users/${username}/ping`);
+    navigate(`/users/${userId}/ping`);
   };
 
   return (
