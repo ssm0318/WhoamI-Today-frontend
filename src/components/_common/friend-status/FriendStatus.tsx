@@ -67,19 +67,22 @@ function FriendStatus({
 
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
-  const handleConfirmAcceptFriendRequest = async (friendType: Connection) => {
-    await acceptFriendRequest(user.id, friendType);
+  const handleConfirmAcceptFriendRequest = async (
+    friendType: Connection,
+    updatePastPosts = false,
+  ) => {
+    await acceptFriendRequest(user.id, friendType, updatePastPosts);
     onClickConfirm?.();
   };
 
   const handleClickConfirm = async (e: MouseEvent) => {
     e.stopPropagation();
-    if (featureFlags?.[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
+    if (!featureFlags?.[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
       // NOTE ver. Q의 경우 옵션 선택 모달이 떠야함
       setIsFriendTypeSelectModalVisible({ visible: true, type: 'accept' });
     } else {
       // NOTE ver. R의 경우 friend로 친구 신청 수락
-      await handleConfirmAcceptFriendRequest(Connection.FRIEND);
+      await handleConfirmAcceptFriendRequest(Connection.FRIEND, false);
       onClickRequest?.();
     }
   };
@@ -123,10 +126,11 @@ function FriendStatus({
     onClickUnfriend?.();
   };
 
-  const handleConfirmRequestFriend = async (friendType: Connection) => {
+  const handleConfirmRequestFriend = async (friendType: Connection, updatePastPosts = false) => {
     await requestFriend({
       userId: user.id,
       friendRequestType: friendType,
+      updatePastPosts,
       onSuccess: () => openToast({ message: t('friend_request_success') }),
       onError: () => openToast({ message: t('temporary_error') }),
     });
@@ -136,12 +140,12 @@ function FriendStatus({
   const handleClickRequest = async (e: MouseEvent) => {
     e.stopPropagation();
 
-    if (featureFlags?.[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
+    if (!featureFlags?.[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
       // NOTE ver. Q의 경우 옵션 선택 모달이 떠야함
       setIsFriendTypeSelectModalVisible({ visible: true, type: 'request' });
     } else {
       // NOTE ver. R의 경우 friend로 친구 신청을 보냄
-      await handleConfirmRequestFriend(Connection.FRIEND);
+      await handleConfirmRequestFriend(Connection.FRIEND, false);
       onClickRequest?.();
     }
   };

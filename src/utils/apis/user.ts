@@ -253,11 +253,13 @@ export const getUserProfile = async (username: string) => {
 export const requestFriend = async ({
   userId,
   friendRequestType,
+  updatePastPosts,
   onSuccess,
   onError,
 }: {
   userId: number;
   friendRequestType: Connection;
+  updatePastPosts: boolean;
   onSuccess: () => void;
   onError: () => void;
 }) => {
@@ -269,6 +271,7 @@ export const requestFriend = async ({
       requester_id: currentUser.id,
       requestee_id: userId,
       requester_choice: friendRequestType,
+      update_past_posts: updatePastPosts,
     })
     .then(() => onSuccess())
     .catch(() => onError());
@@ -278,10 +281,15 @@ export const cancelFriendRequest = async (userId: number) => {
   await axios.delete(`/user/friend-requests/${userId}/`);
 };
 
-export const acceptFriendRequest = async (userId: number, friendType: Connection) => {
+export const acceptFriendRequest = async (
+  userId: number,
+  friendType: Connection,
+  updatePastPosts: boolean,
+) => {
   await axios.patch(`/user/friend-requests/${userId}/respond/`, {
     accepted: true,
     requestee_choice: friendType,
+    update_past_posts: updatePastPosts,
   });
 };
 

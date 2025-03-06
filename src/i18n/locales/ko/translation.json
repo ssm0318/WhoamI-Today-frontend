@@ -555,6 +555,7 @@
           "friend": "친구",
           "close_friend": "친한 친구",
           "fyi": "선택한 유형은 친구에게 노출되지 않습니다.",
+          "update_past_posts": "과거 게시물에 연결 업데이트",
           "cancel": "취소",
           "confirm": "확인"
         }

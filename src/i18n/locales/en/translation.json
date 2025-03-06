@@ -564,6 +564,7 @@
           "friend": "Friend",
           "close_friend": "Close Friend",
           "fyi": "They won't be able to see the connection type you choose.",
+          "update_past_posts": "Update connections to past posts",
           "cancel": "Cancel",
           "confirm": "Confirm"
         }

@@ -1,13 +1,13 @@
 import { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { Layout, RadioButton, Typo } from '@design-system';
+import { CheckBox, Layout, RadioButton, Typo } from '@design-system';
 import { Connection } from '@models/api/friends';
 import * as S from './FriendTypeSelectModal.styled';
 
 interface FriendTypeSelectModalProps {
   visible: boolean;
-  onClickConfirm: (friendType: Connection) => void;
+  onClickConfirm: (friendType: Connection, updatePastPosts: boolean) => void;
   onClickClose: () => void;
   type: 'accept' | 'request';
 }
@@ -23,6 +23,7 @@ function FriendTypeSelectModal({
   });
   // default 값은 friend
   const [friendType, setFriendType] = useState<Connection>(Connection.FRIEND);
+  const [isUpdatePastPosts, setIsUpdatePastPosts] = useState(false);
 
   // Implement usePreventScroll functionality
   useEffect(() => {
@@ -35,7 +36,7 @@ function FriendTypeSelectModal({
   }, [visible]);
 
   const handleClickConfirm = () => {
-    onClickConfirm(friendType);
+    onClickConfirm(friendType, isUpdatePastPosts);
     onClickClose();
   };
 
@@ -46,6 +47,10 @@ function FriendTypeSelectModal({
   const handleClickBackground = (e: MouseEvent) => {
     e.stopPropagation();
     onClickClose();
+  };
+
+  const handleChangeCheckBox = () => {
+    setIsUpdatePastPosts((prev) => !prev);
   };
 
   if (!visible) return null;
@@ -80,6 +85,14 @@ function FriendTypeSelectModal({
               onChange={handleChangeConnection}
             />
           </Layout.FlexCol>
+          <Layout.FlexRow mt={10}>
+            <CheckBox
+              name={t('update_past_posts') || ''}
+              onChange={handleChangeCheckBox}
+              checked={isUpdatePastPosts}
+              disabled={friendType === Connection.FRIEND}
+            />
+          </Layout.FlexRow>
         </Layout.FlexCol>
         <S.ButtonContainer w="100%" justifyContent="space-evenly">
           <S.Button onClick={onClickClose} pv={11}>
