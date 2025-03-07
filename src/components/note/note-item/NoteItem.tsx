@@ -80,11 +80,6 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
   const handleClickNoteDefault = () => {
     if (displayType === 'DETAIL') return;
 
-    if (!isMyPage) {
-      navigate(`./notes/${id}`);
-      return;
-    }
-
     return navigate(`/notes/${id}`);
   };
 
