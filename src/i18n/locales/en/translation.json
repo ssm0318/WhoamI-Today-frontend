@@ -97,7 +97,8 @@
       "side_menu": {
         "explore_friends": "Add Friends",
         "questions": "Questions",
-        "settings": "Settings"
+        "settings": "Settings",
+        "kakao_inquiry": "Kakao Inquiry"
       },
       "bottom_sheet": {
         "title": "Create",

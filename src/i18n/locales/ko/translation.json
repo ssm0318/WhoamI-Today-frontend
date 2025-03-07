@@ -97,7 +97,8 @@
       "side_menu": {
         "explore_friends": "친구 추가",
         "questions": "전체 질문",
-        "settings": "설정"
+        "settings": "설정",
+        "kakao_inquiry": "카카오 문의"
       },
       "bottom_sheet": {
         "title": "작성하기",
