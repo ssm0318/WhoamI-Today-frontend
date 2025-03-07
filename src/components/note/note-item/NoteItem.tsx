@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ContentTranslation from '@components/_common/content-translation/ContentTranslation';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
+import PostFooterDefault from '@components/_common/post-footer/PostFooterDefault';
 import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
@@ -11,6 +12,7 @@ import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import { Layout, Typo } from '@design-system';
 import { Note, POST_DP_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import { NoteImage } from '../note-image/NoteImage.styled';
 
@@ -28,12 +30,15 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
     id,
     author_detail,
     images,
+    like_user_sample,
     like_reaction_user_sample,
     is_edited,
     current_user_read,
     visibility,
   } = note;
   const navigate = useNavigate();
+  const { featureFlags } = useBoundStore(UserSelector);
+
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [showMore, setShowMore] = useState(false);
   const [inputFocus, setInputFocus] = useState(false);
@@ -46,17 +51,33 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
   const { username, profile_image } = author_detail ?? {};
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
 
+  console.log('Note', note, displayType);
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
     setShowMore(true);
   };
 
   const handleClickNote = (e: MouseEvent) => {
-    if (emojiPickerTarget) {
-      return setEmojiPickerTarget(null);
+    if (featureFlags?.friendList) {
+      if (emojiPickerTarget) {
+        return setEmojiPickerTarget(null);
+      }
+
+      e.stopPropagation();
     }
 
-    e.stopPropagation();
+    if (displayType === 'DETAIL') return;
+
+    if (!isMyPage) {
+      navigate(`./notes/${id}`);
+      return;
+    }
+
+    return navigate(`/notes/${id}`);
+  };
+
+  // default ver function
+  const handleClickNoteDefault = () => {
     if (displayType === 'DETAIL') return;
 
     if (!isMyPage) {
@@ -68,7 +89,9 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
   };
 
   const navigateToProfile = (e: MouseEvent) => {
-    e.stopPropagation();
+    if (featureFlags?.friendList) {
+      e.stopPropagation();
+    }
     navigate(`/users/${username}`);
   };
 
@@ -80,10 +103,12 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
         gap={8}
         outline="LIGHT"
         rounded={12}
-        onClick={handleClickNote}
-        style={{
-          overflow: displayType === 'DETAIL' ? 'visible' : undefined,
-        }}
+        onClick={featureFlags?.friendList ? handleClickNote : handleClickNoteDefault}
+        style={
+          featureFlags?.friendList
+            ? { overflow: displayType === 'DETAIL' ? 'visible' : undefined }
+            : undefined
+        }
       >
         <PostMoreModal
           isVisible={showMore}
@@ -158,14 +183,35 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
             </Typo>
           )}
         </Layout.FlexCol>
-        <PostFooter
+        {featureFlags?.friendList ? (
+          <PostFooter
+            reactionSampleUserList={like_reaction_user_sample}
+            isMyPage={isMyPage}
+            post={note}
+            showComments={() => setBottomSheet(true)}
+            setInputFocus={() => setInputFocus(true)}
+            displayType={displayType}
+          />
+        ) : (
+          <PostFooterDefault
+            likedUserList={
+              isMyPage && displayType !== 'DETAIL' ? like_reaction_user_sample : like_user_sample
+            }
+            isMyPage={isMyPage}
+            post={note}
+            showComments={() => setBottomSheet(true)}
+            setInputFocus={() => setInputFocus(true)}
+            displayType={displayType}
+          />
+        )}
+        {/* <PostFooter
           reactionSampleUserList={like_reaction_user_sample}
           isMyPage={isMyPage}
           post={note}
           showComments={() => setBottomSheet(true)}
           setInputFocus={() => setInputFocus(true)}
           displayType={displayType}
-        />
+        /> */}
       </Layout.FlexCol>
       {bottomSheet && (
         <CommentBottomSheet
