@@ -587,6 +587,9 @@
       "title": "Edit Friends",
       "save": "Save"
     },
+    "list_friends": {
+      "title": "Friend List"
+    },
     "updated_profiles": "Updated Profiles",
     "friend_requests": "Friend Requests",
     "friend_requests_desc": "View friend requests and recommended friends",
