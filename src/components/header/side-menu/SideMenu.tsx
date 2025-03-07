@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Z_INDEX } from '@constants/layout';
 import { KAKAO_INQUIRY_LINK } from '@constants/url';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { usePostAppMessage } from '@hooks/useAppMessage';
 
 const SIDE_MENU_LIST = [
   { key: 'explore_friends', path: '/friends/explore' },
@@ -19,6 +20,7 @@ interface Props {
 function SideMenu({ closeSideMenu }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'home.header.side_menu' });
   const navigate = useNavigate();
+  const postMessage = usePostAppMessage();
 
   const handleClickMenu = (path: string) => () => {
     navigate(path);
@@ -29,7 +31,13 @@ function SideMenu({ closeSideMenu }: Props) {
   };
 
   const handleClickKakaoInquiry = () => {
-    window.open(KAKAO_INQUIRY_LINK, '_blank');
+    if (window.ReactNativeWebView) {
+      postMessage('OPEN_BROWSER', {
+        url: KAKAO_INQUIRY_LINK,
+      });
+    } else {
+      window.open(KAKAO_INQUIRY_LINK, '_blank');
+    }
   };
 
   return createPortal(
