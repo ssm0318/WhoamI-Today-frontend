@@ -12,3 +12,5 @@ export const DEFAULT_REDIRECTION_PATH = '/friends';
 export const AFTER_SIGNUP_PATH = '/my';
 
 export const INVITATION_LINK = 'https://whoamitoday.page.link/invite-friend';
+// TODO: 카카오 문의 링크 수정
+export const KAKAO_INQUIRY_LINK = 'https://open.kakao.com/o/sZOm9nVf';

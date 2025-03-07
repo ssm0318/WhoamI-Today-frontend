@@ -2,7 +2,9 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Z_INDEX } from '@constants/layout';
+import { KAKAO_INQUIRY_LINK } from '@constants/url';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { usePostAppMessage } from '@hooks/useAppMessage';
 
 const SIDE_MENU_LIST = [
   { key: 'explore_friends', path: '/friends/explore' },
@@ -18,6 +20,7 @@ interface Props {
 function SideMenu({ closeSideMenu }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'home.header.side_menu' });
   const navigate = useNavigate();
+  const postMessage = usePostAppMessage();
 
   const handleClickMenu = (path: string) => () => {
     navigate(path);
@@ -25,6 +28,16 @@ function SideMenu({ closeSideMenu }: Props) {
 
   const handleClickDimmed = () => {
     closeSideMenu();
+  };
+
+  const handleClickKakaoInquiry = () => {
+    if (window.ReactNativeWebView) {
+      postMessage('OPEN_BROWSER', {
+        url: KAKAO_INQUIRY_LINK,
+      });
+    } else {
+      window.open(KAKAO_INQUIRY_LINK, '_blank');
+    }
   };
 
   return createPortal(
@@ -39,6 +52,10 @@ function SideMenu({ closeSideMenu }: Props) {
                 <Typo type="head-line">{t(menu.key)}</Typo>
               </button>
             ))}
+            {/* 한국인 연구 참여자를 위한 카카오 문의 버튼 */}
+            <button type="button" onClick={handleClickKakaoInquiry}>
+              <Typo type="head-line">{t('kakao_inquiry')}</Typo>
+            </button>
           </Layout.FlexCol>
         </Layout.FlexCol>
       </Layout.Absolute>

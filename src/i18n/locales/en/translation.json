@@ -87,7 +87,8 @@
       "side_menu": {
         "explore_friends": "Explore Friends",
         "questions": "Questions",
-        "settings": "Settings"
+        "settings": "Settings",
+        "kakao_inquiry": "Kakaotalk Inquiry"
       },
       "bottom_sheet": {
         "title": "Create",
