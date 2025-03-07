@@ -26,6 +26,7 @@ import ExploreFriends from './routes/friends/ExploreFriends';
 import FriendsFeed from './routes/friends/FriendsFeed';
 import FriendsList from './routes/friends/FriendsList';
 import Intro from './routes/Intro';
+import Likes from './routes/Likes';
 import My from './routes/My';
 import AllNotes from './routes/notes/AllNotes';
 import NewNote from './routes/notes/NewNote';
@@ -119,9 +120,13 @@ const router = createBrowserRouter([
                   { path: ':responseId', element: <ResponseDetail /> },
                 ],
               },
+              { path: ':responseId/likes', element: <Likes /> },
               {
                 path: 'notes',
-                children: [{ path: ':noteId', element: <NoteDetail /> }],
+                children: [
+                  { path: ':noteId', element: <NoteDetail /> },
+                  { path: ':noteId/likes', element: <Likes /> },
+                ],
               },
               {
                 path: 'ping',
@@ -137,10 +142,15 @@ const router = createBrowserRouter([
         children: [{ path: 'edit', element: <CheckInEdit /> }],
       },
       {
+        path: 'comments/:commentId/likes',
+        element: <Likes />,
+      },
+      {
         path: 'notes',
         children: [
           { path: '', element: <AllNotes /> },
           { path: ':noteId', element: <NoteDetail /> },
+          { path: ':noteId/likes', element: <Likes /> },
           { path: ':noteId/reactions', element: <Reactions /> },
           { path: 'new', element: <NewNote /> },
         ],
@@ -149,6 +159,7 @@ const router = createBrowserRouter([
         path: 'responses',
         children: [
           { path: ':responseId', element: <ResponseDetail /> },
+          { path: ':noteId/likes', element: <Likes /> },
           { path: ':responseId/reactions', element: <Reactions /> },
           { path: ':responseId/edit', element: <NewResponse /> },
         ],

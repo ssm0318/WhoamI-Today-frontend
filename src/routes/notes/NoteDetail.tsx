@@ -14,7 +14,8 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getNoteDetail } from '@utils/apis/note';
+import { UserSelector } from '@stores/user';
+import { getNoteDetail, getNoteDetailDefault } from '@utils/apis/note';
 import { MainScrollContainer } from '../Root';
 
 export function NoteDetail() {
@@ -23,6 +24,7 @@ export function NoteDetail() {
   const [t] = useTranslation('translation');
   const navigate = useNavigate();
   const location = useLocation();
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const [noteDetail, setNoteDetail] = useState<FetchState<Note>>({ state: 'loading' });
@@ -33,7 +35,9 @@ export function NoteDetail() {
     if (!noteId) return;
 
     try {
-      const data = await getNoteDetail(Number(noteId));
+      const data = featureFlags?.friendList
+        ? await getNoteDetail(Number(noteId))
+        : await getNoteDetailDefault(Number(noteId));
       setNoteDetail({ state: 'hasValue', data });
     } catch (error) {
       if (isAxiosError(error)) {
