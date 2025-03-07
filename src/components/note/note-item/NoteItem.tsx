@@ -51,7 +51,6 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
   const { username, profile_image } = author_detail ?? {};
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
 
-  console.log('Note', note, displayType);
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
     setShowMore(true);
