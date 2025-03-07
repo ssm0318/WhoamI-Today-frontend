@@ -2,6 +2,7 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Z_INDEX } from '@constants/layout';
+import { KAKAO_INQUIRY_LINK } from '@constants/url';
 import { Layout, SvgIcon, Typo } from '@design-system';
 
 const SIDE_MENU_LIST = [
@@ -27,6 +28,10 @@ function SideMenu({ closeSideMenu }: Props) {
     closeSideMenu();
   };
 
+  const handleClickKakaoInquiry = () => {
+    window.open(KAKAO_INQUIRY_LINK, '_blank');
+  };
+
   return createPortal(
     <Layout.Absolute t={0} l={0} r={0} b={0} z={Z_INDEX.MODAL_CONTAINER}>
       <Layout.Absolute w="100%" h="100%" bgColor="DIM" onClick={handleClickDimmed} />
@@ -39,6 +44,10 @@ function SideMenu({ closeSideMenu }: Props) {
                 <Typo type="head-line">{t(menu.key)}</Typo>
               </button>
             ))}
+            {/* 한국인 연구 참여자를 위한 카카오 문의 버튼 */}
+            <button type="button" onClick={handleClickKakaoInquiry}>
+              <Typo type="head-line">{t('kakao_inquiry')}</Typo>
+            </button>
           </Layout.FlexCol>
         </Layout.FlexCol>
       </Layout.Absolute>
