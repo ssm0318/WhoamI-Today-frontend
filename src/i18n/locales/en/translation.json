@@ -256,7 +256,9 @@
     "done": "Done",
     "more": "more",
     "edited": "edited",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "friend": "Friends",
+    "close_friend": "Close Friends"
   },
   "note_detail": {
     "title": "{{username}}'s Note",
@@ -275,7 +277,9 @@
     "likes": "likes",
     "more": "More",
     "new_response": "New Response",
-    "edited": "edited"
+    "edited": "edited",
+    "friend": "Friends",
+    "close_friend": "Close Friends"
   },
   "all_responses": {
     "title": "{{username}}'s Responses"

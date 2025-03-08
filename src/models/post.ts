@@ -100,6 +100,7 @@ export interface Note extends ContentsCommon {
   comments: Comment[];
   current_user_read: boolean;
   is_edited: boolean;
+  visibility: string;
 }
 
 export interface NewNoteForm {

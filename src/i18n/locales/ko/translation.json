@@ -253,7 +253,9 @@
     "done": "완료",
     "more": "더보기",
     "edited": "수정됨",
-    "confirm": "확인"
+    "confirm": "확인",
+    "friend": "친구",
+    "close_friend": "친한 친구"
   },
   "note_detail": {
     "title": "{{username}}의 노트",
@@ -272,7 +274,9 @@
     "likes": "좋아요",
     "more": "더보기",
     "new_response": "새 답변",
-    "edited": "수정됨"
+    "edited": "수정됨",
+    "friend": "친구",
+    "close_friend": "친한 친구"
   },
   "all_responses": {
     "title": "{{username}}의 답변들"

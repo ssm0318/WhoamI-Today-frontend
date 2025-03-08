@@ -37,6 +37,7 @@ function ResponseItem({
     like_reaction_user_sample,
     is_edited,
     current_user_read,
+    visibility,
   } = response;
   const { username, profile_image } = author_detail ?? {};
   const [overflowSummary, setOverflowSummary] = useState<string>();
@@ -131,6 +132,21 @@ function ResponseItem({
                   {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
                 </Typo>
                 {!current_user_read && <UpdatedLabel />}
+              </Layout.FlexRow>
+              {/* 공개범위 */}
+              <Layout.FlexRow
+                bgColor="SECONDARY"
+                pl={4}
+                pr={4}
+                pv={2}
+                rounded={4}
+                gap={5}
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Typo type="label-small" color="BLACK">
+                  {visibility === 'close_friends' ? t('close_friend') : t('friend')}
+                </Typo>
               </Layout.FlexRow>
             </Layout.FlexRow>
             {/* 더보기 */}
