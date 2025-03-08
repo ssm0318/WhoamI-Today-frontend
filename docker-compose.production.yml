@@ -8,13 +8,14 @@ services:
       target: production
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt:ro
-      - frontend_build_volume:/usr/share/nginx/html  # ✅ 빌드 파일 공유 볼륨 추가
+      - frontend_build_volume:/usr/share/nginx/html
     networks:
       - whoamitoday-network
     restart: unless-stopped
 
 volumes:
-  frontend_build_volume:  # ✅ 공유 볼륨 정의 추가
+  frontend_build_volume: 
+    external: true
 
 networks:
   whoamitoday-network:
