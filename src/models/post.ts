@@ -89,6 +89,7 @@ export interface Response extends ContentsCommon {
   like_reaction_user_sample: ReactionUserSample[];
   current_user_read: boolean;
   is_edited: boolean;
+  visibility: string;
 }
 
 export interface Note extends ContentsCommon {
@@ -99,11 +100,13 @@ export interface Note extends ContentsCommon {
   comments: Comment[];
   current_user_read: boolean;
   is_edited: boolean;
+  visibility: string;
 }
 
 export interface NewNoteForm {
   content: string;
   images?: CroppedImg[];
+  visibility: string;
 }
 // 질문에 대한 답변 리스트
 /** deprecated */

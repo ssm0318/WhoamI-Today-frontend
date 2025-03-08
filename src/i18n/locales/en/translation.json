@@ -219,8 +219,8 @@
       "checked_in_time": "Checked in {{time}}"
     },
     "connection": {
-      "friend": "friend",
-      "close_friend": "close friend"
+      "friend": "friends",
+      "close_friend": "close friends"
     },
     "edit_connections": {
       "title": "Edit Connections",
@@ -256,11 +256,20 @@
     "done": "Done",
     "more": "more",
     "edited": "edited",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "friend": "Friends",
+    "close_friend": "Close Friends"
   },
   "note_detail": {
     "title": "{{username}}'s Note",
     "error_title": "Note"
+  },
+  "access_setting": {
+      "title": "Public Access Setting",
+      "text": "Set the access of your post.",
+      "friend": "Friends",
+      "close_friend": "Close Friends",
+      "save": "Save"
   },
   "responses": {
     "title": "Responses",
@@ -268,7 +277,9 @@
     "likes": "likes",
     "more": "More",
     "new_response": "New Response",
-    "edited": "edited"
+    "edited": "edited",
+    "friend": "Friends",
+    "close_friend": "Close Friends"
   },
   "all_responses": {
     "title": "{{username}}'s Responses"

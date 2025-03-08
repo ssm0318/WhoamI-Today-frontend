@@ -4,6 +4,7 @@ export interface ResponseQuestionRequestParams {
   question_id?: number;
   post_id?: number;
   content: string;
+  visibility: string;
   share_friends?: unknown;
   share_groups?: unknown;
   share_everyone?: unknown;

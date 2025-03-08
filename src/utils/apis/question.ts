@@ -60,12 +60,14 @@ export const requestResponse = async ({
 export const postResponse = async ({
   question_id,
   content,
+  visibility,
   share_friends = [],
   share_groups = [],
 }: ResponseQuestionRequestParams) => {
   const { data } = await axios.post<Response>(`/qna/responses/`, {
     question_id,
     content,
+    visibility,
     share_friends,
     share_groups,
   });
@@ -75,12 +77,14 @@ export const postResponse = async ({
 export const patchResponse = async ({
   post_id,
   content,
+  visibility,
   share_friends = [],
   share_groups = [],
   share_everyone = false,
 }: ResponseQuestionRequestParams) => {
   const { data } = await axios.patch<Response>(`/qna/responses/${post_id}/`, {
     content,
+    visibility,
     share_friends,
     share_groups,
     share_everyone,

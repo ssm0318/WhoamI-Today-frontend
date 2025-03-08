@@ -31,6 +31,7 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
     like_reaction_user_sample,
     is_edited,
     current_user_read,
+    visibility,
   } = note;
   const navigate = useNavigate();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
@@ -116,6 +117,23 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
               </Typo>
               {!current_user_read && <UpdatedLabel />}
             </Layout.FlexRow>
+            {/* 공개범위 - 본인페이지에서만 표시 */}
+            {isMyPage && (
+              <Layout.FlexRow
+                bgColor="SECONDARY"
+                pl={4}
+                pr={4}
+                pv={2}
+                rounded={4}
+                gap={5}
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Typo type="label-small" color="BLACK">
+                  {visibility === 'close_friends' ? t('close_friend') : t('friend')}
+                </Typo>
+              </Layout.FlexRow>
+            )}
           </Layout.FlexRow>
           {/* 더보기 */}
           <Layout.FlexRow>
