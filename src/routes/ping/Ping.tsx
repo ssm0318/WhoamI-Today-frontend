@@ -1,5 +1,6 @@
 import { isSameDay } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
@@ -16,6 +17,7 @@ import { PingsListLoader } from './PingsLoader';
 
 function Ping() {
   const { userId } = useParams();
+  const [t] = useTranslation('translation', { keyPrefix: 'ping' });
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
@@ -30,7 +32,14 @@ function Ping() {
   const initFetchPingsAndScrollToUnreadMsg = useCallback(
     async (_userId: number, autoScroll = true) => {
       // 첫 페이지 로드
-      const { oldest_unread_page: oldestUnreadPage, next, results } = await getPings(_userId);
+      const {
+        oldest_unread_page: oldestUnreadPage,
+        next,
+        results,
+        username: _username,
+      } = await getPings(_userId);
+      setUsername(_username ?? '');
+
       if (!results) {
         setNextUrl(next);
         setPings([]);
@@ -46,14 +55,10 @@ function Ping() {
         const pageNum = page ? page.split('page=')[1] : null;
         if (!pageNum || !oldestUnreadPage || Number(pageNum) > oldestUnreadPage) return accPings;
 
-        const {
-          next: _next,
-          results: _results,
-          username: _username,
-        } = await getPings(_userId, page);
+        const { next: _next, results: _results } = await getPings(_userId, page);
+
         lastNextUrl = _next;
         if (!_results) return accPings;
-        setUsername(_username ?? '');
         return fetchPingsRecursively(_next, [...[..._results].reverse(), ...accPings]);
       };
 
@@ -100,10 +105,6 @@ function Ping() {
       return acc;
     }, []);
   }, [pings]);
-
-  useEffect(() => {
-    console.debug('refinedPings', refinedPings);
-  }, [refinedPings]);
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextUrl && userId) {
@@ -167,13 +168,20 @@ function Ping() {
         </Layout.FlexCol>
       )}
       {/** ping list */}
-      {refinedPings.length > 0 && (
+      {!firstLoad && refinedPings.length > 0 && (
         <Layout.FlexCol w="100%" gap={15} p={10} mb={PING_MESSAGE_INPUT_HEIGHT}>
           <div ref={targetRef} />
           {isLoading && <Loader />}
           {refinedPings.map((message) => {
             return <PingMessageItem key={message.id} message={message} />;
           })}
+        </Layout.FlexCol>
+      )}
+      {!firstLoad && refinedPings.length === 0 && (
+        <Layout.FlexCol w="100%" h="100%" alignItems="center" mt={50}>
+          <Typo type="body-medium" color="MEDIUM_GRAY">
+            {t('no_pings')}
+          </Typo>
         </Layout.FlexCol>
       )}
       {/** ping input */}

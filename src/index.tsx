@@ -126,7 +126,7 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: 'users/:userid',
+        path: 'users/:userId',
         children: [
           {
             path: '',

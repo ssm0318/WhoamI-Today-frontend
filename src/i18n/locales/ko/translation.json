@@ -310,7 +310,8 @@
     "see_original": "원문보기"
   },
   "ping": {
-    "input_placeholder": "메시지 입력"
+    "input_placeholder": "메시지 입력",
+    "no_pings": "아직 메시지가 없습니다."
   },
   "settings": {
     "title": "설정",
