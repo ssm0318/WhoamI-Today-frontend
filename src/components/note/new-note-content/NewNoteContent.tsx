@@ -21,7 +21,8 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const [t] = useTranslation('translation');
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
-  const [connectionType, setConnectionType] = useState('close_friends');
+  const [connectionType, setConnectionType] = useState(noteInfo.visibility);
+
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
 

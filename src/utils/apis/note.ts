@@ -57,6 +57,9 @@ export const patchNote = async (noteId: number, noteData: NewNoteForm) => {
       formData.append('images', img.file, `${index}`);
     });
   }
+  if (noteData.visibility) {
+    formData.append('visibility', noteData.visibility);
+  }
 
   const { data } = await axiosFormDataInstance.patch<Note>(`notes/${noteId}/`, formData);
   return data;
