@@ -32,6 +32,9 @@ export const postNote = async (noteData: NewNoteForm) => {
       formData.append('images', img.file, `${index}`);
     });
   }
+  if (noteData.visibility) {
+    formData.append('visibility', noteData.visibility);
+  }
 
   const { data } = await axiosFormDataInstance.post<Note>(`notes/`, formData);
   return data;

@@ -25,6 +25,7 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
   };
 
   const confirmPost = async () => {
+    console.log('CONFIRM', noteInfo);
     try {
       const { id: newNoteId } = !noteId
         ? await postNote(noteInfo)

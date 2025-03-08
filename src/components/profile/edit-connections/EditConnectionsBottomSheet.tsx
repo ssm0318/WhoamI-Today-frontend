@@ -21,9 +21,9 @@ function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) 
   const { updateUser } = useContext(UserPageContext);
 
   const [connection, setConnection] = useState<Connection>(
-    user.connection_status ?? Connection.FRIEND,
+    user?.connection_status ?? Connection.FRIEND,
   );
-  const isChanged = connection !== user.connection_status;
+  const isChanged = connection !== user?.connection_status;
 
   const handleChangeConnection = (e: ChangeEvent<HTMLInputElement>) => {
     setConnection(e.target.value as Connection);

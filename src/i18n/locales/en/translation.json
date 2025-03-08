@@ -219,8 +219,8 @@
       "checked_in_time": "Checked in {{time}}"
     },
     "connection": {
-      "friend": "friend",
-      "close_friend": "close friend"
+      "friend": "friends",
+      "close_friend": "close friends"
     },
     "edit_connections": {
       "title": "Edit Connections",

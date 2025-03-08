@@ -104,6 +104,7 @@ export interface Note extends ContentsCommon {
 export interface NewNoteForm {
   content: string;
   images?: CroppedImg[];
+  visibility: string;
 }
 // 질문에 대한 답변 리스트
 /** deprecated */

@@ -1,11 +1,13 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { NewNoteForm } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
+import ConnectionType from '../connection-type/ConnectionType';
 import NewNoteImageEdit from '../new-note-image-edit/NewNoteImageEdit';
 import { NoteImage, NoteImageWrapper } from '../note-image/NoteImage.styled';
 import { NoteInput } from './NoteInputBox.styled';
@@ -16,10 +18,13 @@ interface NoteInformationProps {
 }
 
 function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
-  const [t] = useTranslation('translation', { keyPrefix: 'notes' });
+  const [t] = useTranslation('translation');
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
+  const [connectionType, setConnectionType] = useState('close_friends');
   const [isEditVisible, setIsEditVisible] = useState(false);
+  const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
+
   const [editImageUrl, setEditImageUrl] = useState<string>();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -48,6 +53,13 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
     }
   };
 
+  const visibilityUpdate = () => {
+    setNoteInfo((prevNoteInfo) => ({
+      ...prevNoteInfo,
+      visibility: connectionType,
+    }));
+  };
+
   const onCompleteImageCrop = (croppedImage: CroppedImg) => {
     setNoteInfo((prevNoteInfo) => ({
       ...prevNoteInfo,
@@ -71,6 +83,11 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
     }));
   };
 
+  const handleClickChangeConnection = async () => {
+    setShowEditConnectionsModal(true);
+  };
+  const closeEditConnectionsModal = () => setShowEditConnectionsModal(false);
+
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
   return (
@@ -86,10 +103,42 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
         </Layout.FlexRow>
         <NoteInput
           value={noteInfo.content}
-          placeholder={`${t('whats_on_your_mind')}\n\n${t('content_restriction')}`}
+          placeholder={`${t('notes.whats_on_your_mind')}\n\n${t('notes.content_restriction')}`}
           onChange={handleChangeInput}
         />
-        <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
+        <Layout.FlexRow w="100%" justifyContent="space-between">
+          <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
+          {/** connections */}
+          <Layout.FlexRow>
+            <Layout.FlexRow
+              onClick={handleClickChangeConnection}
+              bgColor="SECONDARY"
+              pl={10}
+              pr={8}
+              pv={5}
+              rounded={8}
+              gap={5}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Typo type="label-large" color="BLACK">
+                {connectionType === 'close_friends'
+                  ? t('user_page.connection.close_friend')
+                  : t('user_page.connection.friend')}
+              </Typo>
+              <Icon name="chevron_down" size={18} color="BLACK" />
+            </Layout.FlexRow>
+            {showEditConnectionsModal && (
+              <ConnectionType
+                type={connectionType}
+                setType={setConnectionType}
+                visibilityUpdate={visibilityUpdate}
+                visible={showEditConnectionsModal}
+                closeBottomSheet={closeEditConnectionsModal}
+              />
+            )}
+          </Layout.FlexRow>{' '}
+        </Layout.FlexRow>
         <input
           ref={inputRef}
           type="file"
