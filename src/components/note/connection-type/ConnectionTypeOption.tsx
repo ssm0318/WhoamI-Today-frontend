@@ -20,7 +20,7 @@ function ConnectionTypeOption({
   visible,
   closeBottomSheet,
 }: Props) {
-  const [t] = useTranslation('translation');
+  const [t] = useTranslation('translation', { keyPrefix: 'access_setting' });
 
   const handleChangeConnection = (e: ChangeEvent<HTMLInputElement>) => {
     setType(e.target.value);
@@ -35,24 +35,24 @@ function ConnectionTypeOption({
     <BottomModal visible={visible} onClose={closeBottomSheet}>
       <Layout.FlexCol justifyContent="space-between" w="100%" p={10} gap={4} bgColor="WHITE">
         <Layout.FlexRow justifyContent="center" w="100%">
-          <Typo type="title-large">{t('user_page.edit_connections.title')}</Typo>
+          <Typo type="title-large">{t('title')}</Typo>
         </Layout.FlexRow>
         <Divider width={1} />
         <Layout.FlexCol pv={10} gap={10} w="100%">
           <Layout.FlexCol gap={3} w="100%" bgColor="LIGHT" p={10} rounded={12}>
             <Typo type="title-medium" mb={10}>
-              {t('user_page.edit_connections.choice')}
+              {t('text')}
             </Typo>
             <Layout.FlexCol justifyContent="flex-start" w="100%" gap={10}>
               <RadioButton
-                label={t('user_page.connection.friend') || ''}
+                label={t('friend') || ''}
                 name="friends"
                 value="friends"
                 checked={type === 'friends'}
                 onChange={handleChangeConnection}
               />
               <RadioButton
-                label={t('user_page.connection.close_friend') || ''}
+                label={t('close_friend') || ''}
                 name="close_friends"
                 value="close_friends"
                 checked={type === 'close_friends'}
@@ -63,7 +63,7 @@ function ConnectionTypeOption({
         </Layout.FlexCol>
 
         <Button.Confirm
-          text={t('user_page.edit_connections.save')}
+          text={t('save')}
           status={type ? 'normal' : 'disabled'}
           sizing="stretch"
           onClick={handleConfirm}

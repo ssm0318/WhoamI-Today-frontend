@@ -259,6 +259,13 @@
     "title": "{{username}}의 노트",
     "error_title": "노트"
   },
+  "access_setting": {
+      "title": "공개 범위 설정",
+      "text": "해당 게시글의 공개 범위를 설정해주세요.",
+      "friend": "친구",
+      "close_friend": "친한 친구",
+      "save": "저장"
+  },
   "responses": {
     "title": "답변",
     "comments": "댓글",
