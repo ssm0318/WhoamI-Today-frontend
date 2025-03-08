@@ -258,16 +258,16 @@
     "edited": "edited",
     "confirm": "Confirm"
   },
+  "note_detail": {
+    "title": "{{username}}'s Note",
+    "error_title": "Note"
+  },
   "access_setting": {
       "title": "Public Access Setting",
       "text": "Set the access of your post.",
       "friend": "Friends",
       "close_friend": "Close Friends",
       "save": "Save"
-  },
-  "note_detail": {
-    "title": "{{username}}'s Note",
-    "error_title": "Note"
   },
   "responses": {
     "title": "Responses",
