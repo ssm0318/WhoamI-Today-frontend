@@ -89,6 +89,7 @@ export interface Response extends ContentsCommon {
   like_reaction_user_sample: ReactionUserSample[];
   current_user_read: boolean;
   is_edited: boolean;
+  visibility: string;
 }
 
 export interface Note extends ContentsCommon {

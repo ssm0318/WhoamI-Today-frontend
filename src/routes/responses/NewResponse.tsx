@@ -61,6 +61,7 @@ function NewResponse() {
       getResponse(responseId).then((data) => {
         if (data && data.content) {
           setNewResponse(data.content);
+          setConnectionType(data.visibility);
         }
         if (data && data.question && data.question.id) {
           const editQuestionId = data.question.id;
