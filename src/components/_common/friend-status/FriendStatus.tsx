@@ -1,7 +1,9 @@
 import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
+import { FeatureFlagKey } from '@constants/featureFlag';
 import { Button, Layout } from '@design-system';
+import { Connection } from '@models/api/friends';
 import {
   areFriends,
   receivedFriendRequest,
@@ -10,6 +12,7 @@ import {
   UserProfile,
 } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import {
   acceptFriendRequest,
   blockRecommendation,
@@ -18,6 +21,7 @@ import {
   rejectFriendRequest,
   requestFriend,
 } from '@utils/apis/user';
+import FriendTypeSelectModal from '../friend-type-select-modal/FriendTypeSelectModal';
 
 export interface Props {
   type: 'sent_requests' | 'requests' | 'recommended' | 'search' | 'user';
@@ -49,19 +53,38 @@ function FriendStatus({
   onClickCancelRequest,
 }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.friend_item' });
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const [isCancelFriendRequestDialogVisible, setIsCancelFriendRequestDialogVisible] =
     useState(false);
   const [isRejectFriendRequestDialogVisible, setIsRejectFriendRequestDialogVisible] =
     useState(false);
   const [isUnfriendDialogVisible, setIsUnfriendDialogVisible] = useState(false);
+  const [isFriendTypeSelectModalVisible, setIsFriendTypeSelectModalVisible] = useState<{
+    visible: boolean;
+    type: 'accept' | 'request';
+  } | null>(null);
 
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
+  const handleConfirmAcceptFriendRequest = async (
+    friendType: Connection,
+    updatePastPosts = false,
+  ) => {
+    await acceptFriendRequest(user.id, friendType, updatePastPosts);
+    onClickConfirm?.();
+  };
+
   const handleClickConfirm = async (e: MouseEvent) => {
     e.stopPropagation();
-    await acceptFriendRequest(user.id);
-    onClickConfirm?.();
+    if (!featureFlags?.[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
+      // NOTE ver. Q의 경우 옵션 선택 모달이 떠야함
+      setIsFriendTypeSelectModalVisible({ visible: true, type: 'accept' });
+    } else {
+      // NOTE ver. R의 경우 friend로 친구 신청 수락
+      await handleConfirmAcceptFriendRequest(Connection.FRIEND, false);
+      onClickRequest?.();
+    }
   };
 
   const handleClickRejectFriendRequest = (e: MouseEvent) => {
@@ -97,20 +120,34 @@ function FriendStatus({
     onClickReject?.();
   };
 
-  const handleConfirmUnriendDialog = async () => {
+  const handleConfirmUnfriendDialog = async () => {
     await breakFriend(user.id);
     setIsUnfriendDialogVisible(false);
     onClickUnfriend?.();
   };
 
-  const handleClickRequest = async (e: MouseEvent) => {
-    e.stopPropagation();
+  const handleConfirmRequestFriend = async (friendType: Connection, updatePastPosts = false) => {
     await requestFriend({
       userId: user.id,
+      friendRequestType: friendType,
+      updatePastPosts,
       onSuccess: () => openToast({ message: t('friend_request_success') }),
       onError: () => openToast({ message: t('temporary_error') }),
     });
     onClickRequest?.();
+  };
+
+  const handleClickRequest = async (e: MouseEvent) => {
+    e.stopPropagation();
+
+    if (!featureFlags?.[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
+      // NOTE ver. Q의 경우 옵션 선택 모달이 떠야함
+      setIsFriendTypeSelectModalVisible({ visible: true, type: 'request' });
+    } else {
+      // NOTE ver. R의 경우 friend로 친구 신청을 보냄
+      await handleConfirmRequestFriend(Connection.FRIEND, false);
+      onClickRequest?.();
+    }
   };
 
   const PrimaryButton = isUserPage ? Button.Highlight : Button.Primary;
@@ -202,8 +239,20 @@ function FriendStatus({
           cancelText={t('break_friends_dialog.cancel')}
           confirmText={t('break_friends_dialog.confirm')}
           confirmTextColor="WARNING"
-          onClickConfirm={handleConfirmUnriendDialog}
+          onClickConfirm={handleConfirmUnfriendDialog}
           onClickClose={() => setIsUnfriendDialogVisible(false)}
+        />
+      )}
+      {!!isFriendTypeSelectModalVisible && (
+        <FriendTypeSelectModal
+          visible={isFriendTypeSelectModalVisible.visible}
+          onClickConfirm={
+            isFriendTypeSelectModalVisible.type === 'accept'
+              ? handleConfirmAcceptFriendRequest
+              : handleConfirmRequestFriend
+          }
+          onClickClose={() => setIsFriendTypeSelectModalVisible(null)}
+          type={isFriendTypeSelectModalVisible.type}
         />
       )}
     </>
