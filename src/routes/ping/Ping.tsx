@@ -185,7 +185,7 @@ function Ping() {
         </Layout.FlexCol>
       )}
       {/** ping input */}
-      <PingMessageInput insertPing={insertPing} />
+      <PingMessageInput insertPing={insertPing} userId={Number(userId)} />
     </MainScrollContainer>
   );
 }

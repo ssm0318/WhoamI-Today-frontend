@@ -1,8 +1,7 @@
-import { ChangeEvent, KeyboardEvent, useContext, useMemo, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from '@components/_common/icon/Icon';
 import { StyledTextInput } from '@components/ping/ping-message-input/PingMessageInput.styled';
-import { UserPageContext } from '@components/user-page/UserPage.context';
 import {
   BOTTOM_TABBAR_HEIGHT,
   MAX_WINDOW_WIDTH,
@@ -16,16 +15,11 @@ const MAX_LENGTH = 10000;
 
 interface Props {
   insertPing: (ping: PostPingMessageRes) => void;
+  userId: number;
 }
 
-function PingMessageInput({ insertPing }: Props) {
+function PingMessageInput({ insertPing, userId }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'ping' });
-  const { user } = useContext(UserPageContext);
-
-  const userId = useMemo(() => {
-    if (user.state !== 'hasValue' || !user.data) return;
-    return user.data.id;
-  }, [user.data, user.state]);
 
   const [messageInput, setMessageInput] = useState('');
   const [showEmojiList, setShowEmojiList] = useState(false);
