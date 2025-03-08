@@ -84,7 +84,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
     }));
   };
 
-  const handleClickChangeConnection = async () => {
+  const handleClickChangeConnection = () => {
     setShowEditConnectionsModal(true);
   };
   const closeEditConnectionsModal = () => setShowEditConnectionsModal(false);

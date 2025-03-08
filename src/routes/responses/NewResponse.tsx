@@ -86,7 +86,7 @@ function NewResponse() {
     setNewResponse(e.target.value);
   };
 
-  const handleClickChangeConnection = async () => {
+  const handleClickChangeConnection = () => {
     setShowEditConnectionsModal(true);
   };
 
@@ -101,7 +101,6 @@ function NewResponse() {
   const handleClickPost = async () => {
     if (!questionId && !responseId) return;
     navigate('/my');
-    console.log('Response visibility', connectionType);
     openToast({ message: t('question.response.posting') });
     const { id: newResponseId } = !isEdit
       ? await postResponse({
@@ -199,7 +198,6 @@ function NewResponse() {
             <ConnectionTypeOption
               type={connectionType}
               setType={setConnectionType}
-              // visibilityUpdate={visibilityUpdate}
               visible={showEditConnectionsModal}
               closeBottomSheet={closeEditConnectionsModal}
             />
