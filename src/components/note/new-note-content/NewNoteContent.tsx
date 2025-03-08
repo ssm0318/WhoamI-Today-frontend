@@ -7,7 +7,7 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import { NewNoteForm } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
-import ConnectionType from '../connection-type/ConnectionType';
+import ConnectionTypeOption from '../connection-type/ConnectionTypeOption';
 import NewNoteImageEdit from '../new-note-image-edit/NewNoteImageEdit';
 import { NoteImage, NoteImageWrapper } from '../note-image/NoteImage.styled';
 import { NoteInput } from './NoteInputBox.styled';
@@ -129,7 +129,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
               <Icon name="chevron_down" size={18} color="BLACK" />
             </Layout.FlexRow>
             {showEditConnectionsModal && (
-              <ConnectionType
+              <ConnectionTypeOption
                 type={connectionType}
                 setType={setConnectionType}
                 visibilityUpdate={visibilityUpdate}

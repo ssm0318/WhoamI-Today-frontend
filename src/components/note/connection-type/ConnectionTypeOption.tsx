@@ -8,12 +8,18 @@ import { Button, Layout, RadioButton, Typo } from '@design-system';
 interface Props {
   type: string;
   setType: (type: string) => void;
-  visibilityUpdate: () => void;
+  visibilityUpdate?: () => void;
   visible: boolean;
   closeBottomSheet: () => void;
 }
 
-function ConnectionType({ type, setType, visibilityUpdate, visible, closeBottomSheet }: Props) {
+function ConnectionTypeOption({
+  type,
+  setType,
+  visibilityUpdate,
+  visible,
+  closeBottomSheet,
+}: Props) {
   const [t] = useTranslation('translation');
 
   const handleChangeConnection = (e: ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +27,7 @@ function ConnectionType({ type, setType, visibilityUpdate, visible, closeBottomS
   };
 
   const handleConfirm = () => {
-    visibilityUpdate();
+    visibilityUpdate?.();
     closeBottomSheet();
   };
 
@@ -68,4 +74,4 @@ function ConnectionType({ type, setType, visibilityUpdate, visible, closeBottomS
   );
 }
 
-export default ConnectionType;
+export default ConnectionTypeOption;

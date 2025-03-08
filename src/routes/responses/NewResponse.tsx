@@ -1,11 +1,13 @@
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledNewResponsePrompt } from '@components/_common/prompt/PromptCard.styled';
+import ConnectionTypeOption from '@components/note/connection-type/ConnectionTypeOption';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { TextArea, Typo } from '@design-system';
@@ -31,6 +33,9 @@ function NewResponse() {
   const [question, setQuestion] = useState<FetchState<Question>>({ state: 'loading' });
 
   const [newResponse, setNewResponse] = useState<string | null>(null);
+
+  const [connectionType, setConnectionType] = useState('close_friends');
+  const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
 
   const title = !location.state
     ? t('question.response.new_response')
@@ -80,6 +85,12 @@ function NewResponse() {
     setNewResponse(e.target.value);
   };
 
+  const handleClickChangeConnection = async () => {
+    setShowEditConnectionsModal(true);
+  };
+
+  const closeEditConnectionsModal = () => setShowEditConnectionsModal(false);
+
   const navigate = useNavigate();
   const handleClickCancel = () => {
     navigate(-1);
@@ -89,15 +100,18 @@ function NewResponse() {
   const handleClickPost = async () => {
     if (!questionId && !responseId) return;
     navigate('/my');
+    console.log('Response visibility', connectionType);
     openToast({ message: t('question.response.posting') });
     const { id: newResponseId } = !isEdit
       ? await postResponse({
           question_id: Number(questionId),
           content: newResponse || '',
+          visibility: connectionType || 'close_friends',
         })
       : await patchResponse({
           post_id: Number(responseId),
           content: newResponse || '',
+          visibility: connectionType || 'close_friends',
         });
 
     openToast({
@@ -160,6 +174,36 @@ function NewResponse() {
           </>
         )}
         {question.state === 'hasError' && <NoContents text={t('no_contents.question')} />}
+        {/** connections */}
+        <FlexRow pt={15} w="100%" justifyContent="flex-end">
+          <FlexRow
+            onClick={handleClickChangeConnection}
+            bgColor="SECONDARY"
+            pl={10}
+            pr={8}
+            pv={5}
+            rounded={8}
+            gap={5}
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Typo type="label-large" color="BLACK">
+              {connectionType === 'close_friends'
+                ? t('user_page.connection.close_friend')
+                : t('user_page.connection.friend')}
+            </Typo>
+            <Icon name="chevron_down" size={18} color="BLACK" />
+          </FlexRow>
+          {showEditConnectionsModal && (
+            <ConnectionTypeOption
+              type={connectionType}
+              setType={setConnectionType}
+              // visibilityUpdate={visibilityUpdate}
+              visible={showEditConnectionsModal}
+              closeBottomSheet={closeEditConnectionsModal}
+            />
+          )}
+        </FlexRow>
       </LayoutBase>
     </MainContainer>
   );
