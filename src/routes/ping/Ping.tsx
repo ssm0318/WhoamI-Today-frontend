@@ -1,12 +1,12 @@
 import { isSameDay } from 'date-fns';
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import PingMessageInput from '@components/ping/ping-message-input/PingMessageInput';
 import PingMessageItem from '@components/ping/ping-message-item/PingMessageItem';
 import SubHeader from '@components/sub-header/SubHeader';
-import { UserPageContext } from '@components/user-page/UserPage.context';
 import { PING_MESSAGE_INPUT_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
@@ -16,18 +16,14 @@ import { MainScrollContainer } from '../Root';
 import { PingsListLoader } from './PingsLoader';
 
 function Ping() {
-  const { username } = useParams();
-  const { user } = useContext(UserPageContext);
-
-  const userId = useMemo(() => {
-    if (user.state !== 'hasValue' || !user.data) return;
-    return user.data.id;
-  }, [user.data, user.state]);
+  const { userId } = useParams();
+  const [t] = useTranslation('translation', { keyPrefix: 'ping' });
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
 
   const [pings, setPings] = useState<PingMessage[]>([]);
+  const [username, setUsername] = useState<string>('');
   const [nextUrl, setNextUrl] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [oldestUnreadPingId, setOldestUnreadPingId] = useState<number | undefined>();
@@ -36,7 +32,14 @@ function Ping() {
   const initFetchPingsAndScrollToUnreadMsg = useCallback(
     async (_userId: number, autoScroll = true) => {
       // 첫 페이지 로드
-      const { oldest_unread_page: oldestUnreadPage, next, results } = await getPings(_userId);
+      const {
+        oldest_unread_page: oldestUnreadPage,
+        next,
+        results,
+        username: _username,
+      } = await getPings(_userId);
+      setUsername(_username ?? '');
+
       if (!results) {
         setNextUrl(next);
         setPings([]);
@@ -53,9 +56,9 @@ function Ping() {
         if (!pageNum || !oldestUnreadPage || Number(pageNum) > oldestUnreadPage) return accPings;
 
         const { next: _next, results: _results } = await getPings(_userId, page);
+
         lastNextUrl = _next;
         if (!_results) return accPings;
-
         return fetchPingsRecursively(_next, [...[..._results].reverse(), ...accPings]);
       };
 
@@ -75,7 +78,7 @@ function Ping() {
 
   useEffect(() => {
     if (!userId) return;
-    initFetchPingsAndScrollToUnreadMsg(userId);
+    initFetchPingsAndScrollToUnreadMsg(Number(userId));
   }, [initFetchPingsAndScrollToUnreadMsg, userId]);
 
   useEffect(() => {
@@ -103,14 +106,10 @@ function Ping() {
     }, []);
   }, [pings]);
 
-  useEffect(() => {
-    console.debug('refinedPings', refinedPings);
-  }, [refinedPings]);
-
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
     if (nextUrl && userId) {
       setPrevScrollHeight(scrollRef.current?.scrollHeight); // infinite 스크롤시에 스크롤 위치 유지
-      const { next, results } = await getPings(userId, nextUrl);
+      const { next, results } = await getPings(Number(userId), nextUrl);
       setNextUrl(next);
       if (!results) return;
       setPings((prev) => [...[...results].reverse(), ...prev]);
@@ -134,7 +133,7 @@ function Ping() {
     if (!userId) return;
 
     // FIXME: 현재 페이지네이션 정보를 유지한채로 안읽은 메시지가 있는 페이지까지 로드하도록 수정 해보자
-    initFetchPingsAndScrollToUnreadMsg(userId, false);
+    initFetchPingsAndScrollToUnreadMsg(Number(userId), false);
     setUnreadCount(0);
   };
 
@@ -169,7 +168,7 @@ function Ping() {
         </Layout.FlexCol>
       )}
       {/** ping list */}
-      {refinedPings.length > 0 && (
+      {!firstLoad && refinedPings.length > 0 && (
         <Layout.FlexCol w="100%" gap={15} p={10} mb={PING_MESSAGE_INPUT_HEIGHT}>
           <div ref={targetRef} />
           {isLoading && <Loader />}
@@ -178,8 +177,15 @@ function Ping() {
           })}
         </Layout.FlexCol>
       )}
+      {!firstLoad && refinedPings.length === 0 && (
+        <Layout.FlexCol w="100%" h="100%" alignItems="center" mt={50}>
+          <Typo type="body-medium" color="MEDIUM_GRAY">
+            {t('no_pings')}
+          </Typo>
+        </Layout.FlexCol>
+      )}
       {/** ping input */}
-      <PingMessageInput insertPing={insertPing} />
+      <PingMessageInput insertPing={insertPing} userId={Number(userId)} />
     </MainScrollContainer>
   );
 }

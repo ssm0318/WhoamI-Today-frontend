@@ -10,10 +10,10 @@ interface Props {
 }
 
 function PingMessageItem({ message }: Props) {
-  const { username } = useParams();
+  const { userId } = useParams();
   const { sender, content, emoji, created_at, show_date, is_read } = message;
 
-  const isAuthor = sender.username !== username;
+  const isAuthor = sender.id !== Number(userId);
   const date = new Date(created_at);
 
   return (

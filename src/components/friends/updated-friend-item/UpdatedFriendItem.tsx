@@ -66,7 +66,7 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
 
   const handleClickPing = (e: MouseEvent) => {
     e.stopPropagation();
-    navigate(`/users/${username}/ping`);
+    navigate(`/users/${id}/ping`);
   };
 
   return (

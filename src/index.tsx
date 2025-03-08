@@ -121,6 +121,16 @@ const router = createBrowserRouter([
                 path: 'notes',
                 children: [{ path: ':noteId', element: <NoteDetail /> }],
               },
+            ],
+          },
+        ],
+      },
+      {
+        path: 'users/:userId',
+        children: [
+          {
+            path: '',
+            children: [
               {
                 path: 'ping',
                 element: <Ping />,
@@ -129,7 +139,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-
       {
         path: 'check-in',
         children: [{ path: 'edit', element: <CheckInEdit /> }],
