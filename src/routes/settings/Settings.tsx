@@ -43,7 +43,7 @@ function Settings() {
     await signOut(() => {
       handleOnClose();
       postMessage('LOGOUT', {});
-      navigate('/');
+      navigate('/signin');
     });
   };
 
