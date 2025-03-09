@@ -259,41 +259,76 @@ export const requestFriend = async ({
   updatePastPosts,
   onSuccess,
   onError,
+  isDefault = false,
 }: {
   userId: number;
   friendRequestType: Connection;
-  updatePastPosts: boolean;
+  updatePastPosts?: boolean;
   onSuccess: () => void;
   onError: () => void;
+  isDefault?: boolean;
 }) => {
   const currentUser = useBoundStore.getState().myProfile;
   if (!currentUser) return;
 
-  axios
-    .post('/user/friend-requests/', {
-      requester_id: currentUser.id,
-      requestee_id: userId,
-      requester_choice: friendRequestType,
-      update_past_posts: updatePastPosts,
-    })
-    .then(() => onSuccess())
-    .catch(() => onError());
+  if (isDefault) {
+    axios
+      .post('/user/friend-requests/default/', {
+        requester_id: currentUser.id,
+        requestee_id: userId,
+      })
+      .then(() => onSuccess())
+      .catch(() => onError());
+  } else {
+    axios
+      .post('/user/friend-requests/', {
+        requester_id: currentUser.id,
+        requestee_id: userId,
+        requester_choice: friendRequestType,
+        update_past_posts: updatePastPosts,
+      })
+      .then(() => onSuccess())
+      .catch(() => onError());
+  }
 };
 
 export const cancelFriendRequest = async (userId: number) => {
   await axios.delete(`/user/friend-requests/${userId}/`);
 };
 
-export const acceptFriendRequest = async (
-  userId: number,
-  friendType: Connection,
-  updatePastPosts: boolean,
-) => {
-  await axios.patch(`/user/friend-requests/${userId}/respond/`, {
-    accepted: true,
-    requestee_choice: friendType,
-    update_past_posts: updatePastPosts,
-  });
+export const acceptFriendRequest = async ({
+  userId,
+  friendType,
+  updatePastPosts,
+  isDefault = false,
+  onSuccess,
+  onError,
+}: {
+  userId: number;
+  friendType: Connection;
+  updatePastPosts?: boolean;
+  isDefault?: boolean;
+  onSuccess: () => void;
+  onError: () => void;
+}) => {
+  if (isDefault) {
+    await axios
+      .patch(`/user/friend-requests/${userId}/respond/`, {
+        accepted: true,
+        requestee_choice: friendType,
+      })
+      .then(() => onSuccess())
+      .catch(() => onError());
+  } else {
+    await axios
+      .patch(`/user/friend-requests/${userId}/respond/`, {
+        accepted: true,
+        requestee_choice: friendType,
+        ...(updatePastPosts !== undefined && { update_past_posts: updatePastPosts }),
+      })
+      .then(() => onSuccess())
+      .catch(() => onError());
+  }
 };
 
 export const rejectFriendRequest = async (userId: number) => {

@@ -7,7 +7,15 @@ import * as S from './FriendTypeSelectModal.styled';
 
 interface FriendTypeSelectModalProps {
   visible: boolean;
-  onClickConfirm: (friendType: Connection, updatePastPosts: boolean) => void;
+  onClickConfirm: ({
+    friendType,
+    updatePastPosts,
+    isDefault,
+  }: {
+    friendType: Connection;
+    updatePastPosts?: boolean;
+    isDefault?: boolean;
+  }) => void;
   onClickClose: () => void;
   type: 'accept' | 'request';
 }
@@ -36,7 +44,11 @@ function FriendTypeSelectModal({
   }, [visible]);
 
   const handleClickConfirm = () => {
-    onClickConfirm(friendType, isUpdatePastPosts);
+    onClickConfirm({
+      friendType,
+      updatePastPosts: isUpdatePastPosts,
+      isDefault: false,
+    });
     onClickClose();
   };
 

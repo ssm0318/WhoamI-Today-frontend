@@ -67,11 +67,23 @@ function FriendStatus({
 
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
-  const handleConfirmAcceptFriendRequest = async (
-    friendType: Connection,
-    updatePastPosts = false,
-  ) => {
-    await acceptFriendRequest(user.id, friendType, updatePastPosts);
+  const handleConfirmAcceptFriendRequest = async ({
+    friendType,
+    updatePastPosts,
+    isDefault = false,
+  }: {
+    friendType: Connection;
+    updatePastPosts?: boolean;
+    isDefault?: boolean;
+  }) => {
+    await acceptFriendRequest({
+      userId: user.id,
+      friendType,
+      updatePastPosts,
+      isDefault,
+      onSuccess: () => openToast({ message: t('friend_accept_success') }),
+      onError: () => openToast({ message: t('temporary_error') }),
+    });
     onClickConfirm?.();
   };
 
@@ -82,8 +94,10 @@ function FriendStatus({
       setIsFriendTypeSelectModalVisible({ visible: true, type: 'accept' });
     } else {
       // NOTE ver. R의 경우 friend로 친구 신청 수락
-      await handleConfirmAcceptFriendRequest(Connection.FRIEND, false);
-      onClickRequest?.();
+      await handleConfirmAcceptFriendRequest({
+        friendType: Connection.FRIEND,
+        isDefault: true,
+      });
     }
   };
 
@@ -126,13 +140,22 @@ function FriendStatus({
     onClickUnfriend?.();
   };
 
-  const handleConfirmRequestFriend = async (friendType: Connection, updatePastPosts = false) => {
+  const handleConfirmRequestFriend = async ({
+    friendType,
+    updatePastPosts,
+    isDefault = false,
+  }: {
+    friendType: Connection;
+    updatePastPosts?: boolean;
+    isDefault?: boolean;
+  }) => {
     await requestFriend({
       userId: user.id,
       friendRequestType: friendType,
       updatePastPosts,
       onSuccess: () => openToast({ message: t('friend_request_success') }),
       onError: () => openToast({ message: t('temporary_error') }),
+      isDefault,
     });
     onClickRequest?.();
   };
@@ -145,8 +168,11 @@ function FriendStatus({
       setIsFriendTypeSelectModalVisible({ visible: true, type: 'request' });
     } else {
       // NOTE ver. R의 경우 friend로 친구 신청을 보냄
-      await handleConfirmRequestFriend(Connection.FRIEND, false);
-      onClickRequest?.();
+      await handleConfirmRequestFriend({
+        friendType: Connection.FRIEND,
+        updatePastPosts: false,
+        isDefault: true,
+      });
     }
   };
 
