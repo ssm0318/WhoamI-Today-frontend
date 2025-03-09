@@ -173,7 +173,6 @@ function FriendStatus({
         updatePastPosts: false,
         isDefault: true,
       });
-      onClickRequest?.();
     }
   };
 
