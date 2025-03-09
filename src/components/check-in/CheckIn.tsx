@@ -128,7 +128,7 @@ function CheckIn({ user }: CheckInProps) {
                 }),
               })}
             </Typo>
-            {!current_user_read && <UpdatedLabel />}
+            {!current_user_read && !isMyPage && <UpdatedLabel />}
           </Layout.FlexRow>
         </>
       ) : (

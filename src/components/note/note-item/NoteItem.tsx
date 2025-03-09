@@ -134,7 +134,7 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
               <Typo type="label-medium" color="MEDIUM_GRAY">
                 {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
               </Typo>
-              {!current_user_read && <UpdatedLabel />}
+              {!current_user_read && !isMyPage && <UpdatedLabel />}
             </Layout.FlexRow>
             {/* 공개범위 - 본인페이지에서만 표시 */}
             {isMyPage && (
