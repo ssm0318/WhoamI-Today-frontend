@@ -69,9 +69,15 @@ function FriendStatus({
 
   const handleConfirmAcceptFriendRequest = async (
     friendType: Connection,
-    updatePastPosts = false,
+    updatePastPosts?: boolean,
   ) => {
-    await acceptFriendRequest(user.id, friendType, updatePastPosts);
+    await acceptFriendRequest({
+      userId: user.id,
+      friendType,
+      updatePastPosts,
+      onSuccess: () => openToast({ message: t('friend_accept_success') }),
+      onError: () => openToast({ message: t('temporary_error') }),
+    });
     onClickConfirm?.();
   };
 
@@ -82,8 +88,7 @@ function FriendStatus({
       setIsFriendTypeSelectModalVisible({ visible: true, type: 'accept' });
     } else {
       // NOTE ver. R의 경우 friend로 친구 신청 수락
-      await handleConfirmAcceptFriendRequest(Connection.FRIEND, false);
-      onClickRequest?.();
+      await handleConfirmAcceptFriendRequest(Connection.FRIEND);
     }
   };
 
