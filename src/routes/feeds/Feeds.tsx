@@ -9,7 +9,6 @@ import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Note } from '@models/post';
-import { useBoundStore } from '@stores/useBoundStore';
 import { getAllFeed } from '@utils/apis/feed';
 import { MainScrollContainer } from 'src/routes/Root';
 
@@ -18,15 +17,9 @@ function Feeds() {
 
   const { scrollRef } = useRestoreScrollPosition('feeds');
 
-  const { fetchCheckIn } = useBoundStore((state) => ({
-    myProfile: state.myProfile,
-    fetchCheckIn: state.fetchCheckIn,
-  }));
-
   const handleRefresh = useCallback(async () => {
     await getAllFeed(null);
-    await fetchCheckIn();
-  }, [fetchCheckIn]);
+  }, []);
 
   const {
     targetRef,
