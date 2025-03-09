@@ -42,7 +42,7 @@
     "next": "다음",
     "crop_picture": "이미지 자르기",
     "password_constraints": "비밀번호는 알파벳 대/소문자, 숫자, 특수문자를 조합하여 8자 이상으로 입력해주세요.",
-    "research_participation_consent_form": "연구 참여 동의",
+    "research_participation_consent_form": "연구 참여 동의서",
     "research_desc": "<0>WhoAmI Today는 워싱턴 대학교의 연구원 그룹이 소셜 미디어를 청소년들의 요구에 더 맞게 만들기 위해 개발한 비영리 서비스입니다.<br/><1>개인 정보 보호 정책/동의 양식</1>에 동의하는 경우, 귀하는 귀하의 데이터에 대한 (통합 및 식별되지 않은) 분석을 포함하는 당사의 연구에 참여하는 것에 동의합니다.</0>",
     "agree_to_research": "동의합니다(현재 워싱턴 대학 연구팀의 연구에 참여하지 않는 한 선택사항입니다.)",
     "learn_more_about_whoami_today": "WhoAmI Today에 대해 자세히 알아보기",
@@ -72,7 +72,7 @@
   },
   "nav_tab": {
     "friends": "친구",
-    "my": "나",
+    "my": "MY",
     "chats": "채팅",
     "questions": "질문"
   },
@@ -83,8 +83,8 @@
   "home": {
     "moment": {
       "todays_moments": "오늘의 순간들",
-      "add_moment_description": "오늘의 <0/>를 기록해보세요!",
-      "already_posted": "오늘의 순간을 이미 업로드하셨군요!"
+      "add_moment_description": "오늘의 <0/>를 기록해보세요.",
+      "already_posted": "오늘의 순간을 이미 업로드하셨군요."
     },
     "question": {
       "todays_questions": "오늘의 질문",
@@ -93,23 +93,23 @@
     },
     "header": {
       "side_menu": {
-        "explore_friends": "친구 탐색",
+        "explore_friends": "친구 추가",
         "questions": "전체 질문",
         "settings": "설정"
       },
       "bottom_sheet": {
-        "title": "만들기",
-        "check-in": "체크인 수정",
-        "note": "새 노트 작성",
+        "title": "작성하기",
+        "check-in": "상태 업데이트",
+        "note": "새 게시글 작성",
         "prompts": "새 답변 작성"
       }
     }
   },
   "question": {
     "response": {
-      "placeholder": "쓰고 싶은 내용을 쓰세요.",
+      "placeholder": "여기에 내용을 입력하세요.",
       "post": "완료",
-      "complete": "답변이 완료되었습니다!",
+      "complete": "답변 작성이 완료되었습니다.",
       "send_question_to_friends_now": "지금 친구들에게 질문을 보내볼까요?",
       "send_question": "질문 보내기",
       "new_response": "새로운 답변",
@@ -118,14 +118,14 @@
       "what_is_your_response": "답변을 작성해주세요.",
       "content_restriction": "⚠️ 부적절하거나 불쾌한 내용은 제한될 수 있습니다.",
       "posting": "답변을 업로드 중입니다...",
-      "posted": "업로드 완료🎉",
-      "edited": "수정 완료🎉",
+      "posted": "업로드 완료 🎉",
+      "edited": "수정 완료 🎉",
       "view": "보기"
     },
     "send": {
       "ask": "보내기",
       "skip": "건너뛰기",
-      "complete": "질문을 보냈습니다!",
+      "complete": "질문을 성공적으로 보냈습니다.",
       "ok": "확인"
     }
   },
@@ -147,11 +147,11 @@
     "mood_placeholder": "이모티콘으로 기분을 표현해 주세요.",
     "photo_placeholder": "사진을 업로드해 주세요.",
     "photo_disabled": "사진 업로드는 앱을 이용해주세요.",
-    "already_photo_uploaded": "이미 사진을 업로드하셨군요!",
+    "already_photo_uploaded": "이미 사진을 업로드하셨군요.",
     "description_placeholder": "자유롭게 생각을 적어주세요.",
     "skip": "건너뛰기",
     "post": "게시",
-    "post_complete": "모먼트 업로드가 완료되었어요!",
+    "post_complete": "모먼트 업로드가 완료되었어요.",
     "view_friends_moment": "친구들의 순간 보러가기"
   },
   "my_detail": {
@@ -160,14 +160,6 @@
       "content": "정말로 삭제하실 건가요?",
       "cancel_btn": "취소",
       "confirm_btn": "삭제"
-    }
-  },
-  "the_days_detail": {
-    "moments": {
-      "title": "그 날의 순간들"
-    },
-    "questions": {
-      "title": "그 날의 질문들"
     }
   },
   "user_page": {
@@ -186,15 +178,15 @@
       "alert": {
         "unfriend": {
           "title": "{{username}}을(를) 친구목록에서 삭제하시겠습니까?",
-          "content": "이 유저와 다시 친구과 되고 싶으면 친구 요청을 다시 보내야합니다."
+          "content": "다시 친구과 되고 싶다면 친구 요청을 다시 보내야 합니다."
         },
         "block": {
           "title": "{{username}}을(를) 차단하시겠습니까?",
-          "content": "이 유저의 게시글 또는 댓글을 더이상 볼 수 없게 됩니다."
+          "content": "이 유저의 게시글이나 댓글을 더 이상 볼 수 없게 됩니다."
         },
         "report": {
           "title": "{{username}}을(를) 신고하시겠습니까?",
-          "content": "신고하면 자동으로 유저를 차단합니다.",
+          "content": "신고 시 자동으로 해당 유저가 차단됩니다.",
           "success_title": "{{username}}님이 신고되었습니다.",
           "error_title": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
         },
@@ -208,12 +200,12 @@
     "cancel": "취소",
     "confirm": "확인",
     "mutual_friends": {
-      "one": "1명의 공통 친구({{firstUserName}})가 있습니다.",
-      "two": "2명의 공통 친구({{firstUserName}}, {{secondUserName}})가 있습니다.",
-      "others": "{{firstUserName}}와(과) {{secondUserName}}, 그 외 {{others}}명의 공통친구가 있습니다."
+      "one": "1명의 공통 친구({{firstUserName}})",
+      "two": "2명의 공통 친구({{firstUserName}}, {{secondUserName}})",
+      "others": "{{firstUserName}}와(과) {{secondUserName}}, 그 외 {{others}}명의 공통친구"
     },
     "check_in": {
-      "checked_in_time": "{{time}}에 체크인"
+      "checked_in_time": "{{time}}에 업데이트됨"
     },
     "connection": {
       "friend": "친구",
@@ -223,31 +215,31 @@
       "title": "친구 관계 변경",
       "choice": "변경할 관계를 선택하세요.",
       "save": "저장",
-      "check_box": "이전 게시글들에 대해서도 일괄 적용",
+      "check_box": "이전 게시글에도 변경사항 적용하기",
       "toast": {
-        "success": "친구 관계가 변경되었습니다.",
+        "success": "친구 관계가 성공적으로 변경되었습니다 🎉",
         "error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
       }
     }
   },
   "notes": {
-    "notes": "{{name}}의 노트",
+    "notes": "{{name}}의 게시글",
     "comments": "댓글",
     "likes": "좋아요",
-    "title": "노트",
-    "new_note": "새로운 노트",
+    "title": "게시글",
+    "new_note": "새로운 게시글",
     "note_header": {
-      "new_note": "새 노트 작성",
-      "edit_note": "노트 편집"
+      "new_note": "새 게시글 작성",
+      "edit_note": "게시글 편집"
     },
-    "posted": "업로드 완료🎉",
-    "updated": "수정 완료🎉",
+    "posted": "업로드 완료 🎉",
+    "updated": "수정 완료 🎉",
     "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
-    "too_large_file_error": "이미지 사이즈가 너무 큽니다. 이미지 사이즈를 조정후 다시 시도해주세요.",
+    "too_large_file_error": "이미지 크기가 너무 큽니다. 크기를 조정한 후 다시 시도해 주세요.",
     "view": "보기",
     "cancel": "취소",
     "post": "게시",
-    "whats_on_your_mind": "지금 떠오르는 생각이 무엇인가요?",
+    "whats_on_your_mind": "지금 무슨 생각을 하고 계신가요?",
     "content_restriction": "⚠️ 부적절하거나 불쾌한 내용은 제한될 수 있습니다.",
     "crop_photo": "이미지 자르기",
     "done": "완료",
@@ -258,8 +250,8 @@
     "close_friend": "친한 친구"
   },
   "note_detail": {
-    "title": "{{username}}의 노트",
-    "error_title": "노트"
+    "title": "{{username}}의 게시글",
+    "error_title": "게시글"
   },
   "access_setting": {
       "title": "공개 범위 설정",
@@ -291,7 +283,7 @@
     "not_found_post_or_comment": "존재하지 않는 게시물/댓글입니다."
   },
   "reactions": {
-    "title": "좋아요/이모지"
+    "title": "게시글 반응"
   },
   "post_more_modal": {
     "menu": {
@@ -300,8 +292,8 @@
       "delete": "삭제"
     },
     "report": {
-      "title": "이 게시물을 신고하시겠습니까?",
-      "content": "신고하면 이 게시물이 자동으로 숨겨집니다.",
+      "title": "이 게시물을 신고하시겠어요?",
+      "content": "신고하면 해당 게시물이 자동으로 숨겨집니다.",
       "cancel": "취소",
       "report": "신고",
       "success_title": "게시물이 성공적으로 신고되었습니다.",
@@ -312,7 +304,7 @@
       "content": "삭제하시면 해당 게시물은 영구적으로 사라집니다",
       "cancel": "취소",
       "delete": "삭제",
-      "success_title": "게시물이 성공적으로 삭제되었습니다.",
+      "success_title": "게시물이 성공적으로 삭제되었습니다 🎉",
       "error_title": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
     }
   },
@@ -336,23 +328,23 @@
     "confirm": "확인",
     "notification_settings": "알림 설정",
     "push_notifications": "푸시 알림 설정",
-    "allow_notification_to_receive_updates_from_friends_as_push_notifications": "알림을 허용해 친구들의 새로운 소식을 푸시 알림으로 받아보세요!",
-    "click_here_to_check_your_system_preferences": "여기를 눌러 시스템 알림 설정을 허용해주세요!",
-    "push_notifications_are_currently_enabled": "현재 푸시 알림이 허용된 상태입니다.",
-    "if_you_don't_want_to_receive_notifications_please_disable_the_system_notification_settings": "알림을 받고 싶지 않다면, 시스템 알림 설정을 차단해주세요!",
-    "push_notifications_are_currently_disabled": "현재 푸시 알림이 차단된 상태입니다.",
-    "if_you_want_to_receive_notifications_please_enable_the_system_notification_settings": "알림을 받고 싶다면, 시스템 알림 설정을 허용해주세요!",
-    "terms_of_uses": "개인정보 수집 및 이용 약관",
+    "allow_notification_to_receive_updates_from_friends_as_push_notifications": "알림을 허용해 친구들의 새로운 소식을 푸시 알림으로 받아보세요.",
+    "click_here_to_check_your_system_preferences": "여기를 눌러 시스템 알림 설정을 확인하세요.",
+    "push_notifications_are_currently_enabled": "현재 푸시 알림이 활성화되어 있습니다.",
+    "if_you_don't_want_to_receive_notifications_please_disable_the_system_notification_settings": "알림을 받고 싶지 않다면, 시스템 알림 설정에서 비활성화하세요.",
+    "push_notifications_are_currently_disabled": "현재 푸시 알림이 비활성되어 있습니다.",
+    "if_you_want_to_receive_notifications_please_enable_the_system_notification_settings": "알림을 받으려면 시스템 알림 설정을 활성화하세요.",
+    "terms_of_uses": "개인정보 처리방침 및 이용 약관",
     "logout": "로그아웃",
     "are_you_sure_you_want_to_log_out": "정말로 로그아웃 하시겠습니까?",
     "cancel": "취소",
     "delete_account": "계정 삭제 및 탈퇴하기",
     "please_check_your_password": "보안을 위해 비밀번호를 입력해주세요.",
-    "password_invalid": "입력한 비밀번호가 맞지 않습니다.",
+    "password_invalid": "비밀번호가 올바르지 않습니다. 다시 시도해주세요.",
     "yes_delete": "확인",
     "password": "비밀번호",
     "continue": "계속하기",
-    "are_you_sure": "정말로 계속하시겠습니까?\n한 번 계정을 삭제하면 다시 복구할 수 없습니다.",
+    "are_you_sure": "정말로 계속하시겠어요?\n한 번 계정을 삭제하면 복구할 수 없습니다.",
     "edit_profile": {
       "title": "프로필 수정",
       "back": "뒤로",
@@ -364,20 +356,20 @@
       "email": "이메일",
       "bio": "소개",
       "pronouns": "대명사",
-      "update": "변경하기",
+      "update": "변경",
       "response": {
-        "updated": "프로필이 업데이트되었습니다🎉"
+        "updated": "프로필이 성공적으로 업데이트되었습니다 🎉"
       },
       "error": {
         "read_file_error": "이미지를 불러오는 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
       }
     },
     "daily_noti_setting": {
-      "title": "데일리 노티 설정",
-      "daily_noti_time": "데일리 노티 시간",
-      "daily_noti_period": "데일리 노티 기간",
+      "title": "데일리 알림 설정",
+      "daily_noti_time": "데일리 알림 시간",
+      "daily_noti_period": "데일리 알림 기간",
       "confirm": "확인",
-      "success": "성공적으로 변경되었습니다! 🎉",
+      "success": "성공적으로 변경되었습니다 🎉",
       "error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
     }
   },
@@ -440,20 +432,18 @@
     "comment_place_holder": "{{username}}에게 댓글을 입력하세요.",
     "reply_place_holder": "{{username}}에게 답글을 입력하세요.",
     "private_comment": "비밀 댓글",
-    "private_placeholder": "해당 댓글은 비공개이며 작성자만 볼 수 있습니다.",
+    "private_placeholder": "해당 댓글은 원글 작성자만 볼 수 있습니다.",
     "replying_to": "{{username}}에게 답글 작성중",
     "report": "신고"
   },
   "no_contents": {
-    "the_day_detail": "업로드한 모먼트나 답변이 없습니다.",
     "friends": "아직 친구가 없습니다.",
     "friends_search": "검색 결과가 없습니다.",
-    "moment_detail": "모먼트를 찾지 못했습니다.",
     "responses": "답변이 없습니다.",
     "response_detail": "답변을 찾지 못했습니다.",
     "all_questions": "질문이 없습니다.",
-    "all_notes": "노트가 없습니다.",
-    "notes": "노트가 없습니다.",
+    "all_notes": "게시글이 없습니다.",
+    "notes": "게시글이 없습니다.",
     "error": {
       "title": "데이터를 불러올 수 없습니다.",
       "text": "잠시 후 다시 시도해주세요."
@@ -501,7 +491,7 @@
     "search_friends": "검색",
     "write_a_message": "메시지를 작성해주세요...",
     "send_separately": "보내기",
-    "sent_success": "질문이 성공적으로 전송되었습니다 :)"
+    "sent_success": "질문이 성공적으로 전송되었습니다 🎉"
   },
   "friends": {
     "explore_friends": {
@@ -514,11 +504,11 @@
         "more_results": "더 많은 검색 결과"
       },
       "invite": {
-        "text": "WhoAmI Today에 친구를 초대해보세요.",
+        "text": "친구 초대",
         "copy": "초대 링크를 클립보드에 복사했습니다.",
-        "desktop_message": "WhoAmI Today에 초대할게! 🎉\n\n가입할 때 아래 내 이름을 꼭 복사해서 붙여넣어 줘!\n\n초대 링크: {{invitation_link}}\n\n내 이름: {{username}}",
-        "mobile_message_title": "WhoAmI Today에 초대할게! 🎉",
-        "mobile_message": "가입할 때 아래 내 이름을 꼭 복사해서 붙여넣어 줘!\n\n초대 링크: {{invitation_link}}\n\n내 이름: {{username}}"
+        "desktop_message": "저와 함께 WhoAmI Today (WIT) 베타 테스트에 참여하세요. WIT는 워싱턴 대학교 연구팀이 청소년을 위해 개발한 소셜 미디어 플랫폼입니다.\n\n가입할 때 제 닉네임을 입력해주세요.\n\n초대 링크: {{invitation_link}}\n\n제 닉네임: {{username}}",
+        "mobile_message_title": "WhoAmI Today (WIT)에서 만나요.",
+        "mobile_message": "가입할 때 제 닉네임을 입력해주세요.\n\n초대 링크: {{invitation_link}}\n\n제 닉네임: {{username}}"
       },
       "tab": {
         "requests": "친구 요청",
@@ -528,15 +518,15 @@
         "title": "친구 요청 ({{number}})",
         "sent_requests": "보낸 요청",
         "no_requests": {
-          "title": "대기 요청 없음.",
-          "text": "수락하지 않은 친구 요청이 없습니다."
+          "title": "대기 중인 요청 없음.",
+          "text": "현재 보류 중인 친구 요청이 없습니다."
         }
       },
       "recommended_list": {
         "title": "추천 친구 ({{number}})"
       },
       "sent_requests_modal": {
-        "title": "보낸 친구 요청 목록",
+        "title": "보낸 친구 요청",
         "no_contents": {
           "title": "보낸 요청이 없습니다."
         }
@@ -552,31 +542,31 @@
         "block_recommendation": "추천 삭제",
         "delete_request_dialog": {
           "title": "친구 요청을 삭제하시겠습니까?",
-          "content": "{{user}}의 친구 요청 목록에 더이상 노출되지 않고, 요청 삭제에 대한 알림은 가지 않습니다.",
+          "content": "{{user}}의 친구 요청 목록에 더 이상 표시되지 않으며, 요청 삭제에 대한 알림은 보내지 않습니다.",
           "cancel": "취소",
           "confirm": "삭제"
         },
         "reject_request_dialog": {
           "title": "친구 요청을 거절하시겠습니까?",
-          "content": "{{user}}님은 친구 요청을 거절한 사실을 알 수 없으며, 거절에 대한 알림은 가지 않습니다.",
+          "content": "{{user}}님은 친구 요청이 거절된 사실을 알 수 없으며, 거절에 대한 알림은 보내지 않습니다.",
           "cancel": "취소",
           "confirm": "친구 요청 거절"
         },
         "break_friends_dialog": {
-          "title": "정말로 친구를 삭제하시겠습니까?",
+          "title": "정말 친구를 삭제하시겠어요?",
           "cancel": "취소",
           "confirm": "삭제"
         },
-        "friend_request_success": "친구 요청이 완료되었습니다.",
+        "friend_request_success": "친구 요청이 성공적으로 완료되었습니다 🎉",
         "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
         "friend_type_select_dialog": {
           "accept_title": "친구 요청 수락",
           "request_title": "친구 요청 보내기",
-          "content": "친구 요청 유형을 선택하세요",
+          "content": "친구 유형을 선택하세요",
           "friend": "친구",
           "close_friend": "친한 친구",
-          "fyi": "선택한 유형은 친구에게 노출되지 않습니다.",
-          "update_past_posts": "과거 게시물에 연결 업데이트",
+          "fyi": "선택한 친구 유형은 친구에게 노출되지 않습니다.",
+          "update_past_posts": "과거 게시물에도 변경사항 반영",
           "cancel": "취소",
           "confirm": "확인"
         }
@@ -586,21 +576,21 @@
       "title": "친구 목록 편집",
       "save": "저장"
     },
-    "updated_profiles": "업데이트한 프로필",
+    "updated_profiles": "업데이트된 프로필",
     "friend_requests": "친구 요청",
     "friend_requests_desc": "친구 요청 및 추천 친구 보기",
     "favorites": "즐겨찾기",
-    "add_favorite": "즐겨찾기에 친구를 추가하고 피드 상단에서 친구의 콘텐츠를 확인하세요!",
-    "all_friends": "친구",
-    "no_friends": "친구를 추가해 피드에서 친구의 콘텐츠를 확인해보세요."
+    "add_favorite": "즐겨찾기에 친구를 추가하고 피드 상단에서 친구의 콘텐츠를 확인하세요.",
+    "all_friends": "친구 목록",
+    "no_friends": "친구를 추가하고 피드에서 친구의 콘텐츠를 확인해보세요."
   },
   "error": {
     "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
-    "file_size_exceeded": "파일 크기가 {{size}}MB 제한을 초과합니다."
+    "file_size_exceeded": "파일 크기가 {{size}}MB 제한을 초과했습니다."
   },
   "check_in_edit": {
     "availability": {
-      "title": "당신의 상태는 어떻게 되나요?",
+      "title": "현재 상태를 설정하세요",
       "description": "친구들에게 대화할 준비가 되어 있는지 알려주세요",
       "select_placeholder": "상태 선택",
       "select_bottom_sheet": {
@@ -610,7 +600,7 @@
     },
     "song": {
       "title": "노래 공유",
-      "description": "당신의 기분을 가장 잘 나타내는 노래는 무엇인가요?",
+      "description": "당신의 기분을 가장 잘 표현하는 노래는 무엇인가요?",
       "search_placeholder": "노래, 앨범, 아티스트 검색...",
       "search_bottom_sheet": {
         "title": "노래 공유",
@@ -621,13 +611,13 @@
       }
     },
     "mood": {
-      "title": "당신의 기분 공유",
-      "description": "이모지를 선택하고 하루를 설명하는 짧은 텍스트를 입력해주세요"
+      "title": "기분 공유",
+      "description": "이모지를 선택하고 하루를 표현하는 짧은 메시지를 입력하세요"
     },
-    "description_placeholder": "하루를 설명하는 짧은 텍스트를 입력해주세요..."
+    "description_placeholder": "하루를 표현하는 짧은 메시지를 입력하세요..."
   },
   "my": {
-    "whats_on_your_mind": "{{username}}님의 지금 드는 생각은?"
+    "whats_on_your_mind": "{{username}}님, 지금 무슨 생각을 하고 계신가요?"
   },
   "music_detail": {
     "shared_a_song": "님이 노래를 공유했습니다",
