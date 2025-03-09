@@ -15,7 +15,7 @@ services:
 
 volumes:
   frontend_build_volume: 
-    driver: local
+    external: true
 
 networks:
   whoamitoday-network:
