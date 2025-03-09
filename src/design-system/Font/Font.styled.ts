@@ -91,4 +91,10 @@ export const StyledFont = styled.span<FontAttrs & TypoPropBase>`
       text-overflow: ellipsis;
       max-width: ${ellipsis.maxWidth}px;
     `}
+
+  ${({ bold }) =>
+    bold &&
+    css`
+      font-weight: bold;
+    `}
 `;
