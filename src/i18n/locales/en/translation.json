@@ -252,8 +252,8 @@
     "more": "More",
     "edited": "Edited",
     "confirm": "Confirm",
-    "friend": "Friends",
-    "close_friend": "Close Friends"
+    "friend": "Friend",
+    "close_friend": "Close Friend"
   },
   "note_detail": {
     "title": "{{username}}'s Post",
@@ -273,8 +273,8 @@
     "more": "More",
     "new_response": "New Response",
     "edited": "Edited",
-    "friend": "Friends",
-    "close_friend": "Close Friends"
+    "friend": "Friend",
+    "close_friend": "Close Friend"
   },
   "all_responses": {
     "title": "{{username}}'s Responses"
