@@ -25,6 +25,7 @@ function UserPage() {
   const { featureFlags } = useBoundStore(UserSelector);
 
   const { user, updateUser } = useContext(UserPageContext);
+  const userId = user.data?.id;
 
   const readCheckIn = async () => {
     if (!username || !user.data || !user.data.check_in.id) return;
@@ -47,7 +48,7 @@ function UserPage() {
   return (
     <>
       <MainContainer key={username} style={{ display: outlet ? 'none' : 'block' }}>
-        <UserHeader username={username} onClickMore={handleClickMore} />
+        <UserHeader username={username} onClickMore={handleClickMore} userId={userId} />
         <Layout.FlexCol w="100%" bgColor="LIGHT" mt={TITLE_HEADER_HEIGHT}>
           {user.state === 'hasError' && <CommonError />}
           {user.state === 'hasValue' && user.data && (
