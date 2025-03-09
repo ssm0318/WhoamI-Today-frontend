@@ -41,7 +41,7 @@ function FriendsDetail() {
     navigate('/my/friends/explore');
   };
 
-  const { scrollRef } = useRestoreScrollPosition('friendsPage');
+  const { scrollRef } = useRestoreScrollPosition('friendsDetail');
 
   return (
     <MainScrollContainer scrollRef={scrollRef}>

@@ -16,7 +16,7 @@ import { MainScrollContainer } from 'src/routes/Root';
 function FriendsFeed() {
   const [t] = useTranslation('translation');
 
-  const { scrollRef } = useRestoreScrollPosition('myPage');
+  const { scrollRef } = useRestoreScrollPosition('friendsFeed');
 
   const { fetchCheckIn } = useBoundStore((state) => ({
     myProfile: state.myProfile,
