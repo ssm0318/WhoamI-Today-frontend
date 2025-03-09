@@ -40,10 +40,11 @@ function Settings() {
   };
 
   const handleClickConfirmLogout = async () => {
+    navigate('/');
+
     await signOut(() => {
       handleOnClose();
       postMessage('LOGOUT', {});
-      navigate('/signin');
     });
   };
 
