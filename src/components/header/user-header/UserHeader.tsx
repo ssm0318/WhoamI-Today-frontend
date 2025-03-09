@@ -5,15 +5,16 @@ import { Layout } from '@design-system';
 
 interface UserHeaderProps {
   username?: string;
+  userId?: number;
   onClickMore: () => void;
 }
 
-function UserHeader({ username, onClickMore }: UserHeaderProps) {
+function UserHeader({ username, userId, onClickMore }: UserHeaderProps) {
   const navigate = useNavigate();
 
   const handleClickPing = async () => {
-    if (!username) return;
-    navigate('ping');
+    if (!userId) return;
+    navigate(`/users/${userId}/ping`);
   };
 
   const handleClickMore = () => {
