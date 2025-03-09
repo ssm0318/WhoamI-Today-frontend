@@ -26,7 +26,14 @@ function Input(props: InputProps) {
       <Typo type={labelType} color={isFocused ? 'BLACK' : 'MEDIUM_GRAY'}>
         {label}
       </Typo>
-      <CommonInput {...inputProps} onFocus={handleFocus} onBlur={handleBlur} maxLength={limit} />
+      <CommonInput
+        {...inputProps}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        maxLength={limit}
+        autoCapitalize="none"
+        autoComplete="off"
+      />
       {limit && inputProps.type === 'text' && (
         <Layout.FlexRow w="100%" justifyContent="flex-end" mt={4}>
           <Typo type="label-small" color="DARK_GRAY">

@@ -77,7 +77,7 @@ function FriendStatus({
 
   const handleClickConfirm = async (e: MouseEvent) => {
     e.stopPropagation();
-    if (!featureFlags?.[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
+    if (featureFlags?.[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
       // NOTE ver. Q의 경우 옵션 선택 모달이 떠야함
       setIsFriendTypeSelectModalVisible({ visible: true, type: 'accept' });
     } else {
@@ -140,7 +140,7 @@ function FriendStatus({
   const handleClickRequest = async (e: MouseEvent) => {
     e.stopPropagation();
 
-    if (!featureFlags?.[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
+    if (featureFlags?.[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
       // NOTE ver. Q의 경우 옵션 선택 모달이 떠야함
       setIsFriendTypeSelectModalVisible({ visible: true, type: 'request' });
     } else {
