@@ -3,9 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
-import { DEFAULT_REDIRECTION_PATH } from '@constants/url';
+import { FEED_DEFAULT_REDIRECTION_PATH, FRIEND_DEFAULT_REDIRECTION_PATH } from '@constants/url';
 import { Button, Font, Layout } from '@design-system';
 import { SignInParams } from '@models/api/user';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { signIn } from '@utils/apis/user';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
@@ -25,10 +27,17 @@ function SignIn() {
   };
 
   const navigate = useNavigate();
+  const { featureFlags } = useBoundStore(UserSelector);
+
   const onSubmit = () => {
     signIn({
       signInInfo,
-      onSuccess: () => navigate(DEFAULT_REDIRECTION_PATH),
+      onSuccess: () =>
+        navigate(
+          featureFlags?.friendList
+            ? FRIEND_DEFAULT_REDIRECTION_PATH
+            : FEED_DEFAULT_REDIRECTION_PATH,
+        ),
       onError: (e) => setSignInError(e),
     });
   };

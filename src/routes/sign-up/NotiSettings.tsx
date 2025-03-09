@@ -1,10 +1,11 @@
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { DEFAULT_REDIRECTION_PATH } from '@constants/url';
+import { FEED_DEFAULT_REDIRECTION_PATH, FRIEND_DEFAULT_REDIRECTION_PATH } from '@constants/url';
 import { Button, Font, Layout } from '@design-system';
 import { hasMandatorySignUpParams } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { signUp } from '@utils/apis/user';
 import { requestPermission } from '@utils/firebaseHelpers';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
@@ -20,6 +21,8 @@ function NotiSettings() {
 
   const [dailyNotiOn, setDailyNotiOn] = useState(false);
   const [notiTime, setNotiTime] = useState<string>('');
+
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const { isMobile } = getMobileDeviceInfo();
 
@@ -53,7 +56,11 @@ function NotiSettings() {
       },
       onSuccess: () => {
         resetSignUpInfo();
-        navigate(DEFAULT_REDIRECTION_PATH);
+        navigate(
+          featureFlags?.friendList
+            ? FRIEND_DEFAULT_REDIRECTION_PATH
+            : FEED_DEFAULT_REDIRECTION_PATH,
+        );
       },
       onError: (e) => {
         // TODO

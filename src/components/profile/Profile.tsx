@@ -7,10 +7,12 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
 import { Connection } from '@models/api/friends';
 import { MyProfile } from '@models/api/user';
 import { areFriends, isMyProfile, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
@@ -22,6 +24,8 @@ interface ProfileProps {
 function Profile({ user }: ProfileProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
 
+  const { featureFlags } = useBoundStore(UserSelector);
+
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const isMyPage = user?.id === myProfile?.id;
   const [friendData, setFriendData] = useState<UserProfile | null>(null);
@@ -32,6 +36,12 @@ function Profile({ user }: ProfileProps) {
   const handleClickEditProfile = () => {
     return navigate('/settings/edit-profile');
   };
+
+  const handleClickFriendList = () => {
+    return navigate('/my/friends/list');
+  };
+
+  const { allFriends } = useInfiniteFetchFriends();
 
   useAsyncEffect(async () => {
     if (isMyPage || !username) return;
@@ -121,6 +131,11 @@ function Profile({ user }: ProfileProps) {
             </Layout.FlexRow>
           )}
           {/* bio */}
+          {featureFlags?.friendFeed && (
+            <button type="button" onClick={handleClickFriendList}>
+              {allFriends?.[0].count} {t('friends')}
+            </button>
+          )}
           {user?.bio && (
             <Layout.FlexCol w="100%">
               <Typo type="body-medium" numberOfLines={2}>

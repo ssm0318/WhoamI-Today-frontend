@@ -1,9 +1,9 @@
 import { VersionType } from '@models/api/user';
 
 export enum FeatureFlagKey {
-  /** 친구탭 페이지에서 친구 피드(친구들의 게시물을 최신순으로 노출)를 노출하는 플래그 */
+  /** 친구탭 페이지에서 친구 피드(친구들의 게시물을 최신순으로 노출)를 노출하는 플래그 (Ver. R) */
   FRIEND_FEED = 'friendFeed',
-  /** 친구탭 페이지에서 전체 친구 목록을 노출하는 플래그 */
+  /** 친구탭 페이지에서 전체 친구 목록을 노출하는 플래그 (Ver. Q) */
   FRIEND_LIST = 'friendList',
   /** 친구 요청 타입 플래그 */
   FRIEND_REQUEST_TYPE = 'friendRequestType',
@@ -14,12 +14,14 @@ export type FeatureFlagMapCollection = {
   [version in VersionType]: FeatureFlagMap;
 };
 
+// 메인버전
 const DEFAULT_FLAGS = {
   [FeatureFlagKey.FRIEND_FEED]: true,
   [FeatureFlagKey.FRIEND_LIST]: false,
   [FeatureFlagKey.FRIEND_REQUEST_TYPE]: false,
 };
 
+// 디폴트버전
 export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
   [VersionType.DEFAULT]: { ...DEFAULT_FLAGS },
   [VersionType.EXPERIMENT]: {

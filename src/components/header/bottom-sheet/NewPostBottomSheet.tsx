@@ -5,6 +5,8 @@ import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import Divider from '@components/_common/divider/Divider';
 import Icon from '@components/_common/icon/Icon';
 import { Font, Layout, SvgIcon, Typo } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { IconNames } from 'src/design-system/SvgIcon/SvgIcon.types';
 import { NewPostButton } from './NewPostBottomSheet.styled';
 
@@ -13,12 +15,6 @@ interface MenuItem {
   path: string;
   icon: IconNames;
 }
-
-const BOTTOM_SHEET_LIST: MenuItem[] = [
-  { key: 'check-in', path: '/check-in/edit', icon: 'bottomsheet_checkin' },
-  { key: 'note', path: '/notes/new', icon: 'bottomsheet_note' },
-  { key: 'prompts', path: '/check-in/prompt', icon: 'bottomsheet_prompt' },
-];
 
 interface Props {
   visible: boolean;
@@ -29,6 +25,15 @@ interface Props {
 function NewPostBottomSheet({ visible, closeBottomSheet, setSelectPrompt }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'home.header.bottom_sheet' });
   const navigate = useNavigate();
+  const { featureFlags } = useBoundStore(UserSelector);
+
+  const BOTTOM_SHEET_LIST: MenuItem[] = [
+    { key: 'check-in', path: '/check-in/edit', icon: 'bottomsheet_checkin' as const },
+    { key: 'note', path: '/notes/new', icon: 'bottomsheet_note' as const },
+    ...(featureFlags?.friendList
+      ? [{ key: 'prompts', path: '/check-in/prompt', icon: 'bottomsheet_prompt' as const }]
+      : []),
+  ];
 
   const handleClickMenu = (path: string) => () => {
     closeBottomSheet();

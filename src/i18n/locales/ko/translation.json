@@ -194,6 +194,7 @@
       }
     },
     "friend": "친구",
+    "friends": "친구",
     "accept": "수락",
     "reject": "거절",
     "requested": "요청됨",
@@ -576,7 +577,10 @@
       "title": "친구 목록 편집",
       "save": "저장"
     },
-    "updated_profiles": "업데이트된 프로필",
+    "list_friends": {
+      "title": "친구 목록"
+    },
+    "updated_profiles": "업데이트한 프로필",
     "friend_requests": "친구 요청",
     "friend_requests_desc": "친구 요청 및 추천 친구 보기",
     "favorites": "즐겨찾기",

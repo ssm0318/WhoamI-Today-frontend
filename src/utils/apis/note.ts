@@ -1,5 +1,5 @@
 import { PaginationResponse } from '@models/api/common';
-import { Comment, NewNoteForm, Note, PostReaction } from '@models/post';
+import { Comment, Like, NewNoteForm, Note, PostReaction } from '@models/post';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 import { objectFormDataSerializer } from '@utils/validateHelpers';
 
@@ -13,6 +13,17 @@ export const getNoteList = async (page: string | null) => {
 
 export const getNoteDetail = async (noteId: number) => {
   const { data } = await axios.get<Note>(`/notes/${noteId}/`);
+  const { id, current_user_read } = data;
+
+  if (!current_user_read) {
+    readNote([id]);
+  }
+
+  return data;
+};
+
+export const getNoteDetailDefault = async (noteId: number) => {
+  const { data } = await axios.get<Note>(`/notes/${noteId}/default/`);
   const { id, current_user_read } = data;
 
   if (!current_user_read) {
@@ -96,6 +107,14 @@ export const getNoteReactions = async (noteId: number, page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<PostReaction[]>>(
     `/notes/${noteId}/interactions/${!requestPage ? '' : `?page=${requestPage}`}`,
+  );
+  return data;
+};
+
+export const getNoteDetailLikes = async (noteId: number, page: string | null) => {
+  const requestPage = page ? page.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<Like[]>>(
+    `/notes/${noteId}/likes/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
 };

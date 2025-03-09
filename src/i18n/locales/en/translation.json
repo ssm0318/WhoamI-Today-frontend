@@ -199,6 +199,7 @@
       }
     },
     "friend": "Friend",
+    "friends": "Friends",
     "accept": "Accept",
     "reject": "Reject",
     "requested": "Requested",
@@ -586,6 +587,9 @@
     "edit_friends": {
       "title": "Edit Friends",
       "save": "Save"
+    },
+    "list_friends": {
+      "title": "Friend List"
     },
     "updated_profiles": "Updated Profiles",
     "friend_requests": "Friend Requests",

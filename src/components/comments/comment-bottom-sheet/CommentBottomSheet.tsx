@@ -10,6 +10,7 @@ import { Layout, Typo } from '@design-system';
 import useCommentList from '@hooks/useCommentList';
 import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import {
   CommentBottomContentWrapper,
   CommentBottomFooterWrapper,
@@ -36,6 +37,7 @@ function CommentBottomSheet({
   closeBottomSheet,
 }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const { comments, fetchComments, nextPage, deleteComment } = useCommentList(post);
 
@@ -88,7 +90,9 @@ function CommentBottomSheet({
             onClickReplyBtn={() => {
               setInputFocus(true);
               setReplyTo(comment);
-              setIsPrivate(comment.is_private);
+              if (featureFlags?.friendList) {
+                setIsPrivate?.(comment.is_private);
+              }
               setCommentTo(comment);
               setCommentToType('Comment');
             }}
@@ -104,10 +108,10 @@ function CommentBottomSheet({
           inputFocus={inputFocus}
           setInputFocus={setInputFocus}
           inputFocusDuration={BOTTOM_MODAL_ANIMATION_DURATION}
-          isPrivate={isPrivate}
-          setIsPrivate={() => {
-            setIsPrivate((prev) => !prev);
-          }}
+          {...(featureFlags?.friendList && {
+            isPrivate,
+            setIsPrivate: () => setIsPrivate((prev) => !prev),
+          })}
           isReply={!!replyTo}
           replyTo={replyTo}
           resetReplyTo={() => {

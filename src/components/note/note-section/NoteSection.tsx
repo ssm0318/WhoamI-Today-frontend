@@ -6,6 +6,8 @@ import NoContents from '@components/_common/no-contents/NoContents';
 import { Layout, Typo } from '@design-system';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Note } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { readUserAllNotes } from '@utils/apis/user';
 import NoteItem from '../note-item/NoteItem';
 import NoteLoader from '../note-loader/NoteLoader';
@@ -17,6 +19,7 @@ type NoteSectionProps = {
 
 function NoteSection({ username }: NoteSectionProps) {
   const [t] = useTranslation('translation');
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const {
     targetRef,
@@ -45,9 +48,11 @@ function NoteSection({ username }: NoteSectionProps) {
   return (
     <>
       <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
-        <Typo type="title-large" color="BLACK">
-          {t('notes.title')}
-        </Typo>
+        {featureFlags?.friendList && (
+          <Typo type="title-large" color="BLACK">
+            {t('notes.title')}
+          </Typo>
+        )}
       </Layout.FlexRow>
       <Layout.FlexCol w="100%" pr={12}>
         <Layout.FlexCol gap={8} mt={10} w="100%" h="100%">
