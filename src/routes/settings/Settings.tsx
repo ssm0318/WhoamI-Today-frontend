@@ -40,12 +40,16 @@ function Settings() {
   };
 
   const handleClickConfirmLogout = async () => {
-    navigate('/');
-
-    await signOut(() => {
-      handleOnClose();
-      postMessage('LOGOUT', {});
-    });
+    try {
+      await signOut(() => {
+        handleOnClose();
+        postMessage('LOGOUT', {});
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      navigate('/');
+    }
   };
 
   const handleClickDeleteAccount = () => navigate('/settings/delete-account');
