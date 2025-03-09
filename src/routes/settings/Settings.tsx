@@ -45,10 +45,9 @@ function Settings() {
         handleOnClose();
         postMessage('LOGOUT', {});
       });
+      navigate('/');
     } catch (error) {
       console.error(error);
-    } finally {
-      navigate('/');
     }
   };
 
