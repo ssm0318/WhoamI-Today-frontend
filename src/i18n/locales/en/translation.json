@@ -9,7 +9,9 @@
   },
   "research_intro": {
     "title": "University of Washington Social Media for Youth Research",
-    "description": "The current version of the app is still in beta and is only available to participants in our research study. If you're interested, please use the links below to sign up or log in.",
+    "description_before_bold": "The current version of the app is still in beta and is ",
+    "description_bold": "only available to participants in our research study",
+    "description_after_bold": ". If you're interested, please use the links below to sign up or log in.",
     "has_account": "I already signed up and received my account information.",
     "has_not_account": "Great, I'd like to sign up for the study",
     "someting_else_title": "Something else?",

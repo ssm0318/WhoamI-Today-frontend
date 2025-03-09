@@ -24,7 +24,13 @@ function ResearchIntro() {
         <Typo type="head-line" mb={50} textAlign="center">
           {t('title')}
         </Typo>
-        <Typo type="title-medium">{t('description')}</Typo>
+        <Typo type="title-medium">
+          {t('description_before_bold')}
+          <Typo type="title-medium" bold>
+            {t('description_bold')}
+          </Typo>
+          {t('description_after_bold')}
+        </Typo>
         <Layout.FlexCol w="100%" gap={30} ph={20} mt={50}>
           <Button.Confirm
             status="normal"

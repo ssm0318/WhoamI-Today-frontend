@@ -46,6 +46,7 @@ export type TextPropsBase = {
   numberOfLines?: number;
   pre?: boolean;
   italic?: boolean;
+  bold?: boolean;
 } & Margin;
 
 export type TypoProps = {
