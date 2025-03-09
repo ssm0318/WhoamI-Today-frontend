@@ -133,7 +133,7 @@ function Profile({ user }: ProfileProps) {
           {/* bio */}
           {featureFlags?.friendFeed && (
             <button type="button" onClick={handleClickFriendList}>
-              {allFriends?.length} {t('friends')}
+              {allFriends?.[0].count} {t('friends')}
             </button>
           )}
           {user?.bio && (
