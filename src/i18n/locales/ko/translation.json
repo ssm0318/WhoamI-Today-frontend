@@ -9,7 +9,9 @@
   },
   "research_intro": {
     "title": "University of Washington 청소년 소셜 미디어 연구",
-    "description": "현재 앱 버전은 베타 단계이며 연구 참여자만 사용할 수 있습니다. 관심이 있으시다면 아래 링크를 통해 가입하거나 로그인해주세요.",
+    "description_before_bold": "현재 앱 버전은 베타 단계이며 ",
+    "description_bold": "연구 참여자만 사용할 수 있습니다",
+    "description_after_bold": ". 관심이 있으시다면 아래 링크를 통해 가입하거나 로그인해주세요.",
     "has_account": "이미 가입했고 계정 정보를 받았습니다.",
     "has_not_account": "연구에 참여하고 싶습니다",
     "someting_else_title": "다른 문의사항이 있나요?",
