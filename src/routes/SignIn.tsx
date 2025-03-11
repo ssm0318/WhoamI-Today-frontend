@@ -8,7 +8,7 @@ import { Button, Font, Layout } from '@design-system';
 import { SignInParams } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { signIn } from '@utils/apis/user';
+import { checkIfSignIn, signIn } from '@utils/apis/user';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 function SignIn() {
@@ -32,12 +32,14 @@ function SignIn() {
   const onSubmit = () => {
     signIn({
       signInInfo,
-      onSuccess: () =>
+      onSuccess: async () => {
+        await checkIfSignIn();
         navigate(
           featureFlags?.friendList
             ? FRIEND_DEFAULT_REDIRECTION_PATH
             : FEED_DEFAULT_REDIRECTION_PATH,
-        ),
+        );
+      },
       onError: (e) => setSignInError(e),
     });
   };
