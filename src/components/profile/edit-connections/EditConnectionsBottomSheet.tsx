@@ -91,7 +91,7 @@ function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) 
               />
             </Layout.FlexCol>
           </Layout.FlexCol>
-          {/* ver. Q 에서만 보이도록 한다 */}
+          {/* ver. Q 에서만 update_past_posts 체크박스 노출 */}
           {featureFlags?.friendList && (
             <Layout.FlexRow>
               <CheckBox
