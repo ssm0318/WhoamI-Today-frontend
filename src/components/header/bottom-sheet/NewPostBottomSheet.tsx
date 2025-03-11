@@ -28,7 +28,7 @@ function NewPostBottomSheet({ visible, closeBottomSheet, setSelectPrompt }: Prop
   const { featureFlags } = useBoundStore(UserSelector);
 
   const BOTTOM_SHEET_LIST: MenuItem[] = [
-    ...(featureFlags?.friendList
+    ...(featureFlags?.checkIn
       ? [{ key: 'check-in', path: '/check-in/edit', icon: 'bottomsheet_checkin' as const }]
       : []),
     { key: 'note', path: '/notes/new', icon: 'bottomsheet_note' as const },
