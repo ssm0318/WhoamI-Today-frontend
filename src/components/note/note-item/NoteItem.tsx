@@ -198,14 +198,6 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
             displayType={displayType}
           />
         )}
-        {/* <PostFooter
-          reactionSampleUserList={like_reaction_user_sample}
-          isMyPage={isMyPage}
-          post={note}
-          showComments={() => setBottomSheet(true)}
-          setInputFocus={() => setInputFocus(true)}
-          displayType={displayType}
-        /> */}
       </Layout.FlexCol>
       {bottomSheet && (
         <CommentBottomSheet
