@@ -253,6 +253,17 @@ export const getUserProfile = async (username: string) => {
   return data;
 };
 
+// TODO: backend 작업 전
+export const getUserFriendList = async (username: string, next?: string | null) => {
+  const requestPage = next ? next.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<User[]>>(
+    `/user/${encodeURIComponent(username)}/friends/?type=all${
+      requestPage ? `&page=${requestPage}` : ''
+    }`,
+  );
+  return data;
+};
+
 export const requestFriend = async ({
   userId,
   friendRequestType,

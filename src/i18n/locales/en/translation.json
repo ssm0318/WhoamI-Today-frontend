@@ -589,7 +589,8 @@
       "save": "Save"
     },
     "list_friends": {
-      "title": "Friend List"
+      "friends_title": "{{username}}'s Friend List",
+      "my_title": "My Friend List"
     },
     "updated_profiles": "Updated Profiles",
     "friend_requests": "Friend Requests",

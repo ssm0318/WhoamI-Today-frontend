@@ -578,7 +578,8 @@
       "save": "저장"
     },
     "list_friends": {
-      "title": "친구 목록"
+      "friends_title": "{{username}}의 친구 목록",
+      "my_title": "내 친구 목록"
     },
     "updated_profiles": "업데이트한 프로필",
     "friend_requests": "친구 요청",
