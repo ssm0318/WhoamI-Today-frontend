@@ -8,6 +8,7 @@ import { Button, CheckBox, Layout, RadioButton, Typo } from '@design-system';
 import { Connection } from '@models/api/friends';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { changeConnection } from '@utils/apis/friends';
 
 interface Props {
@@ -19,6 +20,7 @@ interface Props {
 function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
   const { updateUser } = useContext(UserPageContext);
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const [connection, setConnection] = useState<Connection>(
     user?.connection_status ?? Connection.FRIEND,
@@ -89,14 +91,17 @@ function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) 
               />
             </Layout.FlexCol>
           </Layout.FlexCol>
-          <Layout.FlexRow>
-            <CheckBox
-              name={t('edit_connections.check_box') || ''}
-              onChange={handleChangeCheckBox}
-              checked={isUpdatePastPosts}
-              disabled={connection === Connection.FRIEND}
-            />
-          </Layout.FlexRow>
+          {/* ver. Q 에서만 보이도록 한다 */}
+          {featureFlags?.friendList && (
+            <Layout.FlexRow>
+              <CheckBox
+                name={t('edit_connections.check_box') || ''}
+                onChange={handleChangeCheckBox}
+                checked={isUpdatePastPosts}
+                disabled={connection === Connection.FRIEND}
+              />
+            </Layout.FlexRow>
+          )}
         </Layout.FlexCol>
 
         <Button.Confirm
