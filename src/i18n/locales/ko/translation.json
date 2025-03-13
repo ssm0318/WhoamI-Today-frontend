@@ -559,6 +559,8 @@
           "confirm": "삭제"
         },
         "friend_request_success": "친구 요청이 성공적으로 완료되었습니다 🎉",
+        "friend_accept_success": "친구 요청이 수락되었습니다 🎉",
+        "friend_reject_success": "친구 요청이 거절되었습니다.",
         "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
         "friend_type_select_dialog": {
           "accept_title": "친구 요청 수락",
