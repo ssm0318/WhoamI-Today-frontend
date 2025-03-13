@@ -296,7 +296,10 @@ export const requestFriend = async ({
         requester_id: currentUser.id,
         requestee_id: userId,
         requester_choice: friendRequestType,
-        requester_update_past_posts: updatePastPosts,
+        ...(updatePastPosts !== undefined &&
+          friendRequestType === Connection.CLOSE_FRIEND && {
+            requester_update_past_posts: updatePastPosts,
+          }),
       })
       .then(() => onSuccess())
       .catch(() => onError());
@@ -334,7 +337,8 @@ export const acceptFriendRequest = async ({
       .patch(`/user/friend-requests/${userId}/respond/`, {
         accepted: true,
         requestee_choice: friendType,
-        ...(updatePastPosts !== undefined && { update_past_posts: updatePastPosts }),
+        ...(updatePastPosts !== undefined &&
+          friendType === Connection.CLOSE_FRIEND && { update_past_posts: updatePastPosts }),
       })
       .then(() => onSuccess())
       .catch(() => onError());
