@@ -570,6 +570,7 @@
         },
         "friend_request_success": "Friend request sent successfully 🎉",
         "friend_accept_success": "Friend request accepted successfully 🎉",
+        "friend_reject_success": "Friend request rejected successfully.",
         "temporary_error": "A temporary error occurred. Please try again later.",
         "friend_type_select_dialog": {
           "request_title" : "Send Friend Request",

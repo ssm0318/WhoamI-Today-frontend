@@ -110,14 +110,12 @@ function PostFooter({
       }}
     >
       <Layout.FlexRow gap={10} alignItems="center">
-        {isMyPage ? (
-          // 좋아요나 이모지를 누른 사용자 리스트
-          sampleUserList.length > 0 && (
-            <Layout.FlexRow onClick={handleClickReactions}>
-              <PostReactionList user_sample_list={sampleUserList} />
-            </Layout.FlexRow>
-          )
-        ) : (
+        {sampleUserList.length > 0 && (
+          <Layout.FlexRow onClick={handleClickReactions}>
+            <PostReactionList user_sample_list={sampleUserList} />
+          </Layout.FlexRow>
+        )}
+        {!isMyPage && (
           <>
             <LikeButton postType={type} post={post} iconSize={23} m={0} />
             <Layout.FlexRow ref={toggleButtonRef} alignItems="center">

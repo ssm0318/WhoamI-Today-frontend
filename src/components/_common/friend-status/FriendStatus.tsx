@@ -129,7 +129,12 @@ function FriendStatus({
   };
 
   const handleConfirmRejectFriendRequestDialog = async () => {
-    await rejectFriendRequest(user.id);
+    await rejectFriendRequest({
+      userId: user.id,
+      isDefault: false,
+      onSuccess: () => openToast({ message: t('friend_reject_success') }),
+      onError: () => openToast({ message: t('temporary_error') }),
+    });
     setIsRejectFriendRequestDialogVisible(false);
     onClickReject?.();
   };

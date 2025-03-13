@@ -296,7 +296,7 @@ export const requestFriend = async ({
         requester_id: currentUser.id,
         requestee_id: userId,
         requester_choice: friendRequestType,
-        update_past_posts: updatePastPosts,
+        requester_update_past_posts: updatePastPosts,
       })
       .then(() => onSuccess())
       .catch(() => onError());
@@ -324,9 +324,8 @@ export const acceptFriendRequest = async ({
 }) => {
   if (isDefault) {
     await axios
-      .patch(`/user/friend-requests/${userId}/respond/`, {
+      .patch(`/user/friend-requests/${userId}/respond/default/`, {
         accepted: true,
-        requestee_choice: friendType,
       })
       .then(() => onSuccess())
       .catch(() => onError());
@@ -342,8 +341,30 @@ export const acceptFriendRequest = async ({
   }
 };
 
-export const rejectFriendRequest = async (userId: number) => {
-  await axios.patch(`/user/friend-requests/${userId}/respond/`, { accepted: false });
+export const rejectFriendRequest = async ({
+  userId,
+  isDefault = false,
+  onSuccess,
+  onError,
+}: {
+  userId: number;
+  isDefault?: boolean;
+  onSuccess: () => void;
+  onError: () => void;
+}) => {
+  if (isDefault) {
+    await axios
+      .patch(`/user/friend-requests/${userId}/respond/default/`, { accepted: false })
+      .then(() => onSuccess())
+      .catch(() => onError());
+  } else {
+    await axios
+      .patch(`/user/friend-requests/${userId}/respond/`, {
+        accepted: false,
+      })
+      .then(() => onSuccess())
+      .catch(() => onError());
+  }
 };
 
 export const reportUser = async ({
