@@ -28,9 +28,19 @@ export const useGetAppMessage = <K extends PostMessageKeyType>({
       }
     };
 
+    // For Android
+    const handleDocumentMessage = (event: Event) => {
+      if ('data' in event) {
+        handleMessage(event as unknown as MessageEvent);
+      }
+    };
+
     window.addEventListener('message', handleMessage);
+    document?.addEventListener('message' as any, handleDocumentMessage);
+
     return () => {
       window.removeEventListener('message', handleMessage);
+      document?.removeEventListener('message' as any, handleDocumentMessage);
     };
   }, [cb, key]);
 };
