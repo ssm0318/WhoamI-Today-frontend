@@ -338,7 +338,9 @@ export const acceptFriendRequest = async ({
         accepted: true,
         requestee_choice: friendType,
         ...(updatePastPosts !== undefined &&
-          friendType === Connection.CLOSE_FRIEND && { update_past_posts: updatePastPosts }),
+          friendType === Connection.CLOSE_FRIEND && {
+            requestee_update_past_posts: updatePastPosts,
+          }),
       })
       .then(() => onSuccess())
       .catch(() => onError());
