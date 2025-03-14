@@ -17,11 +17,20 @@ export const useGetAppMessage = <K extends PostMessageKeyType>({
     const handleMessage = (event: MessageEvent) => {
       const { data } = event;
       try {
-        const parsedData = JSON.parse(data);
-        if (!parsedData.key || parsedData.key !== key) return;
+        const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
 
-        const messageData = parsedData.data as PostMessageKeyToData[K];
-        cb(messageData);
+        // 앱에서는 key 대신 type 필드를 사용하고 있으므로 확인
+        const messageKey = parsedData.key || parsedData.type || parsedData.actionType;
+        if (!messageKey || messageKey !== key) return;
+
+        // 앱에서 보내는 데이터 형식에 맞춰 처리
+        // KEYBOARD_HEIGHT 메시지인 경우 height 값만 전달하는 특별 처리
+        if (key === 'KEYBOARD_HEIGHT') {
+          cb({ key, height: parsedData.height } as PostMessageKeyToData[K]);
+        } else {
+          const messageData = parsedData.data as PostMessageKeyToData[K];
+          cb(messageData);
+        }
       } catch (error) {
         // Handle parsing error silently
         console.error('Error parsing message data:', error);
@@ -49,12 +58,24 @@ export const useGetAppMessage = <K extends PostMessageKeyType>({
 export const usePostAppMessage = () => {
   const sendMessage = useCallback((key: PostMessageKeyType, data: Omit<MessageDataType, 'key'>) => {
     if (!window.ReactNativeWebView) return;
-    window.ReactNativeWebView.postMessage(
-      JSON.stringify({
-        actionType: key,
-        ...data,
-      }),
-    );
+
+    // 앱에서 처리할 수 있는 형식으로 메시지 보내기
+    if (key === 'KEYBOARD_OPENED') {
+      // KEYBOARD_OPENED는 타입만 보내기
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({
+          type: key,
+        }),
+      );
+    } else {
+      // 기존 메시지 형식 유지
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({
+          actionType: key,
+          ...data,
+        }),
+      );
+    }
   }, []);
 
   return sendMessage;
