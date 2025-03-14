@@ -48,7 +48,6 @@ function Ping() {
   useGetAppMessage({
     key: 'KEYBOARD_HEIGHT',
     cb: (data) => {
-      console.log('Ping: received keyboard height from app:', data.height);
       const newKeyboardVisible = data.height > 0;
       setIsKeyboardVisible(newKeyboardVisible);
 
