@@ -11,10 +11,12 @@ import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { useIsVirtualKeyboardOpenInIOS } from '@components/comment-list/comment-input-box/_hooks/useIsVirtualKeyboardOpenInIOS';
 import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
+import { usePostAppMessage } from '@hooks/useAppMessage';
 import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { postComment } from '@utils/apis/comments';
+import { isApp } from '@utils/getUserAgent';
 import * as S from './CommentInputBox.styled';
 
 interface CommentInputBoxProps {
@@ -52,6 +54,7 @@ function CommentInputBox({
 }: CommentInputBoxProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const { featureFlags } = useBoundStore(UserSelector);
+  const sendMessage = usePostAppMessage();
 
   const myProfile = useBoundStore((state) => state.myProfile);
   const [content, setContent] = useState('');
@@ -77,6 +80,30 @@ function CommentInputBox({
     if (!featureFlags?.friendList || !isReply) return;
     setInitialIsPrivate(initialIsPrivateRef.current);
   }, [isReply, replyTo, featureFlags?.friendList]);
+
+  // 입력 필드 포커스 처리
+  useEffect(() => {
+    const handleFocus = () => {
+      if (isApp) {
+        try {
+          sendMessage('KEYBOARD_OPENED', {});
+        } catch (error) {
+          console.error('Error posting message to React Native WebView:', error);
+        }
+      }
+    };
+
+    const inputElement = commentRef.current;
+    if (inputElement) {
+      inputElement.addEventListener('focus', handleFocus);
+    }
+
+    return () => {
+      if (inputElement) {
+        inputElement.removeEventListener('focus', handleFocus);
+      }
+    };
+  }, [sendMessage]);
 
   const handleCheckboxChange = () => {
     if (!featureFlags?.friendList || initialIsPrivate) return;
