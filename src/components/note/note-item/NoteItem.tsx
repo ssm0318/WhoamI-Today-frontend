@@ -125,34 +125,30 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
               onClick={navigateToProfile}
             />
             {/* author, created_at 정보 */}
-            <Layout.FlexRow alignItems="center" gap={8}>
+            <Layout.FlexCol>
               <Layout.FlexRow onClick={navigateToProfile}>
                 <Typo type="title-medium" ellipsis={{ enabled: true, maxWidth: 140 }}>
                   {username}
                 </Typo>
               </Layout.FlexRow>
-              <Typo type="label-medium" color="MEDIUM_GRAY">
-                {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
-              </Typo>
               {!current_user_read && !isMyPage && <UpdatedLabel />}
-            </Layout.FlexRow>
-            {/* 공개범위 - 본인페이지에서만 표시 */}
-            {isMyPage && (
-              <Layout.FlexRow
-                bgColor="SECONDARY"
-                pl={4}
-                pr={4}
-                pv={2}
-                rounded={4}
-                gap={5}
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Typo type="label-small" color="BLACK">
-                  {visibility === 'close_friends' ? t('close_friend') : t('friend')}
+              <Layout.FlexRow alignItems="center" gap={4}>
+                <Typo type="label-medium" color="MEDIUM_GRAY">
+                  {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
                 </Typo>
+                {/* 공개범위 - 본인페이지에서만 표시 */}
+                {isMyPage && (
+                  <>
+                    <Typo type="label-medium" color="BLACK">
+                      •
+                    </Typo>
+                    <Typo type="label-medium" color="BLACK">
+                      {visibility === 'close_friends' ? t('close_friend') : t('friend')}
+                    </Typo>
+                  </>
+                )}
               </Layout.FlexRow>
-            )}
+            </Layout.FlexCol>
           </Layout.FlexRow>
           {/* 더보기 */}
           <Layout.FlexRow>
@@ -198,14 +194,6 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
             displayType={displayType}
           />
         )}
-        {/* <PostFooter
-          reactionSampleUserList={like_reaction_user_sample}
-          isMyPage={isMyPage}
-          post={note}
-          showComments={() => setBottomSheet(true)}
-          setInputFocus={() => setInputFocus(true)}
-          displayType={displayType}
-        /> */}
       </Layout.FlexCol>
       {bottomSheet && (
         <CommentBottomSheet

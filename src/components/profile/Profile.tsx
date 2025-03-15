@@ -37,11 +37,14 @@ function Profile({ user }: ProfileProps) {
     return navigate('/settings/edit-profile');
   };
 
-  const handleClickFriendList = () => {
-    return navigate('/my/friends/list');
-  };
-
+  // TODO 친구의 friends를 가져오는 것도 처리가 필요함 (숫자 표기를 위해)
   const { allFriends } = useInfiniteFetchFriends();
+
+  const handleClickFriendList = () => {
+    if (isMyPage) return navigate('/my/friends/list');
+    if (allFriends?.[0].count === 0) return;
+    navigate(`users/${username}/friends/list`);
+  };
 
   useAsyncEffect(async () => {
     if (isMyPage || !username) return;
@@ -130,12 +133,15 @@ function Profile({ user }: ProfileProps) {
               <Typo type="label-medium">)</Typo>
             </Layout.FlexRow>
           )}
-          {/* bio */}
+          {/* 친구 수 */}
           {featureFlags?.friendFeed && (
             <button type="button" onClick={handleClickFriendList}>
-              {allFriends?.[0].count} {t('friends')}
+              <Typo type="label-medium" color="DARK_GRAY" underline>
+                {allFriends?.[0].count} {t('friends')}
+              </Typo>
             </button>
           )}
+          {/* bio */}
           {user?.bio && (
             <Layout.FlexCol w="100%">
               <Typo type="body-medium" numberOfLines={2}>
@@ -161,8 +167,8 @@ function Profile({ user }: ProfileProps) {
           <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />
         </>
       )}
-      {/* 체크인 */}
-      {user && <CheckInSection user={user} />}
+      {/* 체크인 (status) */}
+      {featureFlags?.checkIn && user && <CheckInSection user={user} />}
     </Layout.FlexCol>
   );
 }

@@ -1,5 +1,5 @@
 import { ReactNode, RefObject, UIEvent, useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 import NotiPermissionBanner, {
   NOTI_PERMISSION_BANNER_HEIGHT,
@@ -21,7 +21,6 @@ function Root() {
   const { isMobile } = getMobileDeviceInfo();
   const { initializeFcm } = useFcm();
   const postMessage = usePostAppMessage();
-  const navigate = useNavigate();
 
   useAsyncEffect(async () => {
     if (isMobile) return;
@@ -39,12 +38,8 @@ function Root() {
   const { featureFlags } = useBoundStore(UserSelector);
 
   useEffect(() => {
-    if (featureFlags?.friendList) {
-      navigate('/friends', { replace: true });
-    } else {
-      navigate('/friends/feed', { replace: true });
-    }
-  }, [featureFlags, navigate]);
+    console.debug('featureFlags', featureFlags);
+  }, [featureFlags]);
 
   return (
     <SWRConfig value={{ provider: () => new Map() }}>

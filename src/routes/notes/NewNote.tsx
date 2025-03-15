@@ -15,7 +15,7 @@ function NewNote() {
   const title = !location.state ? t('new_note') : t('edit_note');
   const noteId = location.state?.post.id || '';
   const content = location.state?.post.content || '';
-  const visibility = location.state?.post.visibility || 'close_friends'; // default 'close_friends'
+  const visibility = location.state?.post.visibility || 'friends';
   const images = useMemo(() => location.state?.post.images || [], [location.state?.post.images]);
 
   const [noteInfo, setNoteInfo] = useState<NewNoteForm>({ content, images: [], visibility });

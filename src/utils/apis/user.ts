@@ -262,6 +262,17 @@ export const getUserProfile = async (username: string) => {
   return data;
 };
 
+// TODO: backend 작업 전
+export const getUserFriendList = async (username: string, next?: string | null) => {
+  const requestPage = next ? next.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<User[]>>(
+    `/user/${encodeURIComponent(username)}/friends/?type=all${
+      requestPage ? `&page=${requestPage}` : ''
+    }`,
+  );
+  return data;
+};
+
 export const requestFriend = async ({
   userId,
   friendRequestType,
@@ -294,7 +305,10 @@ export const requestFriend = async ({
         requester_id: currentUser.id,
         requestee_id: userId,
         requester_choice: friendRequestType,
-        update_past_posts: updatePastPosts,
+        ...(updatePastPosts !== undefined &&
+          friendRequestType === Connection.CLOSE_FRIEND && {
+            requester_update_past_posts: updatePastPosts,
+          }),
       })
       .then(() => onSuccess())
       .catch(() => onError());
@@ -322,9 +336,8 @@ export const acceptFriendRequest = async ({
 }) => {
   if (isDefault) {
     await axios
-      .patch(`/user/friend-requests/${userId}/respond/`, {
+      .patch(`/user/friend-requests/${userId}/respond/default/`, {
         accepted: true,
-        requestee_choice: friendType,
       })
       .then(() => onSuccess())
       .catch(() => onError());
@@ -333,15 +346,40 @@ export const acceptFriendRequest = async ({
       .patch(`/user/friend-requests/${userId}/respond/`, {
         accepted: true,
         requestee_choice: friendType,
-        ...(updatePastPosts !== undefined && { update_past_posts: updatePastPosts }),
+        ...(updatePastPosts !== undefined &&
+          friendType === Connection.CLOSE_FRIEND && {
+            requestee_update_past_posts: updatePastPosts,
+          }),
       })
       .then(() => onSuccess())
       .catch(() => onError());
   }
 };
 
-export const rejectFriendRequest = async (userId: number) => {
-  await axios.patch(`/user/friend-requests/${userId}/respond/`, { accepted: false });
+export const rejectFriendRequest = async ({
+  userId,
+  isDefault = false,
+  onSuccess,
+  onError,
+}: {
+  userId: number;
+  isDefault?: boolean;
+  onSuccess: () => void;
+  onError: () => void;
+}) => {
+  if (isDefault) {
+    await axios
+      .patch(`/user/friend-requests/${userId}/respond/default/`, { accepted: false })
+      .then(() => onSuccess())
+      .catch(() => onError());
+  } else {
+    await axios
+      .patch(`/user/friend-requests/${userId}/respond/`, {
+        accepted: false,
+      })
+      .then(() => onSuccess())
+      .catch(() => onError());
+  }
 };
 
 export const reportUser = async ({

@@ -5,9 +5,8 @@ import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
 import { FEED_DEFAULT_REDIRECTION_PATH, FRIEND_DEFAULT_REDIRECTION_PATH } from '@constants/url';
 import { Button, Font, Layout } from '@design-system';
-import { SignInParams } from '@models/api/user';
-import { useBoundStore } from '@stores/useBoundStore';
-import { UserSelector } from '@stores/user';
+import { SignInParams, VersionType } from '@models/api/user';
+import { getMe } from '@utils/apis/my';
 import { signIn } from '@utils/apis/user';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
@@ -27,17 +26,21 @@ function SignIn() {
   };
 
   const navigate = useNavigate();
-  const { featureFlags } = useBoundStore(UserSelector);
 
   const onSubmit = () => {
     signIn({
       signInInfo,
-      onSuccess: () =>
-        navigate(
-          featureFlags?.friendList
-            ? FRIEND_DEFAULT_REDIRECTION_PATH
-            : FEED_DEFAULT_REDIRECTION_PATH,
-        ),
+      onSuccess: () => {
+        getMe().then((me) => {
+          // 로그인하자마자 버전 확인하여 버전에 따라 리다이렉션
+          const currVersion = me.current_ver;
+          navigate(
+            currVersion === VersionType.EXPERIMENT
+              ? FRIEND_DEFAULT_REDIRECTION_PATH
+              : FEED_DEFAULT_REDIRECTION_PATH,
+          );
+        });
+      },
       onError: (e) => setSignInError(e),
     });
   };

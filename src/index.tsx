@@ -21,9 +21,10 @@ import Chats from './routes/Chats';
 import CheckInEdit from './routes/check-in/CheckInEdit';
 import { EditChats } from './routes/edit-chats/EditChats';
 import ForgotPassword from './routes/ForgotPassword';
+import DefaultMyFriendsList from './routes/friends/DefaultMyFriendsList';
+import DefaultUserFriendsList from './routes/friends/DefaultUserFriendsList';
 import EditFriends from './routes/friends/EditFriends';
 import ExploreFriends from './routes/friends/ExploreFriends';
-import FriendsDetail from './routes/friends/FriendsDetail';
 import FriendsFeed from './routes/friends/FriendsFeed';
 import FriendsList from './routes/friends/FriendsList';
 import Intro from './routes/Intro';
@@ -77,9 +78,7 @@ const router = createBrowserRouter([
         path: 'my',
         children: [
           { path: '', element: <My /> },
-          { path: 'friends/list', element: <FriendsDetail /> },
-          { path: 'friends/explore', element: <ExploreFriends /> },
-          { path: 'friends/edit', element: <EditFriends /> },
+          { path: 'friends/list', element: <DefaultMyFriendsList /> },
           { path: 'responses', element: <AllResponses from="my" /> },
         ],
       },
@@ -132,6 +131,7 @@ const router = createBrowserRouter([
                   { path: ':noteId/likes', element: <Likes /> },
                 ],
               },
+              { path: 'friends/list', element: <DefaultUserFriendsList /> },
             ],
           },
         ],
