@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
-import Icon from '@components/_common/icon/Icon';
+import { useParams } from 'react-router-dom';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import UpdatedFriendItemDefault from '@components/friends/updated-friend-item/UpdatedFriendItemDefault';
 import SubHeader from '@components/sub-header/SubHeader';
@@ -20,8 +19,6 @@ function DefaultUserFriendsList() {
     isLoadingMoreAllFriends,
     refetchAllFriends: userRefetchAllFriends,
   } = useInfiniteFetchUserFriends(username || '');
-
-  const navigate = useNavigate();
 
   const handleRefresh = async () => {
     await userRefetchAllFriends();
@@ -58,13 +55,8 @@ function DefaultUserFriendsList() {
               ) : (
                 <Layout.FlexCol alignItems="center" ph={75} gap={8} w="100%">
                   <Typo type="label-medium" color="DARK_GRAY">
-                    {t('no_friends')}
+                    {t('list_friends.no_friends')}
                   </Typo>
-                  <Icon
-                    name="add_user"
-                    background="LIGHT_GRAY"
-                    onClick={() => navigate('/friends/explore')}
-                  />
                 </Layout.FlexCol>
               )}
             </Layout.FlexCol>

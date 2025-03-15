@@ -1,11 +1,22 @@
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { UpdatedProfile } from '@models/api/friends';
 
-const useInfiniteFetchUserFriends = (username: string) => {
+const useInfiniteFetchUserFriends = (username?: string) => {
   const { targetRef, data, isLoading, mutate, isEndPage, isLoadingMore } =
     useSWRInfiniteScroll<UpdatedProfile>({
-      key: `/user/${encodeURIComponent(username)}/friends/?type=all`,
+      key: username ? `/user/${encodeURIComponent(username)}/friend-list/` : '',
     });
+
+  if (!username) {
+    return {
+      isLoadingMoreAllFriends: false,
+      targetRef: null,
+      allFriends: [],
+      isAllFriendsLoading: false,
+      isEndPage: false,
+      refetchAllFriends: () => {},
+    };
+  }
 
   return {
     isLoadingMoreAllFriends: isLoadingMore,

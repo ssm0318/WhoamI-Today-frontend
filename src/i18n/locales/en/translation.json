@@ -596,7 +596,8 @@
     },
     "list_friends": {
       "friends_title": "{{username}}'s Friend List",
-      "my_title": "My Friend List"
+      "my_title": "My Friend List",
+      "no_friends": "No friends yet."
     },
     "updated_profiles": "Updated Profiles",
     "friend_requests": "Friend Requests",
