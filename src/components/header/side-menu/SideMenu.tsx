@@ -2,9 +2,10 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Z_INDEX } from '@constants/layout';
-import { KAKAO_INQUIRY_LINK } from '@constants/url';
+import { RESEARCH_INQUIRY_INSTAGRAM_LINK, RESEARCH_INQUIRY_KAKAOTALK_LINK } from '@constants/url';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
+import i18n from '@i18n/index';
 
 const SIDE_MENU_LIST = [
   { key: 'explore_friends', path: '/friends/explore' },
@@ -33,10 +34,10 @@ function SideMenu({ closeSideMenu }: Props) {
   const handleClickKakaoInquiry = () => {
     if (window.ReactNativeWebView) {
       postMessage('OPEN_BROWSER', {
-        url: KAKAO_INQUIRY_LINK,
+        url: RESEARCH_INQUIRY_KAKAOTALK_LINK,
       });
     } else {
-      window.open(KAKAO_INQUIRY_LINK, '_blank');
+      window.open(RESEARCH_INQUIRY_KAKAOTALK_LINK, '_blank');
     }
   };
 
@@ -52,10 +53,118 @@ function SideMenu({ closeSideMenu }: Props) {
                 <Typo type="head-line">{t(menu.key)}</Typo>
               </button>
             ))}
-            {/* 한국인 연구 참여자를 위한 카카오 문의 버튼 */}
-            <button type="button" onClick={handleClickKakaoInquiry}>
-              <Typo type="head-line">{t('kakao_inquiry')}</Typo>
-            </button>
+            {/* 문의 * 연락처 */}
+            <Layout.FlexCol mt={40} pr={12}>
+              <Typo type="title-large" mb={20}>
+                {t('inquiry')} :
+              </Typo>
+              {i18n.language === 'ko-KR' ? (
+                <Layout.FlexCol gap={8}>
+                  <a
+                    href={RESEARCH_INQUIRY_KAKAOTALK_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleClickKakaoInquiry();
+                    }}
+                  >
+                    <Typo type="title-medium">
+                      💬{' '}
+                      <Typo type="title-medium" bold>
+                        {t('kakao_inquiry')}
+                      </Typo>
+                    </Typo>
+                  </a>
+                  <Typo type="title-medium">
+                    🎮{' '}
+                    <Typo type="title-medium" bold>
+                      {t('discord_inquiry')} :{' '}
+                    </Typo>
+                    @jaewonkim___ (밑줄 3개)
+                  </Typo>
+                  <a
+                    href={RESEARCH_INQUIRY_INSTAGRAM_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => {
+                      if (window.ReactNativeWebView) {
+                        e.preventDefault();
+                        postMessage('OPEN_BROWSER', {
+                          url: RESEARCH_INQUIRY_INSTAGRAM_LINK,
+                        });
+                      }
+                    }}
+                  >
+                    <Typo type="title-medium">
+                      📸{' '}
+                      <Typo type="title-medium" bold>
+                        {t('instagram_inquiry')}
+                      </Typo>
+                      <Typo type="title-medium" underline>
+                        @whoami.today.official
+                      </Typo>
+                    </Typo>
+                  </a>
+                </Layout.FlexCol>
+              ) : (
+                <Layout.FlexCol gap={8}>
+                  <Typo type="title-medium">
+                    🎮{' '}
+                    <Typo type="title-medium" bold>
+                      {t('discord_inquiry')} :{' '}
+                    </Typo>
+                    @jaewonkim___ (three underscores)
+                  </Typo>
+                  <a
+                    href="sms:+1-206-730-2178"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => {
+                      if (window.ReactNativeWebView) {
+                        e.preventDefault();
+                        postMessage('OPEN_BROWSER', {
+                          url: 'sms:+1-206-730-2178',
+                        });
+                      }
+                    }}
+                  >
+                    <Typo type="title-medium">
+                      📱{' '}
+                      <Typo type="title-medium" bold>
+                        {t('text_message_inquiry')} :{' '}
+                      </Typo>
+                      <Typo type="title-medium" underline>
+                        +1-206-730-2178
+                      </Typo>
+                    </Typo>
+                  </a>
+                  <a
+                    href={RESEARCH_INQUIRY_INSTAGRAM_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => {
+                      if (window.ReactNativeWebView) {
+                        e.preventDefault();
+                        postMessage('OPEN_BROWSER', {
+                          url: RESEARCH_INQUIRY_INSTAGRAM_LINK,
+                        });
+                      }
+                    }}
+                  >
+                    <Typo type="title-medium">
+                      📸{' '}
+                      <Typo type="title-medium" bold>
+                        {t('instagram_inquiry')} :{' '}
+                      </Typo>
+                      <Typo type="title-medium" underline>
+                        @whoami.today.official
+                      </Typo>
+                    </Typo>
+                  </a>
+                </Layout.FlexCol>
+              )}
+            </Layout.FlexCol>
           </Layout.FlexCol>
         </Layout.FlexCol>
       </Layout.Absolute>

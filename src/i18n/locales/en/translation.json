@@ -98,7 +98,11 @@
         "explore_friends": "Add Friends",
         "questions": "Questions",
         "settings": "Settings",
-        "kakao_inquiry": "Kakaotalk Inquiry"
+        "inquiry": "Contact & Inquiries",
+        "kakao_inquiry": "Kakaotalk 1:1 Open Chat",
+        "discord_inquiry": "Discord",
+        "instagram_inquiry": "Instagram",
+        "text_message_inquiry": "Text"
       },
       "bottom_sheet": {
         "title": "Create",

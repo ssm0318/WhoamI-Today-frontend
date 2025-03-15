@@ -98,7 +98,11 @@
         "explore_friends": "친구 추가",
         "questions": "전체 질문",
         "settings": "설정",
-        "kakao_inquiry": "카카오톡 문의"
+        "inquiry": "문의 & 연락처",
+        "kakao_inquiry": "카카오톡 1:1 오픈채팅",
+        "discord_inquiry": "디스코드",
+        "instagram_inquiry": "인스타그램",
+        "text_message_inquiry": "문자"
       },
       "bottom_sheet": {
         "title": "작성하기",
