@@ -9,7 +9,7 @@ import {
   PING_EMOJI_FONT_SIZE,
   PING_MESSAGE_INPUT_HEIGHT,
 } from '@constants/layout';
-import { Layout } from '@design-system';
+import { Colors, Layout } from '@design-system';
 import { InputPingMessage, PingEmojiDict, PingEmojiType, PostPingMessageRes } from '@models/ping';
 import { postPingMessage } from '@utils/apis/ping';
 
@@ -64,7 +64,7 @@ function PingMessageInput({ insertPing, userId }: Props) {
   return (
     <Layout.Fixed
       w="100%"
-      style={{ maxWidth: MAX_WINDOW_WIDTH }}
+      style={{ maxWidth: MAX_WINDOW_WIDTH, borderTop: `1px solid ${Colors.LIGHT}` }}
       h={PING_MESSAGE_INPUT_HEIGHT}
       b={BOTTOM_TABBAR_HEIGHT}
       ph={14}
@@ -75,7 +75,8 @@ function PingMessageInput({ insertPing, userId }: Props) {
         w="100%"
         gap={10}
         rounded={13}
-        outline="DARK_GRAY"
+        outline="LIGHT_GRAY"
+        bgColor="LIGHT"
         ph={8}
         pv={9}
         alignItems="center"
@@ -117,12 +118,20 @@ function PingMessageInput({ insertPing, userId }: Props) {
             alignItems="center"
             justifyContent="center"
           >
-            <Icon name="question_send" size={20} onClick={handleClickPost} color="WHITE" />
+            <Icon name="question_send" size={20} onClick={handleClickPost} color="LIGHT" />
           </Layout.FlexRow>
         </Layout.FlexRow>
       </Layout.FlexRow>
       {showEmojiList && (
-        <Layout.Absolute t={-28} l={14} bgColor="LIGHT" rounded={13} pv={2} ph={15}>
+        <Layout.Absolute
+          t={-32}
+          l={14}
+          bgColor="LIGHT"
+          outline="LIGHT_GRAY"
+          rounded={13}
+          pv={2}
+          ph={15}
+        >
           <Layout.FlexRow gap={10}>
             {Object.entries(PingEmojiDict).map(([key, value]) => (
               <button key={key} type="button" onClick={handleClickEmoji(key)}>
