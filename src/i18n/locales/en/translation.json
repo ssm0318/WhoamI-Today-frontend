@@ -175,7 +175,6 @@
       "menu": {
         "add_to_favorite": "Add to Favorites",
         "remove_from_favorite": "Remove from Favorites",
-        "manage_friend_groups": "Manage Friend Groups",
         "unfriend": "Unfriend",
         "block": "Block",
         "report": "Report"
@@ -265,11 +264,11 @@
     "error_title": "Post"
   },
   "access_setting": {
-      "title": "Visibility",
-      "text": "Choose who can see your post.",
-      "friend": "Friends",
-      "close_friend": "Close Friends",
-      "save": "Save"
+    "title": "Visibility",
+    "text": "Choose who can see your post.",
+    "friend": "Friends",
+    "close_friend": "Close Friends",
+    "save": "Save"
   },
   "responses": {
     "title": "Responses",
@@ -578,8 +577,8 @@
         "friend_reject_success": "Friend request rejected successfully.",
         "temporary_error": "A temporary error occurred. Please try again later.",
         "friend_type_select_dialog": {
-          "request_title" : "Send Friend Request",
-          "accept_title" : "Accept Friend Request",
+          "request_title": "Send Friend Request",
+          "accept_title": "Accept Friend Request",
           "content": "Choose the friendship type.",
           "friend": "Friend",
           "close_friend": "Close Friend",

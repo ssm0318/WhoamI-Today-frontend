@@ -46,11 +46,6 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
     callback?.();
   };
 
-  const handleClickManageFriendGroups = () => {
-    // TODO
-    closeMoreModal();
-  };
-
   const handleClickUnfriend = () => {
     setShowAlert({
       title: t('alert.unfriend.title', { username }),
@@ -114,11 +109,6 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
             <button type="button" onClick={handleClickAddToFavorite}>
               <Typo type="button-large" color="DARK_GRAY">
                 {is_favorite ? t('menu.remove_from_favorite') : t('menu.add_to_favorite')}
-              </Typo>
-            </button>
-            <button type="button" onClick={handleClickManageFriendGroups}>
-              <Typo type="button-large" color="DARK_GRAY">
-                {t('menu.manage_friend_groups')}
               </Typo>
             </button>
             <button type="button" onClick={handleClickUnfriend}>

@@ -172,7 +172,6 @@
       "menu": {
         "add_to_favorite": "즐겨찾기",
         "remove_from_favorite": "즐겨찾기 삭제",
-        "manage_friend_groups": "친구 그룹 관리",
         "unfriend": "친구 삭제",
         "block": "차단",
         "report": "신고"
@@ -262,11 +261,11 @@
     "error_title": "게시글"
   },
   "access_setting": {
-      "title": "공개 범위 설정",
-      "text": "해당 게시글의 공개 범위를 설정해주세요.",
-      "friend": "친구",
-      "close_friend": "친한 친구",
-      "save": "저장"
+    "title": "공개 범위 설정",
+    "text": "해당 게시글의 공개 범위를 설정해주세요.",
+    "friend": "친구",
+    "close_friend": "친한 친구",
+    "save": "저장"
   },
   "responses": {
     "title": "답변",
