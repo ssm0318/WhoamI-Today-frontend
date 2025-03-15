@@ -608,7 +608,8 @@
   },
   "error": {
     "temporary_error": "A temporary error occurred. Please try again later.",
-    "file_size_exceeded": "File size exceeds the {{size}}MB limit."
+    "file_size_exceeded": "File size exceeds the {{size}}MB limit.",
+    "not_found": "Page Not Found"
   },
   "check_in_edit": {
     "availability": {

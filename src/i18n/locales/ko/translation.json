@@ -600,7 +600,8 @@
   },
   "error": {
     "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
-    "file_size_exceeded": "파일 크기가 {{size}}MB 제한을 초과했습니다."
+    "file_size_exceeded": "파일 크기가 {{size}}MB 제한을 초과했습니다.",
+    "not_found": "존재하지 않는 페이지 입니다."
   },
   "check_in_edit": {
     "availability": {
