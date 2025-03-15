@@ -8,6 +8,7 @@ import EditConnectionsBottomSheet from '@components/profile/edit-connections/Edi
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
+import useInfiniteFetchUserFriends from '@hooks/useInfiniteFetchUserFriends';
 import { Connection } from '@models/api/friends';
 import { MyProfile } from '@models/api/user';
 import { areFriends, isMyProfile, UserProfile } from '@models/user';
@@ -37,13 +38,16 @@ function Profile({ user }: ProfileProps) {
     return navigate('/settings/edit-profile');
   };
 
-  // TODO 친구의 friends를 가져오는 것도 처리가 필요함 (숫자 표기를 위해)
   const { allFriends } = useInfiniteFetchFriends();
+  const { allFriends: friendFriends } = useInfiniteFetchUserFriends(username);
 
   const handleClickFriendList = () => {
-    if (isMyPage) return navigate('/my/friends/list');
-    if (allFriends?.[0].count === 0) return;
-    navigate(`users/${username}/friends/list`);
+    if (isMyPage) {
+      if (allFriends?.[0].count === 0) return;
+      return navigate('/my/friends/list');
+    }
+    if (friendFriends?.[0].count === 0) return;
+    navigate(`friends/list`);
   };
 
   useAsyncEffect(async () => {
@@ -134,10 +138,10 @@ function Profile({ user }: ProfileProps) {
             </Layout.FlexRow>
           )}
           {/* 친구 수 */}
-          {featureFlags?.friendFeed && (
+          {featureFlags?.friendFeed && (isMyPage || (user && areFriends(user))) && (
             <button type="button" onClick={handleClickFriendList}>
               <Typo type="label-medium" color="DARK_GRAY" underline>
-                {allFriends?.[0].count} {t('friends')}
+                {isMyPage ? allFriends?.[0].count : friendFriends?.[0].count} {t('friends')}
               </Typo>
             </button>
           )}

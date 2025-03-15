@@ -588,7 +588,8 @@
     },
     "list_friends": {
       "friends_title": "{{username}}의 친구 목록",
-      "my_title": "내 친구 목록"
+      "my_title": "내 친구 목록",
+      "no_friends": "아직 친구가 없습니다."
     },
     "updated_profiles": "업데이트한 프로필",
     "friend_requests": "친구 요청",
