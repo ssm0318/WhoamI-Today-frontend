@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
@@ -17,6 +17,7 @@ import { MyProfile } from '@models/api/user';
 import { Persona } from '@models/persona';
 import { useBoundStore } from '@stores/useBoundStore';
 import { editProfile } from '@utils/apis/my';
+import { generateRandomColor } from '@utils/colorHelpers';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { MainScrollContainer } from '../Root';
 
@@ -30,6 +31,16 @@ function EditProfile() {
     updateMyProfile: state.updateMyProfile,
     openToast: state.openToast,
   }));
+
+  // Create a persistent color mapping for each persona
+  const personaColorMap = useMemo(() => {
+    const colorMap: Record<string, string> = {};
+    // Initialize with all possible personas
+    Object.values(Persona).forEach((p) => {
+      colorMap[p] = generateRandomColor();
+    });
+    return colorMap;
+  }, []);
 
   const [draft, setDraft] = useState<Pick<MyProfile, 'bio' | 'username' | 'pronouns' | 'persona'>>({
     bio: myProfile?.bio ?? '',
@@ -231,7 +242,7 @@ function EditProfile() {
             {draft.persona.length > 0 ? (
               draft.persona.map((persona) => (
                 <div key={persona} style={{ margin: '4px 0' }}>
-                  <PersonaChip persona={persona} />
+                  <PersonaChip persona={persona} color={personaColorMap[persona]} />
                 </div>
               ))
             ) : (
@@ -276,6 +287,7 @@ function EditProfile() {
           closeBottomSheet={() => setIsPersonaEditModalVisible(false)}
           onSelect={handlePersonaSelect}
           selectedPersonas={draft.persona}
+          personaColorMap={personaColorMap}
         />
       )}
     </MainScrollContainer>

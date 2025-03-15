@@ -8,16 +8,17 @@ interface PersonaChipProps {
   persona: Persona;
   onSelect?: (persona: Persona) => void;
   isSelected?: boolean;
+  color?: string;
 }
 
-function PersonaChip({ persona, onSelect, isSelected }: PersonaChipProps) {
+function PersonaChip({ persona, onSelect, isSelected, color: providedColor }: PersonaChipProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'persona' });
 
   const handleOnClick = () => {
     onSelect?.(persona);
   };
 
-  const color = useMemo(() => generateRandomColor(), []);
+  const color = useMemo(() => providedColor || generateRandomColor(), [providedColor]);
 
   if (!persona || !Object.keys(Persona).includes(persona)) {
     return null;
