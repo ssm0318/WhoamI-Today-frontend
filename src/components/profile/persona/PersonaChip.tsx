@@ -25,10 +25,10 @@ function PersonaChip({ persona, onSelect, isSelected, color: providedColor }: Pe
   }
   return (
     <Layout.FlexRow
-      bgColor="WHITE"
+      bgColor={isSelected ? 'LIGHT_GRAY' : 'WHITE'}
       gap={4}
-      pv={4}
-      ph={8}
+      pv={2}
+      ph={5}
       outline={isSelected ? 'PRIMARY' : 'LIGHT_GRAY'}
       alignItems="center"
       rounded={20}
@@ -36,6 +36,7 @@ function PersonaChip({ persona, onSelect, isSelected, color: providedColor }: Pe
         flexShrink: 0,
         maxWidth: '100%',
         overflow: 'hidden',
+        border: `1px solid ${color}`,
       }}
       onClick={handleOnClick}
     >

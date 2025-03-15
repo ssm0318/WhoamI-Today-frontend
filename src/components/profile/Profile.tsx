@@ -156,14 +156,13 @@ function Profile({ user }: ProfileProps) {
           )}
         </Layout.FlexCol>
       </Layout.FlexRow>
-      {isMyPage ||
-        (user && areFriends(user) && (
-          <Layout.FlexRow w="100%" gap={8}>
-            {user?.persona.map((persona) => (
-              <PersonaChip key={persona} persona={persona} />
-            ))}
-          </Layout.FlexRow>
-        ))}
+      {featureFlags?.persona && (isMyPage || (user && areFriends(user))) && (
+        <Layout.FlexRow w="100%" gap={8}>
+          {user?.persona.map((persona) => (
+            <PersonaChip key={persona} persona={persona} />
+          ))}
+        </Layout.FlexRow>
+      )}
       {!isMyPage && user && (
         <>
           {!isMyProfile(user) && !areFriends(user) && (
