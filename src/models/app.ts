@@ -34,6 +34,22 @@ export interface LogoutData {
   key: 'LOGOUT';
 }
 
+export interface OpenGalleryData {
+  key: 'OPEN_GALLERY';
+}
+
+export interface OpenCameraData {
+  key: 'OPEN_CAMERA';
+}
+
+export interface FileSelectedData {
+  key: 'FILE_SELECTED';
+  uri: string;
+  type: string;
+  name: string;
+  base64?: string;
+}
+
 // 앱, 웹 서로 약속한 키값에 따른 메시지 타입
 export type PostMessageDataType =
   | ScreenNavigateData
@@ -42,7 +58,10 @@ export type PostMessageDataType =
   | SetMomentDraftData
   | SetCookieData
   | OpenBrowserData
-  | LogoutData;
+  | LogoutData
+  | OpenGalleryData
+  | OpenCameraData
+  | FileSelectedData;
 
 // 앱, 웹 서로 약속한 키값
 export type PostMessageKeyType = PostMessageDataType['key'];
@@ -56,4 +75,7 @@ export type PostMessageKeyToData = {
   SET_COOKIE: SetCookieData;
   OPEN_BROWSER: OpenBrowserData;
   LOGOUT: LogoutData;
+  OPEN_GALLERY: OpenGalleryData;
+  OPEN_CAMERA: OpenCameraData;
+  FILE_SELECTED: FileSelectedData;
 };

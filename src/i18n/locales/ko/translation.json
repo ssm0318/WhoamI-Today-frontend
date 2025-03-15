@@ -250,7 +250,12 @@
     "edited": "수정됨",
     "confirm": "확인",
     "friend": "친구",
-    "close_friend": "친한 친구"
+    "close_friend": "친한 친구",
+    "photo_upload_bottom_sheet": {
+      "title": "사진 업로드",
+      "album": "앨범에서 선택",
+      "camera": "카메라로 촬영"
+    }
   },
   "note_detail": {
     "title": "{{username}}의 게시글",

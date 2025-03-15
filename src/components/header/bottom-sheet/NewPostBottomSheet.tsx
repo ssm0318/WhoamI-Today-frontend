@@ -32,7 +32,7 @@ function NewPostBottomSheet({ visible, closeBottomSheet, setSelectPrompt }: Prop
       ? [{ key: 'check-in', path: '/check-in/edit', icon: 'bottomsheet_checkin' as const }]
       : []),
     { key: 'note', path: '/notes/new', icon: 'bottomsheet_note' as const },
-    ...(featureFlags?.friendList
+    ...(featureFlags?.questionResponseFeature
       ? [{ key: 'prompts', path: '/check-in/prompt', icon: 'bottomsheet_prompt' as const }]
       : []),
   ];

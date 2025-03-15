@@ -253,7 +253,12 @@
     "edited": "Edited",
     "confirm": "Confirm",
     "friend": "Friend",
-    "close_friend": "Close Friend"
+    "close_friend": "Close Friend",
+    "photo_upload_bottom_sheet": {
+      "title": "Photo Upload",
+      "album": "Select from Album",
+      "camera": "Take a Photo"
+    }
   },
   "note_detail": {
     "title": "{{username}}'s Post",

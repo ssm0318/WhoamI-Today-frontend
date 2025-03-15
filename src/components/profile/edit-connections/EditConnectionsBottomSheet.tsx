@@ -103,7 +103,6 @@ function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) 
             </Layout.FlexRow>
           )}
         </Layout.FlexCol>
-
         <Button.Confirm
           text={t('edit_connections.save')}
           status={isChanged ? 'normal' : 'disabled'}

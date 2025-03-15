@@ -4,11 +4,16 @@ import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
+import { FileSelectedData } from '@models/app';
 import { NewNoteForm } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
+import { getMobileDeviceInfo } from '@utils/getUserAgent';
+import { processImageFromApp } from '@utils/imageHelpers';
 import ConnectionTypeOption from '../connection-type/ConnectionTypeOption';
 import NewNoteImageEdit from '../new-note-image-edit/NewNoteImageEdit';
+import NewNotePhotoUploadBottomSheet from '../new-note-photo-upload-bottom-sheet/NewNotePhotoUploadBottomSheet';
 import { NoteImage, NoteImageWrapper } from '../note-image/NoteImage.styled';
 import { NoteInput } from './NoteInputBox.styled';
 
@@ -20,20 +25,64 @@ interface NoteInformationProps {
 function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const [t] = useTranslation('translation');
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
+  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
   const [connectionType, setConnectionType] = useState(noteInfo.visibility);
 
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
+  const [showPhotoUploadBottomSheet, setShowPhotoUploadBottomSheet] = useState(false);
 
   const [editImageUrl, setEditImageUrl] = useState<string>();
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const { isAndroid } = getMobileDeviceInfo();
+  const postMessage = usePostAppMessage();
+
+  // 앱에서 파일 선택 완료 시 호출되는 콜백
+  const handleFileSelected = async (data: FileSelectedData) => {
+    const result = await processImageFromApp(data, (message) => openToast({ message }));
+
+    if (result) {
+      setNoteInfo((prevNoteInfo) => ({
+        ...prevNoteInfo,
+        images: [result],
+      }));
+    }
+  };
+
+  // 앱에서 파일 선택 이벤트 리스닝
+  useGetAppMessage({
+    key: 'FILE_SELECTED',
+    cb: handleFileSelected,
+  });
 
   const onClickAdd = () => {
-    if (noteInfo.images && noteInfo.images.length < 10) inputRef.current?.click();
-    // TODO: exception message
-    else console.log('exceed 10 images');
+    /* 안드로이드의 경우 권한 문제로 앨범 사진 선택, 카메라 촬영 메뉴 별도 표시 */
+    if (isAndroid) {
+      setShowPhotoUploadBottomSheet(true);
+      return;
+    }
+
+    if (noteInfo.images && noteInfo.images.length < 10) {
+      inputRef.current?.click();
+    } else {
+      openToast({
+        message: t('notes.max_images_error') || '최대 10장까지만 첨부할 수 있습니다',
+      });
+    }
+  };
+
+  const handleOpenCamera = () => {
+    postMessage('OPEN_CAMERA', {});
+  };
+
+  const handleOpenAlbum = () => {
+    postMessage('OPEN_GALLERY', {});
+  };
+
+  const closePhotoUploadBottomSheet = () => {
+    setShowPhotoUploadBottomSheet(false);
   };
 
   const onImageAdd = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -87,9 +136,8 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const handleClickChangeConnection = () => {
     setShowEditConnectionsModal(true);
   };
-  const closeEditConnectionsModal = () => setShowEditConnectionsModal(false);
 
-  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+  const closeEditConnectionsModal = () => setShowEditConnectionsModal(false);
 
   return (
     <>
@@ -109,6 +157,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
         />
         <Layout.FlexRow w="100%" justifyContent="space-between">
           <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
+
           {/** connections */}
           <Layout.FlexRow>
             <Layout.FlexRow
@@ -138,7 +187,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
                 closeBottomSheet={closeEditConnectionsModal}
               />
             )}
-          </Layout.FlexRow>{' '}
+          </Layout.FlexRow>
         </Layout.FlexRow>
         <input
           ref={inputRef}
@@ -149,20 +198,29 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
           style={{ display: 'none' }}
         />
       </Layout.FlexCol>
-      {isEditVisible ? (
+      {isEditVisible && (
         <NewNoteImageEdit
           imageUrl={editImageUrl}
           setIsVisible={setIsEditVisible}
           onCompleteImageCrop={onCompleteImageCrop}
         />
-      ) : noteInfo?.images?.length ? (
+      )}
+      {noteInfo?.images && noteInfo.images.length > 0 && (
         <NoteImageWrapper ph={DEFAULT_MARGIN}>
-          {noteInfo.images[0] && <NoteImage src={noteInfo.images[0].url} />}
+          {noteInfo.images[0] && noteInfo.images[0].url && (
+            <NoteImage src={noteInfo.images[0].url} alt="Note image" />
+          )}
           <Layout.Absolute t={0} r={15}>
             <SvgIcon name="delete_image" size={50} onClick={handleDeleteImage} />
           </Layout.Absolute>
         </NoteImageWrapper>
-      ) : null}
+      )}
+      <NewNotePhotoUploadBottomSheet
+        visible={showPhotoUploadBottomSheet}
+        closeBottomSheet={closePhotoUploadBottomSheet}
+        onClickOpenCamera={handleOpenCamera}
+        onClickOpenAlbum={handleOpenAlbum}
+      />
     </>
   );
 }
