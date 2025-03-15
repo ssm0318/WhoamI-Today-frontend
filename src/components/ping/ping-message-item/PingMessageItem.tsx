@@ -40,7 +40,7 @@ function PingMessageItem({ message }: Props) {
           alignItems="center"
           justifyContent="center"
           gap={10}
-          bgColor={isAuthor ? 'LIGHT' : is_read ? 'PRIMARY' : 'SECONDARY'}
+          bgColor={isAuthor ? 'LIGHT' : 'SECONDARY'}
           style={{
             borderRadius: isAuthor ? '13px 13px 0px 13px' : '13px 13px 13px 0px',
             wordBreak: 'break-all',
@@ -49,7 +49,7 @@ function PingMessageItem({ message }: Props) {
         >
           {emoji && PingEmojiDict[emoji] && <Typo type="body-medium">{PingEmojiDict[emoji]}</Typo>}
           {content && (
-            <Typo type="body-large" color={isAuthor ? 'BLACK' : 'WHITE'}>
+            <Typo type="body-large" color="BLACK">
               {content}
             </Typo>
           )}
@@ -58,9 +58,12 @@ function PingMessageItem({ message }: Props) {
           style={isAuthor ? { left: 'calc(50% + 110px)' } : { right: 'calc(50% + 110px)' }}
           b={0}
         >
-          <Typo type="label-small" color="MEDIUM_GRAY">
-            {format(date, 'h:mm aaa')}
-          </Typo>
+          <Layout.FlexCol alignItems="flex-end">
+            {!isAuthor && !is_read && <Layout.FlexRow w={5} h={5} bgColor="NUDGE" rounded={5} />}
+            <Typo type="label-small" color="MEDIUM_GRAY">
+              {format(date, 'h:mm aaa')}
+            </Typo>
+          </Layout.FlexCol>
         </Layout.Absolute>
       </Layout.FlexRow>
     </>

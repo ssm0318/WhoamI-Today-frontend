@@ -11,6 +11,8 @@ export enum FeatureFlagKey {
   REACTION_COUNT = 'reactionCount',
   /** 체크인 (status) 플래그 */
   CHECK_IN = 'checkIn',
+  /** 질문, 답변 관련 기능 태그 */
+  QUESTION_RESPONSE_FEATURE = 'questionResponseFeature',
 }
 
 export type FeatureFlagMap = { [feature in FeatureFlagKey]: boolean };
@@ -18,18 +20,19 @@ export type FeatureFlagMapCollection = {
   [version in VersionType]: FeatureFlagMap;
 };
 
-// Ver. R (디폴트)
+// Default (Ver. R)
 const DEFAULT_FLAGS = {
   [FeatureFlagKey.FRIEND_FEED]: true,
   [FeatureFlagKey.FRIEND_LIST]: false,
   [FeatureFlagKey.FRIEND_REQUEST_TYPE]: false,
   [FeatureFlagKey.REACTION_COUNT]: true,
   [FeatureFlagKey.CHECK_IN]: false,
+  [FeatureFlagKey.QUESTION_RESPONSE_FEATURE]: false,
 };
 
 export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
   [VersionType.DEFAULT]: { ...DEFAULT_FLAGS },
-  // Ver. Q (실험)
+  // Experiment (Ver. Q)
   [VersionType.EXPERIMENT]: {
     ...DEFAULT_FLAGS,
     [FeatureFlagKey.FRIEND_FEED]: false,
@@ -37,5 +40,6 @@ export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
     [FeatureFlagKey.FRIEND_REQUEST_TYPE]: true,
     [FeatureFlagKey.REACTION_COUNT]: false,
     [FeatureFlagKey.CHECK_IN]: true,
+    [FeatureFlagKey.QUESTION_RESPONSE_FEATURE]: true,
   },
 };
