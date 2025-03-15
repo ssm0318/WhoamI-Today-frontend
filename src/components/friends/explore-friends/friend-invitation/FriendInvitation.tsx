@@ -19,7 +19,7 @@ export default function FriendInvitation() {
     if (!isMobile || !navigator.share) {
       const message = decodeHTMLEntities(
         t('desktop_message', {
-          username: myProfile?.username,
+          email: myProfile?.email,
           invitation_link: INVITATION_LINK,
         }),
       );
@@ -33,13 +33,13 @@ export default function FriendInvitation() {
     const message = window.ReactNativeWebView
       ? decodeHTMLEntities(
           `${t('mobile_message_title')}\n\n${t('mobile_message', {
-            username: myProfile?.username,
+            email: myProfile?.email,
             invitation_link: INVITATION_LINK,
           })}`,
         )
       : decodeHTMLEntities(
           t('mobile_message', {
-            username: myProfile?.username,
+            email: myProfile?.email,
             invitation_link: INVITATION_LINK,
           }),
         );
