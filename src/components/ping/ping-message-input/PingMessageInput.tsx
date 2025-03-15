@@ -5,6 +5,8 @@ import { StyledTextInput } from '@components/ping/ping-message-input/PingMessage
 import {
   BOTTOM_TABBAR_HEIGHT,
   MAX_WINDOW_WIDTH,
+  PING_EMOJI_AREA_SIZE,
+  PING_EMOJI_FONT_SIZE,
   PING_MESSAGE_INPUT_HEIGHT,
 } from '@constants/layout';
 import { Layout } from '@design-system';
@@ -66,7 +68,7 @@ function PingMessageInput({ insertPing, userId }: Props) {
       h={PING_MESSAGE_INPUT_HEIGHT}
       b={BOTTOM_TABBAR_HEIGHT}
       ph={14}
-      pv={10}
+      pv={8}
       bgColor="WHITE"
     >
       <Layout.FlexRow
@@ -74,7 +76,8 @@ function PingMessageInput({ insertPing, userId }: Props) {
         gap={10}
         rounded={13}
         outline="DARK_GRAY"
-        p={8}
+        ph={8}
+        pv={9}
         alignItems="center"
         justifyContent="space-between"
         style={{ position: 'relative' }}
@@ -82,10 +85,18 @@ function PingMessageInput({ insertPing, userId }: Props) {
         {/** emoji */}
         {selectedEmoji ? (
           <button type="button" onClick={handleToggleAddEmoji}>
-            <div style={{ fontSize: 22, width: 27 }}>{PingEmojiDict[selectedEmoji]}</div>
+            <div
+              style={{
+                fontSize: PING_EMOJI_FONT_SIZE,
+                width: PING_EMOJI_AREA_SIZE,
+                height: PING_EMOJI_AREA_SIZE,
+              }}
+            >
+              {PingEmojiDict[selectedEmoji]}
+            </div>
           </button>
         ) : (
-          <Icon name="ping_emoji_add" size={27} onClick={handleToggleAddEmoji} />
+          <Icon name="ping_emoji_add" size={PING_EMOJI_AREA_SIZE} onClick={handleToggleAddEmoji} />
         )}
         {/** text */}
         <Layout.FlexRow w="100%" pr={5} alignItems="center">
@@ -97,15 +108,25 @@ function PingMessageInput({ insertPing, userId }: Props) {
             onChange={handleChangeMessage}
             onKeyDown={handleKeyDownInput}
           />
-          <Icon name="question_send" size={20} onClick={handleClickPost} color="BLACK" />
+          <Layout.FlexRow
+            rounded={22}
+            bgColor="PRIMARY"
+            ph={6}
+            pb={4}
+            pt={6}
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Icon name="question_send" size={20} onClick={handleClickPost} color="WHITE" />
+          </Layout.FlexRow>
         </Layout.FlexRow>
       </Layout.FlexRow>
       {showEmojiList && (
         <Layout.Absolute t={-28} l={14} bgColor="LIGHT" rounded={13} pv={2} ph={15}>
-          <Layout.FlexRow gap={7}>
+          <Layout.FlexRow gap={10}>
             {Object.entries(PingEmojiDict).map(([key, value]) => (
               <button key={key} type="button" onClick={handleClickEmoji(key)}>
-                <div style={{ fontSize: 20 }}>{value}</div>
+                <div style={{ fontSize: PING_EMOJI_FONT_SIZE }}>{value}</div>
               </button>
             ))}
           </Layout.FlexRow>
