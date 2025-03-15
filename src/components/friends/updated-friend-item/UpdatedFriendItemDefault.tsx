@@ -59,7 +59,9 @@ function UpdatedFriendItemDefault({ user, isMyPage }: Props) {
             alignItems="center"
             gap={2}
           >
-            <Icon name="question_send" size={24} onClick={handleClickPing} />
+            <Layout.LayoutBase pb={2}>
+              <Icon name="ping_send" size={22} onClick={handleClickPing} />
+            </Layout.LayoutBase>
             {unread_ping_count > 0 && (
               <Layout.Absolute
                 bgColor="BLACK"

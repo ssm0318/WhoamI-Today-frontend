@@ -136,10 +136,12 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
             style={{ position: 'relative' }}
             justifyContent="flex-end"
             alignItems="center"
-            gap={2}
+            gap={3}
           >
             {track_id && <SpotifyMusic track={track_id} sharer={user} useDetailBottomSheet />}
-            <Icon name="question_send" size={24} onClick={handleClickPing} />
+            <Layout.LayoutBase pb={2}>
+              <Icon name="ping_send" size={22} onClick={handleClickPing} />
+            </Layout.LayoutBase>
             {unread_ping_count > 0 && (
               <Layout.Absolute
                 bgColor="BLACK"
