@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: whoami-frontend
+    build:
+      context: .
+      target: production
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - frontend_build_volume:/usr/share/nginx/html
+    networks:
+      - whoamitoday-network
+    restart: unless-stopped
+
+volumes:
+  frontend_build_volume: 
+    external: true
+
+networks:
+  whoamitoday-network:
+    external: true

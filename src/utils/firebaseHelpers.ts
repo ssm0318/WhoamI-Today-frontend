@@ -1,5 +1,6 @@
 import { getToken, MessagePayload, Messaging, onMessage } from 'firebase/messaging';
 import i18n from '@i18n/index';
+import { PROD_BASE_URL } from './apis/axios';
 import { activateFirebaseNotification, readNotification } from './apis/notification';
 
 // Your web app's Firebase configuration
@@ -54,7 +55,7 @@ export const addForegroundMessageEventListener = (messaging: Messaging) => {
     const options = {
       body: i18n.language === 'ko' ? message_ko : message_en,
       tag,
-      icon: 'https://whoami.gina-park.site/whoami192.png',
+      icon: `${PROD_BASE_URL}/whoami192.png`,
       data: {
         url,
       },
