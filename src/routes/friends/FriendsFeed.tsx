@@ -39,7 +39,7 @@ function FriendsFeed() {
   });
 
   return (
-    <MainScrollContainer scrollRef={scrollRef}>
+    <MainScrollContainer scrollRef={scrollRef} showNotificationPermission>
       <PullToRefresh onRefresh={handleRefresh}>
         <Layout.FlexCol w="100%">
           {isLoading ? (

@@ -60,11 +60,17 @@ interface MainScrollContainerProps {
   children?: ReactNode;
   scrollRef?: RefObject<HTMLDivElement>;
   onScroll?: (e: UIEvent) => void;
+  showNotificationPermission?: boolean;
 }
 
-export function MainScrollContainer({ children, scrollRef, onScroll }: MainScrollContainerProps) {
+export function MainScrollContainer({
+  children,
+  scrollRef,
+  onScroll,
+  showNotificationPermission = false,
+}: MainScrollContainerProps) {
   const { isMobile } = getMobileDeviceInfo();
-  const showNotificationPermission = !isMobile;
+  const showBanner = showNotificationPermission && !isMobile;
 
   return (
     <MainWrapper
@@ -72,13 +78,13 @@ export function MainScrollContainer({ children, scrollRef, onScroll }: MainScrol
       ref={scrollRef}
       alignItems="center"
       pt={TOP_NAVIGATION_HEIGHT}
-      pb={BOTTOM_TABBAR_HEIGHT + (showNotificationPermission ? NOTI_PERMISSION_BANNER_HEIGHT : 0)}
+      pb={BOTTOM_TABBAR_HEIGHT + (showBanner ? NOTI_PERMISSION_BANNER_HEIGHT : 0)}
       onScroll={onScroll}
     >
       {children}
       <Outlet />
       {/* 데스크톱 웹만 노출 */}
-      {showNotificationPermission && <NotiPermissionBanner />}
+      {showBanner && <NotiPermissionBanner />}
     </MainWrapper>
   );
 }
