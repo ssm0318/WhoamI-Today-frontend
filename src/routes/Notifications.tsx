@@ -11,6 +11,7 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Notification } from '@models/notification';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { getResponseRequests } from '@utils/apis/my';
 import { getNotifications, readAllNotifications } from '@utils/apis/notification';
 import { getFriendRequests } from '@utils/apis/user';
@@ -28,6 +29,8 @@ function Notifications() {
     if (nextPage === null) return setIsLoading(false);
     await fetchNotifications(nextPage ?? null);
   });
+  const { featureFlags } = useBoundStore(UserSelector);
+
   const { openToast, updateMyProfile } = useBoundStore((state) => ({
     openToast: state.openToast,
     updateMyProfile: state.updateMyProfile,
@@ -47,12 +50,18 @@ function Notifications() {
 
   const fetchRequests = async () => {
     try {
-      const [friendResponse, responseResponse] = await Promise.all([
-        getFriendRequests(),
-        getResponseRequests(null),
-      ]);
-      setFriendRequests(friendResponse.count);
-      setResponseRequests(responseResponse.count);
+      if (featureFlags?.questionResponseFeature) {
+        const [friendResponse, responseResponse] = await Promise.all([
+          getFriendRequests(),
+          getResponseRequests(null),
+        ]);
+        setFriendRequests(friendResponse.count);
+        setResponseRequests(responseResponse.count);
+      } else {
+        const friendResponse = await getFriendRequests();
+        setFriendRequests(friendResponse.count);
+        setResponseRequests(0);
+      }
     } catch (error) {
       console.error('Error fetching requests:', error);
       openToast({ message: t('temporary_error') });
@@ -85,8 +94,12 @@ function Notifications() {
   const restNotifications = notifications.filter((n) => !n.is_recent);
 
   useAsyncEffect(async () => {
-    await Promise.all([fetchNotifications(null), fetchRequests()]);
-  }, []);
+    if (featureFlags?.questionResponseFeature) {
+      await Promise.all([fetchNotifications(null), fetchRequests()]);
+    } else {
+      await fetchNotifications(null);
+    }
+  }, [featureFlags]);
 
   return (
     <MainScrollContainer>
@@ -101,13 +114,14 @@ function Notifications() {
               value={friendRequests !== null ? friendRequests : 0}
               onClick={() => navigate('/friends/explore')}
             />
-            {/* See Prompts Received */}
-            <TopContainer
-              title={t('see_prompts_received')}
-              icon="prompts"
-              value={responseRequests !== null ? responseRequests : 0}
-              onClick={() => navigate('/notifications/prompts')}
-            />
+            {!!featureFlags?.questionResponseFeature && (
+              <TopContainer
+                title={t('see_prompts_received')}
+                icon="prompts"
+                value={responseRequests !== null ? responseRequests : 0}
+                onClick={() => navigate('/notifications/prompts')}
+              />
+            )}
           </Layout.FlexCol>
           {/* 노티 전체 읽음 버튼 */}
           <Layout.FlexRow w="100%" justifyContent="flex-end" pr="default" pv={8}>

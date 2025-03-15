@@ -134,11 +134,16 @@ export const validatePassword = ({
       onSuccess();
     })
     .catch((e: AxiosError<PasswordError>) => {
-      if (e.response?.data.password[0]) {
-        onError(e.response.data.password[0]);
-        return;
+      if (e.response?.data && 'error' in e.response.data) {
+        const { error } = e.response.data as { error: { password?: string[] } };
+        if (error?.password?.[0]) {
+          onError(error.password[0]);
+        } else {
+          onError(String(e.response.data));
+        }
+      } else {
+        onError(String(e.response?.data || e.message));
       }
-      onError(i18n.t('error.temporary_error'));
     });
 };
 
@@ -231,11 +236,15 @@ export const resetPassword = ({
     .put(url, { password, token })
     .then(() => onSuccess())
     .catch((e: AxiosError<PasswordError>) => {
-      if (e.response?.data?.password?.[0]) {
-        onError(e.response.data.password[0]);
-      }
-      if (e.response?.data) {
-        onError(String(e.response?.data));
+      if (e.response?.data && 'error' in e.response.data) {
+        const { error } = e.response.data as { error: { password?: string[] } };
+        if (error?.password?.[0]) {
+          onError(error.password[0]);
+        } else {
+          onError(String(e.response.data));
+        }
+      } else {
+        onError(String(e.response?.data || e.message));
       }
     });
 };
