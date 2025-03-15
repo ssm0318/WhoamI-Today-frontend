@@ -59,7 +59,7 @@ function SideMenu({ closeSideMenu }: Props) {
                 {t('inquiry')} :
               </Typo>
               {i18n.language === 'ko-KR' ? (
-                <Layout.FlexCol gap={8}>
+                <Layout.FlexCol gap={15}>
                   <a
                     href={RESEARCH_INQUIRY_KAKAOTALK_LINK}
                     target="_blank"
@@ -108,7 +108,7 @@ function SideMenu({ closeSideMenu }: Props) {
                   </a>
                 </Layout.FlexCol>
               ) : (
-                <Layout.FlexCol gap={8}>
+                <Layout.FlexCol gap={15}>
                   <Typo type="title-medium">
                     🎮{' '}
                     <Typo type="title-medium" bold>
