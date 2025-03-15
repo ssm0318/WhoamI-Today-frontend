@@ -1,0 +1,57 @@
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Layout, Typo } from '@design-system';
+import { Persona } from '@models/persona';
+import { generateRandomColor } from '@utils/colorHelpers';
+
+interface PersonaChipProps {
+  persona: Persona;
+  onSelect?: (persona: Persona) => void;
+  isSelected?: boolean;
+}
+
+function PersonaChip({ persona, onSelect, isSelected }: PersonaChipProps) {
+  const [t] = useTranslation('translation', { keyPrefix: 'persona' });
+
+  const handleOnClick = () => {
+    onSelect?.(persona);
+  };
+
+  const color = useMemo(() => generateRandomColor(), []);
+
+  if (!persona || !Object.keys(Persona).includes(persona)) {
+    return null;
+  }
+  return (
+    <Layout.FlexRow
+      bgColor="WHITE"
+      gap={4}
+      pv={4}
+      ph={8}
+      outline={isSelected ? 'PRIMARY' : 'LIGHT_GRAY'}
+      alignItems="center"
+      rounded={20}
+      style={{
+        flexShrink: 0,
+        maxWidth: '100%',
+        overflow: 'hidden',
+      }}
+      onClick={handleOnClick}
+    >
+      <div
+        style={{
+          width: 14,
+          height: 14,
+          backgroundColor: color,
+          borderRadius: 12,
+          flexShrink: 0,
+        }}
+      />
+      <Typo type="label-large" numberOfLines={1} ellipsis={{ enabled: true }}>
+        {t(persona)}
+      </Typo>
+    </Layout.FlexRow>
+  );
+}
+
+export default PersonaChip;

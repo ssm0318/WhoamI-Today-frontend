@@ -11,7 +11,7 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test1/',
     bio: 'test1',
     pronouns: 'test1',
-    persona: Persona.lurker,
+    persona: [Persona.lurker],
   },
   {
     id: 2,
@@ -22,7 +22,7 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test2/',
     bio: 'test2',
     pronouns: 'test2',
-    persona: Persona.content_creator,
+    persona: [Persona.content_creator],
   },
   {
     id: 3,
@@ -33,7 +33,7 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test3/',
     bio: 'test3',
     pronouns: 'test3',
-    persona: Persona.private_reactor,
+    persona: [Persona.private_reactor],
   },
   {
     id: 4,
@@ -44,7 +44,7 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test4/',
     bio: 'test4',
     pronouns: 'test4',
-    persona: Persona.public_commenter,
+    persona: [Persona.public_commenter],
   },
   {
     id: 5,
@@ -54,7 +54,7 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test5/',
     bio: 'test5',
     pronouns: 'test5',
-    persona: Persona.instant_responder,
+    persona: [Persona.instant_responder],
   },
   {
     id: 6,
@@ -64,7 +64,7 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test6/',
     bio: 'test6',
     pronouns: 'test6',
-    persona: Persona.takes_my_time,
+    persona: [Persona.takes_my_time],
   },
   {
     id: 7,
@@ -74,7 +74,7 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test7/',
     bio: 'test7',
     pronouns: 'test7',
-    persona: Persona.daily_scroller,
+    persona: [Persona.daily_scroller],
   },
   {
     id: 8,
@@ -84,6 +84,6 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test8/',
     bio: 'test8',
     pronouns: 'test8',
-    persona: Persona.occasional_checker,
+    persona: [Persona.occasional_checker],
   },
 ];

@@ -11,7 +11,7 @@ export interface User {
   username: string;
   bio: string;
   pronouns: string;
-  persona: Persona;
+  persona: Persona[];
 }
 
 export interface UserProfile extends User {
