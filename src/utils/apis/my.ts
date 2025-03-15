@@ -23,7 +23,7 @@ export const editProfile = ({
   onError,
 }: {
   profile: Partial<
-    Pick<MyProfile, 'bio' | 'username' | 'pronouns' | 'noti_time' | 'noti_period_days'>
+    Pick<MyProfile, 'bio' | 'username' | 'pronouns' | 'noti_time' | 'noti_period_days' | 'persona'>
   > & {
     profile_image?: File;
   };
@@ -40,6 +40,11 @@ export const editProfile = ({
 
     if (profile.noti_period_days && key === 'noti_period_days') {
       formData.append('noti_period_days', JSON.stringify(profile.noti_period_days));
+      return;
+    }
+
+    if (profile.persona && key === 'persona') {
+      formData.append('persona', JSON.stringify(profile.persona));
       return;
     }
 
