@@ -332,6 +332,7 @@
     "enter_your_new_password": "새로운 비밀번호를 입력하세요.",
     "confirm_password": "비밀번호 확인",
     "reset_password": "비밀번호 재설정",
+    "reset_password_success": "비밀번호가 성공적으로 재설정되었습니다 🎉",
     "confirm": "확인",
     "notification_settings": "알림 설정",
     "push_notifications": "푸시 알림 설정",
