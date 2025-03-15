@@ -513,9 +513,9 @@
       "invite": {
         "text": "친구 초대",
         "copy": "초대 링크를 클립보드에 복사했습니다.",
-        "desktop_message": "저와 함께 WhoAmI Today (WIT) 베타 테스트에 참여하세요. WIT는 워싱턴 대학교 연구팀이 청소년을 위해 개발한 소셜 미디어 플랫폼입니다.\n\n가입할 때 제 닉네임을 입력해주세요.\n\n초대 링크: {{invitation_link}}\n\n제 닉네임: {{username}}",
+        "desktop_message": "저와 함께 WhoAmI Today (WIT) 베타 테스트에 참여하세요. WIT는 워싱턴 대학교 연구팀이 청소년을 위해 개발한 소셜 미디어 플랫폼입니다.\n\n가입할 때 제 이메일을 입력해주세요.\n\n초대 링크: {{invitation_link}}\n\n제 이메일: {{email}}",
         "mobile_message_title": "WhoAmI Today (WIT)에서 만나요.",
-        "mobile_message": "가입할 때 제 닉네임을 입력해주세요.\n\n초대 링크: {{invitation_link}}\n\n제 닉네임: {{username}}"
+        "mobile_message": "가입할 때 제 이메일을 입력해주세요.\n\n초대 링크: {{invitation_link}}\n\n제 닉네임: {{username}}"
       },
       "tab": {
         "requests": "친구 요청",
