@@ -59,7 +59,7 @@ function SideMenu({ closeSideMenu }: Props) {
                 {t('inquiry')} :
               </Typo>
               {i18n.language === 'ko-KR' ? (
-                <Layout.FlexCol gap={15}>
+                <Layout.FlexCol gap={15} pl={4}>
                   <a
                     href={RESEARCH_INQUIRY_KAKAOTALK_LINK}
                     target="_blank"
@@ -71,7 +71,7 @@ function SideMenu({ closeSideMenu }: Props) {
                   >
                     <Typo type="title-medium">
                       💬{' '}
-                      <Typo type="title-medium" bold>
+                      <Typo type="title-medium" bold underline>
                         {t('kakao_inquiry')}
                       </Typo>
                     </Typo>
@@ -81,7 +81,7 @@ function SideMenu({ closeSideMenu }: Props) {
                     <Typo type="title-medium" bold>
                       {t('discord_inquiry')} :{' '}
                     </Typo>
-                    @jaewonkim___ (밑줄 3개)
+                    <Typo type="title-medium">@jaewonkim___ (밑줄 3개)</Typo>
                   </Typo>
                   <a
                     href={RESEARCH_INQUIRY_INSTAGRAM_LINK}
@@ -108,7 +108,7 @@ function SideMenu({ closeSideMenu }: Props) {
                   </a>
                 </Layout.FlexCol>
               ) : (
-                <Layout.FlexCol gap={15}>
+                <Layout.FlexCol gap={15} pl={4}>
                   <Typo type="title-medium">
                     🎮{' '}
                     <Typo type="title-medium" bold>
