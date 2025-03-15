@@ -1,15 +1,3 @@
-// export enum Availability {
-//   available = 'available',
-//   busy = 'busy',
-//   might_get_distracted = 'might_get_distracted',
-//   urgent_only = 'urgent_only',
-//   about_to_sleep = 'about_to_sleep',
-//   studying = 'studying',
-//   in_transit = 'in_transit',
-//   feeling_social = 'feeling_social',
-//   feeling_quiet = 'feeling_quiet',
-// }
-
 export enum SocialBattery {
   completely_drained = 'completely_drained',
   low = 'low',
