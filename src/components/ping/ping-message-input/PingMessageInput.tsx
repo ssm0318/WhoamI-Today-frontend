@@ -30,6 +30,8 @@ function PingMessageInput({ insertPing, userId }: Props) {
   };
 
   const handleKeyDownInput = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing) return;
+
     if (e.key === 'Enter') {
       e.preventDefault();
       handleClickPost();
@@ -37,7 +39,7 @@ function PingMessageInput({ insertPing, userId }: Props) {
   };
 
   const handleClickPost = () => {
-    if (!userId) return;
+    if (!userId || (!messageInput && !selectedEmoji)) return;
     const inputData: InputPingMessage = { content: messageInput, emoji: selectedEmoji ?? '' };
 
     setMessageInput('');
