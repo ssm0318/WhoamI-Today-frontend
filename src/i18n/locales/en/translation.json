@@ -611,12 +611,12 @@
     "file_size_exceeded": "File size exceeds the {{size}}MB limit."
   },
   "check_in_edit": {
-    "availability": {
-      "title": "What's Your Availability?",
+    "social_battery": {
+      "title": "Social Battery Level",
       "description": "Let friends know if you're open to chat.",
-      "select_placeholder": "Select Availability",
+      "select_placeholder": "Select Social Battery Level",
       "select_bottom_sheet": {
-        "title": "Select Availability",
+        "title": "Select Social Battery Level",
         "confirm": "Confirm"
       }
     },
@@ -644,5 +644,13 @@
   "music_detail": {
     "shared_a_song": "shared a song",
     "listen_on_spotify": "Listen on Spotify"
+  },
+  "social_battery": {
+    "completely_drained": "Completely Drained",
+    "low": "Low Social Battery",
+    "needs_recharge": "Needs Recharge",
+    "moderate": "Moderate",
+    "fully_charged": "Fully Charged",
+    "super_social": "Super Social Mode (HMU!)"
   }
 }

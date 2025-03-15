@@ -11,7 +11,7 @@ import { CheckInBase } from '@models/checkIn';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
-import AvailabilityChip from '../profile/availability-chip/AvailabilityChip';
+import SocialBatteryChip from '../profile/social-batter-chip/SocialBatteryChip';
 import AddNewCheckIn from './add-new-check-in/AddNewCheckIn';
 
 interface CheckInProps {
@@ -33,8 +33,8 @@ function CheckIn({ user }: CheckInProps) {
   const [checkIn, setCheckIn] = useState<CheckInBase | null | undefined>(
     isMyPage ? initialCheckIn : user.check_in,
   );
-  const { availability, track_id, mood, description, current_user_read } = checkIn || {};
-  const hasCheckIn = checkIn && (mood || description || availability || track_id);
+  const { social_battery, track_id, mood, description, current_user_read } = checkIn || {};
+  const hasCheckIn = checkIn && (mood || description || social_battery || track_id);
 
   const [currentDate] = useState(() => new Date());
   const navigate = useNavigate();
@@ -57,8 +57,8 @@ function CheckIn({ user }: CheckInProps) {
         <>
           <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
             <Layout.FlexRow gap={8} alignItems="center">
-              {/* availability */}
-              {availability && <AvailabilityChip availability={availability} />}
+              {/* social battery */}
+              {social_battery && <SocialBatteryChip socialBattery={social_battery} />}
               {/* spotify */}
               {track_id && (
                 <SpotifyMusic
@@ -70,7 +70,7 @@ function CheckIn({ user }: CheckInProps) {
               )}
             </Layout.FlexRow>
             {/* more */}
-            {(!!availability || !!track_id) && isMyPage && (
+            {(!!social_battery || !!track_id) && isMyPage && (
               <SvgIcon
                 name="edit_filled"
                 fill="DARK_GRAY"
@@ -108,7 +108,7 @@ function CheckIn({ user }: CheckInProps) {
                 )}
               </Layout.FlexRow>
             )}
-            {!availability && !track_id && isMyPage && (
+            {!social_battery && !track_id && isMyPage && (
               <SvgIcon
                 name="edit_filled"
                 fill="DARK_GRAY"

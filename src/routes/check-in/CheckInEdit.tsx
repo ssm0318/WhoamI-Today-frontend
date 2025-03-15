@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
-import CheckInAvailability from '@components/check-in/check-in-edit/check-in-availability/CheckInAvailability';
 import CheckInDescription from '@components/check-in/check-in-edit/check-in-description/CheckInDescription';
 import CheckInEmoji from '@components/check-in/check-in-edit/check-in-emoji/CheckInEmoji';
+import CheckInSocialBattery from '@components/check-in/check-in-edit/check-in-social-battery/CheckInSocialBattery';
 import CheckInSpotifyMusic from '@components/check-in/check-in-edit/check-in-spotify-music/CheckInSpotifyMusic';
 import SectionContainer from '@components/check-in/check-in-edit/section-container/SectionContainer';
 import SubHeader from '@components/sub-header/SubHeader';
@@ -14,7 +14,7 @@ import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
-import { Availability, CheckInForm } from '@models/checkIn';
+import { CheckInForm, SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
 import { postCheckIn } from '@utils/apis/checkIn';
 
@@ -34,8 +34,8 @@ function CheckInEdit() {
     setCheckInForm({ [name]: value });
   };
 
-  const handleChangeAvailability = (availability: Availability) => {
-    setCheckInForm({ availability });
+  const handleChangeSocialBattery = (socialBattery: SocialBattery) => {
+    setCheckInForm({ social_battery: socialBattery });
   };
 
   const handleDelete = (name: string) => {
@@ -44,7 +44,7 @@ function CheckInEdit() {
 
   const handleConfirmSave = async () => {
     await postCheckIn({
-      availability: checkInForm.availability,
+      social_battery: checkInForm.social_battery,
       description: checkInForm.description,
       mood: checkInForm.mood,
       track_id: checkInForm.track_id,
@@ -83,15 +83,15 @@ function CheckInEdit() {
         bgColor="BACKGROUND_COLOR"
         p={12}
       >
-        {/* availability */}
+        {/* Social Bateery */}
         <SectionContainer
-          title={t('availability.title')}
-          description={t('availability.description')}
+          title={t('social_battery.title')}
+          description={t('social_battery.description')}
         >
-          <CheckInAvailability
-            availability={checkInForm?.availability}
-            onDelete={() => handleDelete('availability')}
-            onSelectAvailability={handleChangeAvailability}
+          <CheckInSocialBattery
+            socialBattery={checkInForm?.social_battery}
+            onDelete={() => handleDelete('social_battery')}
+            onSelectSocialBattery={handleChangeSocialBattery}
           />
         </SectionContainer>
         {/* spotify */}

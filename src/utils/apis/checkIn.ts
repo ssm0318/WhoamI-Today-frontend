@@ -5,7 +5,6 @@ import axios from './axios';
 // GET check-in list
 export const getCheckInList = async () => {
   const { data } = await axios.get<PaginationResponse<MyCheckIn[]>>(`/check_in/`);
-
   return data;
 };
 
