@@ -126,12 +126,12 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
             />
             {/* author, created_at 정보 */}
             <Layout.FlexCol>
-              <Layout.FlexRow onClick={navigateToProfile}>
+              <Layout.FlexRow onClick={navigateToProfile} gap={4} alignItems="center">
                 <Typo type="title-medium" ellipsis={{ enabled: true, maxWidth: 140 }}>
                   {username}
                 </Typo>
+                {!current_user_read && !isMyPage && <UpdatedLabel />}
               </Layout.FlexRow>
-              {!current_user_read && !isMyPage && <UpdatedLabel />}
               <Layout.FlexRow alignItems="center" gap={4}>
                 <Typo type="label-medium" color="MEDIUM_GRAY">
                   {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
