@@ -28,7 +28,7 @@ function UserHeader({ username, userId, onClickMore }: UserHeaderProps) {
       RightComponent={
         <Layout.FlexRow gap={8} alignItems="center">
           <Icon name="dots_menu" size={44} onClick={handleClickMore} />
-          <Icon name="question_send" size={22} onClick={handleClickPing} />
+          <Icon name="ping_send" size={24} onClick={handleClickPing} padding={2} />
         </Layout.FlexRow>
       }
     />
