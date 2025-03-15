@@ -129,19 +129,22 @@ function Ping() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pings]);
 
-  const handleClickRefresh = () => {
+  const handleClickRefresh = async () => {
     if (!userId) return;
 
     // FIXME: 현재 페이지네이션 정보를 유지한채로 안읽은 메시지가 있는 페이지까지 로드하도록 수정 해보자
-    initFetchPingsAndScrollToUnreadMsg(Number(userId), false);
     setUnreadCount(0);
+    await initFetchPingsAndScrollToUnreadMsg(Number(userId), false);
   };
 
-  const insertPing = (newPing: PostPingMessageRes) => {
+  const insertPing = async (newPing: PostPingMessageRes) => {
     const { unread_count, ...rest } = newPing;
     setPrevScrollHeight(scrollRef.current?.clientHeight); // 새 메시지 추가시 맨 아래로 스크롤 이동
     setPings((prev) => [...prev, rest]);
     setUnreadCount(unread_count);
+
+    await handleClickRefresh();
+    setPrevScrollHeight(scrollRef.current?.clientHeight); // 새로운 메시지가 있는 경우에 스크롤을 다시 맨 아래로 이동
   };
 
   return (
