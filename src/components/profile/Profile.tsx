@@ -138,7 +138,7 @@ function Profile({ user }: ProfileProps) {
             </Layout.FlexRow>
           )}
           {/* 친구 수 */}
-          {featureFlags?.friendFeed && user && areFriends(user) && (
+          {featureFlags?.friendFeed && (isMyPage || (user && areFriends(user))) && (
             <button type="button" onClick={handleClickFriendList}>
               <Typo type="label-medium" color="DARK_GRAY" underline>
                 {isMyPage ? allFriends?.[0].count : friendFriends?.[0].count} {t('friends')}
