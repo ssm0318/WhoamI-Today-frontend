@@ -30,6 +30,8 @@ function PingMessageInput({ insertPing, userId }: Props) {
   };
 
   const handleKeyDownInput = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing) return;
+
     if (e.key === 'Enter') {
       e.preventDefault();
       handleClickPost();
