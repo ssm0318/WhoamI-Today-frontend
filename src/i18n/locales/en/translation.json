@@ -612,12 +612,12 @@
     "file_size_exceeded": "File size exceeds the {{size}}MB limit."
   },
   "check_in_edit": {
-    "availability": {
-      "title": "What's Your Availability?",
+    "social_battery": {
+      "title": "Social Battery Level",
       "description": "Let friends know if you're open to chat.",
-      "select_placeholder": "Select Availability",
+      "select_placeholder": "Select Social Battery Level",
       "select_bottom_sheet": {
-        "title": "Select Availability",
+        "title": "Select Social Battery Level",
         "confirm": "Confirm"
       }
     },

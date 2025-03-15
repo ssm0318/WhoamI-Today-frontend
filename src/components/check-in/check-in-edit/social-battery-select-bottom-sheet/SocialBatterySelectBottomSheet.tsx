@@ -3,28 +3,28 @@ import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
 import Icon from '@components/_common/icon/Icon';
-import AvailabilityChip from '@components/profile/availability-chip/AvailabilityChip';
+import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import { Layout, Typo } from '@design-system';
-import { Availability } from '@models/checkIn';
-import * as S from './AvailabilitySelectBottomSheet.styled';
+import { SocialBattery } from '@models/checkIn';
+import * as S from './SocialBatterySelectBottomSheet.styled';
 
-type AvailabilitySelectBottomSheetProps = {
+type SocialBatterySelectBottomSheetProps = {
   visible: boolean;
   closeBottomSheet: () => void;
-  onSelect: (availability: Availability) => void;
-  selectedAvailability: Availability | null;
+  onSelect: (socialBattery: SocialBattery) => void;
+  selectedSocialBattery: SocialBattery | null;
 };
 
-function AvailabilitySelectBottomSheet({
+function SocialBatterySelectBottomSheet({
   visible,
   closeBottomSheet,
   onSelect,
-  selectedAvailability = null,
-}: AvailabilitySelectBottomSheetProps) {
+  selectedSocialBattery = null,
+}: SocialBatterySelectBottomSheetProps) {
   const [t] = useTranslation('translation', {
-    keyPrefix: 'check_in_edit.availability.select_bottom_sheet',
+    keyPrefix: 'check_in_edit.social_battery.select_bottom_sheet',
   });
-  const [selected, setSelected] = useState<Availability | null>(selectedAvailability || null);
+  const [selected, setSelected] = useState<SocialBattery | null>(selectedSocialBattery || null);
 
   const handleConfirm = () => {
     if (selected) {
@@ -46,9 +46,9 @@ function AvailabilitySelectBottomSheet({
           }}
           ph={12}
         >
-          {Object.values(Availability).map((a) => (
-            <AvailabilityChip
-              availability={a}
+          {Object.values(SocialBattery).map((a) => (
+            <SocialBatteryChip
+              socialBattery={a}
               key={a}
               onSelect={setSelected}
               isSelected={selected === a}
@@ -67,4 +67,4 @@ function AvailabilitySelectBottomSheet({
   );
 }
 
-export default AvailabilitySelectBottomSheet;
+export default SocialBatterySelectBottomSheet;

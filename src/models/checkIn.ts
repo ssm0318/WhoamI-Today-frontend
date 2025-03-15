@@ -1,13 +1,22 @@
-export enum Availability {
-  available = 'available',
-  busy = 'busy',
-  might_get_distracted = 'might_get_distracted',
-  urgent_only = 'urgent_only',
-  about_to_sleep = 'about_to_sleep',
-  studying = 'studying',
-  in_transit = 'in_transit',
-  feeling_social = 'feeling_social',
-  feeling_quiet = 'feeling_quiet',
+// export enum Availability {
+//   available = 'available',
+//   busy = 'busy',
+//   might_get_distracted = 'might_get_distracted',
+//   urgent_only = 'urgent_only',
+//   about_to_sleep = 'about_to_sleep',
+//   studying = 'studying',
+//   in_transit = 'in_transit',
+//   feeling_social = 'feeling_social',
+//   feeling_quiet = 'feeling_quiet',
+// }
+
+export enum SocialBattery {
+  completely_drained = 'completely_drained',
+  low = 'low',
+  needs_recharge = 'needs_recharge',
+  moderate = 'moderate',
+  fully_charged = 'fully_charged',
+  super_social = 'super_social',
 }
 
 export type CheckInBase = {
@@ -15,7 +24,7 @@ export type CheckInBase = {
   is_active: boolean;
   created_at: string;
   mood: string;
-  availability: Availability | null;
+  social_battery: SocialBattery | null;
   description: string;
   track_id: string;
   current_user_read: boolean;

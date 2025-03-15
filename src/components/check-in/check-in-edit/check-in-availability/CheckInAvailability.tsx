@@ -1,33 +1,33 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
-import AvailabilityChip from '@components/profile/availability-chip/AvailabilityChip';
+import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import { Layout, Typo } from '@design-system';
-import { Availability } from '@models/checkIn';
-import AvailabilitySelectBottomSheet from '../availability-select-bottom-sheet/AvailabilitySelectBottomSheet';
+import { SocialBattery } from '@models/checkIn';
+import SocialBatterySelectBottomSheet from '../social-battery-select-bottom-sheet/SocialBatterySelectBottomSheet';
 
-interface CheckInAvailabilityProps {
-  availability: Availability | null;
+interface CheckInSocialBatteryProps {
+  socialBattery: SocialBattery | null;
   onDelete: () => void;
-  onSelectAvailability: (availability: Availability) => void;
+  onSelectSocialBattery: (socialBattery: SocialBattery) => void;
 }
 
-function CheckInAvailability({
-  availability,
+function CheckInSocialBattery({
+  socialBattery,
   onDelete,
-  onSelectAvailability,
-}: CheckInAvailabilityProps) {
-  const [t] = useTranslation('translation', { keyPrefix: 'check_in_edit.availability' });
-  const [showAvailabilitySelect, setShowAvailabilitySelect] = useState(false);
-  const onClickSelectAvailability = () => {
-    setShowAvailabilitySelect(true);
+  onSelectSocialBattery,
+}: CheckInSocialBatteryProps) {
+  const [t] = useTranslation('translation', { keyPrefix: 'check_in_edit.social_battery' });
+  const [showSocialBatterySelect, setShowSocialBatterySelect] = useState(false);
+  const onClickSelectSocialBattery = () => {
+    setShowSocialBatterySelect(true);
   };
 
   return (
     <Layout.FlexRow mt={8} w="100%" alignItems="center" gap={8}>
-      {availability ? (
+      {socialBattery ? (
         <>
-          <AvailabilityChip availability={availability} onSelect={onClickSelectAvailability} />
+          <SocialBatteryChip socialBattery={socialBattery} onSelect={onClickSelectSocialBattery} />
           <DeleteButton onClick={onDelete} size={32} />
         </>
       ) : (
@@ -36,7 +36,7 @@ function CheckInAvailability({
           outline="LIGHT_GRAY"
           rounded={12}
           gap={4}
-          onClick={onClickSelectAvailability}
+          onClick={onClickSelectSocialBattery}
           alignItems="center"
         >
           <Layout.LayoutBase bgColor="MEDIUM_GRAY" w={10} h={10} rounded={5} />
@@ -45,16 +45,16 @@ function CheckInAvailability({
           </Typo>
         </Layout.FlexRow>
       )}
-      {showAvailabilitySelect && (
-        <AvailabilitySelectBottomSheet
-          visible={showAvailabilitySelect}
-          closeBottomSheet={() => setShowAvailabilitySelect(false)}
-          onSelect={onSelectAvailability}
-          selectedAvailability={availability}
+      {showSocialBatterySelect && (
+        <SocialBatterySelectBottomSheet
+          visible={showSocialBatterySelect}
+          closeBottomSheet={() => setShowSocialBatterySelect(false)}
+          onSelect={onSelectSocialBattery}
+          selectedSocialBattery={socialBattery}
         />
       )}
     </Layout.FlexRow>
   );
 }
 
-export default CheckInAvailability;
+export default CheckInSocialBattery;

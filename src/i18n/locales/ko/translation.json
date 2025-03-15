@@ -604,12 +604,12 @@
     "file_size_exceeded": "파일 크기가 {{size}}MB 제한을 초과했습니다."
   },
   "check_in_edit": {
-    "availability": {
-      "title": "현재 상태를 설정하세요",
+    "social_battery": {
+      "title": "소셜 배터리 수준",
       "description": "친구들에게 대화할 준비가 되어 있는지 알려주세요",
-      "select_placeholder": "상태 선택",
+      "select_placeholder": "소셜 배터리 수준 선택",
       "select_bottom_sheet": {
-        "title": "상태 선택",
+        "title": "소셜 배터리 수준 선택",
         "confirm": "확인"
       }
     },
