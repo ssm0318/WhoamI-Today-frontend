@@ -1,10 +1,13 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import i18n from '@i18n/index';
 
-export const API_BASE_URL =
-  process.env.NODE_ENV === 'production'
-    ? 'https://whoami-test-group.gina-park.site/api/' // TODO: 배포 후 변경
-    : 'http://localhost:8000/api/';
+// NOTE: PROD_BASE_URL은 실제 배포된 도메인 주소
+export const PROD_BASE_URL = 'https://whoami.gina-park.site';
+
+export const PROD_API_URL = `${PROD_BASE_URL}/api/`;
+export const DEV_API_URL = 'http://localhost:8000/api/';
+
+export const API_BASE_URL = process.env.NODE_ENV === 'production' ? PROD_API_URL : DEV_API_URL;
 
 const JSON_DEFAULT_OPTIONS: AxiosRequestConfig = {
   baseURL: API_BASE_URL,
