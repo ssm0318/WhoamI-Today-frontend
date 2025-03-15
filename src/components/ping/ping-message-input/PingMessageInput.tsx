@@ -39,7 +39,7 @@ function PingMessageInput({ insertPing, userId }: Props) {
   };
 
   const handleClickPost = () => {
-    if (!userId) return;
+    if (!userId || (!messageInput && !selectedEmoji)) return;
     const inputData: InputPingMessage = { content: messageInput, emoji: selectedEmoji ?? '' };
 
     setMessageInput('');
