@@ -42,11 +42,11 @@ function Profile({ user }: ProfileProps) {
   const { allFriends: friendFriends } = useInfiniteFetchUserFriends(username);
 
   const handleClickFriendList = () => {
-    if (isMyPage) return navigate('/my/friends/list');
-
     if (isMyPage) {
       if (allFriends?.[0].count === 0) return;
-    } else if (friendFriends?.[0].count === 0) return;
+      return navigate('/my/friends/list');
+    }
+    if (friendFriends?.[0].count === 0) return;
     navigate(`friends/list`);
   };
 
@@ -138,7 +138,7 @@ function Profile({ user }: ProfileProps) {
             </Layout.FlexRow>
           )}
           {/* 친구 수 */}
-          {featureFlags?.friendFeed && (
+          {featureFlags?.friendFeed && user && areFriends(user) && (
             <button type="button" onClick={handleClickFriendList}>
               <Typo type="label-medium" color="DARK_GRAY" underline>
                 {isMyPage ? allFriends?.[0].count : friendFriends?.[0].count} {t('friends')}
