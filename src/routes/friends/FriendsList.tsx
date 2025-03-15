@@ -51,7 +51,7 @@ function FriendsList() {
   const { scrollRef } = useRestoreScrollPosition('friendsPage');
 
   return (
-    <MainScrollContainer scrollRef={scrollRef}>
+    <MainScrollContainer scrollRef={scrollRef} showNotificationPermission>
       <PullToRefresh onRefresh={handleRefresh}>
         <Layout.FlexCol w="100%" pb={FLOATING_BUTTON_SIZE + 20}>
           {/* Favorites */}
