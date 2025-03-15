@@ -197,6 +197,7 @@ function EditProfile() {
           onChange={handleChangeTextArea}
           limit={120}
         />
+        {/* persona */}
       </Layout.FlexCol>
       {isEditModalVisible && (
         <ProfileImageEdit
