@@ -637,5 +637,13 @@
   "music_detail": {
     "shared_a_song": "님이 노래를 공유했습니다",
     "listen_on_spotify": "Spotify에서 듣기"
+  },
+  "social_battery": {
+    "completely_drained": "방전됨",
+    "low": "저전력 모드",
+    "needs_recharge": "충전 필요",
+    "moderate": "보통 상태",
+    "fully_charged": "충전 완료",
+    "super_social": "사회력 만땅 (연락 환영!)"
   }
 }

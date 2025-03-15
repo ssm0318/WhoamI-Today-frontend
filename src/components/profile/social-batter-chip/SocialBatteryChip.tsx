@@ -1,6 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import { Layout, Typo } from '@design-system';
 import { SocialBattery } from '@models/checkIn';
-import { SocialBatteryChipAssets, SocialBatteryLabels } from './SocialBatteryChip.contants';
+import { SocialBatteryChipAssets } from './SocialBatteryChip.contants';
 
 interface SocialBatteryChipProps {
   socialBattery: SocialBattery;
@@ -9,6 +10,7 @@ interface SocialBatteryChipProps {
 }
 
 function SocialBatteryChip({ socialBattery, onSelect, isSelected }: SocialBatteryChipProps) {
+  const [t] = useTranslation('translation', { keyPrefix: 'social_battery' });
   const handleOnClick = () => {
     onSelect?.(socialBattery);
   };
@@ -33,7 +35,7 @@ function SocialBatteryChip({ socialBattery, onSelect, isSelected }: SocialBatter
       {SocialBatteryChipAssets[socialBattery].emoji && (
         <Typo type="label-large">{SocialBatteryChipAssets[socialBattery].emoji}</Typo>
       )}
-      <Typo type="label-large">{SocialBatteryLabels[socialBattery]}</Typo>
+      <Typo type="label-large">{t(socialBattery)}</Typo>
     </Layout.FlexRow>
   );
 }

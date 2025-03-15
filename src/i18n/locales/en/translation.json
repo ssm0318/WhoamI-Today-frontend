@@ -645,5 +645,13 @@
   "music_detail": {
     "shared_a_song": "shared a song",
     "listen_on_spotify": "Listen on Spotify"
+  },
+  "social_battery": {
+    "completely_drained": "Completely Drained",
+    "low": "Low Social Battery",
+    "needs_recharge": "Needs Recharge",
+    "moderate": "Moderate",
+    "fully_charged": "Fully Charged",
+    "super_social": "Super Social Mode (HMU!)"
   }
 }
