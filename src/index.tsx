@@ -12,6 +12,7 @@ import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
 import { checkIfSignIn } from '@utils/apis/user';
 import { ChatRoom } from 'src/routes/chat-room/ChatRoom';
+import { NotFound } from 'src/routes/NotFound';
 import Ping from 'src/routes/ping/Ping';
 import './i18n';
 import SpotifyManager from './libs/SpotifyManager';
@@ -187,6 +188,10 @@ const router = createBrowserRouter([
           { path: 'daily-noti-setting', element: <DailyNotiSetting /> },
           { path: 'delete-account', element: <DeleteAccount /> },
         ],
+      },
+      {
+        path: '*',
+        element: <NotFound />,
       },
     ],
   },

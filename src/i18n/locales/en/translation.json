@@ -610,6 +610,10 @@
     "temporary_error": "A temporary error occurred. Please try again later.",
     "file_size_exceeded": "File size exceeds the {{size}}MB limit."
   },
+  "not_found_page": {
+    "title": "Page Not Found",
+    "go_home": "Go to main page"
+  },
   "check_in_edit": {
     "social_battery": {
       "title": "Social Battery Level",
