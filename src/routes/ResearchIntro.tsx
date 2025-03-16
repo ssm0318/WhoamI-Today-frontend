@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
-import { RESEARCH_INQUIRY_KAKAOTALK_LINK, RESEARCH_SIGNUP_FORM_URL } from '@constants/url';
+import { RESEARCH_INQUIRY_KAKAOTALK_LINK } from '@constants/url';
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
 
 function ResearchIntro() {
@@ -11,7 +11,9 @@ function ResearchIntro() {
   const [showMore, setShowMore] = useState(false);
 
   const handleClickSignUpForm = () => {
-    window.open(RESEARCH_SIGNUP_FORM_URL, '_blank');
+    navigate('/signup');
+    // TODO: 출시되고 나면 위 navigate 삭제 & 이 부분 주석 해제 필요
+    // window.open(RESEARCH_SIGNUP_FORM_URL, '_blank');
   };
 
   const handleClickSignIn = () => {
