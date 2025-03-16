@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import i18n from '@i18n/index';
 
 // NOTE: PROD_BASE_URL은 실제 배포된 도메인 주소
-export const PROD_BASE_URL = 'https://whoami.gina-park.site';
+export const PROD_BASE_URL = 'https://whoami-test-group.gina-park.site';
 
 export const PROD_API_URL = `${PROD_BASE_URL}/api/`;
 export const DEV_API_URL = 'http://localhost:8000/api/';
