@@ -5,6 +5,7 @@ import ValidatedPasswordInput from '@components/_common/validated-input/Validate
 import SubHeader from '@components/sub-header/SubHeader';
 import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Layout } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
 import { resetPassword } from '@utils/apis/user';
 
 function ResetPassword() {
@@ -13,6 +14,7 @@ function ResetPassword() {
   const { id, token } = useParams();
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPasswordInput(e.target.value);
@@ -24,7 +26,10 @@ function ResetPassword() {
       id,
       token,
       password: passwordInput,
-      onSuccess: () => navigate('/settings'),
+      onSuccess: () => {
+        openToast({ message: t('settings.reset_password_success') });
+        navigate('/settings');
+      },
       onError: setPasswordError,
     });
   };
