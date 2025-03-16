@@ -9,7 +9,6 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import { useIsVirtualKeyboardOpenInIOS } from '@components/comment-list/comment-input-box/_hooks/useIsVirtualKeyboardOpenInIOS';
 import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
 import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import { Comment, Note, Response } from '@models/post';
@@ -211,23 +210,6 @@ function CommentInputBox({
     resetCommentTo();
     resetCommentType();
   };
-
-  const isVirtualKeyboardOpen = useIsVirtualKeyboardOpenInIOS();
-
-  useEffect(() => {
-    const blurInputOnTouchMoveOutside = (e: Event) => {
-      if (!isVirtualKeyboardOpen) return;
-
-      if (commentRef.current && !commentRef.current.contains(e.target as Node)) {
-        commentRef?.current?.blur();
-      }
-    };
-
-    document.addEventListener('touchmove', blurInputOnTouchMoveOutside);
-    return () => {
-      document.removeEventListener('touchmove', blurInputOnTouchMoveOutside);
-    };
-  }, [isVirtualKeyboardOpen]);
 
   return (
     <S.CommentInputWrapper

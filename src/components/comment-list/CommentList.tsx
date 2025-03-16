@@ -10,7 +10,6 @@ import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { isApp } from '@utils/getUserAgent';
 import CommentInputBox from './comment-input-box/CommentInputBox';
 import CommentItem from './comment-item/CommentItem';
 import { StyledCommentListFooter } from './CommentList.styled';
@@ -66,37 +65,6 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
       }
     },
   });
-
-  // 브라우저에서 테스트할 때는 visualViewport를 사용 (앱에서는 필요 없음)
-  useEffect(() => {
-    if (!isApp && window.visualViewport) {
-      const handleVisualViewportResize = () => {
-        if (!window.visualViewport) return;
-
-        const viewportHeight = window.visualViewport.height;
-        const windowHeight = window.innerHeight;
-
-        // 키보드가 나타날 때
-        const newKeyboardVisible = viewportHeight < windowHeight;
-        if (newKeyboardVisible) {
-          setIsKeyboardVisible(true);
-          const calculatedKeyboardHeight = windowHeight - viewportHeight;
-          setKeyboardHeight(calculatedKeyboardHeight);
-          scrollToBottom();
-        } else {
-          setIsKeyboardVisible(false);
-          setKeyboardHeight(0);
-        }
-      };
-
-      const { visualViewport } = window;
-      visualViewport.addEventListener('resize', handleVisualViewportResize);
-
-      return () => {
-        visualViewport.removeEventListener('resize', handleVisualViewportResize);
-      };
-    }
-  }, [scrollToBottom]);
 
   // 입력 필드에 포커스가 생길 때 스크롤 조정
   useEffect(() => {
