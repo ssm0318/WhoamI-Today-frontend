@@ -128,6 +128,8 @@ function PingMessageInput({ insertPing, userId }: Props) {
     setSelectedEmoji(undefined);
     postPingMessage(userId, inputData).then(({ data: ping }) => {
       insertPing(ping);
+      // 포커스 처리
+      inputRef.current?.focus();
     });
   };
 
