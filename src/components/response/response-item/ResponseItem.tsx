@@ -198,6 +198,7 @@ function ResponseItem({
           closeBottomSheet={() => {
             setBottomSheet(false);
             setInputFocus(false);
+            refresh?.();
           }}
         />
       )}
