@@ -522,9 +522,9 @@
       "invite": {
         "text": "Invite Friends",
         "copy": "Invitation link copied to clipboard.",
-        "desktop_message": "Join me in beta testing WhoAmI Today (WIT) — a social media platform for youth designed by researchers at the University of Washington.\n\nUse my username when signing up.\n\nInvitation link: {{invitation_link}}\n\nMy username: {{username}}",
+        "desktop_message": "Join me in beta testing WhoAmI Today (WIT) — a social media platform for youth designed by researchers at the University of Washington.\n\nUse my email when signing up.\n\nInvitation link: {{invitation_link}}\n\nMy email: {{email}}",
         "mobile_message_title": "Join me on WhoAmI Today (WIT).",
-        "mobile_message": "Use my username when signing up.\n\nInvitation link: {{invitation_link}}\n\nMy username: {{username}}"
+        "mobile_message": "Use my email when signing up.\n\nInvitation link: {{invitation_link}}\n\nMy email: {{email}}"
       },
       "tab": {
         "requests": "Requests",
