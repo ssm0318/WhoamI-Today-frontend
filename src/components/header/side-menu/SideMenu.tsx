@@ -2,7 +2,11 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Z_INDEX } from '@constants/layout';
-import { RESEARCH_INQUIRY_INSTAGRAM_LINK, RESEARCH_INQUIRY_KAKAOTALK_LINK } from '@constants/url';
+import {
+  RESEARCH_INQUIRY_DISCORD_LINK,
+  RESEARCH_INQUIRY_INSTAGRAM_LINK,
+  RESEARCH_INQUIRY_KAKAOTALK_LINK,
+} from '@constants/url';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import i18n from '@i18n/index';
@@ -38,6 +42,34 @@ function SideMenu({ closeSideMenu }: Props) {
       });
     } else {
       window.open(RESEARCH_INQUIRY_KAKAOTALK_LINK, '_blank');
+    }
+  };
+
+  const handleClickDiscordLink = () => {
+    if (window.ReactNativeWebView) {
+      postMessage('OPEN_BROWSER', {
+        url: RESEARCH_INQUIRY_DISCORD_LINK,
+      });
+    } else {
+      window.open(RESEARCH_INQUIRY_DISCORD_LINK, '_blank');
+    }
+  };
+
+  const handleClickInstagramLink = () => {
+    if (window.ReactNativeWebView) {
+      postMessage('OPEN_BROWSER', {
+        url: RESEARCH_INQUIRY_INSTAGRAM_LINK,
+      });
+    } else {
+      window.open(RESEARCH_INQUIRY_INSTAGRAM_LINK, '_blank');
+    }
+  };
+
+  const handleClickTextMessageInquiry = () => {
+    if (window.ReactNativeWebView) {
+      postMessage('OPEN_BROWSER', {
+        url: 'sms:+1-206-730-2178',
+      });
     }
   };
 
@@ -81,19 +113,28 @@ function SideMenu({ closeSideMenu }: Props) {
                     <Typo type="title-medium" bold>
                       {t('discord_inquiry')} :{' '}
                     </Typo>
-                    <Typo type="title-medium">@jaewonkim___ (밑줄 3개)</Typo>
+                    <a
+                      href={RESEARCH_INQUIRY_DISCORD_LINK}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleClickDiscordLink();
+                      }}
+                    >
+                      <Typo type="title-medium" underline>
+                        @jaewonkim___
+                      </Typo>
+                    </a>
+                    <Typo type="title-medium"> (밑줄 3개)</Typo>
                   </Typo>
                   <a
                     href={RESEARCH_INQUIRY_INSTAGRAM_LINK}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => {
-                      if (window.ReactNativeWebView) {
-                        e.preventDefault();
-                        postMessage('OPEN_BROWSER', {
-                          url: RESEARCH_INQUIRY_INSTAGRAM_LINK,
-                        });
-                      }
+                      e.preventDefault();
+                      handleClickInstagramLink();
                     }}
                   >
                     <Typo type="title-medium">
@@ -114,7 +155,22 @@ function SideMenu({ closeSideMenu }: Props) {
                     <Typo type="title-medium" bold>
                       {t('discord_inquiry')} :{' '}
                     </Typo>
-                    @jaewonkim___ (three underscores)
+                    <a
+                      href={RESEARCH_INQUIRY_DISCORD_LINK}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => {
+                        if (window.ReactNativeWebView) {
+                          e.preventDefault();
+                          handleClickDiscordLink();
+                        }
+                      }}
+                    >
+                      <Typo type="title-medium" underline>
+                        @jaewonkim___
+                      </Typo>
+                    </a>
+                    <Typo type="title-medium"> (three underscores)</Typo>
                   </Typo>
                   <a
                     href="sms:+1-206-730-2178"
@@ -123,9 +179,7 @@ function SideMenu({ closeSideMenu }: Props) {
                     onClick={(e) => {
                       if (window.ReactNativeWebView) {
                         e.preventDefault();
-                        postMessage('OPEN_BROWSER', {
-                          url: 'sms:+1-206-730-2178',
-                        });
+                        handleClickTextMessageInquiry();
                       }
                     }}
                   >
@@ -144,12 +198,8 @@ function SideMenu({ closeSideMenu }: Props) {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => {
-                      if (window.ReactNativeWebView) {
-                        e.preventDefault();
-                        postMessage('OPEN_BROWSER', {
-                          url: RESEARCH_INQUIRY_INSTAGRAM_LINK,
-                        });
-                      }
+                      e.preventDefault();
+                      handleClickInstagramLink();
                     }}
                   >
                     <Typo type="title-medium">

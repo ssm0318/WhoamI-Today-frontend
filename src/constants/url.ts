@@ -26,3 +26,5 @@ export const RESEARCH_SIGNUP_FORM_URL_KO =
 export const RESEARCH_INQUIRY_KAKAOTALK_LINK = 'https://open.kakao.com/o/svf9rklh';
 
 export const RESEARCH_INQUIRY_INSTAGRAM_LINK = 'https://www.instagram.com/whoami.today.official/';
+
+export const RESEARCH_INQUIRY_DISCORD_LINK = 'https://discordapp.com/users/1221863102769922160';
