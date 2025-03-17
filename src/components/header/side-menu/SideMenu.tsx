@@ -9,7 +9,6 @@ import {
 } from '@constants/url';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
-import i18n from '@i18n/index';
 
 const SIDE_MENU_LIST = [
   { key: 'explore_friends', path: '/friends/explore' },
@@ -23,7 +22,7 @@ interface Props {
 
 // TODO: 등장/퇴장 애니메이션 추가
 function SideMenu({ closeSideMenu }: Props) {
-  const [t] = useTranslation('translation', { keyPrefix: 'home.header.side_menu' });
+  const [t, i18n] = useTranslation('translation', { keyPrefix: 'home.header.side_menu' });
   const navigate = useNavigate();
   const postMessage = usePostAppMessage();
 
@@ -90,7 +89,7 @@ function SideMenu({ closeSideMenu }: Props) {
               <Typo type="title-large" mb={20}>
                 {t('inquiry')} :
               </Typo>
-              {i18n.language === 'ko-KR' ? (
+              {i18n.language === 'ko' ? (
                 <Layout.FlexCol gap={15} pl={4}>
                   <a
                     href={RESEARCH_INQUIRY_KAKAOTALK_LINK}

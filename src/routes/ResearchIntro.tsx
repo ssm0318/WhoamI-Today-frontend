@@ -2,22 +2,24 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
-import { RESEARCH_INQUIRY_KAKAOTALK_LINK } from '@constants/url';
+import {
+  RESEARCH_INQUIRY_KAKAOTALK_LINK,
+  RESEARCH_SIGNUP_FORM_URL_EN,
+  RESEARCH_SIGNUP_FORM_URL_KO,
+} from '@constants/url';
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
 
 function ResearchIntro() {
-  const [t] = useTranslation('translation', { keyPrefix: 'research_intro' });
+  const [t, i18n] = useTranslation('translation', { keyPrefix: 'research_intro' });
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
 
   const handleClickSignUpForm = () => {
-    navigate('/signup');
-
     // TODO: 출시되고 나면 위 navigate 삭제 & 이 부분 주석 해제 필요
-    // window.open(
-    //   i18n.language === 'ko-KR' ? RESEARCH_SIGNUP_FORM_URL_KO : RESEARCH_SIGNUP_FORM_URL_EN,
-    //   '_blank',
-    // );
+    window.open(
+      i18n.language === 'ko' ? RESEARCH_SIGNUP_FORM_URL_KO : RESEARCH_SIGNUP_FORM_URL_EN,
+      '_blank',
+    );
   };
 
   const handleClickSignIn = () => {
