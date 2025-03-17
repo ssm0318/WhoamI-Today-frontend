@@ -1,6 +1,7 @@
 import { Connection } from '@models/api/friends';
 import { MyProfile } from './api/user';
 import { CheckInBase } from './checkIn';
+import { Persona } from './persona';
 
 export interface User {
   id: number;
@@ -10,6 +11,7 @@ export interface User {
   username: string;
   bio: string;
   pronouns: string;
+  persona: Persona[];
 }
 
 export interface UserProfile extends User {

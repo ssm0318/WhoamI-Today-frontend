@@ -1,20 +1,25 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-import MainContainer from '@components/_common/main-container/MainContainer';
+import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
 import ProfileImageEditButton from '@components/_common/profile-image-edit-button/ProfileImageEditButton';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import ValidatedTextArea from '@components/_common/validated-textarea/ValidatedTextArea';
+import EditPersonaBottomSheet from '@components/profile/edit-persona/EditPersonaBottomSheet';
+import PersonaChip from '@components/profile/persona/PersonaChip';
 import { StyledEditProfileButton } from '@components/settings/SettingsButtons.styled';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { MyProfile } from '@models/api/user';
+import { Persona } from '@models/persona';
 import { useBoundStore } from '@stores/useBoundStore';
 import { editProfile } from '@utils/apis/my';
+import { generateRandomColor } from '@utils/colorHelpers';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
+import { MainScrollContainer } from '../Root';
 
 function EditProfile() {
   const location = useLocation();
@@ -27,10 +32,21 @@ function EditProfile() {
     openToast: state.openToast,
   }));
 
-  const [draft, setDraft] = useState<Pick<MyProfile, 'bio' | 'username' | 'pronouns'>>({
+  // Create a persistent color mapping for each persona
+  const personaColorMap = useMemo(() => {
+    const colorMap: Record<string, string> = {};
+    // Initialize with all possible personas
+    Object.values(Persona).forEach((p) => {
+      colorMap[p] = generateRandomColor();
+    });
+    return colorMap;
+  }, []);
+
+  const [draft, setDraft] = useState<Pick<MyProfile, 'bio' | 'username' | 'pronouns' | 'persona'>>({
     bio: myProfile?.bio ?? '',
     username: myProfile?.username ?? '',
     pronouns: myProfile?.pronouns ?? '',
+    persona: myProfile?.persona ?? [],
   });
 
   const [usernameError, setUsernameError] = useState<string>();
@@ -41,6 +57,7 @@ function EditProfile() {
   const [croppedImg, setCroppedImg] = useState<CroppedImg>();
 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isPersonaEditModalVisible, setIsPersonaEditModalVisible] = useState(false);
 
   const [imageChanged, setImageChanged] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
@@ -50,6 +67,7 @@ function EditProfile() {
       draft.username !== (myProfile?.username ?? '') ||
       draft.pronouns !== (myProfile?.pronouns ?? '') ||
       draft.bio !== (myProfile?.bio ?? '') ||
+      draft.persona !== (myProfile?.persona ?? []) ||
       imageChanged;
 
     setHasChanges(hasDraftChanged);
@@ -128,10 +146,14 @@ function EditProfile() {
     setDraft((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handlePersonaSelect = (personas: Persona[]) => {
+    setDraft((prev) => ({ ...prev, persona: personas }));
+  };
+
   if (!myProfile) return null;
 
   return (
-    <MainContainer>
+    <MainScrollContainer>
       <SubHeader
         typo="title-large"
         title={t('title')}
@@ -197,6 +219,59 @@ function EditProfile() {
           onChange={handleChangeTextArea}
           limit={120}
         />
+        {/* persona */}
+        <Typo type="title-medium" color="MEDIUM_GRAY">
+          {t('persona')}
+        </Typo>
+        <Layout.FlexCol
+          mb={50}
+          w="100%"
+          outline="LIGHT_GRAY"
+          rounded={12}
+          style={{ overflow: 'hidden' }}
+        >
+          <Layout.FlexRow
+            gap={8}
+            pv={12}
+            ph={12}
+            style={{
+              flexWrap: 'wrap',
+            }}
+            w="100%"
+          >
+            {draft.persona.length > 0 ? (
+              draft.persona.map((persona) => (
+                <div key={persona} style={{ margin: '4px 0' }}>
+                  <PersonaChip persona={persona} color={personaColorMap[persona]} />
+                </div>
+              ))
+            ) : (
+              <Layout.FlexRow w="100%" alignItems="center" justifyContent="center" rounded={12}>
+                <Icon
+                  onClick={() => setIsPersonaEditModalVisible(true)}
+                  name="add_default"
+                  size={24}
+                />
+              </Layout.FlexRow>
+            )}
+          </Layout.FlexRow>
+          {draft.persona.length > 0 && (
+            <Layout.FlexRow
+              w="100%"
+              alignItems="center"
+              justifyContent="center"
+              bgColor="LIGHT_GRAY"
+              pv={8}
+              style={{ borderTop: '1px solid #EEEEEE' }}
+              onClick={() => setIsPersonaEditModalVisible(true)}
+            >
+              <Icon name="edit_filled" size={20} />
+              <Typo type="label-medium" ml={4} color="MEDIUM_GRAY">
+                {t('persona_edit_bottom_sheet.edit')}
+              </Typo>
+            </Layout.FlexRow>
+          )}
+        </Layout.FlexCol>
       </Layout.FlexCol>
       {isEditModalVisible && (
         <ProfileImageEdit
@@ -206,7 +281,16 @@ function EditProfile() {
           setImageChanged={setImageChanged}
         />
       )}
-    </MainContainer>
+      {isPersonaEditModalVisible && (
+        <EditPersonaBottomSheet
+          visible={isPersonaEditModalVisible}
+          closeBottomSheet={() => setIsPersonaEditModalVisible(false)}
+          onSelect={handlePersonaSelect}
+          selectedPersonas={draft.persona}
+          personaColorMap={personaColorMap}
+        />
+      )}
+    </MainScrollContainer>
   );
 }
 

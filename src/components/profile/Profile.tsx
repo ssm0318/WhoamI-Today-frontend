@@ -17,6 +17,7 @@ import { UserSelector } from '@stores/user';
 import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
+import PersonaChip from './persona/PersonaChip';
 
 interface ProfileProps {
   user?: UserProfile | MyProfile;
@@ -155,6 +156,13 @@ function Profile({ user }: ProfileProps) {
           )}
         </Layout.FlexCol>
       </Layout.FlexRow>
+      {featureFlags?.persona && (isMyPage || (user && areFriends(user))) && (
+        <Layout.FlexRow w="100%" gap={8}>
+          {user?.persona.map((persona) => (
+            <PersonaChip key={persona} persona={persona} />
+          ))}
+        </Layout.FlexRow>
+      )}
       {!isMyPage && user && (
         <>
           {!isMyProfile(user) && !areFriends(user) && (

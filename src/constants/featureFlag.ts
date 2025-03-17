@@ -13,6 +13,8 @@ export enum FeatureFlagKey {
   CHECK_IN = 'checkIn',
   /** 질문, 답변 관련 기능 태그 */
   QUESTION_RESPONSE_FEATURE = 'questionResponseFeature',
+  /** 페르소나 칩 플래그 */
+  PERSONA = 'persona',
 }
 
 export type FeatureFlagMap = { [feature in FeatureFlagKey]: boolean };
@@ -28,6 +30,7 @@ const DEFAULT_FLAGS = {
   [FeatureFlagKey.REACTION_COUNT]: true,
   [FeatureFlagKey.CHECK_IN]: false,
   [FeatureFlagKey.QUESTION_RESPONSE_FEATURE]: false,
+  [FeatureFlagKey.PERSONA]: false,
 };
 
 export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
@@ -41,5 +44,6 @@ export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
     [FeatureFlagKey.REACTION_COUNT]: false,
     [FeatureFlagKey.CHECK_IN]: true,
     [FeatureFlagKey.QUESTION_RESPONSE_FEATURE]: true,
+    [FeatureFlagKey.PERSONA]: true,
   },
 };
