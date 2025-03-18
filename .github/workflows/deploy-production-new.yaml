@@ -32,7 +32,7 @@ jobs:
         username: ${{ secrets.NEW_SERVER_USER }}
         key: ${{ secrets.NEW_SERVER_KEY }}
         source: "src/key.ts"
-        target: "~/WhoAmI-Today-frontend/src/key.ts"
+        target: "~/WhoamI-Today-frontend/src/key.ts"
         
     - name: Connect to EC2 and Deploy
       uses: appleboy/ssh-action@master
@@ -42,7 +42,7 @@ jobs:
         key: ${{ secrets.NEW_SERVER_KEY }}
         script: |
           echo "🚀 최신 코드 Pull 받기"
-          cd ${{ secrets.NEW_SERVER_FRONTEND_DIR }}
+          cd ~/WhoamI-Today-frontend
           git pull
 
           echo "🛑 기존 컨테이너 종료"
