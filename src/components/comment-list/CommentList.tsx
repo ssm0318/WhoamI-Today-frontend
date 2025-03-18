@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import Loader from '@components/_common/loader/Loader';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
-// import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
 import useCommentList from '@hooks/useCommentList';
@@ -31,8 +30,8 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
 
   const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
   const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
-  const scrollRef = useRef<HTMLDivElement>(null);
 
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrollToBottom, setIsScrollToBottom] = useState<boolean>(false);
 
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
@@ -63,7 +62,6 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
   }, [isScrollToBottom, replyTo]);
 
   return (
-    // <MainScrollContainer scrollRef={scrollRef}>
     <Layout.FlexCol ref={scrollRef} w="100%" pt={24}>
       <Layout.FlexCol w="100%" h="100%" gap={2} ph={16} mb={footerRef.current?.offsetHeight}>
         <SwipeLayoutList>
@@ -123,7 +121,6 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
         </Layout.FlexRow>
       )}
     </Layout.FlexCol>
-    // </MainScrollContainer>
   );
 }
 
