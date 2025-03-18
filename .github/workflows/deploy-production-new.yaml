@@ -21,18 +21,6 @@ jobs:
       run: |
         echo "export const SPOTIFY_CLIENT_ID = '${{ secrets.SPOTIFY_CLIENT_ID }}';" > src/key.ts
         echo "export const SPOTIFY_CLIENT_SECRET = '${{ secrets.SPOTIFY_CLIENT_SECRET }}';" >> src/key.ts
-
-    - name: Verify key.ts exists
-      run: ls -l src/key.ts
-
-    - name: Upload key.ts file
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.NEW_SERVER_HOST }}
-        username: ${{ secrets.NEW_SERVER_USER }}
-        key: ${{ secrets.NEW_SERVER_KEY }}
-        source: "src/key.ts"
-        target: "~/WhoamI-Today-frontend/src/key.ts"
         
     - name: Connect to EC2 and Deploy
       uses: appleboy/ssh-action@master
@@ -42,7 +30,6 @@ jobs:
         key: ${{ secrets.NEW_SERVER_KEY }}
         script: |
           echo "🚀 최신 코드 Pull 받기"
-          cd ~/WhoamI-Today-frontend
           git pull
 
           echo "🛑 기존 컨테이너 종료"
