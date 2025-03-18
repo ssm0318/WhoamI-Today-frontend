@@ -30,6 +30,9 @@ jobs:
         key: ${{ secrets.NEW_SERVER_KEY }}
         script: |
           echo "🚀 최신 코드 Pull 받기"
+          echo "🔄 현재 디렉토리: $(pwd)"
+          cd ~/WhoamI-Today-frontend
+          echo "🔄 현재 디렉토리: $(pwd)"
           git pull
 
           echo "🛑 기존 컨테이너 종료"
