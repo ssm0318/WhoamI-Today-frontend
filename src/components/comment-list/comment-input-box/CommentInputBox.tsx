@@ -58,6 +58,7 @@ function CommentInputBox({
   const commentRef = useRef<HTMLTextAreaElement>(null);
   const initialIsPrivateRef = useRef(isPrivate);
   const [initialIsPrivate, setInitialIsPrivate] = useState(initialIsPrivateRef.current);
+  // const commentsContainerRef = useRef(null);
 
   useEffect(() => {
     if (!inputFocus) return;
