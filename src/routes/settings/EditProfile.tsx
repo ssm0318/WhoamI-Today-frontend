@@ -207,13 +207,7 @@ function EditProfile() {
         <Typo type="title-medium" color="MEDIUM_GRAY">
           {t('persona')}
         </Typo>
-        <Layout.FlexCol
-          mb={50}
-          w="100%"
-          outline="LIGHT_GRAY"
-          rounded={12}
-          style={{ overflow: 'hidden' }}
-        >
+        <Layout.FlexCol w="100%" outline="LIGHT_GRAY" rounded={12} style={{ overflow: 'hidden' }}>
           <Layout.FlexRow
             gap={8}
             pv={12}
