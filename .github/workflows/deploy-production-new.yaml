@@ -17,6 +17,17 @@ jobs:
     - name: Install dependencies
       run: yarn install
 
+    - name: Get latest code
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.NEW_SERVER_HOST }}
+        username: ${{ secrets.NEW_SERVER_USER }}
+        key: ${{ secrets.NEW_SERVER_KEY }}
+        script: |
+          echo "🚀 최신 코드 가져오기"
+          cd ~/WhoamI-Today-frontend
+          git pull
+
     - name: Identify Active Frontend
       id: check-active
       uses: appleboy/ssh-action@master
@@ -44,9 +55,7 @@ jobs:
         key: ${{ secrets.NEW_SERVER_KEY }}
         script: |
           echo "🚀 새로운 프론트엔드 배포: whoami-frontend-${TARGET}"
-
           docker compose -f docker-compose.production.yml up --build -d whoami-frontend-${TARGET}
-
           echo "✅ 배포 완료: ${TARGET} 컨테이너 실행 중!"
 
     - name: Cleanup Old Containers
@@ -57,11 +66,9 @@ jobs:
         key: ${{ secrets.NEW_SERVER_KEY }}
         script: |
           echo "🗑 이전 프론트엔드 컨테이너 정리"
-
           if [[ "$TARGET" == "blue" ]]; then
             docker rm -f whoami-frontend-green || true
           else
             docker rm -f whoami-frontend-blue || true
           fi
-
           echo "✅ 이전 컨테이너 삭제 완료!"
