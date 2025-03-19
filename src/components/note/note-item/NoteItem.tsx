@@ -205,6 +205,7 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
           closeBottomSheet={() => {
             setBottomSheet(false);
             setInputFocus(false);
+            refresh?.();
           }}
         />
       )}

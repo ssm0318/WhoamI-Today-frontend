@@ -1,7 +1,8 @@
-import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import Loader from '@components/_common/loader/Loader';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
+import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
 import useCommentList from '@hooks/useCommentList';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
@@ -30,6 +31,9 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
   const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
   const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isScrollToBottom, setIsScrollToBottom] = useState<boolean>(false);
+
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
   const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
@@ -39,9 +43,27 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
 
   const { comments, fetchComments, nextPage, deleteComment } = useCommentList(post, setIsLoading);
 
+  useEffect(() => {
+    if (isScrollToBottom && !replyTo) {
+      const scrollEl = document.getElementById(MAIN_SCROLL_CONTAINER_ID);
+      if (!scrollEl) return;
+
+      const observer = new MutationObserver(() => {
+        requestAnimationFrame(() => {
+          scrollEl.scrollTop = scrollEl.scrollHeight;
+        });
+      });
+
+      observer.observe(scrollEl, { childList: true, subtree: true });
+
+      return () => observer.disconnect();
+    }
+    setIsScrollToBottom(false);
+  }, [isScrollToBottom, replyTo]);
+
   return (
-    <Layout.FlexCol w="100%" h="100%" pt={24}>
-      <Layout.FlexCol w="100%" gap={2} ph={16} mb={footerRef.current?.offsetHeight}>
+    <Layout.FlexCol ref={scrollRef} w="100%" pt={24}>
+      <Layout.FlexCol w="100%" h="100%" gap={2} ph={16} mb={footerRef.current?.offsetHeight}>
         <SwipeLayoutList>
           {comments.map((comment) => (
             <CommentItem
@@ -84,7 +106,10 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
             resetCommentType={() => {
               setCommentToType(postType);
             }}
-            reloadComments={() => fetchComments(nextPage ?? null, true)}
+            reloadComments={() => {
+              fetchComments(nextPage ?? null, true);
+              if (!replyTo) setIsScrollToBottom(true);
+            }}
             setReload={setReload}
           />
         </Layout.FlexRow>

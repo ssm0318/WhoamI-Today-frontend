@@ -11,6 +11,7 @@ import useCommentList from '@hooks/useCommentList';
 import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
+
 import {
   CommentBottomContentWrapper,
   CommentBottomFooterWrapper,
@@ -47,6 +48,9 @@ function CommentBottomSheet({
   const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
   const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isScrollToBottom, setIsScrollToBottom] = useState<boolean>(false);
+
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
   const handleClick = () => {
@@ -59,6 +63,24 @@ function CommentBottomSheet({
   useEffect(() => {
     setFooterHeight(footerRef.current?.offsetHeight);
   }, [replyTo]);
+
+  useEffect(() => {
+    if (isScrollToBottom && !replyTo) {
+      const scrollEl = scrollRef?.current;
+      if (!scrollEl) return;
+
+      const observer = new MutationObserver(() => {
+        requestAnimationFrame(() => {
+          scrollEl.scrollTop = scrollEl.scrollHeight;
+        });
+      });
+
+      observer.observe(scrollEl, { childList: true, subtree: true });
+
+      return () => observer.disconnect();
+    }
+    setIsScrollToBottom(false);
+  }, [isScrollToBottom, replyTo]);
 
   return createPortal(
     <BottomModal visible={visible} onClose={closeBottomSheet} heightMode="full">
@@ -81,7 +103,7 @@ function CommentBottomSheet({
         </Layout.FlexCol>
       </CommentBottomHeaderWrapper>
 
-      <CommentBottomContentWrapper mb={footerHeight}>
+      <CommentBottomContentWrapper mb={footerHeight} ref={scrollRef}>
         {comments.map((comment) => (
           <CommentItem
             key={comment.id}
@@ -123,7 +145,10 @@ function CommentBottomSheet({
           resetCommentType={() => {
             setCommentToType(postType);
           }}
-          reloadComments={() => fetchComments(nextPage ?? null, true)}
+          reloadComments={() => {
+            fetchComments(nextPage ?? null, true);
+            if (!replyTo) setIsScrollToBottom(true);
+          }}
         />
       </CommentBottomFooterWrapper>
     </BottomModal>,

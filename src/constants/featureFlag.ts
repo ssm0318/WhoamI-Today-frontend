@@ -24,8 +24,8 @@ export type FeatureFlagMapCollection = {
 
 // Default (Ver. R)
 const DEFAULT_FLAGS = {
-  [FeatureFlagKey.FRIEND_FEED]: true,
-  [FeatureFlagKey.FRIEND_LIST]: false,
+  [FeatureFlagKey.FRIEND_FEED]: false,
+  [FeatureFlagKey.FRIEND_LIST]: true,
   [FeatureFlagKey.FRIEND_REQUEST_TYPE]: false,
   [FeatureFlagKey.REACTION_COUNT]: true,
   [FeatureFlagKey.CHECK_IN]: false,
@@ -38,8 +38,8 @@ export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
   // Experiment (Ver. Q)
   [VersionType.EXPERIMENT]: {
     ...DEFAULT_FLAGS,
-    [FeatureFlagKey.FRIEND_FEED]: false,
-    [FeatureFlagKey.FRIEND_LIST]: true,
+    [FeatureFlagKey.FRIEND_FEED]: true,
+    [FeatureFlagKey.FRIEND_LIST]: false,
     [FeatureFlagKey.FRIEND_REQUEST_TYPE]: true,
     [FeatureFlagKey.REACTION_COUNT]: false,
     [FeatureFlagKey.CHECK_IN]: true,
