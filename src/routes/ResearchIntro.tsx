@@ -15,9 +15,8 @@ function ResearchIntro() {
   const [showMore, setShowMore] = useState(false);
 
   const handleClickSignUpForm = () => {
-    // TODO: 출시되고 나면 위 navigate 삭제 & 이 부분 주석 해제 필요
     window.open(
-      i18n.language === 'ko' ? RESEARCH_SIGNUP_FORM_URL_KO : RESEARCH_SIGNUP_FORM_URL_EN,
+      i18n.language === 'ko-KR' ? RESEARCH_SIGNUP_FORM_URL_KO : RESEARCH_SIGNUP_FORM_URL_EN,
       '_blank',
     );
   };

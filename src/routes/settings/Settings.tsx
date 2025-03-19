@@ -94,7 +94,7 @@ function Settings() {
         {/* terms of uses */}
         <StyledSettingsAnchor
           link={
-            i18n.language === 'ko'
+            i18n.language === 'ko-KR'
               ? PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_KO
               : PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_EN
           }
