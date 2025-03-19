@@ -34,6 +34,8 @@ function NewResponse() {
 
   const [newResponse, setNewResponse] = useState<string | null>(null);
 
+  // NOTE: QUESTION_RESPONSE_FEATURE 플래그가 true인 경우만 해당 NewResponse 페이지 노출
+  // 따라서 Note처럼 공개 범위 분기가 필요없음
   const [visibility, setVisibility] = useState<PostVisibility>(PostVisibility.CLOSE_FRIENDS);
   const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
 
