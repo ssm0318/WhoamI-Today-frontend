@@ -9,6 +9,7 @@ export interface User {
   profile_pic: string;
   url: string;
   username: string;
+  email?: string;
   bio: string;
   pronouns: string;
   persona: Persona[];

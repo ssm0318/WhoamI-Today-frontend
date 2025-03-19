@@ -4,8 +4,12 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledFriendItem } from '@components/friends/explore-friends/friend-item/FriendItem.styled';
 import { Layout, Typo } from '@design-system';
 
-function FriendItem(props: Props) {
-  const { user } = props;
+interface FriendItemProps extends Props {
+  showEmail?: boolean;
+}
+
+function FriendItem(props: FriendItemProps) {
+  const { user, showEmail = false } = props;
   const navigate = useNavigate();
 
   const handleClickItem = () => {
@@ -26,6 +30,11 @@ function FriendItem(props: Props) {
         <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 160 }}>
           {user.username}
         </Typo>
+        {showEmail && (
+          <Typo type="label-medium" color="MEDIUM_GRAY" ellipsis={{ enabled: true, maxWidth: 120 }}>
+            {user.email}
+          </Typo>
+        )}
       </Layout.FlexRow>
       <Layout.LayoutBase>
         <FriendStatus {...props} />
