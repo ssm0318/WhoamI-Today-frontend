@@ -89,7 +89,7 @@ function SideMenu({ closeSideMenu }: Props) {
               <Typo type="title-large" mb={20}>
                 {t('inquiry')} :
               </Typo>
-              {i18n.language === 'ko' ? (
+              {i18n.language === 'ko-KR' ? (
                 <Layout.FlexCol gap={15} pl={4}>
                   <a
                     href={RESEARCH_INQUIRY_KAKAOTALK_LINK}

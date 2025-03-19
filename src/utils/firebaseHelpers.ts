@@ -53,7 +53,7 @@ export const addForegroundMessageEventListener = (messaging: Messaging) => {
     const { message_ko, url, tag, type, message_en } = data;
     const title = 'WhoAmI Today';
     const options = {
-      body: i18n.language === 'ko' ? message_ko : message_en,
+      body: i18n.language === 'ko-KR' ? message_ko : message_en,
       tag,
       icon: `${PROD_BASE_URL}/whoami192.png`,
       data: {
