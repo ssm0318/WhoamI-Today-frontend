@@ -215,6 +215,7 @@
       "others": "{{firstUserName}}, {{secondUserName}}, and {{others}} more"
     },
     "check_in": {
+      "new_check_in": "New Status",
       "checked_in_time": "Updated at {{time}}"
     },
     "connection": {
@@ -629,6 +630,8 @@
     "go_home": "Go to main page"
   },
   "check_in_edit": {
+    "title": "Edit Status",
+    "save": "Save",
     "social_battery": {
       "title": "Social Battery Level",
       "description": "Let friends know if you're open to chat.",
