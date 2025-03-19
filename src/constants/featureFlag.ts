@@ -15,6 +15,8 @@ export enum FeatureFlagKey {
   QUESTION_RESPONSE_FEATURE = 'questionResponseFeature',
   /** 페르소나 칩 플래그 */
   PERSONA = 'persona',
+  /** 게시글 작성시 기본 설정 친한 친구 타입 플래그 */
+  POST_VISIBILITY_DEFAULT_CLOSE_FRIEND = 'postVisibilityDefaultCloseFriend',
 }
 
 export type FeatureFlagMap = { [feature in FeatureFlagKey]: boolean };
@@ -31,6 +33,7 @@ const DEFAULT_FLAGS = {
   [FeatureFlagKey.CHECK_IN]: false,
   [FeatureFlagKey.QUESTION_RESPONSE_FEATURE]: false,
   [FeatureFlagKey.PERSONA]: false,
+  [FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]: false,
 };
 
 export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
@@ -45,5 +48,6 @@ export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
     [FeatureFlagKey.CHECK_IN]: true,
     [FeatureFlagKey.QUESTION_RESPONSE_FEATURE]: true,
     [FeatureFlagKey.PERSONA]: true,
+    [FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]: true,
   },
 };

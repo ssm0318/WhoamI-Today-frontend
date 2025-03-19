@@ -2,16 +2,17 @@ import React, { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import { FeatureFlagKey } from '@constants/featureFlag';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import { FileSelectedData } from '@models/app';
-import { NewNoteForm } from '@models/post';
+import { NewNoteForm, PostVisibility } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import { processImageFromApp } from '@utils/imageHelpers';
-import ConnectionTypeOption from '../connection-type/ConnectionTypeOption';
+import VisibilityTypeOption from '../connection-type/ConnectionTypeOption';
 import NewNoteImageEdit from '../new-note-image-edit/NewNoteImageEdit';
 import NewNotePhotoUploadBottomSheet from '../new-note-photo-upload-bottom-sheet/NewNotePhotoUploadBottomSheet';
 import { NoteImage, NoteImageWrapper } from '../note-image/NoteImage.styled';
@@ -20,14 +21,22 @@ import { NoteInput } from './NoteInputBox.styled';
 interface NoteInformationProps {
   noteInfo: NewNoteForm;
   setNoteInfo: React.Dispatch<React.SetStateAction<NewNoteForm>>;
+  isEdit?: boolean;
 }
 
-function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
+function NewNoteContent({ noteInfo, setNoteInfo, isEdit }: NoteInformationProps) {
   const [t] = useTranslation('translation');
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+  const featureFlags = useBoundStore((state) => state.featureFlags);
 
-  const [connectionType, setConnectionType] = useState(noteInfo.visibility);
+  const [visibility, setVisibility] = useState<PostVisibility>(
+    isEdit
+      ? noteInfo.visibility
+      : featureFlags?.[FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]
+      ? PostVisibility.CLOSE_FRIENDS
+      : PostVisibility.FRIENDS,
+  );
 
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
@@ -106,7 +115,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const visibilityUpdate = () => {
     setNoteInfo((prevNoteInfo) => ({
       ...prevNoteInfo,
-      visibility: connectionType,
+      visibility,
     }));
   };
 
@@ -172,16 +181,16 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
               justifyContent="center"
             >
               <Typo type="label-large" color="BLACK">
-                {connectionType === 'close_friends'
+                {visibility === PostVisibility.CLOSE_FRIENDS
                   ? t('user_page.connection.close_friend')
                   : t('user_page.connection.friend')}
               </Typo>
               <Icon name="chevron_down" size={18} color="BLACK" />
             </Layout.FlexRow>
             {showEditConnectionsModal && (
-              <ConnectionTypeOption
-                type={connectionType}
-                setType={setConnectionType}
+              <VisibilityTypeOption
+                type={visibility}
+                setType={setVisibility}
                 visibilityUpdate={visibilityUpdate}
                 visible={showEditConnectionsModal}
                 closeBottomSheet={closeEditConnectionsModal}

@@ -90,7 +90,7 @@ export interface Response extends ContentsCommon {
   like_reaction_user_sample: ReactionUserSample[];
   current_user_read: boolean;
   is_edited: boolean;
-  visibility: string;
+  visibility: PostVisibility;
 }
 
 export interface Note extends ContentsCommon {
@@ -102,13 +102,13 @@ export interface Note extends ContentsCommon {
   comments: Comment[];
   current_user_read: boolean;
   is_edited: boolean;
-  visibility: string;
+  visibility: PostVisibility;
 }
 
 export interface NewNoteForm {
   content: string;
   images?: CroppedImg[];
-  visibility: string;
+  visibility: PostVisibility;
 }
 // 질문에 대한 답변 리스트
 /** deprecated */
@@ -160,3 +160,8 @@ export type PostReaction = {
 };
 
 export type POST_DP_TYPE = 'LIST' | 'DETAIL';
+
+export enum PostVisibility {
+  FRIENDS = 'friends',
+  CLOSE_FRIENDS = 'close_friends',
+}
