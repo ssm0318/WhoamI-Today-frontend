@@ -58,8 +58,15 @@ export const checkIfSignIn = async () => {
   try {
     const user = await getMe();
     const currentTimezone = await syncTimeZone(user?.timezone);
+
     useBoundStore.getState().setMyProfile({ ...user, timezone: currentTimezone });
     useBoundStore.getState().setFeatureFlags();
+
+    // 비밀번호를 변경하지 않았다면 비밀번호 변경 페이지로 리다이렉트
+    if (!user.has_changed_pw) {
+      redirect('/settings/reset-password');
+      return user;
+    }
     return user;
   } catch {
     resetBoundStores();
