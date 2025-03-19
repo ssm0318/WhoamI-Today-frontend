@@ -110,7 +110,7 @@ function PostFooter({
       }}
     >
       <Layout.FlexRow gap={10} alignItems="center">
-        {sampleUserList.length > 0 && (
+        {sampleUserList?.length > 0 && (
           <Layout.FlexRow onClick={handleClickReactions}>
             <PostReactionList user_sample_list={sampleUserList} />
           </Layout.FlexRow>
