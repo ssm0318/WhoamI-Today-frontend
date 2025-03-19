@@ -40,7 +40,7 @@ function PostFooter({
     emojiPickerTarget: state.emojiPickerTarget,
     setEmojiPickerTarget: state.setEmojiPickerTarget,
   }));
-  const myEmojiList = myReactionList.map((reaction) => reaction.emoji);
+  const myEmojiList = myReactionList?.map((reaction) => reaction.emoji);
   const [t] = useTranslation('translation', {
     keyPrefix: post.type === POST_TYPE.RESPONSE ? 'responses' : 'notes',
   });
