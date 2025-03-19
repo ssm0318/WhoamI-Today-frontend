@@ -203,22 +203,6 @@ function EditProfile() {
           limit={20}
           error={usernameError}
         />
-        {/* pronouns */}
-        <ValidatedInput
-          label={t('pronouns')}
-          name="pronouns"
-          type="text"
-          value={draft.pronouns}
-          onChange={handleChangeInput}
-        />
-        {/* bio */}
-        <ValidatedTextArea
-          label={t('bio')}
-          name="bio"
-          value={draft.bio}
-          onChange={handleChangeTextArea}
-          limit={120}
-        />
         {/* persona */}
         <Typo type="title-medium" color="MEDIUM_GRAY">
           {t('persona')}
@@ -272,6 +256,22 @@ function EditProfile() {
             </Layout.FlexRow>
           )}
         </Layout.FlexCol>
+        {/* pronouns */}
+        <ValidatedInput
+          label={t('pronouns')}
+          name="pronouns"
+          type="text"
+          value={draft.pronouns}
+          onChange={handleChangeInput}
+        />
+        {/* bio */}
+        <ValidatedTextArea
+          label={t('bio')}
+          name="bio"
+          value={draft.bio}
+          onChange={handleChangeTextArea}
+          limit={120}
+        />
       </Layout.FlexCol>
       {isEditModalVisible && (
         <ProfileImageEdit
