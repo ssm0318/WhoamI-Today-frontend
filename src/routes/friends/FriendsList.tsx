@@ -12,6 +12,7 @@ import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/Floatin
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import { useFetchFavoriteFriends } from '@hooks/useFetchFavoriteFriends';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
+import { getMe } from '@utils/apis/my';
 import { MainScrollContainer } from 'src/routes/Root';
 import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
 import {
@@ -41,7 +42,7 @@ function FriendsList() {
   };
 
   const handleRefresh = async () => {
-    await Promise.all([refetchFavoriteFriends(), refetchAllFriends()]);
+    await Promise.all([refetchFavoriteFriends(), refetchAllFriends(), getMe()]);
   };
 
   const handleClickExploreFriends = () => {

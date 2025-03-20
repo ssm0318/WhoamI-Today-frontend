@@ -11,6 +11,7 @@ import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getAllFeed } from '@utils/apis/feed';
+import { getMe } from '@utils/apis/my';
 import { MainScrollContainer } from 'src/routes/Root';
 
 function FriendsFeed() {
@@ -24,8 +25,7 @@ function FriendsFeed() {
   }));
 
   const handleRefresh = useCallback(async () => {
-    await getAllFeed(null);
-    await fetchCheckIn();
+    await Promise.all([getAllFeed(null), fetchCheckIn(), getMe()]);
   }, [fetchCheckIn]);
 
   const {

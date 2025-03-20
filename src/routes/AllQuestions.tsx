@@ -1,12 +1,16 @@
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import NoContents from '@components/_common/no-contents/NoContents';
 import PromptCard from '@components/_common/prompt/PromptCard';
+import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Question } from '@models/post';
+import { getMe } from '@utils/apis/my';
+import { getAllQuestions } from '@utils/apis/question';
 import { AllQuestionsLoader, PromptCardLoader } from 'src/routes/questions/AllQuestionsLoader';
 import { MainScrollContainer } from './Root';
 
@@ -22,25 +26,37 @@ function AllQuestions() {
 
   const { scrollRef } = useRestoreScrollPosition('questionsPage');
 
+  const handleRefresh = useCallback(async () => {
+    await Promise.all([getAllQuestions(null), getMe()]);
+  }, []);
+
   return (
     <MainScrollContainer scrollRef={scrollRef}>
-      <Layout.FlexCol pv={14} w="100%" ph={DEFAULT_MARGIN} gap={20} pb={FLOATING_BUTTON_SIZE + 20}>
-        {isLoading ? (
-          <AllQuestionsLoader />
-        ) : questions?.[0] && questions[0].count > 0 ? (
-          <>
-            {questions.map(({ results }) =>
-              results?.map((question) => (
-                <PromptCard question={question} key={question.id} widthMode="full" />
-              )),
-            )}
-            <div ref={targetRef} />
-            {isLoadingMore && <PromptCardLoader />}
-          </>
-        ) : (
-          <NoContents text={t('no_contents.all_questions')} mv={10} />
-        )}
-      </Layout.FlexCol>
+      <PullToRefresh onRefresh={handleRefresh}>
+        <Layout.FlexCol
+          pv={14}
+          w="100%"
+          ph={DEFAULT_MARGIN}
+          gap={20}
+          pb={FLOATING_BUTTON_SIZE + 20}
+        >
+          {isLoading ? (
+            <AllQuestionsLoader />
+          ) : questions?.[0] && questions[0].count > 0 ? (
+            <>
+              {questions.map(({ results }) =>
+                results?.map((question) => (
+                  <PromptCard question={question} key={question.id} widthMode="full" />
+                )),
+              )}
+              <div ref={targetRef} />
+              {isLoadingMore && <PromptCardLoader />}
+            </>
+          ) : (
+            <NoContents text={t('no_contents.all_questions')} mv={10} />
+          )}
+        </Layout.FlexCol>
+      </PullToRefresh>
     </MainScrollContainer>
   );
 }
