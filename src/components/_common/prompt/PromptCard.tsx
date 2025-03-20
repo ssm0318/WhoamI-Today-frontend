@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import { Layout, Typo } from '@design-system';
@@ -20,7 +20,8 @@ function PromptCard({ question, widthMode = 'normal' }: PromptCardProps) {
     navigate(`/questions/${id}/new`);
   };
 
-  const handleClickSend = () => {
+  const handleClickSend = (e: MouseEvent) => {
+    e.stopPropagation();
     setSendPromptBottomModalVisible(true);
   };
 
@@ -30,14 +31,13 @@ function PromptCard({ question, widthMode = 'normal' }: PromptCardProps) {
 
   return (
     <>
-      <StyledPromptCard w={widthMode === 'full' ? '100%' : 250}>
+      <StyledPromptCard w={widthMode === 'full' ? '100%' : 250} onClick={handleClickRespond}>
         <Layout.FlexRow gap={8} alignItems="center">
           <ProfileImage imageUrl="/whoami-profile.svg" username="Whoami Today" size={28} />
           <Typo type="title-medium">Whoami Today</Typo>
         </Layout.FlexRow>
         <Typo type="body-large">{content}</Typo>
         <StyledPromptCardButtons gap={18}>
-          <Icon name="question_respond" size={22} onClick={handleClickRespond} />
           <Icon name="question_send" size={22} onClick={handleClickSend} />
         </StyledPromptCardButtons>
       </StyledPromptCard>
