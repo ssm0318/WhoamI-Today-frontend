@@ -83,9 +83,8 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
   };
 
   const navigateToProfile = (e: MouseEvent) => {
-    if (featureFlags?.friendList) {
-      e.stopPropagation();
-    }
+    e.stopPropagation();
+
     navigate(`/users/${username}`);
   };
 
