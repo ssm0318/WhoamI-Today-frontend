@@ -66,11 +66,11 @@ function CheckInEdit() {
   return (
     <MainContainer>
       <SubHeader
-        title="Edit Check-in"
+        title={t('title')}
         RightComponent={
           <button type="button" onClick={handleConfirmSave}>
             <Typo type="title-medium" color="PRIMARY">
-              Save
+              {t('save')}
             </Typo>
           </button>
         }
