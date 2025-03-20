@@ -12,6 +12,7 @@ export interface User {
   bio: string;
   pronouns: string;
   persona: Persona[];
+  has_changed_pw?: boolean;
 }
 
 export interface UserProfile extends User {

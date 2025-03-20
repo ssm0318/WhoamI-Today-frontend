@@ -39,6 +39,10 @@ function SignIn() {
               ? FRIEND_DEFAULT_REDIRECTION_PATH
               : FEED_DEFAULT_REDIRECTION_PATH,
           );
+
+          if (!me.has_changed_pw) {
+            navigate('/settings/reset-password');
+          }
         });
       },
       onError: (e) => setSignInError(e),
