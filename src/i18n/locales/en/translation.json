@@ -1,4 +1,10 @@
 {
+  "friend": {
+    "hide": "Hide",
+    "unfriend": "Unfriend",
+    "friend": "Friend",
+    "close_friend": "Close Friend"
+  },
   "common": {
     "done": "Done",
     "cancel": "Cancel"

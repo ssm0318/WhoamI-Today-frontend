@@ -1,4 +1,10 @@
 {
+  "friend": {
+    "hide": "숨김",
+    "unfriend": "삭제",
+    "friend": "친구",
+    "close_friend": "친한 친구"
+  },
   "common": {
     "done": "완료",
     "cancel": "취소"
