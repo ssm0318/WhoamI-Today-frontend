@@ -14,6 +14,7 @@ export interface User {
   pronouns: string;
   persona: Persona[];
   has_changed_pw?: boolean;
+  unread_noti_cnt?: number;
 }
 
 export interface UserProfile extends User {

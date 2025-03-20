@@ -30,7 +30,9 @@ function CommonHeader({ title }: CommonHeaderProps) {
             <Noti to="/notifications">
               <Icon name="notification" size={44} />
               <Layout.Absolute t={4} r={4}>
-                {myProfile?.unread_noti && <IconNudge />}
+                {myProfile?.unread_noti_cnt && (
+                  <IconNudge size={18} count={myProfile?.unread_noti_cnt} />
+                )}
               </Layout.Absolute>
             </Noti>
             <Icon name="hamburger" size={44} onClick={handleClickHamburger} />
