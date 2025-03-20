@@ -46,7 +46,12 @@ function AllQuestions() {
             <>
               {questions.map(({ results }) =>
                 results?.map((question) => (
-                  <PromptCard question={question} key={question.id} widthMode="full" />
+                  <PromptCard
+                    key={question.id}
+                    id={question.id}
+                    content={question.content}
+                    widthMode="full"
+                  />
                 )),
               )}
               <div ref={targetRef} />

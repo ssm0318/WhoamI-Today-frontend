@@ -509,6 +509,12 @@
   },
   "prompts": {
     "select_a_prompt": "질문 선택",
+    "questions_from_your_friends": "친구들의 질문",
+    "todays_questions": "오늘의 질문",
+    "no_contents": {
+      "questions_from_your_friends": "친구들의 질문이 없습니다.",
+      "todays_questions": "오늘의 질문이 없습니다."
+    },
     "prompts_of_the_day": {
       "title": "오늘의 질문",
       "more": "더보기"
