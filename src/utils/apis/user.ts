@@ -271,7 +271,6 @@ export const getUserProfile = async (username: string) => {
   return data;
 };
 
-// TODO: backend 작업 전
 export const getUserFriendList = async (username: string, next?: string | null) => {
   const requestPage = next ? next.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<User[]>>(
@@ -294,7 +293,7 @@ export const requestFriend = async ({
   friendRequestType: Connection;
   updatePastPosts?: boolean;
   onSuccess: () => void;
-  onError: () => void;
+  onError: (errorMsg: string) => void;
   isDefault?: boolean;
 }) => {
   const currentUser = useBoundStore.getState().myProfile;
@@ -307,7 +306,14 @@ export const requestFriend = async ({
         requestee_id: userId,
       })
       .then(() => onSuccess())
-      .catch(() => onError());
+      .catch((e: any) => {
+        const { error } = e.response.data as { error: string[] };
+        if (error) {
+          onError(error[0]);
+        } else {
+          onError(i18n.t('error.temporary_error'));
+        }
+      });
   } else {
     axios
       .post('/user/friend-requests/', {
@@ -320,7 +326,14 @@ export const requestFriend = async ({
           }),
       })
       .then(() => onSuccess())
-      .catch(() => onError());
+      .catch((e: any) => {
+        const { error } = e.response.data as { error: string[] };
+        if (error) {
+          onError(error[0]);
+        } else {
+          onError(i18n.t('error.temporary_error'));
+        }
+      });
   }
 };
 

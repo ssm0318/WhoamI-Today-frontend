@@ -158,11 +158,13 @@ function FriendStatus({
       userId: user.id,
       friendRequestType: friendType,
       updatePastPosts,
-      onSuccess: () => openToast({ message: t('friend_request_success') }),
-      onError: () => openToast({ message: t('temporary_error') }),
+      onSuccess: () => {
+        openToast({ message: t('friend_request_success') });
+        onClickRequest?.();
+      },
+      onError: (errorMsg: string) => openToast({ message: errorMsg }),
       isDefault,
     });
-    onClickRequest?.();
   };
 
   const handleClickRequest = async (e: MouseEvent) => {
