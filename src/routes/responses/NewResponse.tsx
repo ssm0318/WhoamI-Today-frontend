@@ -7,13 +7,13 @@ import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledNewResponsePrompt } from '@components/_common/prompt/PromptCard.styled';
-import ConnectionTypeOption from '@components/note/connection-type/ConnectionTypeOption';
+import VisibilityTypeOption from '@components/note/connection-type/ConnectionTypeOption';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { TextArea, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
-import { Question } from '@models/post';
+import { PostVisibility, Question } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getQuestionDetail, patchResponse, postResponse } from '@utils/apis/question';
 import { getResponse } from '@utils/apis/responses';
@@ -34,7 +34,9 @@ function NewResponse() {
 
   const [newResponse, setNewResponse] = useState<string | null>(null);
 
-  const [connectionType, setConnectionType] = useState('close_friends');
+  // NOTE: QUESTION_RESPONSE_FEATURE 플래그가 true인 경우만 해당 NewResponse 페이지 노출
+  // 따라서 Note처럼 공개 범위 분기가 필요없음
+  const [visibility, setVisibility] = useState<PostVisibility>(PostVisibility.CLOSE_FRIENDS);
   const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
 
   const title = !location.state
@@ -61,7 +63,7 @@ function NewResponse() {
       getResponse(responseId).then((data) => {
         if (data && data.content) {
           setNewResponse(data.content);
-          setConnectionType(data.visibility);
+          setVisibility(data.visibility);
         }
         if (data && data.question && data.question.id) {
           const editQuestionId = data.question.id;
@@ -106,12 +108,12 @@ function NewResponse() {
       ? await postResponse({
           question_id: Number(questionId),
           content: newResponse || '',
-          visibility: connectionType || 'close_friends',
+          visibility,
         })
       : await patchResponse({
           post_id: Number(responseId),
           content: newResponse || '',
-          visibility: connectionType || 'close_friends',
+          visibility,
         });
 
     openToast({
@@ -188,16 +190,16 @@ function NewResponse() {
             justifyContent="center"
           >
             <Typo type="label-large" color="BLACK">
-              {connectionType === 'close_friends'
+              {visibility === PostVisibility.CLOSE_FRIENDS
                 ? t('user_page.connection.close_friend')
                 : t('user_page.connection.friend')}
             </Typo>
             <Icon name="chevron_down" size={18} color="BLACK" />
           </FlexRow>
           {showEditConnectionsModal && (
-            <ConnectionTypeOption
-              type={connectionType}
-              setType={setConnectionType}
+            <VisibilityTypeOption
+              type={visibility}
+              setType={setVisibility}
               visible={showEditConnectionsModal}
               closeBottomSheet={closeEditConnectionsModal}
             />

@@ -29,7 +29,7 @@ function NewNote() {
   return (
     <MainContainer>
       <NewNoteHeader noteId={noteId} title={title} noteInfo={noteInfo} status={status} />
-      <NewNoteContent noteInfo={noteInfo} setNoteInfo={setNoteInfo} />
+      <NewNoteContent noteInfo={noteInfo} setNoteInfo={setNoteInfo} isEdit={!!noteId} />
     </MainContainer>
   );
 }

@@ -4,16 +4,17 @@ import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import { Button, Layout, RadioButton, Typo } from '@design-system';
+import { PostVisibility } from '@models/post';
 
 interface Props {
   type: string;
-  setType: (type: string) => void;
+  setType: (type: PostVisibility) => void;
   visibilityUpdate?: () => void;
   visible: boolean;
   closeBottomSheet: () => void;
 }
 
-function ConnectionTypeOption({
+function VisibilityTypeOption({
   type,
   setType,
   visibilityUpdate,
@@ -22,8 +23,8 @@ function ConnectionTypeOption({
 }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'access_setting' });
 
-  const handleChangeConnection = (e: ChangeEvent<HTMLInputElement>) => {
-    setType(e.target.value);
+  const handleChangeVisibility = (e: ChangeEvent<HTMLInputElement>) => {
+    setType(e.target.value as PostVisibility);
   };
 
   const handleConfirm = () => {
@@ -49,14 +50,14 @@ function ConnectionTypeOption({
                 name="friends"
                 value="friends"
                 checked={type === 'friends'}
-                onChange={handleChangeConnection}
+                onChange={handleChangeVisibility}
               />
               <RadioButton
                 label={t('close_friend') || ''}
                 name="close_friends"
                 value="close_friends"
                 checked={type === 'close_friends'}
-                onChange={handleChangeConnection}
+                onChange={handleChangeVisibility}
               />
             </Layout.FlexCol>
           </Layout.FlexCol>
@@ -74,4 +75,4 @@ function ConnectionTypeOption({
   );
 }
 
-export default ConnectionTypeOption;
+export default VisibilityTypeOption;
