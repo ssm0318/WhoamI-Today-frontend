@@ -5,14 +5,40 @@ import PromptCard from '@components/_common/prompt/PromptCard';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import { DEFAULT_MARGIN } from '@constants/layout';
-import { Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
+import { PaginationResponse } from '@models/api/common';
 import { Question } from '@models/post';
 import { getMe } from '@utils/apis/my';
 import { getAllQuestions } from '@utils/apis/question';
+import { getDateFromFormattedString, getFormattedDate } from '@utils/timeHelpers';
 import { AllQuestionsLoader, PromptCardLoader } from 'src/routes/questions/AllQuestionsLoader';
 import { MainScrollContainer } from './Root';
+
+const groupQuestionsByDate = (questions: PaginationResponse<Question[]>[]) => {
+  const groupedQuestions = new Map<string, Question[]>();
+
+  questions.forEach(({ results }) => {
+    results?.forEach((question: Question) => {
+      const formattedDate = getFormattedDate(question.created_at);
+
+      if (!groupedQuestions.has(formattedDate)) {
+        groupedQuestions.set(formattedDate, []);
+      }
+
+      const dateQuestions = groupedQuestions.get(formattedDate);
+      if (dateQuestions) {
+        dateQuestions.push(question);
+      }
+    });
+  });
+
+  return Array.from(groupedQuestions.entries()).sort(
+    ([dateA], [dateB]) =>
+      getDateFromFormattedString(dateB).getTime() - getDateFromFormattedString(dateA).getTime(),
+  );
+};
 
 function AllQuestions() {
   const [t] = useTranslation('translation');
@@ -44,16 +70,28 @@ function AllQuestions() {
             <AllQuestionsLoader />
           ) : questions?.[0] && questions[0].count > 0 ? (
             <>
-              {questions.map(({ results }) =>
-                results?.map((question) => (
-                  <PromptCard
-                    key={question.id}
-                    id={question.id}
-                    content={question.content}
-                    widthMode="full"
-                  />
-                )),
-              )}
+              {groupQuestionsByDate(questions).map(([date, dateQuestions]) => (
+                <Layout.FlexCol key={date} w="100%">
+                  {/* Date header */}
+                  <Layout.FlexRow justifyContent="flex-start" w="100%" mb={10}>
+                    <Typo type="body-large" color="BLACK" bold>
+                      {date}
+                    </Typo>
+                  </Layout.FlexRow>
+
+                  {/* Questions for this date */}
+                  <Layout.FlexCol w="100%" gap={10}>
+                    {dateQuestions.map((question: Question) => (
+                      <PromptCard
+                        key={question.id}
+                        id={question.id}
+                        content={question.content}
+                        widthMode="full"
+                      />
+                    ))}
+                  </Layout.FlexCol>
+                </Layout.FlexCol>
+              ))}
               <div ref={targetRef} />
               {isLoadingMore && <PromptCardLoader />}
             </>
