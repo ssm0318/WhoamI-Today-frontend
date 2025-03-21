@@ -13,7 +13,9 @@ export const StyledPromptCard = styled(Layout.FlexCol)`
 `;
 
 export const StyledPromptCardButtons = styled(Layout.FlexRow)`
+  width: 100%;
   bottom: 16px;
+  justify-content: flex-end;
 `;
 
 export const StyledNewResponsePrompt = styled.div`
