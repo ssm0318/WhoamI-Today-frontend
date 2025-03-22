@@ -43,8 +43,9 @@ function PingMessageItem({ message }: Props) {
           bgColor={isAuthor ? 'LIGHT' : 'SECONDARY'}
           style={{
             borderRadius: isAuthor ? '13px 13px 0px 13px' : '13px 13px 13px 0px',
-            wordBreak: 'normal',
             whiteSpace: 'pre-wrap',
+            overflowWrap: 'break-word', // 줄바꿈을 공백 단위로
+            wordBreak: 'break-word', // 공백이 없는 경우에도 줄바꿈 허용
           }}
         >
           {emoji && PingEmojiDict[emoji] && <Typo type="body-medium">{PingEmojiDict[emoji]}</Typo>}
