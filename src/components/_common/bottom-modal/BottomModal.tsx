@@ -1,6 +1,6 @@
 import React, { MouseEvent, useEffect, useRef, useState } from 'react';
 import { DEFAULT_MARGIN, SCREEN_HEIGHT } from '@constants/layout';
-import { ColorKeys } from '@design-system';
+import { ColorKeys, Layout, SvgIcon } from '@design-system';
 import { usePreventScroll } from '@hooks/usePreventScroll';
 import * as S from './BottomModal.styled';
 
@@ -80,6 +80,15 @@ function BottomModal({
         bgColor={containerBgColor}
         onTransitionEnd={handleTransitionEnd}
       >
+        <Layout.Absolute
+          w="100%"
+          justifyContent="flex-end"
+          r={DEFAULT_MARGIN}
+          t={DEFAULT_MARGIN}
+          onClick={onCloseModal}
+        >
+          <SvgIcon name="close" size={20} />
+        </Layout.Absolute>
         <S.Body ref={bodyRef} onClick={onClickModal}>
           {children}
         </S.Body>
