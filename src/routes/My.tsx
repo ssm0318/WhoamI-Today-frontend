@@ -12,7 +12,7 @@ import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { getMyNotes, getMyResponses } from '@utils/apis/my';
+import { getMe, getMyNotes, getMyResponses } from '@utils/apis/my';
 import { MainScrollContainer } from './Root';
 
 function My() {
@@ -31,7 +31,7 @@ function My() {
   };
 
   const handleRefresh = useCallback(async () => {
-    await Promise.all([getMyResponses(null), getMyNotes(null), fetchCheckIn()]);
+    await Promise.all([getMyResponses(null), getMyNotes(null), fetchCheckIn(), getMe()]);
   }, [fetchCheckIn]);
 
   const { scrollRef } = useRestoreScrollPosition('myPage');

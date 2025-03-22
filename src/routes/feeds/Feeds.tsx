@@ -10,6 +10,7 @@ import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Note } from '@models/post';
 import { getAllFeed } from '@utils/apis/feed';
+import { getMe } from '@utils/apis/my';
 import { MainScrollContainer } from 'src/routes/Root';
 
 function Feeds() {
@@ -19,6 +20,7 @@ function Feeds() {
 
   const handleRefresh = useCallback(async () => {
     await getAllFeed(null);
+    await getMe();
   }, []);
 
   const {

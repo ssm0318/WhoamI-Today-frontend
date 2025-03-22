@@ -3,10 +3,14 @@ import { ResponseRequest } from '@models/api/question';
 import { MyProfile } from '@models/api/user';
 import { Note, Response } from '@models/post';
 import { UserProfile } from '@models/user';
+import { useBoundStore } from '@stores/useBoundStore';
 import axios, { axiosFormDataInstance } from './axios';
 
 export const getMe = async () => {
   const { data } = await axios.get<MyProfile>('/user/me/');
+
+  useBoundStore.getState().setMyProfile({ ...data, unread_noti_cnt: data.unread_noti_cnt ?? 0 });
+
   return data;
 };
 
