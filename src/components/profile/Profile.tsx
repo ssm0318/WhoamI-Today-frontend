@@ -198,7 +198,7 @@ function Profile({ user }: ProfileProps) {
           ))}
         </Layout.ScrollableFlexRow>
       ) : (
-        <PersonaPlaceholder />
+        isMyPage && <PersonaPlaceholder />
       )}
       {!isMyPage && user && (
         <>
