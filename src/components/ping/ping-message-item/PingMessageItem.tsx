@@ -43,7 +43,7 @@ function PingMessageItem({ message }: Props) {
           bgColor={isAuthor ? 'LIGHT' : 'SECONDARY'}
           style={{
             borderRadius: isAuthor ? '13px 13px 0px 13px' : '13px 13px 13px 0px',
-            wordBreak: 'break-all',
+            wordBreak: 'normal',
             whiteSpace: 'pre-wrap',
           }}
         >
