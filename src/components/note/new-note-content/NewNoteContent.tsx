@@ -12,6 +12,7 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import { processImageFromApp } from '@utils/imageHelpers';
+import { FlexRow } from 'src/design-system/layouts';
 import VisibilityTypeOption from '../connection-type/ConnectionTypeOption';
 import NewNoteImageEdit from '../new-note-image-edit/NewNoteImageEdit';
 import NewNotePhotoUploadBottomSheet from '../new-note-photo-upload-bottom-sheet/NewNotePhotoUploadBottomSheet';
@@ -161,7 +162,7 @@ function NewNoteContent({ noteInfo, setNoteInfo, isEdit }: NoteInformationProps)
         </Layout.FlexRow>
         <NoteInput
           value={noteInfo.content}
-          placeholder={`${t('notes.whats_on_your_mind')}\n\n${t('notes.content_restriction')}`}
+          placeholder={t('notes.whats_on_your_mind') || ''}
           onChange={handleChangeInput}
         />
         <Layout.FlexRow w="100%" justifyContent="space-between">
@@ -224,6 +225,11 @@ function NewNoteContent({ noteInfo, setNoteInfo, isEdit }: NoteInformationProps)
           </Layout.Absolute>
         </NoteImageWrapper>
       )}
+      <FlexRow w="100%" justifyContent="flex-end" alignItems="center" ph={DEFAULT_MARGIN}>
+        <Typo type="label-medium" color="MEDIUM_GRAY" mt={8}>
+          {t('notes.content_restriction')}
+        </Typo>
+      </FlexRow>
       <NewNotePhotoUploadBottomSheet
         visible={showPhotoUploadBottomSheet}
         closeBottomSheet={closePhotoUploadBottomSheet}
