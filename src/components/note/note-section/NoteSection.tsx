@@ -20,7 +20,7 @@ type NoteSectionProps = {
 
 function NoteSection({ username }: NoteSectionProps) {
   const [t] = useTranslation('translation');
-  const { featureFlags, myProfile } = useBoundStore(UserSelector);
+  const { myProfile } = useBoundStore(UserSelector);
   const navigate = useNavigate();
 
   const handleClickNewNote = () => {
@@ -54,11 +54,9 @@ function NoteSection({ username }: NoteSectionProps) {
   return (
     <>
       <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" mt="default">
-        {featureFlags?.friendList && (
-          <Typo type="title-large" color="PRIMARY" ml={8}>
-            {t('notes.title')}
-          </Typo>
-        )}
+        <Typo type="title-large" color="PRIMARY" ml={8}>
+          {t('notes.title')}
+        </Typo>
       </Layout.FlexRow>
       {!username && (
         <Layout.FlexRow w="100%" pv={10} bgColor="WHITE" rounded="8px 8px 0px 0px">
