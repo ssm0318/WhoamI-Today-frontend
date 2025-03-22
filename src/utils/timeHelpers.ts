@@ -91,7 +91,7 @@ export const getDailyNotiTime = (time: string) => {
 
 /**
  * 영어는 서수 접미사를 포함하고 한국어는 적절한 형식으로 날짜를 포맷팅
- * @param dateString - ISO 날짜 문자열
+ * @param dateString - YYYY-MM-DD 형식의 날짜 문자열
  * @returns 현재 언어 설정에 따른 포맷팅된 날짜 문자열
  */
 export const getFormattedDate = (dateString: string): string => {

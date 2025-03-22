@@ -16,12 +16,15 @@ import { getDateFromFormattedString, getFormattedDate } from '@utils/timeHelpers
 import { AllQuestionsLoader, PromptCardLoader } from 'src/routes/questions/AllQuestionsLoader';
 import { MainScrollContainer } from './Root';
 
+// TODO 백엔드에서 그루핑 해주는거 받아서 수정 필요
 const groupQuestionsByDate = (questions: PaginationResponse<Question[]>[]) => {
   const groupedQuestions = new Map<string, Question[]>();
 
   questions.forEach(({ results }) => {
     results?.forEach((question: Question) => {
-      const formattedDate = getFormattedDate(question.created_at);
+      const formattedDate = getFormattedDate(
+        question.selected_dates[question.selected_dates.length - 1],
+      );
 
       if (!groupedQuestions.has(formattedDate)) {
         groupedQuestions.set(formattedDate, []);
