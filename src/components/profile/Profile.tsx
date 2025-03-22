@@ -5,7 +5,7 @@ import FriendStatus from '@components/_common/friend-status/FriendStatus';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
-import { Layout, SvgIcon, Typo } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
 import useInfiniteFetchUserFriends from '@hooks/useInfiniteFetchUserFriends';
@@ -18,6 +18,8 @@ import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
 import PersonaChip from './persona/PersonaChip';
+import BioPlaceholder from './placeholders/BioPlaceholder';
+import PronounPlaceholder from './placeholders/PronounPlaceholder';
 
 interface ProfileProps {
   user?: UserProfile | MyProfile;
@@ -35,9 +37,9 @@ function Profile({ user }: ProfileProps) {
   const { username } = useParams();
   const navigate = useNavigate();
 
-  const handleClickEditProfile = () => {
-    return navigate('/settings/edit-profile');
-  };
+  // const handleClickEditProfile = () => {
+  //   return navigate('/settings/edit-profile');
+  // };
 
   const { allFriends } = useInfiniteFetchFriends();
   const { allFriends: friendFriends } = useInfiniteFetchUserFriends(username);
@@ -119,24 +121,38 @@ function Profile({ user }: ProfileProps) {
               )}
             </Layout.FlexRow>
             {/* edit icon */}
-            {isMyPage && (
+            {/* {isMyPage && (
               <SvgIcon
                 name="edit_filled"
                 fill="DARK_GRAY"
                 size={24}
                 onClick={handleClickEditProfile}
               />
-            )}
+            )} */}
           </Layout.FlexRow>
           {/* pronouns */}
-          {(isMyPage ? myProfile?.pronouns : friendData?.pronouns) && (
-            <Layout.FlexRow alignItems="center">
-              <Typo type="label-medium">(</Typo>
-              <Typo type="label-medium" numberOfLines={1}>
-                {isMyPage ? myProfile?.pronouns : friendData?.pronouns}
-              </Typo>
-              <Typo type="label-medium">)</Typo>
-            </Layout.FlexRow>
+          {isMyPage ? (
+            !myProfile?.pronouns ? (
+              <PronounPlaceholder />
+            ) : (
+              <Layout.FlexRow alignItems="center">
+                <Typo type="label-medium">(</Typo>
+                <Typo type="label-medium" numberOfLines={1}>
+                  {myProfile?.pronouns}
+                </Typo>
+                <Typo type="label-medium">)</Typo>
+              </Layout.FlexRow>
+            )
+          ) : (
+            friendData?.pronouns && (
+              <Layout.FlexRow alignItems="center">
+                <Typo type="label-medium">(</Typo>
+                <Typo type="label-medium" numberOfLines={1}>
+                  {friendData?.pronouns}
+                </Typo>
+                <Typo type="label-medium">)</Typo>
+              </Layout.FlexRow>
+            )
           )}
           {/* 친구 수 */}
           {featureFlags?.friendFeed && (isMyPage || (user && areFriends(user))) && (
@@ -147,12 +163,24 @@ function Profile({ user }: ProfileProps) {
             </button>
           )}
           {/* bio */}
-          {user?.bio && (
-            <Layout.FlexCol w="100%">
-              <Typo type="body-medium" numberOfLines={2}>
-                {user.bio}
-              </Typo>
-            </Layout.FlexCol>
+          {isMyPage ? (
+            !myProfile?.bio ? (
+              <BioPlaceholder />
+            ) : (
+              <Layout.FlexCol w="100%">
+                <Typo type="body-medium" numberOfLines={2}>
+                  {myProfile?.bio}
+                </Typo>
+              </Layout.FlexCol>
+            )
+          ) : (
+            friendData?.bio && (
+              <Layout.FlexCol w="100%">
+                <Typo type="body-medium" numberOfLines={2}>
+                  {friendData.bio}
+                </Typo>
+              </Layout.FlexCol>
+            )
           )}
         </Layout.FlexCol>
       </Layout.FlexRow>
