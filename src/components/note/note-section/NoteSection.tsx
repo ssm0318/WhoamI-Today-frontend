@@ -53,7 +53,12 @@ function NoteSection({ username }: NoteSectionProps) {
 
   return (
     <>
-      <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" mt="default">
+      <Layout.FlexRow
+        w="100%"
+        justifyContent="space-between"
+        alignItems="center"
+        mt={!username ? 'default' : 0}
+      >
         <Typo type="title-large" color="PRIMARY" ml={8}>
           {t('notes.title')}
         </Typo>
