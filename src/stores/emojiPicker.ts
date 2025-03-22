@@ -1,10 +1,12 @@
 import { SliceStateCreator } from './useBoundStore';
 
+export interface EmojiPickerTarget {
+  type: 'Note' | 'Response' | 'CheckIn';
+  id: number | null;
+  direction: 'top' | 'bottom';
+}
 interface EmojiPickerState {
-  emojiPickerTarget: {
-    type: 'Note' | 'Response' | 'CheckIn';
-    id: number | null;
-  } | null;
+  emojiPickerTarget: EmojiPickerTarget | null;
 }
 
 interface EmojiPickerAction {

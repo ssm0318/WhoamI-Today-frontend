@@ -4,6 +4,7 @@ import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import Icon from '@components/_common/icon/Icon';
 import EmojiPicker from '@components/emoji-picker/EmojiPicker';
+import { getEmojiPickerDirection } from '@components/emoji-picker/EmojiPicker.helper';
 import { Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 
@@ -24,7 +25,9 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
     if (emojiPickerTarget) {
       return setEmojiPickerTarget(null);
     }
-    setEmojiPickerTarget({ type: 'CheckIn', id: null });
+
+    const pickerDirection = getEmojiPickerDirection(toggleButtonRef.current);
+    setEmojiPickerTarget({ type: 'CheckIn', id: null, direction: pickerDirection });
   };
 
   const handleSelectEmoji = (e: EmojiClickData) => {

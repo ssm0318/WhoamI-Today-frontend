@@ -3,6 +3,10 @@ import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import EmojiPicker from '@components/emoji-picker/EmojiPicker';
+import {
+  getEmojiPickerDirection,
+  getEmojiPickerHeight,
+} from '@components/emoji-picker/EmojiPicker.helper';
 import { Layout, Typo } from '@design-system';
 import { Note, POST_DP_TYPE, POST_TYPE, ReactionUserSample, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -33,6 +37,7 @@ function PostFooter({
   const { comment_count, type, current_user_reaction_id_list } = post;
   const navigate = useNavigate();
   const toggleButtonRef = useRef<HTMLDivElement>(null);
+  const emojiPickerHeight = getEmojiPickerHeight(displayType === 'LIST');
   const [myReactionList, setMyReactionList] = useState<{ id: number; emoji: string }[]>(
     current_user_reaction_id_list,
   );
@@ -87,8 +92,11 @@ function PostFooter({
   const handleClickEmojiButton = () => {
     const isCurrentlyActive =
       emojiPickerTarget?.type === post.type && emojiPickerTarget?.id === post.id;
+    const pickerDirection = getEmojiPickerDirection(toggleButtonRef.current, emojiPickerHeight);
 
-    setEmojiPickerTarget(isCurrentlyActive ? null : { type: post.type, id: post.id });
+    setEmojiPickerTarget(
+      isCurrentlyActive ? null : { type: post.type, id: post.id, direction: pickerDirection },
+    );
   };
 
   useEffect(() => {
@@ -145,7 +153,7 @@ function PostFooter({
         selectedEmojis={myEmojiList}
         onSelectEmoji={handleSelectEmoji}
         onUnselectEmoji={handleUnselectEmoji}
-        height={displayType === 'LIST' ? 200 : 150}
+        height={emojiPickerHeight}
         left={displayType === 'DETAIL' ? -10 : undefined}
         top={(toggleButtonRef?.current?.getBoundingClientRect()?.height ?? 0) + 6}
         post={post}

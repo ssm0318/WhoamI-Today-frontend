@@ -1,5 +1,5 @@
 import ReactEmojiPicker, { EmojiClickData } from 'emoji-picker-react';
-import { DEFAULT_MARGIN, Z_INDEX } from '@constants/layout';
+import { DEFAULT_MARGIN, EMOJI_PICKER_HEIGHT, Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
 import { useDetectOutsideClick } from '@hooks/useDetectOutsideClick';
 import { Note, Response } from '@models/post';
@@ -21,7 +21,7 @@ interface EmojiPickerProps {
 function EmojiPicker({
   onSelectEmoji,
   selectedEmojis,
-  height = 200,
+  height = EMOJI_PICKER_HEIGHT.DEFAULT,
   left = DEFAULT_MARGIN,
   top,
   onUnselectEmoji,
@@ -62,7 +62,12 @@ function EmojiPicker({
   if (!isVisible) return null;
 
   return (
-    <Layout.Absolute ref={emojiPickerWrapper} l={left} mt={top ?? 0} z={Z_INDEX.EMOJI_PICKER}>
+    <Layout.Absolute
+      ref={emojiPickerWrapper}
+      l={left}
+      mt={emojiPickerTarget.direction === 'top' ? -height : top ?? 0}
+      z={Z_INDEX.EMOJI_PICKER}
+    >
       {selectedEmojis && <EmojiPickerCustomStyle unifiedList={unifiedEmojiList} />}
       <ReactEmojiPicker
         height={height}
