@@ -8,50 +8,22 @@ import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
-import { PaginationResponse } from '@models/api/common';
-import { Question } from '@models/post';
+import { Question, QuestionGroup } from '@models/post';
 import { getMe } from '@utils/apis/my';
 import { getAllQuestions } from '@utils/apis/question';
-import { getDateFromFormattedString, getFormattedDate } from '@utils/timeHelpers';
+import { getFormattedDate } from '@utils/timeHelpers';
 import { AllQuestionsLoader, PromptCardLoader } from 'src/routes/questions/AllQuestionsLoader';
 import { MainScrollContainer } from './Root';
-
-// TODO 백엔드에서 그루핑 해주는거 받아서 수정 필요
-const groupQuestionsByDate = (questions: PaginationResponse<Question[]>[]) => {
-  const groupedQuestions = new Map<string, Question[]>();
-
-  questions.forEach(({ results }) => {
-    results?.forEach((question: Question) => {
-      const formattedDate = getFormattedDate(
-        question.selected_dates[question.selected_dates.length - 1],
-      );
-
-      if (!groupedQuestions.has(formattedDate)) {
-        groupedQuestions.set(formattedDate, []);
-      }
-
-      const dateQuestions = groupedQuestions.get(formattedDate);
-      if (dateQuestions) {
-        dateQuestions.push(question);
-      }
-    });
-  });
-
-  return Array.from(groupedQuestions.entries()).sort(
-    ([dateA], [dateB]) =>
-      getDateFromFormattedString(dateB).getTime() - getDateFromFormattedString(dateA).getTime(),
-  );
-};
 
 function AllQuestions() {
   const [t] = useTranslation('translation');
 
   const {
     targetRef,
-    data: questions,
+    data: questionGroups,
     isLoadingMore,
     isLoading,
-  } = useSWRInfiniteScroll<Question>({ key: '/qna/questions/' });
+  } = useSWRInfiniteScroll<QuestionGroup>({ key: '/qna/questions/' });
 
   const { scrollRef } = useRestoreScrollPosition('questionsPage');
 
@@ -71,30 +43,31 @@ function AllQuestions() {
         >
           {isLoading ? (
             <AllQuestionsLoader />
-          ) : questions?.[0] && questions[0].count > 0 ? (
+          ) : questionGroups?.[0] && questionGroups[0].count > 0 ? (
             <>
-              {groupQuestionsByDate(questions).map(([date, dateQuestions]) => (
-                <Layout.FlexCol key={date} w="100%">
-                  {/* Date header */}
-                  <Layout.FlexRow justifyContent="flex-start" w="100%" mb={10}>
-                    <Typo type="body-large" color="BLACK" bold>
-                      {date}
-                    </Typo>
-                  </Layout.FlexRow>
-
-                  {/* Questions for this date */}
-                  <Layout.FlexCol w="100%" gap={10}>
-                    {dateQuestions.map((question: Question) => (
-                      <PromptCard
-                        key={question.id}
-                        id={question.id}
-                        content={question.content}
-                        widthMode="full"
-                      />
-                    ))}
+              {questionGroups.map(({ results }) =>
+                results?.map((questionGroup) => (
+                  <Layout.FlexCol key={questionGroup.date} w="100%">
+                    {/* Date header */}
+                    <Layout.FlexRow justifyContent="flex-start" w="100%" mb={10}>
+                      <Typo type="body-large" color="BLACK" bold>
+                        {getFormattedDate(questionGroup.date)}
+                      </Typo>
+                    </Layout.FlexRow>
+                    {/* Questions for this date */}
+                    <Layout.FlexCol w="100%" gap={10}>
+                      {questionGroup.questions.map((question: Question) => (
+                        <PromptCard
+                          key={question.id}
+                          id={question.id}
+                          content={question.content}
+                          widthMode="full"
+                        />
+                      ))}
+                    </Layout.FlexCol>
                   </Layout.FlexCol>
-                </Layout.FlexCol>
-              ))}
+                )),
+              )}
               <div ref={targetRef} />
               {isLoadingMore && <PromptCardLoader />}
             </>
