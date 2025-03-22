@@ -9,12 +9,13 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import { useIsVirtualKeyboardOpenInIOS } from '@components/comment-list/comment-input-box/_hooks/useIsVirtualKeyboardOpenInIOS';
 import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
+import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { postComment } from '@utils/apis/comments';
+import { isApp } from '@utils/getUserAgent';
 import * as S from './CommentInputBox.styled';
 
 interface CommentInputBoxProps {
@@ -52,13 +53,24 @@ function CommentInputBox({
 }: CommentInputBoxProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const { featureFlags } = useBoundStore(UserSelector);
+  const sendMessage = usePostAppMessage();
 
   const myProfile = useBoundStore((state) => state.myProfile);
   const [content, setContent] = useState('');
   const commentRef = useRef<HTMLTextAreaElement>(null);
   const initialIsPrivateRef = useRef(isPrivate);
   const [initialIsPrivate, setInitialIsPrivate] = useState(initialIsPrivateRef.current);
-  // const commentsContainerRef = useRef(null);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+  // 앱에서 키보드 높이 정보 수신
+  useGetAppMessage({
+    key: 'KEYBOARD_HEIGHT',
+    cb: (data) => {
+      setKeyboardHeight(data.height);
+      setKeyboardOpen(data.height > 0);
+    },
+  });
 
   useEffect(() => {
     if (!inputFocus) return;
@@ -77,6 +89,61 @@ function CommentInputBox({
     if (!featureFlags?.friendList || !isReply) return;
     setInitialIsPrivate(initialIsPrivateRef.current);
   }, [isReply, replyTo, featureFlags?.friendList]);
+
+  // 브라우저에서 테스트할 때는 visualViewport를 사용 (앱에서는 필요 없음)
+  useEffect(() => {
+    if (!isApp && window.visualViewport) {
+      const handleResize = () => {
+        if (!window.visualViewport) return;
+
+        const viewportHeight = window.visualViewport.height;
+        const windowHeight = window.innerHeight;
+
+        // 뷰포트 높이가 창 높이보다 작아지면 키보드가 열린 것으로 간주
+        if (viewportHeight < windowHeight) {
+          setKeyboardOpen(true);
+          // 키보드 높이 계산
+          const calculatedKeyboardHeight = windowHeight - viewportHeight;
+          setKeyboardHeight(calculatedKeyboardHeight);
+        } else {
+          setKeyboardOpen(false);
+          setKeyboardHeight(0);
+        }
+      };
+
+      const { visualViewport } = window;
+      visualViewport.addEventListener('resize', handleResize);
+
+      return () => {
+        visualViewport.removeEventListener('resize', handleResize);
+      };
+    }
+  }, []);
+
+  // 입력 필드 포커스 처리
+  useEffect(() => {
+    const handleFocus = () => {
+      // ReactNative WebView에 키보드가 열렸음을 알림
+      if (isApp) {
+        try {
+          sendMessage('KEYBOARD_OPENED', {});
+        } catch (error) {
+          console.error('Error posting message to React Native WebView:', error);
+        }
+      }
+    };
+
+    const inputElement = commentRef.current;
+    if (inputElement) {
+      inputElement.addEventListener('focus', handleFocus);
+    }
+
+    return () => {
+      if (inputElement) {
+        inputElement.removeEventListener('focus', handleFocus);
+      }
+    };
+  }, [sendMessage]);
 
   const handleCheckboxChange = () => {
     if (!featureFlags?.friendList || initialIsPrivate) return;
@@ -144,25 +211,20 @@ function CommentInputBox({
     resetCommentType();
   };
 
-  const isVirtualKeyboardOpen = useIsVirtualKeyboardOpenInIOS();
-
-  useEffect(() => {
-    const blurInputOnTouchMoveOutside = (e: Event) => {
-      if (!isVirtualKeyboardOpen) return;
-
-      if (commentRef.current && !commentRef.current.contains(e.target as Node)) {
-        commentRef?.current?.blur();
-      }
-    };
-
-    document.addEventListener('touchmove', blurInputOnTouchMoveOutside);
-    return () => {
-      document.removeEventListener('touchmove', blurInputOnTouchMoveOutside);
-    };
-  }, [isVirtualKeyboardOpen]);
-
   return (
-    <S.CommentInputWrapper gap={10} w="100%" pv={12} ph={16} bgColor="WHITE">
+    <S.CommentInputWrapper
+      gap={10}
+      w="100%"
+      pv={12}
+      ph={16}
+      bgColor="WHITE"
+      style={{
+        position: 'relative',
+        transition: 'bottom 0.2s ease-out',
+        bottom: keyboardOpen ? keyboardHeight : 0,
+        zIndex: 1000,
+      }}
+    >
       {/* isPrivate */}
       {featureFlags?.friendList && (
         <Layout.FlexRow gap={4} alignItems="center">

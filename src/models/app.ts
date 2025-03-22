@@ -49,6 +49,14 @@ export interface FileSelectedData {
   name: string;
   base64?: string;
 }
+export interface KeyboardHeightData {
+  key: 'KEYBOARD_HEIGHT';
+  height: number;
+}
+
+export interface KeyboardOpenedData {
+  key: 'KEYBOARD_OPENED';
+}
 
 // 앱, 웹 서로 약속한 키값에 따른 메시지 타입
 export type PostMessageDataType =
@@ -61,7 +69,9 @@ export type PostMessageDataType =
   | LogoutData
   | OpenGalleryData
   | OpenCameraData
-  | FileSelectedData;
+  | FileSelectedData
+  | KeyboardHeightData
+  | KeyboardOpenedData;
 
 // 앱, 웹 서로 약속한 키값
 export type PostMessageKeyType = PostMessageDataType['key'];
@@ -78,4 +88,6 @@ export type PostMessageKeyToData = {
   OPEN_GALLERY: OpenGalleryData;
   OPEN_CAMERA: OpenCameraData;
   FILE_SELECTED: FileSelectedData;
+  KEYBOARD_HEIGHT: KeyboardHeightData;
+  KEYBOARD_OPENED: KeyboardOpenedData;
 };
