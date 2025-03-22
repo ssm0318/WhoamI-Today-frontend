@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Font, Layout, SvgIcon } from '@design-system';
 
 function AddNewCheckIn() {
-  const [t] = useTranslation('translation', { keyPrefix: 'check_in' });
+  const [t] = useTranslation('translation', { keyPrefix: 'user_page.check_in' });
   const navigate = useNavigate();
 
   const handleClickAdd = () => {

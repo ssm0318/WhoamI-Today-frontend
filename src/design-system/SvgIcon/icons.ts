@@ -83,6 +83,7 @@ const checkbox_checked = 'checkbox_checked';
 const spotify = 'spotify';
 const default_profile = 'default_profile';
 const add_comment = 'add_comment';
+const add_note = 'add_note';
 
 // Check In
 const availability_available = 'availability_available';
@@ -149,6 +150,7 @@ export {
   add_comment,
   add_default,
   add_emoji,
+  add_note,
   add_post,
   add_reaction_active,
   add_reaction_default,

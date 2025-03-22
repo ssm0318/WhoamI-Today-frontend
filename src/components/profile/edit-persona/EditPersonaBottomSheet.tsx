@@ -86,11 +86,7 @@ function EditPersonaBottomSheet({
           ))}
         </Layout.FlexRow>
         <S.ConfirmButtonContainer w="100%" pt={16} pb={20} ph={12}>
-          <BottomModalActionButton
-            status={selected.length > 0 ? 'normal' : 'disabled'}
-            text={t('confirm')}
-            onClick={handleConfirm}
-          />
+          <BottomModalActionButton status="normal" text={t('confirm')} onClick={handleConfirm} />
         </S.ConfirmButtonContainer>
       </Layout.FlexCol>
     </BottomModal>

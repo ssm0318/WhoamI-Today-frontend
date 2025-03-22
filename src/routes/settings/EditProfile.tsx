@@ -26,10 +26,11 @@ function EditProfile() {
   const isFromSignUp = !!location.state?.fromSignUp;
 
   const [t] = useTranslation('translation', { keyPrefix: 'settings.edit_profile' });
-  const { myProfile, updateMyProfile, openToast } = useBoundStore((state) => ({
+  const { myProfile, updateMyProfile, openToast, featureFlags } = useBoundStore((state) => ({
     myProfile: state.myProfile,
     updateMyProfile: state.updateMyProfile,
     openToast: state.openToast,
+    featureFlags: state.featureFlags,
   }));
 
   // Create a persistent color mapping for each persona
@@ -204,54 +205,62 @@ function EditProfile() {
           error={usernameError}
         />
         {/* persona */}
-        <Typo type="title-medium" color="MEDIUM_GRAY">
-          {t('persona')}
-        </Typo>
-        <Layout.FlexCol
-          w="100%"
-          outline="LIGHT_GRAY"
-          rounded={12}
-          style={{ overflow: 'hidden' }}
-          onClick={() => setIsPersonaEditModalVisible(true)}
-        >
-          <Layout.FlexRow
-            gap={8}
-            pv={12}
-            ph={12}
-            style={{
-              flexWrap: 'wrap',
-            }}
-            w="100%"
-          >
-            {draft.persona.length > 0 ? (
-              draft.persona.map((persona) => (
-                <div key={persona} style={{ margin: '4px 0' }}>
-                  <PersonaChip persona={persona} color={personaColorMap[persona]} />
-                </div>
-              ))
-            ) : (
-              <Layout.FlexRow w="100%" alignItems="center" justifyContent="center" rounded={12}>
-                <Icon name="add_default" size={24} />
-              </Layout.FlexRow>
-            )}
-          </Layout.FlexRow>
-          {draft.persona.length > 0 && (
-            <Layout.FlexRow
+        {featureFlags?.persona && (
+          <>
+            <Typo type="title-medium" color="MEDIUM_GRAY">
+              {t('persona')}
+            </Typo>
+            <Layout.FlexCol
               w="100%"
-              alignItems="center"
-              justifyContent="center"
-              bgColor="LIGHT_GRAY"
-              pv={8}
-              style={{ borderTop: '1px solid #EEEEEE' }}
-              onClick={() => setIsPersonaEditModalVisible(true)}
+              outline="LIGHT_GRAY"
+              rounded={12}
+              style={{ overflow: 'hidden' }}
             >
-              <Icon name="edit_filled" size={20} />
-              <Typo type="label-medium" ml={4} color="MEDIUM_GRAY">
-                {t('persona_edit_bottom_sheet.edit')}
-              </Typo>
-            </Layout.FlexRow>
-          )}
-        </Layout.FlexCol>
+              <Layout.FlexRow
+                gap={8}
+                pv={12}
+                ph={12}
+                style={{
+                  flexWrap: 'wrap',
+                }}
+                w="100%"
+              >
+                {draft.persona.length > 0 ? (
+                  draft.persona.map((persona) => (
+                    <div key={persona} style={{ margin: '4px 0' }}>
+                      <PersonaChip persona={persona} color={personaColorMap[persona]} />
+                    </div>
+                  ))
+                ) : (
+                  <Layout.FlexRow w="100%" alignItems="center" justifyContent="center" rounded={12}>
+                    <Icon
+                      onClick={() => setIsPersonaEditModalVisible(true)}
+                      name="add_default"
+                      size={24}
+                    />
+                  </Layout.FlexRow>
+                )}
+              </Layout.FlexRow>
+              {draft.persona.length > 0 && (
+                <Layout.FlexRow
+                  w="100%"
+                  alignItems="center"
+                  justifyContent="center"
+                  bgColor="LIGHT_GRAY"
+                  pv={8}
+                  style={{ borderTop: '1px solid #EEEEEE' }}
+                  onClick={() => setIsPersonaEditModalVisible(true)}
+                >
+                  <Icon name="edit_filled" size={20} />
+                  <Typo type="label-medium" ml={4} color="MEDIUM_GRAY">
+                    {t('persona_edit_bottom_sheet.edit')}
+                  </Typo>
+                </Layout.FlexRow>
+              )}
+            </Layout.FlexCol>
+          </>
+        )}
+
         {/* pronouns */}
         <ValidatedInput
           label={t('pronouns')}

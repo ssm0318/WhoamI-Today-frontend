@@ -18,6 +18,9 @@ import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
 import PersonaChip from './persona/PersonaChip';
+import BioPlaceholder from './placeholders/BioPlaceholder';
+import PersonaPlaceholder from './placeholders/PersonaPlaceholder';
+import PronounPlaceholder from './placeholders/PronounPlaceholder';
 
 interface ProfileProps {
   user?: UserProfile | MyProfile;
@@ -119,25 +122,18 @@ function Profile({ user }: ProfileProps) {
               )}
             </Layout.FlexRow>
             {/* edit icon */}
-            {isMyPage && (
-              <SvgIcon
-                name="edit_filled"
-                fill="DARK_GRAY"
-                size={24}
-                onClick={handleClickEditProfile}
-              />
-            )}
+            {isMyPage &&
+              (myProfile?.bio ||
+                myProfile?.pronouns ||
+                (featureFlags?.persona && !!myProfile?.persona.length)) && (
+                <SvgIcon
+                  name="edit_filled"
+                  fill="DARK_GRAY"
+                  size={24}
+                  onClick={handleClickEditProfile}
+                />
+              )}
           </Layout.FlexRow>
-          {/* pronouns */}
-          {(isMyPage ? myProfile?.pronouns : friendData?.pronouns) && (
-            <Layout.FlexRow alignItems="center">
-              <Typo type="label-medium">(</Typo>
-              <Typo type="label-medium" numberOfLines={1}>
-                {isMyPage ? myProfile?.pronouns : friendData?.pronouns}
-              </Typo>
-              <Typo type="label-medium">)</Typo>
-            </Layout.FlexRow>
-          )}
           {/* 친구 수 */}
           {featureFlags?.friendFeed && (isMyPage || (user && areFriends(user))) && (
             <button type="button" onClick={handleClickFriendList}>
@@ -146,23 +142,67 @@ function Profile({ user }: ProfileProps) {
               </Typo>
             </button>
           )}
+          {/* pronouns */}
+          {isMyPage ? (
+            !myProfile?.pronouns ? (
+              <PronounPlaceholder />
+            ) : (
+              <Layout.FlexRow alignItems="center">
+                <Typo type="label-medium">(</Typo>
+                <Typo type="label-medium" numberOfLines={1}>
+                  {myProfile?.pronouns}
+                </Typo>
+                <Typo type="label-medium">)</Typo>
+              </Layout.FlexRow>
+            )
+          ) : (
+            friendData?.pronouns && (
+              <Layout.FlexRow alignItems="center">
+                <Typo type="label-medium">(</Typo>
+                <Typo type="label-medium" numberOfLines={1}>
+                  {friendData?.pronouns}
+                </Typo>
+                <Typo type="label-medium">)</Typo>
+              </Layout.FlexRow>
+            )
+          )}
+
           {/* bio */}
-          {user?.bio && (
-            <Layout.FlexCol w="100%">
-              <Typo type="body-medium" numberOfLines={2}>
-                {user.bio}
-              </Typo>
-            </Layout.FlexCol>
+          {isMyPage ? (
+            !myProfile?.bio ? (
+              <BioPlaceholder />
+            ) : (
+              <Layout.FlexCol w="100%">
+                <Typo type="body-medium" numberOfLines={2}>
+                  {myProfile?.bio}
+                </Typo>
+              </Layout.FlexCol>
+            )
+          ) : (
+            friendData?.bio && (
+              <Layout.FlexCol w="100%">
+                <Typo type="body-medium" numberOfLines={2}>
+                  {friendData.bio}
+                </Typo>
+              </Layout.FlexCol>
+            )
           )}
         </Layout.FlexCol>
       </Layout.FlexRow>
-      {featureFlags?.persona && (isMyPage || (user && areFriends(user))) && (
-        <Layout.ScrollableFlexRow w="100%" gap={8}>
-          {user?.persona.map((persona) => (
-            <PersonaChip key={persona} persona={persona} />
-          ))}
-        </Layout.ScrollableFlexRow>
+      {featureFlags?.persona && (
+        <Layout.FlexRow w="100%">
+          {user && areFriends(user) && user?.persona && user?.persona.length > 0 ? (
+            <Layout.ScrollableFlexRow w="100%" gap={8}>
+              {user?.persona.map((persona) => (
+                <PersonaChip key={persona} persona={persona} />
+              ))}
+            </Layout.ScrollableFlexRow>
+          ) : (
+            isMyPage && <PersonaPlaceholder />
+          )}
+        </Layout.FlexRow>
       )}
+
       {!isMyPage && user && (
         <>
           {!isMyProfile(user) && !areFriends(user) && (
