@@ -207,7 +207,13 @@ function EditProfile() {
         <Typo type="title-medium" color="MEDIUM_GRAY">
           {t('persona')}
         </Typo>
-        <Layout.FlexCol w="100%" outline="LIGHT_GRAY" rounded={12} style={{ overflow: 'hidden' }}>
+        <Layout.FlexCol
+          w="100%"
+          outline="LIGHT_GRAY"
+          rounded={12}
+          style={{ overflow: 'hidden' }}
+          onClick={() => setIsPersonaEditModalVisible(true)}
+        >
           <Layout.FlexRow
             gap={8}
             pv={12}
@@ -225,11 +231,7 @@ function EditProfile() {
               ))
             ) : (
               <Layout.FlexRow w="100%" alignItems="center" justifyContent="center" rounded={12}>
-                <Icon
-                  onClick={() => setIsPersonaEditModalVisible(true)}
-                  name="add_default"
-                  size={24}
-                />
+                <Icon name="add_default" size={24} />
               </Layout.FlexRow>
             )}
           </Layout.FlexRow>

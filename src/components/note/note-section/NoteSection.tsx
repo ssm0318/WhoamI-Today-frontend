@@ -60,24 +60,27 @@ function NoteSection({ username }: NoteSectionProps) {
           </Typo>
         )}
       </Layout.FlexRow>
-      <Layout.FlexRow w="100%" pv={10} bgColor="WHITE" rounded="8px 8px 0px 0px">
-        <Layout.FlexRow
-          rounded={30}
-          alignItems="center"
-          w="100%"
-          justifyContent="space-between"
-          ph={20}
-          pv={10}
-          outline="LIGHT_GRAY"
-          bgColor="LIGHT"
-          onClick={handleClickNewNote}
-        >
-          <Typo type="body-medium" color="DARK_GRAY">
-            {t('my.whats_on_your_mind', { username: myProfile?.username })}
-          </Typo>
-          <Icon name="chat_media_image" size={24} fill="DARK_GRAY" />
+      {!username && (
+        <Layout.FlexRow w="100%" pv={10} bgColor="WHITE" rounded="8px 8px 0px 0px">
+          <Layout.FlexRow
+            rounded={30}
+            alignItems="center"
+            w="100%"
+            justifyContent="space-between"
+            ph={20}
+            pv={10}
+            outline="LIGHT_GRAY"
+            bgColor="LIGHT"
+            onClick={handleClickNewNote}
+          >
+            <Typo type="body-medium" color="DARK_GRAY">
+              {t('my.whats_on_your_mind', { username: myProfile?.username })}
+            </Typo>
+            <Icon name="chat_media_image" size={24} fill="DARK_GRAY" />
+          </Layout.FlexRow>
         </Layout.FlexRow>
-      </Layout.FlexRow>
+      )}
+
       <Layout.FlexCol w="100%" pr={12}>
         <Layout.FlexCol gap={8} mt={10} w="100%" h="100%">
           {isNotesLoading ? (
