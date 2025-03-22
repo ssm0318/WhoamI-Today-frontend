@@ -70,3 +70,13 @@ export const FlexRow = styled(LayoutBase)`
 export const FlexCol = styled(LayoutBase)`
   flex-direction: column;
 `;
+
+export const ScrollableFlexRow = styled(FlexRow)`
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+`;
