@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Layout, SvgIcon, Typo } from '@design-system';
+import { SvgIcon, Typo } from '@design-system';
+import { PlaceholderWrapper } from './Placeholder';
 
 function PersonaPlaceholder() {
   const [t] = useTranslation('translation');
@@ -11,19 +12,7 @@ function PersonaPlaceholder() {
   };
 
   return (
-    <Layout.FlexRow
-      style={{
-        borderWidth: 1,
-        borderStyle: 'dashed',
-        borderRadius: 8,
-      }}
-      outline="MEDIUM_GRAY"
-      bgColor="LIGHT"
-      pv={4}
-      ph={12}
-      gap={4}
-      onClick={handleClickAddPersona}
-    >
+    <PlaceholderWrapper onClick={handleClickAddPersona}>
       <SvgIcon name="add_default" size={12} />
       <Typo type="label-medium" color="BLACK">
         {t('settings.edit_profile.placeholders.persona.my')}
@@ -34,7 +23,7 @@ function PersonaPlaceholder() {
       <Typo type="label-medium" color="BLACK">
         {t('settings.edit_profile.placeholders.persona.persona')} 🤔
       </Typo>
-    </Layout.FlexRow>
+    </PlaceholderWrapper>
   );
 }
 

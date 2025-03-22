@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Layout, SvgIcon, Typo } from '@design-system';
+import { SvgIcon, Typo } from '@design-system';
+import { PlaceholderWrapper } from './Placeholder';
 
 function PronounPlaceholder() {
   const [t] = useTranslation('translation');
@@ -12,25 +13,12 @@ function PronounPlaceholder() {
   };
 
   return (
-    <Layout.FlexRow
-      style={{
-        borderWidth: 1,
-        borderStyle: 'dashed',
-        borderRadius: 8,
-      }}
-      outline="MEDIUM_GRAY"
-      bgColor="LIGHT"
-      pv={4}
-      ph={12}
-      gap={4}
-      onClick={handleClickAddPronoun}
-    >
+    <PlaceholderWrapper onClick={handleClickAddPronoun}>
       <SvgIcon name="add_default" size={12} />
-
-      <Typo type="label-medium" color="MEDIUM_GRAY">
+      <Typo type="label-medium" color="BLACK">
         {t('settings.edit_profile.placeholders.pronoun')}
       </Typo>
-    </Layout.FlexRow>
+    </PlaceholderWrapper>
   );
 }
 

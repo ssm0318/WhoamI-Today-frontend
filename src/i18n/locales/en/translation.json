@@ -401,7 +401,10 @@
           "my": "My",
           "WIT": "WIT",
           "persona": "Persona"
-        }
+        },
+        "social_battery": "My Social Battery Level",
+        "music": "Your song",
+        "mood": "#mood"
       }
     },
     "daily_noti_setting": {

@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
+import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
+import MusicPlaceholder from '@components/profile/placeholders/MusicPlaceholder';
+import SocialBatteryPlaceholder from '@components/profile/placeholders/SocialBatteryPlaceholder';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { MyProfile } from '@models/api/user';
@@ -56,7 +59,7 @@ function CheckIn({ user }: CheckInProps) {
         {/* check in time */}
         {checkIn?.created_at && (
           <Layout.FlexRow w="100%" justifyContent="flex-start" gap={4}>
-            <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
+            <Typo type="label-medium" numberOfLines={2} color="BLACK">
               {t('checked_in_time', {
                 time: convertTimeDiffByString({
                   now: currentDate,
@@ -70,15 +73,21 @@ function CheckIn({ user }: CheckInProps) {
         <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
           <Layout.FlexRow gap={8} alignItems="center">
             {/* social battery */}
-            {social_battery && <SocialBatteryChip socialBattery={social_battery} />}
+            {social_battery ? (
+              <SocialBatteryChip socialBattery={social_battery} />
+            ) : (
+              <SocialBatteryPlaceholder />
+            )}
             {/* spotify */}
-            {track_id && (
+            {track_id ? (
               <SpotifyMusic
                 track={track_id}
                 useDetailBottomSheet
                 useAlbumImg
                 fontType="label-large"
               />
+            ) : (
+              <MusicPlaceholder />
             )}
           </Layout.FlexRow>
           {/* more */}
@@ -92,7 +101,7 @@ function CheckIn({ user }: CheckInProps) {
           )}
         </Layout.FlexRow>
         <Layout.FlexRow w="100%" alignItems="center" gap={8}>
-          {(!!mood || !!description) && (
+          {!!mood || !!description ? (
             <Layout.FlexRow
               w="100%"
               gap={8}
@@ -119,8 +128,10 @@ function CheckIn({ user }: CheckInProps) {
                 </Typo>
               )}
             </Layout.FlexRow>
+          ) : (
+            <MoodPlaceholder />
           )}
-          {!social_battery && !track_id && isMyPage && (
+          {isMyPage && (track_id || mood || description || social_battery) && (
             <SvgIcon
               name="edit_filled"
               fill="DARK_GRAY"
