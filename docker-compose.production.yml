@@ -1,21 +1,35 @@
 version: '3.8'
 
 services:
-  app:
-    container_name: whoami-frontend
+  frontend-blue:
+    container_name: whoami-frontend-blue
     build:
       context: .
       target: production
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt:ro
-      - frontend_build_volume:/usr/share/nginx/html
+      - frontend_build_volume_blue:/usr/share/nginx/html
+    networks:
+      - whoamitoday-network
+    restart: unless-stopped
+
+  frontend-green:
+    container_name: whoami-frontend-green
+    build:
+      context: .
+      target: production
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - frontend_build_volume_green:/usr/share/nginx/html
     networks:
       - whoamitoday-network
     restart: unless-stopped
 
 volumes:
-  frontend_build_volume: 
-    external: true
+  frontend_build_volume_blue:
+    driver: local
+  frontend_build_volume_green:
+    driver: local
 
 networks:
   whoamitoday-network:

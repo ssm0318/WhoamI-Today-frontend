@@ -1,4 +1,4 @@
-name: Deploy to New Production Server
+name: Deploy Frontend to Production (Blue-Green)
 
 on:
   push:
@@ -17,52 +17,58 @@ jobs:
     - name: Install dependencies
       run: yarn install
 
-    - name: Create key.ts from secrets
-      run: |
-        echo "export const SPOTIFY_CLIENT_ID = '${{ secrets.SPOTIFY_CLIENT_ID }}';" > src/key.ts
-        echo "export const SPOTIFY_CLIENT_SECRET = '${{ secrets.SPOTIFY_CLIENT_SECRET }}';" >> src/key.ts
-        
-    - name: Connect to EC2 and Deploy
+    - name: Get latest code
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.NEW_SERVER_HOST }}
         username: ${{ secrets.NEW_SERVER_USER }}
         key: ${{ secrets.NEW_SERVER_KEY }}
         script: |
-          echo "🚀 최신 코드 Pull 받기"
-          echo "🔄 현재 디렉토리: $(pwd)"
+          echo "🚀 최신 코드 가져오기"
           cd ~/WhoamI-Today-frontend
-          echo "🔄 현재 디렉토리: $(pwd)"
           git pull
 
-          echo "🛑 기존 컨테이너 종료"
-          docker compose -f docker-compose.production.yml down
+    - name: Identify Active Frontend
+      id: check-active
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.NEW_SERVER_HOST }}
+        username: ${{ secrets.NEW_SERVER_USER }}
+        key: ${{ secrets.NEW_SERVER_KEY }}
+        script: |
+          active=$(docker ps --format "{{.Names}}" | grep -E "whoami-frontend-(blue|green)" || true)
+          if [[ "$active" == "whoami-frontend-blue" ]]; then
+            echo "✅ 현재 실행 중인 컨테이너: BLUE"
+            echo "🔄 GREEN으로 전환"
+            echo "TARGET=green" >> $GITHUB_ENV
+          else
+            echo "✅ 현재 실행 중인 컨테이너: GREEN"
+            echo "🔄 BLUE으로 전환"
+            echo "TARGET=blue" >> $GITHUB_ENV
+          fi
 
-          echo "🛑 기존 nginx-reverse-proxy 컨테이너 종료"
-          docker stop nginx-reverse-proxy || true
-          docker rm nginx-reverse-proxy || true
+    - name: Deploy New Frontend Version
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.NEW_SERVER_HOST }}
+        username: ${{ secrets.NEW_SERVER_USER }}
+        key: ${{ secrets.NEW_SERVER_KEY }}
+        script: |
+          echo "🚀 새로운 프론트엔드 배포: whoami-frontend-${TARGET}"
+          docker compose -f docker-compose.production.yml up --build -d whoami-frontend-${TARGET}
+          echo "✅ 배포 완료: ${TARGET} 컨테이너 실행 중!"
 
-          echo "🗑 기존 볼륨 삭제"
-          docker volume rm frontend_build_volume || true
-
-          echo "📂 새로운 볼륨 생성"
-          docker volume create frontend_build_volume
-
-          echo "🔄 컨테이너 재배포 (Build & Run)"
-          docker compose -f docker-compose.production.yml up --build -d
-
-          echo "🏠 홈으로 이동"
-          cd ~
-
-          echo "🔄 nginx-reverse-proxy 재시작"
-          docker run -d \
-            --name nginx-reverse-proxy \
-            --network whoamitoday-network \
-            -p 80:80 -p 443:443 \
-            -v frontend_build_volume:/usr/share/nginx/html \
-            -v /home/ubuntu/nginx_conf:/etc/nginx/conf.d \
-            -v /etc/letsencrypt:/etc/letsencrypt:ro \
-            -v whoami-today-backend_whoami-backend-media:/app/adoorback/adoorback/adoorback/media \
-            nginx:alpine
-
-          echo "✅ 배포 완료!"
+    - name: Cleanup Old Containers
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.NEW_SERVER_HOST }}
+        username: ${{ secrets.NEW_SERVER_USER }}
+        key: ${{ secrets.NEW_SERVER_KEY }}
+        script: |
+          echo "🗑 이전 프론트엔드 컨테이너 정리"
+          if [[ "$TARGET" == "blue" ]]; then
+            docker rm -f whoami-frontend-green || true
+          else
+            docker rm -f whoami-frontend-blue || true
+          fi
+          echo "✅ 이전 컨테이너 삭제 완료!"
