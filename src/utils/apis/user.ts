@@ -309,7 +309,11 @@ export const requestFriend = async ({
       .catch((e: any) => {
         const { error } = e.response.data as { error: string[] };
         if (error) {
-          onError(error[0]);
+          if (error[0].includes('Cannot send friend requests to users using different versions')) {
+            onError(i18n.t('error.friend_request_error_different_group'));
+          } else {
+            onError(error[0]);
+          }
         } else {
           onError(i18n.t('error.temporary_error'));
         }
@@ -329,7 +333,11 @@ export const requestFriend = async ({
       .catch((e: any) => {
         const { error } = e.response.data as { error: string[] };
         if (error) {
-          onError(error[0]);
+          if (error[0].includes('Cannot send friend requests to users using different versions')) {
+            onError(i18n.t('error.friend_request_error_different_group'));
+          } else {
+            onError(error[0]);
+          }
         } else {
           onError(i18n.t('error.temporary_error'));
         }
