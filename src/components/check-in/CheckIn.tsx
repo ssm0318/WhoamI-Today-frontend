@@ -53,6 +53,20 @@ function CheckIn({ user }: CheckInProps) {
   return (
     <Layout.FlexCol w="100%" gap={8} p={16} bgColor="GRAY_14" rounded={8} justifyContent="center">
       <>
+        {/* check in time */}
+        {checkIn?.created_at && (
+          <Layout.FlexRow w="100%" justifyContent="flex-start" gap={4}>
+            <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
+              {t('checked_in_time', {
+                time: convertTimeDiffByString({
+                  now: currentDate,
+                  day: new Date(checkIn?.created_at),
+                }),
+              })}
+            </Typo>
+            {!current_user_read && !isMyPage && <UpdatedLabel />}
+          </Layout.FlexRow>
+        )}
         <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
           <Layout.FlexRow gap={8} alignItems="center">
             {/* social battery */}
@@ -115,21 +129,6 @@ function CheckIn({ user }: CheckInProps) {
             />
           )}
         </Layout.FlexRow>
-
-        {/* check in time */}
-        {checkIn?.created_at && (
-          <Layout.FlexRow w="100%" justifyContent="flex-end" gap={4}>
-            <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
-              {t('checked_in_time', {
-                time: convertTimeDiffByString({
-                  now: currentDate,
-                  day: new Date(checkIn?.created_at),
-                }),
-              })}
-            </Typo>
-            {!current_user_read && !isMyPage && <UpdatedLabel />}
-          </Layout.FlexRow>
-        )}
       </>
     </Layout.FlexCol>
   );

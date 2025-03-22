@@ -219,7 +219,7 @@
     },
     "check_in": {
       "new_check_in": "새로운 상태 추가하기",
-      "checked_in_time": "{{time}}에 업데이트됨"
+      "checked_in_time": "최근 상태: {{time}}"
     },
     "connection": {
       "friend": "친구",
@@ -390,7 +390,16 @@
       },
       "error": {
         "read_file_error": "이미지를 불러오는 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-      }
+      },
+      "placeholders": {
+        "bio": "소개",
+        "pronoun": "대명사",
+        "persona": {
+          "my": "나의",
+          "WIT": "WIT",
+          "persona": "페르소나"
+        }
+      } 
     },
     "daily_noti_setting": {
       "title": "데일리 알림 설정",

@@ -222,7 +222,7 @@
     },
     "check_in": {
       "new_check_in": "New Status",
-      "checked_in_time": "Updated at {{time}}"
+      "checked_in_time": "Most Recent Check-in: {{time}}"
     },
     "connection": {
       "friend": "Friends",
@@ -393,6 +393,15 @@
       },
       "error": {
         "read_file_error": "Error uploading image. Please try again later."
+      },
+      "placeholders": {
+        "bio": "Bio",
+        "pronoun": "Pronoun",
+        "persona": {
+          "my": "My",
+          "WIT": "WIT",
+          "persona": "Persona"
+        }
       }
     },
     "daily_noti_setting": {

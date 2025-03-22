@@ -5,7 +5,7 @@ import FriendStatus from '@components/_common/friend-status/FriendStatus';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
-import { Layout, Typo } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
 import useInfiniteFetchUserFriends from '@hooks/useInfiniteFetchUserFriends';
@@ -19,6 +19,7 @@ import CheckInSection from '../check-in/CheckIn';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
 import PersonaChip from './persona/PersonaChip';
 import BioPlaceholder from './placeholders/BioPlaceholder';
+import PersonaPlaceholder from './placeholders/PersonaPlaceholder';
 import PronounPlaceholder from './placeholders/PronounPlaceholder';
 
 interface ProfileProps {
@@ -37,9 +38,9 @@ function Profile({ user }: ProfileProps) {
   const { username } = useParams();
   const navigate = useNavigate();
 
-  // const handleClickEditProfile = () => {
-  //   return navigate('/settings/edit-profile');
-  // };
+  const handleClickEditProfile = () => {
+    return navigate('/settings/edit-profile');
+  };
 
   const { allFriends } = useInfiniteFetchFriends();
   const { allFriends: friendFriends } = useInfiniteFetchUserFriends(username);
@@ -121,14 +122,17 @@ function Profile({ user }: ProfileProps) {
               )}
             </Layout.FlexRow>
             {/* edit icon */}
-            {/* {isMyPage && (
-              <SvgIcon
-                name="edit_filled"
-                fill="DARK_GRAY"
-                size={24}
-                onClick={handleClickEditProfile}
-              />
-            )} */}
+            {isMyPage &&
+              (myProfile?.bio ||
+                myProfile?.pronouns ||
+                (featureFlags?.persona && myProfile?.persona)) && (
+                <SvgIcon
+                  name="edit_filled"
+                  fill="DARK_GRAY"
+                  size={24}
+                  onClick={handleClickEditProfile}
+                />
+              )}
           </Layout.FlexRow>
           {/* pronouns */}
           {isMyPage ? (
@@ -184,12 +188,17 @@ function Profile({ user }: ProfileProps) {
           )}
         </Layout.FlexCol>
       </Layout.FlexRow>
-      {featureFlags?.persona && (isMyPage || (user && areFriends(user))) && (
+      {featureFlags?.persona &&
+      (isMyPage || (user && areFriends(user))) &&
+      user?.persona &&
+      user?.persona.length > 0 ? (
         <Layout.ScrollableFlexRow w="100%" gap={8}>
           {user?.persona.map((persona) => (
             <PersonaChip key={persona} persona={persona} />
           ))}
         </Layout.ScrollableFlexRow>
+      ) : (
+        <PersonaPlaceholder />
       )}
       {!isMyPage && user && (
         <>
