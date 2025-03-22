@@ -125,7 +125,7 @@ function Profile({ user }: ProfileProps) {
             {isMyPage &&
               (myProfile?.bio ||
                 myProfile?.pronouns ||
-                (featureFlags?.persona && myProfile?.persona)) && (
+                (featureFlags?.persona && !!myProfile?.persona.length)) && (
                 <SvgIcon
                   name="edit_filled"
                   fill="DARK_GRAY"
