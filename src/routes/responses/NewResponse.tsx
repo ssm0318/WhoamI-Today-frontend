@@ -160,9 +160,7 @@ function NewResponse() {
         {question.state === 'hasValue' && (
           <>
             <TextArea
-              placeholder={`${t('question.response.what_is_your_response')}\n\n${t(
-                'question.response.content_restriction',
-              )}`}
+              placeholder={t('question.response.what_is_your_response') || ''}
               value={newResponse || ''}
               onChange={handleChangeResponse}
             />
@@ -204,6 +202,11 @@ function NewResponse() {
               closeBottomSheet={closeEditConnectionsModal}
             />
           )}
+        </FlexRow>
+        <FlexRow w="100%" justifyContent="flex-end" pt={10}>
+          <Typo type="label-medium" color="MEDIUM_GRAY" mt={8}>
+            {t('question.response.content_restriction')}
+          </Typo>
         </FlexRow>
       </LayoutBase>
     </MainContainer>
