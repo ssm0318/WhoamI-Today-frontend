@@ -64,9 +64,13 @@ function ResponseSection({ username }: ResponseSectionProps) {
   return (
     <>
       <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
-        <Typo type="title-large" color="BLACK">
-          {t('responses.title')}
-        </Typo>
+        <Layout.FlexRow gap={20} ph="default">
+          <img width="20px" src="/whoami-logo.svg" alt="who_am_i" />
+          <Typo type="title-large" color="PRIMARY">
+            {t('responses.title')}
+          </Typo>
+        </Layout.FlexRow>
+
         {isMoreButtonVisible && <Icon onClick={handleClickMore} name="arrow_right" />}
       </Layout.FlexRow>
       <S.ResponseSectionWrapper w="100%" pr={12}>

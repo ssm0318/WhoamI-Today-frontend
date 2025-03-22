@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import Icon from '@components/_common/icon/Icon';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import { Layout, Typo } from '@design-system';
@@ -19,7 +20,12 @@ type NoteSectionProps = {
 
 function NoteSection({ username }: NoteSectionProps) {
   const [t] = useTranslation('translation');
-  const { featureFlags } = useBoundStore(UserSelector);
+  const { featureFlags, myProfile } = useBoundStore(UserSelector);
+  const navigate = useNavigate();
+
+  const handleClickNewNote = () => {
+    return navigate('/notes/new');
+  };
 
   const {
     targetRef,
@@ -47,12 +53,30 @@ function NoteSection({ username }: NoteSectionProps) {
 
   return (
     <>
-      <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
+      <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" mt="default">
         {featureFlags?.friendList && (
-          <Typo type="title-large" color="BLACK">
+          <Typo type="title-large" color="PRIMARY" ml={8}>
             {t('notes.title')}
           </Typo>
         )}
+      </Layout.FlexRow>
+      <Layout.FlexRow w="100%" pv={10} bgColor="WHITE" rounded="8px 8px 0px 0px">
+        <Layout.FlexRow
+          rounded={30}
+          alignItems="center"
+          w="100%"
+          justifyContent="space-between"
+          ph={20}
+          pv={10}
+          outline="LIGHT_GRAY"
+          bgColor="LIGHT"
+          onClick={handleClickNewNote}
+        >
+          <Typo type="body-medium" color="DARK_GRAY">
+            {t('my.whats_on_your_mind', { username: myProfile?.username })}
+          </Typo>
+          <Icon name="chat_media_image" size={24} fill="DARK_GRAY" />
+        </Layout.FlexRow>
       </Layout.FlexRow>
       <Layout.FlexCol w="100%" pr={12}>
         <Layout.FlexCol gap={8} mt={10} w="100%" h="100%">
