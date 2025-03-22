@@ -23,8 +23,8 @@ function ProfileImage({
   return (
     <NonShrinkWrapper onClick={onClick}>
       {!!updated && (
-        <Layout.Absolute t={0} l={size / 4} r={size / 4}>
-          <UpdatedLabel />
+        <Layout.Absolute t={0} l={size / 4 + 2} r={size / 4}>
+          <UpdatedLabel fontSize={8} />
         </Layout.Absolute>
       )}
       <Layout.LayoutBase w={size} h={size} rounded={size / 2} className={className}>
