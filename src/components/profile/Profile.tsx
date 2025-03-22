@@ -134,6 +134,14 @@ function Profile({ user }: ProfileProps) {
                 />
               )}
           </Layout.FlexRow>
+          {/* 친구 수 */}
+          {featureFlags?.friendFeed && (isMyPage || (user && areFriends(user))) && (
+            <button type="button" onClick={handleClickFriendList}>
+              <Typo type="label-medium" color="DARK_GRAY" underline>
+                {isMyPage ? allFriends?.[0].count : friendFriends?.[0].count} {t('friends')}
+              </Typo>
+            </button>
+          )}
           {/* pronouns */}
           {isMyPage ? (
             !myProfile?.pronouns ? (
@@ -158,14 +166,7 @@ function Profile({ user }: ProfileProps) {
               </Layout.FlexRow>
             )
           )}
-          {/* 친구 수 */}
-          {featureFlags?.friendFeed && (isMyPage || (user && areFriends(user))) && (
-            <button type="button" onClick={handleClickFriendList}>
-              <Typo type="label-medium" color="DARK_GRAY" underline>
-                {isMyPage ? allFriends?.[0].count : friendFriends?.[0].count} {t('friends')}
-              </Typo>
-            </button>
-          )}
+
           {/* bio */}
           {isMyPage ? (
             !myProfile?.bio ? (
@@ -188,18 +189,20 @@ function Profile({ user }: ProfileProps) {
           )}
         </Layout.FlexCol>
       </Layout.FlexRow>
-      {featureFlags?.persona &&
-      (isMyPage || (user && areFriends(user))) &&
-      user?.persona &&
-      user?.persona.length > 0 ? (
-        <Layout.ScrollableFlexRow w="100%" gap={8}>
-          {user?.persona.map((persona) => (
-            <PersonaChip key={persona} persona={persona} />
-          ))}
-        </Layout.ScrollableFlexRow>
-      ) : (
-        isMyPage && <PersonaPlaceholder />
+      {featureFlags?.persona && (
+        <Layout.FlexRow w="100%">
+          {user && areFriends(user) && user?.persona && user?.persona.length > 0 ? (
+            <Layout.ScrollableFlexRow w="100%" gap={8}>
+              {user?.persona.map((persona) => (
+                <PersonaChip key={persona} persona={persona} />
+              ))}
+            </Layout.ScrollableFlexRow>
+          ) : (
+            isMyPage && <PersonaPlaceholder />
+          )}
+        </Layout.FlexRow>
       )}
+
       {!isMyPage && user && (
         <>
           {!isMyProfile(user) && !areFriends(user) && (
