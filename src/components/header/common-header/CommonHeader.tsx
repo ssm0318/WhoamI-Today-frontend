@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from '@components/_common/icon/Icon';
 import IconNudge from '@components/_common/icon-nudge/IconNudge';
 import { Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
+import { getMe } from '@utils/apis/my';
 import { Noti } from '../Header.styled';
 import MainHeader from '../MainHeader';
 import SideMenu from '../side-menu/SideMenu';
@@ -20,6 +21,11 @@ function CommonHeader({ title }: CommonHeaderProps) {
   const handleClickHamburger = () => {
     setShowSideMenu(true);
   };
+
+  // unread_noti_cnt 갱신을 위해 탭 변경시 getMe 실행
+  useEffect(() => {
+    getMe();
+  }, [title]);
 
   return (
     <>
