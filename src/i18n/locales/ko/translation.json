@@ -218,6 +218,7 @@
       "others": "{{firstUserName}}와(과) {{secondUserName}}, 그 외 {{others}}명의 공통친구"
     },
     "check_in": {
+      "new_check_in": "새로운 상태 추가하기",
       "checked_in_time": "{{time}}에 업데이트됨"
     },
     "connection": {
