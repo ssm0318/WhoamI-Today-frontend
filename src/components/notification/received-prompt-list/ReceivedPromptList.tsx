@@ -26,7 +26,7 @@ export default function ReceivedPromptList({
         </Layout.FlexRow>
         <Layout.FlexCol w="100%" gap={12}>
           {responseRequests.map((n) => (
-            <ReceivedPromptItem responseRequest={n} currDate={currDate} />
+            <ReceivedPromptItem key={n.id} responseRequest={n} currDate={currDate} />
           ))}
         </Layout.FlexCol>
       </Layout.FlexCol>

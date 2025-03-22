@@ -15,6 +15,7 @@ export interface User {
   persona: Persona[];
   has_changed_pw?: boolean;
   unread_noti_cnt?: number;
+  connection_status: Connection | null;
 }
 
 export interface UserProfile extends User {
@@ -24,7 +25,6 @@ export interface UserProfile extends User {
   check_in: CheckInBase;
   mutuals: User[];
   is_favorite: boolean;
-  connection_status: Connection | null;
 }
 
 export const areFriends = (user: User | UserProfile): user is UserProfile =>

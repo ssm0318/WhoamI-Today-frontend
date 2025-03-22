@@ -5,12 +5,13 @@ import PromptCard from '@components/_common/prompt/PromptCard';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import { DEFAULT_MARGIN } from '@constants/layout';
-import { Layout } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
-import { Question } from '@models/post';
+import { Question, QuestionGroup } from '@models/post';
 import { getMe } from '@utils/apis/my';
 import { getAllQuestions } from '@utils/apis/question';
+import { getFormattedDate } from '@utils/timeHelpers';
 import { AllQuestionsLoader, PromptCardLoader } from 'src/routes/questions/AllQuestionsLoader';
 import { MainScrollContainer } from './Root';
 
@@ -19,10 +20,10 @@ function AllQuestions() {
 
   const {
     targetRef,
-    data: questions,
+    data: questionGroups,
     isLoadingMore,
     isLoading,
-  } = useSWRInfiniteScroll<Question>({ key: '/qna/questions/' });
+  } = useSWRInfiniteScroll<QuestionGroup>({ key: '/qna/questions/' });
 
   const { scrollRef } = useRestoreScrollPosition('questionsPage');
 
@@ -42,11 +43,29 @@ function AllQuestions() {
         >
           {isLoading ? (
             <AllQuestionsLoader />
-          ) : questions?.[0] && questions[0].count > 0 ? (
+          ) : questionGroups?.[0] && questionGroups[0].count > 0 ? (
             <>
-              {questions.map(({ results }) =>
-                results?.map((question) => (
-                  <PromptCard question={question} key={question.id} widthMode="full" />
+              {questionGroups.map(({ results }) =>
+                results?.map((questionGroup) => (
+                  <Layout.FlexCol key={questionGroup.date} w="100%">
+                    {/* Date header */}
+                    <Layout.FlexRow justifyContent="flex-start" w="100%" mb={10}>
+                      <Typo type="body-large" color="BLACK" bold>
+                        {getFormattedDate(questionGroup.date)}
+                      </Typo>
+                    </Layout.FlexRow>
+                    {/* Questions for this date */}
+                    <Layout.FlexCol w="100%" gap={10}>
+                      {questionGroup.questions.map((question: Question) => (
+                        <PromptCard
+                          key={question.id}
+                          id={question.id}
+                          content={question.content}
+                          widthMode="full"
+                        />
+                      ))}
+                    </Layout.FlexCol>
+                  </Layout.FlexCol>
                 )),
               )}
               <div ref={targetRef} />

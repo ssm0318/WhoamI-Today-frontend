@@ -1,4 +1,5 @@
 import { MouseEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -7,10 +8,9 @@ import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { UpdateFriendListParams } from '@hooks/useInfiniteFetchFriends';
-import { UpdatedProfile } from '@models/api/friends';
+import { Connection, UpdatedProfile } from '@models/api/friends';
 import { addFriendToFavorite, deleteFavorite, hideFriend } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
-import UpdatedLabel from '../updated-label/UpdatedLabel';
 import { StyledProfileArea, StyledUpdatedFriendItem } from './UpdatedFriendItem.styled';
 
 interface Props {
@@ -29,7 +29,10 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
     unread_ping_count,
     track_id,
     description,
+    connection_status,
   } = user;
+
+  const [t] = useTranslation('translation', { keyPrefix: 'friend' });
 
   const navigate = useNavigate();
   const handleClickProfile = () => {
@@ -75,12 +78,12 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
       rightContent={[
         <StyledSwipeButton key="hide" backgroundColor="DARK_GRAY" onClick={handleHide}>
           <Typo type="body-medium" color="WHITE" textAlign="center">
-            Hide
+            {t('hide')}
           </Typo>
         </StyledSwipeButton>,
         <StyledSwipeButton key="unfriend" backgroundColor="ERROR" onClick={handleUnfriend}>
           <Typo type="body-medium" color="WHITE" textAlign="center">
-            Unfriend
+            {t('unfriend')}
           </Typo>
         </StyledSwipeButton>,
       ]}
@@ -115,13 +118,30 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
         >
           <StyledProfileArea>
             <Layout.FlexRow alignItems="center" gap={7}>
-              <ProfileImage imageUrl={profile_image} username={username} size={44} />
+              <ProfileImage
+                imageUrl={profile_image}
+                username={username}
+                size={44}
+                updated={!current_user_read}
+              />
               <Layout.FlexCol>
                 <Layout.FlexRow gap={4} alignItems="center">
                   <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 100 }}>
                     {username}
                   </Typo>
-                  {!current_user_read && <UpdatedLabel />}
+                  <Layout.FlexRow
+                    bgColor="SECONDARY"
+                    rounded={4}
+                    gap={5}
+                    ph={4}
+                    pv={2}
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Typo type="label-small" color="BLACK">
+                      {connection_status === Connection.FRIEND ? t('friend') : t('close_friend')}
+                    </Typo>
+                  </Layout.FlexRow>
                 </Layout.FlexRow>
                 {description && (
                   <Typo type="label-medium" color="MEDIUM_GRAY" numberOfLines={1}>

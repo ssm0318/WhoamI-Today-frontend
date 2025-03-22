@@ -13,6 +13,11 @@ export interface ShareSettings {
   share_anonymously: boolean;
 }
 
+export interface QuestionGroup {
+  date: string;
+  questions: Question[];
+}
+
 export interface Question {
   type: 'Question';
   id: number;

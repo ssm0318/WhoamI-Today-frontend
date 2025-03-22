@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { PaginationResponse } from '@models/api/common';
 import { ResponseQuestionRequestParams } from '@models/api/question';
-import { DailyQuestion, Question, Response } from '@models/post';
+import { DailyQuestion, Question, QuestionGroup, Response } from '@models/post';
 import axios from './axios';
 
 // GET today's questions
@@ -13,7 +13,7 @@ export const getTodayQuestions = async () => {
 // GET all questions (pagination)
 export const getAllQuestions = async (page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
-  const { data } = await axios.get<PaginationResponse<Question[]>>(
+  const { data } = await axios.get<PaginationResponse<QuestionGroup[]>>(
     `/qna/questions/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;

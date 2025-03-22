@@ -2,19 +2,18 @@ import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import { Layout, Typo } from '@design-system';
-import { DailyQuestion, Question } from '@models/post';
 import ProfileImage from '../profile-image/ProfileImage';
 import { StyledPromptCard, StyledPromptCardButtons } from './PromptCard.styled';
 import SendPromptModal from './SendPromptModal';
 
 interface PromptCardProps {
-  question: Question | DailyQuestion;
   widthMode?: 'full' | 'normal';
+  id: number;
+  content: string;
 }
-function PromptCard({ question, widthMode = 'normal' }: PromptCardProps) {
+function PromptCard({ id, content, widthMode = 'normal' }: PromptCardProps) {
   const navigate = useNavigate();
 
-  const { id, content } = question;
   const [sendPromptModalVisible, setSendPromptBottomModalVisible] = useState(false);
   const handleClickRespond = () => {
     navigate(`/questions/${id}/new`);
@@ -45,7 +44,7 @@ function PromptCard({ question, widthMode = 'normal' }: PromptCardProps) {
         <SendPromptModal
           visible={sendPromptModalVisible}
           onClose={onCloseSendBottomModal}
-          questionId={question.id}
+          questionId={id}
         />
       )}
     </>

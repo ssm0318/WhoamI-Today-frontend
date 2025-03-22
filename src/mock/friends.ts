@@ -1,3 +1,4 @@
+import { Connection } from '@models/api/friends';
 import { Persona } from '@models/persona';
 import { User } from '@models/user';
 
@@ -12,6 +13,7 @@ export const friendList: User[] = [
     bio: 'test1',
     pronouns: 'test1',
     persona: [Persona.lurker],
+    connection_status: Connection.FRIEND,
   },
   {
     id: 2,
@@ -23,6 +25,7 @@ export const friendList: User[] = [
     bio: 'test2',
     pronouns: 'test2',
     persona: [Persona.content_creator],
+    connection_status: Connection.FRIEND,
   },
   {
     id: 3,
@@ -34,6 +37,7 @@ export const friendList: User[] = [
     bio: 'test3',
     pronouns: 'test3',
     persona: [Persona.private_reactor],
+    connection_status: Connection.FRIEND,
   },
   {
     id: 4,
@@ -45,6 +49,7 @@ export const friendList: User[] = [
     bio: 'test4',
     pronouns: 'test4',
     persona: [Persona.public_commenter],
+    connection_status: Connection.FRIEND,
   },
   {
     id: 5,
@@ -55,6 +60,7 @@ export const friendList: User[] = [
     bio: 'test5',
     pronouns: 'test5',
     persona: [Persona.instant_responder],
+    connection_status: Connection.FRIEND,
   },
   {
     id: 6,
@@ -65,6 +71,7 @@ export const friendList: User[] = [
     bio: 'test6',
     pronouns: 'test6',
     persona: [Persona.takes_my_time],
+    connection_status: Connection.FRIEND,
   },
   {
     id: 7,
@@ -75,6 +82,7 @@ export const friendList: User[] = [
     bio: 'test7',
     pronouns: 'test7',
     persona: [Persona.daily_scroller],
+    connection_status: Connection.FRIEND,
   },
   {
     id: 8,
@@ -85,5 +93,6 @@ export const friendList: User[] = [
     bio: 'test8',
     pronouns: 'test8',
     persona: [Persona.occasional_checker],
+    connection_status: Connection.FRIEND,
   },
 ];
