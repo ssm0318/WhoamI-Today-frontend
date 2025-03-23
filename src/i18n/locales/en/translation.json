@@ -1,749 +1,749 @@
 {
-  "friend": {
-    "hide": "Hide",
-    "unfriend": "Unfriend",
-    "friend": "Friend",
-    "close_friend": "Close Friend"
-  },
-  "common": {
-    "done": "Done",
-    "cancel": "Cancel"
-  },
-  "intro": {
-    "sign_in": "Sign In",
-    "sign_up": "Sign Up"
-  },
-  "research_intro": {
-    "title": "University of Washington Social Media for Youth Research",
-    "description_before_bold": "The current version of the app is still in beta and is ",
-    "description_bold": "only available to participants in our research study",
-    "description_after_bold": ". If you're interested, please use the links below to sign up or log in.",
-    "has_account": "I already signed up and received my account information.",
-    "has_not_account": "Great, I'd like to sign up for the study",
-    "someting_else_title": "Something else?",
-    "someting_else_description": "If you signed up for the study but haven't received your account information yet, please allow a couple of days for us to get back to you. If you still don't hear from us, feel free to reach out via:"
-  },
-  "sign_in": {
-    "username_or_email": "Username or Email",
-    "password": "Password",
-    "sign_in": "Sign In",
-    "forgot_password": "Forgot password",
-    "sign_up": "Sign Up"
-  },
-  "forgot_password": {
-    "title": "Forgot Password",
-    "email": "Email",
-    "description": "We'll email you password reset instructions.",
-    "email_guide": "Enter the email address you used to register.",
-    "confirm": "Reset Password",
-    "email_sent_success": "Email sent succesfully 🎉",
-    "email_sent_failed": "Failed to send email"
-  },
-  "sign_up": {
-    "create_an_account": "Create an Account",
-    "email": "Email",
-    "email_guide": "You will need to verify your email later.",
-    "password": "Password",
-    "username": "Username",
-    "add": "Add",
-    "skip": "Skip",
-    "next": "Next",
-    "crop_picture": "Crop Image",
-    "password_constraints": "Password must be at least 8 characters and include uppercase, lowercase, numbers, and symbols.",
-    "research_participation_consent_form": "Research Participation Consent Form",
-    "research_desc": "<0>WhoAmI Today is a non-profit service developed by a group of researchers at the University of Washington to make social media more aligned with the needs of adolescents. If you agree to the<1>privacy policy/consent form</1>, you agree to participating in our research, which includes the (aggregated and deidentified) analysis of your data.</0>",
-    "agree_to_research": "Agree (optional, unless you are currently participating in the research led by Univ. of Washington research team).",
-    "learn_more_about_whoami_today": "Learn more about WhoAmI Today",
-    "age": "Age",
-    "gender": "Gender",
-    "female": "Female",
-    "male": "Male",
-    "transgender": "Transgender",
-    "non_binary": "Non-binary/Non-conforming",
-    "dont_want_to_respond": "Don't want to respond",
-    "parental_permission": "Parental Permission",
-    "need_parental_permission_error": "Users under 18 need parental permission",
-    "yes": "Yes",
-    "no": "No",
-    "i_agree_to_provide_consent_to_my_child's_participation_in_the_research": "I agree to provide consent to my child's participation in the research.",
-    "printing_your_name_below": "Printing your name below will act as a signature to consent to the information above.",
-    "date_of_signature": "Date of Signature",
-    "data_security_guide": "The data we collect will be confidential and will not be stored with your name. All data and audio and recordings will be stored securely.",
-    "add_a_profile_image": "Add Profile Image",
-    "noti_on_desc": "Allow notifications from WhoAmI?",
-    "noti_time_setting_desc_1": "We'll send out daily reminders to post.",
-    "noti_time_setting_desc_2": "When do you want to be notified?",
-    "noti_time_default_desc": "Default notification time: 4PM",
-    "complete": "Complete",
-    "error": "A temporary error occurred. Please try again.",
-    "success": "Signup complete 🎉"
-  },
-  "nav_tab": {
-    "friends": "Friends",
-    "my": "MY",
-    "chats": "Chats",
-    "questions": "Questions"
-  },
-  "header": {
-    "my": "My Profile",
-    "questions": "Questions"
-  },
-  "home": {
-    "moment": {
-      "todays_moments": "Today's Moments",
-      "add_moment_description": "Add <0/> of the day",
-      "already_posted": "You've posted for today."
+    "friend": {
+        "hide": "Hide",
+        "unfriend": "Unfriend",
+        "friend": "Friend",
+        "close_friend": "Close Friend"
     },
-    "question": {
-      "todays_questions": "Today's Questions",
-      "see_all": "See More",
-      "all_questions": "All Questions"
+    "common": {
+        "done": "Done",
+        "cancel": "Cancel"
+    },
+    "intro": {
+        "sign_in": "Sign In",
+        "sign_up": "Sign Up"
+    },
+    "research_intro": {
+        "title": "University of Washington Social Media for Youth Research",
+        "description_before_bold": "The current version of the app is still in beta and is ",
+        "description_bold": "only available to participants in our research study",
+        "description_after_bold": ". If you're interested, please use the links below to sign up or log in.",
+        "has_account": "I already signed up and received my account information.",
+        "has_not_account": "Great, I'd like to sign up for the study",
+        "someting_else_title": "Something else?",
+        "someting_else_description": "If you signed up for the study but haven't received your account information yet, please allow a couple of days for us to get back to you. If you still don't hear from us, feel free to reach out via:"
+    },
+    "sign_in": {
+        "username_or_email": "Username or Email",
+        "password": "Password",
+        "sign_in": "Sign In",
+        "forgot_password": "Forgot password",
+        "sign_up": "Sign Up"
+    },
+    "forgot_password": {
+        "title": "Forgot Password",
+        "email": "Email",
+        "description": "We'll email you password reset instructions.",
+        "email_guide": "Enter the email address you used to register.",
+        "confirm": "Reset Password",
+        "email_sent_success": "Email sent succesfully 🎉",
+        "email_sent_failed": "Failed to send email"
+    },
+    "sign_up": {
+        "create_an_account": "Create an Account",
+        "email": "Email",
+        "email_guide": "You will need to verify your email later.",
+        "password": "Password",
+        "username": "Username",
+        "add": "Add",
+        "skip": "Skip",
+        "next": "Next",
+        "crop_picture": "Crop Image",
+        "password_constraints": "Password must be at least 8 characters and include uppercase, lowercase, numbers, and symbols.",
+        "research_participation_consent_form": "Research Participation Consent Form",
+        "research_desc": "<0>WhoAmI Today is a non-profit service developed by a group of researchers at the University of Washington to make social media more aligned with the needs of adolescents. If you agree to the<1>privacy policy/consent form</1>, you agree to participating in our research, which includes the (aggregated and deidentified) analysis of your data.</0>",
+        "agree_to_research": "Agree (optional, unless you are currently participating in the research led by Univ. of Washington research team).",
+        "learn_more_about_whoami_today": "Learn more about WhoAmI Today",
+        "age": "Age",
+        "gender": "Gender",
+        "female": "Female",
+        "male": "Male",
+        "transgender": "Transgender",
+        "non_binary": "Non-binary/Non-conforming",
+        "dont_want_to_respond": "Don't want to respond",
+        "parental_permission": "Parental Permission",
+        "need_parental_permission_error": "Users under 18 need parental permission",
+        "yes": "Yes",
+        "no": "No",
+        "i_agree_to_provide_consent_to_my_child's_participation_in_the_research": "I agree to provide consent to my child's participation in the research.",
+        "printing_your_name_below": "Printing your name below will act as a signature to consent to the information above.",
+        "date_of_signature": "Date of Signature",
+        "data_security_guide": "The data we collect will be confidential and will not be stored with your name. All data and audio and recordings will be stored securely.",
+        "add_a_profile_image": "Add Profile Image",
+        "noti_on_desc": "Allow notifications from WhoAmI?",
+        "noti_time_setting_desc_1": "We'll send out daily reminders to post.",
+        "noti_time_setting_desc_2": "When do you want to be notified?",
+        "noti_time_default_desc": "Default notification time: 4PM",
+        "complete": "Complete",
+        "error": "A temporary error occurred. Please try again.",
+        "success": "Signup complete 🎉"
+    },
+    "nav_tab": {
+        "friends": "Friends",
+        "my": "MY",
+        "chats": "Chats",
+        "questions": "Questions"
     },
     "header": {
-      "side_menu": {
-        "explore_friends": "Add Friends",
-        "questions": "Questions",
-        "settings": "Settings",
-        "inquiry": "Contact & Inquiries",
-        "kakao_inquiry": "Kakaotalk 1:1 Open Chat",
-        "discord_inquiry": "Discord",
-        "instagram_inquiry": "Instagram",
-        "text_message_inquiry": "Text"
-      },
-      "bottom_sheet": {
-        "title": "Create",
-        "check-in": "Status",
-        "note": "Post",
-        "prompts": "Daily Questions"
-      }
-    }
-  },
-  "question": {
-    "response": {
-      "placeholder": "Write your response here.",
-      "post": "Post",
-      "complete": "Your response has been posted.",
-      "send_question_to_friends_now": "Send this question to friends?",
-      "send_question": "Send to Friends",
-      "new_response": "New Response",
-      "edit_response": "Edit Response",
-      "cancel": "Cancel",
-      "what_is_your_response": "What's your response?",
-      "content_restriction": "⚠️ Inappropriate or offensive content may be restricted.",
-      "posting": "Posting...",
-      "posted": "Posted. 🎉",
-      "edited": "Updated. 🎉",
-      "view": "View"
+        "my": "My Profile",
+        "questions": "Questions"
     },
-    "send": {
-      "ask": "Ask",
-      "skip": "Skip",
-      "complete": "Question sent successfully 🎉",
-      "ok": "OK"
-    }
-  },
-  "calendar": {
-    "title_format": "MMMM yyyy",
-    "weeks_one": "{{count}}st week",
-    "weeks_two": "{{count}}nd week",
-    "weeks_few": "{{count}}rd week",
-    "weeks_other": "{{count}}th week",
-    "table_header": {
-      "sun": "SUN",
-      "mon": "MON",
-      "tue": "TUE",
-      "wed": "WED",
-      "thu": "THU",
-      "fri": "FRI",
-      "sat": "SAT"
-    }
-  },
-  "moment_upload": {
-    "todays_moments": "Today's Moments",
-    "mood_placeholder": "Express your mood with emojis",
-    "photo_placeholder": "Show your day with a photo",
-    "photo_disabled": "Use mobile to upload a photo",
-    "already_photo_uploaded": "You've uploaded a photo for today.",
-    "description_placeholder": "Describe your day with words",
-    "skip": "Skip",
-    "post": "Post",
-    "post_complete": "Your moment have been posted.",
-    "view_friends_moment": "View Friends' Moments"
-  },
-  "my_detail": {
-    "title_format": "d/M/yy (E)"
-  },
-  "delete_alert": {
-    "content": "Are you sure you want to delete this?",
-    "cancel_btn": "Cancel",
-    "confirm_btn": "Delete"
-  },
-  "user_page": {
-    "this_user_do_not_exist": "User Not Found :(",
-    "request_a_friend": "Add Friend",
-    "are_you_sure_you_want_to_delete_this_friend": "Remove this friend?",
-    "more_modal": {
-      "menu": {
-        "add_to_favorite": "Add to Favorites",
-        "remove_from_favorite": "Remove from Favorites",
-        "unfriend": "Unfriend",
-        "block": "Block",
-        "report": "Report"
-      },
-      "alert": {
-        "unfriend": {
-          "title": "Unfriend {{username}}?",
-          "content": "You'll need to send a new friend request if you change your mind."
+    "home": {
+        "moment": {
+            "todays_moments": "Today's Moments",
+            "add_moment_description": "Add <0/> of the day",
+            "already_posted": "You've posted for today."
         },
-        "block": {
-          "title": "Block {{username}}?",
-          "content": "You won't see any posts or comments from this account."
+        "question": {
+            "todays_questions": "Today's Questions",
+            "see_all": "See More",
+            "all_questions": "All Questions"
         },
-        "report": {
-          "title": "Report {{username}}?",
-          "content": "Reporting will also automatically block this account.",
-          "success_title": "{{username}} reported",
-          "error_title": "A temporary error occurred. Please try again later."
-        },
-        "cancel": "Cancel"
-      }
-    },
-    "friend": "Friend",
-    "friends": "Friends",
-    "accept": "Accept",
-    "reject": "Reject",
-    "requested": "Requested",
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "mutual_friends": {
-      "one": "1 mutual friend: {{firstUserName}}",
-      "two": "2 mutual friends: {{firstUserName}} and {{secondUserName}}",
-      "others": "{{firstUserName}}, {{secondUserName}}, and {{others}} more"
-    },
-    "check_in": {
-      "new_check_in": "New Status",
-      "title": "Most Recent Check-In",
-      "checked_in_time": "Updated at {{time}}"
-    },
-    "connection": {
-      "friend": "Friends",
-      "close_friend": "Close Friends"
-    },
-    "edit_connections": {
-      "title": "Friendship Type",
-      "choice": "Select the friendship type you want to change.",
-      "save": "Save",
-      "check_box": "Apply this change to past posts",
-      "toast": {
-        "success": "Friendship type updated successfully 🎉",
-        "error": "A temporary error occurred. Please try again."
-      }
-    }
-  },
-  "notes": {
-    "notes": "{{name}}'s Posts",
-    "comments": "Comments",
-    "likes": "Likes",
-    "title": "Posts",
-    "new_note": "New Post",
-    "note_header": {
-      "new_note": "New Post",
-      "edit_note": "Edit Post"
-    },
-    "posted": "Posted successfully 🎉",
-    "updated": "Updated successfully 🎉",
-    "temporary_error": "A temporary error occurred. Please try again later.",
-    "too_large_file_error": "Image too large. Please resize and try again.",
-    "view": "View",
-    "cancel": "Cancel",
-    "post": "Post",
-    "whats_on_your_mind": "What's on your mind?",
-    "content_restriction": "⚠️ Inappropriate or offensive content may be restricted.",
-    "crop_photo": "Crop Photo",
-    "done": "Done",
-    "more": "More",
-    "edited": "Edited",
-    "confirm": "Confirm",
-    "friend": "Friends",
-    "close_friend": "Close Friends Only",
-    "photo_upload_bottom_sheet": {
-      "title": "Photo Upload",
-      "album": "Select from Album",
-      "camera": "Take a Photo"
-    }
-  },
-  "note_detail": {
-    "title": "{{username}}'s Post",
-    "error_title": "Post"
-  },
-  "access_setting": {
-    "title": "Visibility",
-    "text": "Choose who can see your post.",
-    "friend": "Friends",
-    "close_friend": "Close Friends",
-    "save": "Save"
-  },
-  "responses": {
-    "title": "Daily Q&As",
-    "comments": "Comments",
-    "likes": "Likes",
-    "more": "More",
-    "new_response": "New Response",
-    "edited": "Edited",
-    "friend": "Friend",
-    "close_friend": "Close Friend"
-  },
-  "all_responses": {
-    "title": "{{username}}'s Responses"
-  },
-  "response_detail": {
-    "title": "{{name}}'s Response",
-    "error_title": "Response"
-  },
-  "likes": {
-    "title": "Likes",
-    "forbidden_post_or_comment": "This post or comment is not accessible.",
-    "not_found_post_or_comment": "This post or comment does not exist."
-  },
-  "reactions": {
-    "title": "Reactions"
-  },
-  "post_more_modal": {
-    "menu": {
-      "report": "Report",
-      "edit": "Edit",
-      "delete": "Delete"
-    },
-    "report": {
-      "title": "Report This Post?",
-      "content": "Reporting will also hide this post from you.",
-      "cancel": "Cancel",
-      "report": "Report",
-      "success_title": "Post reported successfully 🎉",
-      "error_title": "A temporary error occurred. Please try again later."
-    },
-    "delete": {
-      "title": "Delete This Post?",
-      "content": "This post will be permanently deleted",
-      "cancel": "Cancel",
-      "delete": "Delete",
-      "success_title": "Post deleted succesfully 🎉",
-      "error_title": "A temporary error occurred. Please try again later."
-    }
-  },
-  "translation": {
-    "see_translation": "See Translation",
-    "see_original": "See Original"
-  },
-  "ping": {
-    "input_placeholder": "Send a message...",
-    "no_pings": "No messages yet."
-  },
-  "settings": {
-    "title": "Settings",
-    "account_settings": "Account Settings",
-    "update": "Update",
-    "change_password": "Change Password",
-    "confirm_password": "Confirm Password",
-    "enter_your_current_password": "Enter your current password.",
-    "enter_your_new_password": "Enter your new password.",
-    "reset_password": "Reset Password",
-    "reset_password_success": "Password reset successfully 🎉",
-    "confirm": "Confirm",
-    "notification_settings": "Notification Settings",
-    "push_notifications": "Push Notifications",
-    "allow_notification_to_receive_updates_from_friends_as_push_notifications": "Allow push notifications to receive updates from friends.",
-    "click_here_to_check_your_system_preferences": "Click here to check your system notification settings.",
-    "push_notifications_are_currently_enabled": "Push notifications enabled.",
-    "if_you_don't_want_to_receive_notifications_please_disable_the_system_notification_settings": "To disable notifications, adjust your system settings",
-    "push_notifications_are_currently_disabled": "Push notifications disabled.",
-    "if_you_want_to_receive_notifications_please_enable_the_system_notification_settings": "To enable notifications, adjust your system settings",
-    "terms_of_uses": "Terms of Use & Privacy Policy",
-    "logout": "Logout",
-    "are_you_sure_you_want_to_log_out": "Are you sure you want to log out?",
-    "cancel": "Cancel",
-    "delete_account": "Delete Account",
-    "please_check_your_password": "Enter password to continue.",
-    "password_invalid": "Invalid password. Please try again.",
-    "yes_delete": "Yes, Delete",
-    "password": "Password",
-    "continue": "Continue",
-    "are_you_sure": "Are you sure?\nThis action can't be undone.",
-    "edit_profile": {
-      "title": "Edit Profile",
-      "back": "Back",
-      "done": "Done",
-      "cancel": "Cancel",
-      "change_picture": "Change Picture",
-      "username": "Username",
-      "username_valiation_error": "Letters, numbers, Korean, and _ only (max 20 characters).",
-      "email": "Email",
-      "bio": "Bio",
-      "pronouns": "Pronouns",
-      "persona": "WhoAmI Today Persona",
-      "persona_edit_bottom_sheet": {
-        "title": "Edit your WhoAmI Today Persona",
-        "selected": "selected",
-        "confirm": "Confirm",
-        "max_persona_limit": "Maximum 10 personas can be selected",
-        "edit": "Edit"
-      },
-      "update": "Update",
-      "response": {
-        "updated": "Profile updated successfully 🎉"
-      },
-      "error": {
-        "read_file_error": "Error uploading image. Please try again later."
-      },
-      "placeholders": {
-        "bio": "Bio",
-        "pronoun": "Pronoun",
-        "persona": {
-          "my": "My",
-          "WIT": "WIT",
-          "persona": "Persona"
-        },
-        "social_battery": "My Social Battery Level",
-        "music": "Your song",
-        "mood": "#mood"
-      }
-    },
-    "daily_noti_setting": {
-      "title": "Daily Notification Settings",
-      "daily_noti_time": "Notification Time",
-      "daily_noti_period": "Notification Period",
-      "confirm": "Confirm",
-      "success": "Changes updated successfully 🎉",
-      "error": "A temporary error occurred. Please try again later."
-    }
-  },
-  "time": {
-    "just_a_moment_ago": "just a moment ago",
-    "minute_ago_one": "{{count}} minute ago",
-    "minute_ago_other": "{{count}} minutes ago",
-    "hour_ago_one": "{{count}} hour ago",
-    "hour_ago_other": "{{count}} hours ago",
-    "day_ago_one": "{{count}} day ago",
-    "day_ago_other": "{{count}} days ago",
-    "week_ago_one": "{{count}} week ago",
-    "week_ago_other": "{{count}} weeks ago",
-    "short": {
-      "minute": "{{count}}m",
-      "hour": "{{count}}h",
-      "day": "{{count}}d",
-      "week": "{{count}}w"
-    },
-    "AM": "AM",
-    "PM": "PM",
-    "day": {
-      "long": {
-        "0": "Sunday",
-        "1": "Monday",
-        "2": "Tuesday",
-        "3": "Wednesday",
-        "4": "Thursday",
-        "5": "Friday",
-        "6": "Saturday"
-      },
-      "short": {
-        "0": "Sun",
-        "1": "Mon",
-        "2": "Tue",
-        "3": "Wed",
-        "4": "Thu",
-        "5": "Fri",
-        "6": "Sat"
-      }
-    },
-    "every_day": "Every day"
-  },
-  "notifications": {
-    "title": "Notifications",
-    "last_7_days": "Last 7 days",
-    "last_30_days": "Last 30 days",
-    "earlier": "Earlier",
-    "see_friend_requests": "View Friend Requests",
-    "see_prompts_received": "View Received Questions",
-    "received_prompts": {
-      "sent_by": "Sent by {{username}}"
-    },
-    "read_all": "Mark All as Read",
-    "temporary_error": "A temporary error occurred. Please try again later."
-  },
-  "comment": {
-    "reply": "Reply",
-    "message": "Message",
-    "delete": "Delete",
-    "post": "Post",
-    "cancel": "Cancel",
-    "comment": "Comment",
-    "comment_place_holder": "Add a comment for {{username}}",
-    "reply_place_holder": "Add a reply to {{username}}",
-    "private_comment": "Private Comment",
-    "private_placeholder": "This comment is only visible to the original poster.",
-    "replying_to": "Replying to {{username}}",
-    "report": "Report"
-  },
-  "no_contents": {
-    "friends": "No friends yet.",
-    "friends_search": "No results found.",
-    "responses": "No responses yet.",
-    "response_detail": "Response not found.",
-    "all_questions": "No questions found.",
-    "all_notes": "No posts.",
-    "notes": "No posts yet.",
-    "error": {
-      "title": "Something's Wrong.",
-      "text": "Please try again."
-    },
-    "question": "No questions found.",
-    "forbidden_post": "This post is not accessible.",
-    "not_found_post": "This post does not exist.",
-    "forbidden_comment": "This comment is not accessible.",
-    "not_found_comment": "This comment does not exist."
-  },
-  "chats": {
-    "title": "Chats",
-    "room_list": {
-      "search_placeholder": "Search",
-      "title": "Messages",
-      "no_contents": "No messages found"
-    },
-    "edit_room_list": {
-      "header": {
-        "title": "Chats",
-        "cancel": "Cancel"
-      },
-      "button": {
-        "mute": "Mute",
-        "delete": "Cancel"
-      }
-    }
-  },
-  "prompts": {
-    "select_a_prompt": "Select a Question",
-    "questions_from_your_friends": "Questions from Your Friends",
-    "todays_questions": "Today's Questions",
-    "no_contents": {
-      "questions_from_your_friends": "No questions from your friends.",
-      "todays_questions": "No today's questions."
-    },
-    "prompts_of_the_day": {
-      "title": "Today's Questions",
-      "more": "More"
-    },
-    "recent_prompts": "Recent Questions",
-    "send_this_prompt_to": "Send to...",
-    "search_friends": "Search Friends",
-    "cancel": "Cancel",
-    "write_a_message": "Your message will appear in your friend’s notifications along with the question content.",
-    "send_separately": "Send Separately",
-    "sent_success": "Question sent successfully 🎉"
-  },
-  "chat_room": {
-    "noti_setting_dialog": {
-      "title": "Mute Chat?",
-      "content": "You won't receive notifications from this chat until you unmute it.",
-      "cancel": "Cancel",
-      "confirm": "Mute"
-    }
-  },
-  "friends": {
-    "explore_friends": {
-      "title": "Explore Friends",
-      "done": "Done",
-      "search": {
-        "placeholder": "Search or add friends.",
-        "cancel": "Cancel",
-        "your_friends": "YOUR FRIENDS",
-        "more_results": "MORE RESULTS"
-      },
-      "invite": {
-        "text": "Invite Friends",
-        "copy": "Invitation link copied to clipboard.",
-        "desktop_message": "Join me in beta testing WhoAmI Today (WIT) — a social media platform for youth designed by researchers at the University of Washington.\n\nUse my email when signing up.\n\nInvitation link: {{invitation_link}}\n\nMy email: {{email}}",
-        "mobile_message_title": "Join me on WhoAmI Today (WIT).",
-        "mobile_message": "Use my email when signing up.\n\nInvitation link: {{invitation_link}}\n\nMy email: {{email}}"
-      },
-      "tab": {
-        "requests": "Requests",
-        "recommended": "Recommended"
-      },
-      "request_list": {
-        "title": "FRIEND REQUESTS ({{number}})",
-        "sent_requests": "Sent Requests",
-        "no_requests": {
-          "title": "Pending Requests",
-          "text": "No pending requests."
+        "header": {
+            "side_menu": {
+                "explore_friends": "Add Friends",
+                "questions": "Questions",
+                "settings": "Settings",
+                "inquiry": "Contact & Inquiries",
+                "kakao_inquiry": "Kakaotalk 1:1 Open Chat",
+                "discord_inquiry": "Discord",
+                "instagram_inquiry": "Instagram",
+                "text_message_inquiry": "Text"
+            },
+            "bottom_sheet": {
+                "title": "Create",
+                "check-in": "Status",
+                "note": "Post",
+                "prompts": "Daily Questions"
+            }
         }
-      },
-      "recommended_list": {
-        "title": "RECOMMENDED FRIENDS ({{number}})"
-      },
-      "sent_requests_modal": {
-        "title": "Sent Requests",
-        "no_contents": {
-          "title": "No Sent Requests."
+    },
+    "question": {
+        "response": {
+            "placeholder": "Write your response here.",
+            "post": "Post",
+            "complete": "Your response has been posted.",
+            "send_question_to_friends_now": "Send this question to friends?",
+            "send_question": "Send to Friends",
+            "new_response": "New Response",
+            "edit_response": "Edit Response",
+            "cancel": "Cancel",
+            "what_is_your_response": "What's your response?",
+            "content_restriction": "⚠️ Inappropriate or offensive content may be restricted.",
+            "posting": "Posting...",
+            "posted": "Posted. 🎉",
+            "edited": "Updated. 🎉",
+            "view": "View"
+        },
+        "send": {
+            "ask": "Ask",
+            "skip": "Skip",
+            "complete": "Question sent successfully 🎉",
+            "ok": "OK"
         }
-      },
-      "friend_item": {
-        "confirm": "Confirm",
+    },
+    "calendar": {
+        "title_format": "MMMM yyyy",
+        "weeks_one": "{{count}}st week",
+        "weeks_two": "{{count}}nd week",
+        "weeks_few": "{{count}}rd week",
+        "weeks_other": "{{count}}th week",
+        "table_header": {
+            "sun": "SUN",
+            "mon": "MON",
+            "tue": "TUE",
+            "wed": "WED",
+            "thu": "THU",
+            "fri": "FRI",
+            "sat": "SAT"
+        }
+    },
+    "moment_upload": {
+        "todays_moments": "Today's Moments",
+        "mood_placeholder": "Express your mood with emojis",
+        "photo_placeholder": "Show your day with a photo",
+        "photo_disabled": "Use mobile to upload a photo",
+        "already_photo_uploaded": "You've uploaded a photo for today.",
+        "description_placeholder": "Describe your day with words",
+        "skip": "Skip",
+        "post": "Post",
+        "post_complete": "Your moment have been posted.",
+        "view_friends_moment": "View Friends' Moments"
+    },
+    "my_detail": {
+        "title_format": "d/M/yy (E)"
+    },
+    "delete_alert": {
+        "content": "Are you sure you want to delete this?",
+        "cancel_btn": "Cancel",
+        "confirm_btn": "Delete"
+    },
+    "user_page": {
+        "this_user_do_not_exist": "User Not Found :(",
+        "request_a_friend": "Add Friend",
+        "are_you_sure_you_want_to_delete_this_friend": "Remove this friend?",
+        "more_modal": {
+            "menu": {
+                "add_to_favorite": "Add to Favorites",
+                "remove_from_favorite": "Remove from Favorites",
+                "unfriend": "Unfriend",
+                "block": "Block",
+                "report": "Report"
+            },
+            "alert": {
+                "unfriend": {
+                    "title": "Unfriend {{username}}?",
+                    "content": "You'll need to send a new friend request if you change your mind."
+                },
+                "block": {
+                    "title": "Block {{username}}?",
+                    "content": "You won't see any posts or comments from this account."
+                },
+                "report": {
+                    "title": "Report {{username}}?",
+                    "content": "Reporting will also automatically block this account.",
+                    "success_title": "{{username}} reported",
+                    "error_title": "A temporary error occurred. Please try again later."
+                },
+                "cancel": "Cancel"
+            }
+        },
+        "friend": "Friend",
+        "friends": "Friends",
+        "accept": "Accept",
         "reject": "Reject",
-        "unfriend": "Unfriend",
-        "delete": "Delete",
-        "request": "Request",
         "requested": "Requested",
         "cancel": "Cancel",
-        "block_recommendation": "Delete",
-        "delete_request_dialog": {
-          "title": "Delete request?",
-          "content": "{{user}} will no longer see your friend request and won't be notified.",
-          "cancel": "Cancel",
-          "confirm": "Delete"
-        },
-        "reject_request_dialog": {
-          "title": "Reject Friend Request?",
-          "content": "{{user}} won't be notified that you rejected their request.",
-          "cancel": "Cancel",
-          "confirm": "Reject Friend Request"
-        },
-        "break_friends_dialog": {
-          "title": "Are you sure you want to unfriend this user?",
-          "cancel": "Cancel",
-          "confirm": "Unfriend"
-        },
-        "friend_request_success": "Friend request sent successfully 🎉",
-        "friend_accept_success": "Friend request accepted successfully 🎉",
-        "friend_reject_success": "Friend request rejected successfully.",
-        "temporary_error": "A temporary error occurred. Please try again later.",
-        "friend_type_select_dialog": {
-          "request_title": "Send Friend Request",
-          "accept_title": "Accept Friend Request",
-          "content": "Choose the friendship type.",
-          "friend": "Friend",
-          "close_friend": "Close Friend",
-          "fyi": "They won't see the friendship type you choose.",
-          "update_past_posts": "Apply this setting to past posts",
-          "cancel": "Cancel",
-          "confirm": "Confirm"
-        }
-      }
-    },
-    "edit_friends": {
-      "title": "Edit Friends",
-      "save": "Save"
-    },
-    "list_friends": {
-      "friends_title": "{{username}}'s Friend List",
-      "my_title": "My Friend List",
-      "no_friends": "No friends yet."
-    },
-    "updated_profiles": "Updated Profiles",
-    "friend_requests": "Friend Requests",
-    "friend_requests_desc": "View friend requests and recommended friends",
-    "favorites": "Favorites",
-    "add_favorite": "Add friends to Favorites to see their content at the top of your feed.",
-    "all_friends": "Friends",
-    "no_friends": "Add friends to see their profiles in your feed."
-  },
-  "error": {
-    "temporary_error": "A temporary error occurred. Please try again later.",
-    "file_size_exceeded": "File size exceeds the {{size}}MB limit.",
-    "friend_request_error_different_group": "Sorry, you can't add this user during the app testing period."
-  },
-  "not_found_page": {
-    "title": "Page Not Found",
-    "go_home": "Go to main page"
-  },
-  "check_in_edit": {
-    "title": "Edit Status",
-    "save": "Save",
-    "social_battery": {
-      "title": "Social Battery Level",
-      "description": "Let friends know if you're open to chat.",
-      "select_placeholder": "Select Social Battery Level",
-      "select_bottom_sheet": {
-        "title": "Select Social Battery Level",
-        "confirm": "Confirm"
-      }
-    },
-    "song": {
-      "title": "Share a Song",
-      "description": "What song best describes your mood?",
-      "search_placeholder": "Search for a song, album, or artist...",
-      "search_bottom_sheet": {
-        "title": "Share a Song",
         "confirm": "Confirm",
-        "search_placeholder": "Search for a song, album, or artist...",
+        "mutual_friends": {
+            "one": "1 mutual friend: {{firstUserName}}",
+            "two": "2 mutual friends: {{firstUserName}} and {{secondUserName}}",
+            "others": "{{firstUserName}}, {{secondUserName}}, and {{others}} more"
+        },
+        "check_in": {
+            "new_check_in": "New Status",
+            "title": "Most Recent Check-In",
+            "checked_in_time": "Last updated {{time}}"
+        },
+        "connection": {
+            "friend": "Friends",
+            "close_friend": "Close Friends"
+        },
+        "edit_connections": {
+            "title": "Friendship Type",
+            "choice": "Select the friendship type you want to change.",
+            "save": "Save",
+            "check_box": "Apply this change to past posts",
+            "toast": {
+                "success": "Friendship type updated successfully 🎉",
+                "error": "A temporary error occurred. Please try again."
+            }
+        }
+    },
+    "notes": {
+        "notes": "{{name}}'s Posts",
+        "comments": "Comments",
+        "likes": "Likes",
+        "title": "Posts",
+        "new_note": "New Post",
+        "note_header": {
+            "new_note": "New Post",
+            "edit_note": "Edit Post"
+        },
+        "posted": "Posted successfully 🎉",
+        "updated": "Updated successfully 🎉",
+        "temporary_error": "A temporary error occurred. Please try again later.",
+        "too_large_file_error": "Image too large. Please resize and try again.",
+        "view": "View",
         "cancel": "Cancel",
-        "all_results": "All Results"
-      }
+        "post": "Post",
+        "whats_on_your_mind": "What's on your mind?",
+        "content_restriction": "⚠️ Inappropriate or offensive content may be restricted.",
+        "crop_photo": "Crop Photo",
+        "done": "Done",
+        "more": "More",
+        "edited": "Edited",
+        "confirm": "Confirm",
+        "friend": "Friends",
+        "close_friend": "Close Friends Only",
+        "photo_upload_bottom_sheet": {
+            "title": "Photo Upload",
+            "album": "Select from Album",
+            "camera": "Take a Photo"
+        }
     },
-    "mood": {
-      "title": "Share Your Mood",
-      "description": "Choose an emoji and write a short message about your day."
+    "note_detail": {
+        "title": "{{username}}'s Post",
+        "error_title": "Post"
     },
-    "description_placeholder": "Write a short message about your day..."
-  },
-  "my": {
-    "whats_on_your_mind": "What's on your mind, {{username}}?"
-  },
-  "music_detail": {
-    "shared_a_song": "shared a song",
-    "listen_on_spotify": "Listen on Spotify"
-  },
-  "social_battery": {
-    "completely_drained": "Completely Drained",
-    "low": "Low Social Battery",
-    "needs_recharge": "Needs Recharge",
-    "moderate": "Moderate",
-    "fully_charged": "Fully Charged",
-    "super_social": "Super Social Mode (HMU!)"
-  },
-  "persona": {
-    "lurker": "Lurker",
-    "content_creator": "Content Creator", 
-    "private_reactor": "Private Reactor",
-    "public_commenter": "Public Commenter",
-    "instant_responder": "Instant Responder",
-    "takes_my_time": "Takes My Time",
-    "daily_scroller": "Daily Scroller",
-    "occasional_checker": "Occasional Checker",
-    "scheduled_checker": "Scheduled Checker", 
-    "night_owl": "Night Owl",
-    "early_bird": "Early Bird",
-    "emoji_fan": "Emoji Fan",
-    "word_person": "Word Person",
-    "poster": "Poster",
-    "commenter": "Commenter",
-    "selfie_poster": "Selfie Poster",
-    "photo_heavy": "Photo Heavy",
-    "text_poster": "Text Poster",
-    "deep_talks": "Deep Talks",
-    "curious_asker": "Curious Asker",
-    "open_book": "Open Book",
-    "closed_book": "Closed Book",
-    "nofilter_purist": "#NoFilter Purist",
-    "curated_aesthetic": "Curated Aesthetic",
-    "weekend_user": "Weekend User",
-    "everyday_presence": "Everyday Presence",
-    "trend_watcher": "Trend Watcher",
-    "meme_lover": "Meme Lover",
-    "frequent_poster": "Frequent Poster",
-    "occasional_poster": "Occasional Poster",
-    "shares_many_at_once": "Shares Many at Once",
-    "random_and_casual": "Random and Casual",
-    "stream_of_consciousness": "Stream of Consciousness",
-    "one_liners": "One Liners",
-    "throwbacks": "Throwbacks",
-    "music_sharer": "Music Sharer",
-    "opinion_poster": "Opinion Poster",
-    "silent_supporter": "Silent Supporter",
-    "always_online": "Always Online",
-    "rarely_posts_but_watches_everything": "Rarely Posts but Watches Everything",
-    "binge_scroller": "Binge Scroller",
-    "silent_observer": "Silent Observer",
-    "active_listener": "Active Listener",
-    "thoughtful_responder": "Thoughtful Responder"
-  }
+    "access_setting": {
+        "title": "Visibility",
+        "text": "Choose who can see your post.",
+        "friend": "Friends",
+        "close_friend": "Close Friends",
+        "save": "Save"
+    },
+    "responses": {
+        "title": "Daily Q&As",
+        "comments": "Comments",
+        "likes": "Likes",
+        "more": "More",
+        "new_response": "New Response",
+        "edited": "Edited",
+        "friend": "Friend",
+        "close_friend": "Close Friend"
+    },
+    "all_responses": {
+        "title": "{{username}}'s Responses"
+    },
+    "response_detail": {
+        "title": "{{name}}'s Response",
+        "error_title": "Response"
+    },
+    "likes": {
+        "title": "Likes",
+        "forbidden_post_or_comment": "This post or comment is not accessible.",
+        "not_found_post_or_comment": "This post or comment does not exist."
+    },
+    "reactions": {
+        "title": "Reactions"
+    },
+    "post_more_modal": {
+        "menu": {
+            "report": "Report",
+            "edit": "Edit",
+            "delete": "Delete"
+        },
+        "report": {
+            "title": "Report This Post?",
+            "content": "Reporting will also hide this post from you.",
+            "cancel": "Cancel",
+            "report": "Report",
+            "success_title": "Post reported successfully 🎉",
+            "error_title": "A temporary error occurred. Please try again later."
+        },
+        "delete": {
+            "title": "Delete This Post?",
+            "content": "This post will be permanently deleted",
+            "cancel": "Cancel",
+            "delete": "Delete",
+            "success_title": "Post deleted succesfully 🎉",
+            "error_title": "A temporary error occurred. Please try again later."
+        }
+    },
+    "translation": {
+        "see_translation": "See Translation",
+        "see_original": "See Original"
+    },
+    "ping": {
+        "input_placeholder": "Send a message...",
+        "no_pings": "No messages yet."
+    },
+    "settings": {
+        "title": "Settings",
+        "account_settings": "Account Settings",
+        "update": "Update",
+        "change_password": "Change Password",
+        "confirm_password": "Confirm Password",
+        "enter_your_current_password": "Enter your current password.",
+        "enter_your_new_password": "Enter your new password.",
+        "reset_password": "Reset Password",
+        "reset_password_success": "Password reset successfully 🎉",
+        "confirm": "Confirm",
+        "notification_settings": "Notification Settings",
+        "push_notifications": "Push Notifications",
+        "allow_notification_to_receive_updates_from_friends_as_push_notifications": "Allow push notifications to receive updates from friends.",
+        "click_here_to_check_your_system_preferences": "Click here to check your system notification settings.",
+        "push_notifications_are_currently_enabled": "Push notifications enabled.",
+        "if_you_don't_want_to_receive_notifications_please_disable_the_system_notification_settings": "To disable notifications, adjust your system settings",
+        "push_notifications_are_currently_disabled": "Push notifications disabled.",
+        "if_you_want_to_receive_notifications_please_enable_the_system_notification_settings": "To enable notifications, adjust your system settings",
+        "terms_of_uses": "Terms of Use & Privacy Policy",
+        "logout": "Logout",
+        "are_you_sure_you_want_to_log_out": "Are you sure you want to log out?",
+        "cancel": "Cancel",
+        "delete_account": "Delete Account",
+        "please_check_your_password": "Enter password to continue.",
+        "password_invalid": "Invalid password. Please try again.",
+        "yes_delete": "Yes, Delete",
+        "password": "Password",
+        "continue": "Continue",
+        "are_you_sure": "Are you sure?\nThis action can't be undone.",
+        "edit_profile": {
+            "title": "Edit Profile",
+            "back": "Back",
+            "done": "Done",
+            "cancel": "Cancel",
+            "change_picture": "Change Picture",
+            "username": "Username",
+            "username_valiation_error": "Letters, numbers, Korean, and _ only (max 20 characters).",
+            "email": "Email",
+            "bio": "Bio",
+            "pronouns": "Pronouns",
+            "persona": "WhoAmI Today Persona",
+            "persona_edit_bottom_sheet": {
+                "title": "Edit your WhoAmI Today Persona",
+                "selected": "selected",
+                "confirm": "Confirm",
+                "max_persona_limit": "Maximum 10 personas can be selected",
+                "edit": "Edit"
+            },
+            "update": "Update",
+            "response": {
+                "updated": "Profile updated successfully 🎉"
+            },
+            "error": {
+                "read_file_error": "Error uploading image. Please try again later."
+            },
+            "placeholders": {
+                "bio": "Bio",
+                "pronoun": "Pronoun",
+                "persona": {
+                    "my": "My",
+                    "WIT": "WIT",
+                    "persona": "Persona"
+                },
+                "social_battery": "My Social Battery Level",
+                "music": "Your song",
+                "mood": "#mood"
+            }
+        },
+        "daily_noti_setting": {
+            "title": "Daily Notification Settings",
+            "daily_noti_time": "Notification Time",
+            "daily_noti_period": "Notification Period",
+            "confirm": "Confirm",
+            "success": "Changes updated successfully 🎉",
+            "error": "A temporary error occurred. Please try again later."
+        }
+    },
+    "time": {
+        "just_a_moment_ago": "just a moment ago",
+        "minute_ago_one": "{{count}} minute ago",
+        "minute_ago_other": "{{count}} minutes ago",
+        "hour_ago_one": "{{count}} hour ago",
+        "hour_ago_other": "{{count}} hours ago",
+        "day_ago_one": "{{count}} day ago",
+        "day_ago_other": "{{count}} days ago",
+        "week_ago_one": "{{count}} week ago",
+        "week_ago_other": "{{count}} weeks ago",
+        "short": {
+            "minute": "{{count}}m",
+            "hour": "{{count}}h",
+            "day": "{{count}}d",
+            "week": "{{count}}w"
+        },
+        "AM": "AM",
+        "PM": "PM",
+        "day": {
+            "long": {
+                "0": "Sunday",
+                "1": "Monday",
+                "2": "Tuesday",
+                "3": "Wednesday",
+                "4": "Thursday",
+                "5": "Friday",
+                "6": "Saturday"
+            },
+            "short": {
+                "0": "Sun",
+                "1": "Mon",
+                "2": "Tue",
+                "3": "Wed",
+                "4": "Thu",
+                "5": "Fri",
+                "6": "Sat"
+            }
+        },
+        "every_day": "Every day"
+    },
+    "notifications": {
+        "title": "Notifications",
+        "last_7_days": "Last 7 days",
+        "last_30_days": "Last 30 days",
+        "earlier": "Earlier",
+        "see_friend_requests": "View Friend Requests",
+        "see_prompts_received": "View Received Questions",
+        "received_prompts": {
+            "sent_by": "Sent by {{username}}"
+        },
+        "read_all": "Mark All as Read",
+        "temporary_error": "A temporary error occurred. Please try again later."
+    },
+    "comment": {
+        "reply": "Reply",
+        "message": "Message",
+        "delete": "Delete",
+        "post": "Post",
+        "cancel": "Cancel",
+        "comment": "Comment",
+        "comment_place_holder": "Add a comment for {{username}}",
+        "reply_place_holder": "Add a reply to {{username}}",
+        "private_comment": "Private Comment",
+        "private_placeholder": "This comment is only visible to the original poster.",
+        "replying_to": "Replying to {{username}}",
+        "report": "Report"
+    },
+    "no_contents": {
+        "friends": "No friends yet.",
+        "friends_search": "No results found.",
+        "responses": "No responses yet.",
+        "response_detail": "Response not found.",
+        "all_questions": "No questions found.",
+        "all_notes": "No posts.",
+        "notes": "No posts yet.",
+        "error": {
+            "title": "Something's Wrong.",
+            "text": "Please try again."
+        },
+        "question": "No questions found.",
+        "forbidden_post": "This post is not accessible.",
+        "not_found_post": "This post does not exist.",
+        "forbidden_comment": "This comment is not accessible.",
+        "not_found_comment": "This comment does not exist."
+    },
+    "chats": {
+        "title": "Chats",
+        "room_list": {
+            "search_placeholder": "Search",
+            "title": "Messages",
+            "no_contents": "No messages found"
+        },
+        "edit_room_list": {
+            "header": {
+                "title": "Chats",
+                "cancel": "Cancel"
+            },
+            "button": {
+                "mute": "Mute",
+                "delete": "Cancel"
+            }
+        }
+    },
+    "prompts": {
+        "select_a_prompt": "Select a Question",
+        "questions_from_your_friends": "Questions from Your Friends",
+        "todays_questions": "Today's Questions",
+        "no_contents": {
+            "questions_from_your_friends": "No questions from your friends.",
+            "todays_questions": "No today's questions."
+        },
+        "prompts_of_the_day": {
+            "title": "Today's Questions",
+            "more": "More"
+        },
+        "recent_prompts": "Recent Questions",
+        "send_this_prompt_to": "Send to...",
+        "search_friends": "Search Friends",
+        "cancel": "Cancel",
+        "write_a_message": "Your message will appear in your friend’s notifications along with the question content.",
+        "send_separately": "Send Separately",
+        "sent_success": "Question sent successfully 🎉"
+    },
+    "chat_room": {
+        "noti_setting_dialog": {
+            "title": "Mute Chat?",
+            "content": "You won't receive notifications from this chat until you unmute it.",
+            "cancel": "Cancel",
+            "confirm": "Mute"
+        }
+    },
+    "friends": {
+        "explore_friends": {
+            "title": "Explore Friends",
+            "done": "Done",
+            "search": {
+                "placeholder": "Search or add friends.",
+                "cancel": "Cancel",
+                "your_friends": "YOUR FRIENDS",
+                "more_results": "MORE RESULTS"
+            },
+            "invite": {
+                "text": "Invite Friends",
+                "copy": "Invitation link copied to clipboard.",
+                "desktop_message": "Join me in beta testing WhoAmI Today (WIT) — a social media platform for youth designed by researchers at the University of Washington.\n\nUse my email when signing up.\n\nInvitation link: {{invitation_link}}\n\nMy email: {{email}}",
+                "mobile_message_title": "Join me on WhoAmI Today (WIT).",
+                "mobile_message": "Use my email when signing up.\n\nInvitation link: {{invitation_link}}\n\nMy email: {{email}}"
+            },
+            "tab": {
+                "requests": "Requests",
+                "recommended": "Recommended"
+            },
+            "request_list": {
+                "title": "FRIEND REQUESTS ({{number}})",
+                "sent_requests": "Sent Requests",
+                "no_requests": {
+                    "title": "Pending Requests",
+                    "text": "No pending requests."
+                }
+            },
+            "recommended_list": {
+                "title": "RECOMMENDED FRIENDS ({{number}})"
+            },
+            "sent_requests_modal": {
+                "title": "Sent Requests",
+                "no_contents": {
+                    "title": "No Sent Requests."
+                }
+            },
+            "friend_item": {
+                "confirm": "Confirm",
+                "reject": "Reject",
+                "unfriend": "Unfriend",
+                "delete": "Delete",
+                "request": "Request",
+                "requested": "Requested",
+                "cancel": "Cancel",
+                "block_recommendation": "Delete",
+                "delete_request_dialog": {
+                    "title": "Delete request?",
+                    "content": "{{user}} will no longer see your friend request and won't be notified.",
+                    "cancel": "Cancel",
+                    "confirm": "Delete"
+                },
+                "reject_request_dialog": {
+                    "title": "Reject Friend Request?",
+                    "content": "{{user}} won't be notified that you rejected their request.",
+                    "cancel": "Cancel",
+                    "confirm": "Reject Friend Request"
+                },
+                "break_friends_dialog": {
+                    "title": "Are you sure you want to unfriend this user?",
+                    "cancel": "Cancel",
+                    "confirm": "Unfriend"
+                },
+                "friend_request_success": "Friend request sent successfully 🎉",
+                "friend_accept_success": "Friend request accepted successfully 🎉",
+                "friend_reject_success": "Friend request rejected successfully.",
+                "temporary_error": "A temporary error occurred. Please try again later.",
+                "friend_type_select_dialog": {
+                    "request_title": "Send Friend Request",
+                    "accept_title": "Accept Friend Request",
+                    "content": "Choose the friendship type.",
+                    "friend": "Friend",
+                    "close_friend": "Close Friend",
+                    "fyi": "They won't see the friendship type you choose.",
+                    "update_past_posts": "Apply this setting to past posts",
+                    "cancel": "Cancel",
+                    "confirm": "Confirm"
+                }
+            }
+        },
+        "edit_friends": {
+            "title": "Edit Friends",
+            "save": "Save"
+        },
+        "list_friends": {
+            "friends_title": "{{username}}'s Friend List",
+            "my_title": "My Friend List",
+            "no_friends": "No friends yet."
+        },
+        "updated_profiles": "Updated Profiles",
+        "friend_requests": "Friend Requests",
+        "friend_requests_desc": "View friend requests and recommended friends",
+        "favorites": "Favorites",
+        "add_favorite": "Add friends to Favorites to see their content at the top of your feed.",
+        "all_friends": "Friends",
+        "no_friends": "Add friends to see their profiles in your feed."
+    },
+    "error": {
+        "temporary_error": "A temporary error occurred. Please try again later.",
+        "file_size_exceeded": "File size exceeds the {{size}}MB limit.",
+        "friend_request_error_different_group": "Sorry, you can't add this user during the app testing period."
+    },
+    "not_found_page": {
+        "title": "Page Not Found",
+        "go_home": "Go to main page"
+    },
+    "check_in_edit": {
+        "title": "Edit Status",
+        "save": "Save",
+        "social_battery": {
+            "title": "Social Battery Level",
+            "description": "Let friends know if you're open to chat.",
+            "select_placeholder": "Select Social Battery Level",
+            "select_bottom_sheet": {
+                "title": "Select Social Battery Level",
+                "confirm": "Confirm"
+            }
+        },
+        "song": {
+            "title": "Share a Song",
+            "description": "What song best describes your mood?",
+            "search_placeholder": "Search for a song, album, or artist...",
+            "search_bottom_sheet": {
+                "title": "Share a Song",
+                "confirm": "Confirm",
+                "search_placeholder": "Search for a song, album, or artist...",
+                "cancel": "Cancel",
+                "all_results": "All Results"
+            }
+        },
+        "mood": {
+            "title": "Share Your Mood",
+            "description": "Choose an emoji and write a short message about your day."
+        },
+        "description_placeholder": "Write a short message about your day..."
+    },
+    "my": {
+        "whats_on_your_mind": "What's on your mind, {{username}}?"
+    },
+    "music_detail": {
+        "shared_a_song": "shared a song",
+        "listen_on_spotify": "Listen on Spotify"
+    },
+    "social_battery": {
+        "completely_drained": "Completely Drained",
+        "low": "Low Social Battery",
+        "needs_recharge": "Needs Recharge",
+        "moderate": "Moderate",
+        "fully_charged": "Fully Charged",
+        "super_social": "Super Social Mode (HMU!)"
+    },
+    "persona": {
+        "lurker": "Lurker",
+        "content_creator": "Content Creator",
+        "private_reactor": "Private Reactor",
+        "public_commenter": "Public Commenter",
+        "instant_responder": "Instant Responder",
+        "takes_my_time": "Takes My Time",
+        "daily_scroller": "Daily Scroller",
+        "occasional_checker": "Occasional Checker",
+        "scheduled_checker": "Scheduled Checker",
+        "night_owl": "Night Owl",
+        "early_bird": "Early Bird",
+        "emoji_fan": "Emoji Fan",
+        "word_person": "Word Person",
+        "poster": "Poster",
+        "commenter": "Commenter",
+        "selfie_poster": "Selfie Poster",
+        "photo_heavy": "Photo Heavy",
+        "text_poster": "Text Poster",
+        "deep_talks": "Deep Talks",
+        "curious_asker": "Curious Asker",
+        "open_book": "Open Book",
+        "closed_book": "Closed Book",
+        "nofilter_purist": "#NoFilter Purist",
+        "curated_aesthetic": "Curated Aesthetic",
+        "weekend_user": "Weekend User",
+        "everyday_presence": "Everyday Presence",
+        "trend_watcher": "Trend Watcher",
+        "meme_lover": "Meme Lover",
+        "frequent_poster": "Frequent Poster",
+        "occasional_poster": "Occasional Poster",
+        "shares_many_at_once": "Shares Many at Once",
+        "random_and_casual": "Random and Casual",
+        "stream_of_consciousness": "Stream of Consciousness",
+        "one_liners": "One Liners",
+        "throwbacks": "Throwbacks",
+        "music_sharer": "Music Sharer",
+        "opinion_poster": "Opinion Poster",
+        "silent_supporter": "Silent Supporter",
+        "always_online": "Always Online",
+        "rarely_posts_but_watches_everything": "Rarely Posts but Watches Everything",
+        "binge_scroller": "Binge Scroller",
+        "silent_observer": "Silent Observer",
+        "active_listener": "Active Listener",
+        "thoughtful_responder": "Thoughtful Responder"
+    }
 }
