@@ -222,7 +222,8 @@
     },
     "check_in": {
       "new_check_in": "New Status",
-      "checked_in_time": "Most Recent Check-in: {{time}}"
+      "title": "Most Recent Check-In",
+      "checked_in_time": "Updated at {{time}}"
     },
     "connection": {
       "friend": "Friends",

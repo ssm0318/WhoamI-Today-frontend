@@ -219,7 +219,8 @@
     },
     "check_in": {
       "new_check_in": "새로운 상태 추가하기",
-      "checked_in_time": "최근 상태: {{time}}"
+      "title": "가장 최근 상태",
+      "checked_in_time": "{{time}}에 업데이트됨"
     },
     "connection": {
       "friend": "친구",
