@@ -15,6 +15,7 @@ interface Props {
   useAlbumImg?: boolean;
   containerStyle?: CSSProperties;
   fontType?: FontType;
+  onClick?: () => void;
 }
 
 function SpotifyMusic({
@@ -24,9 +25,22 @@ function SpotifyMusic({
   fontType = 'label-medium',
   useDetailBottomSheet = false,
   useAlbumImg = false,
+  onClick,
 }: Props) {
   const [trackData, setTrackData] = useState<Track | null>(null);
   const spotifyManager = SpotifyManager.getInstance();
+
+  const [showMusicDetail, setShowMusicDetail] = useState(false);
+
+  const handleClickMusic = (e: MouseEvent) => {
+    e.stopPropagation();
+
+    if (!useDetailBottomSheet) {
+      onClick?.();
+      return;
+    }
+    setShowMusicDetail(true);
+  };
 
   useEffect(() => {
     if (!track) return setTrackData(null);
@@ -34,18 +48,9 @@ function SpotifyMusic({
     spotifyManager.getTrack(track).then(setTrackData);
   }, [spotifyManager, track]);
 
-  const [showMusicDetail, setShowMusicDetail] = useState(false);
-
-  const handleClickMusic = (e: MouseEvent) => {
-    e.stopPropagation();
-
-    if (!useDetailBottomSheet) return;
-    setShowMusicDetail(true);
-  };
-
   return (
     <>
-      <StyledSpotifyMusic type="button" onClick={handleClickMusic} disabled={!useDetailBottomSheet}>
+      <StyledSpotifyMusic type="button" onClick={handleClickMusic} disabled={false}>
         {!!trackData && (
           <Layout.FlexRow
             w="100%"

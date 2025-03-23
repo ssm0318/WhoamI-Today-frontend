@@ -7,11 +7,18 @@ interface SocialBatteryChipProps {
   socialBattery: SocialBattery;
   onSelect?: (socialBattery: SocialBattery) => void;
   isSelected?: boolean;
+  onClick?: () => void;
 }
 
-function SocialBatteryChip({ socialBattery, onSelect, isSelected }: SocialBatteryChipProps) {
+function SocialBatteryChip({
+  socialBattery,
+  onSelect,
+  isSelected,
+  onClick,
+}: SocialBatteryChipProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'social_battery' });
   const handleOnClick = () => {
+    onClick?.();
     onSelect?.(socialBattery);
   };
 

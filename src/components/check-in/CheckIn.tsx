@@ -73,20 +73,30 @@ function CheckIn({ user }: CheckInProps) {
           <Layout.FlexRow gap={8} alignItems="center">
             {/* social battery */}
             {social_battery ? (
-              <SocialBatteryChip socialBattery={social_battery} />
+              <SocialBatteryChip
+                socialBattery={social_battery}
+                onClick={() => {
+                  if (!isMyPage) return;
+                  handleClickEditCheckIn();
+                }}
+              />
             ) : (
-              <SocialBatteryPlaceholder />
+              isMyPage && <SocialBatteryPlaceholder />
             )}
             {/* spotify */}
             {track_id ? (
               <SpotifyMusic
                 track={track_id}
-                useDetailBottomSheet
+                useDetailBottomSheet={!isMyPage}
                 useAlbumImg
                 fontType="label-large"
+                onClick={() => {
+                  if (!isMyPage) return;
+                  handleClickEditCheckIn();
+                }}
               />
             ) : (
-              <MusicPlaceholder />
+              isMyPage && <MusicPlaceholder />
             )}
           </Layout.FlexRow>
         </Layout.FlexRow>
@@ -101,6 +111,10 @@ function CheckIn({ user }: CheckInProps) {
               ph={8}
               pv={4}
               rounded={12}
+              onClick={() => {
+                if (!isMyPage) return;
+                handleClickEditCheckIn();
+              }}
             >
               {/* emoji */}
               {mood && (
@@ -119,15 +133,7 @@ function CheckIn({ user }: CheckInProps) {
               )}
             </Layout.FlexRow>
           ) : (
-            <MoodPlaceholder />
-          )}
-          {isMyPage && (track_id || mood || description || social_battery) && (
-            <SvgIcon
-              name="edit_filled"
-              fill="DARK_GRAY"
-              size={24}
-              onClick={handleClickEditCheckIn}
-            />
+            isMyPage && <MoodPlaceholder />
           )}
         </Layout.FlexRow>
         {/* check in time */}
