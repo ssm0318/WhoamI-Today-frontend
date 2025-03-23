@@ -380,7 +380,7 @@
             "email": "Email",
             "bio": "Bio",
             "pronouns": "Pronouns",
-            "persona": "WhoAmI Today Persona",
+            "persona": "Persona",
             "persona_edit_bottom_sheet": {
                 "title": "Edit your WhoAmI Today Persona",
                 "selected": "selected",
