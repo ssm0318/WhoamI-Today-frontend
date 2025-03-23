@@ -207,9 +207,13 @@ function EditProfile() {
         {/* persona */}
         {featureFlags?.persona && (
           <>
-            <Typo type="title-medium" color="MEDIUM_GRAY">
-              {t('persona')}
-            </Typo>
+            <Layout.FlexRow alignItems="center" gap={8}>
+              <img width="14px" src="/whoami-logo.svg" alt="who_am_i" />
+              <Typo type="title-medium" color="MEDIUM_GRAY">
+                {t('persona')}
+              </Typo>
+            </Layout.FlexRow>
+
             <Layout.FlexCol
               w="100%"
               outline="LIGHT_GRAY"
