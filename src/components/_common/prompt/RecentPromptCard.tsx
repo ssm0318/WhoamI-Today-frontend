@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import Icon from '@components/_common/icon/Icon';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { Question } from '@models/post';
 import ProfileImage from '../profile-image/ProfileImage';
@@ -20,11 +19,12 @@ function RecentPromptCard({ question, requesterName }: PromptCardProps) {
 
   const [sendPromptModalVisible, setSendPromptBottomModalVisible] = useState(false);
 
-  const handleClickRespond = () => {
+  const handleClickQuestion = () => {
     navigate(`/questions/${id}/new`);
   };
 
-  const handleClickSend = () => {
+  const handleClickSend = (e: MouseEvent) => {
+    e.stopPropagation();
     setSendPromptBottomModalVisible(true);
   };
 
@@ -34,7 +34,15 @@ function RecentPromptCard({ question, requesterName }: PromptCardProps) {
 
   return (
     <>
-      <StyledRecentPromptCard w="100%" ph={16} pv={10} rounded={12} gap={8} bgColor="LIGHT">
+      <StyledRecentPromptCard
+        w="100%"
+        ph={16}
+        pv={10}
+        rounded={12}
+        gap={8}
+        bgColor="LIGHT"
+        onClick={handleClickQuestion}
+      >
         <Layout.FlexRow w="100%" alignItems="center" gap={8}>
           <Layout.FlexCol w="100%" gap={8}>
             {requesterName && (
@@ -51,10 +59,9 @@ function RecentPromptCard({ question, requesterName }: PromptCardProps) {
             </Layout.FlexRow>
             <Typo type="body-large">{content}</Typo>
           </Layout.FlexCol>
-          <Layout.FlexCol gap={12} justifyContent="space-between">
-            <Icon name="question_respond" size={22} onClick={handleClickRespond} />
-            <Icon name="question_send" size={22} onClick={handleClickSend} />
-          </Layout.FlexCol>
+        </Layout.FlexRow>
+        <Layout.FlexRow w="100%" justifyContent="flex-end">
+          <SvgIcon name="question_send" size={22} onClick={handleClickSend} />
         </Layout.FlexRow>
       </StyledRecentPromptCard>
       {sendPromptModalVisible && (
