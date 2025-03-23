@@ -2,7 +2,6 @@ import { isSameDay } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import PingMessageInput from '@components/ping/ping-message-input/PingMessageInput';
 import PingMessageItem from '@components/ping/ping-message-item/PingMessageItem';
@@ -209,10 +208,12 @@ function Ping() {
       <SubHeader
         title={username}
         RightComponent={
-          <Layout.FlexRow w="100%" style={{ position: 'relative' }}>
-            <Icon name="refresh" size={36} onClick={handleClickRefresh} />
+          <Layout.FlexRow w="100%" style={{ position: 'relative' }} onClick={handleClickRefresh}>
+            <Typo type="label-medium" color="MEDIUM_GRAY" underline pre textAlign="right">
+              {t('load_new_messages')}
+            </Typo>
             {unreadCount > 0 && (
-              <Layout.Absolute bgColor="WARNING" rounded={12} t={4} r={13} ph={3} tl={['100%', 0]}>
+              <Layout.Absolute bgColor="WARNING" rounded={12} t={-3} r={2} ph={3} tl={['100%', 0]}>
                 <Typo type="label-small" color="WHITE">
                   {unreadCount > 99 ? '99+' : unreadCount}
                 </Typo>

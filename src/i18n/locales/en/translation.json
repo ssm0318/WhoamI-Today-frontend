@@ -337,7 +337,8 @@
     },
     "ping": {
         "input_placeholder": "Send a message...",
-        "no_pings": "No messages yet."
+        "no_pings": "No messages yet.",
+        "load_new_messages": "Load New Messages"
     },
     "settings": {
         "title": "Settings",
