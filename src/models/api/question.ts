@@ -22,6 +22,6 @@ export interface ResponseRequest {
   message: string;
   created_at: string;
   is_recent: boolean; // 최근 7일 true, 최근 30일 false
-  requester_username: string;
+  requester_username_list: string[];
   question_content: string;
 }

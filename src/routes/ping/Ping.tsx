@@ -2,7 +2,6 @@ import { isSameDay } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import PingMessageInput from '@components/ping/ping-message-input/PingMessageInput';
 import PingMessageItem from '@components/ping/ping-message-item/PingMessageItem';
@@ -28,7 +27,7 @@ function Ping() {
   const [pings, setPings] = useState<PingMessage[]>([]);
   const [username, setUsername] = useState<string>('');
   const [nextUrl, setNextUrl] = useState<string | null>(null);
-  const [unreadCount, setUnreadCount] = useState<number>(0);
+  // const [unreadCount, setUnreadCount] = useState<number>(0);
   const [oldestUnreadPingId, setOldestUnreadPingId] = useState<number | undefined>();
   const [firstLoad, setFirstLoad] = useState(true);
 
@@ -189,15 +188,15 @@ function Ping() {
     if (!userId) return;
 
     // FIXME: 현재 페이지네이션 정보를 유지한채로 안읽은 메시지가 있는 페이지까지 로드하도록 수정 해보자
-    setUnreadCount(0);
+    // setUnreadCount(0);
     await initFetchPingsAndScrollToUnreadMsg(Number(userId), false);
   };
 
   const insertPing = async (newPing: PostPingMessageRes) => {
-    const { unread_count, ...rest } = newPing;
+    const { ...rest } = newPing;
     setPrevScrollHeight(scrollRef.current?.clientHeight); // 새 메시지 추가시 맨 아래로 스크롤 이동
     setPings((prev) => [...prev, rest]);
-    setUnreadCount(unread_count);
+    // setUnreadCount(unread_count);
 
     await handleClickRefresh();
     setPrevScrollHeight(scrollRef.current?.clientHeight); // 새로운 메시지가 있는 경우에 스크롤을 다시 맨 아래로 이동
@@ -209,15 +208,10 @@ function Ping() {
       <SubHeader
         title={username}
         RightComponent={
-          <Layout.FlexRow w="100%" style={{ position: 'relative' }}>
-            <Icon name="refresh" size={36} onClick={handleClickRefresh} />
-            {unreadCount > 0 && (
-              <Layout.Absolute bgColor="WARNING" rounded={12} t={4} r={13} ph={3} tl={['100%', 0]}>
-                <Typo type="label-small" color="WHITE">
-                  {unreadCount > 99 ? '99+' : unreadCount}
-                </Typo>
-              </Layout.Absolute>
-            )}
+          <Layout.FlexRow w="100%" style={{ position: 'relative' }} onClick={handleClickRefresh}>
+            <Typo type="label-medium" color="MEDIUM_GRAY" underline pre textAlign="right">
+              {t('refresh')}
+            </Typo>
           </Layout.FlexRow>
         }
       />
