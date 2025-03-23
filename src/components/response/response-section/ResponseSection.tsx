@@ -64,9 +64,9 @@ function ResponseSection({ username }: ResponseSectionProps) {
   return (
     <>
       <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
-        <Layout.FlexRow gap={20} ph="default">
-          <img width="20px" src="/whoami-logo.svg" alt="who_am_i" />
-          <Typo type="title-large" color="PRIMARY">
+        <Layout.FlexRow gap={12} ph="default" alignItems="center">
+          <img width="20px" src="/whoami-profile.svg" alt="who_am_i" />
+          <Typo type="title-large" color="BLACK">
             {t('responses.title')}
           </Typo>
         </Layout.FlexRow>

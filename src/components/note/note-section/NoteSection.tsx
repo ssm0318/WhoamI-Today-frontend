@@ -59,7 +59,7 @@ function NoteSection({ username }: NoteSectionProps) {
         alignItems="center"
         mt={!username ? 'default' : 0}
       >
-        <Typo type="title-large" color="PRIMARY" ml={8}>
+        <Typo type="title-large" color="BLACK" ml={8}>
           {t('notes.title')}
         </Typo>
       </Layout.FlexRow>
