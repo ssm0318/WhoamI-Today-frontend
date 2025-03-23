@@ -139,7 +139,7 @@ function CommentItem({
                 >{`${comment.content ?? t('private_placeholder')}`}</Typo>
                 {/* Reply & Message buttons */}
                 <Layout.FlexRow w="100%" gap={16} alignItems="center">
-                  {replyAvailable && (
+                  {replyAvailable && (isCommentAuthor || isPostAuthor) && (
                     <button type="button" onClick={handleReplyInput}>
                       <Typo type="label-medium" color="DARK_GRAY">
                         {t('reply')}
