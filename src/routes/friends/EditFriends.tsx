@@ -103,7 +103,7 @@ function EditFriends() {
                       {featureFlags?.friendList &&
                         (is_hidden ? (
                           <Icon
-                            name="star_outline"
+                            name="friend_unpinned"
                             size={20}
                             padding={12}
                             color="MEDIUM_GRAY"
@@ -114,11 +114,9 @@ function EditFriends() {
                             name={is_favorite ? 'friend_pinned' : 'friend_unpinned'}
                             size={20}
                             padding={12}
-                            color="NO_STATUS_CHIP"
-                            onClick={() => handleToggleFavorite(friend, is_favorite)}
+                            onClick={handleToggleFavorite(friend, is_favorite)}
                           />
                         ))}
-
                       <Layout.FlexRow gap={8} alignItems="center">
                         <ProfileImage imageUrl={profile_image} username={username} size={44} />
                         <Typo ellipsis={{ enabled: true, maxWidth: 150 }} type="title-small">
