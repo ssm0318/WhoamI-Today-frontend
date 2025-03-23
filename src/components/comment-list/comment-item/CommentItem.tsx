@@ -139,13 +139,14 @@ function CommentItem({
                 >{`${comment.content ?? t('private_placeholder')}`}</Typo>
                 {/* Reply & Message buttons */}
                 <Layout.FlexRow w="100%" gap={16} alignItems="center">
-                  {replyAvailable && (isCommentAuthor || isPostAuthor) && (
-                    <button type="button" onClick={handleReplyInput}>
-                      <Typo type="label-medium" color="DARK_GRAY">
-                        {t('reply')}
-                      </Typo>
-                    </button>
-                  )}
+                  {replyAvailable &&
+                    (!is_private || (is_private && (isCommentAuthor || isPostAuthor))) && (
+                      <button type="button" onClick={handleReplyInput}>
+                        <Typo type="label-medium" color="DARK_GRAY">
+                          {t('reply')}
+                        </Typo>
+                      </button>
+                    )}
                   {/* {!isCommentAuthor && isPostAuthor && (
                     <button type="button" onClick={handleSendMessage}>
                       <Typo type="label-medium" color="DARK_GRAY">
