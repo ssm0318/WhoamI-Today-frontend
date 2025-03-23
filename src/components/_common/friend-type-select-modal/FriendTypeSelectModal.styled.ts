@@ -27,7 +27,7 @@ export const Body = styled(Layout.Absolute)`
   left: 50%;
   border-radius: 12.195px;
   background-color: ${({ theme }) => theme.WHITE};
-  width: 70%;
+  width: 80%;
   max-width: calc(100% - 40px);
 `;
 
