@@ -104,11 +104,19 @@ function PostFooter({
   };
 
   const handleUnselectEmoji = async (emoji: EmojiClickData) => {
+    if (!myProfile) return;
     const targetReaction = myReactionList.find((reaction) => reaction.emoji === emoji.emoji);
 
     if (!targetReaction) return;
     await deleteReaction(targetReaction.id);
     setMyReactionList(myReactionList.filter((reaction) => reaction.emoji !== emoji.emoji));
+
+    // 이모지 리액션 목록 업데이트
+    setSampleUserList((prev) => {
+      return prev.filter(
+        (sample) => !(sample.reaction === emoji.emoji && sample.id === myProfile.id),
+      );
+    });
   };
 
   const handleClickEmojiButton = () => {
