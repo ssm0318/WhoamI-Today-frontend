@@ -536,7 +536,7 @@
     "send_this_prompt_to": "Send to...",
     "search_friends": "Search Friends",
     "cancel": "Cancel",
-    "write_a_message": "Write a message...",
+    "write_a_message": "Your message will appear in your friend’s notifications along with the question content.",
     "send_separately": "Send Separately",
     "sent_success": "Question sent successfully 🎉"
   },

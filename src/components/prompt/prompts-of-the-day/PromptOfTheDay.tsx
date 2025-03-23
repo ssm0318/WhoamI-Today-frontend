@@ -59,7 +59,12 @@ function PromptsOfTheDay() {
       <StyledRecentPromptsOfTheDay gap={16} w="100%" alignItems="center">
         {/* today's prompts */}
         {todaysQuestions.map((question) => (
-          <PromptCard id={question.id} content={question.content} widthMode="full" />
+          <PromptCard
+            key={question.id}
+            id={question.id}
+            content={question.content}
+            widthMode="full"
+          />
         ))}
         {todaysQuestions.length === 0 && (
           <NoContents text={t('no_contents.todays_questions')} mv={10} />
