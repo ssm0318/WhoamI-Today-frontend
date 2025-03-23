@@ -335,7 +335,7 @@
   "ping": {
     "input_placeholder": "메시지 입력",
     "no_pings": "아직 메시지가 없습니다.",
-    "load_new_messages": "새로운 메시지 불러오기"
+    "refresh": "새로고침"
   },
   "settings": {
     "title": "설정",

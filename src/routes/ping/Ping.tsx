@@ -27,7 +27,7 @@ function Ping() {
   const [pings, setPings] = useState<PingMessage[]>([]);
   const [username, setUsername] = useState<string>('');
   const [nextUrl, setNextUrl] = useState<string | null>(null);
-  const [unreadCount, setUnreadCount] = useState<number>(0);
+  // const [unreadCount, setUnreadCount] = useState<number>(0);
   const [oldestUnreadPingId, setOldestUnreadPingId] = useState<number | undefined>();
   const [firstLoad, setFirstLoad] = useState(true);
 
@@ -188,15 +188,15 @@ function Ping() {
     if (!userId) return;
 
     // FIXME: 현재 페이지네이션 정보를 유지한채로 안읽은 메시지가 있는 페이지까지 로드하도록 수정 해보자
-    setUnreadCount(0);
+    // setUnreadCount(0);
     await initFetchPingsAndScrollToUnreadMsg(Number(userId), false);
   };
 
   const insertPing = async (newPing: PostPingMessageRes) => {
-    const { unread_count, ...rest } = newPing;
+    const { ...rest } = newPing;
     setPrevScrollHeight(scrollRef.current?.clientHeight); // 새 메시지 추가시 맨 아래로 스크롤 이동
     setPings((prev) => [...prev, rest]);
-    setUnreadCount(unread_count);
+    // setUnreadCount(unread_count);
 
     await handleClickRefresh();
     setPrevScrollHeight(scrollRef.current?.clientHeight); // 새로운 메시지가 있는 경우에 스크롤을 다시 맨 아래로 이동
@@ -210,15 +210,8 @@ function Ping() {
         RightComponent={
           <Layout.FlexRow w="100%" style={{ position: 'relative' }} onClick={handleClickRefresh}>
             <Typo type="label-medium" color="MEDIUM_GRAY" underline pre textAlign="right">
-              {t('load_new_messages')}
+              {t('refresh')}
             </Typo>
-            {unreadCount > 0 && (
-              <Layout.Absolute bgColor="WARNING" rounded={12} t={-3} r={2} ph={3} tl={['100%', 0]}>
-                <Typo type="label-small" color="WHITE">
-                  {unreadCount > 99 ? '99+' : unreadCount}
-                </Typo>
-              </Layout.Absolute>
-            )}
           </Layout.FlexRow>
         }
       />
