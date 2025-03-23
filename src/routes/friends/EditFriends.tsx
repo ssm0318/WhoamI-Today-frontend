@@ -111,7 +111,7 @@ function EditFriends() {
                           />
                         ) : (
                           <Icon
-                            name={is_favorite ? 'star' : 'star_outline'}
+                            name={is_favorite ? 'friend_pinned' : 'friend_unpinned'}
                             size={20}
                             padding={12}
                             color="NO_STATUS_CHIP"
