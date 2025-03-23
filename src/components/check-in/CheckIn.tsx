@@ -56,10 +56,18 @@ function CheckIn({ user }: CheckInProps) {
   return (
     <Layout.FlexCol w="100%" gap={8} p={16} bgColor="GRAY_14" rounded={8} justifyContent="center">
       <>
-        <Layout.FlexRow>
+        <Layout.FlexRow w="100%" justifyContent="space-between">
           <Typo type="label-large" color="BLACK">
             {t('title')}
           </Typo>
+          {isMyPage && (
+            <SvgIcon
+              name="edit_filled"
+              fill="DARK_GRAY"
+              size={24}
+              onClick={handleClickEditCheckIn}
+            />
+          )}
         </Layout.FlexRow>
         <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
           <Layout.FlexRow gap={8} alignItems="center">
@@ -81,15 +89,6 @@ function CheckIn({ user }: CheckInProps) {
               <MusicPlaceholder />
             )}
           </Layout.FlexRow>
-          {/* more */}
-          {(!!social_battery || !!track_id) && isMyPage && (
-            <SvgIcon
-              name="edit_filled"
-              fill="DARK_GRAY"
-              size={24}
-              onClick={handleClickEditCheckIn}
-            />
-          )}
         </Layout.FlexRow>
         <Layout.FlexRow w="100%" alignItems="center" gap={8}>
           {!!mood || !!description ? (

@@ -122,17 +122,14 @@ function Profile({ user }: ProfileProps) {
               )}
             </Layout.FlexRow>
             {/* edit icon */}
-            {isMyPage &&
-              (myProfile?.bio ||
-                myProfile?.pronouns ||
-                (featureFlags?.persona && !!myProfile?.persona.length)) && (
-                <SvgIcon
-                  name="edit_filled"
-                  fill="DARK_GRAY"
-                  size={24}
-                  onClick={handleClickEditProfile}
-                />
-              )}
+            {isMyPage && (
+              <SvgIcon
+                name="edit_filled"
+                fill="DARK_GRAY"
+                size={24}
+                onClick={handleClickEditProfile}
+              />
+            )}
           </Layout.FlexRow>
           {/* 친구 수 */}
           {featureFlags?.friendFeed && (isMyPage || (user && areFriends(user))) && (
