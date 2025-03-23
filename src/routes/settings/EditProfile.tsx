@@ -7,7 +7,6 @@ import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImag
 import ProfileImageEditButton from '@components/_common/profile-image-edit-button/ProfileImageEditButton';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import ValidatedTextArea from '@components/_common/validated-textarea/ValidatedTextArea';
-import EditPersonaBottomSheet from '@components/profile/edit-persona/EditPersonaBottomSheet';
 import PersonaChip from '@components/profile/persona/PersonaChip';
 import { StyledEditProfileButton } from '@components/settings/SettingsButtons.styled';
 import SubHeader from '@components/sub-header/SubHeader';
@@ -51,6 +50,7 @@ function EditProfile() {
   });
 
   const [usernameError, setUsernameError] = useState<string>();
+  const [isPersonaListExpanded, setIsPersonaListExpanded] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -58,7 +58,6 @@ function EditProfile() {
   const [croppedImg, setCroppedImg] = useState<CroppedImg>();
 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [isPersonaEditModalVisible, setIsPersonaEditModalVisible] = useState(false);
 
   const [imageChanged, setImageChanged] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
@@ -73,6 +72,31 @@ function EditProfile() {
 
     setHasChanges(hasDraftChanged);
   }, [draft, imageChanged, myProfile]);
+
+  const handleTogglePersona = (persona: Persona) => {
+    setDraft((prev) => {
+      const currentPersonas = [...prev.persona];
+
+      // If already selected, remove it
+      if (currentPersonas.includes(persona)) {
+        return {
+          ...prev,
+          persona: currentPersonas.filter((p) => p !== persona),
+        };
+      }
+
+      // If not selected and we're under the limit of 10, add it
+      if (currentPersonas.length < 10) {
+        return {
+          ...prev,
+          persona: [...currentPersonas, persona],
+        };
+      }
+
+      // If at the limit, return the current selection
+      return prev;
+    });
+  };
 
   const handleClickUpdate = () => {
     inputRef.current?.click();
@@ -147,10 +171,6 @@ function EditProfile() {
     setDraft((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePersonaSelect = (personas: Persona[]) => {
-    setDraft((prev) => ({ ...prev, persona: personas }));
-  };
-
   if (!myProfile) return null;
 
   return (
@@ -220,47 +240,68 @@ function EditProfile() {
               rounded={12}
               style={{ overflow: 'hidden' }}
             >
-              <Layout.FlexRow
-                gap={8}
-                pv={12}
-                ph={12}
-                style={{
-                  flexWrap: 'wrap',
-                }}
-                w="100%"
-              >
-                {draft.persona.length > 0 ? (
-                  draft.persona.map((persona) => (
-                    <div key={persona} style={{ margin: '4px 0' }}>
-                      <PersonaChip persona={persona} color={personaColorMap[persona]} />
-                    </div>
-                  ))
-                ) : (
-                  <Layout.FlexRow w="100%" alignItems="center" justifyContent="center" rounded={12}>
-                    <Icon
-                      onClick={() => setIsPersonaEditModalVisible(true)}
-                      name="add_default"
-                      size={24}
-                    />
-                  </Layout.FlexRow>
-                )}
-              </Layout.FlexRow>
-              {draft.persona.length > 0 && (
-                <Layout.FlexRow
-                  w="100%"
-                  alignItems="center"
-                  justifyContent="center"
-                  bgColor="LIGHT_GRAY"
-                  pv={8}
-                  style={{ borderTop: '1px solid #EEEEEE' }}
-                  onClick={() => setIsPersonaEditModalVisible(true)}
-                >
-                  <Icon name="edit_filled" size={20} />
-                  <Typo type="label-medium" ml={4} color="MEDIUM_GRAY">
-                    {t('persona_edit_bottom_sheet.edit')}
+              <Layout.FlexCol w="100%" alignItems="center" ph={12} pv={16}>
+                <Layout.FlexRow mt={8} mb={2}>
+                  <Typo type="body-medium" color={draft.persona.length >= 10 ? 'WARNING' : 'DARK'}>
+                    {draft.persona.length} / 10 {t('persona_edit_bottom_sheet.selected')}
                   </Typo>
                 </Layout.FlexRow>
-              )}
+                {draft.persona.length >= 10 && (
+                  <Layout.FlexRow mb={4}>
+                    <Typo type="body-small" color="WARNING">
+                      {t('persona_edit_bottom_sheet.max_persona_limit')}
+                    </Typo>
+                  </Layout.FlexRow>
+                )}
+                <Layout.FlexRow
+                  gap={6}
+                  pv={16}
+                  style={{
+                    flexWrap: 'wrap',
+                  }}
+                  w="100%"
+                >
+                  {Object.values(Persona)
+                    .slice(0, isPersonaListExpanded ? undefined : 10)
+                    .map((persona) => (
+                      <PersonaChip
+                        persona={persona}
+                        key={persona}
+                        onSelect={handleTogglePersona}
+                        isSelected={draft.persona.includes(persona)}
+                        color={personaColorMap[persona]}
+                      />
+                    ))}
+                </Layout.FlexRow>
+                {!isPersonaListExpanded && Object.values(Persona).length > 5 && (
+                  <Layout.FlexRow
+                    w="100%"
+                    justifyContent="center"
+                    alignItems="center"
+                    onClick={() => setIsPersonaListExpanded(true)}
+                    pv={8}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <Layout.FlexRow ml={4}>
+                      <Icon name="chevron_down" size={16} />
+                    </Layout.FlexRow>
+                  </Layout.FlexRow>
+                )}
+                {isPersonaListExpanded && Object.values(Persona).length > 5 && (
+                  <Layout.FlexRow
+                    w="100%"
+                    justifyContent="center"
+                    alignItems="center"
+                    onClick={() => setIsPersonaListExpanded(false)}
+                    pv={8}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <Layout.FlexRow ml={4}>
+                      <Icon name="chevron_up" size={16} />
+                    </Layout.FlexRow>
+                  </Layout.FlexRow>
+                )}
+              </Layout.FlexCol>
             </Layout.FlexCol>
           </>
         )}
@@ -288,15 +329,6 @@ function EditProfile() {
           image={originalImageFileUrl}
           onCompleteImageCrop={handleCompleteImageCrop}
           setImageChanged={setImageChanged}
-        />
-      )}
-      {isPersonaEditModalVisible && (
-        <EditPersonaBottomSheet
-          visible={isPersonaEditModalVisible}
-          closeBottomSheet={() => setIsPersonaEditModalVisible(false)}
-          onSelect={handlePersonaSelect}
-          selectedPersonas={draft.persona}
-          personaColorMap={personaColorMap}
         />
       )}
     </MainScrollContainer>
