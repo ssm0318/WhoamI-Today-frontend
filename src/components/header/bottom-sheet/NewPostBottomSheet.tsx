@@ -31,10 +31,10 @@ function NewPostBottomSheet({ visible, closeBottomSheet, setSelectPrompt }: Prop
     ...(featureFlags?.checkIn
       ? [{ key: 'check-in', path: '/check-in/edit', icon: 'bottomsheet_checkin' as const }]
       : []),
-    { key: 'note', path: '/notes/new', icon: 'bottomsheet_note' as const },
     ...(featureFlags?.questionResponseFeature
       ? [{ key: 'prompts', path: '/check-in/prompt', icon: 'bottomsheet_prompt' as const }]
       : []),
+    { key: 'note', path: '/notes/new', icon: 'bottomsheet_note' as const },
   ];
 
   const handleClickMenu = (path: string) => () => {

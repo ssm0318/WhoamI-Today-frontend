@@ -112,9 +112,9 @@
             },
             "bottom_sheet": {
                 "title": "Create",
-                "check-in": "Status",
+                "check-in": "Check-In",
                 "note": "Post",
-                "prompts": "Daily Questions"
+                "prompts": "Daily Q&A"
             }
         }
     },
@@ -221,7 +221,7 @@
             "others": "{{firstUserName}}, {{secondUserName}}, and {{others}} more"
         },
         "check_in": {
-            "new_check_in": "New Status",
+            "new_check_in": "New Check-In",
             "title": "Most Recent Check-In",
             "checked_in_time": "Last updated {{time}}"
         },
@@ -656,7 +656,7 @@
         "go_home": "Go to main page"
     },
     "check_in_edit": {
-        "title": "Edit Status",
+        "title": "Edit Check-In",
         "save": "Save",
         "social_battery": {
             "title": "Social Battery Level",
