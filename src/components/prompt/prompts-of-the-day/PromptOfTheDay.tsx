@@ -3,13 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { useDraggable } from 'react-use-draggable-scroll';
 import NoContents from '@components/_common/no-contents/NoContents';
 import PromptCard from '@components/_common/prompt/PromptCard';
-import RecentPromptCard from '@components/_common/prompt/RecentPromptCard';
+import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { ResponseRequest } from '@models/api/question';
 import { TodayQuestionsSelector } from '@stores/todaysQuestions';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getResponseRequests } from '@utils/apis/my';
+import ReceivedPromptItem from '../received-prompt-item/ReceivedPromptItem';
 import {
   StyledPromptsOfTheDay,
   StyledPromptsOfTheDayContainer,
@@ -43,10 +44,12 @@ function PromptsOfTheDay() {
         <Typo type="title-medium">{t('questions_from_your_friends')}</Typo>
       </Layout.FlexRow>
       <StyledPromptsOfTheDayContainer w="100%" {...events} ref={ref}>
-        <StyledPromptsOfTheDay gap={16} mt={10} pl={16} pb={16}>
+        <StyledPromptsOfTheDay gap={16} mt={10} pl={16} pb={20}>
           {/* received prompts */}
           {responseRequests.map((request) => (
-            <PromptCard key={request.id} id={request.id} content={request.question_content} />
+            <Layout.FlexRow key={request.id} w={SCREEN_WIDTH / 1.5}>
+              <ReceivedPromptItem responseRequest={request} showDate={false} />
+            </Layout.FlexRow>
           ))}
         </StyledPromptsOfTheDay>
       </StyledPromptsOfTheDayContainer>
@@ -56,7 +59,7 @@ function PromptsOfTheDay() {
       <StyledRecentPromptsOfTheDay gap={16} w="100%" alignItems="center">
         {/* today's prompts */}
         {todaysQuestions.map((question) => (
-          <RecentPromptCard question={question} key={question.id} />
+          <PromptCard id={question.id} content={question.content} widthMode="full" />
         ))}
         {todaysQuestions.length === 0 && (
           <NoContents text={t('no_contents.todays_questions')} mv={10} />
