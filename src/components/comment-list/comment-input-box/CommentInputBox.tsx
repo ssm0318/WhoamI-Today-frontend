@@ -209,6 +209,8 @@ function CommentInputBox({
     resetReplyTo?.();
     resetCommentTo();
     resetCommentType();
+    // 비밀 댓글이었을 경우, 비밀 댓글 해제
+    if (isPrivate) setIsPrivate?.();
   };
 
   return (
