@@ -1,16 +1,14 @@
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledNewResponsePrompt } from '@components/_common/prompt/PromptCard.styled';
-import VisibilityTypeOption from '@components/note/visibility-type-option/VisibilityTypeOption';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { TextArea, Typo } from '@design-system';
+import { Layout, RadioButton, TextArea, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { PostVisibility, Question } from '@models/post';
@@ -37,7 +35,6 @@ function NewResponse() {
   // NOTE: QUESTION_RESPONSE_FEATURE 플래그가 true인 경우만 해당 NewResponse 페이지 노출
   // 따라서 Note처럼 공개 범위 분기가 필요없음
   const [visibility, setVisibility] = useState<PostVisibility>(PostVisibility.CLOSE_FRIENDS);
-  const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
 
   const title = !location.state
     ? t('question.response.new_response')
@@ -88,11 +85,9 @@ function NewResponse() {
     setNewResponse(e.target.value);
   };
 
-  const handleClickChangeConnection = () => {
-    setShowEditConnectionsModal(true);
+  const handleChangeVisibility = (e: ChangeEvent<HTMLInputElement>) => {
+    setVisibility(e.target.value as PostVisibility);
   };
-
-  const closeEditConnectionsModal = () => setShowEditConnectionsModal(false);
 
   const navigate = useNavigate();
   const handleClickCancel = () => {
@@ -174,34 +169,33 @@ function NewResponse() {
           </>
         )}
         {question.state === 'hasError' && <NoContents text={t('no_contents.question')} />}
-        {/** connections */}
+        {/** visibility options */}
         <FlexRow pt={15} w="100%" justifyContent="flex-end">
-          <FlexRow
-            onClick={handleClickChangeConnection}
-            bgColor="SECONDARY"
-            pl={10}
-            pr={8}
-            pv={5}
-            rounded={8}
-            gap={5}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Typo type="label-large" color="BLACK">
-              {visibility === PostVisibility.CLOSE_FRIENDS
-                ? t('user_page.connection.close_friend')
-                : t('user_page.connection.friend')}
+          <Layout.FlexCol gap={2} bgColor="LIGHT" p={6} rounded={8}>
+            <Typo type="label-medium" bold mb={4} fontSize={11}>
+              {t('access_setting.title')}
             </Typo>
-            <Icon name="chevron_down" size={18} color="BLACK" />
-          </FlexRow>
-          {showEditConnectionsModal && (
-            <VisibilityTypeOption
-              type={visibility}
-              setType={setVisibility}
-              visible={showEditConnectionsModal}
-              closeBottomSheet={closeEditConnectionsModal}
-            />
-          )}
+            <Layout.FlexCol justifyContent="flex-start" w="100%" gap={4}>
+              <RadioButton
+                label={t('access_setting.friend') || ''}
+                name="friends"
+                value="friends"
+                checked={visibility === 'friends'}
+                onChange={handleChangeVisibility}
+                labelType="label-medium"
+                buttonSize="small"
+              />
+              <RadioButton
+                label={t('access_setting.close_friend') || ''}
+                name="close_friends"
+                value="close_friends"
+                checked={visibility === 'close_friends'}
+                onChange={handleChangeVisibility}
+                labelType="label-medium"
+                buttonSize="small"
+              />
+            </Layout.FlexCol>
+          </Layout.FlexCol>
         </FlexRow>
         <FlexRow w="100%" justifyContent="flex-end" pt={10}>
           <Typo type="label-medium" color="MEDIUM_GRAY" mt={8}>
