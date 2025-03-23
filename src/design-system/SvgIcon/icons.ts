@@ -76,6 +76,8 @@ const add_default = 'add_default';
 const star = 'star';
 const star_outline = 'star_outline';
 const friend_requests = 'friend_requests';
+const friend_pinned = 'friend_pinned';
+const friend_unpinned = 'friend_unpinned';
 
 // My
 const checkbox_default = 'checkbox_default';
@@ -202,7 +204,9 @@ export {
   favorite_false,
   favorite_ping,
   favorite_true,
+  friend_pinned,
   friend_requests,
+  friend_unpinned,
   friend_updates_chat,
   friend_updates_profile,
   friends_active,

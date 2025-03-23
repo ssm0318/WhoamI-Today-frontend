@@ -112,9 +112,9 @@
             },
             "bottom_sheet": {
                 "title": "Create",
-                "check-in": "Status",
+                "check-in": "Check-In",
                 "note": "Post",
-                "prompts": "Daily Questions"
+                "prompts": "Daily Q&A"
             }
         }
     },
@@ -221,7 +221,7 @@
             "others": "{{firstUserName}}, {{secondUserName}}, and {{others}} more"
         },
         "check_in": {
-            "new_check_in": "New Status",
+            "new_check_in": "New Check-In",
             "title": "Most Recent Check-In",
             "checked_in_time": "Last updated {{time}}"
         },
@@ -641,8 +641,8 @@
         "updated_profiles": "Updated Profiles",
         "friend_requests": "Friend Requests",
         "friend_requests_desc": "View friend requests and recommended friends",
-        "favorites": "Favorites",
-        "add_favorite": "Add friends to Favorites to see their content at the top of your feed.",
+        "favorites": "Pinned",
+        "add_favorite": "Pin friends to see their profiles at the top of your feed.",
         "all_friends": "Friends",
         "no_friends": "Add friends to see their profiles in your feed."
     },
@@ -656,7 +656,7 @@
         "go_home": "Go to main page"
     },
     "check_in_edit": {
-        "title": "Edit Status",
+        "title": "Edit Check-In",
         "save": "Save",
         "social_battery": {
             "title": "Social Battery Level",
