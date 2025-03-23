@@ -54,7 +54,7 @@ function CheckIn({ user }: CheckInProps) {
   // TODO: 체크인 로딩 표시
   if (!hasCheckIn && !isMyPage) return null;
   return (
-    <Layout.FlexCol w="100%" gap={8} p={16} bgColor="GRAY_14" rounded={8} justifyContent="center">
+    <Layout.FlexCol w="100%" gap={8} p={8} bgColor="GRAY_14" rounded={8} justifyContent="center">
       <>
         <Layout.FlexRow w="100%" justifyContent="space-between">
           <Typo type="label-large" color="BLACK">
