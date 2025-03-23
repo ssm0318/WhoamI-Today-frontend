@@ -188,7 +188,7 @@ function Profile({ user }: ProfileProps) {
       </Layout.FlexRow>
       {featureFlags?.persona && (
         <Layout.FlexRow w="100%">
-          {user && areFriends(user) && user?.persona && user?.persona.length > 0 ? (
+          {user && (areFriends(user) || isMyPage) && user?.persona && user?.persona.length > 0 ? (
             <Layout.ScrollableFlexRow w="100%" gap={8}>
               {user?.persona.map((persona) => (
                 <PersonaChip key={persona} persona={persona} />
