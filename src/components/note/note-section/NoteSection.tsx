@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
-import { Layout, Typo } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -76,9 +76,12 @@ function NoteSection({ username }: NoteSectionProps) {
             bgColor="LIGHT"
             onClick={handleClickNewNote}
           >
-            <Typo type="body-medium" color="DARK_GRAY">
-              {t('my.whats_on_your_mind', { username: myProfile?.username })}
-            </Typo>
+            <Layout.FlexRow alignItems="center" gap={8}>
+              <SvgIcon name="add_note" size={24} />
+              <Typo type="body-medium" color="DARK_GRAY">
+                {t('my.whats_on_your_mind', { username: myProfile?.username })}
+              </Typo>
+            </Layout.FlexRow>
             <Icon name="chat_media_image" size={24} fill="DARK_GRAY" />
           </Layout.FlexRow>
         </Layout.FlexRow>
