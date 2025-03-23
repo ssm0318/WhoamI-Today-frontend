@@ -20,6 +20,9 @@ import { generateRandomColor } from '@utils/colorHelpers';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { MainScrollContainer } from '../Root';
 
+const PERSONA_LIST_LIMIT = 10;
+const PERSONA_LIST_EXPANDED_LIMIT = 10;
+
 function EditProfile() {
   const location = useLocation();
   const isFromSignUp = !!location.state?.fromSignUp;
@@ -77,7 +80,6 @@ function EditProfile() {
     setDraft((prev) => {
       const currentPersonas = [...prev.persona];
 
-      // If already selected, remove it
       if (currentPersonas.includes(persona)) {
         return {
           ...prev,
@@ -85,7 +87,6 @@ function EditProfile() {
         };
       }
 
-      // If not selected and we're under the limit of 10, add it
       if (currentPersonas.length < 10) {
         return {
           ...prev,
@@ -93,7 +94,6 @@ function EditProfile() {
         };
       }
 
-      // If at the limit, return the current selection
       return prev;
     });
   };
@@ -242,11 +242,15 @@ function EditProfile() {
             >
               <Layout.FlexCol w="100%" alignItems="center" ph={12} pv={16}>
                 <Layout.FlexRow mt={8} mb={2}>
-                  <Typo type="body-medium" color={draft.persona.length >= 10 ? 'WARNING' : 'DARK'}>
-                    {draft.persona.length} / 10 {t('persona_edit_bottom_sheet.selected')}
+                  <Typo
+                    type="body-medium"
+                    color={draft.persona.length >= PERSONA_LIST_LIMIT ? 'WARNING' : 'DARK'}
+                  >
+                    {draft.persona.length} / {PERSONA_LIST_LIMIT}{' '}
+                    {t('persona_edit_bottom_sheet.selected')}
                   </Typo>
                 </Layout.FlexRow>
-                {draft.persona.length >= 10 && (
+                {draft.persona.length >= PERSONA_LIST_LIMIT && (
                   <Layout.FlexRow mb={4}>
                     <Typo type="body-small" color="WARNING">
                       {t('persona_edit_bottom_sheet.max_persona_limit')}
@@ -262,7 +266,7 @@ function EditProfile() {
                   w="100%"
                 >
                   {Object.values(Persona)
-                    .slice(0, isPersonaListExpanded ? undefined : 10)
+                    .slice(0, isPersonaListExpanded ? undefined : PERSONA_LIST_EXPANDED_LIMIT)
                     .map((persona) => (
                       <PersonaChip
                         persona={persona}
@@ -273,34 +277,36 @@ function EditProfile() {
                       />
                     ))}
                 </Layout.FlexRow>
-                {!isPersonaListExpanded && Object.values(Persona).length > 5 && (
-                  <Layout.FlexRow
-                    w="100%"
-                    justifyContent="center"
-                    alignItems="center"
-                    onClick={() => setIsPersonaListExpanded(true)}
-                    pv={8}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <Layout.FlexRow ml={4}>
-                      <Icon name="chevron_down" size={16} />
+                {!isPersonaListExpanded &&
+                  Object.values(Persona).length > PERSONA_LIST_EXPANDED_LIMIT && (
+                    <Layout.FlexRow
+                      w="100%"
+                      justifyContent="center"
+                      alignItems="center"
+                      onClick={() => setIsPersonaListExpanded(true)}
+                      pv={8}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <Layout.FlexRow ml={4}>
+                        <Icon name="chevron_down" size={16} />
+                      </Layout.FlexRow>
                     </Layout.FlexRow>
-                  </Layout.FlexRow>
-                )}
-                {isPersonaListExpanded && Object.values(Persona).length > 5 && (
-                  <Layout.FlexRow
-                    w="100%"
-                    justifyContent="center"
-                    alignItems="center"
-                    onClick={() => setIsPersonaListExpanded(false)}
-                    pv={8}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <Layout.FlexRow ml={4}>
-                      <Icon name="chevron_up" size={16} />
+                  )}
+                {isPersonaListExpanded &&
+                  Object.values(Persona).length > PERSONA_LIST_EXPANDED_LIMIT && (
+                    <Layout.FlexRow
+                      w="100%"
+                      justifyContent="center"
+                      alignItems="center"
+                      onClick={() => setIsPersonaListExpanded(false)}
+                      pv={8}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <Layout.FlexRow ml={4}>
+                        <Icon name="chevron_up" size={16} />
+                      </Layout.FlexRow>
                     </Layout.FlexRow>
-                  </Layout.FlexRow>
-                )}
+                  )}
               </Layout.FlexCol>
             </Layout.FlexCol>
           </>
