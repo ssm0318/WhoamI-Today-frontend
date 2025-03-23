@@ -14,7 +14,6 @@ import { deleteReaction, postReaction } from '@utils/apis/reaction';
 import EmojiButton from '../emoji-button/EmojiButton';
 import Icon from '../icon/Icon';
 import LikeButton from '../like-button/LikeButton';
-import PostMyEmojiList from '../post-my-emoji-list/PostMyEmojiList';
 import PostReactionList from '../post-reaction-list/PostReactionList';
 
 type PostFooterProps = {
@@ -27,7 +26,7 @@ type PostFooterProps = {
 };
 
 function PostFooter({
-  reactionSampleUserList: sampleUserList,
+  reactionSampleUserList: initialReactionSampleUserList,
   isMyPage,
   post,
   displayType = 'LIST',
@@ -41,9 +40,13 @@ function PostFooter({
   const [myReactionList, setMyReactionList] = useState<{ id: number; emoji: string }[]>(
     current_user_reaction_id_list,
   );
-  const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
+  const [sampleUserList, setSampleUserList] = useState<ReactionUserSample[]>(
+    initialReactionSampleUserList,
+  );
+  const { emojiPickerTarget, setEmojiPickerTarget, myProfile } = useBoundStore((state) => ({
     emojiPickerTarget: state.emojiPickerTarget,
     setEmojiPickerTarget: state.setEmojiPickerTarget,
+    myProfile: state.myProfile,
   }));
   const myEmojiList = myReactionList?.map((reaction) => reaction.emoji);
   const [t] = useTranslation('translation', {
@@ -69,6 +72,7 @@ function PostFooter({
   };
 
   const handleSelectEmoji = async (emoji: EmojiClickData) => {
+    if (!myProfile) return;
     const response = await postReaction(post.type, post.id, emoji.emoji);
 
     setEmojiPickerTarget(null);
@@ -79,6 +83,24 @@ function PostFooter({
         emoji: response.emoji,
       },
     ]);
+
+    // 이모지 리액션 목록 업데이트
+    setSampleUserList((prev) => {
+      const newSample: ReactionUserSample = {
+        id: myProfile.id,
+        like: false,
+        reaction: emoji.emoji,
+        profile_image: myProfile.profile_image,
+        profile_pic: myProfile.profile_pic,
+        url: myProfile.url,
+        username: myProfile.username,
+        bio: myProfile.bio,
+        pronouns: myProfile.pronouns,
+        persona: myProfile.persona,
+        connection_status: myProfile.connection_status,
+      };
+      return [...prev, newSample];
+    });
   };
 
   const handleUnselectEmoji = async (emoji: EmojiClickData) => {
@@ -118,11 +140,6 @@ function PostFooter({
       }}
     >
       <Layout.FlexRow gap={10} alignItems="center">
-        {sampleUserList?.length > 0 && (
-          <Layout.FlexRow onClick={handleClickReactions}>
-            <PostReactionList user_sample_list={sampleUserList} />
-          </Layout.FlexRow>
-        )}
         {!isMyPage && (
           <>
             <LikeButton postType={type} post={post} iconSize={23} m={0} />
@@ -131,7 +148,7 @@ function PostFooter({
                 <EmojiButton post={post} onClick={handleClickEmojiButton} />
               ) : (
                 <>
-                  <PostMyEmojiList emojiList={myEmojiList} />
+                  {/* <PostMyEmojiList emojiList={myEmojiList} /> */}
                   <EmojiButton post={post} onClick={handleClickEmojiButton} />
                 </>
               )}
@@ -139,6 +156,11 @@ function PostFooter({
           </>
         )}
         <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
+        {sampleUserList?.length > 0 && (
+          <Layout.FlexRow onClick={handleClickReactions}>
+            <PostReactionList user_sample_list={sampleUserList} />
+          </Layout.FlexRow>
+        )}
       </Layout.FlexRow>
       {!!comment_count && displayType === 'LIST' && (
         <Layout.FlexRow>
