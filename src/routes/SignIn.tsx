@@ -41,7 +41,7 @@ function SignIn() {
           );
 
           if (!me.has_changed_pw) {
-            navigate('/settings/reset-password');
+            navigate('/settings/reset-password?first_login=true');
           }
         });
       },

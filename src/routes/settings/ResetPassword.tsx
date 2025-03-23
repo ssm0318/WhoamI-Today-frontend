@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
 import SubHeader from '@components/sub-header/SubHeader';
 import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
@@ -12,6 +12,9 @@ function ResetPassword() {
   const [t] = useTranslation('translation');
   // 비밀번호 변경 이메일에서 redirect된 경우 받은 id, token
   const { id, token } = useParams();
+  const [searchParams] = useSearchParams();
+  const firstLogin = searchParams.get('first_login') === 'true';
+
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
@@ -28,11 +31,18 @@ function ResetPassword() {
       password: passwordInput,
       onSuccess: () => {
         openToast({ message: t('settings.reset_password_success') });
-        navigate('/settings');
+
+        if (firstLogin) {
+          navigate('/settings/edit-profile');
+        } else {
+          navigate('/settings/reset-password');
+        }
       },
       onError: setPasswordError,
     });
   };
+
+  console.log('First login:', firstLogin);
 
   return (
     <Layout.FlexCol w="100%">
