@@ -89,19 +89,19 @@ function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) 
                 checked={connection === Connection.CLOSE_FRIEND}
                 onChange={handleChangeConnection}
               />
+              {/* ver. Q 에서만 update_past_posts 체크박스 노출 */}
+              {featureFlags?.friendList && (
+                <Layout.FlexRow ml={30}>
+                  <CheckBox
+                    name={t('edit_connections.check_box') || ''}
+                    onChange={handleChangeCheckBox}
+                    checked={isUpdatePastPosts}
+                    disabled={connection === Connection.FRIEND}
+                  />
+                </Layout.FlexRow>
+              )}
             </Layout.FlexCol>
           </Layout.FlexCol>
-          {/* ver. Q 에서만 update_past_posts 체크박스 노출 */}
-          {featureFlags?.friendList && (
-            <Layout.FlexRow>
-              <CheckBox
-                name={t('edit_connections.check_box') || ''}
-                onChange={handleChangeCheckBox}
-                checked={isUpdatePastPosts}
-                disabled={connection === Connection.FRIEND}
-              />
-            </Layout.FlexRow>
-          )}
         </Layout.FlexCol>
         <Button.Confirm
           text={t('edit_connections.save')}

@@ -97,7 +97,7 @@ function FriendTypeSelectModal({
               onChange={handleChangeConnection}
             />
           </Layout.FlexCol>
-          <Layout.FlexRow mt={10}>
+          <Layout.FlexRow mt={10} ml={20}>
             <CheckBox
               name={t('update_past_posts') || ''}
               onChange={handleChangeCheckBox}

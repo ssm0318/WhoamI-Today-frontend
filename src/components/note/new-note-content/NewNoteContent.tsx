@@ -1,10 +1,9 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { FeatureFlagKey } from '@constants/featureFlag';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Layout, SvgIcon, Typo } from '@design-system';
+import { Layout, RadioButton, SvgIcon, Typo } from '@design-system';
 import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import { FileSelectedData } from '@models/app';
 import { NewNoteForm, PostVisibility } from '@models/post';
@@ -13,7 +12,6 @@ import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import { processImageFromApp } from '@utils/imageHelpers';
 import { FlexRow } from 'src/design-system/layouts';
-import VisibilityTypeOption from '../connection-type/ConnectionTypeOption';
 import NewNoteImageEdit from '../new-note-image-edit/NewNoteImageEdit';
 import NewNotePhotoUploadBottomSheet from '../new-note-photo-upload-bottom-sheet/NewNotePhotoUploadBottomSheet';
 import { NoteImage, NoteImageWrapper } from '../note-image/NoteImage.styled';
@@ -40,7 +38,6 @@ function NewNoteContent({ noteInfo, setNoteInfo, isEdit }: NoteInformationProps)
   );
 
   const [isEditVisible, setIsEditVisible] = useState(false);
-  const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
   const [showPhotoUploadBottomSheet, setShowPhotoUploadBottomSheet] = useState(false);
 
   const [editImageUrl, setEditImageUrl] = useState<string>();
@@ -113,10 +110,12 @@ function NewNoteContent({ noteInfo, setNoteInfo, isEdit }: NoteInformationProps)
     }
   };
 
-  const visibilityUpdate = () => {
+  const handleChangeVisibility = (e: ChangeEvent<HTMLInputElement>) => {
+    const newVisibility = e.target.value as PostVisibility;
+    setVisibility(newVisibility);
     setNoteInfo((prevNoteInfo) => ({
       ...prevNoteInfo,
-      visibility,
+      visibility: newVisibility,
     }));
   };
 
@@ -143,12 +142,6 @@ function NewNoteContent({ noteInfo, setNoteInfo, isEdit }: NoteInformationProps)
     }));
   };
 
-  const handleClickChangeConnection = () => {
-    setShowEditConnectionsModal(true);
-  };
-
-  const closeEditConnectionsModal = () => setShowEditConnectionsModal(false);
-
   return (
     <>
       <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} mt={TITLE_HEADER_HEIGHT} pv={12} gap={16}>
@@ -165,39 +158,34 @@ function NewNoteContent({ noteInfo, setNoteInfo, isEdit }: NoteInformationProps)
           placeholder={t('notes.whats_on_your_mind') || ''}
           onChange={handleChangeInput}
         />
-        <Layout.FlexRow w="100%" justifyContent="space-between">
+        <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="flex-start">
           <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
-
-          {/** connections */}
-          <Layout.FlexRow>
-            <Layout.FlexRow
-              onClick={handleClickChangeConnection}
-              bgColor="SECONDARY"
-              pl={10}
-              pr={8}
-              pv={5}
-              rounded={8}
-              gap={5}
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Typo type="label-large" color="BLACK">
-                {visibility === PostVisibility.CLOSE_FRIENDS
-                  ? t('user_page.connection.close_friend')
-                  : t('user_page.connection.friend')}
-              </Typo>
-              <Icon name="chevron_down" size={18} color="BLACK" />
-            </Layout.FlexRow>
-            {showEditConnectionsModal && (
-              <VisibilityTypeOption
-                type={visibility}
-                setType={setVisibility}
-                visibilityUpdate={visibilityUpdate}
-                visible={showEditConnectionsModal}
-                closeBottomSheet={closeEditConnectionsModal}
+          {/** visibility options */}
+          <Layout.FlexCol gap={2} bgColor="LIGHT" p={6} rounded={8}>
+            <Typo type="label-medium" bold mb={4} fontSize={11}>
+              {t('access_setting.title')}
+            </Typo>
+            <Layout.FlexCol justifyContent="flex-start" w="100%" gap={4}>
+              <RadioButton
+                label={t('access_setting.friend') || ''}
+                name="friends"
+                value="friends"
+                checked={visibility === 'friends'}
+                onChange={handleChangeVisibility}
+                labelType="label-large"
+                buttonSize="small"
               />
-            )}
-          </Layout.FlexRow>
+              <RadioButton
+                label={t('access_setting.close_friend') || ''}
+                name="close_friends"
+                value="close_friends"
+                checked={visibility === 'close_friends'}
+                onChange={handleChangeVisibility}
+                labelType="label-large"
+                buttonSize="small"
+              />
+            </Layout.FlexCol>
+          </Layout.FlexCol>
         </Layout.FlexRow>
         <input
           ref={inputRef}

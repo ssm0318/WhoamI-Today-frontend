@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const StyledRadioButton = styled.div<{ disabled?: boolean }>`
+export const StyledRadioButton = styled.div<{ disabled?: boolean; size?: 'small' | 'medium' }>`
   display: flex;
   align-items: center;
   width: 100%;
@@ -10,15 +10,15 @@ export const StyledRadioButton = styled.div<{ disabled?: boolean }>`
     align-items: center;
     width: 100%;
     cursor: pointer;
-  }
 
   input[type='radio'] {
     appearance: none;
-    width: 24px;
-    height: 24px;
+    width: ${({ size }) => (size === 'small' ? '16px' : '24px')};
+    height: ${({ size }) => (size === 'small' ? '16px' : '24px')};
     border: 2px solid ${({ theme }) => theme.MEDIUM_GRAY};
     border-radius: 50%;
-    margin-right: 12px;
+    margin-top: 0px;
+    margin-right: ${({ size }) => (size === 'small' ? '8px' : '12px')};
     position: relative;
     flex-shrink: 0;
 
@@ -29,8 +29,8 @@ export const StyledRadioButton = styled.div<{ disabled?: boolean }>`
       &:after {
         content: '';
         position: absolute;
-        width: 12px;
-        height: 12px;
+        width: ${({ size }) => (size === 'small' ? '8px' : '12px')};
+        height: ${({ size }) => (size === 'small' ? '8px' : '12px')};
         background-color: ${({ theme }) => theme.PRIMARY};
         border-radius: 50%;
         top: 50%;
