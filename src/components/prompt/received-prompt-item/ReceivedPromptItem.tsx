@@ -15,11 +15,12 @@ function ReceivedPromptItem({
   currDate = new Date(),
   showDate = true,
 }: ReceivedPromptItemProps) {
-  const { id, created_at, question_id, requester_username, question_content } = responseRequest;
+  const { id, created_at, question_id, requester_username_list, question_content } =
+    responseRequest;
   return (
     <Layout.FlexRow w="100%" key={id} gap={13} alignItems="center">
       <RecentPromptCard
-        requesterName={requester_username}
+        requesterName={requester_username_list.join(', ')}
         question={{
           id: question_id,
           content: question_content,
