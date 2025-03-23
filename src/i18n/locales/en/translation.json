@@ -264,8 +264,8 @@
     "more": "More",
     "edited": "Edited",
     "confirm": "Confirm",
-    "friend": "Friend",
-    "close_friend": "Close Friend",
+    "friend": "Friends",
+    "close_friend": "Close Friends Only",
     "photo_upload_bottom_sheet": {
       "title": "Photo Upload",
       "album": "Select from Album",

@@ -19,9 +19,16 @@ function TimePicker({ onTimeChange, initialTime }: TimePickerProps) {
     period: initialPeriod,
   } = convert24to12Format(initialTime);
 
+  // Round initial minutes to the nearest 15
+  const roundedInitialMinutes = Math.round(initialMinutes / 15) * 15;
+  const normalizedInitialMinutes = roundedInitialMinutes === 60 ? 0 : roundedInitialMinutes;
+
   const [hours, setHours] = useState(initialHours);
-  const [minutes, setMinutes] = useState(initialMinutes);
+  const [minutes, setMinutes] = useState(normalizedInitialMinutes);
   const [period, setPeriod] = useState(initialPeriod);
+
+  // Available minute options
+  const minuteOptions = [0, 15, 30, 45];
 
   const incrementHours = () => {
     const newHours = hours === 12 ? 1 : hours + 1;
@@ -36,13 +43,17 @@ function TimePicker({ onTimeChange, initialTime }: TimePickerProps) {
   };
 
   const incrementMinutes = () => {
-    const newMinutes = minutes === 59 ? 0 : minutes + 1;
+    const currentIndex = minuteOptions.indexOf(minutes);
+    const nextIndex = (currentIndex + 1) % minuteOptions.length;
+    const newMinutes = minuteOptions[nextIndex];
     setMinutes(newMinutes);
     updateTime(hours, newMinutes, period);
   };
 
   const decrementMinutes = () => {
-    const newMinutes = minutes === 0 ? 59 : minutes - 1;
+    const currentIndex = minuteOptions.indexOf(minutes);
+    const prevIndex = (currentIndex - 1 + minuteOptions.length) % minuteOptions.length;
+    const newMinutes = minuteOptions[prevIndex];
     setMinutes(newMinutes);
     updateTime(hours, newMinutes, period);
   };
