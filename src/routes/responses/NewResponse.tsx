@@ -7,7 +7,7 @@ import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledNewResponsePrompt } from '@components/_common/prompt/PromptCard.styled';
-import VisibilityTypeOption from '@components/note/connection-type/ConnectionTypeOption';
+import VisibilityTypeOption from '@components/note/visibility-type-option/VisibilityTypeOption';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { TextArea, Typo } from '@design-system';
