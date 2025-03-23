@@ -550,7 +550,7 @@
     },
     "friends": {
         "explore_friends": {
-            "title": "Explore Friends",
+            "title": "Add Friends",
             "done": "Done",
             "search": {
                 "placeholder": "Search or add friends.",
