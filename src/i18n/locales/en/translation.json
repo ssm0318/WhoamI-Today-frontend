@@ -222,6 +222,7 @@
     },
     "check_in": {
       "new_check_in": "New Status",
+      "title": "Most Recent Check-In",
       "checked_in_time": "Updated at {{time}}"
     },
     "connection": {
@@ -393,6 +394,18 @@
       },
       "error": {
         "read_file_error": "Error uploading image. Please try again later."
+      },
+      "placeholders": {
+        "bio": "Bio",
+        "pronoun": "Pronoun",
+        "persona": {
+          "my": "My",
+          "WIT": "WIT",
+          "persona": "Persona"
+        },
+        "social_battery": "My Social Battery Level",
+        "music": "Your song",
+        "mood": "#mood"
       }
     },
     "daily_noti_setting": {

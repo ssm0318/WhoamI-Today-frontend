@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
+import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
+import MusicPlaceholder from '@components/profile/placeholders/MusicPlaceholder';
+import SocialBatteryPlaceholder from '@components/profile/placeholders/SocialBatteryPlaceholder';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { MyProfile } from '@models/api/user';
@@ -12,7 +15,6 @@ import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import SocialBatteryChip from '../profile/social-batter-chip/SocialBatteryChip';
-import AddNewCheckIn from './add-new-check-in/AddNewCheckIn';
 
 interface CheckInProps {
   user: UserProfile | MyProfile;
@@ -52,73 +54,84 @@ function CheckIn({ user }: CheckInProps) {
   // TODO: 체크인 로딩 표시
   if (!hasCheckIn && !isMyPage) return null;
   return (
-    <Layout.FlexCol w="100%" gap={8} p={16} bgColor="GRAY_14" rounded={8} justifyContent="center">
-      {hasCheckIn ? (
-        <>
-          <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
-            <Layout.FlexRow gap={8} alignItems="center">
-              {/* social battery */}
-              {social_battery && <SocialBatteryChip socialBattery={social_battery} />}
-              {/* spotify */}
-              {track_id && (
-                <SpotifyMusic
-                  track={track_id}
-                  useDetailBottomSheet
-                  useAlbumImg
-                  fontType="label-large"
+    <Layout.FlexCol w="100%" gap={8} p={8} bgColor="GRAY_14" rounded={8} justifyContent="center">
+      <>
+        <Layout.FlexRow w="100%" justifyContent="space-between">
+          <Typo type="label-large" color="BLACK">
+            {t('title')}
+          </Typo>
+          {isMyPage && (
+            <SvgIcon
+              name="edit_filled"
+              fill="DARK_GRAY"
+              size={24}
+              onClick={handleClickEditCheckIn}
+            />
+          )}
+        </Layout.FlexRow>
+        <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
+          <Layout.FlexRow gap={8} alignItems="center">
+            {/* social battery */}
+            {social_battery ? (
+              <SocialBatteryChip socialBattery={social_battery} />
+            ) : (
+              <SocialBatteryPlaceholder />
+            )}
+            {/* spotify */}
+            {track_id ? (
+              <SpotifyMusic
+                track={track_id}
+                useDetailBottomSheet
+                useAlbumImg
+                fontType="label-large"
+              />
+            ) : (
+              <MusicPlaceholder />
+            )}
+          </Layout.FlexRow>
+        </Layout.FlexRow>
+        <Layout.FlexRow w="100%" alignItems="center" gap={8}>
+          {!!mood || !!description ? (
+            <Layout.FlexRow
+              w="100%"
+              gap={8}
+              bgColor="WHITE"
+              alignItems="center"
+              outline="GRAY_1"
+              ph={8}
+              pv={4}
+              rounded={12}
+            >
+              {/* emoji */}
+              {mood && (
+                <EmojiItem
+                  emojiString={mood}
+                  size={24}
+                  bgColor="TRANSPARENT"
+                  outline="TRANSPARENT"
                 />
               )}
+              {/* description */}
+              {description && (
+                <Typo type="label-large" numberOfLines={2}>
+                  {description}
+                </Typo>
+              )}
             </Layout.FlexRow>
-            {/* more */}
-            {(!!social_battery || !!track_id) && isMyPage && (
-              <SvgIcon
-                name="edit_filled"
-                fill="DARK_GRAY"
-                size={24}
-                onClick={handleClickEditCheckIn}
-              />
-            )}
-          </Layout.FlexRow>
-          <Layout.FlexRow w="100%" alignItems="center" gap={8}>
-            {(!!mood || !!description) && (
-              <Layout.FlexRow
-                w="100%"
-                gap={8}
-                bgColor="WHITE"
-                alignItems="center"
-                outline="GRAY_1"
-                ph={8}
-                pv={4}
-                rounded={12}
-              >
-                {/* emoji */}
-                {mood && (
-                  <EmojiItem
-                    emojiString={mood}
-                    size={24}
-                    bgColor="TRANSPARENT"
-                    outline="TRANSPARENT"
-                  />
-                )}
-                {/* description */}
-                {description && (
-                  <Typo type="label-large" numberOfLines={2}>
-                    {description}
-                  </Typo>
-                )}
-              </Layout.FlexRow>
-            )}
-            {!social_battery && !track_id && isMyPage && (
-              <SvgIcon
-                name="edit_filled"
-                fill="DARK_GRAY"
-                size={24}
-                onClick={handleClickEditCheckIn}
-              />
-            )}
-          </Layout.FlexRow>
-
-          {/* check in time */}
+          ) : (
+            <MoodPlaceholder />
+          )}
+          {isMyPage && (track_id || mood || description || social_battery) && (
+            <SvgIcon
+              name="edit_filled"
+              fill="DARK_GRAY"
+              size={24}
+              onClick={handleClickEditCheckIn}
+            />
+          )}
+        </Layout.FlexRow>
+        {/* check in time */}
+        {checkIn?.created_at && (
           <Layout.FlexRow w="100%" justifyContent="flex-end" gap={4}>
             <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
               {t('checked_in_time', {
@@ -130,10 +143,8 @@ function CheckIn({ user }: CheckInProps) {
             </Typo>
             {!current_user_read && !isMyPage && <UpdatedLabel />}
           </Layout.FlexRow>
-        </>
-      ) : (
-        <AddNewCheckIn />
-      )}
+        )}
+      </>
     </Layout.FlexCol>
   );
 }

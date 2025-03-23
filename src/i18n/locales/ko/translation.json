@@ -218,6 +218,8 @@
       "others": "{{firstUserName}}와(과) {{secondUserName}}, 그 외 {{others}}명의 공통친구"
     },
     "check_in": {
+      "new_check_in": "새로운 상태 추가하기",
+      "title": "가장 최근 상태",
       "checked_in_time": "{{time}}에 업데이트됨"
     },
     "connection": {
@@ -389,6 +391,18 @@
       },
       "error": {
         "read_file_error": "이미지를 불러오는 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+      },
+      "placeholders": {
+        "bio": "소개",
+        "pronoun": "대명사",
+        "persona": {
+          "my": "나의",
+          "WIT": "WIT",
+          "persona": "페르소나"
+        },
+        "social_battery": "나의 소셜 배터리 수준",
+        "music": "내 노래",
+        "mood": "#현재 무드"
       }
     },
     "daily_noti_setting": {
