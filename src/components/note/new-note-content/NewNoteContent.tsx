@@ -161,17 +161,19 @@ function NewNoteContent({ noteInfo, setNoteInfo, isEdit }: NoteInformationProps)
         <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="flex-start">
           <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
           {/** visibility options */}
-          <Layout.FlexCol gap={3} bgColor="LIGHT" p={10} rounded={12}>
-            <Typo type="title-small" mb={6} bold>
+          <Layout.FlexCol gap={2} bgColor="LIGHT" p={6} rounded={8}>
+            <Typo type="label-medium" bold mb={2} fontSize={11}>
               {t('access_setting.title')}
             </Typo>
-            <Layout.FlexCol justifyContent="flex-start" w="100%" gap={8}>
+            <Layout.FlexCol justifyContent="flex-start" w="100%" gap={2}>
               <RadioButton
                 label={t('access_setting.friend') || ''}
                 name="friends"
                 value="friends"
                 checked={visibility === 'friends'}
                 onChange={handleChangeVisibility}
+                labelType="label-medium"
+                buttonSize="small"
               />
               <RadioButton
                 label={t('access_setting.close_friend') || ''}
@@ -179,6 +181,8 @@ function NewNoteContent({ noteInfo, setNoteInfo, isEdit }: NoteInformationProps)
                 value="close_friends"
                 checked={visibility === 'close_friends'}
                 onChange={handleChangeVisibility}
+                labelType="label-medium"
+                buttonSize="small"
               />
             </Layout.FlexCol>
           </Layout.FlexCol>
