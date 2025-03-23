@@ -17,11 +17,12 @@ export default function RecommendedList() {
     const data = await getRecommendedFriends();
     setRecommendedList(data);
   }, []);
-  useAsyncEffect(fetchFriends, [fetchFriends]);
 
   const updateRecommendedList = (userId: number) => () => {
     setRecommendedList((prev) => prev?.filter((user) => user.id !== userId));
   };
+
+  useAsyncEffect(fetchFriends, [fetchFriends]);
 
   if (!recommendedList) return <Loader />;
   return (
@@ -39,7 +40,7 @@ export default function RecommendedList() {
               type="recommended"
               user={friend}
               onClickRequest={updateRecommendedList(friend.id)}
-              onClickCancelRequest={updateRecommendedList(friend.id)}
+              onClickDeleteRecommendation={updateRecommendedList(friend.id)}
             />
           ))}
         </>
