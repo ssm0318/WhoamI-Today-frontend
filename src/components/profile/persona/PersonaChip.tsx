@@ -37,6 +37,12 @@ function PersonaChip({ persona, onSelect, isSelected, color: providedColor }: Pe
         maxWidth: '100%',
         overflow: 'hidden',
         border: `1px solid ${color}`,
+        // touch 효과 제거
+        WebkitTapHighlightColor: 'transparent',
+        userSelect: 'none',
+        cursor: 'pointer',
+        WebkitAppearance: 'none',
+        WebkitTouchCallout: 'none',
       }}
       onClick={handleOnClick}
     >
