@@ -1,5 +1,6 @@
 import { MutableRefObject, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useDraggable } from 'react-use-draggable-scroll';
 import NoContents from '@components/_common/no-contents/NoContents';
 import PromptCard from '@components/_common/prompt/PromptCard';
@@ -10,6 +11,7 @@ import { ResponseRequest } from '@models/api/question';
 import { TodayQuestionsSelector } from '@stores/todaysQuestions';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getResponseRequests } from '@utils/apis/my';
+import { closeModalAndNavigate } from '@utils/modalUtils';
 import ReceivedPromptItem from '../received-prompt-item/ReceivedPromptItem';
 import {
   StyledPromptsOfTheDay,
@@ -21,7 +23,7 @@ function PromptsOfTheDay() {
   const [t] = useTranslation('translation', { keyPrefix: 'prompts' });
   const { todaysQuestions, fetchTodaysQuestions } = useBoundStore(TodayQuestionsSelector);
   const [responseRequests, setResponseRequests] = useState<ResponseRequest[]>([]);
-
+  const navigate = useNavigate();
   const fetchReceivedPrompts = async (page: string | null) => {
     const { results } = await getResponseRequests(page);
     if (!results) return;
@@ -35,6 +37,10 @@ function PromptsOfTheDay() {
     await fetchTodaysQuestions();
     await fetchReceivedPrompts(null);
   }, []);
+
+  const handleClickSeeMoreQuestions = () => {
+    closeModalAndNavigate(navigate, '/questions');
+  };
 
   if (!todaysQuestions) return null;
 
@@ -53,8 +59,13 @@ function PromptsOfTheDay() {
           ))}
         </StyledPromptsOfTheDay>
       </StyledPromptsOfTheDayContainer>
-      <Layout.FlexRow ml={16}>
+      <Layout.FlexRow ph={16} w="100%" justifyContent="space-between" alignItems="center">
         <Typo type="title-medium">{t('todays_questions')}</Typo>
+        <Layout.FlexRow onClick={handleClickSeeMoreQuestions}>
+          <Typo type="body-medium" color="MEDIUM_GRAY" underline>
+            {t('see_more_questions')}
+          </Typo>
+        </Layout.FlexRow>
       </Layout.FlexRow>
       <StyledRecentPromptsOfTheDay gap={16} w="100%" alignItems="center">
         {/* today's prompts */}

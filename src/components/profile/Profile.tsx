@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import FriendStatus from '@components/_common/friend-status/FriendStatus';
@@ -38,7 +38,8 @@ function Profile({ user }: ProfileProps) {
   const { username } = useParams();
   const navigate = useNavigate();
 
-  const handleClickEditProfile = () => {
+  const handleClickEditProfile = (e: MouseEvent) => {
+    e.stopPropagation();
     return navigate('/settings/edit-profile');
   };
 
@@ -123,13 +124,14 @@ function Profile({ user }: ProfileProps) {
             </Layout.FlexRow>
             {/* edit icon */}
             {isMyPage && (
-              <Layout.FlexRow w="100%" alignItems="center" gap={2} justifyContent="flex-end">
-                <SvgIcon
-                  name="edit_filled"
-                  fill="DARK_GRAY"
-                  size={16}
-                  onClick={handleClickEditProfile}
-                />
+              <Layout.FlexRow
+                w="100%"
+                alignItems="center"
+                gap={2}
+                justifyContent="flex-end"
+                onClick={handleClickEditProfile}
+              >
+                <SvgIcon name="edit_filled" fill="DARK_GRAY" size={16} />
                 <Typo type="label-medium" color="DARK_GRAY" underline>
                   {t('edit_profile')}
                 </Typo>

@@ -542,7 +542,8 @@
         "cancel": "Cancel",
         "write_a_message": "The message you write here will show up in your friend’s notifications along with the question.",
         "send_separately": "Send Separately",
-        "sent_success": "Question sent successfully 🎉"
+        "sent_success": "Question sent successfully 🎉",
+        "see_more_questions": "See More Questions"
     },
     "chat_room": {
         "noti_setting_dialog": {
