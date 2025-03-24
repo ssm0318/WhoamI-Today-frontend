@@ -3,7 +3,9 @@
         "hide": "Hide",
         "unfriend": "Unfriend",
         "friend": "Friend",
-        "close_friend": "Close Friend"
+        "close_friend": "Close Friend",
+        "are_you_sure_you_want_to_delete_this_friend": "Remove this friend?",
+        "temporary_error": "A temporary error occurred. Please try again later."
     },
     "common": {
         "done": "Done",
@@ -238,7 +240,8 @@
                 "success": "Friendship type updated successfully 🎉",
                 "error": "A temporary error occurred. Please try again."
             }
-        }
+        },
+        "edit_profile": "Edit Profile"
     },
     "notes": {
         "notes": "{{name}}'s Posts",

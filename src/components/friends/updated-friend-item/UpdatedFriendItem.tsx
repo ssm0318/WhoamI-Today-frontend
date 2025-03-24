@@ -1,11 +1,13 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import AlertDialog from '@components/_common/alert-dialog/AlertDialog';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
+import UserRelatedAlert, { Alert } from '@components/user-page/UserRelatedAlert';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { UpdateFriendListParams } from '@hooks/useInfiniteFetchFriends';
 import { Connection, UpdatedProfile } from '@models/api/friends';
@@ -60,12 +62,29 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
     });
   };
 
-  const handleUnfriend = () => {
-    breakFriend(id).then(() => {
-      updateFavoriteFriendList();
-      updateFriendList({ type: 'break_friends', item: user });
+  const [showBreakFriendsAlert, setShowBreakFriendsAlert] = useState<Alert>();
+  const [showTemporalErrorAlert, setShowTemporalErrorAlert] = useState(false);
+
+  const handleClickBreakFriend = () => {
+    setShowBreakFriendsAlert({
+      onClickConfirm: async () => {
+        try {
+          handleOnCloseBreakFriendsAlert();
+          await breakFriend(id);
+
+          updateFavoriteFriendList();
+          updateFriendList({ type: 'break_friends', item: user });
+        } catch {
+          setShowTemporalErrorAlert(true);
+        }
+      },
+      confirmMsg: t('are_you_sure_you_want_to_delete_this_friend'),
     });
   };
+
+  const handleOnCloseTemporalErrorAlert = () => setShowTemporalErrorAlert(false);
+
+  const handleOnCloseBreakFriendsAlert = () => setShowBreakFriendsAlert(undefined);
 
   const handleClickPing = (e: MouseEvent) => {
     e.stopPropagation();
@@ -81,7 +100,7 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
             {t('hide')}
           </Typo>
         </StyledSwipeButton>,
-        <StyledSwipeButton key="unfriend" backgroundColor="ERROR" onClick={handleUnfriend}>
+        <StyledSwipeButton key="unfriend" backgroundColor="ERROR" onClick={handleClickBreakFriend}>
           <Typo type="body-medium" color="WHITE" textAlign="center">
             {t('unfriend')}
           </Typo>
@@ -180,6 +199,21 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
             )}
           </Layout.FlexRow>
         </StyledUpdatedFriendItem>
+        {showBreakFriendsAlert && (
+          <UserRelatedAlert
+            visible={!!showBreakFriendsAlert}
+            close={handleOnCloseBreakFriendsAlert}
+            {...showBreakFriendsAlert}
+          />
+        )}
+        {showTemporalErrorAlert && (
+          <AlertDialog
+            visible={showTemporalErrorAlert}
+            onClickDimmed={handleOnCloseTemporalErrorAlert}
+          >
+            {t('error.temporary_error')}
+          </AlertDialog>
+        )}
       </Layout.FlexRow>
     </SwipeLayout>
   );
