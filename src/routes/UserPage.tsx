@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate, useOutlet, useParams } from 'react-router-dom';
 import CommonError from '@components/_common/common-error/CommonError';
 import { Divider } from '@components/_common/divider/Divider.styled';
@@ -10,6 +10,7 @@ import ResponseSection from '@components/response/response-section/ResponseSecti
 import UserMoreModal from '@components/user-page/UserMoreModal';
 import { UserPageContext } from '@components/user-page/UserPage.context';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
+import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -23,6 +24,7 @@ function UserPage() {
   const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
   const { featureFlags } = useBoundStore(UserSelector);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const { user, updateUser } = useContext(UserPageContext);
   const userId = user.data?.id;
@@ -53,45 +55,58 @@ function UserPage() {
   return (
     <MainContainer key={username}>
       <UserHeader username={username} onClickMore={handleClickMore} userId={userId} />
-      <Layout.FlexCol w="100%" bgColor="LIGHT" mt={TITLE_HEADER_HEIGHT}>
-        {user.state === 'hasError' && <CommonError />}
-        {user.state === 'hasValue' && user.data && (
-          <UserMoreModal
-            isVisible={showMore}
-            setIsVisible={setShowMore}
-            user={user.data}
-            callback={updateUser}
-          />
-        )}
-        {(user.state === 'loading' || user.state === 'hasValue') && (
-          <>
-            {/** profile section */}
-            <Layout.FlexRow
-              w="100%"
-              alignItems="center"
-              justifyContent="space-between"
-              p={12}
-              bgColor="WHITE"
-              rounded={8}
-            >
-              <Profile user={user.data} />
-            </Layout.FlexRow>
-            {featureFlags?.friendList && (
-              <>
-                {/** responses and notes section */}
-                <Divider width={8} bgColor="LIGHT" />
-                <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
-                  <ResponseSection username={username} />
-                </Layout.FlexCol>
-              </>
-            )}
+      <Layout.FlexCol
+        w="100%"
+        bgColor="LIGHT"
+        mt={TITLE_HEADER_HEIGHT}
+        style={{
+          height: `calc(100vh - ${TITLE_HEADER_HEIGHT}px)`,
+          overflowY: 'auto',
+          WebkitOverflowScrolling: 'touch', // For iOS smooth scrolling
+          position: 'relative',
+        }}
+        ref={containerRef}
+      >
+        <div id={MAIN_SCROLL_CONTAINER_ID} style={{ width: '100%' }}>
+          {user.state === 'hasError' && <CommonError />}
+          {user.state === 'hasValue' && user.data && (
+            <UserMoreModal
+              isVisible={showMore}
+              setIsVisible={setShowMore}
+              user={user.data}
+              callback={updateUser}
+            />
+          )}
+          {(user.state === 'loading' || user.state === 'hasValue') && (
+            <>
+              {/** profile section */}
+              <Layout.FlexRow
+                w="100%"
+                alignItems="center"
+                justifyContent="space-between"
+                p={12}
+                bgColor="WHITE"
+                rounded={8}
+              >
+                <Profile user={user.data} />
+              </Layout.FlexRow>
+              {featureFlags?.friendList && (
+                <>
+                  {/** responses and notes section */}
+                  <Divider width={8} bgColor="LIGHT" />
+                  <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
+                    <ResponseSection username={username} />
+                  </Layout.FlexCol>
+                </>
+              )}
 
-            <Divider width={8} bgColor="LIGHT" />
-            <Layout.FlexCol pt={0} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
-              <NoteSection username={username} />
-            </Layout.FlexCol>
-          </>
-        )}
+              <Divider width={8} bgColor="LIGHT" />
+              <Layout.FlexCol pt={0} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
+                <NoteSection username={username} />
+              </Layout.FlexCol>
+            </>
+          )}
+        </div>
       </Layout.FlexCol>
     </MainContainer>
   );
