@@ -290,8 +290,8 @@
         "more": "More",
         "new_response": "New Response",
         "edited": "Edited",
-        "friend": "Friend",
-        "close_friend": "Close Friend"
+        "friend": "Friends",
+        "close_friend": "Close Friends Only"
     },
     "all_responses": {
         "title": "{{username}}'s Responses"
