@@ -540,7 +540,7 @@
     "recent_prompts": "최근 질문",
     "send_this_prompt_to": "질문 보내기",
     "search_friends": "검색",
-    "write_a_message": "입력된 메세지는 질문 내용과 함께 친구의 알림에 전달됩니다.",
+    "write_a_message": "여기에 쓴 메세지는 질문 내용과 함께 친구의 알림에 전달됩니다.",
     "send_separately": "보내기",
     "sent_success": "질문이 성공적으로 전송되었습니다 🎉"
   },
