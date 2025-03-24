@@ -19,6 +19,7 @@ function FavoriteFriendItem({ user }: Props) {
     track_id,
     description,
     connection_status,
+    unread_ping_count,
   } = user;
 
   const [t] = useTranslation('translation', { keyPrefix: 'friend' });
@@ -66,13 +67,34 @@ function FavoriteFriendItem({ user }: Props) {
           </Layout.Absolute>
         </button>
       </Layout.FlexRow>
-      <Layout.FlexRow gap={5} justifyContent="center" alignItems="center">
+      <Layout.FlexRow
+        gap={5}
+        justifyContent="center"
+        alignItems="center"
+        style={{ position: 'relative' }}
+      >
         <Typo type="label-large" color="DARK" ellipsis={{ enabled: true, maxWidth: 120 }}>
           {username}
         </Typo>
         <Layout.LayoutBase pb={2}>
           <Icon name="ping_send" size={20} onClick={handleClickPing} />
         </Layout.LayoutBase>
+        {unread_ping_count > 0 && (
+          <Layout.Absolute
+            bgColor="BLACK"
+            alignItems="center"
+            rounded={10}
+            t={-3}
+            r={6}
+            ph={3}
+            pv={1}
+            tl={['100%', 0]}
+          >
+            <Typo type="label-small" color="WHITE" fontSize={7} fontWeight={700}>
+              {unread_ping_count > 99 ? '99+' : unread_ping_count}
+            </Typo>
+          </Layout.Absolute>
+        )}
       </Layout.FlexRow>
       <Layout.FlexRow gap={3} alignItems="center">
         {track_id && <SpotifyMusic track={track_id} sharer={user} useDetailBottomSheet />}
