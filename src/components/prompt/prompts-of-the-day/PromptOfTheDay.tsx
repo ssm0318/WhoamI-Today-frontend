@@ -53,8 +53,11 @@ function PromptsOfTheDay() {
           ))}
         </StyledPromptsOfTheDay>
       </StyledPromptsOfTheDayContainer>
-      <Layout.FlexRow ml={16}>
+      <Layout.FlexRow ph={16} w="100%" justifyContent="space-between" alignItems="center">
         <Typo type="title-medium">{t('todays_questions')}</Typo>
+        <Typo type="label-medium" color="MEDIUM_GRAY" underline>
+          {t('see_more_questions')}
+        </Typo>
       </Layout.FlexRow>
       <StyledRecentPromptsOfTheDay gap={16} w="100%" alignItems="center">
         {/* today's prompts */}
