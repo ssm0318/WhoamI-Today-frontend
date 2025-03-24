@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, Layout, StyledCheckBox, Typo } from '@design-system';
+import { Button, Colors, Layout, StyledCheckBox, Typo } from '@design-system';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { FetchState } from '@models/api/common';
@@ -184,6 +184,9 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
               placeholder={t('prompts.write_a_message') || ''}
               value={messageInput}
               onChange={handleChangeMessage}
+              style={{
+                backgroundColor: Colors.LIGHT,
+              }}
             />
             <Divider width={1} />
             <Layout.LayoutBase pv={12} ph={16} w="100%">
