@@ -2,9 +2,9 @@ import { SocialBattery } from '@models/checkIn';
 
 export const SocialBatteryChipAssets: Record<SocialBattery, { emoji: string | null }> = {
   completely_drained: { emoji: '💤' },
-  low: { emoji: '🔋' },
+  low: { emoji: '🪫' },
   needs_recharge: { emoji: '🔌' },
-  moderate: { emoji: '😐' },
+  moderate: { emoji: '🔋' },
   fully_charged: { emoji: '🚀' },
-  super_social: { emoji: '🎉' },
+  super_social: { emoji: '🤩' },
 };
