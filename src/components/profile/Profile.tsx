@@ -123,12 +123,17 @@ function Profile({ user }: ProfileProps) {
             </Layout.FlexRow>
             {/* edit icon */}
             {isMyPage && (
-              <SvgIcon
-                name="edit_filled"
-                fill="DARK_GRAY"
-                size={24}
-                onClick={handleClickEditProfile}
-              />
+              <Layout.FlexRow w="100%" alignItems="center" gap={2} justifyContent="flex-end">
+                <SvgIcon
+                  name="edit_filled"
+                  fill="DARK_GRAY"
+                  size={16}
+                  onClick={handleClickEditProfile}
+                />
+                <Typo type="label-medium" color="DARK_GRAY" underline>
+                  {t('edit_profile')}
+                </Typo>
+              </Layout.FlexRow>
             )}
           </Layout.FlexRow>
           {/* 친구 수 */}

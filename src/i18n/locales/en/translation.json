@@ -240,7 +240,8 @@
                 "success": "Friendship type updated successfully 🎉",
                 "error": "A temporary error occurred. Please try again."
             }
-        }
+        },
+        "edit_profile": "Edit Profile"
     },
     "notes": {
         "notes": "{{name}}'s Posts",
