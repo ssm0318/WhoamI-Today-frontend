@@ -9,7 +9,7 @@ import Profile from '@components/profile/Profile';
 import ResponseSection from '@components/response/response-section/ResponseSection';
 import UserMoreModal from '@components/user-page/UserMoreModal';
 import { UserPageContext } from '@components/user-page/UserPage.context';
-import { TITLE_HEADER_HEIGHT } from '@constants/layout';
+import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -53,21 +53,24 @@ function UserPage() {
   }
 
   return (
-    <MainContainer key={username}>
+    <MainContainer key={username} style={{ height: '100vh', overflow: 'hidden' }}>
       <UserHeader username={username} onClickMore={handleClickMore} userId={userId} />
-      <Layout.FlexCol
-        w="100%"
-        bgColor="LIGHT"
-        mt={TITLE_HEADER_HEIGHT}
+      <div
+        id={MAIN_SCROLL_CONTAINER_ID}
         style={{
-          height: `calc(100vh - ${TITLE_HEADER_HEIGHT}px)`,
+          height: `calc(100vh - ${TITLE_HEADER_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px)`,
           overflowY: 'auto',
-          WebkitOverflowScrolling: 'touch', // For iOS smooth scrolling
+          WebkitOverflowScrolling: 'touch',
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
+          width: '100%',
+          marginTop: `${TITLE_HEADER_HEIGHT}px`,
+          paddingBottom: '24px', // 하단 여유 공간 추가
           position: 'relative',
         }}
         ref={containerRef}
       >
-        <div id={MAIN_SCROLL_CONTAINER_ID} style={{ width: '100%' }}>
+        <Layout.FlexCol w="100%" bgColor="LIGHT">
           {user.state === 'hasError' && <CommonError />}
           {user.state === 'hasValue' && user.data && (
             <UserMoreModal
@@ -106,8 +109,8 @@ function UserPage() {
               </Layout.FlexCol>
             </>
           )}
-        </div>
-      </Layout.FlexCol>
+        </Layout.FlexCol>
+      </div>
     </MainContainer>
   );
 }

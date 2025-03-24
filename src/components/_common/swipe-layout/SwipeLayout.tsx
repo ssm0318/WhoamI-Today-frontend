@@ -1,4 +1,4 @@
-import { ReactElement, TouchEvent, useContext, useRef, useState } from 'react';
+import { ReactElement, TouchEvent, useContext, useEffect, useRef, useState } from 'react';
 import {
   StyledLeftContent,
   StyledRightContent,
@@ -42,6 +42,17 @@ export function SwipeLayout({
   const maxRightContentWidth = rightContentWidth * 1.5;
 
   const { setHasSwipedItem } = useContext(SwipeLayoutListContext);
+
+  // 컴포넌트 언마운트 시 정리 작업
+  useEffect(() => {
+    return () => {
+      // 언마운트 시 스와이프 상태 초기화
+      setIsSwiped(false);
+      setDistance(undefined);
+      setSwipingDirection('none');
+      setHasSwipedItem(false);
+    };
+  }, [setHasSwipedItem]);
 
   const clearSwipeState = () => {
     setIsSwiped(false);
