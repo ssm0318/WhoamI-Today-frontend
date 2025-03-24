@@ -106,7 +106,7 @@ function FriendsList() {
                   fontType="body-medium"
                 />
               </Layout.FlexRow>
-              <Layout.FlexCol w="100%" pv={8} gap={4}>
+              <Layout.FlexCol w="100%" pv={8}>
                 {isAllFriendsLoading ? (
                   <AllFriendListLoader />
                 ) : allFriends?.[0] && allFriends[0].count > 0 ? (

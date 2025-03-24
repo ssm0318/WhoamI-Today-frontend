@@ -114,7 +114,7 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
                 backgroundColor="DARK_GRAY"
                 onClick={handleDeleteFavorite}
               >
-                <Icon name="star" size={28} />
+                <Icon name="friend_pinned" size={28} />
               </StyledSwipeButton>,
             ]
           : [
@@ -123,7 +123,7 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
                 backgroundColor="DARK_GRAY"
                 onClick={handleAddFavorite}
               >
-                <SvgIcon name="star_outline" size={28} color="WHITE" />
+                <SvgIcon name="friend_unpinned" size={28} color="WHITE" />
               </StyledSwipeButton>,
             ]
       }
