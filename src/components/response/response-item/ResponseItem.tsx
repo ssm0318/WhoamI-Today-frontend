@@ -29,6 +29,29 @@ function ResponseItem({
   refresh,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
+
+  const [overflowSummary, setOverflowSummary] = useState<string>();
+  const [bottomSheet, setBottomSheet] = useState<boolean>(false);
+  const [inputFocus, setInputFocus] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+
+  const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
+    emojiPickerTarget: state.emojiPickerTarget,
+    setEmojiPickerTarget: state.setEmojiPickerTarget,
+  }));
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (displayType !== 'LIST') return;
+    if (response.content.length > MAX_RESPONSE_CONTENT_LENGTH)
+      setOverflowSummary(response.content.slice(0, MAX_RESPONSE_CONTENT_LENGTH));
+
+    const contentArrWithNewLine = response.content.split('\n');
+    if (contentArrWithNewLine.length > MAX_RESPONSE_NEW_LINE)
+      setOverflowSummary(contentArrWithNewLine.slice(0, MAX_RESPONSE_NEW_LINE).join('\n'));
+  }, [response.content, displayType]);
+
   const {
     content,
     created_at,
@@ -39,18 +62,8 @@ function ResponseItem({
     current_user_read,
     visibility,
   } = response;
+
   const { username, profile_image } = author_detail ?? {};
-  const [overflowSummary, setOverflowSummary] = useState<string>();
-  const [bottomSheet, setBottomSheet] = useState<boolean>(false);
-  const [inputFocus, setInputFocus] = useState(false);
-
-  const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
-    emojiPickerTarget: state.emojiPickerTarget,
-    setEmojiPickerTarget: state.setEmojiPickerTarget,
-  }));
-
-  const navigate = useNavigate();
-  const [showMore, setShowMore] = useState(false);
 
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
@@ -77,16 +90,6 @@ function ResponseItem({
     e.stopPropagation();
     navigate(`/users/${username}`);
   };
-
-  useEffect(() => {
-    if (displayType !== 'LIST') return;
-    if (content.length > MAX_RESPONSE_CONTENT_LENGTH)
-      setOverflowSummary(content.slice(0, MAX_RESPONSE_CONTENT_LENGTH));
-
-    const contentArrWithNewLine = content.split('\n');
-    if (contentArrWithNewLine.length > MAX_RESPONSE_NEW_LINE)
-      setOverflowSummary(contentArrWithNewLine.slice(0, MAX_RESPONSE_NEW_LINE).join('\n'));
-  }, [content, displayType]);
 
   return (
     <>

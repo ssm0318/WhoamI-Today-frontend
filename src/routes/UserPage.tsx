@@ -45,8 +45,13 @@ function UserPage() {
 
   const outlet = useOutlet();
 
+  // outlet이 있으면 outlet만 렌더링
+  if (outlet) {
+    return outlet;
+  }
+
   return (
-    <MainContainer key={username} style={{ display: outlet ? 'none' : 'block' }}>
+    <MainContainer key={username}>
       <UserHeader username={username} onClickMore={handleClickMore} userId={userId} />
       <Layout.FlexCol w="100%" bgColor="LIGHT" mt={TITLE_HEADER_HEIGHT}>
         {user.state === 'hasError' && <CommonError />}
