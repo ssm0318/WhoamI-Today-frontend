@@ -10,6 +10,7 @@ interface ProfileImageProps {
   className?: string;
   onClick?: (e: MouseEvent) => void;
   updated?: boolean;
+  updatedLabelSize?: number;
 }
 
 function ProfileImage({
@@ -19,12 +20,17 @@ function ProfileImage({
   size = 36,
   onClick,
   updated = false,
+  updatedLabelSize = 8,
 }: ProfileImageProps) {
   return (
     <NonShrinkWrapper onClick={onClick}>
       {!!updated && (
-        <Layout.Absolute t={0} l={size / 4 + 2} r={size / 4}>
-          <UpdatedLabel fontSize={8} />
+        <Layout.Absolute
+          t={-updatedLabelSize / 4}
+          l="50%"
+          style={{ transform: 'translateX(-50%)' }}
+        >
+          <UpdatedLabel fontSize={updatedLabelSize} />
         </Layout.Absolute>
       )}
       <Layout.LayoutBase w={size} h={size} rounded={size / 2} className={className}>

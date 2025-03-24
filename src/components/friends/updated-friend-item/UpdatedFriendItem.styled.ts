@@ -3,6 +3,7 @@ import { Layout } from '@design-system';
 
 export const StyledUpdatedFriendItem = styled(Layout.FlexRow)`
   padding-bottom: 4px;
+  padding-top: 4px;
   border-bottom: 1px ${({ theme }) => theme.LIGHT} solid;
 `;
 

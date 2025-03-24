@@ -177,7 +177,9 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
             alignItems="center"
             gap={3}
           >
-            {track_id && <SpotifyMusic track={track_id} sharer={user} useDetailBottomSheet />}
+            <Layout.FlexRow w="100%" ml={12}>
+              {track_id && <SpotifyMusic track={track_id} sharer={user} useDetailBottomSheet />}
+            </Layout.FlexRow>
             <Layout.LayoutBase pb={2}>
               <Icon name="ping_send" size={22} onClick={handleClickPing} />
             </Layout.LayoutBase>
