@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import MainContainer from '@components/_common/main-container/MainContainer';
 import NewNoteHeader from '@components/note/new-note-header/NewNoteHeader';
 import { NewNoteForm } from '@models/post';
 import { convertImagesToFiles } from '@utils/convertImageToFiles';
 import NewNoteContent from '../../components/note/new-note-content/NewNoteContent';
+import { MainScrollContainer } from '../Root';
 
 function NewNote() {
   const location = useLocation();
@@ -27,10 +27,10 @@ function NewNote() {
   }, [images, location.state]);
 
   return (
-    <MainContainer>
+    <MainScrollContainer>
       <NewNoteHeader noteId={noteId} title={title} noteInfo={noteInfo} status={status} />
       <NewNoteContent noteInfo={noteInfo} setNoteInfo={setNoteInfo} isEdit={!!noteId} />
-    </MainContainer>
+    </MainScrollContainer>
   );
 }
 

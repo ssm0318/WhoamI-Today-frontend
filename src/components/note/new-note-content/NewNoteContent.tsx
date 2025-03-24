@@ -2,7 +2,7 @@ import React, { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { FeatureFlagKey } from '@constants/featureFlag';
-import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
+import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, RadioButton, SvgIcon, Typo } from '@design-system';
 import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import { FileSelectedData } from '@models/app';
@@ -144,7 +144,7 @@ function NewNoteContent({ noteInfo, setNoteInfo, isEdit }: NoteInformationProps)
 
   return (
     <>
-      <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} mt={TITLE_HEADER_HEIGHT} pv={12} gap={16}>
+      <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} pv={12} gap={16}>
         <Layout.FlexRow w="100%" alignItems="center" gap={8} pv={8}>
           <ProfileImage
             imageUrl={myProfile?.profile_image}
