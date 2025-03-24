@@ -10,7 +10,7 @@ function UpdatedLabel({ fontSize = 10 }: UpdatedLabelProps) {
       ph={4}
       justifyContent="center"
       alignItems="center"
-      bgColor="UPDATED"
+      style={{ backgroundColor: 'red' }}
       rounded={4}
     >
       <Typo type="label-small" color="WHITE" fontSize={fontSize}>
