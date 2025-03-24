@@ -2,12 +2,10 @@ import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Loader } from '@components/_common/loader/Loader.styled';
-import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledNewResponsePrompt } from '@components/_common/prompt/PromptCard.styled';
 import SubHeader from '@components/sub-header/SubHeader';
-import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, RadioButton, TextArea, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
@@ -16,6 +14,7 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { getQuestionDetail, patchResponse, postResponse } from '@utils/apis/question';
 import { getResponse } from '@utils/apis/responses';
 import { FlexRow, LayoutBase } from 'src/design-system/layouts';
+import { MainScrollContainer } from '../Root';
 
 const isValidQuestionId = (questionId?: string): questionId is string =>
   !!questionId && /^\d+$/.test(questionId);
@@ -123,7 +122,7 @@ function NewResponse() {
   const disabledPost = !newResponse?.trim().length;
 
   return (
-    <MainContainer>
+    <MainScrollContainer>
       <SubHeader
         title={title}
         LeftComponent={
@@ -139,7 +138,7 @@ function NewResponse() {
           </button>
         }
       />
-      <LayoutBase mt={TITLE_HEADER_HEIGHT} w="100%" pt={20} ph={12}>
+      <LayoutBase w="100%" pt={20} ph={12} pb={50}>
         {currentUser && (
           <FlexRow gap={4} alignItems="center" mb={12}>
             <ProfileImage
@@ -203,7 +202,7 @@ function NewResponse() {
           </Typo>
         </FlexRow>
       </LayoutBase>
-    </MainContainer>
+    </MainScrollContainer>
   );
 }
 
