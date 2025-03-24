@@ -4,7 +4,7 @@ export const SocialBatteryChipAssets: Record<SocialBattery, { emoji: string | nu
   completely_drained: { emoji: '💤' },
   low: { emoji: '🪫' },
   needs_recharge: { emoji: '🔌' },
-  moderate: { emoji: '🔋' },
+  moderately_social: { emoji: '🔋' },
   fully_charged: { emoji: '🚀' },
   super_social: { emoji: '🤩' },
 };

@@ -2,7 +2,7 @@ export enum SocialBattery {
   completely_drained = 'completely_drained',
   low = 'low',
   needs_recharge = 'needs_recharge',
-  moderate = 'moderate',
+  moderately_social = 'moderately_social',
   fully_charged = 'fully_charged',
   super_social = 'super_social',
 }
