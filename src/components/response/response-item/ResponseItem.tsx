@@ -155,7 +155,15 @@ function ResponseItem({
               <Icon name="dots_menu" size={24} onClick={handleClickMore} />
             </Layout.FlexRow>
           </Layout.FlexRow>
-          <Layout.FlexCol w="100%" mb={8}>
+          <Layout.FlexCol
+            w="100%"
+            mb={8}
+            style={{
+              whiteSpace: 'pre-wrap',
+              overflowWrap: 'break-word', // 줄바꿈을 공백 단위로
+              wordBreak: 'break-word', // 공백이 없는 경우에도 줄바꿈 허용
+            }}
+          >
             {displayType === 'DETAIL' ? (
               <ContentTranslation content={content} translateContent={!isMyPage} />
             ) : (
