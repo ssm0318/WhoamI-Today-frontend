@@ -1,10 +1,13 @@
-export const getUnifiedEmoji = (emoji: string) => {
-  const codePoint = emoji.codePointAt(0)?.toString(16) || '';
+export const getUnifiedEmoji = (emoji: string): string => {
+  // 모든 codePoint를 순회하면서 16진수로 변환하고 '-'로 join
+  const codePoints = Array.from(emoji)
+    .map((char) => char.codePointAt(0)?.toString(16))
+    .filter(Boolean); // undefined 필터링
 
-  // NOTE 예외적으로 relaxed emoji의 경우 -fe0f를 붙여주어야 함
-  if (codePoint === '263a') {
+  // relaxed emoji 보정도 같이 적용
+  if (codePoints.length === 1 && codePoints[0] === '263a') {
     return '263a-fe0f';
   }
 
-  return codePoint;
+  return codePoints.join('-');
 };
