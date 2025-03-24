@@ -228,8 +228,8 @@
             "checked_in_time": "Last updated {{time}}"
         },
         "connection": {
-            "friend": "Friends",
-            "close_friend": "Close Friends"
+            "friend": "Friend",
+            "close_friend": "Close Friend"
         },
         "edit_connections": {
             "title": "Friendship Type",
