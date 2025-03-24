@@ -14,6 +14,7 @@ export const closeAllModals = (): boolean => {
         bubbles: true,
       }),
     );
+    modalClosed = true;
 
     // 2. 모달 배경 찾아서 클릭 (배경 클릭으로 모달이 닫히는 경우)
     const modalBackgrounds = Array.from(
@@ -51,32 +52,14 @@ export const closeAllModals = (): boolean => {
       });
     }
 
-    // 4. modal-container 내용 비우기
+    // 4. modal-container 내용 숨기기 (innerHTML 직접 조작은 피함)
     const modalContainer = document.getElementById('modal-container');
     if (modalContainer) {
-      modalContainer.innerHTML = '';
+      modalContainer.style.display = 'none';
       modalClosed = true;
     }
 
-    // 5. 모든 모달 관련 요소 DOM에서 직접 제거 (가장 강력한 방법)
-    const allModalElements = Array.from(
-      document.querySelectorAll(
-        '[class*="Modal"], [class*="modal"], [class*="BottomModal"], [class*="Popup"], [class*="popup"], [class*="Dialog"], [class*="dialog"]',
-      ),
-    );
-
-    if (allModalElements.length > 0) {
-      allModalElements.forEach((el) => {
-        try {
-          if (el && el.parentNode) {
-            el.parentNode.removeChild(el);
-            modalClosed = true;
-          }
-        } catch (e) {
-          console.error('모달 요소 제거 실패', e);
-        }
-      });
-    }
+    // 5. DOM 직접 조작하는 방식은 제거함 (React와 충돌 발생)
 
     // 6. body에 추가된 no-scroll 클래스 제거 (많은 모달이 body에 클래스를 추가해 스크롤을 막음)
     document.body.classList.remove('no-scroll', 'modal-open', 'overflow-hidden');
@@ -96,11 +79,12 @@ export const closeAllModals = (): boolean => {
 export const closeModalAndNavigate = (
   navigate: (path: string) => void,
   path: string,
-  delay = 300,
+  delay = 300, // 적절한 지연 시간 설정
 ): void => {
+  // 먼저 모달 닫기 시도
   closeAllModals();
 
-  // 지정된 시간 후 네비게이션 실행
+  // 모달 닫은 후 지연 시간을 두고 네비게이션 수행
   setTimeout(() => {
     navigate(path);
   }, delay);
