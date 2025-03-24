@@ -3,7 +3,9 @@
     "hide": "숨김",
     "unfriend": "삭제",
     "friend": "친구",
-    "close_friend": "친한 친구"
+    "close_friend": "친한 친구",
+    "are_you_sure_you_want_to_delete_this_friend": "이 친구를 삭제하시겠습니까?",
+    "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
   },
   "common": {
     "done": "완료",
