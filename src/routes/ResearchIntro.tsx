@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import MainContainer from '@components/_common/main-container/MainContainer';
 import {
   RESEARCH_INQUIRY_DISCORD_LINK,
   RESEARCH_INQUIRY_INSTAGRAM_LINK,
@@ -11,6 +10,7 @@ import {
 } from '@constants/url';
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
+import { MainScrollContainer } from './Root';
 
 function ResearchIntro() {
   const [t, i18n] = useTranslation('translation', { keyPrefix: 'research_intro' });
@@ -68,7 +68,7 @@ function ResearchIntro() {
   };
 
   return (
-    <MainContainer>
+    <MainScrollContainer>
       <Layout.FlexCol mt={100} w="100%" h="100%" ph={25} alignItems="center">
         <Typo type="head-line" mb={50} textAlign="center">
           {t('title')}
@@ -256,7 +256,7 @@ function ResearchIntro() {
           </Layout.FlexCol>
         )}
       </Layout.FlexCol>
-    </MainContainer>
+    </MainScrollContainer>
   );
 }
 
