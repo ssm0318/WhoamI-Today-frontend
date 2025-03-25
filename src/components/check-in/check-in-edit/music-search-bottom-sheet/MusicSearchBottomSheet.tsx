@@ -51,7 +51,7 @@ function MusicSearchBottomSheet({
   }, [query]);
 
   const handleSelectMusic = (track: Track) => {
-    setSelected(track.id);
+    setSelected((prevSelected) => (prevSelected === track.id ? null : track.id));
   };
 
   const [autoFocus, setAutoFocus] = useState(false);

@@ -9,7 +9,12 @@ type MusicItemProps = {
 
 function MusicItem({ track, onSelect, selected }: MusicItemProps) {
   return (
-    <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center">
+    <Layout.FlexRow
+      justifyContent="space-between"
+      w="100%"
+      alignItems="center"
+      onClick={() => onSelect(track)}
+    >
       <Layout.FlexRow gap={12} flex={1}>
         {/* 썸네일 */}
         {track.album.images.length > 0 && track.album.images[0].url ? (
