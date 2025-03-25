@@ -15,6 +15,7 @@ export interface User {
   persona: Persona[];
   has_changed_pw?: boolean;
   unread_noti_cnt?: number;
+  unread_ping_count?: number;
   connection_status: Connection | null;
 }
 
