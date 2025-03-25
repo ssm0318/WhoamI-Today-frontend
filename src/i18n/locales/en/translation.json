@@ -23,7 +23,12 @@
         "has_account": "I already signed up and received my account information.",
         "has_not_account": "Great, I'd like to sign up for the study",
         "someting_else_title": "Something else?",
-        "someting_else_description": "If you signed up for the study but haven't received your account information yet, please allow a couple of days for us to get back to you. If you still don't hear from us, feel free to reach out via:"
+        "someting_else_description": "If you signed up for the study but haven't received your account information yet, please allow a couple of days for us to get back to you. If you still don't hear from us, feel free to reach out via:",
+        "discord": "Discord",
+        "email": "Email",
+        "kakao": "Kakaotalk 1:1 Open Chat",
+        "instagram": "Instagram",
+        "text_message": "Text"
     },
     "sign_in": {
         "username_or_email": "Username or Email",
