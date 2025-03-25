@@ -28,7 +28,6 @@ function UserPage() {
 
   const { user, updateUser } = useContext(UserPageContext);
   const userId = user.data?.id;
-  // console.log(user.data);
   const unreadCount = user.data?.unread_ping_count;
 
   const readCheckIn = async () => {
