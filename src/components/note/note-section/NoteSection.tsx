@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
+import { UserPageContext } from '@components/user-page/UserPage.context';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Note } from '@models/post';
@@ -22,6 +23,9 @@ function NoteSection({ username }: NoteSectionProps) {
   const [t] = useTranslation('translation');
   const { myProfile } = useBoundStore(UserSelector);
   const navigate = useNavigate();
+
+  const { user } = useContext(UserPageContext);
+  const areFriends = user?.data?.are_friends === true;
 
   const handleClickNewNote = () => {
     return navigate('/notes/new');
@@ -107,7 +111,10 @@ function NoteSection({ username }: NoteSectionProps) {
             </>
           ) : (
             <Layout.FlexRow alignItems="center" w="100%" h="100%">
-              <NoContents title={t('no_contents.notes')} />
+              <NoContents
+                text={areFriends ? t('no_contents.notes') : t('no_contents.notes_not_friend')}
+                pv={20}
+              />
             </Layout.FlexRow>
           )}
         </Layout.FlexCol>

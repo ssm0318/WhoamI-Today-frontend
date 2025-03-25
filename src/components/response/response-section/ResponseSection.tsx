@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -6,6 +6,7 @@ import CommonError from '@components/_common/common-error/CommonError';
 import Icon from '@components/_common/icon/Icon';
 import NoContents from '@components/_common/no-contents/NoContents';
 import SelectPromptSheet from '@components/prompt/select-prompt-sheet/SelectPromptSheet';
+import { UserPageContext } from '@components/user-page/UserPage.context';
 import { Layout, Typo } from '@design-system';
 import { PaginationResponse } from '@models/api/common';
 import { Response } from '@models/post';
@@ -32,6 +33,9 @@ function ResponseSection({ username }: ResponseSectionProps) {
   const [t] = useTranslation('translation');
   const navigate = useNavigate();
   const [selectPrompt, setSelectPrompt] = useState(false);
+
+  const { user } = useContext(UserPageContext);
+  const areFriends = user?.data?.are_friends === true;
 
   const {
     data: responses,
@@ -106,7 +110,14 @@ function ResponseSection({ username }: ResponseSectionProps) {
                 </>
               ) : !responses?.results?.length ? (
                 <Layout.FlexRow alignItems="center" h="100%" justifyContent="center" w="100%">
-                  <NoContents text={t('no_contents.responses')} pv={20} />
+                  <NoContents
+                    text={
+                      areFriends
+                        ? t('no_contents.responses')
+                        : t('no_contents.responses_not_friend')
+                    }
+                    pv={20}
+                  />
                 </Layout.FlexRow>
               ) : (
                 responses.results
