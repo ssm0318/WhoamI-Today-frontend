@@ -106,7 +106,7 @@ function ResearchIntro() {
           <Layout.FlexCol w="100%" ph={20} mt={10}>
             <Typo type="body-medium">{t('someting_else_description')}</Typo>
             <Layout.FlexCol gap={12} mt={20}>
-              {i18n.language !== 'ko-KR' ? (
+              {i18n.language === 'ko-KR' ? (
                 <Layout.FlexCol gap={15} pl={4}>
                   <a
                     href={RESEARCH_INQUIRY_KAKAOTALK_LINK}
