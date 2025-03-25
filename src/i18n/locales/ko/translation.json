@@ -502,7 +502,9 @@
     "forbidden_post": "접근이 불가능한 게시글입니다.",
     "not_found_post": "존재하지 않는 게시글입니다.",
     "forbidden_comment": "접근이 불가능한 댓글입니다.",
-    "not_found_comment": "존재하지 않는 댓글입니다."
+    "not_found_comment": "존재하지 않는 댓글입니다.",
+    "responses_not_friend": "친구에게만 공개된 답변입니다.",
+    "notes_not_friend": "친구에게만 공개된 게시글입니다."
   },
   "chats": {
     "title": "채팅",

@@ -509,7 +509,9 @@
         "forbidden_post": "This post is not accessible.",
         "not_found_post": "This post does not exist.",
         "forbidden_comment": "This comment is not accessible.",
-        "not_found_comment": "This comment does not exist."
+        "not_found_comment": "This comment does not exist.",
+        "responses_not_friend": "Only friends can view this response.",
+        "notes_not_friend": "Only friends can view this notes."
     },
     "chats": {
         "title": "Chats",
