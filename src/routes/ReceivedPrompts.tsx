@@ -36,7 +36,7 @@ export default function ReceivedPrompts() {
 
   return (
     <MainScrollContainer>
-      <SubHeader title="Received Prompts" />
+      <SubHeader title="Received Questions" />
       <Layout.FlexCol w="100%" ph={16} pb={16}>
         <ReceivedPromptList
           title={t('last_7_days')}
