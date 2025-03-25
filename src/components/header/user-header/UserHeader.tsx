@@ -17,7 +17,6 @@ function UserHeader({ username, userId, unreadCount, onClickMore }: UserHeaderPr
   const { user } = useContext(UserPageContext);
   const areFriends = user?.data?.are_friends === true;
 
-  console.log(unreadCount);
   const handleClickPing = async () => {
     if (!userId) return;
     navigate(`/users/${userId}/ping`);
