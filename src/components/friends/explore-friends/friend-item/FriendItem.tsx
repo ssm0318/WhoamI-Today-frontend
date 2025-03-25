@@ -27,14 +27,20 @@ function FriendItem(props: FriendItemProps) {
     >
       <Layout.FlexRow alignItems="center" gap={7}>
         <ProfileImage imageUrl={user.profile_image} username={user.username} size={44} />
-        <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 160 }}>
-          {user.username}
-        </Typo>
-        {showEmail && (
-          <Typo type="label-medium" color="MEDIUM_GRAY" ellipsis={{ enabled: true, maxWidth: 120 }}>
-            {user.email}
+        <Layout.FlexCol>
+          <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 160 }}>
+            {user.username}
           </Typo>
-        )}
+          {showEmail && (
+            <Typo
+              type="label-medium"
+              color="MEDIUM_GRAY"
+              ellipsis={{ enabled: true, maxWidth: 300 }}
+            >
+              {user.email}
+            </Typo>
+          )}
+        </Layout.FlexCol>
       </Layout.FlexRow>
       <Layout.LayoutBase>
         <FriendStatus {...props} />
