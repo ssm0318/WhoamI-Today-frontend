@@ -26,14 +26,14 @@ export type FeatureFlagMapCollection = {
 
 // Default (Ver. R)
 const DEFAULT_FLAGS = {
-  [FeatureFlagKey.FRIEND_FEED]: true,
-  [FeatureFlagKey.FRIEND_LIST]: false,
-  [FeatureFlagKey.FRIEND_REQUEST_TYPE]: false,
-  [FeatureFlagKey.REACTION_COUNT]: true,
-  [FeatureFlagKey.CHECK_IN]: false,
-  [FeatureFlagKey.QUESTION_RESPONSE_FEATURE]: false,
-  [FeatureFlagKey.PERSONA]: false,
-  [FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]: false,
+  [FeatureFlagKey.FRIEND_FEED]: false,
+  [FeatureFlagKey.FRIEND_LIST]: true,
+  [FeatureFlagKey.FRIEND_REQUEST_TYPE]: true,
+  [FeatureFlagKey.REACTION_COUNT]: false,
+  [FeatureFlagKey.CHECK_IN]: true,
+  [FeatureFlagKey.QUESTION_RESPONSE_FEATURE]: true,
+  [FeatureFlagKey.PERSONA]: true,
+  [FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]: true,
 };
 
 export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {

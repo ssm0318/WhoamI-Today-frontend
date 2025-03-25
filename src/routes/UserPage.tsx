@@ -28,6 +28,8 @@ function UserPage() {
 
   const { user, updateUser } = useContext(UserPageContext);
   const userId = user.data?.id;
+  // console.log(user.data);
+  const unreadCount = user.data?.unread_ping_count;
 
   const readCheckIn = async () => {
     if (!username || !user.data || !user.data.check_in.id) return;
@@ -54,7 +56,12 @@ function UserPage() {
 
   return (
     <MainContainer key={username} style={{ height: '100vh', overflow: 'hidden' }}>
-      <UserHeader username={username} onClickMore={handleClickMore} userId={userId} />
+      <UserHeader
+        username={username}
+        onClickMore={handleClickMore}
+        userId={userId}
+        unreadCount={unreadCount}
+      />
       <div
         id={MAIN_SCROLL_CONTAINER_ID}
         style={{
