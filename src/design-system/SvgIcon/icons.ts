@@ -72,6 +72,7 @@ const noti_icon_emoji = 'noti_icon_emoji';
 const noti_icon_public_comment = 'noti_icon_public_comment';
 const noti_icon_private_comment = 'noti_icon_private_comment';
 const noti_icon_prompt = 'noti_icon_prompt';
+const noti_icon_ping = 'noti_icon_ping';
 const add_default = 'add_default';
 const star = 'star';
 const star_outline = 'star_outline';
@@ -233,6 +234,7 @@ export {
   new_chat,
   noti_icon_emoji,
   noti_icon_like,
+  noti_icon_ping,
   noti_icon_private_comment,
   noti_icon_prompt,
   noti_icon_public_comment,
