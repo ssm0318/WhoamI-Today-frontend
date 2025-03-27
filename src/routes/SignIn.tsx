@@ -76,7 +76,7 @@ function SignIn() {
           onKeyDown={onKeySubmit}
         />
       </Layout.FlexCol>
-      <Layout.Absolute w="100%" b="50px" flexDirection="column" alignItems="center" gap={10}>
+      <Layout.FlexCol w="100%" alignItems="center" gap={10}>
         {signInError && (
           <Font.Body type="18_regular" color="ERROR">
             {signInError}
@@ -98,7 +98,7 @@ function SignIn() {
             <Font.Body type="18_regular">{t('sign_up')}</Font.Body>
           </a> */}
         </Layout.FlexRow>
-      </Layout.Absolute>
+      </Layout.FlexCol>
     </>
   );
 }
