@@ -2,13 +2,14 @@ import styled from 'styled-components';
 import { Layout, TextArea, Typo } from '@design-system';
 
 export const SendPromptModalContainer = styled.div`
-  padding: 16px;
+  padding: 16px 16px 0 16px;
   background-color: ${({ theme }) => theme.WHITE};
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-y: hidden;
+  overflow: hidden;
 `;
 
 export const SendPromptModalFriendListContainer = styled.div`
@@ -23,6 +24,25 @@ export const SendPromptModalTitle = styled(Typo)`
 
 export const SendPromptModalFriendList = styled(Layout.FlexCol)`
   overflow-y: auto;
+  flex: 1;
+  width: 100%;
+  padding-bottom: 200px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const FixedBottomSection = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: ${({ theme }) => theme.WHITE};
+
+  border-top: 1px solid ${({ theme }) => theme.LIGHT_GRAY};
 `;
 
 export const MessageInput = styled(TextArea)`
@@ -31,4 +51,5 @@ export const MessageInput = styled(TextArea)`
   padding: 12px 16px;
   font-size: 14px;
   border: none;
+  background-color: ${({ theme }) => theme.WHITE};
 `;

@@ -1,5 +1,6 @@
 import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
+import { Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
 
 interface PopupProps {
@@ -24,7 +25,7 @@ const StyledPopupOverlay = styled(Layout.FlexCol)`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: ${Z_INDEX.COMMENT_LIKES_POPUP};
   justify-content: center;
   align-items: center;
 `;

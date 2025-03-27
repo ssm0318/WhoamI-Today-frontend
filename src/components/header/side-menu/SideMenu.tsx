@@ -85,7 +85,7 @@ function SideMenu({ closeSideMenu }: Props) {
               </button>
             ))}
             {/* 문의 * 연락처 */}
-            <Layout.FlexCol mt={40} pr={12}>
+            <Layout.FlexCol mt={52} pr={12}>
               <Typo type="title-large" mb={20}>
                 {t('inquiry')} :
               </Typo>

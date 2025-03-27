@@ -110,7 +110,7 @@ function UserPage() {
               )}
 
               <Divider width={8} bgColor="LIGHT" />
-              <Layout.FlexCol pt={0} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
+              <Layout.FlexCol pt={8} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
                 <NoteSection username={username} />
               </Layout.FlexCol>
             </>
