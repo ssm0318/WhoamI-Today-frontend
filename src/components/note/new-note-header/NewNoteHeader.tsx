@@ -1,4 +1,5 @@
 import { AxiosError } from 'axios';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Layout, Typo } from '@design-system';
@@ -16,6 +17,7 @@ interface NewNoteHeaderProps {
 
 function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
@@ -25,6 +27,9 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
   };
 
   const confirmPost = async () => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     try {
       const { id: newNoteId } = !noteId
         ? await postNote(noteInfo)
@@ -43,10 +48,12 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
           }`,
         ),
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const canPost = !!noteInfo.content;
+  const canPost = !!noteInfo.content && !isSubmitting;
 
   return (
     <NewNoteHeaderWrapper>

@@ -34,6 +34,7 @@ function NewResponse() {
   // NOTE: QUESTION_RESPONSE_FEATURE 플래그가 true인 경우만 해당 NewResponse 페이지 노출
   // 따라서 Note처럼 공개 범위 분기가 필요없음
   const [visibility, setVisibility] = useState<PostVisibility>(PostVisibility.CLOSE_FRIENDS);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const title = !location.state
     ? t('question.response.new_response')
@@ -95,38 +96,43 @@ function NewResponse() {
 
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const handleClickPost = async () => {
-    if (!questionId && !responseId) return;
-    navigate('/my');
-    openToast({ message: t('question.response.posting') });
-    const { id: newResponseId } = !isEdit
-      ? await postResponse({
-          question_id: Number(questionId),
-          content: newResponse || '',
-          visibility,
-        })
-      : await patchResponse({
-          post_id: Number(responseId),
-          content: newResponse || '',
-          visibility,
-        });
+    if ((!questionId && !responseId) || isSubmitting) return;
 
-    openToast({
-      message: t(isEdit ? 'question.response.edited' : 'question.response.posted'),
-      actionText: t('question.response.view'),
-    });
+    setIsSubmitting(true);
+    try {
+      navigate('/my');
+      openToast({ message: t('question.response.posting') });
+      const { id: newResponseId } = !isEdit
+        ? await postResponse({
+            question_id: Number(questionId),
+            content: newResponse || '',
+            visibility,
+          })
+        : await patchResponse({
+            post_id: Number(responseId),
+            content: newResponse || '',
+            visibility,
+          });
 
-    navigate(`/responses/${newResponseId}`, { state: 'new' });
-    openToast({ message: t('question.response.posting') });
+      openToast({
+        message: t(isEdit ? 'question.response.edited' : 'question.response.posted'),
+        actionText: t('question.response.view'),
+      });
+
+      navigate(`/responses/${newResponseId}`, { state: 'new' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const disabledPost = !newResponse?.trim().length;
+  const disabledPost = !newResponse?.trim().length || isSubmitting;
 
   return (
     <MainScrollContainer>
       <SubHeader
         title={title}
         LeftComponent={
-          <button type="button" onClick={handleClickCancel}>
+          <button type="button" onClick={handleClickCancel} disabled={isSubmitting}>
             <Typo type="title-large">{t('question.response.cancel')}</Typo>
           </button>
         }
