@@ -1,6 +1,7 @@
 import { MouseEvent } from 'react';
-import { Z_INDEX } from '@constants/layout';
+import { TOP_NAVIGATION_HEIGHT, Z_INDEX } from '@constants/layout';
 import { Layout, SvgIcon } from '@design-system';
+import { MainWrapper } from '@styles/wrappers';
 
 interface ProfileImageOverlayProps {
   imageUrl?: string | null;
@@ -9,30 +10,35 @@ interface ProfileImageOverlayProps {
 }
 
 function ProfileImageOverlay({ imageUrl, username, onClose }: ProfileImageOverlayProps) {
-  const handleOverlayClick = () => {
-    onClose();
-  };
-
   const handleCloseClick = (e: MouseEvent) => {
     e.stopPropagation();
     onClose();
   };
 
+  const handleOverlayClick = (e: MouseEvent) => {
+    e.stopPropagation();
+    onClose();
+  };
+
   return (
-    <Layout.AbsoluteFill
+    <MainWrapper
       style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        zIndex: Z_INDEX.PROFILE_IMAGE_OVERLAY,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: Z_INDEX.PROFILE_IMAGE_OVERLAY,
-        cursor: 'pointer',
       }}
       onClick={handleOverlayClick}
     >
       {/* Close Button (X) */}
       <Layout.Absolute
-        t={16}
+        t={TOP_NAVIGATION_HEIGHT + 16}
         r={16}
         style={{
           cursor: 'pointer',
@@ -84,7 +90,7 @@ function ProfileImageOverlay({ imageUrl, username, onClose }: ProfileImageOverla
           <SvgIcon name="default_profile" size={Math.min(window.innerWidth * 0.7, 400)} />
         )}
       </div>
-    </Layout.AbsoluteFill>
+    </MainWrapper>
   );
 }
 
