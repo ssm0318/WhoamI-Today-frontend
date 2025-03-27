@@ -492,7 +492,13 @@
         "private_comment": "Private Comment",
         "private_placeholder": "This comment is only visible to the original poster.",
         "replying_to": "Replying to {{username}}",
-        "report": "Report"
+        "report": "Report",
+        "report_title": "Report This Comment?",
+        "report_content": "Reporting will also hide this comment from you.",
+        "report_confirm": "Report",
+        "report_cancel": "Cancel",
+        "report_success": "Comment reported",
+        "report_error": "A temporary error occurred. Please try again later."
     },
     "no_contents": {
         "friends": "No friends yet.",

@@ -119,6 +119,7 @@ function CommentBottomSheet({
               setCommentToType('Comment');
             }}
             onDeleteComplete={deleteComment}
+            onConfirmReport={deleteComment}
           />
         ))}
       </CommentBottomContentWrapper>

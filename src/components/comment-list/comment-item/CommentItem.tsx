@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import CommonDialog, {
+  CommonDialogProps,
+} from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAlert';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
@@ -10,9 +13,10 @@ import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import { Layout, Typo } from '@design-system';
 import useDeleteCommentAlert from '@hooks/useDeleteCommentAlert';
-import { Comment, PrivateComment } from '@models/post';
+import { Comment, POST_TYPE, PrivateComment } from '@models/post';
 import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { reportContent } from '@utils/apis/common';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import CommentLikesPopup from '../comment-likes-popup/CommentLikesPopup';
 
@@ -22,7 +26,13 @@ interface CommentItemProps {
   replyAvailable?: boolean;
   onClickReplyBtn?: () => void;
   onDeleteComplete: (commentId: number) => void;
+  onConfirmReport?: (commentId: number) => void;
 }
+
+type AlertProps = Pick<
+  CommonDialogProps,
+  'title' | 'content' | 'confirmText' | 'onClickConfirm' | 'cancelText'
+>;
 
 function CommentItem({
   isPostAuthor,
@@ -30,6 +40,7 @@ function CommentItem({
   onClickReplyBtn,
   onDeleteComplete,
   replyAvailable = true,
+  onConfirmReport,
 }: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const { author_detail, created_at, is_private, replies, like_user_sample } = comment;
@@ -37,8 +48,12 @@ function CommentItem({
   const navigate = useNavigate();
   const [createdAt] = useState(() => (created_at ? new Date(created_at) : null));
   const [currentDate] = useState(() => new Date());
+  const [showAlert, setShowAlert] = useState<AlertProps>();
+  const { openToast, isUserAuthor } = useBoundStore((state) => ({
+    openToast: state.openToast,
+    isUserAuthor: state.isUserAuthor,
+  }));
 
-  const isUserAuthor = useBoundStore((state) => state.isUserAuthor);
   const isCommentAuthor = author_detail ? isUserAuthor((author_detail as User).id) : false;
 
   const [isLikesModalOpen, setIsLikesModalOpen] = useState(false);
@@ -64,8 +79,31 @@ function CommentItem({
     setDeleteTarget(comment);
   };
 
+  const handleOnCloseAlert = () => setShowAlert(undefined);
+  const handleOnConfirmAlert = () => {
+    handleOnCloseAlert();
+  };
+
   const handleClickReport = () => {
-    // TODO
+    if (!comment.id) return;
+    setShowAlert({
+      title: t('report'),
+      content: t('report_content'),
+      confirmText: t('report_confirm'),
+      cancelText: t('report_cancel'),
+      onClickConfirm: async () => {
+        await reportContent({
+          postId: comment.id,
+          postType: POST_TYPE.COMMENT,
+          onSuccess: () => {
+            openToast({ message: t('report_success') });
+          },
+          onError: () => openToast({ message: t('report_error') }),
+        });
+        onConfirmReport?.(comment.id);
+        handleOnConfirmAlert();
+      },
+    });
   };
 
   const handleClickLikes = () => {
@@ -202,6 +240,14 @@ function CommentItem({
           onClose={handleCloseLikesModal}
           commentId={comment.id}
           onClickUser={handleClickUser}
+        />
+      )}
+      {showAlert && (
+        <CommonDialog
+          visible={!!showAlert}
+          onClickClose={handleOnCloseAlert}
+          confirmTextColor="WARNING"
+          {...showAlert}
         />
       )}
     </>

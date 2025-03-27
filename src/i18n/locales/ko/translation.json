@@ -485,7 +485,13 @@
     "private_comment": "비밀 댓글",
     "private_placeholder": "해당 댓글은 원글 작성자만 볼 수 있습니다.",
     "replying_to": "{{username}}에게 답글 작성중",
-    "report": "신고"
+    "report": "신고",
+    "report_title": "이 댓글을 신고하시겠어요?",
+    "report_content": "신고하면 해당 댓글이 자동으로 숨겨집니다.",
+    "report_confirm": "신고",
+    "report_cancel": "취소",
+    "report_success": "댓글이 성공적으로 신고되었습니다.",
+    "report_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
   },
   "no_contents": {
     "friends": "아직 친구가 없습니다.",
