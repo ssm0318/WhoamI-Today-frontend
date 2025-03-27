@@ -115,7 +115,8 @@
                 "kakao_inquiry": "Kakaotalk 1:1 Open Chat",
                 "discord_inquiry": "Discord",
                 "instagram_inquiry": "Instagram",
-                "text_message_inquiry": "Text"
+                "text_message_inquiry": "Text",
+                "user_manual": "User Manual"
             },
             "bottom_sheet": {
                 "title": "Create",

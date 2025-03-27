@@ -28,3 +28,6 @@ export const RESEARCH_INQUIRY_KAKAOTALK_LINK = 'https://open.kakao.com/o/svf9rkl
 export const RESEARCH_INQUIRY_INSTAGRAM_LINK = 'https://www.instagram.com/whoami.today.official/';
 
 export const RESEARCH_INQUIRY_DISCORD_LINK = 'https://discordapp.com/users/1221863102769922160';
+
+export const USER_MANUAL_URL =
+  'https://drive.google.com/drive/folders/1cSpDgvApvfPCbJ7SVzrV8Wjli7ceSSiX';
