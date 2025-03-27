@@ -11,11 +11,11 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { requestResponse } from '@utils/apis/question';
 import { searchFriends } from '@utils/apis/user';
 import BottomModal from '../bottom-modal/BottomModal';
-import { Divider } from '../divider/Divider.styled';
 import { Loader } from '../loader/Loader.styled';
 import ProfileImage from '../profile-image/ProfileImage';
 import SearchInput from '../search-input/SearchInput';
 import {
+  FixedBottomSection,
   MessageInput,
   SendPromptModalContainer,
   SendPromptModalFriendList,
@@ -92,6 +92,7 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const handleClickSend = async () => {
     if (!currentUser) return;
+
     await requestResponse({
       currentUserId: currentUser.id,
       questionId,
@@ -178,8 +179,7 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
           )}
         </SendPromptModalFriendList>
         {selectedFriends.length !== 0 && (
-          <Layout.Fixed b={0} w="100%" pt={12} bgColor="WHITE">
-            <Divider width={1} />
+          <FixedBottomSection>
             <MessageInput
               placeholder={t('prompts.write_a_message') || ''}
               value={messageInput}
@@ -188,7 +188,6 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
                 backgroundColor: Colors.LIGHT,
               }}
             />
-            <Divider width={1} />
             <Layout.LayoutBase pv={12} ph={16} w="100%">
               <Button.Confirm
                 text={t('prompts.send_separately')}
@@ -197,7 +196,7 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
                 onClick={handleClickSend}
               />
             </Layout.LayoutBase>
-          </Layout.Fixed>
+          </FixedBottomSection>
         )}
       </SendPromptModalContainer>
     </BottomModal>,
