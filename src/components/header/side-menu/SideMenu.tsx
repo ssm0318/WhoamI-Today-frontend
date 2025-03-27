@@ -6,6 +6,7 @@ import {
   RESEARCH_INQUIRY_DISCORD_LINK,
   RESEARCH_INQUIRY_INSTAGRAM_LINK,
   RESEARCH_INQUIRY_KAKAOTALK_LINK,
+  USER_MANUAL_URL,
 } from '@constants/url';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
@@ -69,6 +70,18 @@ function SideMenu({ closeSideMenu }: Props) {
       postMessage('OPEN_BROWSER', {
         url: 'sms:+1-206-730-2178',
       });
+    } else {
+      window.open('sms:+1-206-730-2178', '_blank');
+    }
+  };
+
+  const handleClickUserManual = () => {
+    if (window.ReactNativeWebView) {
+      postMessage('OPEN_BROWSER', {
+        url: USER_MANUAL_URL,
+      });
+    } else {
+      window.open(USER_MANUAL_URL, '_blank');
     }
   };
 
@@ -213,6 +226,24 @@ function SideMenu({ closeSideMenu }: Props) {
                   </a>
                 </Layout.FlexCol>
               )}
+            </Layout.FlexCol>
+            <Layout.FlexCol mt={52} pr={12}>
+              <a
+                href={USER_MANUAL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleClickUserManual();
+                }}
+              >
+                <Typo type="title-medium" color="BLACK">
+                  📒{' '}
+                </Typo>
+                <Typo type="title-medium" color="BLACK" bold underline>
+                  {t('user_manual')}
+                </Typo>
+              </a>
             </Layout.FlexCol>
           </Layout.FlexCol>
         </Layout.FlexCol>
