@@ -21,18 +21,14 @@ function MoreResponseButton({ username }: MoreResponseButtonProps) {
       h="100%"
       justifyContent="center"
       alignItems="center"
-      gap={4}
-      w={MORE_RESPONSE_BUTTON_WIDTH}
       onClick={handleClick}
     >
-      <Typo type="button-medium" color="DARK_GRAY">
-        {t('responses.more')}
+      <Typo type="button-small" color="DARK_GRAY" underline>
+        {t('responses.view_all')}
       </Typo>
-      <Icon size={32} name="arrow_right" />
+      <Icon size={24} name="arrow_right" />
     </Layout.FlexRow>
   );
 }
-
-const MORE_RESPONSE_BUTTON_WIDTH = 90;
 
 export default MoreResponseButton;

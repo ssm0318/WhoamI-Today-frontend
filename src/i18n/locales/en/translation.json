@@ -299,7 +299,8 @@
         "new_response": "New Response",
         "edited": "Edited",
         "friend": "Friends",
-        "close_friend": "Close Friends Only"
+        "close_friend": "Close Friends Only",
+        "view_all": "View All"
     },
     "all_responses": {
         "title": "{{username}}'s Responses"

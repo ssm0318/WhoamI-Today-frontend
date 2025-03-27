@@ -296,7 +296,8 @@
     "new_response": "새 답변",
     "edited": "수정됨",
     "friend": "친구",
-    "close_friend": "친한 친구"
+    "close_friend": "친한 친구",
+    "view_all": "모두 보기"
   },
   "all_responses": {
     "title": "{{username}}의 답변들"
