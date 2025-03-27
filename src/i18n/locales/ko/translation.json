@@ -115,7 +115,8 @@
         "kakao_inquiry": "카카오톡 1:1 오픈채팅",
         "discord_inquiry": "디스코드",
         "instagram_inquiry": "인스타그램",
-        "text_message_inquiry": "문자"
+        "text_message_inquiry": "문자",
+        "user_manual": "사용자 매뉴얼"
       },
       "bottom_sheet": {
         "title": "작성하기",
