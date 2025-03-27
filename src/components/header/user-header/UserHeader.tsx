@@ -38,7 +38,7 @@ function UserHeader({ username, userId, unreadCount, onClickMore }: UserHeaderPr
               <Layout.LayoutBase pb={2}>
                 <Icon name="ping_send" size={20} onClick={handleClickPing} />
               </Layout.LayoutBase>
-              {unreadCount && unreadCount > 0 && (
+              {!!unreadCount && unreadCount > 0 && (
                 <Layout.Absolute
                   bgColor="BLACK"
                   alignItems="center"

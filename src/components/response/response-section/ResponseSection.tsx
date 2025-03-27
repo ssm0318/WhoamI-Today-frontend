@@ -1,6 +1,6 @@
-import { MouseEvent, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import CommonError from '@components/_common/common-error/CommonError';
 import Icon from '@components/_common/icon/Icon';
@@ -31,7 +31,6 @@ const responseFetcher = async (url: string) => {
 
 function ResponseSection({ username }: ResponseSectionProps) {
   const [t] = useTranslation('translation');
-  const navigate = useNavigate();
   const [selectPrompt, setSelectPrompt] = useState(false);
 
   const { user } = useContext(UserPageContext);
@@ -43,13 +42,6 @@ function ResponseSection({ username }: ResponseSectionProps) {
     isLoading: isResponsesLoading,
     error: isResponsesError,
   } = useSWR(`/user/${encodeURIComponent(username || 'me')}/responses/`, responseFetcher);
-
-  const isMoreButtonVisible = responses && responses.count > RESPONSE_VIEW_MAX_COUNT;
-
-  const handleClickMore = (e: MouseEvent) => {
-    e.stopPropagation();
-    navigate(username ? `/users/${username}/responses` : '/my/responses');
-  };
 
   const { responseId } = useParams();
 
@@ -74,8 +66,7 @@ function ResponseSection({ username }: ResponseSectionProps) {
             {t('responses.title')}
           </Typo>
         </Layout.FlexRow>
-
-        {isMoreButtonVisible && <Icon onClick={handleClickMore} name="arrow_right" />}
+        <MoreResponseButton username={username} />
       </Layout.FlexRow>
       <S.ResponseSectionWrapper w="100%" pr={12}>
         {isResponsesError ? (
@@ -132,7 +123,6 @@ function ResponseSection({ username }: ResponseSectionProps) {
                   ))
               )}
             </Layout.FlexRow>
-            {isMoreButtonVisible && <MoreResponseButton username={username} />}
           </Layout.FlexRow>
         )}
       </S.ResponseSectionWrapper>

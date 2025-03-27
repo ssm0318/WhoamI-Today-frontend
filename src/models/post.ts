@@ -6,6 +6,7 @@ export enum POST_TYPE {
   RESPONSE = 'Response',
   QUESTION = 'Question',
   NOTE = 'Note',
+  COMMENT = 'Comment',
 }
 
 export interface ShareSettings {
@@ -60,7 +61,7 @@ export interface Comment extends ContentsCommon {
   like_user_sample: User[];
 }
 
-export type PrivateComment = Omit<Comment, 'id' | 'author' | 'author_detail'> &
+export type PrivateComment = Omit<Comment, 'author' | 'author_detail'> &
   Pick<Partial<ContentsCommon>, 'id' | 'author' | 'author_detail'>;
 
 // 유저 태그

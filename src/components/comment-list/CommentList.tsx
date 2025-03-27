@@ -130,6 +130,7 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
                 setTimeout(scrollToBottom, 100);
               }}
               onDeleteComplete={deleteComment}
+              onConfirmReport={deleteComment}
             />
           ))}
         </SwipeLayoutList>

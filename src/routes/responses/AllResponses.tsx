@@ -60,7 +60,7 @@ function AllResponses({ from }: Props) {
   const Container = useMainContainer ? MainContainer : MainScrollContainer;
 
   return (
-    <Container>
+    <Container style={{ height: '100vh' }}>
       <SubHeader title={t('title', { username: username || myProfile?.username })} />
       <Layout.FlexCol
         id="all-responses"
