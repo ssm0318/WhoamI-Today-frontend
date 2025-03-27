@@ -62,6 +62,7 @@ function CommentInputBox({
   const [initialIsPrivate, setInitialIsPrivate] = useState(initialIsPrivateRef.current);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 앱에서 키보드 높이 정보 수신
   useGetAppMessage({
@@ -162,17 +163,10 @@ function CommentInputBox({
           username: commentTargetAuthor,
         });
 
-  const isPosingCommentRef = useRef(false);
-
   const handleSubmitComment = () => {
-    if (isPosingCommentRef.current) return;
-    if (!content) {
-      isPosingCommentRef.current = false;
-      return;
-    }
+    if (isSubmitting || !content) return;
 
-    isPosingCommentRef.current = true;
-
+    setIsSubmitting(true);
     postComment({
       target_id: post.id,
       target_type: postType,
@@ -188,7 +182,7 @@ function CommentInputBox({
         setReload?.(false);
       })
       .finally(() => {
-        isPosingCommentRef.current = false;
+        setIsSubmitting(false);
       });
   };
 
@@ -273,7 +267,7 @@ function CommentInputBox({
 
         <Button.Primary
           text={t('post')}
-          status={content ? 'normal' : 'disabled'}
+          status={content && !isSubmitting ? 'normal' : 'disabled'}
           onClick={handleSubmitComment}
         />
       </Layout.FlexRow>
