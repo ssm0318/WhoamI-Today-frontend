@@ -43,8 +43,6 @@ function ResponseSection({ username }: ResponseSectionProps) {
     error: isResponsesError,
   } = useSWR(`/user/${encodeURIComponent(username || 'me')}/responses/`, responseFetcher);
 
-  const isMoreButtonVisible = responses && responses.count > RESPONSE_VIEW_MAX_COUNT;
-
   const { responseId } = useParams();
 
   // 답변 상세 페이지에서의 변경사항 업데이트
@@ -68,8 +66,7 @@ function ResponseSection({ username }: ResponseSectionProps) {
             {t('responses.title')}
           </Typo>
         </Layout.FlexRow>
-
-        {isMoreButtonVisible && <MoreResponseButton username={username} />}
+        <MoreResponseButton username={username} />
       </Layout.FlexRow>
       <S.ResponseSectionWrapper w="100%" pr={12}>
         {isResponsesError ? (
