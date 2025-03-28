@@ -16,9 +16,10 @@ interface LikeButtonProps {
   post: MomentPost | QuestionResponse | Response | Comment | Note | PrivateComment;
   m?: number;
   iconSize: number;
+  refresh?: () => void;
 }
 
-function LikeButton({ postType, post, iconSize, m = 6 }: LikeButtonProps) {
+function LikeButton({ postType, post, iconSize, m = 6, refresh }: LikeButtonProps) {
   const { id, current_user_like_id } = post;
 
   const [likeId, setLikeId] = useState<number | null>(current_user_like_id);
@@ -45,6 +46,7 @@ function LikeButton({ postType, post, iconSize, m = 6 }: LikeButtonProps) {
     e.stopPropagation();
     if (likeId) unLike();
     else like();
+    refresh?.();
   };
 
   return (
