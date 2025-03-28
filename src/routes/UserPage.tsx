@@ -77,22 +77,22 @@ function UserPage() {
         userId={userId}
         unreadCount={unreadCount}
       />
-      <PullToRefresh onRefresh={handleRefresh}>
-        <div
-          id={MAIN_SCROLL_CONTAINER_ID}
-          ref={scrollRef}
-          style={{
-            height: `calc(100vh - ${TITLE_HEADER_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px)`,
-            overflowY: 'auto',
-            WebkitOverflowScrolling: 'touch',
-            msOverflowStyle: 'none',
-            scrollbarWidth: 'none',
-            width: '100%',
-            marginTop: `${TITLE_HEADER_HEIGHT}px`,
-            paddingBottom: '24px', // 하단 여유 공간 추가
-            position: 'relative',
-          }}
-        >
+      <div
+        id={MAIN_SCROLL_CONTAINER_ID}
+        ref={scrollRef}
+        style={{
+          height: `calc(100vh - ${TITLE_HEADER_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px)`,
+          overflowY: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
+          width: '100%',
+          marginTop: `${TITLE_HEADER_HEIGHT}px`,
+          paddingBottom: '24px', // 하단 여유 공간 추가
+          position: 'relative',
+        }}
+      >
+        <PullToRefresh onRefresh={handleRefresh}>
           <Layout.FlexCol w="100%" bgColor="LIGHT">
             {user.state === 'hasError' && <CommonError />}
             {user.state === 'hasValue' && user.data && (
@@ -133,8 +133,8 @@ function UserPage() {
               </>
             )}
           </Layout.FlexCol>
-        </div>
-      </PullToRefresh>
+        </PullToRefresh>
+      </div>
     </MainContainer>
   );
 }
