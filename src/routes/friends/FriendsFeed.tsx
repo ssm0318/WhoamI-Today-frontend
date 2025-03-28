@@ -10,7 +10,6 @@ import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getAllFeed } from '@utils/apis/feed';
 import { getMe } from '@utils/apis/my';
 import { MainScrollContainer } from 'src/routes/Root';
 
@@ -24,10 +23,6 @@ function FriendsFeed() {
     fetchCheckIn: state.fetchCheckIn,
   }));
 
-  const handleRefresh = useCallback(async () => {
-    await Promise.all([getAllFeed(null), fetchCheckIn(), getMe()]);
-  }, [fetchCheckIn]);
-
   const {
     targetRef,
     data: notes,
@@ -37,6 +32,10 @@ function FriendsFeed() {
   } = useSWRInfiniteScroll<Note>({
     key: `/user/feed/`,
   });
+
+  const handleRefresh = useCallback(async () => {
+    await Promise.all([refetchFeed(), fetchCheckIn(), getMe()]);
+  }, [refetchFeed, fetchCheckIn]);
 
   return (
     <MainScrollContainer scrollRef={scrollRef} showNotificationPermission>
