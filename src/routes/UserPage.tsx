@@ -42,7 +42,7 @@ function UserPage() {
   const outlet = useOutlet();
 
   useEffect(() => {
-    if (!isMyPage) {
+    if (isMyPage) {
       navigate('/my');
     }
   }, [isMyPage, navigate]);
