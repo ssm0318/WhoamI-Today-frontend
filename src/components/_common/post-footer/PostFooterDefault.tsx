@@ -17,6 +17,7 @@ type PostFooterProps = {
   displayType?: POST_DP_TYPE;
   showComments: () => void;
   setInputFocus: () => void;
+  refresh?: () => void;
 };
 
 // default 버전
@@ -29,6 +30,7 @@ function PostFooterDefault({
   displayType = 'LIST',
   showComments,
   setInputFocus,
+  refresh,
 }: PostFooterProps) {
   const { comment_count, type, like_count } = post;
   const navigate = useNavigate();
@@ -62,7 +64,9 @@ function PostFooterDefault({
             <ProfileImageList images={likedUserList.map((user) => user.profile_image)} />
           </button>
         )}
-        {!isMyPage && <LikeButton postType={type} post={post} iconSize={23} m={0} />}
+        {!isMyPage && (
+          <LikeButton postType={type} post={post} iconSize={23} m={0} refresh={refresh} />
+        )}
         {/* 좋아요 수 */}
         {featureFlags?.reactionCount && !!like_count && like_count > 0 && (
           <button type="button" onClick={handleClickLikes}>

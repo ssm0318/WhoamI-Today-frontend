@@ -191,6 +191,7 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
             showComments={() => setBottomSheet(true)}
             setInputFocus={() => setInputFocus(true)}
             displayType={displayType}
+            refresh={refresh}
           />
         )}
       </Layout.FlexCol>
