@@ -15,7 +15,6 @@ import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { readFriendCheckIn } from '@utils/apis/checkIn';
@@ -51,8 +50,6 @@ function UserPage() {
     setShowMore(true);
   };
 
-  const { scrollRef } = useRestoreScrollPosition('friendsPage');
-
   const handleRefresh = async () => {
     if (!username) return;
 
@@ -79,7 +76,6 @@ function UserPage() {
       />
       <div
         id={MAIN_SCROLL_CONTAINER_ID}
-        ref={scrollRef}
         style={{
           height: `calc(100vh - ${TITLE_HEADER_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px)`,
           overflowY: 'auto',
