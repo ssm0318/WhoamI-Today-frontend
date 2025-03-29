@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate, useOutlet, useParams } from 'react-router-dom';
+import { Outlet, useNavigate, useOutlet, useParams } from 'react-router-dom';
 import { mutate } from 'swr';
 import CommonError from '@components/_common/common-error/CommonError';
 import { Divider } from '@components/_common/divider/Divider.styled';
@@ -61,77 +61,78 @@ function UserPage() {
     ]);
   };
 
-  // outlet이 있으면 outlet만 렌더링
-  if (outlet) {
-    return outlet;
-  }
-
   return (
-    <MainContainer key={username} style={{ height: '100vh', overflow: 'hidden' }}>
-      <UserHeader
-        username={username}
-        onClickMore={handleClickMore}
-        userId={userId}
-        unreadCount={unreadCount}
-      />
-      <div
-        id={MAIN_SCROLL_CONTAINER_ID}
-        style={{
-          height: `calc(100vh - ${TITLE_HEADER_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px)`,
-          overflowY: 'auto',
-          WebkitOverflowScrolling: 'touch',
-          msOverflowStyle: 'none',
-          scrollbarWidth: 'none',
-          width: '100%',
-          marginTop: `${TITLE_HEADER_HEIGHT}px`,
-          paddingBottom: '24px', // 하단 여유 공간 추가
-          position: 'relative',
-        }}
+    <>
+      <MainContainer
+        key={username}
+        style={{ height: '100vh', overflow: 'hidden', display: outlet ? 'none' : 'block' }}
       >
-        <PullToRefresh onRefresh={handleRefresh}>
-          <Layout.FlexCol w="100%" bgColor="LIGHT">
-            {user.state === 'hasError' && <CommonError />}
-            {user.state === 'hasValue' && user.data && (
-              <UserMoreModal
-                isVisible={showMore}
-                setIsVisible={setShowMore}
-                user={user.data}
-                callback={updateUser}
-              />
-            )}
-            {(user.state === 'loading' || user.state === 'hasValue') && (
-              <>
-                {/** profile section */}
-                <Layout.FlexRow
-                  w="100%"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  p={12}
-                  bgColor="WHITE"
-                  rounded={8}
-                >
-                  <Profile user={user.data} />
-                </Layout.FlexRow>
-                {featureFlags?.friendList && (
-                  <>
-                    {/** responses and notes section */}
-                    <Divider width={8} bgColor="LIGHT" />
-                    <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
-                      <ResponseSection username={username} />
-                    </Layout.FlexCol>
-                  </>
-                )}
+        <UserHeader
+          username={username}
+          onClickMore={handleClickMore}
+          userId={userId}
+          unreadCount={unreadCount}
+        />
+        <div
+          id={MAIN_SCROLL_CONTAINER_ID}
+          style={{
+            height: `calc(100vh - ${TITLE_HEADER_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px)`,
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
+            msOverflowStyle: 'none',
+            scrollbarWidth: 'none',
+            width: '100%',
+            marginTop: `${TITLE_HEADER_HEIGHT}px`,
+            paddingBottom: '24px', // 하단 여유 공간 추가
+            position: 'relative',
+          }}
+        >
+          <PullToRefresh onRefresh={handleRefresh}>
+            <Layout.FlexCol w="100%" bgColor="LIGHT">
+              {user.state === 'hasError' && <CommonError />}
+              {user.state === 'hasValue' && user.data && (
+                <UserMoreModal
+                  isVisible={showMore}
+                  setIsVisible={setShowMore}
+                  user={user.data}
+                  callback={updateUser}
+                />
+              )}
+              {(user.state === 'loading' || user.state === 'hasValue') && (
+                <>
+                  {/** profile section */}
+                  <Layout.FlexRow
+                    w="100%"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    p={12}
+                    bgColor="WHITE"
+                    rounded={8}
+                  >
+                    <Profile user={user.data} />
+                  </Layout.FlexRow>
+                  {featureFlags?.friendList && (
+                    <>
+                      {/** responses and notes section */}
+                      <Divider width={8} bgColor="LIGHT" />
+                      <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
+                        <ResponseSection username={username} />
+                      </Layout.FlexCol>
+                    </>
+                  )}
 
-                <Divider width={8} bgColor="LIGHT" />
-                <Layout.FlexCol pt={8} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
-                  <NoteSection username={username} />
-                </Layout.FlexCol>
-              </>
-            )}
-          </Layout.FlexCol>
-        </PullToRefresh>
-      </div>
-    </MainContainer>
+                  <Divider width={8} bgColor="LIGHT" />
+                  <Layout.FlexCol pt={8} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
+                    <NoteSection username={username} />
+                  </Layout.FlexCol>
+                </>
+              )}
+            </Layout.FlexCol>
+          </PullToRefresh>
+        </div>
+      </MainContainer>
+      <Outlet />
+    </>
   );
 }
 
