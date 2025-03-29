@@ -1,4 +1,9 @@
-import { getAnalytics, logEvent, setUserProperties } from 'firebase/analytics';
+import {
+  getAnalytics,
+  logEvent,
+  setAnalyticsCollectionEnabled,
+  setUserProperties,
+} from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
 import { useEffect } from 'react';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -35,6 +40,9 @@ const useAnalytics = () => {
     }
 
     if (analytics) {
+      if (process.env.NODE_ENV !== 'production') {
+        setAnalyticsCollectionEnabled(analytics, true);
+      }
       setUserProperties(analytics, {
         userId: myProfile?.id,
         username: myProfile?.username,
