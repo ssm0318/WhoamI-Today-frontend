@@ -59,7 +59,7 @@ function EmojiPicker({
     callback: () => {
       setEmojiPickerTarget(null);
     },
-    enabled: !!isVisible,
+    enabled: !!(emojiPickerTarget && emojiPickerTarget.type === 'CheckIn'),
   });
 
   const content = useMemo(() => {
@@ -68,13 +68,8 @@ function EmojiPicker({
     const unifiedEmojiList = selectedEmojis?.map((e) => getUnifiedEmoji(e)) || [];
 
     return (
-      <Layout.Absolute
-        ref={emojiPickerWrapper}
-        l={left}
-        t={emojiPickerTarget.top}
-        z={Z_INDEX.EMOJI_PICKER}
-      >
-        <Layout.LayoutBase onClick={(e) => e.stopPropagation()}>
+      <Layout.Absolute l={left} t={emojiPickerTarget.top} z={Z_INDEX.EMOJI_PICKER}>
+        <Layout.LayoutBase ref={emojiPickerWrapper} onClick={(e) => e.stopPropagation()}>
           {selectedEmojis && <EmojiPickerCustomStyle unifiedList={unifiedEmojiList} />}
           <ReactEmojiPicker
             height={height}
