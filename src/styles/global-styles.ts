@@ -67,10 +67,12 @@ const GlobalStyle = createGlobalStyle`
     }
 
     // emoji-picker-react 관련 스타일
-    .EmojiPickerReact .epr-header,
-    .EmojiPickerReact li.epr-emoji-category>.epr-emoji-category-label {
-        display: none;
-      }
+    .EmojiPickerReact {
+        .epr-category-nav,
+        li.epr-emoji-category>.epr-emoji-category-label  {
+            display: none;
+        }
+    }
 `;
 
 export default GlobalStyle;

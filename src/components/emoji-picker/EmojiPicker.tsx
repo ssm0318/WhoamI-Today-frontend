@@ -74,18 +74,20 @@ function EmojiPicker({
         t={emojiPickerTarget.top}
         z={Z_INDEX.EMOJI_PICKER}
       >
-        {selectedEmojis && <EmojiPickerCustomStyle unifiedList={unifiedEmojiList} />}
-        <ReactEmojiPicker
-          height={height}
-          onEmojiClick={handleSelectEmoji}
-          autoFocusSearch={false}
-          searchDisabled
-          previewConfig={{
-            showPreview: false,
-          }}
-          categories={EMOJI_CATEGORIES}
-          lazyLoadEmojis
-        />
+        <Layout.LayoutBase onClick={(e) => e.stopPropagation()}>
+          {selectedEmojis && <EmojiPickerCustomStyle unifiedList={unifiedEmojiList} />}
+          <ReactEmojiPicker
+            height={height}
+            onEmojiClick={handleSelectEmoji}
+            autoFocusSearch={false}
+            skinTonesDisabled
+            previewConfig={{
+              showPreview: false,
+            }}
+            categories={EMOJI_CATEGORIES}
+            lazyLoadEmojis
+          />
+        </Layout.LayoutBase>
       </Layout.Absolute>
     );
   }, [
