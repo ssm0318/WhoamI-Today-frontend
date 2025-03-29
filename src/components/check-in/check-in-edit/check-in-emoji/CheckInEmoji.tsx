@@ -27,7 +27,7 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
     }
 
     if (!toggleButtonRef.current) return;
-    const pickerPosition = getEmojiPickerPosition(toggleButtonRef.current);
+    const pickerPosition = getEmojiPickerPosition({ targetEl: toggleButtonRef.current });
     setEmojiPickerTarget({ type: 'CheckIn', id: null, ...pickerPosition });
   };
 

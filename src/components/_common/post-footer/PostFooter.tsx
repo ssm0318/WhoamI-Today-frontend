@@ -7,6 +7,7 @@ import {
   getEmojiPickerHeight,
   getEmojiPickerPosition,
 } from '@components/emoji-picker/EmojiPicker.helper';
+import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { Note, POST_DP_TYPE, POST_TYPE, ReactionUserSample, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -125,7 +126,12 @@ function PostFooter({
 
     if (!toggleButtonRef.current) return;
 
-    const pickerPosition = getEmojiPickerPosition(toggleButtonRef.current, emojiPickerHeight);
+    const pickerPosition = getEmojiPickerPosition({
+      targetEl: toggleButtonRef.current,
+      pickerHeight: emojiPickerHeight,
+      bottomAreaHeight:
+        displayType === 'DETAIL' ? BOTTOM_TABBAR_HEIGHT + 100 : BOTTOM_TABBAR_HEIGHT,
+    });
 
     setEmojiPickerTarget(
       isCurrentlyActive ? null : { type: post.type, id: post.id, ...pickerPosition },
