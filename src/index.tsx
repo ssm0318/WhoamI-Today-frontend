@@ -7,6 +7,7 @@ import ToastBar from '@components/_common/toast-bar/ToastBar';
 import ErrorPage from '@components/error-page/ErrorPage';
 import { UserPageContextProvider } from '@components/user-page/UserPage.context';
 import { Colors, Typo } from '@design-system';
+import useAnalytics from '@hooks/useAnalytics';
 import { useGetAppMessage } from '@hooks/useAppMessage';
 import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
@@ -230,6 +231,9 @@ function App() {
   const { setAppNotiPermission } = useBoundStore((state) => ({
     setAppNotiPermission: state.setAppNotiPermission,
   }));
+
+  // firebase analytics 추적
+  useAnalytics();
 
   useGetAppMessage({
     cb: ({ value }) => {
