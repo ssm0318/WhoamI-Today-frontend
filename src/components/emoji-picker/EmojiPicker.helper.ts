@@ -1,16 +1,20 @@
 import { BOTTOM_TABBAR_HEIGHT, EMOJI_PICKER_HEIGHT } from '@constants/layout';
 import { EmojiPickerTarget } from '@stores/emojiPicker';
 
-export function getEmojiPickerDirection(
-  targetEl: HTMLDivElement | null | undefined,
+export function getEmojiPickerPosition({
+  targetEl,
   pickerHeight = EMOJI_PICKER_HEIGHT.DEFAULT,
-): EmojiPickerTarget['direction'] {
-  if (!targetEl) return 'bottom';
+  bottomAreaHeight = BOTTOM_TABBAR_HEIGHT,
+}: {
+  targetEl: HTMLDivElement;
+  pickerHeight?: number;
+  bottomAreaHeight?: number;
+}): Pick<EmojiPickerTarget, 'top'> {
   const { top, height } = targetEl.getBoundingClientRect();
-  const bottomMargin = window.innerHeight - top - height - BOTTOM_TABBAR_HEIGHT;
+  const bottomMargin = window.innerHeight - top - height - bottomAreaHeight;
 
-  if (pickerHeight > bottomMargin) return 'top';
-  return 'bottom';
+  if (pickerHeight > bottomMargin) return { top: targetEl.offsetTop - pickerHeight - 10 };
+  return { top: targetEl.offsetTop + height + 10 };
 }
 
 export function getEmojiPickerHeight(useDefaultHeight = true): number {

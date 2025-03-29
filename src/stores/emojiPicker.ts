@@ -3,7 +3,7 @@ import { SliceStateCreator } from './useBoundStore';
 export interface EmojiPickerTarget {
   type: 'Note' | 'Response' | 'CheckIn';
   id: number | null;
-  direction: 'top' | 'bottom';
+  top?: number;
 }
 interface EmojiPickerState {
   emojiPickerTarget: EmojiPickerTarget | null;
