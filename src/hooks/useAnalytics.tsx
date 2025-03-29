@@ -1,4 +1,4 @@
-import { getAnalytics, logEvent } from 'firebase/analytics';
+import { getAnalytics, logEvent, setUserProperties } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
 import { useEffect } from 'react';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -29,34 +29,32 @@ const useAnalytics = () => {
     }
   };
 
-  // 👉 세션 추적도 여기서 처리
   useEffect(() => {
     if (!analytics) {
       initializeAnalytics();
     }
 
-    const userInfo = {
-      userId: myProfile?.id,
-      userName: myProfile?.username,
-    };
+    if (analytics) {
+      setUserProperties(analytics, {
+        userId: myProfile?.id,
+        username: myProfile?.username,
+      });
+    }
 
     const handleFocus = () => {
-      trackEvent('session_resume', userInfo);
+      trackEvent('session_resume');
       console.log('[useAnalytics] session_resume');
     };
 
     const handleBlur = () => {
-      trackEvent('session_pause', userInfo);
+      trackEvent('session_pause');
       console.log('[useAnalytics] session_pause');
     };
 
     const handleUnload = () => {
-      trackEvent('session_end', userInfo);
+      trackEvent('session_end');
       console.log('[useAnalytics] session_end');
     };
-
-    // 앱 시작
-    trackEvent('session_start', userInfo);
 
     window.addEventListener('focus', handleFocus);
     window.addEventListener('blur', handleBlur);
