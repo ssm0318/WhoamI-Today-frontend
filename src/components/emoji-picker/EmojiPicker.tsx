@@ -50,6 +50,11 @@ function EmojiPicker({
     [onSelectEmoji, onUnselectEmoji, selectedEmojis, setEmojiPickerTarget],
   );
 
+  const isVisible =
+    emojiPickerTarget &&
+    (emojiPickerTarget.type === 'CheckIn' ||
+      (emojiPickerTarget.type === post?.type && emojiPickerTarget.id === post?.id));
+
   const emojiPickerWrapper = useDetectOutsideClick({
     callback: () => {
       setEmojiPickerTarget(null);
@@ -58,34 +63,26 @@ function EmojiPicker({
   });
 
   const content = useMemo(() => {
-    const isVisible =
-      emojiPickerTarget &&
-      (emojiPickerTarget.type === 'CheckIn' ||
-        (emojiPickerTarget.type === post?.type && emojiPickerTarget.id === post?.id));
-
     if (!isVisible) return null;
 
     const unifiedEmojiList = selectedEmojis?.map((e) => getUnifiedEmoji(e)) || [];
 
     return (
-      <Layout.Absolute
-        ref={emojiPickerWrapper}
-        l={left}
-        t={emojiPickerTarget.top}
-        z={Z_INDEX.EMOJI_PICKER}
-      >
-        {selectedEmojis && <EmojiPickerCustomStyle unifiedList={unifiedEmojiList} />}
-        <ReactEmojiPicker
-          height={height}
-          onEmojiClick={handleSelectEmoji}
-          autoFocusSearch={false}
-          searchDisabled
-          previewConfig={{
-            showPreview: false,
-          }}
-          categories={EMOJI_CATEGORIES}
-          lazyLoadEmojis
-        />
+      <Layout.Absolute l={left} t={emojiPickerTarget.top} z={Z_INDEX.EMOJI_PICKER}>
+        <Layout.LayoutBase ref={emojiPickerWrapper} onClick={(e) => e.stopPropagation()}>
+          {selectedEmojis && <EmojiPickerCustomStyle unifiedList={unifiedEmojiList} />}
+          <ReactEmojiPicker
+            height={height}
+            onEmojiClick={handleSelectEmoji}
+            autoFocusSearch={false}
+            skinTonesDisabled
+            previewConfig={{
+              showPreview: false,
+            }}
+            categories={EMOJI_CATEGORIES}
+            lazyLoadEmojis
+          />
+        </Layout.LayoutBase>
       </Layout.Absolute>
     );
   }, [
@@ -93,9 +90,8 @@ function EmojiPicker({
     emojiPickerWrapper,
     handleSelectEmoji,
     height,
+    isVisible,
     left,
-    post?.id,
-    post?.type,
     selectedEmojis,
   ]);
 
