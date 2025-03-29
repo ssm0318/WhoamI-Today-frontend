@@ -64,12 +64,20 @@ function CommentInputBox({
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const { emojiPickerTarget } = useBoundStore((state) => ({
+    emojiPickerTarget: state.emojiPickerTarget,
+  }));
+  const isEmojiPickerVisible =
+    emojiPickerTarget &&
+    (emojiPickerTarget.type === 'CheckIn' ||
+      (emojiPickerTarget.type === post?.type && emojiPickerTarget.id === post?.id));
+
   // 앱에서 키보드 높이 정보 수신
   useGetAppMessage({
     key: 'KEYBOARD_HEIGHT',
     cb: (data) => {
       setKeyboardHeight(data.height);
-      setKeyboardOpen(data.height > 0);
+      setKeyboardOpen(data.height > 0 && !isEmojiPickerVisible);
     },
   });
 
@@ -101,7 +109,7 @@ function CommentInputBox({
         const windowHeight = window.innerHeight;
 
         // 뷰포트 높이가 창 높이보다 작아지면 키보드가 열린 것으로 간주
-        if (viewportHeight < windowHeight) {
+        if (viewportHeight < windowHeight && !isEmojiPickerVisible) {
           setKeyboardOpen(true);
           // 키보드 높이 계산
           const calculatedKeyboardHeight = windowHeight - viewportHeight;
@@ -119,7 +127,7 @@ function CommentInputBox({
         visualViewport.removeEventListener('resize', handleResize);
       };
     }
-  }, []);
+  }, [isEmojiPickerVisible]);
 
   // 입력 필드 포커스 처리
   useEffect(() => {

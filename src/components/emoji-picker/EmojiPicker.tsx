@@ -50,19 +50,19 @@ function EmojiPicker({
     [onSelectEmoji, onUnselectEmoji, selectedEmojis, setEmojiPickerTarget],
   );
 
+  const isVisible =
+    emojiPickerTarget &&
+    (emojiPickerTarget.type === 'CheckIn' ||
+      (emojiPickerTarget.type === post?.type && emojiPickerTarget.id === post?.id));
+
   const emojiPickerWrapper = useDetectOutsideClick({
     callback: () => {
       setEmojiPickerTarget(null);
     },
-    enabled: !!(emojiPickerTarget && emojiPickerTarget.type === 'CheckIn'),
+    enabled: !!isVisible,
   });
 
   const content = useMemo(() => {
-    const isVisible =
-      emojiPickerTarget &&
-      (emojiPickerTarget.type === 'CheckIn' ||
-        (emojiPickerTarget.type === post?.type && emojiPickerTarget.id === post?.id));
-
     if (!isVisible) return null;
 
     const unifiedEmojiList = selectedEmojis?.map((e) => getUnifiedEmoji(e)) || [];
@@ -95,9 +95,8 @@ function EmojiPicker({
     emojiPickerWrapper,
     handleSelectEmoji,
     height,
+    isVisible,
     left,
-    post?.id,
-    post?.type,
     selectedEmojis,
   ]);
 
