@@ -1,8 +1,10 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useOutlet, useParams } from 'react-router-dom';
+import { mutate } from 'swr';
 import CommonError from '@components/_common/common-error/CommonError';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
+import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import UserHeader from '@components/header/user-header/UserHeader';
 import NoteSection from '@components/note/note-section/NoteSection';
 import Profile from '@components/profile/Profile';
@@ -24,7 +26,6 @@ function UserPage() {
   const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
   const { featureFlags } = useBoundStore(UserSelector);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const { user, updateUser } = useContext(UserPageContext);
   const userId = user.data?.id;
@@ -37,16 +38,28 @@ function UserPage() {
 
   useAsyncEffect(readCheckIn, [user.data]);
 
+  const outlet = useOutlet();
+
   useEffect(() => {
-    if (!isMyPage) return;
-    return navigate('/my');
+    if (isMyPage) {
+      navigate('/my');
+    }
   }, [isMyPage, navigate]);
 
   const handleClickMore = () => {
     setShowMore(true);
   };
 
-  const outlet = useOutlet();
+  const handleRefresh = async () => {
+    if (!username) return;
+
+    const encodedUsername = encodeURIComponent(username);
+
+    await Promise.all([
+      mutate(`/user/${encodedUsername}/responses/`),
+      mutate(`/user/${encodedUsername}/notes/`),
+    ]);
+  };
 
   // outlet이 있으면 outlet만 렌더링
   if (outlet) {
@@ -74,48 +87,49 @@ function UserPage() {
           paddingBottom: '24px', // 하단 여유 공간 추가
           position: 'relative',
         }}
-        ref={containerRef}
       >
-        <Layout.FlexCol w="100%" bgColor="LIGHT">
-          {user.state === 'hasError' && <CommonError />}
-          {user.state === 'hasValue' && user.data && (
-            <UserMoreModal
-              isVisible={showMore}
-              setIsVisible={setShowMore}
-              user={user.data}
-              callback={updateUser}
-            />
-          )}
-          {(user.state === 'loading' || user.state === 'hasValue') && (
-            <>
-              {/** profile section */}
-              <Layout.FlexRow
-                w="100%"
-                alignItems="center"
-                justifyContent="space-between"
-                p={12}
-                bgColor="WHITE"
-                rounded={8}
-              >
-                <Profile user={user.data} />
-              </Layout.FlexRow>
-              {featureFlags?.friendList && (
-                <>
-                  {/** responses and notes section */}
-                  <Divider width={8} bgColor="LIGHT" />
-                  <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
-                    <ResponseSection username={username} />
-                  </Layout.FlexCol>
-                </>
-              )}
+        <PullToRefresh onRefresh={handleRefresh}>
+          <Layout.FlexCol w="100%" bgColor="LIGHT">
+            {user.state === 'hasError' && <CommonError />}
+            {user.state === 'hasValue' && user.data && (
+              <UserMoreModal
+                isVisible={showMore}
+                setIsVisible={setShowMore}
+                user={user.data}
+                callback={updateUser}
+              />
+            )}
+            {(user.state === 'loading' || user.state === 'hasValue') && (
+              <>
+                {/** profile section */}
+                <Layout.FlexRow
+                  w="100%"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  p={12}
+                  bgColor="WHITE"
+                  rounded={8}
+                >
+                  <Profile user={user.data} />
+                </Layout.FlexRow>
+                {featureFlags?.friendList && (
+                  <>
+                    {/** responses and notes section */}
+                    <Divider width={8} bgColor="LIGHT" />
+                    <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
+                      <ResponseSection username={username} />
+                    </Layout.FlexCol>
+                  </>
+                )}
 
-              <Divider width={8} bgColor="LIGHT" />
-              <Layout.FlexCol pt={8} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
-                <NoteSection username={username} />
-              </Layout.FlexCol>
-            </>
-          )}
-        </Layout.FlexCol>
+                <Divider width={8} bgColor="LIGHT" />
+                <Layout.FlexCol pt={8} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
+                  <NoteSection username={username} />
+                </Layout.FlexCol>
+              </>
+            )}
+          </Layout.FlexCol>
+        </PullToRefresh>
       </div>
     </MainContainer>
   );

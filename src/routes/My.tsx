@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { mutate } from 'swr';
 import Divider from '@components/_common/divider/Divider';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
@@ -9,7 +10,7 @@ import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { getMe, getMyNotes, getMyResponses } from '@utils/apis/my';
+import { getMe } from '@utils/apis/my';
 import { MainScrollContainer } from './Root';
 
 function My() {
@@ -21,7 +22,12 @@ function My() {
   const { featureFlags } = useBoundStore(UserSelector);
 
   const handleRefresh = useCallback(async () => {
-    await Promise.all([getMyResponses(null), getMyNotes(null), fetchCheckIn(), getMe()]);
+    await Promise.all([
+      mutate('/user/me/responses/'),
+      mutate('/user/me/notes/'),
+      fetchCheckIn(),
+      getMe(),
+    ]);
   }, [fetchCheckIn]);
 
   const { scrollRef } = useRestoreScrollPosition('myPage');

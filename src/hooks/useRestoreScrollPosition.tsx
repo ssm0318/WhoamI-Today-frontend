@@ -7,6 +7,7 @@ export interface ScrollPositionStore {
   friendsPage?: number;
   questionsPage?: number;
   myPage?: number;
+  userPage?: number;
   feeds?: number;
   friendsDetail?: number;
   friendsFeed?: number;
