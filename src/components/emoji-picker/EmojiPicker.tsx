@@ -57,11 +57,6 @@ function EmojiPicker({
     enabled: !!(emojiPickerTarget && emojiPickerTarget.type === 'CheckIn'),
   });
 
-  const element = useMemo(
-    () => (createPortalId ? document.getElementById(createPortalId) : null),
-    [createPortalId],
-  );
-
   const content = useMemo(() => {
     const isVisible =
       emojiPickerTarget &&
@@ -103,6 +98,8 @@ function EmojiPicker({
     post?.type,
     selectedEmojis,
   ]);
+
+  const element = createPortalId ? document.getElementById(createPortalId) : null;
 
   if (createPortalId && element) {
     return createPortal(content, element);
