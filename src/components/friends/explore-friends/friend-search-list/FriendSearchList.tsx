@@ -111,7 +111,6 @@ export default function FriendSearchList({ query }: Props) {
                   type="search"
                   user={user}
                   onClickUnfriend={handleClickUnfriend(user.id)}
-                  showEmail
                 />
               ))}
             </Layout.FlexCol>
@@ -130,7 +129,6 @@ export default function FriendSearchList({ query }: Props) {
                   user={user}
                   onClickRequest={handleClickRequest(user.id)}
                   onClickCancelRequest={handleClickCancelRequest(user.id)}
-                  showEmail
                 />
               ))}
             </Layout.FlexCol>
