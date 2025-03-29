@@ -126,7 +126,8 @@ function ResponseSection({ username }: ResponseSectionProps) {
           </Layout.FlexRow>
         )}
       </S.ResponseSectionWrapper>
-
+      {/** NOTE: 답변 목록에서 이모지가 잘리지 않도록 외부에서 이모지 피커 렌더링 */}
+      <div id="response_section_emoji_picker" style={{ overflow: 'visible' }} />
       {selectPrompt && (
         <SelectPromptSheet visible={selectPrompt} closeBottomSheet={() => setSelectPrompt(false)} />
       )}
