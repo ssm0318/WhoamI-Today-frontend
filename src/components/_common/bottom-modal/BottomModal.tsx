@@ -11,8 +11,9 @@ interface BottomModalProps {
   children: React.ReactNode;
   bgColor?: string;
   containerBgColor?: ColorKeys;
-  heightMode?: 'content' | 'full';
+  heightMode?: 'content' | 'full' | 'custom';
   TopComponent?: React.ReactNode; // 바텀 모달 위 컴포넌트
+  customHeight?: number;
 }
 
 function BottomModal({
@@ -24,6 +25,7 @@ function BottomModal({
   containerBgColor = 'WHITE',
   heightMode = 'content',
   TopComponent,
+  customHeight,
 }: BottomModalProps) {
   const bodyRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
@@ -40,8 +42,12 @@ function BottomModal({
       if (heightMode === 'full') {
         return setHeight(maxHeight);
       }
+
+      if (heightMode === 'custom') {
+        return setHeight(customHeight || maxHeight);
+      }
     }
-  }, [visible, heightMode, maxHeight]);
+  }, [visible, heightMode, maxHeight, customHeight]);
 
   usePreventScroll(visible);
 

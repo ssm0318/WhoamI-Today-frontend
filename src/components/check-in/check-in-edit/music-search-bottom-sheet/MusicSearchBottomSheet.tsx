@@ -1,11 +1,13 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
 import Icon from '@components/_common/icon/Icon';
 import SearchInput from '@components/_common/search-input/SearchInput';
+import { SCREEN_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import { useGetAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
 import MusicItem from './music-item/MusicItem';
@@ -25,6 +27,9 @@ function MusicSearchBottomSheet({
   const [t] = useTranslation('translation', {
     keyPrefix: 'check_in_edit.song.search_bottom_sheet',
   });
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [modalHeight, setModalHeight] = useState(SCREEN_HEIGHT * 0.8);
 
   const spotifyManager = SpotifyManager.getInstance();
 
@@ -59,15 +64,35 @@ function MusicSearchBottomSheet({
     setAutoFocus(true);
   };
 
+  // useAppMessage 훅을 사용하여 키보드 높이 정보 수신
+  useGetAppMessage({
+    key: 'KEYBOARD_HEIGHT',
+    cb: (data) => {
+      const newKeyboardVisible = data.height > 0;
+      setIsKeyboardVisible(newKeyboardVisible);
+      setKeyboardHeight(data.height);
+    },
+  });
+
+  // Update modal height when keyboard visibility changes
+  useEffect(() => {
+    if (isKeyboardVisible) {
+      setModalHeight(SCREEN_HEIGHT * 0.8 - keyboardHeight);
+    } else {
+      setModalHeight(SCREEN_HEIGHT * 0.8);
+    }
+  }, [isKeyboardVisible, keyboardHeight]);
+
   if (!trackList) return null;
   return (
     <BottomModal
       visible={visible}
       onClose={closeBottomSheet}
-      heightMode="full"
+      heightMode="custom"
+      customHeight={modalHeight}
       onTransitionEnd={autoFocusInput}
     >
-      <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE">
+      <Layout.FlexCol alignItems="center" justifyContent="space-between" w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
         <Typo type="title-large">{t('title')}</Typo>
         <Layout.FlexCol ph={16} mt={12} w="100%">
@@ -100,21 +125,23 @@ function MusicSearchBottomSheet({
             ))}
           </Layout.FlexCol>
         </Layout.FlexCol>
-        <Layout.Fixed b={0} w="100%" bgColor="WHITE">
-          <S.ConfirmButtonContainer
-            w="100%"
-            pt={16}
-            pb={20}
-            ph={12}
-            h={CONFIRM_BUTTON_CONTAINER_HEIGHT}
-          >
-            <BottomModalActionButton
-              status={selected ? 'normal' : 'disabled'}
-              text={t('confirm')}
-              onClick={handleConfirm}
-            />
-          </S.ConfirmButtonContainer>
-        </Layout.Fixed>
+        {!isKeyboardVisible && (
+          <Layout.Fixed b={0} w="100%" bgColor="WHITE">
+            <S.ConfirmButtonContainer
+              w="100%"
+              pt={16}
+              pb={20}
+              ph={12}
+              h={CONFIRM_BUTTON_CONTAINER_HEIGHT}
+            >
+              <BottomModalActionButton
+                status={selected ? 'normal' : 'disabled'}
+                text={t('confirm')}
+                onClick={handleConfirm}
+              />
+            </S.ConfirmButtonContainer>
+          </Layout.Fixed>
+        )}
       </Layout.FlexCol>
     </BottomModal>
   );

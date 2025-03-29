@@ -1,22 +1,22 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { EmojiClickData } from 'emoji-picker-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import MainContainer from '@components/_common/main-container/MainContainer';
 import CheckInDescription from '@components/check-in/check-in-edit/check-in-description/CheckInDescription';
 import CheckInEmoji from '@components/check-in/check-in-edit/check-in-emoji/CheckInEmoji';
 import CheckInSocialBattery from '@components/check-in/check-in-edit/check-in-social-battery/CheckInSocialBattery';
 import CheckInSpotifyMusic from '@components/check-in/check-in-edit/check-in-spotify-music/CheckInSpotifyMusic';
 import SectionContainer from '@components/check-in/check-in-edit/section-container/SectionContainer';
 import SubHeader from '@components/sub-header/SubHeader';
-import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import { useGetAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
 import { CheckInForm, SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
 import { postCheckIn } from '@utils/apis/checkIn';
+import { MainScrollContainer } from '../Root';
 
 function CheckInEdit() {
   const [t] = useTranslation('translation', { keyPrefix: 'check_in_edit' });
@@ -27,6 +27,9 @@ function CheckInEdit() {
     setCheckInForm: state.setCheckInForm,
     fetchCheckIn: state.fetchCheckIn,
   }));
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const [trackData, setTrackData] = useState<Track | null>(null);
 
@@ -63,8 +66,29 @@ function CheckInEdit() {
     setCheckInForm(myCheckIn);
   }, []);
 
+  // useAppMessage 훅을 사용하여 키보드 높이 정보 수신
+  useGetAppMessage({
+    key: 'KEYBOARD_HEIGHT',
+    cb: (data) => {
+      const newKeyboardVisible = data.height > 0;
+      setIsKeyboardVisible(newKeyboardVisible);
+      setKeyboardHeight(data.height);
+
+      // 키보드가 올라올 때 스크롤 조정
+      if (newKeyboardVisible) {
+        // 약간의 지연을 두고 스크롤 조정 (iOS/Android 호환성)
+        setTimeout(() => {
+          const { activeElement } = document;
+          if (activeElement) {
+            activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 300);
+      }
+    },
+  });
+
   return (
-    <MainContainer>
+    <MainScrollContainer scrollRef={scrollContainerRef}>
       <SubHeader
         title={t('title')}
         RightComponent={
@@ -76,12 +100,14 @@ function CheckInEdit() {
         }
       />
       <Layout.FlexCol
-        mt={TITLE_HEADER_HEIGHT}
-        w="100%"
         h="100%"
+        w="100%"
         gap={16}
         bgColor="BACKGROUND_COLOR"
         p={12}
+        style={{
+          paddingBottom: isKeyboardVisible ? `${keyboardHeight + 16}px` : '16px',
+        }}
       >
         {/* Social Bateery */}
         <SectionContainer
@@ -120,7 +146,7 @@ function CheckInEdit() {
           />
         </SectionContainer>
       </Layout.FlexCol>
-    </MainContainer>
+    </MainScrollContainer>
   );
 }
 

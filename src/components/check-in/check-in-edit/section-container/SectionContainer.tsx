@@ -8,7 +8,18 @@ interface SectionContainerProps extends PropsWithChildren {
 
 function SectionContainer({ children, title, description }: SectionContainerProps) {
   return (
-    <Layout.FlexCol justifyContent="space-between" w="100%" bgColor="WHITE" rounded={12} p={12}>
+    <Layout.FlexCol
+      justifyContent="flex-start"
+      w="100%"
+      bgColor="WHITE"
+      rounded={12}
+      p={12}
+      gap={8}
+      style={{
+        flexShrink: 0,
+        minHeight: 'fit-content',
+      }}
+    >
       <Typo type="title-large">{title}</Typo>
       <Typo type="body-small" color="DARK_GRAY">
         {description}
