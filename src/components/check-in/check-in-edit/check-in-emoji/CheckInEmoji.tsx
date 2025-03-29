@@ -4,7 +4,7 @@ import DeleteButton from '@components/_common/delete-button/DeleteButton';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import Icon from '@components/_common/icon/Icon';
 import EmojiPicker from '@components/emoji-picker/EmojiPicker';
-import { getEmojiPickerDirection } from '@components/emoji-picker/EmojiPicker.helper';
+import { getEmojiPickerPosition } from '@components/emoji-picker/EmojiPicker.helper';
 import { Layout } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
 
@@ -26,8 +26,9 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
       return setEmojiPickerTarget(null);
     }
 
-    const pickerDirection = getEmojiPickerDirection(toggleButtonRef.current);
-    setEmojiPickerTarget({ type: 'CheckIn', id: null, direction: pickerDirection });
+    if (!toggleButtonRef.current) return;
+    const pickerPosition = getEmojiPickerPosition(toggleButtonRef.current);
+    setEmojiPickerTarget({ type: 'CheckIn', id: null, ...pickerPosition });
   };
 
   const handleSelectEmoji = (e: EmojiClickData) => {
@@ -45,6 +46,7 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
     <Layout.FlexCol w="100%">
       <Layout.FlexRow gap={8} mt={8} alignItems="center">
         <Layout.FlexRow
+          ref={toggleButtonRef}
           alignItems="center"
           justifyContent="center"
           rounded={12}
@@ -65,10 +67,7 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
         {mood && <DeleteButton onClick={onDelete} size={32} />}
       </Layout.FlexRow>
       {/* emoji toggle popup */}
-      <EmojiPicker
-        onSelectEmoji={handleSelectEmoji}
-        top={(toggleButtonRef.current?.getBoundingClientRect().height ?? 0) + 12}
-      />
+      <EmojiPicker onSelectEmoji={handleSelectEmoji} />
     </Layout.FlexCol>
   );
 }

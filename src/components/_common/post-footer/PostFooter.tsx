@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import EmojiPicker from '@components/emoji-picker/EmojiPicker';
 import {
-  getEmojiPickerDirection,
   getEmojiPickerHeight,
+  getEmojiPickerPosition,
 } from '@components/emoji-picker/EmojiPicker.helper';
 import { Layout, Typo } from '@design-system';
 import { Note, POST_DP_TYPE, POST_TYPE, ReactionUserSample, Response } from '@models/post';
@@ -122,10 +122,13 @@ function PostFooter({
   const handleClickEmojiButton = () => {
     const isCurrentlyActive =
       emojiPickerTarget?.type === post.type && emojiPickerTarget?.id === post.id;
-    const pickerDirection = getEmojiPickerDirection(toggleButtonRef.current, emojiPickerHeight);
+
+    if (!toggleButtonRef.current) return;
+
+    const pickerPosition = getEmojiPickerPosition(toggleButtonRef.current, emojiPickerHeight);
 
     setEmojiPickerTarget(
-      isCurrentlyActive ? null : { type: post.type, id: post.id, direction: pickerDirection },
+      isCurrentlyActive ? null : { type: post.type, id: post.id, ...pickerPosition },
     );
   };
 
@@ -180,12 +183,16 @@ function PostFooter({
         </Layout.FlexRow>
       )}
       <EmojiPicker
+        createPortalId={
+          displayType === 'LIST' && post.type === 'Response'
+            ? 'response_section_emoji_picker'
+            : undefined
+        }
         selectedEmojis={myEmojiList}
         onSelectEmoji={handleSelectEmoji}
         onUnselectEmoji={handleUnselectEmoji}
         height={emojiPickerHeight}
         left={displayType === 'DETAIL' ? -10 : undefined}
-        top={(toggleButtonRef?.current?.getBoundingClientRect()?.height ?? 0) + 6}
         post={post}
       />
     </Layout.FlexCol>
