@@ -26,6 +26,7 @@ function NoteSection({ username }: NoteSectionProps) {
 
   const { user } = useContext(UserPageContext);
   const areFriends = user?.data?.are_friends === true;
+  const isMyPage = !username;
 
   const handleClickNewNote = () => {
     return navigate('/notes/new');
@@ -114,7 +115,11 @@ function NoteSection({ username }: NoteSectionProps) {
           ) : (
             <Layout.FlexRow alignItems="center" w="100%" h="100%">
               <NoContents
-                text={areFriends ? t('no_contents.notes') : t('no_contents.notes_not_friend')}
+                text={
+                  isMyPage || areFriends
+                    ? t('no_contents.notes')
+                    : t('no_contents.notes_not_friend')
+                }
                 pv={20}
               />
             </Layout.FlexRow>
