@@ -31,3 +31,6 @@ export const RESEARCH_INQUIRY_DISCORD_LINK = 'https://discordapp.com/users/12218
 
 export const USER_MANUAL_URL =
   'https://drive.google.com/drive/folders/1cSpDgvApvfPCbJ7SVzrV8Wjli7ceSSiX';
+
+export const ONBOARDING_VIDEO_URL =
+  'https://www.youtube.com/playlist?list=PLeg7yLjhFvgw7tWm9QpU536mfHjLQWy7S';

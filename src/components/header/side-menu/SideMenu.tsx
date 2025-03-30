@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Z_INDEX } from '@constants/layout';
 import {
+  ONBOARDING_VIDEO_URL,
   RESEARCH_INQUIRY_DISCORD_LINK,
   RESEARCH_INQUIRY_INSTAGRAM_LINK,
   RESEARCH_INQUIRY_KAKAOTALK_LINK,
@@ -85,6 +86,16 @@ function SideMenu({ closeSideMenu }: Props) {
     }
   };
 
+  const handleClickOnboardingVideo = () => {
+    if (window.ReactNativeWebView) {
+      postMessage('OPEN_BROWSER', {
+        url: ONBOARDING_VIDEO_URL,
+      });
+    } else {
+      window.open(ONBOARDING_VIDEO_URL, '_blank');
+    }
+  };
+
   return createPortal(
     <Layout.Absolute t={0} l={0} r={0} b={0} z={Z_INDEX.MODAL_CONTAINER}>
       <Layout.Absolute w="100%" h="100%" bgColor="DIM" onClick={handleClickDimmed} />
@@ -97,6 +108,42 @@ function SideMenu({ closeSideMenu }: Props) {
                 <Typo type="head-line">{t(menu.key)}</Typo>
               </button>
             ))}
+            <Layout.FlexCol mt={52} pr={12}>
+              <a
+                href={ONBOARDING_VIDEO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleClickOnboardingVideo();
+                }}
+              >
+                <Typo type="title-large" color="BLACK">
+                  📺{' '}
+                </Typo>
+                <Typo type="title-large" color="BLACK" underline>
+                  {t('onboarding_video')}
+                </Typo>
+              </a>
+            </Layout.FlexCol>
+            <Layout.FlexCol>
+              <a
+                href={USER_MANUAL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleClickUserManual();
+                }}
+              >
+                <Typo type="title-large" color="BLACK">
+                  📒{' '}
+                </Typo>
+                <Typo type="title-large" color="BLACK" underline>
+                  {t('user_manual')}
+                </Typo>
+              </a>
+            </Layout.FlexCol>
             {/* 문의 * 연락처 */}
             <Layout.FlexCol mt={52} pr={12}>
               <Typo type="title-large" mb={20}>
@@ -226,24 +273,6 @@ function SideMenu({ closeSideMenu }: Props) {
                   </a>
                 </Layout.FlexCol>
               )}
-            </Layout.FlexCol>
-            <Layout.FlexCol mt={52} pr={12}>
-              <a
-                href={USER_MANUAL_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleClickUserManual();
-                }}
-              >
-                <Typo type="title-medium" color="BLACK">
-                  📒{' '}
-                </Typo>
-                <Typo type="title-medium" color="BLACK" bold underline>
-                  {t('user_manual')}
-                </Typo>
-              </a>
             </Layout.FlexCol>
           </Layout.FlexCol>
         </Layout.FlexCol>
