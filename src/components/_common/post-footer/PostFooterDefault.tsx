@@ -56,7 +56,7 @@ function PostFooterDefault({
   };
 
   return (
-    <Layout.FlexCol gap={8}>
+    <Layout.FlexRow gap={8} alignItems="center">
       <Layout.FlexRow gap={8} alignItems="center">
         {/* 좋아요 리스트 */}
         {isMyPage && likedUserList?.length > 0 && (
@@ -91,7 +91,7 @@ function PostFooterDefault({
           </button>
         </Layout.FlexRow>
       )}
-    </Layout.FlexCol>
+    </Layout.FlexRow>
   );
 }
 

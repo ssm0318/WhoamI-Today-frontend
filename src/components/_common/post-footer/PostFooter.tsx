@@ -140,12 +140,13 @@ function PostFooter({
   }, [setEmojiPickerTarget]);
 
   return (
-    <Layout.FlexCol
+    <Layout.FlexRow
       gap={8}
       w="100%"
       style={{
         position: displayType === 'DETAIL' ? 'relative' : undefined,
       }}
+      alignItems="center"
     >
       <Layout.FlexRow gap={10} alignItems="center">
         {!isMyPage && (
@@ -193,7 +194,7 @@ function PostFooter({
         top={(toggleButtonRef?.current?.getBoundingClientRect()?.height ?? 0) + 6}
         post={post}
       />
-    </Layout.FlexCol>
+    </Layout.FlexRow>
   );
 }
 export default PostFooter;
