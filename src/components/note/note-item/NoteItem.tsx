@@ -31,7 +31,6 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
     author_detail,
     images,
     like_user_sample,
-    like_reaction_user_sample,
     is_edited,
     current_user_read,
     visibility,
@@ -185,9 +184,7 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
         ) : (
           // ver R
           <PostFooterDefault
-            likedUserList={
-              isMyPage && displayType !== 'DETAIL' ? like_reaction_user_sample : like_user_sample
-            }
+            likedUserList={like_user_sample}
             isMyPage={isMyPage}
             post={note}
             showComments={() => setBottomSheet(true)}

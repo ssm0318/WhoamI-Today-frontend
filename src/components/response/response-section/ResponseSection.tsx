@@ -35,6 +35,7 @@ function ResponseSection({ username }: ResponseSectionProps) {
 
   const { user } = useContext(UserPageContext);
   const areFriends = user?.data?.are_friends === true;
+  const isMyPage = !username;
 
   const {
     data: responses,
@@ -103,7 +104,7 @@ function ResponseSection({ username }: ResponseSectionProps) {
                 <Layout.FlexRow alignItems="center" h="100%" justifyContent="center" w="100%">
                   <NoContents
                     text={
-                      areFriends
+                      isMyPage || areFriends
                         ? t('no_contents.responses')
                         : t('no_contents.responses_not_friend')
                     }
