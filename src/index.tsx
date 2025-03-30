@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
@@ -220,6 +221,13 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
+Sentry.init({
+  dsn: 'https://43afe4ecf8a882b0e5cccb39f876b4b8@o4508942221705216.ingest.us.sentry.io/4509065127002112',
+  integrations: (defaults) =>
+    defaults.filter((integration) => integration.name !== 'BrowserTracing'),
+  tracesSampleRate: 0,
+});
 
 function App() {
   const spotifyManager = SpotifyManager.getInstance();
