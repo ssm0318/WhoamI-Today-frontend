@@ -41,7 +41,7 @@ function MusicItem({ track, onSelect, selected }: MusicItemProps) {
         </Layout.FlexCol>
       </Layout.FlexRow>
       {/* check box */}
-      <Layout.FlexRow>
+      <Layout.FlexRow onClick={(e) => e.stopPropagation()}>
         <StyledCheckBox name={track.id} onChange={() => onSelect(track)} checked={selected} />
       </Layout.FlexRow>
     </Layout.FlexRow>

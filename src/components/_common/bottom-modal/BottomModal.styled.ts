@@ -51,9 +51,9 @@ export const Container = styled(Layout.Absolute)<{
   width: 100%;
   left: 50%;
   height: ${(props) => props.height}px;
-  bottom: ${(props) => -1 * props.height}px;
-  transform: translateX(-50%) translateY(${(props) => (props.visible ? -props.height : 0)}px);
-  transition: transform 0.3s ease-in;
+  bottom: 0;
+  transform: translateX(-50%) translateY(${(props) => (props.visible ? '0' : '100%')});
+  transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
   overflow: hidden;
   position: fixed;
   max-width: ${MAX_WINDOW_WIDTH}px;

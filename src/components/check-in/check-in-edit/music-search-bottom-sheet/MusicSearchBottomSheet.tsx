@@ -6,8 +6,10 @@ import BottomModalActionButton from '@components/_common/bottom-modal/BottomModa
 import Icon from '@components/_common/icon/Icon';
 import SearchInput from '@components/_common/search-input/SearchInput';
 import { Layout, Typo } from '@design-system';
+import { useGetAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
+import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import MusicItem from './music-item/MusicItem';
 import * as S from './MusicSearchBottomSheet.styled';
 
@@ -25,6 +27,8 @@ function MusicSearchBottomSheet({
   const [t] = useTranslation('translation', {
     keyPrefix: 'check_in_edit.song.search_bottom_sheet',
   });
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const { isAndroid } = getMobileDeviceInfo();
 
   const spotifyManager = SpotifyManager.getInstance();
 
@@ -59,6 +63,14 @@ function MusicSearchBottomSheet({
     setAutoFocus(true);
   };
 
+  useGetAppMessage({
+    key: 'KEYBOARD_HEIGHT',
+    cb: (data) => {
+      const newKeyboardVisible = data.height > 0;
+      setIsKeyboardVisible(newKeyboardVisible);
+    },
+  });
+
   if (!trackList) return null;
   return (
     <BottomModal
@@ -67,7 +79,7 @@ function MusicSearchBottomSheet({
       heightMode="full"
       onTransitionEnd={autoFocusInput}
     >
-      <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE">
+      <Layout.FlexCol alignItems="center" justifyContent="space-between" w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
         <Typo type="title-large">{t('title')}</Typo>
         <Layout.FlexCol ph={16} mt={12} w="100%">
@@ -100,21 +112,24 @@ function MusicSearchBottomSheet({
             ))}
           </Layout.FlexCol>
         </Layout.FlexCol>
-        <Layout.Fixed b={0} w="100%" bgColor="WHITE">
-          <S.ConfirmButtonContainer
-            w="100%"
-            pt={16}
-            pb={20}
-            ph={12}
-            h={CONFIRM_BUTTON_CONTAINER_HEIGHT}
-          >
-            <BottomModalActionButton
-              status={selected ? 'normal' : 'disabled'}
-              text={t('confirm')}
-              onClick={handleConfirm}
-            />
-          </S.ConfirmButtonContainer>
-        </Layout.Fixed>
+
+        {(isAndroid && !isKeyboardVisible) || !isAndroid ? (
+          <Layout.Fixed b={0} w="100%" bgColor="WHITE">
+            <S.ConfirmButtonContainer
+              w="100%"
+              pt={16}
+              pb={20}
+              ph={12}
+              h={CONFIRM_BUTTON_CONTAINER_HEIGHT}
+            >
+              <BottomModalActionButton
+                status={selected ? 'normal' : 'disabled'}
+                text={t('confirm')}
+                onClick={handleConfirm}
+              />
+            </S.ConfirmButtonContainer>
+          </Layout.Fixed>
+        ) : null}
       </Layout.FlexCol>
     </BottomModal>
   );

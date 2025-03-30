@@ -1,7 +1,9 @@
 import React, { MouseEvent, useEffect, useRef, useState } from 'react';
 import { DEFAULT_MARGIN, SCREEN_HEIGHT } from '@constants/layout';
 import { ColorKeys, Layout, SvgIcon } from '@design-system';
+import { useGetAppMessage } from '@hooks/useAppMessage';
 import { usePreventScroll } from '@hooks/usePreventScroll';
+import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import * as S from './BottomModal.styled';
 
 interface BottomModalProps {
@@ -13,6 +15,7 @@ interface BottomModalProps {
   containerBgColor?: ColorKeys;
   heightMode?: 'content' | 'full';
   TopComponent?: React.ReactNode; // 바텀 모달 위 컴포넌트
+  customHeight?: number;
 }
 
 function BottomModal({
@@ -24,24 +27,48 @@ function BottomModal({
   containerBgColor = 'WHITE',
   heightMode = 'content',
   TopComponent,
+  customHeight,
 }: BottomModalProps) {
   const bodyRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
   const maxHeight = SCREEN_HEIGHT - 50;
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const { isAndroid } = getMobileDeviceInfo();
+
+  // Get keyboard height from app
+  useGetAppMessage({
+    key: 'KEYBOARD_HEIGHT',
+    cb: (data) => {
+      const newKeyboardVisible = data.height > 0;
+      setIsKeyboardVisible(newKeyboardVisible);
+      setKeyboardHeight(data.height);
+    },
+  });
 
   useEffect(() => {
     if (!visible) return;
     if (bodyRef.current) {
       const bodyHeight = bodyRef.current.scrollHeight;
+      let calculatedHeight;
+
       if (heightMode === 'content') {
-        return setHeight(bodyHeight > maxHeight ? maxHeight : bodyHeight);
+        calculatedHeight = bodyHeight > maxHeight ? maxHeight : bodyHeight;
+      } else if (heightMode === 'full') {
+        calculatedHeight = maxHeight;
+      } else {
+        calculatedHeight = maxHeight;
       }
 
-      if (heightMode === 'full') {
-        return setHeight(maxHeight);
+      // Adjust height for keyboard on Android
+      if (isAndroid && isKeyboardVisible) {
+        const adjustedHeight = Math.min(calculatedHeight, SCREEN_HEIGHT - keyboardHeight);
+        setHeight(adjustedHeight);
+      } else {
+        setHeight(calculatedHeight);
       }
     }
-  }, [visible, heightMode, maxHeight]);
+  }, [visible, heightMode, maxHeight, customHeight, isKeyboardVisible, keyboardHeight, isAndroid]);
 
   usePreventScroll(visible);
 
