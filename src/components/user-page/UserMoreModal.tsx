@@ -22,6 +22,7 @@ type AlertProps = Pick<CommonDialogProps, 'title' | 'content' | 'confirmText' | 
 function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModalProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page.more_modal' });
   const [showAlert, setShowAlert] = useState<AlertProps>();
+  const { featureFlags } = useBoundStore((state) => ({ featureFlags: state.featureFlags }));
 
   const { id, username, are_friends, is_favorite } = user;
 
@@ -106,11 +107,13 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
       <BottomMenuDialog visible={isVisible} onClickClose={closeMoreModal}>
         {are_friends && (
           <>
-            <button type="button" onClick={handleClickAddToFavorite}>
-              <Typo type="button-large" color="DARK_GRAY">
-                {is_favorite ? t('menu.remove_from_favorite') : t('menu.add_to_favorite')}
-              </Typo>
-            </button>
+            {featureFlags?.friendList && (
+              <button type="button" onClick={handleClickAddToFavorite}>
+                <Typo type="button-large" color="DARK_GRAY">
+                  {is_favorite ? t('menu.remove_from_favorite') : t('menu.add_to_favorite')}
+                </Typo>
+              </button>
+            )}
             <button type="button" onClick={handleClickUnfriend}>
               <Typo type="button-large" color="WARNING">
                 {t('menu.unfriend')}

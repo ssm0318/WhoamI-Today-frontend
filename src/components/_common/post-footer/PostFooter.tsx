@@ -15,31 +15,30 @@ import LikeButton from '../like-button/LikeButton';
 import PostReactionList from '../post-reaction-list/PostReactionList';
 
 type PostFooterProps = {
-  reactionSampleUserList: ReactionUserSample[];
   isMyPage: boolean;
   post: Response | Note;
   displayType?: POST_DP_TYPE;
   showComments: () => void;
   setInputFocus: () => void;
+  refresh?: () => void;
 };
 
 function PostFooter({
-  reactionSampleUserList: initialReactionSampleUserList,
   isMyPage,
   post,
   displayType = 'LIST',
   showComments,
   setInputFocus,
+  refresh,
 }: PostFooterProps) {
-  const { comment_count, type, current_user_reaction_id_list } = post;
+  const { comment_count, type, current_user_reaction_id_list, like_reaction_user_sample } = post;
   const navigate = useNavigate();
   const toggleButtonRef = useRef<HTMLDivElement>(null);
   const [myReactionList, setMyReactionList] = useState<{ id: number; emoji: string }[]>(
     current_user_reaction_id_list,
   );
-  const [sampleUserList, setSampleUserList] = useState<ReactionUserSample[]>(
-    initialReactionSampleUserList,
-  );
+  const [sampleUserList, setSampleUserList] =
+    useState<ReactionUserSample[]>(like_reaction_user_sample);
   const { emojiPickerTarget, setEmojiPickerTarget, myProfile } = useBoundStore((state) => ({
     emojiPickerTarget: state.emojiPickerTarget,
     setEmojiPickerTarget: state.setEmojiPickerTarget,
@@ -138,6 +137,10 @@ function PostFooter({
   }, [current_user_reaction_id_list]);
 
   useEffect(() => {
+    setSampleUserList(like_reaction_user_sample);
+  }, [like_reaction_user_sample]);
+
+  useEffect(() => {
     return () => {
       setEmojiPickerTarget(null);
     };
@@ -154,7 +157,7 @@ function PostFooter({
       <Layout.FlexRow gap={10} alignItems="center">
         {!isMyPage && (
           <>
-            <LikeButton postType={type} post={post} iconSize={23} m={0} />
+            <LikeButton postType={type} post={post} iconSize={23} m={0} refresh={refresh} />
             <Layout.FlexRow ref={toggleButtonRef} alignItems="center">
               {(myEmojiList || []).length === 0 ? (
                 <EmojiButton post={post} onClick={handleClickEmojiButton} />

@@ -32,6 +32,7 @@ function LikeButton({ postType, post, iconSize, m = 6, refresh }: LikeButtonProp
     if (!id) return;
     postLike({ target_id: id, target_type: postType }).then(({ id: like_id }) => {
       setLikeId(like_id);
+      refresh?.();
     });
   };
 
@@ -39,6 +40,7 @@ function LikeButton({ postType, post, iconSize, m = 6, refresh }: LikeButtonProp
     if (!likeId) return;
     deleteLike(likeId).then(() => {
       setLikeId(null);
+      refresh?.();
     });
   };
 
@@ -46,7 +48,6 @@ function LikeButton({ postType, post, iconSize, m = 6, refresh }: LikeButtonProp
     e.stopPropagation();
     if (likeId) unLike();
     else like();
-    refresh?.();
   };
 
   return (

@@ -52,16 +52,8 @@ function ResponseItem({
       setOverflowSummary(contentArrWithNewLine.slice(0, MAX_RESPONSE_NEW_LINE).join('\n'));
   }, [response.content, displayType]);
 
-  const {
-    content,
-    created_at,
-    author_detail,
-    question,
-    like_reaction_user_sample,
-    is_edited,
-    current_user_read,
-    visibility,
-  } = response;
+  const { content, created_at, author_detail, question, is_edited, current_user_read, visibility } =
+    response;
 
   const { username, profile_image } = author_detail ?? {};
 
@@ -190,12 +182,12 @@ function ResponseItem({
           </Layout.FlexCol>
           <QuestionItem question={question} />
           <PostFooter
-            reactionSampleUserList={like_reaction_user_sample}
             isMyPage={isMyPage}
             post={response}
             showComments={() => setBottomSheet(true)}
             setInputFocus={() => setInputFocus(true)}
             displayType={displayType}
+            refresh={refresh}
           />
         </Layout.FlexCol>
       </Layout.FlexRow>
