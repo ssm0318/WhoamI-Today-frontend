@@ -64,7 +64,7 @@ function BottomModal({
 
       // Adjust height for keyboard on Android
       if (isAndroid && isKeyboardVisible) {
-        const adjustedHeight = Math.min(calculatedHeight, SCREEN_HEIGHT - keyboardHeight - 20);
+        const adjustedHeight = Math.min(calculatedHeight, SCREEN_HEIGHT - keyboardHeight);
         setHeight(adjustedHeight);
       } else {
         setHeight(calculatedHeight);
