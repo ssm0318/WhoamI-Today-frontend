@@ -163,16 +163,21 @@ function PostFooter({
             </Layout.FlexRow>
           </>
         )}
-        <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
+        {displayType === 'LIST' && (
+          <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
+        )}
         {sampleUserList?.length > 0 && (
           <Layout.FlexRow onClick={handleClickReactions}>
             <PostReactionList user_sample_list={sampleUserList} />
           </Layout.FlexRow>
         )}
       </Layout.FlexRow>
-      {!!comment_count && displayType === 'LIST' && (
+      {!!comment_count && (
         <Layout.FlexRow>
-          <button type="button" onClick={handleClickCommentText}>
+          <button
+            type="button"
+            onClick={displayType === 'LIST' ? handleClickCommentText : undefined}
+          >
             <Typo type="label-large" color="BLACK" underline>
               {comment_count ?? 0} {t('comments')}
             </Typo>
