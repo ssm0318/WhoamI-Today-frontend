@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
-import Divider from '@components/_common/divider/Divider';
 import Icon from '@components/_common/icon/Icon';
 import CommentInputBox from '@components/comment-list/comment-input-box/CommentInputBox';
 import CommentItem from '@components/comment-list/comment-item/CommentItem';
@@ -98,9 +97,6 @@ function CommentBottomSheet({
             <Typo type="title-large">{t('comment')}</Typo>
           </Layout.FlexRow>
         </Layout.FlexRow>
-        <Layout.FlexCol gap={12} pt={12} w="100%">
-          <Divider width={1} />
-        </Layout.FlexCol>
       </CommentBottomHeaderWrapper>
 
       <CommentBottomContentWrapper mb={footerHeight} ref={scrollRef}>
@@ -126,6 +122,7 @@ function CommentBottomSheet({
 
       <CommentBottomFooterWrapper ref={footerRef}>
         <CommentInputBox
+          from="COMMENT_BOTTOM_SHEET"
           post={commentTo}
           postType={commentToType}
           inputFocus={inputFocus}

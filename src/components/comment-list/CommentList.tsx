@@ -4,7 +4,6 @@ import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutLis
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
-import { useGetAppMessage } from '@hooks/useAppMessage';
 import useCommentList from '@hooks/useCommentList';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Comment, Note, Response } from '@models/post';
@@ -29,8 +28,6 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
 
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
   const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
@@ -51,20 +48,6 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
       }, 300); // 키보드가 완전히 나타난 후 스크롤
     }
   }, []);
-
-  // 앱에서 키보드 높이 정보 수신
-  useGetAppMessage({
-    key: 'KEYBOARD_HEIGHT',
-    cb: (data) => {
-      const newKeyboardVisible = data.height > 0;
-      setKeyboardHeight(data.height);
-      setIsKeyboardVisible(newKeyboardVisible);
-
-      if (newKeyboardVisible) {
-        scrollToBottom();
-      }
-    },
-  });
 
   // 입력 필드에 포커스가 생길 때 스크롤 조정
   useEffect(() => {
@@ -105,9 +88,7 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
         gap={2}
         ph={16}
         style={{
-          marginBottom: isKeyboardVisible
-            ? (footerRef.current?.offsetHeight || 0) + keyboardHeight
-            : footerRef.current?.offsetHeight,
+          // marginBottom: footerRef.current?.offsetHeight,
           transition: 'margin-bottom 0.2s ease-out',
         }}
         mb={footerRef.current?.offsetHeight}
@@ -137,7 +118,7 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
       </Layout.FlexCol>
       <StyledCommentListFooter
         ref={footerRef}
-        b={isKeyboardVisible ? keyboardHeight : BOTTOM_TABBAR_HEIGHT}
+        b={BOTTOM_TABBAR_HEIGHT}
         w="100%"
         bgColor="WHITE"
         style={{
@@ -147,6 +128,7 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
       >
         <Layout.FlexRow w="100%">
           <CommentInputBox
+            from="COMMENT_LIST"
             post={commentTo}
             postType={commentToType}
             inputFocus={inputFocus}

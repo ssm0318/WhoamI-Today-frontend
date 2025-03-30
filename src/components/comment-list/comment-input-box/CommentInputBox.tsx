@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ChangeEvent,
   Dispatch,
@@ -15,7 +16,7 @@ import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { postComment } from '@utils/apis/comments';
-import { isApp } from '@utils/getUserAgent';
+import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import * as S from './CommentInputBox.styled';
 
 interface CommentInputBoxProps {
@@ -33,6 +34,7 @@ interface CommentInputBoxProps {
   setInputFocus?: Dispatch<SetStateAction<boolean>>;
   reloadComments?: () => void;
   setReload?: (reload: boolean) => void;
+  from: 'COMMENT_LIST' | 'COMMENT_BOTTOM_SHEET';
 }
 
 function CommentInputBox({
@@ -50,6 +52,7 @@ function CommentInputBox({
   setInputFocus,
   reloadComments,
   setReload,
+  from,
 }: CommentInputBoxProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const { featureFlags } = useBoundStore(UserSelector);
@@ -63,7 +66,7 @@ function CommentInputBox({
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const { isAndroid } = getMobileDeviceInfo();
   const { emojiPickerTarget } = useBoundStore((state) => ({
     emojiPickerTarget: state.emojiPickerTarget,
   }));
@@ -100,59 +103,59 @@ function CommentInputBox({
   }, [isReply, replyTo, featureFlags?.friendList]);
 
   // 브라우저에서 테스트할 때는 visualViewport를 사용 (앱에서는 필요 없음)
-  useEffect(() => {
-    if (!isApp && window.visualViewport) {
-      const handleResize = () => {
-        if (!window.visualViewport) return;
+  // useEffect(() => {
+  //   if (!isApp && window.visualViewport) {
+  //     const handleResize = () => {
+  //       if (!window.visualViewport) return;
 
-        const viewportHeight = window.visualViewport.height;
-        const windowHeight = window.innerHeight;
+  //       const viewportHeight = window.visualViewport.height;
+  //       const windowHeight = window.innerHeight;
 
-        // 뷰포트 높이가 창 높이보다 작아지면 키보드가 열린 것으로 간주
-        if (viewportHeight < windowHeight && !isEmojiPickerVisible) {
-          setKeyboardOpen(true);
-          // 키보드 높이 계산
-          const calculatedKeyboardHeight = windowHeight - viewportHeight;
-          setKeyboardHeight(calculatedKeyboardHeight);
-        } else {
-          setKeyboardOpen(false);
-          setKeyboardHeight(0);
-        }
-      };
+  //       // 뷰포트 높이가 창 높이보다 작아지면 키보드가 열린 것으로 간주
+  //       if (viewportHeight < windowHeight && !isEmojiPickerVisible) {
+  //         setKeyboardOpen(true);
+  //         // 키보드 높이 계산
+  //         const calculatedKeyboardHeight = windowHeight - viewportHeight;
+  //         setKeyboardHeight(calculatedKeyboardHeight);
+  //       } else {
+  //         setKeyboardOpen(false);
+  //         setKeyboardHeight(0);
+  //       }
+  //     };
 
-      const { visualViewport } = window;
-      visualViewport.addEventListener('resize', handleResize);
+  //     const { visualViewport } = window;
+  //     visualViewport.addEventListener('resize', handleResize);
 
-      return () => {
-        visualViewport.removeEventListener('resize', handleResize);
-      };
-    }
-  }, [isEmojiPickerVisible]);
+  //     return () => {
+  //       visualViewport.removeEventListener('resize', handleResize);
+  //     };
+  //   }
+  // }, [isEmojiPickerVisible]);
 
   // 입력 필드 포커스 처리
-  useEffect(() => {
-    const handleFocus = () => {
-      // ReactNative WebView에 키보드가 열렸음을 알림
-      if (isApp) {
-        try {
-          sendMessage('KEYBOARD_OPENED', {});
-        } catch (error) {
-          console.error('Error posting message to React Native WebView:', error);
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const handleFocus = () => {
+  //     // ReactNative WebView에 키보드가 열렸음을 알림
+  //     if (isApp) {
+  //       try {
+  //         sendMessage('KEYBOARD_OPENED', {});
+  //       } catch (error) {
+  //         console.error('Error posting message to React Native WebView:', error);
+  //       }
+  //     }
+  //   };
 
-    const inputElement = commentRef.current;
-    if (inputElement) {
-      inputElement.addEventListener('focus', handleFocus);
-    }
+  //   const inputElement = commentRef.current;
+  //   if (inputElement) {
+  //     inputElement.addEventListener('focus', handleFocus);
+  //   }
 
-    return () => {
-      if (inputElement) {
-        inputElement.removeEventListener('focus', handleFocus);
-      }
-    };
-  }, [sendMessage]);
+  //   return () => {
+  //     if (inputElement) {
+  //       inputElement.removeEventListener('focus', handleFocus);
+  //     }
+  //   };
+  // }, [sendMessage]);
 
   const handleCheckboxChange = () => {
     if (!featureFlags?.friendList || initialIsPrivate) return;
@@ -225,7 +228,7 @@ function CommentInputBox({
       style={{
         position: 'relative',
         transition: 'bottom 0.2s ease-out',
-        bottom: keyboardOpen ? keyboardHeight : 0,
+        bottom: from === 'COMMENT_BOTTOM_SHEET' && isAndroid && keyboardOpen ? 50 : 0,
         zIndex: 1000,
       }}
     >
