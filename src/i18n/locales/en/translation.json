@@ -116,7 +116,8 @@
                 "discord_inquiry": "Discord",
                 "instagram_inquiry": "Instagram",
                 "text_message_inquiry": "Text",
-                "user_manual": "User Manual"
+                "user_manual": "User Manual",
+                "onboarding_video": "Onboarding Video"
             },
             "bottom_sheet": {
                 "title": "Create",

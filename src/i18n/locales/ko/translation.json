@@ -116,7 +116,8 @@
         "discord_inquiry": "디스코드",
         "instagram_inquiry": "인스타그램",
         "text_message_inquiry": "문자",
-        "user_manual": "사용자 매뉴얼"
+        "user_manual": "사용자 매뉴얼",
+        "onboarding_video": "온보딩 영상"
       },
       "bottom_sheet": {
         "title": "작성하기",
