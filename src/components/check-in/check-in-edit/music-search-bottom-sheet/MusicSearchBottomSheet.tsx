@@ -112,7 +112,7 @@ function MusicSearchBottomSheet({
             ))}
           </Layout.FlexCol>
         </Layout.FlexCol>
-        {isAndroid && isKeyboardVisible && (
+        {isAndroid && !isKeyboardVisible && (
           <Layout.Fixed b={0} w="100%" bgColor="WHITE">
             <S.ConfirmButtonContainer
               w="100%"
