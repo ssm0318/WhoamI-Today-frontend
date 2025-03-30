@@ -30,7 +30,7 @@ export const RESEARCH_INQUIRY_INSTAGRAM_LINK = 'https://www.instagram.com/whoami
 export const RESEARCH_INQUIRY_DISCORD_LINK = 'https://discordapp.com/users/1221863102769922160';
 
 export const USER_MANUAL_URL =
-  'https://drive.google.com/drive/folders/1cSpDgvApvfPCbJ7SVzrV8Wjli7ceSSiX';
+  'https://drive.google.com/drive/folders/131GPATMKThegtTlw86OtBYOgfx1uu6S4?usp=sharing';
 
 export const ONBOARDING_VIDEO_URL =
   'https://www.youtube.com/playlist?list=PLeg7yLjhFvgw7tWm9QpU536mfHjLQWy7S';
