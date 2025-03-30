@@ -13,7 +13,7 @@ interface BottomModalProps {
   children: React.ReactNode;
   bgColor?: string;
   containerBgColor?: ColorKeys;
-  heightMode?: 'content' | 'full' | 'custom';
+  heightMode?: 'content' | 'full';
   TopComponent?: React.ReactNode; // 바텀 모달 위 컴포넌트
   customHeight?: number;
 }
@@ -56,8 +56,6 @@ function BottomModal({
         calculatedHeight = bodyHeight > maxHeight ? maxHeight : bodyHeight;
       } else if (heightMode === 'full') {
         calculatedHeight = maxHeight;
-      } else if (heightMode === 'custom') {
-        calculatedHeight = customHeight || maxHeight;
       } else {
         calculatedHeight = maxHeight;
       }
