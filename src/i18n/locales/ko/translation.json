@@ -669,7 +669,7 @@
     "go_home": "메인 페이지로 이동"
   },
   "check_in_edit": {
-    "title": "체크인 수정",
+    "title": "상태 수정",
     "save": "저장",
     "social_battery": {
       "title": "소셜 배터리 수준",
