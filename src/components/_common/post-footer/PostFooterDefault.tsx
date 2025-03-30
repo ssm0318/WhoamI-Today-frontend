@@ -56,7 +56,7 @@ function PostFooterDefault({
   };
 
   return (
-    <Layout.FlexCol gap={8}>
+    <Layout.FlexRow gap={8} alignItems="center">
       <Layout.FlexRow gap={8} alignItems="center">
         {/* 좋아요 리스트 */}
         {isMyPage && likedUserList?.length > 0 && (
@@ -75,18 +75,23 @@ function PostFooterDefault({
             </Typo>
           </button>
         )}
-        <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
+        {displayType === 'LIST' && (
+          <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
+        )}
       </Layout.FlexRow>
-      {!!comment_count && displayType === 'LIST' && (
+      {!!comment_count && (
         <Layout.FlexRow>
-          <button type="button" onClick={handleClickCommentText}>
+          <button
+            type="button"
+            onClick={displayType === 'LIST' ? handleClickCommentText : undefined}
+          >
             <Typo type="label-large" color="BLACK" underline>
               {comment_count || 0} {t('comments')}
             </Typo>
           </button>
         </Layout.FlexRow>
       )}
-    </Layout.FlexCol>
+    </Layout.FlexRow>
   );
 }
 
