@@ -42,8 +42,6 @@ function ResetPassword() {
     });
   };
 
-  console.log('First login:', firstLogin);
-
   return (
     <Layout.FlexCol w="100%">
       <SubHeader typo="title-large" title={t('settings.reset_password')} />
