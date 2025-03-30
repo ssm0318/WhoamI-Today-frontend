@@ -9,13 +9,15 @@ import CheckInSocialBattery from '@components/check-in/check-in-edit/check-in-so
 import CheckInSpotifyMusic from '@components/check-in/check-in-edit/check-in-spotify-music/CheckInSpotifyMusic';
 import SectionContainer from '@components/check-in/check-in-edit/section-container/SectionContainer';
 import SubHeader from '@components/sub-header/SubHeader';
-import { Layout, Typo } from '@design-system';
+import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
+import { Colors, Layout, Typo } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
 import { CheckInForm, SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
 import { postCheckIn } from '@utils/apis/checkIn';
+import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import { MainScrollContainer } from '../Root';
 
 function CheckInEdit() {
@@ -30,6 +32,7 @@ function CheckInEdit() {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { isAndroid } = getMobileDeviceInfo();
 
   const [trackData, setTrackData] = useState<Track | null>(null);
 
@@ -88,7 +91,14 @@ function CheckInEdit() {
   });
 
   return (
-    <MainScrollContainer scrollRef={scrollContainerRef}>
+    <MainScrollContainer
+      scrollRef={scrollContainerRef}
+      style={{
+        backgroundColor: Colors.BACKGROUND_COLOR,
+        paddingBottom:
+          isAndroid && isKeyboardVisible ? `${keyboardHeight + BOTTOM_TABBAR_HEIGHT}px` : undefined,
+      }}
+    >
       <SubHeader
         title={t('title')}
         RightComponent={

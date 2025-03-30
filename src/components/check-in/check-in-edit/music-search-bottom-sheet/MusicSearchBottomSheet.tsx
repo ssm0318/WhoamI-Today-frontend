@@ -1,15 +1,15 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
 import Icon from '@components/_common/icon/Icon';
 import SearchInput from '@components/_common/search-input/SearchInput';
-import { SCREEN_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
+import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import MusicItem from './music-item/MusicItem';
 import * as S from './MusicSearchBottomSheet.styled';
 
@@ -28,8 +28,7 @@ function MusicSearchBottomSheet({
     keyPrefix: 'check_in_edit.song.search_bottom_sheet',
   });
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
-  const [modalHeight, setModalHeight] = useState(SCREEN_HEIGHT * 0.8);
+  const { isAndroid } = getMobileDeviceInfo();
 
   const spotifyManager = SpotifyManager.getInstance();
 
@@ -64,32 +63,20 @@ function MusicSearchBottomSheet({
     setAutoFocus(true);
   };
 
-  // useAppMessage 훅을 사용하여 키보드 높이 정보 수신
   useGetAppMessage({
     key: 'KEYBOARD_HEIGHT',
     cb: (data) => {
       const newKeyboardVisible = data.height > 0;
       setIsKeyboardVisible(newKeyboardVisible);
-      setKeyboardHeight(data.height);
     },
   });
-
-  // Update modal height when keyboard visibility changes
-  useEffect(() => {
-    if (isKeyboardVisible) {
-      setModalHeight(SCREEN_HEIGHT * 0.8 - keyboardHeight);
-    } else {
-      setModalHeight(SCREEN_HEIGHT * 0.8);
-    }
-  }, [isKeyboardVisible, keyboardHeight]);
 
   if (!trackList) return null;
   return (
     <BottomModal
       visible={visible}
       onClose={closeBottomSheet}
-      heightMode="custom"
-      customHeight={modalHeight}
+      heightMode="full"
       onTransitionEnd={autoFocusInput}
     >
       <Layout.FlexCol alignItems="center" justifyContent="space-between" w="100%" bgColor="WHITE">
@@ -125,7 +112,7 @@ function MusicSearchBottomSheet({
             ))}
           </Layout.FlexCol>
         </Layout.FlexCol>
-        {!isKeyboardVisible && (
+        {isAndroid && isKeyboardVisible && (
           <Layout.Fixed b={0} w="100%" bgColor="WHITE">
             <S.ConfirmButtonContainer
               w="100%"
