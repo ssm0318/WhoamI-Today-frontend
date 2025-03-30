@@ -21,7 +21,7 @@ type NoteSectionProps = {
 
 function NoteSection({ username }: NoteSectionProps) {
   const [t] = useTranslation('translation');
-  const { myProfile } = useBoundStore(UserSelector);
+  const { myProfile, featureFlags } = useBoundStore(UserSelector);
   const navigate = useNavigate();
 
   const { user } = useContext(UserPageContext);
@@ -31,6 +31,8 @@ function NoteSection({ username }: NoteSectionProps) {
     return navigate('/notes/new');
   };
 
+  const isDefault = !!featureFlags?.friendFeed;
+
   const {
     targetRef,
     data: notes,
@@ -38,7 +40,7 @@ function NoteSection({ username }: NoteSectionProps) {
     isLoadingMore: isNotesLoadingMore,
     mutate: refetchNotes,
   } = useSWRInfiniteScroll<Note>({
-    key: `/user/${encodeURIComponent(username || 'me')}/notes/`,
+    key: `/user/${encodeURIComponent(username || 'me')}/notes/${isDefault ? 'default' : ''}`,
   });
 
   const { noteId } = useParams();
