@@ -33,12 +33,14 @@ export function NoteDetail() {
 
   useAsyncEffect(async () => {
     if (!noteId) return;
-
     try {
       const data = featureFlags?.friendList
         ? await getNoteDetail(Number(noteId))
         : await getNoteDetailDefault(Number(noteId));
       setNoteDetail({ state: 'hasValue', data });
+      if (reload) {
+        setReload(false);
+      }
     } catch (error) {
       if (isAxiosError(error)) {
         setNoteDetail({ state: 'hasError', error });
@@ -69,6 +71,9 @@ export function NoteDetail() {
             note={noteDetail.data}
             isMyPage={noteDetail.data.author_detail?.id === myProfile?.id}
             displayType="DETAIL"
+            refresh={() => {
+              setReload(true);
+            }}
           />
         )}
       </Layout.FlexCol>

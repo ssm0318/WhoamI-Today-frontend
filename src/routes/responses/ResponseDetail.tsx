@@ -34,6 +34,9 @@ function ResponseDetail() {
     try {
       const data = await getResponse(Number(responseId));
       setResponseDetail({ state: 'hasValue', data });
+      if (reload) {
+        setReload(false);
+      }
     } catch (error) {
       if (isAxiosError(error)) {
         setResponseDetail({ state: 'hasError', error });
@@ -66,6 +69,9 @@ function ResponseDetail() {
             response={responseDetail.data}
             displayType="DETAIL"
             isMyPage={responseDetail.data.author_detail?.id === myProfile?.id}
+            refresh={() => {
+              setReload(true);
+            }}
           />
         )}
       </Layout.FlexCol>

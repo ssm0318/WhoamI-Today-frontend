@@ -172,16 +172,18 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
             </Typo>
           )}
         </Layout.FlexCol>
+        {/* ver Q */}
         {featureFlags?.friendList ? (
           <PostFooter
-            reactionSampleUserList={like_reaction_user_sample}
             isMyPage={isMyPage}
             post={note}
             showComments={() => setBottomSheet(true)}
             setInputFocus={() => setInputFocus(true)}
             displayType={displayType}
+            refresh={refresh}
           />
         ) : (
+          // ver R
           <PostFooterDefault
             likedUserList={
               isMyPage && displayType !== 'DETAIL' ? like_reaction_user_sample : like_user_sample
