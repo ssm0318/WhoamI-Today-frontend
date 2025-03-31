@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import { FeatureFlagKey } from '@constants/featureFlag';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, RadioButton, SvgIcon, Typo } from '@design-system';
 import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
@@ -20,22 +19,13 @@ import { NoteInput } from './NoteInputBox.styled';
 interface NoteInformationProps {
   noteInfo: NewNoteForm;
   setNoteInfo: React.Dispatch<React.SetStateAction<NewNoteForm>>;
-  isEdit?: boolean;
 }
 
-function NewNoteContent({ noteInfo, setNoteInfo, isEdit }: NoteInformationProps) {
+function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const [t] = useTranslation('translation');
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
-  const featureFlags = useBoundStore((state) => state.featureFlags);
-
-  const [visibility, setVisibility] = useState<PostVisibility>(
-    isEdit
-      ? noteInfo.visibility
-      : featureFlags?.[FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]
-      ? PostVisibility.CLOSE_FRIENDS
-      : PostVisibility.FRIENDS,
-  );
+  const { visibility } = noteInfo;
 
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [showPhotoUploadBottomSheet, setShowPhotoUploadBottomSheet] = useState(false);
@@ -112,7 +102,6 @@ function NewNoteContent({ noteInfo, setNoteInfo, isEdit }: NoteInformationProps)
 
   const handleChangeVisibility = (e: ChangeEvent<HTMLInputElement>) => {
     const newVisibility = e.target.value as PostVisibility;
-    setVisibility(newVisibility);
     setNoteInfo((prevNoteInfo) => ({
       ...prevNoteInfo,
       visibility: newVisibility,
