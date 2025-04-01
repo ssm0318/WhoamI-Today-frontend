@@ -114,7 +114,7 @@ function EditProfile() {
 
       if (typeof imageDataUrl !== 'string') {
         openToast({ message: t('error.read_file_error') || '' });
-        throw new Error(t('error.read_file_error') || '');
+        return;
       }
 
       setOriginalImageFileURL(imageDataUrl);
@@ -123,6 +123,10 @@ function EditProfile() {
       const errMsg = (error as Error)?.message;
       if (!errMsg) return;
       openToast({ message: errMsg });
+      // Reset the file input to allow new file selection
+      if (inputRef.current) {
+        inputRef.current.value = '';
+      }
     }
   };
 
