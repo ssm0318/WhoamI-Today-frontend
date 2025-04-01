@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/react';
 import { Area } from 'react-easy-crop';
 import { PixelCrop } from 'react-image-crop';
 import { IMAGE_FILE_SIZE_LIMIT } from '@constants/size';
@@ -31,30 +30,8 @@ export const rotateSize = (width: number, height: number, rotation: number) => {
 
 export const readFile = (file: File): Promise<string | ArrayBuffer | null> => {
   return new Promise((resolve, reject) => {
-    Sentry.captureMessage('readFile', {
-      level: 'info',
-      extra: {
-        file: {
-          name: file.name,
-          type: file.type,
-          size: file.size,
-          lastModified: file.lastModified,
-        },
-      },
-    });
-
     // 파일 크기 확인
     if (file.size > IMAGE_FILE_SIZE_LIMIT) {
-      Sentry.captureMessage('readFile file size exceeded', {
-        level: 'warning',
-        extra: {
-          fileSize: file.size,
-          fileSizeLimit: IMAGE_FILE_SIZE_LIMIT,
-          fileSizeMB: file.size / 1024 / 1024,
-          fileSizeLimitMB: IMAGE_FILE_SIZE_LIMIT / 1024 / 1024,
-        },
-      });
-
       reject(
         new Error(
           i18n.t('error.file_size_exceeded', {
@@ -67,27 +44,13 @@ export const readFile = (file: File): Promise<string | ArrayBuffer | null> => {
 
     const reader = new FileReader();
 
-    reader.addEventListener('error', (error) => {
-      Sentry.captureException(error, {
-        extra: {
-          fileName: file.name,
-          fileType: file.type,
-          fileSize: file.size,
-        },
-      });
+    reader.addEventListener('error', () => {
       reject(new Error('File reading error'));
     });
 
     reader.addEventListener(
       'load',
       () => {
-        Sentry.captureMessage('readFile success', {
-          level: 'info',
-          extra: {
-            resultType: typeof reader.result,
-            resultLength: reader.result ? String(reader.result).length : 0,
-          },
-        });
         resolve(reader.result);
       },
       false,
@@ -111,26 +74,11 @@ const getCroppedImg = async (
   rotation = 0,
   flip = { horizontal: false, vertical: false },
 ): Promise<CroppedImg> => {
-  Sentry.captureMessage('getCroppedImg', {
-    level: 'info',
-    extra: {
-      pixelCrop,
-      rotation,
-      flip,
-    },
-  });
-
   const image = await createImage(imageSrc);
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
 
   if (!ctx) {
-    Sentry.captureMessage('getCroppedImg error', {
-      level: 'error',
-      extra: {
-        error: 'Get context from canvas Error',
-      },
-    });
     throw new Error('Get context from canvas Error');
   }
 
@@ -180,25 +128,12 @@ const getCroppedImg = async (
   return new Promise((resolve) => {
     croppedCanvas.toBlob((blob) => {
       if (!blob) {
-        Sentry.captureMessage('getCroppedImg blob error', {
-          level: 'error',
-          extra: {
-            error: 'Blob is null',
-          },
-        });
         return;
       }
       const result = {
         file: new File([blob], `${imageSrc}_cropped.jpg`, { type: 'image/jpeg' }),
         url: URL.createObjectURL(blob),
       };
-      Sentry.captureMessage('getCroppedImg success', {
-        level: 'info',
-        extra: {
-          fileSize: blob.size,
-          fileType: blob.type,
-        },
-      });
       resolve(result);
     }, 'image/jpeg');
   });
@@ -226,27 +161,10 @@ export async function getReactImageCrop(
   scale = 1,
   rotate = 0,
 ): Promise<CroppedImg> {
-  Sentry.captureMessage('getReactImageCrop', {
-    level: 'info',
-    extra: {
-      imageNaturalWidth: image.naturalWidth,
-      imageNaturalHeight: image.naturalHeight,
-      crop,
-      scale,
-      rotate,
-    },
-  });
-
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
 
   if (!ctx) {
-    Sentry.captureMessage('getReactImageCrop error', {
-      level: 'error',
-      extra: {
-        error: 'No 2d context',
-      },
-    });
     throw new Error('No 2d context');
   }
 
@@ -299,25 +217,12 @@ export async function getReactImageCrop(
   return new Promise((resolve) => {
     canvas.toBlob((blob) => {
       if (!blob) {
-        Sentry.captureMessage('getReactImageCrop blob error', {
-          level: 'error',
-          extra: {
-            error: 'Blob is null',
-          },
-        });
         return;
       }
       const result = {
         file: new File([blob], `cropped.jpg`, { type: 'image/jpeg' }),
         url: URL.createObjectURL(blob),
       };
-      Sentry.captureMessage('getReactImageCrop success', {
-        level: 'info',
-        extra: {
-          fileSize: blob.size,
-          fileType: blob.type,
-        },
-      });
       resolve(result);
     }, 'image/jpeg');
   });
