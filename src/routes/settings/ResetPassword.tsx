@@ -33,7 +33,7 @@ function ResetPassword() {
         openToast({ message: t('settings.reset_password_success') });
 
         if (firstLogin) {
-          navigate('/settings/edit-profile');
+          navigate('/settings/edit-profile?from_reset_password=true');
         } else {
           navigate('/settings/reset-password');
         }
