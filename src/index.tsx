@@ -227,6 +227,7 @@ Sentry.init({
   integrations: (defaults) =>
     defaults.filter((integration) => integration.name !== 'BrowserTracing'),
   tracesSampleRate: 0,
+  enabled: false,
 });
 
 function App() {
