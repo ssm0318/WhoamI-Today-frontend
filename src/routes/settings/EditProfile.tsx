@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/react';
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
@@ -108,35 +107,12 @@ function EditProfile() {
   const onImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
 
-    Sentry.captureMessage('onImageChange', {
-      level: 'info',
-      extra: {
-        files: e.target.files,
-        myProfile,
-      },
-    });
-
     const image = e.target.files[0];
 
     try {
       const imageDataUrl = await readFile(image);
 
-      Sentry.captureMessage('imageDataUrl', {
-        level: 'info',
-        extra: {
-          imageDataUrl,
-          myProfile,
-        },
-      });
-
       if (typeof imageDataUrl !== 'string') {
-        Sentry.captureMessage('imageDataUrl is not a string', {
-          level: 'error',
-          extra: {
-            imageDataUrl,
-            myProfile,
-          },
-        });
         openToast({ message: t('error.read_file_error') || '' });
         throw new Error(t('error.read_file_error') || '');
       }
