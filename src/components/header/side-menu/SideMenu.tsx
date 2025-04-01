@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Z_INDEX } from '@constants/layout';
 import {
+  DAILY_SURVEY_URL_EN,
+  DAILY_SURVEY_URL_KO,
   ONBOARDING_VIDEO_URL,
   RESEARCH_INQUIRY_DISCORD_LINK,
   RESEARCH_INQUIRY_INSTAGRAM_LINK,
@@ -11,6 +13,8 @@ import {
 } from '@constants/url';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
+import { UserGroup } from '@models/api/user';
+import { useBoundStore } from '@stores/useBoundStore';
 
 const SIDE_MENU_LIST = [
   { key: 'explore_friends', path: '/friends/explore' },
@@ -27,6 +31,13 @@ function SideMenu({ closeSideMenu }: Props) {
   const [t, i18n] = useTranslation('translation', { keyPrefix: 'home.header.side_menu' });
   const navigate = useNavigate();
   const postMessage = usePostAppMessage();
+
+  const { myProfile } = useBoundStore((state) => ({
+    myProfile: state.myProfile,
+  }));
+
+  const isUSParticipant =
+    myProfile?.user_group === UserGroup.GROUP_1 || myProfile?.user_group === UserGroup.GROUP_2;
 
   const handleClickMenu = (path: string) => () => {
     navigate(path);
@@ -96,6 +107,16 @@ function SideMenu({ closeSideMenu }: Props) {
     }
   };
 
+  const handleClickDailySurvery = () => {
+    if (window.ReactNativeWebView) {
+      postMessage('OPEN_BROWSER', {
+        url: isUSParticipant ? DAILY_SURVEY_URL_EN : DAILY_SURVEY_URL_KO,
+      });
+    } else {
+      window.open(isUSParticipant ? DAILY_SURVEY_URL_EN : DAILY_SURVEY_URL_KO, '_blank');
+    }
+  };
+
   return createPortal(
     <Layout.Absolute t={0} l={0} r={0} b={0} z={Z_INDEX.MODAL_CONTAINER}>
       <Layout.Absolute w="100%" h="100%" bgColor="DIM" onClick={handleClickDimmed} />
@@ -109,6 +130,24 @@ function SideMenu({ closeSideMenu }: Props) {
               </button>
             ))}
             <Layout.FlexCol mt={52} pr={12}>
+              <a
+                href={isUSParticipant ? DAILY_SURVEY_URL_EN : DAILY_SURVEY_URL_KO}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleClickDailySurvery();
+                }}
+              >
+                <Typo type="title-large" color="BLACK">
+                  📝{' '}
+                </Typo>
+                <Typo type="title-large" color="BLACK" underline>
+                  {t('daily_survey')}
+                </Typo>
+              </a>
+            </Layout.FlexCol>
+            <Layout.FlexCol>
               <a
                 href={ONBOARDING_VIDEO_URL}
                 target="_blank"

@@ -105,6 +105,13 @@ export enum VersionType {
   EXPERIMENT = 'experiment',
 }
 
+export enum UserGroup {
+  GROUP_1 = 'group_1', // 'Group 1: US / default (ver.R) -> experiment (ver.Q)'
+  GROUP_2 = 'group_2', // 'Group 2: US / experiment (ver.Q) -> default (ver.R)'
+  GROUP_3 = 'group_3', // 'Group 3: Korea / default (ver.R) -> experiment (ver.Q)'
+  GROUP_4 = 'group_4', // 'Group 4: Korea / experiment (ver.Q) -> default (ver.R)'
+}
+
 export interface MyProfile extends User {
   email: string;
   date_of_birth: string | null;
@@ -122,6 +129,7 @@ export interface MyProfile extends User {
   timezone?: string;
   check_in?: MyCheckIn;
   current_ver: VersionType;
+  user_group: UserGroup;
 }
 
 export interface FriendRequest {

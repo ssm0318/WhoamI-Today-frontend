@@ -117,7 +117,8 @@
                 "instagram_inquiry": "Instagram",
                 "text_message_inquiry": "Text",
                 "user_manual": "User Manual",
-                "onboarding_video": "Onboarding Video"
+                "onboarding_video": "Onboarding Video",
+                "daily_survey": "Daily Survey"
             },
             "bottom_sheet": {
                 "title": "Create",

@@ -117,7 +117,8 @@
         "instagram_inquiry": "인스타그램",
         "text_message_inquiry": "문자",
         "user_manual": "사용자 매뉴얼",
-        "onboarding_video": "온보딩 영상"
+        "onboarding_video": "온보딩 영상",
+        "daily_survey": "데일리 설문"
       },
       "bottom_sheet": {
         "title": "작성하기",

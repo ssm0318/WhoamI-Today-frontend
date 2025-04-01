@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import IconNudge from '@components/_common/icon-nudge/IconNudge';
 import { Layout } from '@design-system';
@@ -13,7 +14,10 @@ interface CommonHeaderProps {
 }
 
 function CommonHeader({ title }: CommonHeaderProps) {
-  const [showSideMenu, setShowSideMenu] = useState(false);
+  const [searchParams] = useSearchParams();
+  // show_side_menu 파라미터가 true인 경우 사이드 메뉴 표시
+  const initialShowSideMenu = searchParams.get('show_side_menu') === 'true' || false;
+  const [showSideMenu, setShowSideMenu] = useState(initialShowSideMenu);
   const { myProfile } = useBoundStore((state) => ({
     myProfile: state.myProfile,
   }));

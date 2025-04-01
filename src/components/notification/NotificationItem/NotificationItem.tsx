@@ -20,7 +20,12 @@ function NotificationItem({ item }: NotificationItemProps) {
   const [currentDate] = useState(() => new Date());
 
   const handleClickNotification = async () => {
-    navigate(redirect_url);
+    if (notification_type === 'DailySurvey') {
+      // side menu 오픈
+      navigate('/my?show_side_menu=true');
+    } else {
+      navigate(redirect_url);
+    }
     await readNotification([item.id]);
   };
 
@@ -37,6 +42,7 @@ function NotificationItem({ item }: NotificationItemProps) {
         return 'noti_icon_ping';
       // User, FriendRequest는 어차피 profile image가 있어서 icon은 필요 없음
       // other의 경우는 아직 없는 케이스라 icon 없음
+      case 'DailySurvey':
       case 'User':
       case 'FriendRequest':
       case 'other':

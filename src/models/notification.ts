@@ -22,4 +22,5 @@ export type NotificationType =
   | 'Response'
   | 'Ping'
   | 'User'
+  | 'DailySurvey'
   | 'other';
