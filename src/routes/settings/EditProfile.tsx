@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/react';
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
@@ -27,6 +27,8 @@ const PERSONA_LIST_EXPANDED_LIMIT = 10;
 function EditProfile() {
   const location = useLocation();
   const isFromSignUp = !!location.state?.fromSignUp;
+  const [searchParams] = useSearchParams();
+  const isFromResetPassword = searchParams.get('from_reset_password') === 'true';
 
   const [t] = useTranslation('translation', { keyPrefix: 'settings.edit_profile' });
   const { myProfile, updateMyProfile, openToast, featureFlags } = useBoundStore((state) => ({
@@ -155,7 +157,13 @@ function EditProfile() {
   const navigate = useNavigate();
 
   const handleClickCancel = () => {
-    return isFromSignUp ? navigate('/friends') : navigate(-1);
+    if (isFromResetPassword) {
+      navigate('/my');
+    } else if (isFromSignUp) {
+      navigate('/friends');
+    } else {
+      navigate(-1);
+    }
   };
 
   const handleClickSave = async () => {
@@ -206,7 +214,7 @@ function EditProfile() {
         LeftComponent={
           <button type="button" onClick={handleClickCancel}>
             <Typo type="title-large" color="DARK">
-              {isFromSignUp ? t('cancel') : t('back')}
+              {isFromSignUp || isFromResetPassword ? t('cancel') : t('back')}
             </Typo>
           </button>
         }
