@@ -35,5 +35,5 @@ export const USER_MANUAL_URL =
 export const ONBOARDING_VIDEO_URL =
   'https://www.youtube.com/playlist?list=PLeg7yLjhFvgw7tWm9QpU536mfHjLQWy7S';
 
-export const DAILY_SURVEY_URL_EN = 'https://uwashington.qualtrics.com/jfe/form/SV_enCRJajqcebapD0';
-export const DAILY_SURVEY_URL_KO = 'https://uwashington.qualtrics.com/jfe/form/SV_eqVqzorpK77Nxga';
+export const DAILY_SURVEY_URL_EN = 'https://uwashington.qualtrics.com/jfe/form/SV_1Gjnnq3QYN8y1h4';
+export const DAILY_SURVEY_URL_KO = 'https://uwashington.qualtrics.com/jfe/form/SV_6PWRLamoT9XqFdI';
