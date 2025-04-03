@@ -664,7 +664,7 @@
         "friend_requests": "Friend Requests",
         "friend_requests_desc": "View friend requests and recommended friends",
         "favorites": "Pinned",
-        "add_favorite": "Pin friends to see their profiles at the top of your feed.",
+        "add_favorite": "Pin friends to see their profiles at the top of your feed!",
         "all_friends": "Friends",
         "no_friends": "Add friends to see their profiles in your feed."
     },
