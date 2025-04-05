@@ -117,6 +117,7 @@ function PingMessageInput({ insertPing, userId }: Props) {
             value={messageInput}
             autoCorrect="off"
             autoCapitalize="off"
+            spellCheck={false}
             onChange={handleChangeMessage}
             onKeyDown={handleKeyDownInput}
           />
