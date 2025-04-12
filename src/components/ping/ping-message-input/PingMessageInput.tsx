@@ -115,6 +115,9 @@ function PingMessageInput({ insertPing, userId }: Props) {
             maxLength={MAX_LENGTH}
             placeholder={t('input_placeholder') || ''}
             value={messageInput}
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
             onChange={handleChangeMessage}
             onKeyDown={handleKeyDownInput}
           />
