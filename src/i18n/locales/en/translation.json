@@ -118,7 +118,7 @@
                 "text_message_inquiry": "Text",
                 "user_manual": "User Manual",
                 "onboarding_video": "Onboarding Video",
-                "daily_survey": "Daily Survey"
+                "daily_survey": "App Use Survey"
             },
             "bottom_sheet": {
                 "title": "Create",
