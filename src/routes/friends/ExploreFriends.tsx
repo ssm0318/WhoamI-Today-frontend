@@ -12,6 +12,7 @@ import SubHeader from '@components/sub-header/SubHeader';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import i18n from '@i18n/index';
+import { useBoundStore } from '@stores/useBoundStore';
 import { MainScrollContainer } from 'src/routes/Root';
 import { Typo } from '../../design-system/Font/index';
 
@@ -24,11 +25,15 @@ function ExploreFriends() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends' });
   const navigate = useNavigate();
 
+  const { featureFlags } = useBoundStore((state) => ({
+    featureFlags: state.featureFlags,
+  }));
+
   const [selectedTab, setSelectedTab] = useState('requests');
   const [query, setQuery] = useState('');
 
   const handleClickDone = () => {
-    navigate('/friends');
+    navigate(featureFlags?.friendFeed ? '/friends/feed' : '/friends');
   };
 
   return (

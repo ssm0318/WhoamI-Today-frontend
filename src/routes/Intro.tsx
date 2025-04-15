@@ -2,12 +2,18 @@ import { useTranslation } from 'react-i18next';
 import { Navigate, useLoaderData } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import { Button, Layout } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
 
 function Intro() {
   const [t] = useTranslation('translation', { keyPrefix: 'intro' });
   const data = useLoaderData();
 
-  if (data) return <Navigate to="/friends" replace />;
+  const { featureFlags } = useBoundStore((state) => ({
+    featureFlags: state.featureFlags,
+  }));
+
+  if (data)
+    return <Navigate to={featureFlags?.friendFeed ? '/friends/feed' : '/friends'} replace />;
   return (
     <MainContainer>
       <Layout.FlexCol w="100%" h="100%" justifyContent="center" alignItems="center" mb={100}>

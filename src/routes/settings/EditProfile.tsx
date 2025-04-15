@@ -28,7 +28,6 @@ function EditProfile() {
   const isFromSignUp = !!location.state?.fromSignUp;
   const [searchParams] = useSearchParams();
   const isFromResetPassword = searchParams.get('from_reset_password') === 'true';
-
   const [t] = useTranslation('translation', { keyPrefix: 'settings.edit_profile' });
   const { myProfile, updateMyProfile, openToast, featureFlags } = useBoundStore((state) => ({
     myProfile: state.myProfile,
@@ -140,7 +139,7 @@ function EditProfile() {
     if (isFromResetPassword) {
       navigate('/my');
     } else if (isFromSignUp) {
-      navigate('/friends');
+      navigate(featureFlags?.friendFeed ? '/friends/feed' : '/friends');
     } else {
       navigate(-1);
     }
