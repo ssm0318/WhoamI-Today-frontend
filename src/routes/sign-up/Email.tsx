@@ -31,7 +31,7 @@ function Email() {
           // NOTE: username은 email로 설정
           username: emailInput,
         });
-        navigate('/signup/password');
+        navigate('/signup/info');
       },
       onError: (e) => setEmailError(e),
     });

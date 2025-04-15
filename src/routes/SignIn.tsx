@@ -93,10 +93,9 @@ function SignIn() {
           <a href="/forgot-password">
             <Font.Body type="18_regular">{t('forgot_password')}</Font.Body>
           </a>
-          {/* 연구 참여자는 회원가입 링크 숨김 */}
-          {/* <a href="/signup/email">
+          <a href="/signup/email">
             <Font.Body type="18_regular">{t('sign_up')}</Font.Body>
-          </a> */}
+          </a>
         </Layout.FlexRow>
       </Layout.FlexCol>
     </>
