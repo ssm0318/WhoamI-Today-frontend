@@ -85,7 +85,7 @@
         "error": "A temporary error occurred. Please try again.",
         "success": "Signup complete 🎉",
         "friend_email": "Friend's Email",
-        "friend_email_guide": "Enter the email address of your friend.",
+        "friend_email_guide": "WIT is currently only available to participants in our study or to people who’ve been invited by existing users. To join, please enter the email of your friend who’s already a WIT user.",
         "friend_email_error": "Invalid email address",
         "date_of_birth": "Date of Birth",
         "date_of_birth_guide": "This allows us to accurately calculate your age now and after for research participation.",
