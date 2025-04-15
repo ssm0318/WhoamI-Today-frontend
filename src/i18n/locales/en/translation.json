@@ -83,7 +83,18 @@
         "noti_time_default_desc": "Default notification time: 4PM",
         "complete": "Complete",
         "error": "A temporary error occurred. Please try again.",
-        "success": "Signup complete 🎉"
+        "success": "Signup complete 🎉",
+        "friend_email": "Friend's Email",
+        "friend_email_guide": "Enter the email address of your friend.",
+        "friend_email_error": "Invalid email address",
+        "date_of_birth": "Date of Birth",
+        "date_of_birth_guide": "This allows us to accurately calculate your age now and after for research participation.",
+        "date_of_birth_error": "Invalid date of birth",
+        "privacy_policy": "Privacy Policy",
+        "privacy_policy_link_view": "View Privacy Policy",
+        "privacy_policy_guide": "By agreeing to the Privacy Policy, you consent to participate in our research which includes (aggregated and anonymized) analysis of your data.",
+        "privacy_policy_agree": "Yes, I agree.",
+        "validate_error": "Something went wrong. Please check your information."
     },
     "nav_tab": {
         "friends": "Friends",
@@ -557,7 +568,7 @@
         "send_this_prompt_to": "Send to...",
         "search_friends": "Search Friends",
         "cancel": "Cancel",
-        "write_a_message": "The message you write here will show up in your friend’s notifications along with the question.",
+        "write_a_message": "The message you write here will show up in your friend's notifications along with the question.",
         "send_separately": "Send Separately",
         "sent_success": "Question sent successfully 🎉",
         "see_more_questions": "See More Questions"

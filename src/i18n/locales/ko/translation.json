@@ -83,7 +83,16 @@
     "noti_time_default_desc": "알림 수신 시간을 설정하지 않으면, 오후 4시에 알림이 전송됩니다",
     "complete": "완료",
     "error": "회원 가입 중 일시적인 오류가 발생했습니다:( \n 회원 가입을 다시 진행해주세요.",
-    "success": "회원 가입이 완료되었습니다 🎉"
+    "success": "회원 가입이 완료되었습니다 🎉",
+    "friend_email": "친구의 이메일",
+    "friend_email_guide": "친구의 이메일 주소를 입력해주세요.",
+    "date_of_birth": "생년월일",
+    "date_of_birth_guide": "이 정보는 연구 참여 시 정확한 나이를 계산하기 위해 사용됩니다.",
+    "privacy_policy": "개인정보 보호 정책",
+    "privacy_policy_link_view": "개인정보 보호 정책 보기",
+    "privacy_policy_guide": "개인정보 보호 정책에 동의하는 경우, 귀하는 귀하의 데이터에 대한 (통합 및 식별되지 않은) 분석을 포함하는 당사의 연구에 참여하는 것에 동의합니다.",
+    "privacy_policy_agree": "네, 동의합니다.",
+    "validate_error": "문제가 있습니다. 정보를 확인해주세요."
   },
   "nav_tab": {
     "friends": "친구",
