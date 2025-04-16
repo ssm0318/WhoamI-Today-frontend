@@ -94,7 +94,7 @@
     "privacy_policy_link_view": "개인정보 보호 정책 보기",
     "privacy_policy_guide": "개인정보 보호 정책에 동의하는 경우, 귀하는 귀하의 데이터에 대한 (통합 및 식별되지 않은) 분석을 포함하는 당사의 연구에 참여하는 것에 동의합니다.",
     "privacy_policy_agree": "네, 동의합니다.",
-    "validate_error": "문제가 있습니다. 정보를 확인해주세요."
+    "password_validation_error": "비밀번호는 최소 8자 이상이어야 하며, 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다."
   },
   "nav_tab": {
     "friends": "친구",

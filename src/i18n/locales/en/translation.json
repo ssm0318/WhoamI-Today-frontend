@@ -94,7 +94,7 @@
         "privacy_policy_link_view": "View Privacy Policy",
         "privacy_policy_guide": "By agreeing to the Privacy Policy, you consent to participate in our research which includes (aggregated and anonymized) analysis of your data.",
         "privacy_policy_agree": "Yes, I agree.",
-        "validate_error": "Something went wrong. Please check your information."
+        "password_validation_error": "Password must be at least 8 characters and include uppercase, lowercase, numbers, and symbols."
     },
     "nav_tab": {
         "friends": "Friends",
