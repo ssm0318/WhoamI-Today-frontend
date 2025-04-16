@@ -20,9 +20,9 @@ function Info() {
   const [dateOfBirthInput, setDateOfBirthInput] = useState('');
   const [dateOfBirthError, setDateOfBirthError] = useState<string | null>(null);
   const [privacyPolicyChecked, setPrivacyPolicyChecked] = useState(false);
-  const [validateError, setValidateError] = useState<boolean>(false);
-  const { setSignUpInfo } = useBoundStore((state) => ({
+  const { setSignUpInfo, openToast } = useBoundStore((state) => ({
     setSignUpInfo: state.setSignUpInfo,
+    openToast: state.openToast,
   }));
   const navigate = useNavigate();
   const postMessage = usePostAppMessage();
@@ -81,9 +81,9 @@ function Info() {
           navigate('/signup/password');
         },
         onError: (errorMsg: string) => {
-          if (errorMsg) {
-            setValidateError(true);
-          }
+          openToast({
+            message: errorMsg,
+          });
         },
       });
     }
@@ -171,11 +171,6 @@ function Info() {
           text={t('next')}
           onClick={onClickNext}
         />
-        {validateError && (
-          <Typo type="label-medium" color="WARNING">
-            {t('validate_error')}
-          </Typo>
-        )}
       </Layout.Fixed>
     </>
   );

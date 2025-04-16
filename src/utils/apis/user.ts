@@ -131,7 +131,11 @@ export const validateInviterBirthdate = ({
       onSuccess(res.data);
     })
     .catch((e) => {
-      onError(e.response.data);
+      if (e.response.data.detail) {
+        onError(e.response.data.detail);
+      } else {
+        onError(i18n.t('error.temporary_error'));
+      }
     });
 };
 
@@ -173,7 +177,9 @@ export const validatePassword = ({
       onSuccess();
     })
     .catch((e: AxiosError<PasswordError>) => {
-      if (e.response?.data && 'error' in e.response.data) {
+      if (e.response?.data.password_validation_error) {
+        onError(i18n.t('sign_up.password_validation_error'));
+      } else if (e.response?.data && 'error' in e.response.data) {
         const { error } = e.response.data as { error: { password?: string[] } };
         if (error?.password?.[0]) {
           onError(error.password[0]);

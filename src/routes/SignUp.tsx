@@ -26,7 +26,7 @@ function SignUp() {
   return (
     <>
       <SubHeader title={title} />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 40} w="100%" ph={24} alignItems="center">
+      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 20} w="100%" ph={24} alignItems="center">
         <Outlet />
       </Layout.FlexCol>
     </>

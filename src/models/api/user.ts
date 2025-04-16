@@ -60,6 +60,7 @@ export type EmailValidateErrorType = (typeof EmailValidateError)[keyof typeof Em
 
 export interface PasswordError {
   password: PasswordValidateErrorType[];
+  password_validation_error: string[];
 }
 
 export interface PasswordConfirmError {
