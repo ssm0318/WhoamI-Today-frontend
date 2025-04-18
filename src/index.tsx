@@ -50,6 +50,7 @@ import EditProfile from './routes/settings/EditProfile';
 import ResetPassword from './routes/settings/ResetPassword';
 import Settings from './routes/settings/Settings';
 import Email from './routes/sign-up/Email';
+import Info from './routes/sign-up/Info';
 import NotiSettings from './routes/sign-up/NotiSettings';
 import Password from './routes/sign-up/Password';
 import SignIn from './routes/SignIn';
@@ -212,6 +213,7 @@ const router = createBrowserRouter([
         children: [
           { path: 'email', element: <Email /> },
           { path: 'password', element: <Password /> },
+          { path: 'info', element: <Info /> },
           { path: 'noti-settings', element: <NotiSettings /> },
           { path: '', element: <Navigate replace to="email" /> },
         ],

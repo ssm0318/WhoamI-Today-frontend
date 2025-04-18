@@ -15,7 +15,9 @@ import {
   SignInParams,
   SignInResponse,
   SignUpParams,
+  UserGroup,
   UsernameError,
+  VersionType,
 } from '@models/api/user';
 import { Note, Response } from '@models/post';
 import { User, UserProfile } from '@models/user';
@@ -73,8 +75,8 @@ export const checkIfSignIn = async () => {
     setItemToSessionStorage<ScrollPositionStore>(SESSION_STORAGE_KEY, {});
 
     // FIXME 연구가 끝나면 기존 /signin 경로로 변경 (아래 주석 해제)
-    return redirect('/research-intro');
-    // return redirect('/signin');
+    // return redirect('/research-intro');
+    return redirect('/signin');
   }
 };
 
@@ -101,6 +103,40 @@ export const signOut = async (onSuccess: () => void) => {
   axios.get('/user/logout/').then(() => {
     onSuccess();
   });
+};
+
+export const validateInviterBirthdate = ({
+  birthdate,
+  email,
+  onSuccess,
+  onError,
+}: {
+  birthdate: string;
+  email: string;
+  onSuccess: (res: {
+    email: string;
+    inviter_id: number;
+    user_group: UserGroup;
+    current_ver: VersionType;
+  }) => void;
+  onError: (errorMsg: string) => void;
+}) => {
+  const formData = new FormData();
+  formData.append('date_of_birth', birthdate);
+  formData.append('email', email);
+
+  axiosFormDataInstance
+    .post('/user/signup/inviter-birthdate/', formData)
+    .then((res) => {
+      onSuccess(res.data);
+    })
+    .catch((e) => {
+      if (e.response.data.detail) {
+        onError(e.response.data.detail);
+      } else {
+        onError(i18n.t('error.temporary_error'));
+      }
+    });
 };
 
 export const validateEmail = ({
@@ -141,7 +177,9 @@ export const validatePassword = ({
       onSuccess();
     })
     .catch((e: AxiosError<PasswordError>) => {
-      if (e.response?.data && 'error' in e.response.data) {
+      if (e.response?.data.password_validation_error) {
+        onError(i18n.t('sign_up.password_validation_error'));
+      } else if (e.response?.data && 'error' in e.response.data) {
         const { error } = e.response.data as { error: { password?: string[] } };
         if (error?.password?.[0]) {
           onError(error.password[0]);
@@ -188,13 +226,17 @@ export const signUp = ({
 }) => {
   const formData = new FormData();
 
-  const { email, password, username, noti_time } = signUpInfo;
+  const { email, password, username, noti_time, current_ver, user_group, inviter_id } = signUpInfo;
 
   formData.append('email', email);
   formData.append('username', username);
   formData.append('password', password);
 
   if (noti_time) formData.append('noti_time', noti_time);
+
+  if (current_ver) formData.append('current_ver', current_ver);
+  if (user_group) formData.append('user_group', user_group);
+  if (inviter_id) formData.append('inviter_id', inviter_id.toString());
 
   axiosFormDataInstance
     .post('/user/signup/', formData)

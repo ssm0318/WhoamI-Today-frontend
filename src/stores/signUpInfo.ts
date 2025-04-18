@@ -1,4 +1,4 @@
-import { SignUpParams } from '@models/api/user';
+import { SignUpParams, UserGroup, VersionType } from '@models/api/user';
 import { sliceResetFns } from './resetSlices';
 import { SliceStateCreator } from './useBoundStore';
 
@@ -17,6 +17,9 @@ const initialState = {
     username: '',
     password: '',
     noti_time: '16:00',
+    current_ver: VersionType.DEFAULT,
+    user_group: UserGroup.GROUP_1,
+    inviter_id: 0,
   },
 };
 

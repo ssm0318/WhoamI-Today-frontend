@@ -5,8 +5,6 @@ import {
   RESEARCH_INQUIRY_DISCORD_LINK,
   RESEARCH_INQUIRY_INSTAGRAM_LINK,
   RESEARCH_INQUIRY_KAKAOTALK_LINK,
-  RESEARCH_SIGNUP_FORM_URL_EN,
-  RESEARCH_SIGNUP_FORM_URL_KO,
 } from '@constants/url';
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
@@ -19,10 +17,11 @@ function ResearchIntro() {
   const postMessage = usePostAppMessage();
 
   const handleClickSignUpForm = () => {
-    window.open(
-      i18n.language === 'ko-KR' ? RESEARCH_SIGNUP_FORM_URL_KO : RESEARCH_SIGNUP_FORM_URL_EN,
-      '_blank',
-    );
+    // window.open(
+    //   i18n.language === 'ko-KR' ? RESEARCH_SIGNUP_FORM_URL_KO : RESEARCH_SIGNUP_FORM_URL_EN,
+    //   '_blank',
+    // );
+    navigate('/signup');
   };
 
   const handleClickSignIn = () => {

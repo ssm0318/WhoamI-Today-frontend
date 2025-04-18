@@ -28,6 +28,9 @@ export interface SignUpParams {
   password: string;
   /** default: 16:00 */
   noti_time?: string;
+  current_ver?: VersionType;
+  user_group?: UserGroup;
+  inviter_id?: number;
 }
 
 export const hasMandatorySignUpParams = (
@@ -57,6 +60,7 @@ export type EmailValidateErrorType = (typeof EmailValidateError)[keyof typeof Em
 
 export interface PasswordError {
   password: PasswordValidateErrorType[];
+  password_validation_error: string[];
 }
 
 export interface PasswordConfirmError {
