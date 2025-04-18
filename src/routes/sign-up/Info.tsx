@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import AlertDialog from '@components/_common/alert-dialog/AlertDialog';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import {
   PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_EN,
@@ -20,6 +21,8 @@ function Info() {
   const [dateOfBirthInput, setDateOfBirthInput] = useState('');
   const [dateOfBirthError, setDateOfBirthError] = useState<string | null>(null);
   const [privacyPolicyChecked, setPrivacyPolicyChecked] = useState(false);
+  const [showAgeConfirmDialog, setShowAgeConfirmDialog] = useState(false);
+  const [calculatedAge, setCalculatedAge] = useState(0);
   const { setSignUpInfo, openToast } = useBoundStore((state) => ({
     setSignUpInfo: state.setSignUpInfo,
     openToast: state.openToast,
@@ -52,6 +55,19 @@ function Info() {
     if (dateOfBirthError) setDateOfBirthError(null);
   };
 
+  const calculateAge = (birthDate: string) => {
+    const birthDateObj = new Date(birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birthDateObj.getFullYear();
+    const monthDiff = today.getMonth() - birthDateObj.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+      age -= 1;
+    }
+
+    return age;
+  };
+
   const onClickNext = () => {
     let hasErrors = false;
 
@@ -66,27 +82,35 @@ function Info() {
     }
 
     if (!hasErrors) {
-      // YYYY-MM-DD 형식으로 변환
-      const birthdate = format(new Date(dateOfBirthInput), 'yyyy-MM-dd');
-
-      validateInviterBirthdate({
-        birthdate,
-        email: friendEmailInput,
-        onSuccess: (res) => {
-          setSignUpInfo({
-            inviter_id: res.inviter_id,
-            user_group: res.user_group,
-            current_ver: res.current_ver,
-          });
-          navigate('/signup/password');
-        },
-        onError: (errorMsg: string) => {
-          openToast({
-            message: errorMsg,
-          });
-        },
-      });
+      const age = calculateAge(dateOfBirthInput);
+      setCalculatedAge(age);
+      setShowAgeConfirmDialog(true);
     }
+  };
+
+  const handleConfirmAge = () => {
+    // YYYY-MM-DD 형식으로 변환
+    const birthdate = format(new Date(dateOfBirthInput), 'yyyy-MM-dd');
+
+    validateInviterBirthdate({
+      birthdate,
+      email: friendEmailInput,
+      onSuccess: (res) => {
+        setSignUpInfo({
+          inviter_id: res.inviter_id,
+          user_group: res.user_group,
+          current_ver: res.current_ver,
+        });
+        navigate('/signup/password');
+      },
+      onError: (errorMsg: string) => {
+        openToast({
+          message: errorMsg,
+        });
+      },
+    });
+
+    setShowAgeConfirmDialog(false);
   };
 
   const handleClickPrivacyPolicy = () => {
@@ -172,6 +196,31 @@ function Info() {
           onClick={onClickNext}
         />
       </Layout.Fixed>
+
+      <AlertDialog
+        visible={showAgeConfirmDialog}
+        onClickDimmed={() => setShowAgeConfirmDialog(false)}
+      >
+        <Layout.FlexCol gap={20} alignItems="center">
+          <Typo type="title-large" color="BLACK" textAlign="center">
+            {t('age_confirm_dialog_title', { age: calculatedAge })}
+          </Typo>
+          <Layout.FlexRow gap={10} mt={10}>
+            <Button.Medium
+              type="outlined"
+              status="normal"
+              text={t('age_confirm_dialog_no')}
+              onClick={() => setShowAgeConfirmDialog(false)}
+            />
+            <Button.Medium
+              type="gray_fill"
+              status="normal"
+              text={t('age_confirm_dialog_yes', { age: calculatedAge })}
+              onClick={handleConfirmAge}
+            />
+          </Layout.FlexRow>
+        </Layout.FlexCol>
+      </AlertDialog>
     </>
   );
 }
