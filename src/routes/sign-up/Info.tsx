@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import AlertDialog from '@components/_common/alert-dialog/AlertDialog';
+import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import {
   PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_EN,
@@ -125,7 +125,7 @@ function Info() {
 
   return (
     <>
-      <Layout.FlexCol gap={30} w="100%">
+      <Layout.FlexCol gap={20} w="100%">
         <ValidatedInput
           label={t('friend_email')}
           name="friend_email"
@@ -179,7 +179,7 @@ function Info() {
         </Layout.FlexCol>
       </Layout.FlexCol>
 
-      <Layout.Fixed l={0} b="50px" w="100%" alignItems="center">
+      <Layout.Fixed l={0} b={30} w="100%" alignItems="center">
         <Button.Large
           type="gray_fill"
           status={
@@ -196,31 +196,15 @@ function Info() {
           onClick={onClickNext}
         />
       </Layout.Fixed>
-
-      <AlertDialog
+      <CommonDialog
         visible={showAgeConfirmDialog}
-        onClickDimmed={() => setShowAgeConfirmDialog(false)}
-      >
-        <Layout.FlexCol gap={20} alignItems="center">
-          <Typo type="title-large" color="BLACK" textAlign="center">
-            {t('age_confirm_dialog_title', { age: calculatedAge })}
-          </Typo>
-          <Layout.FlexRow gap={10} mt={10}>
-            <Button.Medium
-              type="outlined"
-              status="normal"
-              text={t('age_confirm_dialog_no')}
-              onClick={() => setShowAgeConfirmDialog(false)}
-            />
-            <Button.Medium
-              type="gray_fill"
-              status="normal"
-              text={t('age_confirm_dialog_yes', { age: calculatedAge })}
-              onClick={handleConfirmAge}
-            />
-          </Layout.FlexRow>
-        </Layout.FlexCol>
-      </AlertDialog>
+        title={t('age_confirm_dialog_title')}
+        content={t('age_confirm_dialog_content', { age: calculatedAge })}
+        confirmText={t('age_confirm_dialog_yes')}
+        cancelText={t('age_confirm_dialog_no')}
+        onClickConfirm={handleConfirmAge}
+        onClickClose={() => setShowAgeConfirmDialog(false)}
+      />
     </>
   );
 }
