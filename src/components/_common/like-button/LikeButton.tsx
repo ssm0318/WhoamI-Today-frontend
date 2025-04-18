@@ -40,13 +40,18 @@ function LikeButton({ postType, post, iconSize, m = 6, refresh }: LikeButtonProp
 
     try {
       setIsLoading(true);
-      const { id: like_id } = await postLike({ target_id: id, target_type: postType });
+      const { id: like_id } = await postLike(
+        { target_id: id, target_type: postType },
+        (errorMsg) => {
+          openToast({
+            message: errorMsg || t('error.like_duplicate'),
+          });
+        },
+      );
       setLikeId(like_id);
       refresh?.();
     } catch (error) {
-      openToast({
-        message: t('error.like_duplicate'),
-      });
+      // Error already handled by onError callback
     } finally {
       setIsLoading(false);
     }
@@ -57,13 +62,15 @@ function LikeButton({ postType, post, iconSize, m = 6, refresh }: LikeButtonProp
 
     try {
       setIsLoading(true);
-      await deleteLike(likeId);
+      await deleteLike(likeId, (errorMsg) => {
+        openToast({
+          message: errorMsg || t('error.unlike_duplicate'),
+        });
+      });
       setLikeId(null);
       refresh?.();
     } catch (error) {
-      openToast({
-        message: t('error.unlike_duplicate'),
-      });
+      // Error already handled by onError callback
     } finally {
       setIsLoading(false);
     }
