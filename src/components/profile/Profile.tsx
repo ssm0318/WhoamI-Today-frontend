@@ -74,6 +74,7 @@ function Profile({ user }: ProfileProps) {
     setShowEditConnectionsModal(true);
   };
 
+  // persona 영역 collapse ui 구현
   const personaContainerRef = useRef<HTMLDivElement | null>(null);
   const [isPersonaContainerExpanded, setIsPersonaContainerExpanded] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -239,14 +240,14 @@ function Profile({ user }: ProfileProps) {
                   <PersonaChip key={persona} persona={persona} />
                 ))}
               </Layout.FlexRow>
-              {isOverflowing && (
+              <Layout.LayoutBase style={{ visibility: isOverflowing ? 'visible' : 'hidden' }}>
                 <Icon
                   name={isPersonaContainerExpanded ? 'expand_close' : 'expand_open'}
                   size={24}
                   color="PRIMARY"
                   onClick={() => setIsPersonaContainerExpanded((prev) => !prev)}
                 />
-              )}
+              </Layout.LayoutBase>
             </Layout.FlexRow>
           ) : (
             isMyPage && <PersonaPlaceholder />
