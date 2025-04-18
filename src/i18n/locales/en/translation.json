@@ -671,7 +671,9 @@
     "error": {
         "temporary_error": "A temporary error occurred. Please try again later.",
         "file_size_exceeded": "File size exceeds the {{size}}MB limit.",
-        "friend_request_error_different_group": "Sorry, you can't add this user during the app testing period."
+        "friend_request_error_different_group": "Sorry, you can't add this user during the app testing period.",
+        "like_duplicate": "You've already liked this post.",
+        "unlike_duplicate": "You've already unliked this post."
     },
     "not_found_page": {
         "title": "Page Not Found",

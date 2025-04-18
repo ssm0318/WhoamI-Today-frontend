@@ -663,7 +663,9 @@
   "error": {
     "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
     "file_size_exceeded": "파일 크기가 {{size}}MB 제한을 초과했습니다.",
-    "friend_request_error_different_group": "죄송하지만, 앱 테스트 기간에는 해당 유저를 추가할 수 없습니다."
+    "friend_request_error_different_group": "죄송하지만, 앱 테스트 기간에는 해당 유저를 추가할 수 없습니다.",
+    "like_duplicate": "이미 좋아요를 눌렀습니다.",
+    "unlike_duplicate": "이미 좋아요를 취소했습니다."
   },
   "not_found_page": {
     "title": "존재하지 않는 페이지 입니다.",
