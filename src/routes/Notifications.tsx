@@ -8,6 +8,7 @@ import TopContainer from '@components/notification/TopContainer/TopContainer';
 import SubHeader from '@components/sub-header/SubHeader';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Notification } from '@models/notification';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -99,8 +100,10 @@ function Notifications() {
     await fetchRequests();
   }, [featureFlags]);
 
+  const { scrollRef } = useRestoreScrollPosition('notificationsPage');
+
   return (
-    <MainScrollContainer>
+    <MainScrollContainer scrollRef={scrollRef}>
       <SubHeader title={t('title')} />
       <PullToRefresh onRefresh={handleRefresh}>
         <Layout.FlexCol w="100%">

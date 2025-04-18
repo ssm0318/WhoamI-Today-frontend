@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import IconNudge from '@components/_common/icon-nudge/IconNudge';
 import { Layout } from '@design-system';
+import { resetScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMe } from '@utils/apis/my';
 import { Noti } from '../Header.styled';
@@ -38,7 +39,11 @@ function CommonHeader({ title }: CommonHeaderProps) {
         rightButtons={
           <>
             <Noti to="/notifications">
-              <Icon name="notification" size={44} />
+              <Icon
+                name="notification"
+                size={44}
+                onClick={() => resetScrollPosition('notificationsPage')}
+              />
               <Layout.Absolute t={4} r={4}>
                 {!!myProfile?.unread_noti_cnt && (
                   <IconNudge size={18} count={myProfile?.unread_noti_cnt} />
