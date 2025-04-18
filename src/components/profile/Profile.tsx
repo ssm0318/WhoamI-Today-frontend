@@ -244,7 +244,6 @@ function Profile({ user }: ProfileProps) {
                 <Icon
                   name={isPersonaContainerExpanded ? 'expand_close' : 'expand_open'}
                   size={24}
-                  color="PRIMARY"
                   onClick={() => setIsPersonaContainerExpanded((prev) => !prev)}
                 />
               </Layout.LayoutBase>
