@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import FriendStatus from '@components/_common/friend-status/FriendStatus';
@@ -73,6 +73,32 @@ function Profile({ user }: ProfileProps) {
 
     setShowEditConnectionsModal(true);
   };
+
+  const personaContainerRef = useRef<HTMLDivElement | null>(null);
+  const [isPersonaContainerExpanded, setIsPersonaContainerExpanded] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const [chipHeight, setChipHeight] = useState(0);
+
+  useEffect(() => {
+    if (!personaContainerRef.current) return;
+
+    const container = personaContainerRef.current;
+    const firstRowHeight = container.firstElementChild
+      ? container.firstElementChild.clientHeight
+      : 0;
+
+    setChipHeight(firstRowHeight);
+  }, [user?.persona]);
+
+  useEffect(() => {
+    if (!personaContainerRef.current) return;
+    if (chipHeight === 0) return;
+
+    const container = personaContainerRef.current;
+    const isOverflow = container.scrollHeight > container.clientHeight;
+
+    setIsOverflowing(isOverflow);
+  }, [chipHeight, user?.persona]);
 
   return (
     <Layout.FlexCol w="100%" gap={16}>
@@ -194,19 +220,39 @@ function Profile({ user }: ProfileProps) {
         </Layout.FlexCol>
       </Layout.FlexRow>
       {featureFlags?.persona && (
-        <Layout.FlexRow w="100%">
+        <Layout.FlexCol w="100%">
           {user && (areFriends(user) || isMyPage) && user?.persona && user?.persona.length > 0 ? (
-            <Layout.ScrollableFlexRow w="100%" gap={8}>
-              {user?.persona.map((persona) => (
-                <PersonaChip key={persona} persona={persona} />
-              ))}
-            </Layout.ScrollableFlexRow>
+            <Layout.FlexRow w="100%">
+              <Layout.FlexRow
+                w="100%"
+                gap={8}
+                alignItems="center"
+                style={{
+                  position: 'relative',
+                  flexWrap: 'wrap',
+                  maxHeight: isPersonaContainerExpanded ? 'none' : `${chipHeight + 8}px`,
+                  overflow: isPersonaContainerExpanded ? 'visible' : 'hidden',
+                }}
+                ref={personaContainerRef}
+              >
+                {user?.persona.map((persona) => (
+                  <PersonaChip key={persona} persona={persona} />
+                ))}
+              </Layout.FlexRow>
+              {isOverflowing && (
+                <Icon
+                  name={isPersonaContainerExpanded ? 'expand_close' : 'expand_open'}
+                  size={24}
+                  color="PRIMARY"
+                  onClick={() => setIsPersonaContainerExpanded((prev) => !prev)}
+                />
+              )}
+            </Layout.FlexRow>
           ) : (
             isMyPage && <PersonaPlaceholder />
           )}
-        </Layout.FlexRow>
+        </Layout.FlexCol>
       )}
-
       {!isMyPage && user && (
         <>
           {!isMyProfile(user) && !areFriends(user) && (
