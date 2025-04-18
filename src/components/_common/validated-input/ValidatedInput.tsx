@@ -17,7 +17,7 @@ function ValidatedInput(props: ValidatedInputProps) {
         </Layout.FlexRow>
       )}
       {guide && !error && (
-        <Typo type="label-small" color="DARK_GRAY" mt={18}>
+        <Typo type="label-medium" color="DARK_GRAY" mt={18}>
           {guide}
         </Typo>
       )}

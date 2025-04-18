@@ -95,9 +95,10 @@
         "privacy_policy_guide": "By agreeing to the Privacy Policy, you consent to participate in our research which includes (aggregated and anonymized) analysis of your data.",
         "privacy_policy_agree": "Yes, I agree.",
         "password_validation_error": "Password must be at least 8 characters and include uppercase, lowercase, numbers, and symbols.",
-        "age_confirm_dialog_title": "{{age}} years old?",
+        "age_confirm_dialog_title": "Age Confirmation",
+        "age_confirm_dialog_content": "Are you sure you are {{age}} years old?",
         "age_confirm_dialog_no": "No",
-        "age_confirm_dialog_yes": "Yes, I'm {{age}} years old"
+        "age_confirm_dialog_yes": "Yes"
     },
     "nav_tab": {
         "friends": "Friends",
