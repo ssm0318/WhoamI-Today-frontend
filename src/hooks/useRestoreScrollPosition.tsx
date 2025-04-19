@@ -12,6 +12,7 @@ export interface ScrollPositionStore {
   friendsDetail?: number;
   friendsFeed?: number;
   commentsPage?: number;
+  notificationsPage?: number;
 }
 
 export function useRestoreScrollPosition(key: keyof ScrollPositionStore) {

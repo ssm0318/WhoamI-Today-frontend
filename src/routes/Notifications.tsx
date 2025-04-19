@@ -8,12 +8,13 @@ import TopContainer from '@components/notification/TopContainer/TopContainer';
 import SubHeader from '@components/sub-header/SubHeader';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import useInfiniteScroll from '@hooks/useInfiniteScroll';
+import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
+import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Notification } from '@models/notification';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { getResponseRequests } from '@utils/apis/my';
-import { getNotifications, readAllNotifications } from '@utils/apis/notification';
+import { readAllNotifications } from '@utils/apis/notification';
 import { getFriendRequests } from '@utils/apis/user';
 import { MainScrollContainer } from './Root';
 
@@ -21,14 +22,10 @@ function Notifications() {
   const navigate = useNavigate();
 
   const [t] = useTranslation('translation', { keyPrefix: 'notifications' });
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
+
   const [friendRequests, setFriendRequests] = useState<number | null>(null);
   const [responseRequests, setResponseRequests] = useState<number | null>(null);
-  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
-    if (nextPage === null) return setIsLoading(false);
-    await fetchNotifications(nextPage ?? null);
-  });
+
   const { featureFlags } = useBoundStore(UserSelector);
 
   const { openToast, updateMyProfile } = useBoundStore((state) => ({
@@ -36,17 +33,19 @@ function Notifications() {
     updateMyProfile: state.updateMyProfile,
   }));
 
-  const fetchNotifications = async (page: string | null) => {
-    const { results, next } = await getNotifications(page);
-    if (!results) return;
-    setNextPage(next);
-    if (page === null) {
-      setNotifications(results);
-    } else {
-      setNotifications([...notifications, ...results]);
-    }
-    setIsLoading(false);
-  };
+  const {
+    targetRef,
+    data: allNotifications,
+    isLoading: isNotificationsLoading,
+    mutate: mutateNotifications,
+    isLoadingMore: isNotificationsLoadingMore,
+  } = useSWRInfiniteScroll<Notification>({
+    key: '/notifications/',
+  });
+
+  const flatNotifications = allNotifications?.flatMap((page) => page.results ?? []) ?? [];
+  const recentNotifications = flatNotifications.filter((n) => n.is_recent);
+  const restNotifications = flatNotifications.filter((n) => !n.is_recent);
 
   const fetchRequests = async () => {
     try {
@@ -70,7 +69,7 @@ function Notifications() {
 
   const handleRefresh = async () => {
     try {
-      await Promise.all([fetchNotifications(null), fetchRequests()]);
+      await Promise.all([mutateNotifications(), fetchRequests()]);
     } catch (error) {
       console.error('Error refreshing data:', error);
       openToast({ message: t('temporary_error') });
@@ -80,7 +79,13 @@ function Notifications() {
   const handleReadAll = async () => {
     try {
       await readAllNotifications();
-      setNotifications(notifications.map((n) => ({ ...n, is_read: true })));
+      mutateNotifications(
+        allNotifications?.map((prev) => ({
+          ...prev,
+          results: prev.results?.map((n) => ({ ...n, is_read: true })) ?? [],
+        })) ?? [],
+        { revalidate: false },
+      );
       updateMyProfile({
         unread_noti: false,
       });
@@ -90,19 +95,15 @@ function Notifications() {
     }
   };
 
-  const recentNotifications = notifications.filter((n) => n.is_recent);
-  const restNotifications = notifications.filter((n) => !n.is_recent);
-
   useAsyncEffect(async () => {
-    if (featureFlags?.questionResponseFeature) {
-      await Promise.all([fetchNotifications(null), fetchRequests()]);
-    } else {
-      await fetchNotifications(null);
-    }
+    if (!featureFlags?.questionResponseFeature) return;
+    await fetchRequests();
   }, [featureFlags]);
 
+  const { scrollRef } = useRestoreScrollPosition('notificationsPage');
+
   return (
-    <MainScrollContainer>
+    <MainScrollContainer scrollRef={scrollRef}>
       <SubHeader title={t('title')} />
       <PullToRefresh onRefresh={handleRefresh}>
         <Layout.FlexCol w="100%">
@@ -131,35 +132,43 @@ function Notifications() {
               </Typo>
             </button>
           </Layout.FlexRow>
-
-          {/* Last 7 days */}
-          {recentNotifications.length > 0 && (
-            <>
-              <Layout.FlexRow pv={8} ph={16}>
-                <Typo type="title-medium">{t('last_7_days')}</Typo>
-              </Layout.FlexRow>
-              {recentNotifications.map((noti) => (
-                <NotificationItem item={noti} key={noti.id} />
-              ))}
-            </>
-          )}
-          {/* Rest of notifications */}
-          {restNotifications.length > 0 && (
-            <>
-              <Layout.FlexRow mt={8} pv={8} ph={16}>
-                <Typo type="title-medium">{t('earlier')}</Typo>
-              </Layout.FlexRow>
-              {restNotifications.map((noti) => (
-                <NotificationItem item={noti} key={noti.id} />
-              ))}
-            </>
-          )}
-          <div ref={targetRef} />
-          {isLoading && (
+          {/** Notifications */}
+          {isNotificationsLoading ? (
             <Layout.FlexRow w="100%" h={40}>
               <Loader />
             </Layout.FlexRow>
-          )}
+          ) : allNotifications?.[0] && allNotifications[0].count > 0 ? (
+            <>
+              {/* Last 7 days */}
+              {recentNotifications.length > 0 && (
+                <>
+                  <Layout.FlexRow pv={8} ph={16}>
+                    <Typo type="title-medium">{t('last_7_days')}</Typo>
+                  </Layout.FlexRow>
+                  {recentNotifications.map((noti) => (
+                    <NotificationItem item={noti} key={noti.id} />
+                  ))}
+                </>
+              )}
+              {/* Rest of notifications */}
+              {restNotifications.length > 0 && (
+                <>
+                  <Layout.FlexRow mt={8} pv={8} ph={16}>
+                    <Typo type="title-medium">{t('earlier')}</Typo>
+                  </Layout.FlexRow>
+                  {restNotifications.map((noti) => (
+                    <NotificationItem item={noti} key={noti.id} />
+                  ))}
+                </>
+              )}
+              <div ref={targetRef} />
+              {isNotificationsLoadingMore && (
+                <Layout.FlexRow w="100%" h={40}>
+                  <Loader />
+                </Layout.FlexRow>
+              )}
+            </>
+          ) : null}
         </Layout.FlexCol>
       </PullToRefresh>
     </MainScrollContainer>
