@@ -133,71 +133,95 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
 
   return (
     <>
-      <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} pv={12} gap={16}>
-        <Layout.FlexRow w="100%" alignItems="center" gap={8} pv={8}>
-          <ProfileImage
-            imageUrl={myProfile?.profile_image}
-            username={myProfile?.username}
-            size={50}
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'auto',
+        }}
+      >
+        <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} pv={12} gap={16} pb={100}>
+          <Layout.FlexRow w="100%" alignItems="center" gap={8} pv={8}>
+            <ProfileImage
+              imageUrl={myProfile?.profile_image}
+              username={myProfile?.username}
+              size={50}
+            />
+            <Typo type="title-medium">{myProfile?.username}</Typo>
+          </Layout.FlexRow>
+
+          {/* Text input */}
+          <NoteInput
+            value={noteInfo.content}
+            placeholder={t('notes.whats_on_your_mind') || ''}
+            onChange={handleChangeInput}
+            minRows={noteInfo?.images && noteInfo.images.length > 0 ? 3 : 6}
           />
-          <Typo type="title-medium">{myProfile?.username}</Typo>
-        </Layout.FlexRow>
-        <NoteInput
-          value={noteInfo.content}
-          placeholder={t('notes.whats_on_your_mind') || ''}
-          onChange={handleChangeInput}
-        />
-        {/* 첨부한 노트 이미지 */}
-        <Layout.FlexRow w="100%" justifyContent="center" alignItems="flex-start">
+
+          {/* 첨부한 노트 이미지 */}
           {noteInfo?.images && noteInfo.images.length > 0 && (
-            <NoteImageWrapper ph={DEFAULT_MARGIN}>
-              {noteInfo.images[0] && noteInfo.images[0].url && (
-                <NoteImage src={noteInfo.images[0].url} alt="Note image" />
-              )}
-              <Layout.Absolute t={0} r={15}>
-                <SvgIcon name="delete_image" size={50} onClick={handleDeleteImage} />
-              </Layout.Absolute>
-            </NoteImageWrapper>
-          )}
-        </Layout.FlexRow>
-        <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="flex-start">
-          <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
-          {/** visibility options */}
-          <Layout.FlexCol gap={2} bgColor="LIGHT" p={6} rounded={8}>
-            <Typo type="label-medium" bold mb={4} fontSize={11}>
-              {t('access_setting.title')}
-            </Typo>
-            <Layout.FlexCol justifyContent="flex-start" w="100%" gap={4}>
-              <RadioButton
-                label={t('access_setting.friend') || ''}
-                name="friends"
-                value="friends"
-                checked={visibility === 'friends'}
-                onChange={handleChangeVisibility}
-                labelType="label-large"
-                buttonSize="small"
-              />
-              <RadioButton
-                label={t('access_setting.close_friend') || ''}
-                name="close_friends"
-                value="close_friends"
-                checked={visibility === 'close_friends'}
-                onChange={handleChangeVisibility}
-                labelType="label-large"
-                buttonSize="small"
-              />
+            <Layout.FlexCol w="100%" alignItems="center" mt={16}>
+              <NoteImageWrapper ph={DEFAULT_MARGIN} style={{ width: '100%' }}>
+                {noteInfo.images[0] && noteInfo.images[0].url && (
+                  <NoteImage src={noteInfo.images[0].url} alt="Note image" />
+                )}
+                <Layout.Absolute t={0} r={15}>
+                  <SvgIcon name="delete_image" size={50} onClick={handleDeleteImage} />
+                </Layout.Absolute>
+              </NoteImageWrapper>
             </Layout.FlexCol>
-          </Layout.FlexCol>
-        </Layout.FlexRow>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/jpeg, image/png"
-          onChange={onImageAdd}
-          multiple={false}
-          style={{ display: 'none' }}
-        />
-      </Layout.FlexCol>
+          )}
+
+          {/* Media button and visibility options */}
+          <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="flex-start" mt={20}>
+            <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
+            {/** visibility options */}
+            <Layout.FlexCol gap={2} bgColor="LIGHT" p={6} rounded={8}>
+              <Typo type="label-medium" bold mb={4} fontSize={11}>
+                {t('access_setting.title')}
+              </Typo>
+              <Layout.FlexCol justifyContent="flex-start" w="100%" gap={4}>
+                <RadioButton
+                  label={t('access_setting.friend') || ''}
+                  name="friends"
+                  value="friends"
+                  checked={visibility === 'friends'}
+                  onChange={handleChangeVisibility}
+                  labelType="label-large"
+                  buttonSize="small"
+                />
+                <RadioButton
+                  label={t('access_setting.close_friend') || ''}
+                  name="close_friends"
+                  value="close_friends"
+                  checked={visibility === 'close_friends'}
+                  onChange={handleChangeVisibility}
+                  labelType="label-large"
+                  buttonSize="small"
+                />
+              </Layout.FlexCol>
+            </Layout.FlexCol>
+          </Layout.FlexRow>
+
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/jpeg, image/png"
+            onChange={onImageAdd}
+            multiple={false}
+            style={{ display: 'none' }}
+          />
+
+          <FlexRow w="100%" justifyContent="flex-end" alignItems="center" mt={12}>
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              {t('notes.content_restriction')}
+            </Typo>
+          </FlexRow>
+        </Layout.FlexCol>
+      </div>
+
       {isEditVisible && (
         <NewNoteImageEdit
           imageUrl={editImageUrl}
@@ -205,11 +229,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
           onCompleteImageCrop={onCompleteImageCrop}
         />
       )}
-      <FlexRow w="100%" justifyContent="flex-end" alignItems="center" ph={DEFAULT_MARGIN} pb={20}>
-        <Typo type="label-medium" color="MEDIUM_GRAY" mt={8}>
-          {t('notes.content_restriction')}
-        </Typo>
-      </FlexRow>
+
       <NewNotePhotoUploadBottomSheet
         visible={showPhotoUploadBottomSheet}
         closeBottomSheet={closePhotoUploadBottomSheet}

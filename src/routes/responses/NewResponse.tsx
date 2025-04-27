@@ -128,7 +128,7 @@ function NewResponse() {
   const disabledPost = !newResponse?.trim().length || isSubmitting;
 
   return (
-    <MainScrollContainer>
+    <MainScrollContainer style={{ display: 'flex', flexDirection: 'column' }}>
       <SubHeader
         title={title}
         LeftComponent={
@@ -144,7 +144,7 @@ function NewResponse() {
           </button>
         }
       />
-      <LayoutBase w="100%" pt={20} ph={12} pb={50}>
+      <LayoutBase w="100%" pt={20} ph={12} pb={50} style={{ flexGrow: 1, overflow: 'auto' }}>
         {currentUser && (
           <FlexRow gap={4} alignItems="center" mb={12}>
             <ProfileImage
@@ -163,6 +163,7 @@ function NewResponse() {
               placeholder={t('question.response.what_is_your_response') || ''}
               value={newResponse || ''}
               onChange={handleChangeResponse}
+              minRows={20}
             />
             <StyledNewResponsePrompt>
               <FlexRow gap={8} alignItems="center" mb={12}>
@@ -174,6 +175,7 @@ function NewResponse() {
           </>
         )}
         {question.state === 'hasError' && <NoContents text={t('no_contents.question')} />}
+
         {/** visibility options */}
         <FlexRow pt={15} w="100%" justifyContent="flex-end">
           <Layout.FlexCol gap={2} bgColor="LIGHT" p={6} rounded={8}>

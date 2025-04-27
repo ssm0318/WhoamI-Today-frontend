@@ -9,4 +9,9 @@ export const NoteInput = styled(TextareaAutosize)`
   ::placeholder {
     color: ${({ theme }) => theme.MEDIUM_GRAY};
   }
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
