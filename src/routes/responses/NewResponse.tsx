@@ -164,6 +164,9 @@ function NewResponse() {
               value={newResponse || ''}
               onChange={handleChangeResponse}
               minRows={20}
+              style={{
+                marginBottom: 20,
+              }}
             />
             <StyledNewResponsePrompt>
               <FlexRow gap={8} alignItems="center" mb={12}>

@@ -157,7 +157,12 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
             value={noteInfo.content}
             placeholder={t('notes.whats_on_your_mind') || ''}
             onChange={handleChangeInput}
-            minRows={noteInfo?.images && noteInfo.images.length > 0 ? 3 : 6}
+            minRows={4}
+            maxRows={10}
+            style={{
+              marginBottom: 20,
+              overflow: 'auto',
+            }}
           />
 
           {/* 첨부한 노트 이미지 */}
