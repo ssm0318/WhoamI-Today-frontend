@@ -75,8 +75,8 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
     <StyledNoteImageEditContainer bgColor="DARK">
       {croppedImg ? (
         <>
-          {/* 크롭 완료된 이미지 미리보기 */}
           <SubHeader
+            title={t('crop_photo')}
             RightComponent={
               <button type="button" onClick={handleClickCheck}>
                 <Typo type="title-large" color="PRIMARY">
@@ -93,7 +93,6 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
       ) : (
         imageUrl && (
           <>
-            {/* 이미지 크롭 */}
             <SubHeader
               title={t('crop_photo')}
               RightComponent={

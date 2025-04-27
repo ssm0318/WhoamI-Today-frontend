@@ -147,6 +147,19 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
           placeholder={t('notes.whats_on_your_mind') || ''}
           onChange={handleChangeInput}
         />
+        {/* 첨부한 노트 이미지 */}
+        <Layout.FlexRow w="100%" justifyContent="center" alignItems="flex-start">
+          {noteInfo?.images && noteInfo.images.length > 0 && (
+            <NoteImageWrapper ph={DEFAULT_MARGIN}>
+              {noteInfo.images[0] && noteInfo.images[0].url && (
+                <NoteImage src={noteInfo.images[0].url} alt="Note image" />
+              )}
+              <Layout.Absolute t={0} r={15}>
+                <SvgIcon name="delete_image" size={50} onClick={handleDeleteImage} />
+              </Layout.Absolute>
+            </NoteImageWrapper>
+          )}
+        </Layout.FlexRow>
         <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="flex-start">
           <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
           {/** visibility options */}
@@ -192,17 +205,7 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
           onCompleteImageCrop={onCompleteImageCrop}
         />
       )}
-      {noteInfo?.images && noteInfo.images.length > 0 && (
-        <NoteImageWrapper ph={DEFAULT_MARGIN}>
-          {noteInfo.images[0] && noteInfo.images[0].url && (
-            <NoteImage src={noteInfo.images[0].url} alt="Note image" />
-          )}
-          <Layout.Absolute t={0} r={15}>
-            <SvgIcon name="delete_image" size={50} onClick={handleDeleteImage} />
-          </Layout.Absolute>
-        </NoteImageWrapper>
-      )}
-      <FlexRow w="100%" justifyContent="flex-end" alignItems="center" ph={DEFAULT_MARGIN}>
+      <FlexRow w="100%" justifyContent="flex-end" alignItems="center" ph={DEFAULT_MARGIN} pb={20}>
         <Typo type="label-medium" color="MEDIUM_GRAY" mt={8}>
           {t('notes.content_restriction')}
         </Typo>
