@@ -52,10 +52,16 @@ export const closeAllModals = (): boolean => {
       });
     }
 
-    // 4. modal-container 내용 숨기기 (innerHTML 직접 조작은 피함)
+    // 4. modal-container 내용 임시 숨기기 - 이후 모달이 다시 열릴 수 있도록 함
     const modalContainer = document.getElementById('modal-container');
     if (modalContainer) {
-      modalContainer.style.display = 'none';
+      // display:none 대신 내부 콘텐츠만 비우도록 수정
+      // modalContainer.style.display = 'none';
+      // 기존 visibility와 opacity 유지하면서 내부 컨텐츠만 처리
+      const modalContent = modalContainer.firstElementChild;
+      if (modalContent) {
+        modalContent.innerHTML = '';
+      }
       modalClosed = true;
     }
 
@@ -67,6 +73,14 @@ export const closeAllModals = (): boolean => {
     return modalClosed;
   } catch (error) {
     return false;
+  }
+};
+
+// modalContainer를 재설정하는 유틸리티 함수 추가
+export const resetModalContainer = (): void => {
+  const modalContainer = document.getElementById('modal-container');
+  if (modalContainer) {
+    modalContainer.style.display = '';
   }
 };
 
@@ -86,6 +100,8 @@ export const closeModalAndNavigate = (
 
   // 모달 닫은 후 지연 시간을 두고 네비게이션 수행
   setTimeout(() => {
+    // 모달 컨테이너 초기화
+    resetModalContainer();
     navigate(path);
   }, delay);
 };
