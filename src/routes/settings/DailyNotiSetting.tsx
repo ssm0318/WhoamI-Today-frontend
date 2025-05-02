@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import TimePicker from '@components/_common/time-picker/TimePicker';
+import WeekPicker from '@components/_common/week-picker/WeekPicker';
 import SubHeader from '@components/sub-header/SubHeader';
 import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, Layout, Typo } from '@design-system';
-import { MyProfile } from '@models/api/user';
+import { DayOfWeek, MyProfile } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { editProfile } from '@utils/apis/my';
 
@@ -20,7 +21,15 @@ function DailyNotiSetting() {
     openToast: state.openToast,
   }));
 
+  const [notiPeriodDays, setNotiPeriodDays] = useState<DayOfWeek[]>(
+    myProfile ? myProfile?.noti_period_days : [],
+  );
+
   const [notiTime, setNotiTime] = useState(myProfile ? myProfile?.noti_time : '');
+
+  const handleChangePeriod = (period: DayOfWeek[]) => {
+    setNotiPeriodDays(period);
+  };
 
   const handleChangeTime = (time: string) => {
     setNotiTime(time);
@@ -31,6 +40,7 @@ function DailyNotiSetting() {
     editProfile({
       profile: {
         noti_time: notiTime,
+        noti_period_days: notiPeriodDays,
       },
       onSuccess: (data: MyProfile) => {
         updateMyProfile({ ...data });
@@ -51,6 +61,12 @@ function DailyNotiSetting() {
         <Typo type="title-medium">{t('daily_noti_time')}</Typo>
         <TimePicker initialTime={notiTime} onTimeChange={handleChangeTime} />
       </Layout.FlexCol>
+      <Layout.FlexCol mt={40} w="100%" gap={20} ph={24} alignItems="center">
+        {/* week picker */}
+        <Typo type="title-medium">{t('daily_noti_period')}</Typo>
+        <WeekPicker initialDays={notiPeriodDays} onWeekChange={handleChangePeriod} />
+      </Layout.FlexCol>
+
       <Layout.Absolute
         l={0}
         b={20 + (id && token ? 0 : BOTTOM_TABBAR_HEIGHT)}
