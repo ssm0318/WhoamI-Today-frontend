@@ -139,12 +139,14 @@ function SideMenu({ closeSideMenu }: Props) {
                   handleClickDailySurvery();
                 }}
               >
-                <Typo type="title-large" color="BLACK">
-                  📝{' '}
-                </Typo>
-                <Typo type="title-large" color="BLACK" underline>
-                  {t('daily_survey')}
-                </Typo>
+                <Layout.FlexRow gap={4}>
+                  <Typo type="title-large" color="BLACK">
+                    📝{' '}
+                  </Typo>
+                  <Typo type="title-large" color="BLACK" underline>
+                    {t('feedback_to_researcher')}
+                  </Typo>
+                </Layout.FlexRow>
               </a>
             </Layout.FlexCol>
             <Layout.FlexCol>
