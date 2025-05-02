@@ -133,7 +133,7 @@
         "text_message_inquiry": "문자",
         "user_manual": "사용자 매뉴얼",
         "onboarding_video": "온보딩 영상",
-        "daily_survey": "앱 사용 설문"
+        "feedback_to_researcher": "연구팀에게 피드백"
       },
       "bottom_sheet": {
         "title": "작성하기",
