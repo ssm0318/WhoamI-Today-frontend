@@ -133,7 +133,7 @@
                 "text_message_inquiry": "Text",
                 "user_manual": "User Manual",
                 "onboarding_video": "Onboarding Video",
-                "daily_survey": "App Use Survey"
+                "feedback_to_researcher": "Feedback to Researchers"
             },
             "bottom_sheet": {
                 "title": "Create",
