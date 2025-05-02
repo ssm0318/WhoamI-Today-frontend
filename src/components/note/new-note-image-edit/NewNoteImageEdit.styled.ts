@@ -3,7 +3,14 @@ import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 
 export const StyledNoteImageEditContainer = styled(Layout.FixedFullScreen)`
-  z-index: 200;
+  z-index: 9999;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  right: 0;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const StyledNewNoteImageWrapper = styled.div`

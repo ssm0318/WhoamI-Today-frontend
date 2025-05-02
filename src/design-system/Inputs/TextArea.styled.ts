@@ -23,5 +23,10 @@ export const CommonTextArea = styled(TextareaAutosize)`
         border-bottom-style: solid;
       }
   `}
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 export default CommonTextArea;
