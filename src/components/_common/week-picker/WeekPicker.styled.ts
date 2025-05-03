@@ -20,8 +20,8 @@ export const DayButton = styled.button<{
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  border: 1px solid ${({ selected, theme }) => (selected ? theme.UPDATED : theme.LIGHT_GRAY)};
-  background: ${({ selected, theme }) => (selected ? theme.UPDATED : theme.WHITE)};
+  border: 1px solid ${({ selected, theme }) => (selected ? theme.PRIMARY : theme.LIGHT_GRAY)};
+  background: ${({ selected, theme }) => (selected ? theme.PRIMARY : theme.WHITE)};
   color: ${({ selected, theme }) => (selected ? theme.WHITE : theme.DARK_GRAY)};
   font-size: 14px;
   font-weight: 600;
