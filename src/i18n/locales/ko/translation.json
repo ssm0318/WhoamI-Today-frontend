@@ -435,8 +435,8 @@
     },
     "daily_noti_setting": {
       "title": "알림 시간 설정",
-      "daily_noti_time": "데일리 알림 시간",
-      "daily_noti_period": "데일리 알림 기간",
+      "daily_noti_time": "푸시 알림 시간",
+      "daily_noti_period": "푸시 알림 주기",
       "confirm": "확인",
       "success": "성공적으로 변경되었습니다 🎉",
       "error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
