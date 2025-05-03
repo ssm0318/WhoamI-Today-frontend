@@ -57,14 +57,14 @@ function DailyNotiSetting() {
     <Layout.FlexCol w="100%">
       <SubHeader typo="title-large" title={t('title')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT + 40} w="100%" gap={20} ph={24} alignItems="center">
-        {/* time picker */}
-        <Typo type="title-medium">{t('daily_noti_time')}</Typo>
-        <TimePicker initialTime={notiTime} onTimeChange={handleChangeTime} />
-      </Layout.FlexCol>
-      <Layout.FlexCol mt={40} w="100%" gap={20} ph={24} alignItems="center">
         {/* week picker */}
         <Typo type="title-medium">{t('daily_noti_period')}</Typo>
         <WeekPicker initialDays={notiPeriodDays} onWeekChange={handleChangePeriod} />
+      </Layout.FlexCol>
+      <Layout.FlexCol mt={40} w="100%" gap={20} ph={24} alignItems="center">
+        {/* time picker */}
+        <Typo type="title-medium">{t('daily_noti_time')}</Typo>
+        <TimePicker initialTime={notiTime} onTimeChange={handleChangeTime} />
       </Layout.FlexCol>
 
       <Layout.Absolute
