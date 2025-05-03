@@ -20,7 +20,10 @@ function NotificationItem({ item }: NotificationItemProps) {
   const [currentDate] = useState(() => new Date());
 
   const handleClickNotification = async () => {
-    if (notification_type === 'DailySurvey') {
+    if (notification_type === 'QuestionSuggest') {
+      // 질문 제안 페이지로 이동
+      navigate('/suggest-questions');
+    } else if (notification_type === 'DailySurvey') {
       // side menu 오픈
       navigate('/my?show_side_menu=true');
     } else {
@@ -45,7 +48,7 @@ function NotificationItem({ item }: NotificationItemProps) {
       case 'DailySurvey':
       case 'User':
       case 'FriendRequest':
-      case 'other':
+      case 'QuestionSuggest':
       default:
         return null;
     }
