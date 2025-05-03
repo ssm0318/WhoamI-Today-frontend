@@ -30,6 +30,10 @@
         "instagram": "Instagram",
         "text_message": "Text"
     },
+    "suggest_questions": {
+        "title": "Please Tell Us the Questions You'd Like to See on WIT",
+        "description": "Hi! We heard from several of you that the current questions didn’t quite hit the mark, or that you’d like the ability to add your own. While that feature isn’t available just yet, we’d love to get a better sense of what kinds of questions you want to see on the platform. Whenever you have a new question idea, please use the “Suggest Questions” survey in the side menu (where the settings are) to help us shape this upcoming feature in a way that actually works for you. Thank you! ☺️"
+    },
     "sign_in": {
         "username_or_email": "Username or Email",
         "password": "Password",
