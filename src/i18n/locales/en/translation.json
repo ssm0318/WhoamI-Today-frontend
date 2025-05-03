@@ -437,9 +437,9 @@
             }
         },
         "daily_noti_setting": {
-            "title": "Daily Notification Settings",
+            "title": "Notification Timing",
             "daily_noti_time": "Notification Time",
-            "daily_noti_period": "Notification Period",
+            "daily_noti_period": "Notification Frequency",
             "confirm": "Confirm",
             "success": "Changes updated successfully 🎉",
             "error": "A temporary error occurred. Please try again later."

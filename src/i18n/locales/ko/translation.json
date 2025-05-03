@@ -434,7 +434,7 @@
       }
     },
     "daily_noti_setting": {
-      "title": "데일리 알림 설정",
+      "title": "알림 시간 설정",
       "daily_noti_time": "데일리 알림 시간",
       "daily_noti_period": "데일리 알림 기간",
       "confirm": "확인",
