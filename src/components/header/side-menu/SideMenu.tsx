@@ -6,10 +6,11 @@ import {
   DAILY_SURVEY_URL_EN,
   DAILY_SURVEY_URL_KO,
   ONBOARDING_VIDEO_URL,
+  QUESTION_SUGGEST_URL_EN,
+  QUESTION_SUGGEST_URL_KO,
   RESEARCH_INQUIRY_DISCORD_LINK,
   RESEARCH_INQUIRY_INSTAGRAM_LINK,
   RESEARCH_INQUIRY_KAKAOTALK_LINK,
-  USER_MANUAL_URL,
 } from '@constants/url';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
@@ -87,13 +88,13 @@ function SideMenu({ closeSideMenu }: Props) {
     }
   };
 
-  const handleClickUserManual = () => {
+  const handleClickQuestionSuggest = () => {
     if (window.ReactNativeWebView) {
       postMessage('OPEN_BROWSER', {
-        url: USER_MANUAL_URL,
+        url: isUSParticipant ? QUESTION_SUGGEST_URL_EN : QUESTION_SUGGEST_URL_KO,
       });
     } else {
-      window.open(USER_MANUAL_URL, '_blank');
+      window.open(isUSParticipant ? QUESTION_SUGGEST_URL_EN : QUESTION_SUGGEST_URL_KO, '_blank');
     }
   };
 
@@ -169,19 +170,19 @@ function SideMenu({ closeSideMenu }: Props) {
             </Layout.FlexCol>
             <Layout.FlexCol>
               <a
-                href={USER_MANUAL_URL}
+                href={isUSParticipant ? QUESTION_SUGGEST_URL_EN : QUESTION_SUGGEST_URL_KO}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => {
                   e.preventDefault();
-                  handleClickUserManual();
+                  handleClickQuestionSuggest();
                 }}
               >
                 <Typo type="title-large" color="BLACK">
                   📒{' '}
                 </Typo>
                 <Typo type="title-large" color="BLACK" underline>
-                  {t('user_manual')}
+                  {t('question_suggest')}
                 </Typo>
               </a>
             </Layout.FlexCol>

@@ -133,7 +133,8 @@
                 "text_message_inquiry": "Text",
                 "user_manual": "User Manual",
                 "onboarding_video": "Onboarding Video",
-                "feedback_to_researcher": "Feedback to Researchers"
+                "feedback_to_researcher": "Feedback to Researchers",
+                "question_suggest": "Suggest Questions"
             },
             "bottom_sheet": {
                 "title": "Create",

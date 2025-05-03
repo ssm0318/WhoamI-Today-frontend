@@ -37,3 +37,8 @@ export const ONBOARDING_VIDEO_URL =
 
 export const DAILY_SURVEY_URL_EN = 'https://uwashington.qualtrics.com/jfe/form/SV_b4017RNxNe5wvMq';
 export const DAILY_SURVEY_URL_KO = 'https://uwashington.qualtrics.com/jfe/form/SV_cCnY8BhEGcTrdrM';
+
+export const QUESTION_SUGGEST_URL_EN =
+  'https://uwashington.qualtrics.com/jfe/form/SV_2adjX3VMIwBGt4q';
+export const QUESTION_SUGGEST_URL_KO =
+  'https://uwashington.qualtrics.com/jfe/form/SV_8Idyexv0QaBrRae';
