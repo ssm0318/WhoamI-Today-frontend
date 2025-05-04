@@ -23,4 +23,4 @@ export type NotificationType =
   | 'Ping'
   | 'User'
   | 'DailySurvey'
-  | 'other';
+  | 'QuestionSuggest';

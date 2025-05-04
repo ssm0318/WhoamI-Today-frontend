@@ -55,6 +55,7 @@ import NotiSettings from './routes/sign-up/NotiSettings';
 import Password from './routes/sign-up/Password';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
+import SuggestQuestions from './routes/SuggestQuestions';
 import UserPage from './routes/UserPage';
 
 const router = createBrowserRouter([
@@ -62,6 +63,8 @@ const router = createBrowserRouter([
   { path: '', element: <Intro />, loader: checkIfSignIn },
   // research intro route (for research)
   { path: 'research-intro', element: <ResearchIntro /> },
+  // question suggestion
+  { path: 'suggest-questions', element: <SuggestQuestions /> },
   {
     // authorized routes
     path: '/',
