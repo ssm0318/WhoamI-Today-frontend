@@ -130,7 +130,25 @@ function SideMenu({ closeSideMenu }: Props) {
                 <Typo type="head-line">{t(menu.key)}</Typo>
               </button>
             ))}
-            <Layout.FlexCol mt={52} pr={12}>
+            <Layout.FlexCol mt={52}>
+              <a
+                href={isUSParticipant ? QUESTION_SUGGEST_URL_EN : QUESTION_SUGGEST_URL_KO}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleClickQuestionSuggest();
+                }}
+              >
+                <Typo type="title-large" color="BLACK">
+                  ❓{' '}
+                </Typo>
+                <Typo type="title-large" color="BLACK" underline>
+                  {t('question_suggest')}
+                </Typo>
+              </a>
+            </Layout.FlexCol>
+            <Layout.FlexCol>
               <a
                 href={isUSParticipant ? DAILY_SURVEY_URL_EN : DAILY_SURVEY_URL_KO}
                 target="_blank"
@@ -168,24 +186,7 @@ function SideMenu({ closeSideMenu }: Props) {
                 </Typo>
               </a>
             </Layout.FlexCol>
-            <Layout.FlexCol>
-              <a
-                href={isUSParticipant ? QUESTION_SUGGEST_URL_EN : QUESTION_SUGGEST_URL_KO}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleClickQuestionSuggest();
-                }}
-              >
-                <Typo type="title-large" color="BLACK">
-                  📒{' '}
-                </Typo>
-                <Typo type="title-large" color="BLACK" underline>
-                  {t('question_suggest')}
-                </Typo>
-              </a>
-            </Layout.FlexCol>
+
             {/* 문의 * 연락처 */}
             <Layout.FlexCol mt={52} pr={12}>
               <Typo type="title-large" mb={20}>
