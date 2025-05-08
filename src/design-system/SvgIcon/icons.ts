@@ -124,6 +124,8 @@ const delete_image = 'delete_image';
 const my_profile = 'my_profile';
 const friends_active = 'friends_active';
 const friends_inactive = 'friends_inactive';
+const feed_active = 'feed_active';
+const feed_inactive = 'feed_inactive';
 const my_active = 'my_active';
 const my_inactive = 'my_inactive';
 const chats_active = 'chats_active';
@@ -205,6 +207,8 @@ export {
   favorite_false,
   favorite_ping,
   favorite_true,
+  feed_active,
+  feed_inactive,
   friend_pinned,
   friend_requests,
   friend_unpinned,
