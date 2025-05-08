@@ -92,10 +92,14 @@ const router = createBrowserRouter([
         path: 'friends',
         children: [
           { path: '', element: <FriendsList /> },
-          { path: 'feed', element: <FriendsFeed /> },
+          // { path: 'feed', element: <FriendsFeed /> },
           { path: 'explore', element: <ExploreFriends /> },
           { path: 'edit', element: <EditFriends /> },
         ],
+      },
+      {
+        path: 'feed',
+        element: <FriendsFeed />,
       },
       {
         path: 'questions',
