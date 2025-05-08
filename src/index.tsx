@@ -99,7 +99,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'feed',
-        element: <FriendsFeed />,
+        children: [{ path: '', element: <FriendsFeed /> }],
       },
       {
         path: 'questions',
