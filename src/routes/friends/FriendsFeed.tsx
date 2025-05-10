@@ -5,10 +5,11 @@ import NoContents from '@components/_common/no-contents/NoContents';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
+import ResponseItem from '@components/response/response-item/ResponseItem';
 import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
-import { Note } from '@models/post';
+import { Note, POST_TYPE, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMe } from '@utils/apis/my';
 import { MainScrollContainer } from 'src/routes/Root';
@@ -25,17 +26,35 @@ function FriendsFeed() {
 
   const {
     targetRef,
-    data: notes,
+    data: feedItems,
     isLoading,
-    isLoadingMore: isNotesLoadingMore,
+    isLoadingMore: isFeedItemsLoadingMore,
     mutate: refetchFeed,
-  } = useSWRInfiniteScroll<Note>({
-    key: `/user/feed/`,
+  } = useSWRInfiniteScroll<Note | Response>({
+    key: `/user/feed/full`,
   });
 
   const handleRefresh = useCallback(async () => {
     await Promise.all([refetchFeed(), fetchCheckIn(), getMe()]);
   }, [refetchFeed, fetchCheckIn]);
+
+  const renderFeedItem = useCallback(
+    (item: Note | Response) => {
+      if (item.type === POST_TYPE.NOTE) {
+        return <NoteItem key={item.id} note={item} isMyPage={false} refresh={refetchFeed} />;
+      }
+      return (
+        <ResponseItem
+          key={item.id}
+          response={item}
+          displayType="FEED"
+          isMyPage={false}
+          refresh={refetchFeed}
+        />
+      );
+    },
+    [refetchFeed],
+  );
 
   return (
     <MainScrollContainer scrollRef={scrollRef} showNotificationPermission>
@@ -43,15 +62,11 @@ function FriendsFeed() {
         <Layout.FlexCol w="100%">
           {isLoading ? (
             <NoteLoader />
-          ) : notes?.[0] && notes[0].count > 0 ? (
+          ) : feedItems?.[0] && feedItems[0].count > 0 ? (
             <>
-              {notes.map(({ results }) =>
-                results?.map((note) => (
-                  <NoteItem key={note.id} note={note} isMyPage={false} refresh={refetchFeed} />
-                )),
-              )}
+              {feedItems.map(({ results }) => results?.map((item) => renderFeedItem(item)))}
               <div ref={targetRef} />
-              {isNotesLoadingMore && (
+              {isFeedItemsLoadingMore && (
                 <Layout.FlexRow w="100%" h={40}>
                   <Loader />
                 </Layout.FlexRow>
