@@ -71,7 +71,7 @@ function ResponseItem({
     if (displayType === 'DETAIL') return;
 
     if (!isMyPage) {
-      navigate(`./responses/${response.id}`);
+      navigate(`/responses/${response.id}`);
       return;
     }
 
@@ -89,7 +89,7 @@ function ResponseItem({
         p={WRAPPER_PADDING}
         rounded={12}
         outline="LIGHT"
-        w={displayType === 'LIST' ? RESPONSE_WIDTH : '100%'}
+        w={displayType === 'DETAIL' || displayType === 'FEED' ? '100%' : RESPONSE_WIDTH}
         onClick={handleClickDetail}
         style={{
           overflow: displayType === 'DETAIL' ? 'visible' : undefined,

@@ -12,7 +12,7 @@ export const TabWrapper = styled.nav`
   margin: 0 auto;
   background-color: white;
   height: ${BOTTOM_TABBAR_HEIGHT}px;
-  padding: 8px 36px 29px 36px;
+  padding: 8px 0px 29px 0px;
   box-shadow: 0px -4px 12px 0px rgba(0, 0, 0, 0.16);
   z-index: ${Z_INDEX.BOTTOM_TAB};
 `;

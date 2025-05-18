@@ -67,7 +67,7 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
     if (displayType === 'DETAIL') return;
 
     if (!isMyPage) {
-      navigate(`./notes/${id}`);
+      navigate(`/notes/${id}`);
       return;
     }
 

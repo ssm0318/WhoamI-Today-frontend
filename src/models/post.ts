@@ -165,7 +165,7 @@ export type PostReaction = {
   reaction: string | null;
 };
 
-export type POST_DP_TYPE = 'LIST' | 'DETAIL';
+export type POST_DP_TYPE = 'LIST' | 'DETAIL' | 'FEED';
 
 export enum PostVisibility {
   FRIENDS = 'friends',
