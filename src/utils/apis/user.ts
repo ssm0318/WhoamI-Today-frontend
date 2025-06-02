@@ -107,23 +107,15 @@ export const signOut = async (onSuccess: () => void) => {
 
 export const validateInviterBirthdate = ({
   birthdate,
-  email,
   onSuccess,
   onError,
 }: {
   birthdate: string;
-  email: string;
-  onSuccess: (res: {
-    email: string;
-    inviter_id: number;
-    user_group: UserGroup;
-    current_ver: VersionType;
-  }) => void;
+  onSuccess: (res: { inviter_id: number; user_group: UserGroup; current_ver: VersionType }) => void;
   onError: (errorMsg: string) => void;
 }) => {
   const formData = new FormData();
   formData.append('date_of_birth', birthdate);
-  formData.append('email', email);
 
   axiosFormDataInstance
     .post('/user/signup/inviter-birthdate/', formData)
