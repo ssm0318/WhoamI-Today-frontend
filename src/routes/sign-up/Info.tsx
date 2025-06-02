@@ -16,8 +16,6 @@ import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 function Info() {
   const [t, i18n] = useTranslation('translation', { keyPrefix: 'sign_up' });
-  const [friendEmailInput, setFriendEmailInput] = useState('');
-  const [friendEmailError, setFriendEmailError] = useState<string | null>(null);
   const [dateOfBirthInput, setDateOfBirthInput] = useState('');
   const [dateOfBirthError, setDateOfBirthError] = useState<string | null>(null);
   const [privacyPolicyChecked, setPrivacyPolicyChecked] = useState(false);
@@ -35,19 +33,9 @@ function Info() {
       ? PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_KO
       : PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_EN;
 
-  const handleChangeFriendEmail = (e: ChangeEvent<HTMLInputElement>) => {
-    setFriendEmailInput(e.target.value);
-    if (friendEmailError) setFriendEmailError(null);
-  };
-
   const isValideDateOfBirth = (date: string) => {
     const dateObj = new Date(date);
     return dateObj instanceof Date && !Number.isNaN(dateObj.getTime());
-  };
-
-  const isValidEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
   };
 
   const handleChangeDateOfBirth = (e: ChangeEvent<HTMLInputElement>) => {
@@ -76,11 +64,6 @@ function Info() {
       hasErrors = true;
     }
 
-    if (!isValidEmail(friendEmailInput)) {
-      setFriendEmailError(t('friend_email_error'));
-      hasErrors = true;
-    }
-
     if (!hasErrors) {
       const age = calculateAge(dateOfBirthInput);
       setCalculatedAge(age);
@@ -94,7 +77,6 @@ function Info() {
 
     validateInviterBirthdate({
       birthdate,
-      email: friendEmailInput,
       onSuccess: (res) => {
         setSignUpInfo({
           inviter_id: res.inviter_id,
@@ -126,7 +108,7 @@ function Info() {
   return (
     <>
       <Layout.FlexCol gap={20} w="100%">
-        <ValidatedInput
+        {/* <ValidatedInput
           label={t('friend_email')}
           name="friend_email"
           type="email"
@@ -135,7 +117,7 @@ function Info() {
           onChange={handleChangeFriendEmail}
           error={friendEmailError}
           guide={t('friend_email_guide')}
-        />
+        /> */}
         <ValidatedInput
           label={t('date_of_birth')}
           name="date_of_birth"
@@ -183,13 +165,9 @@ function Info() {
         <Button.Large
           type="gray_fill"
           status={
-            !friendEmailInput ||
-            friendEmailError ||
-            !dateOfBirthInput ||
-            dateOfBirthError ||
-            !privacyPolicyChecked
-              ? 'disabled'
-              : 'normal'
+            // !friendEmailInput ||
+            // friendEmailError ||
+            !dateOfBirthInput || dateOfBirthError || !privacyPolicyChecked ? 'disabled' : 'normal'
           }
           width={AUTH_BUTTON_WIDTH}
           text={t('next')}
