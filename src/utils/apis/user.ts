@@ -15,9 +15,7 @@ import {
   SignInParams,
   SignInResponse,
   SignUpParams,
-  UserGroup,
   UsernameError,
-  VersionType,
 } from '@models/api/user';
 import { Note, Response } from '@models/post';
 import { User, UserProfile } from '@models/user';
@@ -105,20 +103,20 @@ export const signOut = async (onSuccess: () => void) => {
   });
 };
 
-export const validateInviterBirthdate = ({
+export const validateBirthdate = ({
   birthdate,
   onSuccess,
   onError,
 }: {
   birthdate: string;
-  onSuccess: (res: { inviter_id: number; user_group: UserGroup; current_ver: VersionType }) => void;
+  onSuccess: (res: { inviter_id: number }) => void;
   onError: (errorMsg: string) => void;
 }) => {
   const formData = new FormData();
   formData.append('date_of_birth', birthdate);
 
   axiosFormDataInstance
-    .post('/user/signup/inviter-birthdate/', formData)
+    .post('/user/signup/birthdate/', formData)
     .then((res) => {
       onSuccess(res.data);
     })
@@ -218,17 +216,13 @@ export const signUp = ({
 }) => {
   const formData = new FormData();
 
-  const { email, password, username, noti_time, current_ver, user_group, inviter_id } = signUpInfo;
+  const { email, password, username, noti_time } = signUpInfo;
 
   formData.append('email', email);
   formData.append('username', username);
   formData.append('password', password);
 
   if (noti_time) formData.append('noti_time', noti_time);
-
-  if (current_ver) formData.append('current_ver', current_ver);
-  if (user_group) formData.append('user_group', user_group);
-  if (inviter_id) formData.append('inviter_id', inviter_id.toString());
 
   axiosFormDataInstance
     .post('/user/signup/', formData)

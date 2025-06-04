@@ -11,7 +11,7 @@ import {
 import { Button, CheckBox, Layout, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import { useBoundStore } from '@stores/useBoundStore';
-import { validateInviterBirthdate } from '@utils/apis/user';
+import { validateBirthdate } from '@utils/apis/user';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 function Info() {
@@ -21,8 +21,7 @@ function Info() {
   const [privacyPolicyChecked, setPrivacyPolicyChecked] = useState(false);
   const [showAgeConfirmDialog, setShowAgeConfirmDialog] = useState(false);
   const [calculatedAge, setCalculatedAge] = useState(0);
-  const { setSignUpInfo, openToast } = useBoundStore((state) => ({
-    setSignUpInfo: state.setSignUpInfo,
+  const { openToast } = useBoundStore((state) => ({
     openToast: state.openToast,
   }));
   const navigate = useNavigate();
@@ -75,14 +74,9 @@ function Info() {
     // YYYY-MM-DD 형식으로 변환
     const birthdate = format(new Date(dateOfBirthInput), 'yyyy-MM-dd');
 
-    validateInviterBirthdate({
+    validateBirthdate({
       birthdate,
-      onSuccess: (res) => {
-        setSignUpInfo({
-          inviter_id: res.inviter_id,
-          user_group: res.user_group,
-          current_ver: res.current_ver,
-        });
+      onSuccess: () => {
         navigate('/signup/password');
       },
       onError: (errorMsg: string) => {
