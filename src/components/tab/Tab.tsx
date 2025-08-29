@@ -80,7 +80,7 @@ export default function Tab() {
         <TabItem to="/my" type="my" size={28} />
         {/* <TabItem to="/chats" type="chats" size={28} /> */}
         {featureFlags?.friendList && <TabItem to="/questions" type="questions" size={28} />}
-        <TabItem to="/feed" type="feed" size={28} />
+        {/* <TabItem to="/feed" type="feed" size={28} /> */}
       </Layout.FlexRow>
       {showFloatingButton && <FloatingButton />}
     </TabWrapper>
