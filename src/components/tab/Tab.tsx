@@ -76,7 +76,7 @@ export default function Tab() {
     <TabWrapper>
       <Layout.FlexRow w="100%" justifyContent="space-evenly" alignItems="center" pt={4}>
         {featureFlags?.friendList && <TabItem to="/friends" type="friends" size={28} />}
-        {featureFlags?.friendFeed && <TabItem to="/friends/feed" type="friends" size={28} />}
+        {featureFlags?.friendFeed && <TabItem to="/feed" type="friends" size={28} />}
         <TabItem to="/my" type="my" size={28} />
         {/* <TabItem to="/chats" type="chats" size={28} /> */}
         {featureFlags?.friendList && <TabItem to="/questions" type="questions" size={28} />}
