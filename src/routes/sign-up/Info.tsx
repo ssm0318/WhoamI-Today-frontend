@@ -71,7 +71,7 @@ function Info() {
   };
 
   const handleConfirmAge = () => {
-    // YYYY-MM-DD 형식으로 변환
+    // Convert to YYYY-MM-DD format
     const birthdate = format(new Date(dateOfBirthInput), 'yyyy-MM-dd');
 
     validateBirthdate({
@@ -121,7 +121,7 @@ function Info() {
           error={dateOfBirthError}
           guide={t('date_of_birth_guide')}
         />
-        {/* 개인정보 관련 체크 */}
+        {/* Privacy related checks */}
         <Layout.FlexCol gap={10}>
           <Typo type="title-medium" color="MEDIUM_GRAY">
             {t('privacy_policy')}

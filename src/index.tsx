@@ -236,7 +236,7 @@ Sentry.init({
   integrations: (defaults) =>
     defaults.filter((integration) => integration.name !== 'BrowserTracing'),
   tracesSampleRate: 0,
-  enabled: false, // 불필요한 로깅을 방지하기 위해 비활성화, 필요한 경우 활성화 해주세요
+  enabled: false, // Disabled to prevent unnecessary logging, enable if needed
 });
 
 function App() {

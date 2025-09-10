@@ -19,7 +19,7 @@ function TabItem({ to, type, size = 48 }: TabItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'nav_tab' });
   const myProfile = useBoundStore((state) => state.myProfile);
 
-  // TODO: 안읽은 메시지 개수 얻기
+  // TODO: Get unread message count
   // const unReadMsgCnt = 15;
 
   const scrollToTop = (isActive: boolean) => () => {

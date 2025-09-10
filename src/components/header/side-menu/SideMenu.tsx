@@ -27,7 +27,7 @@ interface Props {
   closeSideMenu: () => void;
 }
 
-// TODO: 등장/퇴장 애니메이션 추가
+// TODO: Add entrance/exit animations
 function SideMenu({ closeSideMenu }: Props) {
   const [t, i18n] = useTranslation('translation', { keyPrefix: 'home.header.side_menu' });
   const navigate = useNavigate();
@@ -187,7 +187,7 @@ function SideMenu({ closeSideMenu }: Props) {
               </a>
             </Layout.FlexCol>
 
-            {/* 문의 * 연락처 */}
+            {/* Inquiry & Contact */}
             <Layout.FlexCol mt={52} pr={12}>
               <Typo type="title-large" mb={20}>
                 {t('inquiry')} :

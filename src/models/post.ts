@@ -49,7 +49,7 @@ export interface ContentsCommon {
   updated_at: string;
 }
 
-// 댓글
+// Comment
 export interface Comment extends ContentsCommon {
   is_anonymous: boolean;
   is_private: boolean;
@@ -64,7 +64,7 @@ export interface Comment extends ContentsCommon {
 export type PrivateComment = Omit<Comment, 'author' | 'author_detail'> &
   Pick<Partial<ContentsCommon>, 'id' | 'author' | 'author_detail'>;
 
-// 유저 태그
+// User tag
 export interface UserTag {
   id: number;
   tagged_username: string;
@@ -75,7 +75,7 @@ export interface UserTag {
 export const isAdminAuthor = (author: User | AdminAuthor): author is AdminAuthor => {
   return (author as AdminAuthor).color_hex !== undefined;
 };
-// 어드민 작성자
+// Admin author
 export interface AdminAuthor {
   color_hex: string;
 }
@@ -85,7 +85,7 @@ export interface ReactionUserSample extends User {
   reaction: string | null;
 }
 
-// 답변
+// Response
 export interface Response extends ContentsCommon {
   type: POST_TYPE.RESPONSE;
   comments: Comment[];
@@ -116,7 +116,7 @@ export interface NewNoteForm {
   images?: CroppedImg[];
   visibility: PostVisibility;
 }
-// 질문에 대한 답변 리스트
+// Response list for questions
 /** deprecated */
 export interface DayQuestion extends Omit<Question, 'selected_dates' | 'selected'> {
   responses: QuestionResponse[];

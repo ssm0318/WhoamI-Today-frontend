@@ -116,7 +116,7 @@ function ResponseItem({
                 size={PROFILE_IMAGE_SIZE}
                 onClick={navigateToProfile}
               />
-              {/* author, created_at 정보 */}
+              {/* author, created_at information */}
               <Layout.FlexCol>
                 <Layout.FlexRow onClick={navigateToProfile}>
                   <Typo type="title-medium" ellipsis={{ enabled: true, maxWidth: 90 }}>
@@ -128,7 +128,7 @@ function ResponseItem({
                   <Typo type="label-medium" color="MEDIUM_GRAY">
                     {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
                   </Typo>
-                  {/* 공개범위 - 본인페이지에서만 표시 */}
+                  {/* Visibility scope - only shown on own page */}
                   {isMyPage && (
                     <>
                       <Typo type="label-medium" color="BLACK">
@@ -142,7 +142,7 @@ function ResponseItem({
                 </Layout.FlexRow>
               </Layout.FlexCol>
             </Layout.FlexRow>
-            {/* 더보기 */}
+            {/* More options */}
             <Layout.FlexRow>
               <Icon name="dots_menu" size={24} onClick={handleClickMore} />
             </Layout.FlexRow>
@@ -152,8 +152,8 @@ function ResponseItem({
             mb={8}
             style={{
               whiteSpace: 'pre-wrap',
-              overflowWrap: 'break-word', // 줄바꿈을 공백 단위로
-              wordBreak: 'break-word', // 공백이 없는 경우에도 줄바꿈 허용
+              overflowWrap: 'break-word', // Line break by whitespace units
+              wordBreak: 'break-word', // Allow line break even when there's no whitespace
             }}
           >
             {displayType === 'DETAIL' ? (
@@ -172,7 +172,7 @@ function ResponseItem({
                 )}
               </Typo>
             )}
-            {/* (수정됨) */}
+            {/* (Edited) */}
             {is_edited && (
               <Typo type="label-medium" color="MEDIUM_GRAY">
                 {`(${t('edited')})`}

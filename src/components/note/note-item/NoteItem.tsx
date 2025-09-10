@@ -122,7 +122,7 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
               size={PROFILE_IMAGE_SIZE}
               onClick={navigateToProfile}
             />
-            {/* author, created_at 정보 */}
+            {/* author, created_at information */}
             <Layout.FlexCol>
               <Layout.FlexRow onClick={navigateToProfile} gap={4} alignItems="center">
                 <Typo type="title-medium" ellipsis={{ enabled: true, maxWidth: 140 }}>
@@ -134,7 +134,7 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
                 <Typo type="label-medium" color="MEDIUM_GRAY">
                   {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
                 </Typo>
-                {/* 공개범위 - 본인페이지에서만 표시 */}
+                {/* Visibility scope - only shown on own page */}
                 {isMyPage && (
                   <>
                     <Typo type="label-medium" color="BLACK">
@@ -148,7 +148,7 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
               </Layout.FlexRow>
             </Layout.FlexCol>
           </Layout.FlexRow>
-          {/* 더보기 */}
+          {/* More options */}
           <Layout.FlexRow>
             <Icon name="dots_menu" size={24} onClick={handleClickMore} />
           </Layout.FlexRow>
@@ -158,13 +158,13 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
             content={content}
             translateContent={!isMyPage && displayType === 'DETAIL'}
           />
-          {/* 노트 이미지 - 1개만 노출 */}
+          {/* Note image - only show 1 */}
           {images[0] && (
             <Layout.FlexRow w="100%" mv={10}>
               <NoteImage src={images[0]} />
             </Layout.FlexRow>
           )}
-          {/* (수정됨) */}
+          {/* (Edited) */}
           {is_edited && (
             <Typo type="label-medium" color="MEDIUM_GRAY">
               {`(${t('edited')})`}

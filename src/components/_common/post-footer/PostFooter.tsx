@@ -80,7 +80,7 @@ function PostFooter({
       },
     ]);
 
-    // 이모지 리액션 목록 업데이트
+    // Update emoji reaction list
     setSampleUserList((prev) => {
       const newSample: ReactionUserSample = {
         id: myProfile.id,
@@ -107,7 +107,7 @@ function PostFooter({
     await deleteReaction(targetReaction.id);
     setMyReactionList(myReactionList.filter((reaction) => reaction.emoji !== emoji.emoji));
 
-    // 이모지 리액션 목록 업데이트
+    // Update emoji reaction list
     setSampleUserList((prev) => {
       return prev.filter(
         (sample) => !(sample.reaction === emoji.emoji && sample.id === myProfile.id),

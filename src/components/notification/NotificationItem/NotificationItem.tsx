@@ -21,10 +21,10 @@ function NotificationItem({ item }: NotificationItemProps) {
 
   const handleClickNotification = async () => {
     if (notification_type === 'QuestionSuggest') {
-      // 질문 제안 페이지로 이동
+      // Navigate to question suggestion page
       navigate('/suggest-questions');
     } else if (notification_type === 'DailySurvey') {
-      // side menu 오픈
+      // Open side menu
       navigate('/my?show_side_menu=true');
     } else {
       navigate(redirect_url);
@@ -43,8 +43,8 @@ function NotificationItem({ item }: NotificationItemProps) {
         return 'noti_icon_prompt';
       case 'Ping':
         return 'noti_icon_ping';
-      // User, FriendRequest는 어차피 profile image가 있어서 icon은 필요 없음
-      // other의 경우는 아직 없는 케이스라 icon 없음
+      // User, FriendRequest already have profile images so no icon needed
+      // Other cases don't exist yet so no icon
       case 'DailySurvey':
       case 'User':
       case 'FriendRequest':

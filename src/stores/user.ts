@@ -63,7 +63,7 @@ export const createUserSlice: SliceStateCreator<UserSlice> = (set, get) => {
     setFeatureFlags: () => {
       const currVersion = get().myProfile?.current_ver;
 
-      console.debug('currVersion', currVersion);
+      // console.debug('currVersion', currVersion); // Disabled for security - avoid logging user data in production
       if (!currVersion) return;
 
       const featureFlags =

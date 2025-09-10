@@ -41,7 +41,7 @@ export const signIn = ({
     .then(() => onSuccess())
     .catch((e: AxiosError<SignInError>) => {
       if (e.response?.status === 401 && !retry) {
-        // NOTE: access_token이 만료되거나 잘못된 경우, 1번 더 다시 로그인 시도
+        // NOTE: If access_token is expired or invalid, retry login once more
         document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         signIn({ signInInfo, onSuccess, onError, retry: true });
         return;
@@ -62,7 +62,7 @@ export const checkIfSignIn = async () => {
     useBoundStore.getState().setMyProfile({ ...user, timezone: currentTimezone });
     useBoundStore.getState().setFeatureFlags();
 
-    // 비밀번호를 변경하지 않았다면 비밀번호 변경 페이지로 리다이렉트
+    // Redirect to password change page if password hasn't been changed
     if (!user.has_changed_pw) {
       redirect('/settings/reset-password?first_login=true');
       return user;
@@ -72,7 +72,7 @@ export const checkIfSignIn = async () => {
     resetBoundStores();
     setItemToSessionStorage<ScrollPositionStore>(SESSION_STORAGE_KEY, {});
 
-    // FIXME 연구가 끝나면 기존 /signin 경로로 변경 (아래 주석 해제)
+    // FIXME Change to existing /signin path when research is finished (uncomment below)
     // return redirect('/research-intro');
     return redirect('/signin');
   }
@@ -252,7 +252,7 @@ export const confirmPassword = ({
 };
 
 // reset password
-// id, token이 있으면 reset-password/:id/:token/로 요청 (from 비밀번호 변경 이메일)
+// If id, token exist, request to reset-password/:id/:token/ (from password change email)
 export const resetPassword = ({
   id,
   token,

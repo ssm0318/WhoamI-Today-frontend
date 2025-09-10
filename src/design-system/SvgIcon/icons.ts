@@ -1,4 +1,4 @@
-// 아이콘이 추가되면 여기에도 추가 해주세요
+// Please add new icons here when they are added
 
 /** @deprecated ver1 icon */
 const moment_mood_normal = 'moment_mood_normal';
@@ -120,7 +120,7 @@ const ping_send = 'ping_send';
 // Note
 const delete_image = 'delete_image';
 
-// FIXME: 하단 탭 아이콘 교체
+// FIXME: Replace bottom tab icons
 const my_profile = 'my_profile';
 const friends_active = 'friends_active';
 const friends_inactive = 'friends_inactive';
