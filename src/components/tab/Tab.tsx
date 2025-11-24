@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
 
-import FloatingButton from '@components/header/floating-button/FloatingButton';
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { resetScrollPosition } from '@hooks/useRestoreScrollPosition';
@@ -11,7 +9,7 @@ import { NavTabItem, StyledTabItem, TabWrapper } from './Tab.styled';
 
 interface TabItemProps {
   to: string;
-  type: 'friends' | 'my' | 'questions' | 'feed';
+  type: 'friends' | 'my' | 'questions' | 'feed' | 'discover' | 'chats';
   size?: number;
 }
 
@@ -45,7 +43,7 @@ function TabItem({ to, type, size = 48 }: TabItemProps) {
             />
           ) : (
             <StyledTabItem>
-              {/* {type === 'chats' && unReadMsgCnt > 0 && (
+              {/* {type === 'chats' && unReadMsg  Cnt > 0 && (
                 <StyledMessageCount t={-7} l="70%" pv={1} ph={5}>
                   <Typo type="label-small">{unReadMsgCnt > 999 ? '999+' : unReadMsgCnt}</Typo>
                 </StyledMessageCount>
@@ -63,26 +61,28 @@ function TabItem({ to, type, size = 48 }: TabItemProps) {
 }
 
 export default function Tab() {
-  const location = useLocation();
+  // const location = useLocation();
   const { featureFlags } = useBoundStore(UserSelector);
 
-  const showFloatingButton =
-    location.pathname === '/friends' ||
-    location.pathname === '/feed' ||
-    location.pathname === '/my' ||
-    location.pathname === '/questions';
+  // const showFloatingButton =
+  //   location.pathname === '/friends' ||
+  //   location.pathname === '/feed' ||
+  //   location.pathname === '/my' ||
+  //   location.pathname === '/questions';
 
   return (
     <TabWrapper>
       <Layout.FlexRow w="100%" justifyContent="space-evenly" alignItems="center" pt={4}>
         {featureFlags?.friendList && <TabItem to="/friends" type="friends" size={28} />}
         {featureFlags?.friendFeed && <TabItem to="/feed" type="friends" size={28} />}
+        {featureFlags?.discover && <TabItem to="/discover" type="discover" size={28} />}
+        {featureFlags?.pingTab && <TabItem to="/ping" type="chats" size={28} />}
         <TabItem to="/my" type="my" size={28} />
         {/* <TabItem to="/chats" type="chats" size={28} /> */}
-        {featureFlags?.friendList && <TabItem to="/questions" type="questions" size={28} />}
+        {/* {featureFlags?.friendList && <TabItem to="/questions" type="questions" size={28} />} */}
         {/* <TabItem to="/feed" type="feed" size={28} /> */}
       </Layout.FlexRow>
-      {showFloatingButton && <FloatingButton />}
+      {/* {showFloatingButton && <FloatingButton />} */}
     </TabWrapper>
   );
 }

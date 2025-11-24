@@ -79,6 +79,7 @@ const star_outline = 'star_outline';
 const friend_requests = 'friend_requests';
 const friend_pinned = 'friend_pinned';
 const friend_unpinned = 'friend_unpinned';
+const friend_item_chat = 'friend_item_chat';
 
 // My
 const checkbox_default = 'checkbox_default';
@@ -132,6 +133,8 @@ const chats_active = 'chats_active';
 const chats_inactive = 'chats_inactive';
 const questions_active = 'questions_active';
 const questions_inactive = 'questions_inactive';
+const discover_active = 'discover_active';
+const discover_inactive = 'discover_inactive';
 
 const delete_button = 'delete_button';
 const top_navigation_friend = 'top_navigation_friend';
@@ -194,6 +197,8 @@ export {
   delete_button,
   delete_default,
   delete_image,
+  discover_active,
+  discover_inactive,
   dots_menu,
   edit,
   edit_filled,
@@ -209,6 +214,7 @@ export {
   favorite_true,
   feed_active,
   feed_inactive,
+  friend_item_chat,
   friend_pinned,
   friend_requests,
   friend_unpinned,
