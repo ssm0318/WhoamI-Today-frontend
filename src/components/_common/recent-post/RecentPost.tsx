@@ -8,11 +8,10 @@ interface Props {
   recentPost: Note;
 }
 function RecentPost({ recentPost }: Props) {
-  console.log('recentPost', recentPost);
   const { author, created_at, content } = recentPost;
 
   const handleClickMore = () => {
-    console.log('handleClickMore');
+    // TODO(Gina): 더 보기 바텀 시트 연결
   };
 
   return (
@@ -39,12 +38,14 @@ function RecentPost({ recentPost }: Props) {
           </Layout.FlexRow>
         </Layout.FlexRow>
 
-        {/* content (글자수 제한) */}
+        {/* content */}
+        {/* TODO(Gina): 기획 확정되면 글자수 제한 추가 */}
         <Typo type="body-large" color="BLACK">
           {content}
         </Typo>
 
         {/* PostFooter */}
+        {/* TODO(Gina): 기획 확정되면 PostFooter 추가 */}
       </Layout.FlexCol>
     </Container>
   );
