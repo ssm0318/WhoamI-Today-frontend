@@ -50,14 +50,7 @@ function FriendsList() {
       .flatMap(({ results }) => results || [])
       .filter((user) => !user.is_hidden);
 
-    // eslint-disable-next-line no-console
-    console.log('FriendsList - allFriends:', allFriends);
-    // eslint-disable-next-line no-console
-    console.log('FriendsList - allFriendsList:', allFriendsList);
-    // eslint-disable-next-line no-console
-    console.log('FriendsList - allFriendsList length:', allFriendsList.length);
     allFriendsList.forEach((friend) => {
-      // eslint-disable-next-line no-console
       console.log(
         `Friend: ${friend.username}, connection_status: ${friend.connection_status}, is_hidden: ${friend.is_hidden}`,
       );
@@ -70,11 +63,6 @@ function FriendsList() {
 
     // 테스트용: CloseFriends 선택 시 빈 배열 반환
     const filtered = selectedType === 'close' ? [] : allFriendsList;
-
-    // eslint-disable-next-line no-console
-    console.log('FriendsList - filtered:', filtered);
-    // eslint-disable-next-line no-console
-    console.log('FriendsList - filtered length:', filtered.length);
 
     return {
       allFriendsCount: allFriendsList.length,

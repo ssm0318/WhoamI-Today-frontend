@@ -95,7 +95,7 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
 
       {/* Status/Mood Chips */}
       <Layout.FlexCol gap={4}>
-        <Layout.FlexRow gap={4}>
+        <Layout.FlexRow gap={4} style={{ minHeight: track_id ? 28 : undefined }}>
           {social_battery && <SocialBatteryChip socialBattery={social_battery} />}
           {track_id && (
             <SpotifyMusic
@@ -143,7 +143,7 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
       {isBottomSheetVisible && (
         <FriendRecentUpdatesBottomSheet
           visible={isBottomSheetVisible}
-          username={username}
+          userProfile={user}
           closeBottomSheet={handleCloseBottomSheet}
         />
       )}

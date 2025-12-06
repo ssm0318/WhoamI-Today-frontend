@@ -595,7 +595,7 @@
         "add_now": "지금 추가하기"
       },
       "select_close_friends": {
-        "title": "Select close friends",
+        "title": "친한 친구 선택",
         "selected": "명 선택됨",
         "no_selection": "친구를 선택해주세요",
         "no_friends_available": "추가할 수 있는 친구가 없습니다",
@@ -603,6 +603,9 @@
         "add_to_close_friends": "Add to close friends",
         "success": "친한 친구로 추가되었습니다",
         "error": "오류가 발생했습니다"
+      },
+      "latest_updates": {
+        "title": "{{username}} 이번 주"
       }
     },
     "explore_friends": {

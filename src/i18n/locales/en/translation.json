@@ -611,6 +611,9 @@
                 "add_to_close_friends": "Add to close friends",
                 "success": "Added as close friends",
                 "error": "An error occurred"
+            }, 
+            "latest_updates": {
+                "title": "{{username}} this week"
             }
         },
         "explore_friends": {

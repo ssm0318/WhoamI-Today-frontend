@@ -19,9 +19,17 @@ interface CommentListProps {
   inputFocus: boolean;
   setInputFocus: Dispatch<SetStateAction<boolean>>;
   setReload: (reload: boolean) => void;
+  bottomOffset?: number;
 }
 
-function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: CommentListProps) {
+function CommentList({
+  postType,
+  post,
+  inputFocus,
+  setInputFocus,
+  setReload,
+  bottomOffset,
+}: CommentListProps) {
   const footerRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { featureFlags } = useBoundStore(UserSelector);
@@ -118,7 +126,7 @@ function CommentList({ postType, post, inputFocus, setInputFocus, setReload }: C
       </Layout.FlexCol>
       <StyledCommentListFooter
         ref={footerRef}
-        b={BOTTOM_TABBAR_HEIGHT}
+        b={bottomOffset !== undefined ? bottomOffset : BOTTOM_TABBAR_HEIGHT}
         w="100%"
         bgColor="WHITE"
         style={{
