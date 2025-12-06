@@ -1,4 +1,4 @@
-import { CheckInBase } from '@models/checkIn';
+import { CheckInBase, SocialBattery } from '@models/checkIn';
 import { DayQuestion } from '@models/post';
 import { User } from '@models/user';
 import { PaginationResponse } from './common';
@@ -22,6 +22,7 @@ export interface UpdatedProfile extends User {
   track_id?: string;
   description: string;
   unread_ping_count: number;
+  social_battery?: SocialBattery | null;
 }
 
 export type GetAllFriendsResponse = PaginationResponse<UpdatedProfile[]>;

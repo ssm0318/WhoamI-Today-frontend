@@ -590,6 +590,29 @@
         }
     },
     "friends": {
+        "list": {
+            "all_friends": "All Friends",
+            "close_friend": "Close Friends",
+            "latest_update": "Latest Update",
+            "view_all": "View All",
+            "no_friends": {
+                "all_friends_title": "No friends yet",
+                "all_friends_description": "Add friends to connect and share with.",
+                "close_friends_title": "No close friends yet",
+                "close_friends_description": "Looks like you're gatekeeping your inner circle a little too hard.",
+                "add_now": "Add now"
+            },
+            "select_close_friends": {
+                "title": "Select close friends",
+                "selected": "selected",
+                "no_selection": "Please select friends",
+                "no_friends_available": "No friends available to add",
+                "confirm": "Confirm",
+                "add_to_close_friends": "Add to close friends",
+                "success": "Added as close friends",
+                "error": "An error occurred"
+            }
+        },
         "explore_friends": {
             "title": "Add Friends",
             "done": "Done",

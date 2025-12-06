@@ -582,6 +582,29 @@
     "see_more_questions": "질문 더보기"
   },
   "friends": {
+    "list": {
+      "all_friends": "친구 목록",
+      "close_friend": "친한 친구",
+      "latest_update": "최근 업데이트",
+      "view_all": "모두 보기",
+      "no_friends": {
+        "all_friends_title": "아직 친구가 없습니다",
+        "all_friends_description": "친구를 추가해서 함께 소통해보세요.",
+        "close_friends_title": "아직 친한 친구가 없습니다",
+        "close_friends_description": "내부 서클을 조금 더 열어보는 건 어떨까요?",
+        "add_now": "지금 추가하기"
+      },
+      "select_close_friends": {
+        "title": "Select close friends",
+        "selected": "명 선택됨",
+        "no_selection": "친구를 선택해주세요",
+        "no_friends_available": "추가할 수 있는 친구가 없습니다",
+        "confirm": "확인",
+        "add_to_close_friends": "Add to close friends",
+        "success": "친한 친구로 추가되었습니다",
+        "error": "오류가 발생했습니다"
+      }
+    },
     "explore_friends": {
       "title": "친구 탐색",
       "done": "완료",

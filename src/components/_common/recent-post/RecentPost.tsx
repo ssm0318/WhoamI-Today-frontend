@@ -1,51 +1,68 @@
+import { MouseEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Icon from '@components/_common/icon/Icon';
+import PostFooter from '@components/_common/post-footer/PostFooter';
 import { Layout, Typo } from '@design-system';
 import { Note } from '@models/post';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
-import Icon from '../icon/Icon';
-import { Container } from './RecentPost.styled';
+import { Container, ContentWrapper, FadeOutOverlay } from './RecentPost.styled';
 
 interface Props {
   recentPost: Note;
+  hideContent?: boolean;
 }
-function RecentPost({ recentPost }: Props) {
-  const { author, created_at, content } = recentPost;
+function RecentPost({ recentPost, hideContent = false }: Props) {
+  const { id, created_at, content } = recentPost;
+  const navigate = useNavigate();
 
-  const handleClickMore = () => {
-    // TODO(Gina): 더 보기 바텀 시트 연결
+  const handleClickMore = (e: MouseEvent) => {
+    e.stopPropagation();
+    // TODO: 더 보기 바텀 시트 연결
+  };
+
+  const handleClickPost = (e: MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/notes/${id}`);
+  };
+
+  const handleShowComments = () => {
+    navigate(`/notes/${id}`);
+  };
+
+  const handleSetInputFocus = () => {
+    // 포커스는 상세 페이지에서 처리
   };
 
   return (
-    <Container>
-      <Layout.FlexCol w="100%">
-        {/* 이름, 작성시간 & more 버튼 */}
+    <Container onClick={handleClickPost}>
+      <Layout.FlexCol w="100%" gap={8}>
+        {/* 시간 & more 버튼 */}
         <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
-          <Layout.FlexRow gap={4}>
-            <Typo type="label-medium" color="MEDIUM_GRAY">
-              {author}
-            </Typo>
-            <Typo type="label-medium" color="MEDIUM_GRAY">
-              •
-            </Typo>
-            <Typo type="label-medium" color="MEDIUM_GRAY">
-              {convertTimeDiffByString({
-                now: new Date(),
-                day: new Date(created_at),
-              })}
-            </Typo>
-          </Layout.FlexRow>
-          <Layout.FlexRow>
-            <Icon name="dots_menu" size={24} onClick={handleClickMore} />
-          </Layout.FlexRow>
+          <Typo type="label-medium" color="MEDIUM_GRAY">
+            {convertTimeDiffByString({
+              now: new Date(),
+              day: new Date(created_at),
+            })}
+          </Typo>
+          <Icon name="dots_menu" size={24} onClick={handleClickMore} />
         </Layout.FlexRow>
 
         {/* content */}
-        {/* TODO(Gina): 기획 확정되면 글자수 제한 추가 */}
-        <Typo type="body-large" color="BLACK">
-          {content}
-        </Typo>
+        <ContentWrapper hideContent={hideContent}>
+          <Typo type="body-large" color="BLACK">
+            {content}
+          </Typo>
+          {hideContent && <FadeOutOverlay />}
+        </ContentWrapper>
 
         {/* PostFooter */}
-        {/* TODO(Gina): 기획 확정되면 PostFooter 추가 */}
+        <PostFooter
+          isMyPage={false}
+          post={recentPost}
+          displayType="LIST"
+          showComments={handleShowComments}
+          setInputFocus={handleSetInputFocus}
+        />
       </Layout.FlexCol>
     </Container>
   );

@@ -1,15 +1,16 @@
 import styled from 'styled-components';
-import { Layout } from '@design-system';
+import { Colors, Layout } from '@design-system';
 
-export const Container = styled(Layout.FlexRow)`
+export const Container = styled(Layout.FlexCol)`
   background-color: #eee6f4;
-  padding: 12px 16px;
-  border-radius: 12px;
 `;
 
-export const RecentPostConnector = styled.div`
-  width: 10px;
-  height: 8px;
-  background-color: #eee6f4;
-  margin-left: 32px;
+export const StarIconContainer = styled(Layout.FlexRow).attrs({
+  alignItems: 'center',
+  justifyContent: 'center',
+})`
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: ${Colors.SECONDARY};
 `;
