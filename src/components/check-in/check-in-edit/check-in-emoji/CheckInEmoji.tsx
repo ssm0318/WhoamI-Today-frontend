@@ -59,7 +59,8 @@ function CheckInEmoji({ mood, onDelete, onSelectEmoji }: CheckInEmojiProps) {
           ) : (
             <Icon
               onClick={handleClickEmoji}
-              name={emojiPickerTarget ? 'add_reaction_active' : 'add_reaction_default'}
+              // name={emojiPickerTarget ? 'add_reaction_active' : 'add_reaction_default'}
+              name="add_reaction"
               size={24}
             />
           )}

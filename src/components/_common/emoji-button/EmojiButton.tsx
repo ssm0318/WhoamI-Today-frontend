@@ -17,8 +17,8 @@ function EmojiButton({ post, onClick }: EmojiButtonProps) {
   };
 
   return (
-    <Layout.FlexRow alignItems="center" m={0}>
-      {id && <Icon name="ping_emoji_add" size={23} onClick={handleClick} />}
+    <Layout.FlexRow w={48} h={48} alignItems="center" justifyContent="center" m={0}>
+      {id && <Icon name="add_reaction" size={23} onClick={handleClick} />}
     </Layout.FlexRow>
   );
 }

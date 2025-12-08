@@ -7,7 +7,6 @@ import CommonDialog, {
 import { Typo } from '@design-system';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
-import { addFriendToFavorite, deleteFavorite } from '@utils/apis/friends';
 import { breakFriend, reportUser } from '@utils/apis/user';
 
 interface UserMoreModalProps {
@@ -24,7 +23,7 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
   const [showAlert, setShowAlert] = useState<AlertProps>();
   const { featureFlags } = useBoundStore((state) => ({ featureFlags: state.featureFlags }));
 
-  const { id, username, are_friends, is_favorite } = user;
+  const { id, username, are_friends, connection_status } = user;
 
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
@@ -38,11 +37,23 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
     closeMoreModal();
   };
 
-  const handleClickAddToFavorite = async () => {
+  // const handleClickAddToFavorite = async () => {
+  //   closeMoreModal();
+
+  //   if (is_favorite) await deleteFavorite(id);
+  //   else await addFriendToFavorite(id);
+
+  //   callback?.();
+  // };
+
+  const handleClickAddToCloseFriends = async () => {
     closeMoreModal();
 
-    if (is_favorite) await deleteFavorite(id);
-    else await addFriendToFavorite(id);
+    console.log('connection_status', connection_status);
+    console.log('id', id);
+
+    // if (connection_status === 'close_friend') await removeFriendFromCloseFriends(id);
+    // else await addFriendToCloseFriends(id);
 
     callback?.();
   };
@@ -107,10 +118,19 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
       <BottomMenuDialog visible={isVisible} onClickClose={closeMoreModal}>
         {are_friends && (
           <>
-            {featureFlags?.friendList && (
+            {/* {featureFlags?.friendList && (
               <button type="button" onClick={handleClickAddToFavorite}>
                 <Typo type="button-large" color="DARK_GRAY">
                   {is_favorite ? t('menu.remove_from_favorite') : t('menu.add_to_favorite')}
+                </Typo>
+              </button>
+            )} */}
+            {featureFlags?.friendList && (
+              <button type="button" onClick={handleClickAddToCloseFriends}>
+                <Typo type="button-large" color="DARK_GRAY">
+                  {connection_status === 'close_friend'
+                    ? t('menu.remove_from_close_friends')
+                    : t('menu.add_to_close_friends')}
                 </Typo>
               </button>
             )}

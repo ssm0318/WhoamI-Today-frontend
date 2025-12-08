@@ -213,6 +213,8 @@
         "are_you_sure_you_want_to_delete_this_friend": "Remove this friend?",
         "more_modal": {
             "menu": {
+                "add_to_close_friends": "Add to Close Friends",
+                "remove_from_close_friends": "Remove from Close Friends",
                 "add_to_favorite": "Add to Favorites",
                 "remove_from_favorite": "Remove from Favorites",
                 "unfriend": "Unfriend",

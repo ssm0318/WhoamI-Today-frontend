@@ -210,6 +210,8 @@
     "are_you_sure_you_want_to_delete_this_friend": "정말로 이 친구를 삭제하시겠습니까?",
     "more_modal": {
       "menu": {
+        "add_to_close_friends": "친한 친구 추가",
+        "remove_from_close_friends": "친한 친구 삭제",
         "add_to_favorite": "즐겨찾기",
         "remove_from_favorite": "즐겨찾기 삭제",
         "unfriend": "친구 삭제",

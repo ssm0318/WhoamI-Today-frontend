@@ -12,7 +12,7 @@ interface Props {
   hideContent?: boolean;
 }
 function RecentPost({ recentPost, hideContent = false }: Props) {
-  const { id, created_at, content } = recentPost;
+  const { id, created_at, content, current_user_read } = recentPost;
   const navigate = useNavigate();
 
   const handleClickMore = (e: MouseEvent) => {
@@ -35,15 +35,26 @@ function RecentPost({ recentPost, hideContent = false }: Props) {
 
   return (
     <Container onClick={handleClickPost}>
-      <Layout.FlexCol w="100%" gap={8}>
+      <Layout.FlexCol w="100%">
         {/* 시간 & more 버튼 */}
         <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
-          <Typo type="label-medium" color="MEDIUM_GRAY">
-            {convertTimeDiffByString({
-              now: new Date(),
-              day: new Date(created_at),
-            })}
-          </Typo>
+          <Layout.FlexRow gap={10} alignItems="center">
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              {convertTimeDiffByString({
+                now: new Date(),
+                day: new Date(created_at),
+              })}
+            </Typo>
+            {/* NEW BADGE */}
+            {current_user_read && (
+              <Layout.FlexRow bgColor="TERTIARY_BLUE" rounded={4} ph={8} pv={2}>
+                <Typo type="body-small" color="WHITE">
+                  NEW
+                </Typo>
+              </Layout.FlexRow>
+            )}
+          </Layout.FlexRow>
+
           <Icon name="dots_menu" size={24} onClick={handleClickMore} />
         </Layout.FlexRow>
 

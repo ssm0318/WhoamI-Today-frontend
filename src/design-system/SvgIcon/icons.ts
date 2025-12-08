@@ -80,6 +80,7 @@ const friend_requests = 'friend_requests';
 const friend_pinned = 'friend_pinned';
 const friend_unpinned = 'friend_unpinned';
 const friend_item_chat = 'friend_item_chat';
+const close_friend = 'close_friend';
 
 // My
 const checkbox_default = 'checkbox_default';
@@ -146,6 +147,7 @@ const edit = 'edit';
 const new_add = 'new_add';
 const add_reaction_default = 'add_reaction_default';
 const add_reaction_active = 'add_reaction_active';
+const add_reaction = 'add_reaction';
 
 // Notification
 const prompts = 'prompts';
@@ -160,6 +162,7 @@ export {
   add_emoji,
   add_note,
   add_post,
+  add_reaction,
   add_reaction_active,
   add_reaction_default,
   add_user,
@@ -190,6 +193,7 @@ export {
   circle_check_unchecked,
   close,
   close_comment,
+  close_friend,
   comment,
   comment_message,
   comment_reply,

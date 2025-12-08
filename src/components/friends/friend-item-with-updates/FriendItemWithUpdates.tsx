@@ -1,5 +1,4 @@
 import { MouseEvent, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -10,7 +9,7 @@ import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatt
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { Connection, UpdatedProfile } from '@models/api/friends';
 import { Note } from '@models/post';
-import { Container, StarIconContainer } from './FriendItemWithUpdates.styled';
+import { Container } from './FriendItemWithUpdates.styled';
 
 interface Props {
   user: UpdatedProfile;
@@ -29,7 +28,6 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
     connection_status,
   } = user;
 
-  const [t] = useTranslation('translation', { keyPrefix: 'friends.list' });
   const navigate = useNavigate();
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
 
@@ -42,11 +40,9 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
     navigate(`/users/${id}/ping`);
   };
 
-  const handleClickViewAll = (e: MouseEvent) => {
-    e.stopPropagation();
-    if (recentPost) {
-      setIsBottomSheetVisible(true);
-    }
+  const handleClickFriendBadge = () => {
+    // TODO: 친한 친구 토글 (CLOSE FRIEND <-> FRIEND)
+    console.log('handleClickFriendBadge');
   };
 
   const handleCloseBottomSheet = () => {
@@ -63,11 +59,13 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
             <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 100 }}>
               {username}
             </Typo>
-            {connection_status === Connection.CLOSE_FRIEND && (
-              <StarIconContainer>
-                <SvgIcon name="star" size={16} color="WHITE" />
-              </StarIconContainer>
-            )}
+            <SvgIcon
+              name="close_friend"
+              size={16}
+              // TODO: 친구용 아이콘으로 실제 변경 필요
+              color={connection_status === Connection.CLOSE_FRIEND ? 'BLACK' : 'WHITE'}
+              onClick={handleClickFriendBadge}
+            />
           </Layout.FlexRow>
         </Layout.FlexRow>
         <Layout.FlexRow style={{ position: 'relative' }}>
@@ -124,22 +122,8 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
         </Layout.FlexRow>
       </Layout.FlexCol>
 
-      {/* Latest Update 섹션 */}
-      {recentPost && (
-        <>
-          <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
-            <Typo type="label-large" color="BLACK" fontWeight={700}>
-              {t('latest_update')}
-            </Typo>
-            <Layout.FlexRow gap={4} alignItems="center" onClick={handleClickViewAll}>
-              <Typo type="label-large" color="PRIMARY" underline>
-                {t('view_all')}
-              </Typo>
-            </Layout.FlexRow>
-          </Layout.FlexRow>
-          <RecentPost recentPost={recentPost} hideContent />
-        </>
-      )}
+      {/* Recent Post 영역 (유저마다 무조건 하나씩은 있음) */}
+      {recentPost && <RecentPost recentPost={recentPost} hideContent />}
       {isBottomSheetVisible && (
         <FriendRecentUpdatesBottomSheet
           visible={isBottomSheetVisible}
