@@ -16,6 +16,8 @@ function Header() {
       return <FriendHeader />;
     case '/feed':
       return <CommonHeader title={t('nav_tab.feed')} />;
+    case '/discover':
+      return <CommonHeader title={t('nav_tab.discover')} />;
     case '/my':
       return <CommonHeader title={t('header.my')} />;
     case '/questions':
