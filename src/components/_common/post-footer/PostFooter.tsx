@@ -155,10 +155,17 @@ function PostFooter({
       }}
       alignItems="center"
     >
-      <Layout.FlexRow gap={10} alignItems="center">
+      <Layout.FlexRow alignItems="center">
         {!isMyPage && (
           <>
-            <LikeButton postType={type} post={post} iconSize={23} m={0} refresh={refresh} />
+            <LikeButton
+              postType={type}
+              post={post}
+              iconSize={23}
+              m={0}
+              outerSize={48}
+              refresh={refresh}
+            />
             <Layout.FlexRow ref={toggleButtonRef} alignItems="center">
               {(myEmojiList || []).length === 0 ? (
                 <EmojiButton post={post} onClick={handleClickEmojiButton} />
@@ -172,7 +179,9 @@ function PostFooter({
           </>
         )}
         {displayType === 'LIST' && (
-          <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
+          <Layout.FlexRow w={48} h={48} alignItems="center" justifyContent="center">
+            <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
+          </Layout.FlexRow>
         )}
         {sampleUserList?.length > 0 && (
           <Layout.FlexRow onClick={handleClickReactions}>

@@ -7,6 +7,10 @@ export enum POST_TYPE {
   QUESTION = 'Question',
   NOTE = 'Note',
   COMMENT = 'Comment',
+  // 새로 추가된 타입
+  SELECT_PERSONA = 'SelectPersona',
+  SELECT_INTEREST = 'SelectInterest',
+  HIGHLIGHT = 'Highlight',
 }
 
 export interface ShareSettings {

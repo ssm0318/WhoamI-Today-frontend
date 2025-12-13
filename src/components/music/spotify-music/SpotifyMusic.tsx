@@ -5,7 +5,7 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
 import { User } from '@models/user';
 import { FontType } from 'src/design-system/Font/Font.types';
-import { StyledSpotifyMusic } from './SpotifyMusic.styled';
+import { SkeletonBox, StyledSpotifyMusic } from './SpotifyMusic.styled';
 
 interface Props {
   /* track id 또는 track data 전달. */
@@ -28,6 +28,7 @@ function SpotifyMusic({
   onClick,
 }: Props) {
   const [trackData, setTrackData] = useState<Track | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const spotifyManager = SpotifyManager.getInstance();
 
   const [showMusicDetail, setShowMusicDetail] = useState(false);
@@ -43,15 +44,32 @@ function SpotifyMusic({
   };
 
   useEffect(() => {
-    if (!track) return setTrackData(null);
-    if (typeof track !== 'string') return setTrackData(track);
-    spotifyManager.getTrack(track).then(setTrackData);
+    if (!track) {
+      setTrackData(null);
+      setIsLoading(false);
+      return;
+    }
+    if (typeof track !== 'string') {
+      setTrackData(track);
+      setIsLoading(false);
+      return;
+    }
+    setIsLoading(true);
+    spotifyManager
+      .getTrack(track)
+      .then((data) => {
+        setTrackData(data);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
   }, [spotifyManager, track]);
 
   return (
     <>
       <StyledSpotifyMusic type="button" onClick={handleClickMusic} disabled={false}>
-        {!!trackData && (
+        {isLoading ? (
           <Layout.FlexRow
             w="100%"
             outline="SPOTIFY_GREEN"
@@ -64,26 +82,47 @@ function SpotifyMusic({
             bgColor="WHITE"
             style={{
               ...containerStyle,
+              minHeight: 28,
             }}
           >
-            {useAlbumImg ? (
-              <img
-                src={trackData.album.images[0].url}
-                width={16}
-                height={16}
-                alt={`${trackData.name}-album`}
-                style={{
-                  borderRadius: 4,
-                }}
-              />
-            ) : (
-              <SpotifyIcon />
-            )}
-            <Typo type={fontType} numberOfLines={1}>
-              {trackData.artists[0].name} - {trackData.name}
-            </Typo>
-            {useAlbumImg && <SpotifyIcon />}
+            <SpotifyIcon />
+            <SkeletonBox />
           </Layout.FlexRow>
+        ) : (
+          !!trackData && (
+            <Layout.FlexRow
+              w="100%"
+              outline="SPOTIFY_GREEN"
+              rounded={12}
+              justifyContent="center"
+              alignItems="center"
+              pv={4}
+              ph={8}
+              gap={4}
+              bgColor="WHITE"
+              style={{
+                ...containerStyle,
+              }}
+            >
+              {useAlbumImg ? (
+                <img
+                  src={trackData.album.images[0].url}
+                  width={16}
+                  height={16}
+                  alt={`${trackData.name}-album`}
+                  style={{
+                    borderRadius: 4,
+                  }}
+                />
+              ) : (
+                <SpotifyIcon />
+              )}
+              <Typo type={fontType} numberOfLines={1}>
+                {trackData.artists[0].name} - {trackData.name}
+              </Typo>
+              {useAlbumImg && <SpotifyIcon />}
+            </Layout.FlexRow>
+          )
         )}
       </StyledSpotifyMusic>
       {useDetailBottomSheet && (

@@ -5,7 +5,8 @@
     "friend": "친구",
     "close_friend": "친한 친구",
     "are_you_sure_you_want_to_delete_this_friend": "이 친구를 삭제하시겠습니까?",
-    "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+    "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+    "view_all_updates_this_week": "이번주 모든 업데이트 보기"
   },
   "common": {
     "done": "완료",
@@ -105,7 +106,8 @@
     "my": "MY",
     "chats": "채팅",
     "questions": "질문",
-    "feed": "피드"
+    "feed": "피드",
+    "discover": "발견"
   },
   "header": {
     "my": "내 프로필",
@@ -208,6 +210,8 @@
     "are_you_sure_you_want_to_delete_this_friend": "정말로 이 친구를 삭제하시겠습니까?",
     "more_modal": {
       "menu": {
+        "add_to_close_friends": "친한 친구 추가",
+        "remove_from_close_friends": "친한 친구 삭제",
         "add_to_favorite": "즐겨찾기",
         "remove_from_favorite": "즐겨찾기 삭제",
         "unfriend": "친구 삭제",
@@ -580,6 +584,32 @@
     "see_more_questions": "질문 더보기"
   },
   "friends": {
+    "list": {
+      "all_friends": "친구 목록",
+      "close_friend": "친한 친구",
+      "latest_update": "최근 업데이트",
+      "view_all": "모두 보기",
+      "no_friends": {
+        "all_friends_title": "아직 친구가 없습니다",
+        "all_friends_description": "친구를 추가해서 함께 소통해보세요.",
+        "close_friends_title": "아직 친한 친구가 없습니다",
+        "close_friends_description": "내부 서클을 조금 더 열어보는 건 어떨까요?",
+        "add_now": "지금 추가하기"
+      },
+      "select_close_friends": {
+        "title": "친한 친구 선택",
+        "selected": "명 선택됨",
+        "no_selection": "친구를 선택해주세요",
+        "no_friends_available": "추가할 수 있는 친구가 없습니다",
+        "confirm": "확인",
+        "add_to_close_friends": "Add to close friends",
+        "success": "친한 친구로 추가되었습니다",
+        "error": "오류가 발생했습니다"
+      },
+      "latest_updates": {
+        "title": "{{username}} 이번 주"
+      }
+    },
     "explore_friends": {
       "title": "친구 탐색",
       "done": "완료",

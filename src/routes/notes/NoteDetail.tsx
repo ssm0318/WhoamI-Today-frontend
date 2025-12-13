@@ -55,7 +55,7 @@ export function NoteDetail() {
   };
 
   return (
-    <MainScrollContainer>
+    <MainScrollContainer pb={0}>
       <SubHeader
         title={
           noteDetail.data
@@ -85,6 +85,7 @@ export function NoteDetail() {
             setReload={setReload}
             inputFocus={inputFocus}
             setInputFocus={setInputFocus}
+            bottomOffset={0}
           />
         </Layout.FlexCol>
       )}

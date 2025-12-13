@@ -18,10 +18,11 @@ interface LikeButtonProps {
   post: MomentPost | QuestionResponse | Response | Comment | Note | PrivateComment;
   m?: number;
   iconSize: number;
+  outerSize?: number;
   refresh?: () => void;
 }
 
-function LikeButton({ postType, post, iconSize, m = 6, refresh }: LikeButtonProps) {
+function LikeButton({ postType, post, iconSize, m = 6, outerSize = 48, refresh }: LikeButtonProps) {
   const { id, current_user_like_id } = post;
   const [t] = useTranslation('translation');
   const { openToast } = useBoundStore((state) => ({
@@ -83,7 +84,7 @@ function LikeButton({ postType, post, iconSize, m = 6, refresh }: LikeButtonProp
   };
 
   return (
-    <Layout.FlexRow alignItems="center">
+    <Layout.FlexRow alignItems="center" w={outerSize} h={outerSize} justifyContent="center">
       {id && (
         <S.IconButton type="button" m={m} onClick={toggleLike} size={iconSize} disabled={isLoading}>
           <SvgIcon name={likeId ? 'like_filled' : 'like'} size={iconSize} />

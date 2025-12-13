@@ -17,6 +17,10 @@ export enum FeatureFlagKey {
   PERSONA = 'persona',
   /** 게시글 작성시 기본 설정 친한 친구 타입 플래그 */
   POST_VISIBILITY_DEFAULT_CLOSE_FRIEND = 'postVisibilityDefaultCloseFriend',
+  /** DISCOVER 탭 */
+  DISCOVER = 'discover',
+  /** Ping 탭 */
+  PING_TAB = 'pingTab',
 }
 
 export type FeatureFlagMap = { [feature in FeatureFlagKey]: boolean };
@@ -34,11 +38,13 @@ const DEFAULT_FLAGS = {
   [FeatureFlagKey.QUESTION_RESPONSE_FEATURE]: false,
   [FeatureFlagKey.PERSONA]: false,
   [FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]: false,
+  [FeatureFlagKey.DISCOVER]: false,
+  [FeatureFlagKey.PING_TAB]: false,
 };
 
 export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
   [VersionType.DEFAULT]: { ...DEFAULT_FLAGS },
-  // Experiment (Ver. Q)
+  // Experiment (Ver. A)
   [VersionType.EXPERIMENT]: {
     ...DEFAULT_FLAGS,
     [FeatureFlagKey.FRIEND_FEED]: false,
@@ -49,5 +55,7 @@ export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
     [FeatureFlagKey.QUESTION_RESPONSE_FEATURE]: true,
     [FeatureFlagKey.PERSONA]: true,
     [FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]: true,
+    [FeatureFlagKey.DISCOVER]: true,
+    [FeatureFlagKey.PING_TAB]: true,
   },
 };

@@ -79,6 +79,8 @@ const star_outline = 'star_outline';
 const friend_requests = 'friend_requests';
 const friend_pinned = 'friend_pinned';
 const friend_unpinned = 'friend_unpinned';
+const friend_item_chat = 'friend_item_chat';
+const close_friend = 'close_friend';
 
 // My
 const checkbox_default = 'checkbox_default';
@@ -132,6 +134,8 @@ const chats_active = 'chats_active';
 const chats_inactive = 'chats_inactive';
 const questions_active = 'questions_active';
 const questions_inactive = 'questions_inactive';
+const discover_active = 'discover_active';
+const discover_inactive = 'discover_inactive';
 
 const delete_button = 'delete_button';
 const top_navigation_friend = 'top_navigation_friend';
@@ -143,6 +147,7 @@ const edit = 'edit';
 const new_add = 'new_add';
 const add_reaction_default = 'add_reaction_default';
 const add_reaction_active = 'add_reaction_active';
+const add_reaction = 'add_reaction';
 
 // Notification
 const prompts = 'prompts';
@@ -157,6 +162,7 @@ export {
   add_emoji,
   add_note,
   add_post,
+  add_reaction,
   add_reaction_active,
   add_reaction_default,
   add_user,
@@ -187,6 +193,7 @@ export {
   circle_check_unchecked,
   close,
   close_comment,
+  close_friend,
   comment,
   comment_message,
   comment_reply,
@@ -194,6 +201,8 @@ export {
   delete_button,
   delete_default,
   delete_image,
+  discover_active,
+  discover_inactive,
   dots_menu,
   edit,
   edit_filled,
@@ -209,6 +218,7 @@ export {
   favorite_true,
   feed_active,
   feed_inactive,
+  friend_item_chat,
   friend_pinned,
   friend_requests,
   friend_unpinned,

@@ -5,7 +5,8 @@
         "friend": "Friend",
         "close_friend": "Close Friend",
         "are_you_sure_you_want_to_delete_this_friend": "Remove this friend?",
-        "temporary_error": "A temporary error occurred. Please try again later."
+        "temporary_error": "A temporary error occurred. Please try again later.",
+        "view_all_updates_this_week": "View all updates this week"
     },
     "common": {
         "done": "Done",
@@ -105,7 +106,8 @@
         "my": "MY",
         "chats": "Chats",
         "questions": "Questions",
-        "feed": "Feed"
+        "feed": "Feed",
+        "discover": "Discover"
     },
     "header": {
         "my": "My Profile",
@@ -211,6 +213,8 @@
         "are_you_sure_you_want_to_delete_this_friend": "Remove this friend?",
         "more_modal": {
             "menu": {
+                "add_to_close_friends": "Add to Close Friends",
+                "remove_from_close_friends": "Remove from Close Friends",
                 "add_to_favorite": "Add to Favorites",
                 "remove_from_favorite": "Remove from Favorites",
                 "unfriend": "Unfriend",
@@ -588,6 +592,32 @@
         }
     },
     "friends": {
+        "list": {
+            "all_friends": "All Friends",
+            "close_friend": "Close Friends",
+            "latest_update": "Latest Update",
+            "view_all": "View All",
+            "no_friends": {
+                "all_friends_title": "No friends yet",
+                "all_friends_description": "Add friends to connect and share with.",
+                "close_friends_title": "No close friends yet",
+                "close_friends_description": "Looks like you're gatekeeping your inner circle a little too hard.",
+                "add_now": "Add now"
+            },
+            "select_close_friends": {
+                "title": "Select close friends",
+                "selected": "selected",
+                "no_selection": "Please select friends",
+                "no_friends_available": "No friends available to add",
+                "confirm": "Confirm",
+                "add_to_close_friends": "Add to close friends",
+                "success": "Added as close friends",
+                "error": "An error occurred"
+            }, 
+            "latest_updates": {
+                "title": "{{username}} this week"
+            }
+        },
         "explore_friends": {
             "title": "Add Friends",
             "done": "Done",
