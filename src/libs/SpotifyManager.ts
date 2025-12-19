@@ -28,16 +28,24 @@ class SpotifyManager {
   };
 
   searchMusic = async (query: string, limit: number, offset: number): Promise<Track[]> => {
-    if (!this.spotifyApi) {
-      throw new Error('SpotifyApi is not initialized.');
-    }
+    if (!this.spotifyApi) throw new Error('SpotifyApi is not initialized.');
+
+    const q = query.trim().replace(/\s+/g, ' ');
+    if (!q) return [];
+
+    const params = new URLSearchParams({
+      q,
+      type: 'track',
+      limit: String(Math.min(Math.max(limit, 1), 50)),
+      offset: String(Math.min(Math.max(offset, 0), 1000)),
+    });
 
     try {
-      const result = (await this.spotifyApi.makeRequest(
-        'GET',
-        `search?q=${query}&type=track&limit=${limit}&offset=${offset}`,
-      )) as { tracks: { items: Track[] } };
-      return result.tracks.items;
+      const result = (await this.spotifyApi.makeRequest('GET', `search?${params.toString()}`)) as {
+        tracks: { items: Track[] };
+      };
+
+      return result.tracks.items ?? [];
     } catch (error) {
       console.error('Error searching music:', error);
       throw error;
