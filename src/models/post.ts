@@ -175,3 +175,15 @@ export enum PostVisibility {
   FRIENDS = 'friends',
   CLOSE_FRIENDS = 'close_friends',
 }
+
+export interface SelectInterest extends ContentsCommon {
+  type: POST_TYPE.SELECT_INTEREST;
+}
+
+export interface SelectPersona extends ContentsCommon {
+  type: POST_TYPE.SELECT_PERSONA;
+}
+
+export interface Highlight extends ContentsCommon {
+  type: POST_TYPE.HIGHLIGHT;
+}
