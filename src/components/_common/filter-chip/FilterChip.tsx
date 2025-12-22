@@ -1,4 +1,4 @@
-import { Typo } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import { ChipContainer } from './FilterChip.styled';
 
 interface FilterChipProps {
@@ -10,10 +10,12 @@ interface FilterChipProps {
 function FilterChip({ isSelected, onClick, label = 'Filter' }: FilterChipProps) {
   return (
     <ChipContainer isSelected={isSelected} onClick={onClick}>
+      <Layout.FlexRow justifyContent="center" alignItems="center">
+        {isSelected && <SvgIcon name="tick" size={16} />}
+      </Layout.FlexRow>
       <Typo type="body-medium" color="BLACK">
         {label}
       </Typo>
-      {/* <SvgIcon name="chevron_down" size={16} color="BLACK" /> */}
     </ChipContainer>
   );
 }

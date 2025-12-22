@@ -33,7 +33,7 @@ function Discover() {
     (post: Note | Response | SelectInterest | SelectPersona | Highlight) => {
       switch (post.type) {
         case POST_TYPE.NOTE:
-          return <RecentPost recentPost={post} hideContent />;
+          return <RecentPost recentPost={post} />;
         case POST_TYPE.RESPONSE:
           return null;
         case POST_TYPE.SELECT_INTEREST:
@@ -59,13 +59,19 @@ function Discover() {
                 key={filter}
                 label={DiscoverFilterLabel[filter]}
                 isSelected={selectedFilter.includes(filter)}
-                onClick={() => setSelectedFilter([...selectedFilter, filter])}
+                onClick={() => {
+                  if (selectedFilter.includes(filter)) {
+                    setSelectedFilter(selectedFilter.filter((f) => f !== filter));
+                  } else {
+                    setSelectedFilter([...selectedFilter, filter]);
+                  }
+                }}
               />
             ))}
           </S.ScrollableFilterRow>
 
           {/* POSTS -> Recent Posts */}
-          <Layout.FlexCol ph={16} gap={20}>
+          <Layout.FlexCol gap={20} mh={16}>
             {discoverPostList.map((post) => renderPostComponent(post))}
           </Layout.FlexCol>
 

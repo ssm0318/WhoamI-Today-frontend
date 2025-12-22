@@ -67,6 +67,7 @@ const close_comment = 'close_comment';
 const checkbox_rectangle_checked = 'checkbox_rectangle_checked';
 const checkbox_rectangle_default = 'checkbox_rectangle_default';
 const circle_check = 'circle_check';
+const tick = 'tick';
 
 const noti_icon_like = 'noti_icon_like';
 const noti_icon_emoji = 'noti_icon_emoji';
@@ -274,6 +275,7 @@ export {
   spotify,
   star,
   star_outline,
+  tick,
   top_navigation_back,
   top_navigation_chat,
   top_navigation_dots,

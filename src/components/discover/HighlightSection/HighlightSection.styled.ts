@@ -8,7 +8,7 @@ export const HighlightSectionWrapper = styled(Layout.FlexCol)`
   border-radius: 16px;
   padding: 24px;
   gap: 20px;
-  width: ${SCREEN_WIDTH - 20}px;
+  width: ${SCREEN_WIDTH - 32}px;
   max-width: 100%;
   box-sizing: border-box;
 `;

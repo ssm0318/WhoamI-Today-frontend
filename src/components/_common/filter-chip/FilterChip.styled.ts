@@ -12,6 +12,7 @@ export const ChipContainer = styled(Layout.FlexRow).attrs<ChipContainerProps>(({
   ph: 8,
   outline: 'BLACK',
   alignItems: 'center',
+  justifyContent: 'center',
   rounded: 20,
 }))<ChipContainerProps>`
   flex-shrink: 0;
