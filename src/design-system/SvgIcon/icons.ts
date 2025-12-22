@@ -66,6 +66,7 @@ const private_comment = 'private_comment';
 const close_comment = 'close_comment';
 const checkbox_rectangle_checked = 'checkbox_rectangle_checked';
 const checkbox_rectangle_default = 'checkbox_rectangle_default';
+const circle_check = 'circle_check';
 
 const noti_icon_like = 'noti_icon_like';
 const noti_icon_emoji = 'noti_icon_emoji';
@@ -189,6 +190,7 @@ export {
   checkbox_rectangle_default,
   chevron_down,
   chevron_up,
+  circle_check,
   circle_check_checked,
   circle_check_unchecked,
   close,

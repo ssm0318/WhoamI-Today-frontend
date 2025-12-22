@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import HashTagPill from '@components/_common/hash-tag-pill/HashTagPill';
+import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import { Layout, Typo } from '@design-system';
+import { Button, Layout, Typo } from '@design-system';
 import { friendList } from '@mock/friends';
 import { Persona } from '@models/persona';
 import * as S from './SelectPersonaSection.styled';
@@ -41,12 +42,16 @@ const initialSelectedPersonas: Persona[] = [
 ];
 
 // Mock data: 친구 프로필 이미지들 (처음 2개)
-const friendProfiles = friendList.slice(0, 2);
+const friendProfiles = friendList.slice(0, 1);
 const additionalFriendsCount = 6;
 
-function SelectPersonaSection() {
+interface SelectPersonaSectionProps {
+  isSaved?: boolean;
+  onSave?: () => void;
+}
+
+function SelectPersonaSection({ isSaved = false, onSave }: SelectPersonaSectionProps) {
   const [selectedPersonas, setSelectedPersonas] = useState<Persona[]>(initialSelectedPersonas);
-  const [isSaved, setIsSaved] = useState(false);
 
   const handleTogglePersona = (persona: Persona) => {
     setSelectedPersonas((prev) => {
@@ -55,7 +60,11 @@ function SelectPersonaSection() {
       }
       return [...prev, persona];
     });
-    setIsSaved(true);
+  };
+
+  const handleSave = () => {
+    onSave?.();
+    // TODO: 실제 저장 로직 구현
   };
 
   // Persona를 3줄로 나누기
@@ -98,10 +107,15 @@ function SelectPersonaSection() {
         </Typo>
       </S.FriendsSection>
 
-      {isSaved && (
+      {!isSaved ? (
+        <S.SaveButtonWrapper>
+          <Button.Primary text="Save to your Profile" onClick={handleSave} status="normal" />
+        </S.SaveButtonWrapper>
+      ) : (
         <S.SavedMessage>
+          <Icon name="circle_check" size={20} />
           <Typo type="body-medium" color="WHITE">
-            ✓ Saved to your Profile
+            Saved to your Profile
           </Typo>
         </S.SavedMessage>
       )}

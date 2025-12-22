@@ -33,6 +33,7 @@ export const PersonaGrid = styled.div`
   width: 100%;
   max-width: 100%;
   height: calc(24px * 3 + 8px * 2); /* 3줄 높이: (pill height * 3) + (gap * 2) */
+  overflow-x: hidden;
   overflow-y: hidden;
   box-sizing: border-box;
 
@@ -56,8 +57,7 @@ export const PersonaRow = styled.div`
   height: 24px;
   flex-shrink: 0;
   box-sizing: border-box;
-  margin-left: 16px;
-  margin-right: 16px;
+  padding: 0 16px;
 
   /* 스크롤바 숨김 */
   &::-webkit-scrollbar {
@@ -72,20 +72,33 @@ export const PersonaRow = styled.div`
 
 export const FriendsSection = styled(Layout.FlexRow)`
   align-items: center;
-  gap: 12px;
+  gap: 4px;
   width: 100%;
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
   overflow: hidden;
+  padding-left: 16px;
 `;
 
 export const FriendsProfileList = styled(Layout.FlexRow)`
   align-items: center;
 `;
 
+export const SaveButtonWrapper = styled.div`
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
+
+  button {
+    width: 100%;
+  }
+`;
+
 export const SavedMessage = styled(Layout.FlexRow)`
   justify-content: center;
   align-items: center;
+  width: 100%;
+  gap: 10px;
   margin-top: 8px;
 `;

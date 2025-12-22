@@ -37,7 +37,7 @@ function Discover() {
         case POST_TYPE.RESPONSE:
           return null;
         case POST_TYPE.SELECT_INTEREST:
-          return <SelectInterestSection />;
+          return <SelectInterestSection isSaved />;
         case POST_TYPE.SELECT_PERSONA:
           return <SelectPersonaSection />;
         case POST_TYPE.HIGHLIGHT:
@@ -65,7 +65,7 @@ function Discover() {
           </S.ScrollableFilterRow>
 
           {/* POSTS -> Recent Posts */}
-          <Layout.FlexCol ph={16}>
+          <Layout.FlexCol ph={16} gap={20}>
             {discoverPostList.map((post) => renderPostComponent(post))}
           </Layout.FlexCol>
 
