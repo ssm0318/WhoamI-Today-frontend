@@ -32,30 +32,8 @@ export const PersonaGrid = styled.div`
   gap: 8px;
   width: 100%;
   max-width: 100%;
-  height: calc(24px * 3 + 8px * 2); /* 3줄 높이: (pill height * 3) + (gap * 2) */
-  overflow-x: hidden;
-  overflow-y: hidden;
-  box-sizing: border-box;
-
-  /* 스크롤바 숨김 */
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-`;
-
-export const PersonaRow = styled.div`
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 8px;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
-  height: 24px;
-  flex-shrink: 0;
   box-sizing: border-box;
   padding: 0 16px;
 
@@ -68,6 +46,15 @@ export const PersonaRow = styled.div`
 
   /* 터치 스크롤 활성화 */
   -webkit-overflow-scrolling: touch;
+`;
+
+export const PersonaRow = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  min-width: max-content;
+  flex-shrink: 0;
+  box-sizing: border-box;
 `;
 
 export const FriendsSection = styled(Layout.FlexRow)`

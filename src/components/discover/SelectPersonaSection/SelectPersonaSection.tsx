@@ -4,7 +4,10 @@ import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Button, Layout, Typo } from '@design-system';
 import { friendList } from '@mock/friends';
+import { MyProfile } from '@models/api/user';
 import { Persona } from '@models/persona';
+import { useBoundStore } from '@stores/useBoundStore';
+import { editProfile } from '@utils/apis/my';
 import * as S from './SelectPersonaSection.styled';
 
 // Persona enum 값을 표시용 라벨로 변환
@@ -14,32 +17,6 @@ const formatPersonaLabel = (persona: Persona): string => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 };
-
-// Mock data: 선택 가능한 Persona 목록 (가로 스크롤 테스트를 위해 더 많은 항목 추가)
-const availablePersonas: Persona[] = [
-  Persona.content_creator,
-  Persona.lurker,
-  Persona.word_person,
-  Persona.photo_heavy,
-  Persona.deep_talks,
-  Persona.occasional_poster,
-  Persona.private_reactor,
-  Persona.commenter,
-  Persona.open_book,
-  Persona.curated_aesthetic,
-  Persona.emoji_fan,
-  Persona.thoughtful_responder,
-  Persona.instant_responder,
-  Persona.poster,
-  Persona.text_poster,
-];
-
-// Mock data: 선택된 Persona (초기값)
-const initialSelectedPersonas: Persona[] = [
-  Persona.private_reactor,
-  Persona.commenter,
-  Persona.open_book,
-];
 
 // Mock data: 친구 프로필 이미지들 (처음 2개)
 const friendProfiles = friendList.slice(0, 1);
@@ -51,7 +28,12 @@ interface SelectPersonaSectionProps {
 }
 
 function SelectPersonaSection({ isSaved = false, onSave }: SelectPersonaSectionProps) {
-  const [selectedPersonas, setSelectedPersonas] = useState<Persona[]>(initialSelectedPersonas);
+  const { myProfile, updateMyProfile, openToast } = useBoundStore((state) => ({
+    updateMyProfile: state.updateMyProfile,
+    openToast: state.openToast,
+    myProfile: state.myProfile,
+  }));
+  const [selectedPersonas, setSelectedPersonas] = useState<Persona[]>(myProfile?.persona || []);
 
   const handleTogglePersona = (persona: Persona) => {
     setSelectedPersonas((prev) => {
@@ -64,8 +46,21 @@ function SelectPersonaSection({ isSaved = false, onSave }: SelectPersonaSectionP
 
   const handleSave = () => {
     onSave?.();
-    // TODO: 실제 저장 로직 구현
+
+    editProfile({
+      profile: {
+        persona: selectedPersonas,
+      },
+      onSuccess: (data: MyProfile) => {
+        updateMyProfile({ ...data });
+      },
+      onError: (error) => {
+        if (error.detail) openToast({ message: error.detail });
+      },
+    });
   };
+
+  const availablePersonas = Object.values(Persona);
 
   // Persona를 3줄로 나누기
   const personasPerRow = Math.ceil(availablePersonas.length / 3);
