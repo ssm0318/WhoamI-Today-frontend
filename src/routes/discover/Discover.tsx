@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import FilterChip from '@components/_common/filter-chip/FilterChip';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
-import HighlightSection from '@components/discover/HighlightSection/HighlightSection';
+import HighlightQuestionSection from '@components/discover/HighlightQuestionSection/HighlightQuestionSection';
 import SelectInterestSection from '@components/discover/SelectInterestSection/SelectInterestSection';
 import SelectPersonaSection from '@components/discover/SelectPersonaSection/SelectPersonaSection';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
@@ -56,7 +56,13 @@ function Discover() {
             </S.AnimatedCardWrapper>
           ) : null;
         case POST_TYPE.HIGHLIGHT:
-          return <HighlightSection />;
+          return (
+            <HighlightQuestionSection
+              tag="#DailyQuestions"
+              question="What are your two truths and a lie"
+              questionId={1}
+            />
+          );
         default:
           return null;
       }

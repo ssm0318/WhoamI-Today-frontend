@@ -313,6 +313,8 @@
         "text": "Choose who can see your post.",
         "friend": "Friends",
         "close_friend": "Close Friends",
+        "follower": "Followers",
+        "public": "Public",
         "save": "Save"
     },
     "responses": {

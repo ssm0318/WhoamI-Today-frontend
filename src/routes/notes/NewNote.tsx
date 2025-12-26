@@ -21,12 +21,16 @@ function NewNote() {
   const content = location.state?.post.content || '';
   const visibility =
     location.state?.post.visibility ||
-    featureFlags?.[FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]
-      ? PostVisibility.CLOSE_FRIENDS
-      : PostVisibility.FRIENDS;
+    (featureFlags?.[FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]
+      ? [PostVisibility.CLOSE_FRIENDS]
+      : [PostVisibility.FRIENDS]);
   const images = useMemo(() => location.state?.post.images || [], [location.state?.post.images]);
 
-  const [noteInfo, setNoteInfo] = useState<NewNoteForm>({ content, images: [], visibility });
+  const [noteInfo, setNoteInfo] = useState<NewNoteForm>({
+    content,
+    images: [],
+    visibility,
+  });
 
   useEffect(() => {
     if (location.state) {

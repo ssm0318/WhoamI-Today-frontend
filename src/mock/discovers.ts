@@ -114,7 +114,7 @@ export const discoverPostList: (Note | Response | SelectInterest | SelectPersona
     comments: [],
     current_user_read: true,
     is_edited: false,
-    visibility: PostVisibility.FRIENDS,
+    visibility: [PostVisibility.FRIENDS, PostVisibility.CLOSE_FRIENDS],
   },
   {
     id: 3,

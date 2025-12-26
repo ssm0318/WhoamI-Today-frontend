@@ -310,6 +310,8 @@
     "text": "해당 게시글의 공개 범위를 설정해주세요.",
     "friend": "친구",
     "close_friend": "친한 친구",
+    "follower": "팔로워",
+    "public": "아무나",
     "save": "저장"
   },
   "responses": {

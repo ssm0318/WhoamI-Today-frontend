@@ -5,8 +5,9 @@ import { Loader } from '@components/_common/loader/Loader.styled';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledNewResponsePrompt } from '@components/_common/prompt/PromptCard.styled';
+import VisibilityMultiSelect from '@components/note/visibility-multi-select/VisibilityMultiSelect';
 import SubHeader from '@components/sub-header/SubHeader';
-import { Layout, RadioButton, TextArea, Typo } from '@design-system';
+import { Layout, TextArea, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { PostVisibility, Question } from '@models/post';
@@ -33,7 +34,7 @@ function NewResponse() {
 
   // NOTE: QUESTION_RESPONSE_FEATURE 플래그가 true인 경우만 해당 NewResponse 페이지 노출
   // 따라서 Note처럼 공개 범위 분기가 필요없음
-  const [visibility, setVisibility] = useState<PostVisibility>(PostVisibility.CLOSE_FRIENDS);
+  const [visibilityList, setVisibilityList] = useState<PostVisibility[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const title = !location.state
@@ -60,7 +61,7 @@ function NewResponse() {
       getResponse(responseId).then((data) => {
         if (data && data.content) {
           setNewResponse(data.content);
-          setVisibility(data.visibility);
+          setVisibilityList(data.visibility);
         }
         if (data && data.question && data.question.id) {
           const editQuestionId = data.question.id;
@@ -85,8 +86,8 @@ function NewResponse() {
     setNewResponse(e.target.value);
   };
 
-  const handleChangeVisibility = (e: ChangeEvent<HTMLInputElement>) => {
-    setVisibility(e.target.value as PostVisibility);
+  const handleChangeVisibility = (visibilities: PostVisibility[]) => {
+    setVisibilityList(visibilities);
   };
 
   const navigate = useNavigate();
@@ -106,12 +107,12 @@ function NewResponse() {
         ? await postResponse({
             question_id: Number(questionId),
             content: newResponse || '',
-            visibility,
+            visibility: visibilityList,
           })
         : await patchResponse({
             post_id: Number(responseId),
             content: newResponse || '',
-            visibility,
+            visibility: visibilityList,
           });
 
       openToast({
@@ -185,26 +186,10 @@ function NewResponse() {
             <Typo type="label-medium" bold mb={4} fontSize={11}>
               {t('access_setting.title')}
             </Typo>
-            <Layout.FlexCol justifyContent="flex-start" w="100%" gap={4}>
-              <RadioButton
-                label={t('access_setting.friend') || ''}
-                name="friends"
-                value="friends"
-                checked={visibility === 'friends'}
-                onChange={handleChangeVisibility}
-                labelType="label-medium"
-                buttonSize="small"
-              />
-              <RadioButton
-                label={t('access_setting.close_friend') || ''}
-                name="close_friends"
-                value="close_friends"
-                checked={visibility === 'close_friends'}
-                onChange={handleChangeVisibility}
-                labelType="label-medium"
-                buttonSize="small"
-              />
-            </Layout.FlexCol>
+            <VisibilityMultiSelect
+              selectedVisibilities={visibilityList}
+              onChange={handleChangeVisibility}
+            />
           </Layout.FlexCol>
         </FlexRow>
         <FlexRow w="100%" justifyContent="flex-end" pt={10}>

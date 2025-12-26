@@ -100,7 +100,7 @@ export interface Response extends ContentsCommon {
   like_reaction_user_sample: ReactionUserSample[];
   current_user_read: boolean;
   is_edited: boolean;
-  visibility: PostVisibility;
+  visibility: PostVisibility[];
 }
 
 export interface Note extends ContentsCommon {
@@ -118,7 +118,7 @@ export interface Note extends ContentsCommon {
 export interface NewNoteForm {
   content: string;
   images?: CroppedImg[];
-  visibility: PostVisibility;
+  visibility: PostVisibility[];
 }
 // Response list for questions
 /** deprecated */
