@@ -35,7 +35,7 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
     isLoadingMoreAllFriends,
     allFriends,
     targetRef: allFriendsTargetRef,
-  } = useInfiniteFetchFriends();
+  } = useInfiniteFetchFriends({ type: 'all' });
 
   const [searchedFriendsList, setSearchFriendsList] = useState<FetchState<UserProfile[]>>({
     state: 'loading',

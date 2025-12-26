@@ -1,16 +1,12 @@
 import { MouseEvent } from 'react';
 import { Layout } from '@design-system';
-import { Note, Response } from '@models/post';
 import Icon from '../icon/Icon';
 
 interface EmojiButtonProps {
-  post: Response | Note;
   onClick?: () => void;
 }
 
-function EmojiButton({ post, onClick }: EmojiButtonProps) {
-  const { id } = post;
-
+function EmojiButton({ onClick }: EmojiButtonProps) {
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
     onClick?.();
@@ -18,7 +14,7 @@ function EmojiButton({ post, onClick }: EmojiButtonProps) {
 
   return (
     <Layout.FlexRow w={48} h={48} alignItems="center" justifyContent="center" m={0}>
-      {id && <Icon name="add_reaction" size={23} onClick={handleClick} />}
+      <Icon name="add_reaction" size={23} onClick={handleClick} />
     </Layout.FlexRow>
   );
 }

@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { FriendType } from '@models/api/friends';
 import { ChipContainer } from './FriendTypeChip.styled';
-
-export type FriendType = 'all' | 'close';
 
 interface FriendTypeChipProps {
   type: FriendType;

@@ -13,9 +13,13 @@ interface UpdateFriendsStateParams {
 
 export type UpdateFriendListParams = BreakFriendsParams | UpdateFriendsStateParams;
 
-const useInfiniteFetchFriends = () => {
+interface UseInfiniteFetchFriendsParams {
+  type?: 'all' | 'close_friends';
+}
+
+const useInfiniteFetchFriends = ({ type: friendType }: UseInfiniteFetchFriendsParams) => {
   const { targetRef, data, isLoading, mutate, isEndPage, isLoadingMore } =
-    useSWRInfiniteScroll<UpdatedProfile>({ key: '/user/friends/?type=all' });
+    useSWRInfiniteScroll<UpdatedProfile>({ key: `/user/friends/?type=${friendType}` });
 
   const updateFriendList = (params: UpdateFriendListParams) => {
     if (!data) return;

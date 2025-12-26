@@ -23,7 +23,7 @@ function EditFriends() {
   const { featureFlags } = useBoundStore(UserSelector);
 
   const { isLoadingMoreAllFriends, allFriends, isAllFriendsLoading, targetRef, updateFriendList } =
-    useInfiniteFetchFriends();
+    useInfiniteFetchFriends({ type: 'all' });
   const { updateFavoriteFriendList } = useFetchFavoriteFriends();
 
   const [showTemporalErrorAlert, setShowTemporalErrorAlert] = useState(false);

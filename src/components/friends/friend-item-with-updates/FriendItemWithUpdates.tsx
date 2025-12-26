@@ -2,17 +2,17 @@ import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import RecentPost from '@components/_common/recent-post/RecentPost';
+import RecentPostItem from '@components/_common/recent-post/RecentPostItem';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { Connection, UpdatedProfile } from '@models/api/friends';
-import { Note } from '@models/post';
+import { RecentPost } from '@models/post';
 import { Container } from './FriendItemWithUpdates.styled';
 
 interface Props {
   user: UpdatedProfile;
-  recentPost?: Note;
+  recentPost?: RecentPost;
 }
 
 function FriendItemWithUpdates({ user, recentPost }: Props) {
@@ -117,7 +117,7 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
       </Layout.FlexCol>
 
       {/* Recent Post 영역 (유저마다 무조건 하나씩은 있음) */}
-      {recentPost && <RecentPost recentPost={recentPost} hideContent />}
+      {!!recentPost && <RecentPostItem recentPost={recentPost} hideContent />}
     </Container>
   );
 }

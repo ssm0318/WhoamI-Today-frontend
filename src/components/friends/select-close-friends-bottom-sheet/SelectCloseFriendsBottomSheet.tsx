@@ -18,7 +18,7 @@ interface Props {
 
 function SelectCloseFriendsBottomSheet({ visible, closeBottomSheet }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.list.select_close_friends' });
-  const { allFriends, isAllFriendsLoading } = useInfiniteFetchFriends();
+  const { allFriends, isAllFriendsLoading } = useInfiniteFetchFriends({ type: 'all' });
   const [selectedFriendIds, setSelectedFriendIds] = useState<Set<number>>(new Set());
 
   // BottomSheet가 닫힐 때 선택 상태 초기화

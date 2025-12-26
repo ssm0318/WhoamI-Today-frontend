@@ -4,29 +4,30 @@ import { createPortal } from 'react-dom';
 import { DEFAULT_MARGIN, EMOJI_PICKER_HEIGHT, Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
 import { useDetectOutsideClick } from '@hooks/useDetectOutsideClick';
-import { Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getUnifiedEmoji } from '@utils/emojiHelpers';
 import { EMOJI_CATEGORIES } from './EmojiPicker.constants';
 import { EmojiPickerCustomStyle } from './EmojiPicker.styled';
 
 interface EmojiPickerProps {
+  postId?: number;
+  postType?: 'Note' | 'Response';
   onSelectEmoji: (emoji: EmojiClickData) => void;
   onUnselectEmoji?: (emoji: EmojiClickData) => void;
   selectedEmojis?: string[];
   height?: number;
   left?: number;
-  post?: Response | Note;
   createPortalId?: string;
 }
 
 function EmojiPicker({
+  postId,
+  postType,
   onSelectEmoji,
   selectedEmojis,
   height = EMOJI_PICKER_HEIGHT.DEFAULT,
   left = DEFAULT_MARGIN,
   onUnselectEmoji,
-  post,
   createPortalId,
 }: EmojiPickerProps) {
   const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
@@ -53,7 +54,7 @@ function EmojiPicker({
   const isVisible =
     emojiPickerTarget &&
     (emojiPickerTarget.type === 'CheckIn' ||
-      (emojiPickerTarget.type === post?.type && emojiPickerTarget.id === post?.id));
+      (emojiPickerTarget.type === postType && emojiPickerTarget.id === postId));
 
   const emojiPickerWrapper = useDetectOutsideClick({
     callback: () => {

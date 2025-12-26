@@ -37,7 +37,13 @@ function NoteListItem({ note }: NoteListItemProps) {
           {content}
         </Typo>
         <Layout.FlexRow gap={12}>
-          <LikeButton postType="Note" post={note} iconSize={24} m={0} />
+          <LikeButton
+            postType="Note"
+            postId={note.id}
+            currentUserLikeId={note.current_user_like_id}
+            iconSize={24}
+            m={0}
+          />
           <Icon name="add_comment" size={24} onClick={handleClickComment} />
         </Layout.FlexRow>
         <Layout.FlexRow>

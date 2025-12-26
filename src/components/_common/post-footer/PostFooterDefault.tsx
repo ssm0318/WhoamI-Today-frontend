@@ -65,7 +65,14 @@ function PostFooterDefault({
           </button>
         )}
         {!isMyPage && (
-          <LikeButton postType={type} post={post} iconSize={23} m={0} refresh={refresh} />
+          <LikeButton
+            postType={type}
+            postId={post.id}
+            currentUserLikeId={post.current_user_like_id}
+            iconSize={23}
+            m={0}
+            refresh={refresh}
+          />
         )}
         {/* 좋아요 수 */}
         {featureFlags?.reactionCount && !!like_count && like_count > 0 && (

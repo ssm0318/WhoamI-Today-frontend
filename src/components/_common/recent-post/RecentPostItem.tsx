@@ -1,19 +1,20 @@
 import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
-import PostFooter from '@components/_common/post-footer/PostFooter';
+import { NoteImage } from '@components/note/note-image/NoteImage.styled';
 import { Layout, Typo } from '@design-system';
-import { Note } from '@models/post';
+import { POST_TYPE, RecentPost } from '@models/post';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
-import { Container, ContentWrapper, FadeOutOverlay, NoteImage } from './RecentPost.styled';
+import RecentPostFooter from './RecentPostFooter';
+import { Container, ContentWrapper, FadeOutOverlay } from './RecentPostItem.styled';
 
 interface Props {
-  recentPost: Note;
+  recentPost: RecentPost;
   hideContent?: boolean;
   showNewBadge?: boolean;
 }
-function RecentPost({ recentPost, hideContent = false, showNewBadge = true }: Props) {
-  const { id, created_at, content, current_user_read, images } = recentPost;
+function RecentPostItem({ recentPost, hideContent = false, showNewBadge = true }: Props) {
+  const { id, created_at, preview_content, is_read } = recentPost;
   const navigate = useNavigate();
 
   const handleClickMore = (e: MouseEvent) => {
@@ -48,7 +49,7 @@ function RecentPost({ recentPost, hideContent = false, showNewBadge = true }: Pr
             </Typo>
             {/* NEW BADGE */}
             {/* discover 페이지에서는 보여주지 않음 */}
-            {!!showNewBadge && current_user_read && (
+            {!!showNewBadge && !is_read && (
               <Layout.FlexRow bgColor="TERTIARY_BLUE" rounded={4} ph={8} pv={2}>
                 <Typo type="body-small" color="WHITE">
                   NEW
@@ -62,22 +63,21 @@ function RecentPost({ recentPost, hideContent = false, showNewBadge = true }: Pr
 
         {/* content */}
         <ContentWrapper hideContent={hideContent}>
-          {images[0] && (
+          {recentPost?.type === POST_TYPE.NOTE && recentPost.images[0] && (
             <Layout.FlexRow w="100%" mv={10}>
-              <NoteImage src={images[0]} />
+              <NoteImage src={recentPost.images[0]} />
             </Layout.FlexRow>
           )}
           <Typo type="body-large" color="BLACK">
-            {content}
+            {preview_content}
           </Typo>
           {hideContent && <FadeOutOverlay />}
         </ContentWrapper>
 
         {/* PostFooter */}
-        <PostFooter
+        <RecentPostFooter
           isMyPage={false}
           post={recentPost}
-          displayType="LIST"
           showComments={handleShowComments}
           setInputFocus={handleSetInputFocus}
         />
@@ -86,4 +86,4 @@ function RecentPost({ recentPost, hideContent = false, showNewBadge = true }: Pr
   );
 }
 
-export default RecentPost;
+export default RecentPostItem;
