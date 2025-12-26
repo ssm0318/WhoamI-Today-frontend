@@ -4,11 +4,16 @@ import { PostVisibility } from '@models/post';
 import { StyledCheckBoxItem } from './VisibilityMultiSelect.styled';
 
 interface VisibilityMultiSelectProps {
+  availableVisibilities: PostVisibility[];
   selectedVisibilities: PostVisibility[];
   onChange: (visibilities: PostVisibility[]) => void;
 }
 
-function VisibilityMultiSelect({ selectedVisibilities, onChange }: VisibilityMultiSelectProps) {
+function VisibilityMultiSelect({
+  availableVisibilities,
+  selectedVisibilities,
+  onChange,
+}: VisibilityMultiSelectProps) {
   const [t] = useTranslation('translation');
 
   const handleToggleVisibility = (value: PostVisibility) => {
@@ -39,50 +44,19 @@ function VisibilityMultiSelect({ selectedVisibilities, onChange }: VisibilityMul
 
   return (
     <Layout.FlexCol gap={4} w="100%">
-      <StyledCheckBoxItem onClick={() => handleToggleVisibility(PostVisibility.FRIENDS)}>
-        <SvgIcon
-          name={
-            selectedVisibilities.includes(PostVisibility.FRIENDS)
-              ? 'circle_check_checked'
-              : 'circle_check_unchecked'
-          }
-          size={24}
-        />
-        <Typo type="label-large">{t('access_setting.friend') || ''}</Typo>
-      </StyledCheckBoxItem>
-      <StyledCheckBoxItem onClick={() => handleToggleVisibility(PostVisibility.CLOSE_FRIENDS)}>
-        <SvgIcon
-          name={
-            selectedVisibilities.includes(PostVisibility.CLOSE_FRIENDS)
-              ? 'circle_check_checked'
-              : 'circle_check_unchecked'
-          }
-          size={24}
-        />
-        <Typo type="label-large">{t('access_setting.close_friend') || ''}</Typo>
-      </StyledCheckBoxItem>
-      <StyledCheckBoxItem onClick={() => handleToggleVisibility(PostVisibility.FOLLOWER)}>
-        <SvgIcon
-          name={
-            selectedVisibilities.includes(PostVisibility.FOLLOWER)
-              ? 'circle_check_checked'
-              : 'circle_check_unchecked'
-          }
-          size={24}
-        />
-        <Typo type="label-large">{t('access_setting.follower') || ''}</Typo>
-      </StyledCheckBoxItem>
-      <StyledCheckBoxItem onClick={() => handleToggleVisibility(PostVisibility.PUBLIC)}>
-        <SvgIcon
-          name={
-            selectedVisibilities.includes(PostVisibility.PUBLIC)
-              ? 'circle_check_checked'
-              : 'circle_check_unchecked'
-          }
-          size={24}
-        />
-        <Typo type="label-large">{t('access_setting.public') || ''}</Typo>
-      </StyledCheckBoxItem>
+      {availableVisibilities.map((visibility) => (
+        <StyledCheckBoxItem key={visibility} onClick={() => handleToggleVisibility(visibility)}>
+          <SvgIcon
+            name={
+              selectedVisibilities.includes(visibility)
+                ? 'circle_check_checked'
+                : 'circle_check_unchecked'
+            }
+            size={24}
+          />
+          <Typo type="label-large">{t(`access_setting.${visibility.toLowerCase()}`) || ''}</Typo>
+        </StyledCheckBoxItem>
+      ))}
     </Layout.FlexCol>
   );
 }

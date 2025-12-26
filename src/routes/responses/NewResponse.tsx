@@ -189,6 +189,12 @@ function NewResponse() {
             <VisibilityMultiSelect
               selectedVisibilities={visibilityList}
               onChange={handleChangeVisibility}
+              availableVisibilities={[
+                PostVisibility.FRIENDS,
+                PostVisibility.CLOSE_FRIENDS,
+                PostVisibility.FOLLOWER,
+                PostVisibility.PUBLIC,
+              ]}
             />
           </Layout.FlexCol>
         </FlexRow>
