@@ -8,6 +8,7 @@ import SelectPersonaSection from '@components/discover/SelectPersonaSection/Sele
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
+import { useSaveAndHide } from '@hooks/useSaveAndHide';
 import { discoverPostList } from '@mock/discovers';
 import { DiscoverFilter, DiscoverFilterLabel } from '@models/discover';
 import { Highlight, Note, POST_TYPE, Response, SelectInterest, SelectPersona } from '@models/post';
@@ -17,6 +18,13 @@ import * as S from './Discover.styled';
 
 function Discover() {
   const [selectedFilter, setSelectedFilter] = useState<DiscoverFilter[]>([]);
+  const {
+    isSaved: isPersonaSaved,
+    showCard: showPersonaCard,
+    isAnimating: isPersonaAnimating,
+    handleSave: handlePersonaSave,
+  } = useSaveAndHide();
+
   const discoverFilterList = [
     DiscoverFilter.follow,
     DiscoverFilter.MUTUAL_FRIENDS,
@@ -37,17 +45,22 @@ function Discover() {
           return <RecentPost recentPost={post} showNewBadge={false} />;
         case POST_TYPE.RESPONSE:
           return null;
+        // TODO: SelectInterestSection에도 animation 로직 필요한지 확인 후 적용
         case POST_TYPE.SELECT_INTEREST:
           return <SelectInterestSection isSaved />;
         case POST_TYPE.SELECT_PERSONA:
-          return <SelectPersonaSection />;
+          return showPersonaCard ? (
+            <S.AnimatedCardWrapper $isAnimating={isPersonaAnimating}>
+              <SelectPersonaSection isSaved={isPersonaSaved} onSave={handlePersonaSave} />
+            </S.AnimatedCardWrapper>
+          ) : null;
         case POST_TYPE.HIGHLIGHT:
           return <HighlightSection />;
         default:
           return null;
       }
     },
-    [],
+    [isPersonaSaved, showPersonaCard, handlePersonaSave, isPersonaAnimating],
   );
 
   return (
