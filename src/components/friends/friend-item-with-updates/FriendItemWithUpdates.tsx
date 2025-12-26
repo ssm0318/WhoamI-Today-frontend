@@ -1,9 +1,8 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import RecentPost from '@components/_common/recent-post/RecentPost';
-import FriendRecentUpdatesBottomSheet from '@components/friends/friend-recent-updates-bottom-sheet/FriendRecentUpdatesBottomSheet';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import { Layout, SvgIcon, Typo } from '@design-system';
@@ -29,7 +28,6 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
   } = user;
 
   const navigate = useNavigate();
-  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
 
   const handleClickProfile = () => {
     navigate(`/users/${username}`);
@@ -45,10 +43,6 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
     console.log('handleClickFriendBadge');
   };
 
-  const handleCloseBottomSheet = () => {
-    setIsBottomSheetVisible(false);
-  };
-
   return (
     <Container mh={16} ph={16} pv={12} gap={12} onClick={handleClickProfile} rounded={12}>
       {/* 프로필 헤더 */}
@@ -56,14 +50,14 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
         <Layout.FlexRow alignItems="center" gap={7}>
           <ProfileImage imageUrl={profile_image} username={username} size={36} />
           <Layout.FlexRow alignItems="center" gap={4}>
-            <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 100 }}>
+            <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 100 }} mr={4}>
               {username}
             </Typo>
             <SvgIcon
-              name="close_friend"
+              name={
+                connection_status === Connection.CLOSE_FRIEND ? 'close_friend' : 'default_friend'
+              }
               size={16}
-              // TODO: 친구용 아이콘으로 실제 변경 필요
-              color={connection_status === Connection.CLOSE_FRIEND ? 'BLACK' : 'WHITE'}
               onClick={handleClickFriendBadge}
             />
           </Layout.FlexRow>
@@ -124,13 +118,6 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
 
       {/* Recent Post 영역 (유저마다 무조건 하나씩은 있음) */}
       {recentPost && <RecentPost recentPost={recentPost} hideContent />}
-      {isBottomSheetVisible && (
-        <FriendRecentUpdatesBottomSheet
-          visible={isBottomSheetVisible}
-          userProfile={user}
-          closeBottomSheet={handleCloseBottomSheet}
-        />
-      )}
     </Container>
   );
 }

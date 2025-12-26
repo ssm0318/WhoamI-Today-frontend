@@ -81,6 +81,7 @@ const friend_pinned = 'friend_pinned';
 const friend_unpinned = 'friend_unpinned';
 const friend_item_chat = 'friend_item_chat';
 const close_friend = 'close_friend';
+const default_friend = 'default_friend';
 
 // My
 const checkbox_default = 'checkbox_default';
@@ -197,6 +198,7 @@ export {
   comment,
   comment_message,
   comment_reply,
+  default_friend,
   default_profile,
   delete_button,
   delete_default,
