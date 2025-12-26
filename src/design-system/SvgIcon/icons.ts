@@ -159,6 +159,9 @@ const sent_by = 'sent_by';
 const comment_reply = 'comment_reply';
 const comment_message = 'comment_message';
 
+const hashtag = 'hashtag';
+const hashtag_selected = 'hashtag_selected';
+
 export {
   add_comment,
   add_default,
@@ -233,6 +236,8 @@ export {
   friends_inactive,
   green_dot,
   hamburger,
+  hashtag,
+  hashtag_selected,
   heart,
   hide_false,
   hide_true,

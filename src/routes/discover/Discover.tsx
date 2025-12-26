@@ -29,11 +29,12 @@ function Discover() {
     await Promise.all([getMe()]);
   }, []);
 
+  // TODO: 실제 데이터 연결 시 props 다시 한번 체크 필요 (테스트용으로 들어가있는거 없는지)
   const renderPostComponent = useCallback(
     (post: Note | Response | SelectInterest | SelectPersona | Highlight) => {
       switch (post.type) {
         case POST_TYPE.NOTE:
-          return <RecentPost recentPost={post} />;
+          return <RecentPost recentPost={post} showNewBadge={false} />;
         case POST_TYPE.RESPONSE:
           return null;
         case POST_TYPE.SELECT_INTEREST:

@@ -98,11 +98,11 @@ function SelectPersonaSection({ isSaved = false, onSave }: SelectPersonaSectionP
         <S.FriendsProfileList>
           {friendProfiles.map((friend, index) => (
             <Layout.FlexRow key={friend.id} ml={index === 0 ? 0 : -15} z={index}>
-              <ProfileImage imageUrl={friend.profile_image} username={friend.username} size={32} />
+              <ProfileImage imageUrl={friend.profile_image} username={friend.username} size={24} />
             </Layout.FlexRow>
           ))}
         </S.FriendsProfileList>
-        <Typo type="body-medium" color="WHITE">
+        <Typo type="label-medium" color="WHITE" bold>
           +{additionalFriendsCount} friends have selected theirs
         </Typo>
       </S.FriendsSection>
