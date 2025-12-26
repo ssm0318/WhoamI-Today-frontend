@@ -6,7 +6,7 @@ export const Container = styled(Layout.FlexCol)`
 `;
 
 export const EmojiContainer = styled.div`
-  font-size: 48px;
+  font-size: 32px;
   line-height: 1;
 `;
 

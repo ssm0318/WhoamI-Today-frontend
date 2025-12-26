@@ -5,14 +5,15 @@ import PostFooter from '@components/_common/post-footer/PostFooter';
 import { Layout, Typo } from '@design-system';
 import { Note } from '@models/post';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
-import { Container, ContentWrapper, FadeOutOverlay } from './RecentPost.styled';
+import { Container, ContentWrapper, FadeOutOverlay, NoteImage } from './RecentPost.styled';
 
 interface Props {
   recentPost: Note;
   hideContent?: boolean;
+  showNewBadge?: boolean;
 }
-function RecentPost({ recentPost, hideContent = false }: Props) {
-  const { id, created_at, content, current_user_read } = recentPost;
+function RecentPost({ recentPost, hideContent = false, showNewBadge = true }: Props) {
+  const { id, created_at, content, current_user_read, images } = recentPost;
   const navigate = useNavigate();
 
   const handleClickMore = (e: MouseEvent) => {
@@ -46,7 +47,8 @@ function RecentPost({ recentPost, hideContent = false }: Props) {
               })}
             </Typo>
             {/* NEW BADGE */}
-            {current_user_read && (
+            {/* discover 페이지에서는 보여주지 않음 */}
+            {!!showNewBadge && current_user_read && (
               <Layout.FlexRow bgColor="TERTIARY_BLUE" rounded={4} ph={8} pv={2}>
                 <Typo type="body-small" color="WHITE">
                   NEW
@@ -60,6 +62,11 @@ function RecentPost({ recentPost, hideContent = false }: Props) {
 
         {/* content */}
         <ContentWrapper hideContent={hideContent}>
+          {images[0] && (
+            <Layout.FlexRow w="100%" mv={10}>
+              <NoteImage src={images[0]} />
+            </Layout.FlexRow>
+          )}
           <Typo type="body-large" color="BLACK">
             {content}
           </Typo>

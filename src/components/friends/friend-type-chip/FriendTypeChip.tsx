@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { SvgIcon, Typo } from '@design-system';
-import { ChipContainer, StarIconContainer } from './FriendTypeChip.styled';
+import { Layout, SvgIcon, Typo } from '@design-system';
+import { ChipContainer } from './FriendTypeChip.styled';
 
 export type FriendType = 'all' | 'close';
 
@@ -18,16 +18,18 @@ function FriendTypeChip({ type, isSelected, count, onClick }: FriendTypeChipProp
 
   return (
     <ChipContainer isSelected={isSelected} onClick={onClick}>
-      {!isAllFriends && (
-        <StarIconContainer isSelected={isSelected}>
-          <SvgIcon name="star" size={12} color="WHITE" />
-        </StarIconContainer>
-      )}
-      <Typo type="label-large" color={isSelected ? 'WHITE' : 'BLACK'}>
-        {isAllFriends
-          ? `${t('all_friends')}${count !== undefined ? ` (${count})` : ''}`
-          : t('close_friend')}
-      </Typo>
+      <Layout.FlexRow alignItems="center" gap={4} h={24}>
+        {!isAllFriends && (
+          <Layout.FlexRow h={24}>
+            <SvgIcon name="close_friend" size={24} />
+          </Layout.FlexRow>
+        )}
+        <Typo type="button-medium" color={isSelected ? 'WHITE' : 'BLACK'}>
+          {isAllFriends
+            ? `${t('all_friends')}${count !== undefined ? ` (${count})` : ''}`
+            : `${t('close_friend')}${count !== undefined ? ` (${count})` : ''}`}
+        </Typo>
+      </Layout.FlexRow>
     </ChipContainer>
   );
 }

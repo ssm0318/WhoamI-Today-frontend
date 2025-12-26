@@ -1,4 +1,4 @@
-import { Typo } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import * as S from './HashTagPill.styled';
 
 interface HashTagPillProps {
@@ -10,22 +10,12 @@ interface HashTagPillProps {
 function HashTagPill({ isSelected, onClick, label }: HashTagPillProps) {
   return (
     <S.HashTagPillContainer isSelected={isSelected} onClick={onClick}>
-      {isSelected ? (
-        <>
-          <S.CheckmarkBox>
-            <Typo type="label-medium" color="WHITE">
-              ✓
-            </Typo>
-          </S.CheckmarkBox>
-          <Typo type="label-medium" color="WHITE">
-            {label}
-          </Typo>
-        </>
-      ) : (
-        <Typo type="label-medium" color="BLACK">
-          ##{label}
-        </Typo>
-      )}
+      <Layout.FlexRow h={16} w={16}>
+        <SvgIcon name={isSelected ? 'hashtag_selected' : 'hashtag'} size={16} />
+      </Layout.FlexRow>
+      <Typo type="body-medium" color="BLACK" bold={isSelected}>
+        {label}
+      </Typo>
     </S.HashTagPillContainer>
   );
 }
