@@ -6,7 +6,7 @@ import EmojiPicker from '@components/emoji-picker/EmojiPicker';
 import { getEmojiPickerPosition } from '@components/emoji-picker/EmojiPicker.helper';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
-import { Note, POST_DP_TYPE, POST_TYPE, ReactionUserSample, Response } from '@models/post';
+import { POST_TYPE, ReactionUserSample, RecentPost } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { deleteReaction, postReaction } from '@utils/apis/reaction';
 import EmojiButton from '../emoji-button/EmojiButton';
@@ -14,23 +14,21 @@ import Icon from '../icon/Icon';
 import LikeButton from '../like-button/LikeButton';
 import PostReactionList from '../post-reaction-list/PostReactionList';
 
-type PostFooterProps = {
+type RecentPostFooterProps = {
   isMyPage: boolean;
-  post: Response | Note;
-  displayType?: POST_DP_TYPE;
+  post: RecentPost;
   showComments: () => void;
   setInputFocus: () => void;
   refresh?: () => void;
 };
 
-function PostFooter({
+function RecentPostFooter({
   isMyPage,
   post,
-  displayType = 'LIST',
   showComments,
   setInputFocus,
   refresh,
-}: PostFooterProps) {
+}: RecentPostFooterProps) {
   const { comment_count, type, current_user_reaction_id_list, like_reaction_user_sample } = post;
   const navigate = useNavigate();
   const toggleButtonRef = useRef<HTMLDivElement>(null);
@@ -123,8 +121,7 @@ function PostFooter({
 
     const pickerPosition = getEmojiPickerPosition({
       targetEl: toggleButtonRef.current,
-      bottomAreaHeight:
-        displayType === 'DETAIL' ? BOTTOM_TABBAR_HEIGHT + 100 : BOTTOM_TABBAR_HEIGHT,
+      bottomAreaHeight: BOTTOM_TABBAR_HEIGHT,
     });
 
     setEmojiPickerTarget(
@@ -147,14 +144,7 @@ function PostFooter({
   }, [setEmojiPickerTarget]);
 
   return (
-    <Layout.FlexRow
-      gap={8}
-      w="100%"
-      style={{
-        position: displayType === 'DETAIL' ? 'relative' : undefined,
-      }}
-      alignItems="center"
-    >
+    <Layout.FlexRow gap={8} w="100%" alignItems="center">
       <Layout.FlexRow alignItems="center">
         {!isMyPage && (
           <>
@@ -179,11 +169,9 @@ function PostFooter({
             </Layout.FlexRow>
           </>
         )}
-        {displayType === 'LIST' && (
-          <Layout.FlexRow w={48} h={48} alignItems="center" justifyContent="center">
-            <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
-          </Layout.FlexRow>
-        )}
+        <Layout.FlexRow w={48} h={48} alignItems="center" justifyContent="center">
+          <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
+        </Layout.FlexRow>
         {sampleUserList?.length > 0 && (
           <Layout.FlexRow onClick={handleClickReactions}>
             <PostReactionList user_sample_list={sampleUserList} />
@@ -192,10 +180,7 @@ function PostFooter({
       </Layout.FlexRow>
       {!!comment_count && (
         <Layout.FlexRow>
-          <button
-            type="button"
-            onClick={displayType === 'LIST' ? handleClickCommentText : undefined}
-          >
+          <button type="button" onClick={handleClickCommentText}>
             <Typo type="label-large" color="BLACK" underline>
               {comment_count ?? 0} {t('comments')}
             </Typo>
@@ -205,17 +190,12 @@ function PostFooter({
       <EmojiPicker
         postId={post.id}
         postType={post.type}
-        createPortalId={
-          displayType === 'LIST' && post.type === 'Response'
-            ? 'response_section_emoji_picker'
-            : undefined
-        }
+        createPortalId={post.type === 'Response' ? 'response_section_emoji_picker' : undefined}
         selectedEmojis={myEmojiList}
         onSelectEmoji={handleSelectEmoji}
         onUnselectEmoji={handleUnselectEmoji}
-        left={displayType === 'DETAIL' ? -10 : undefined}
       />
     </Layout.FlexRow>
   );
 }
-export default PostFooter;
+export default RecentPostFooter;

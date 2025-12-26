@@ -43,7 +43,7 @@ function Profile({ user }: ProfileProps) {
     return navigate('/settings/edit-profile');
   };
 
-  const { allFriends } = useInfiniteFetchFriends();
+  const { allFriends } = useInfiniteFetchFriends({ type: 'all' });
   const { allFriends: friendFriends } = useInfiniteFetchUserFriends(username);
 
   const handleClickFriendList = () => {

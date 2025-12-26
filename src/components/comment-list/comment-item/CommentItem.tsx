@@ -210,7 +210,12 @@ function CommentItem({
                 </Layout.FlexRow>
               ) : (
                 (!is_private || isPostAuthor) && (
-                  <LikeButton postType="Comment" post={comment} iconSize={15} />
+                  <LikeButton
+                    postType="Comment"
+                    postId={comment.id}
+                    currentUserLikeId={comment.current_user_like_id}
+                    iconSize={15}
+                  />
                 )
               )}
             </Layout.FlexCol>

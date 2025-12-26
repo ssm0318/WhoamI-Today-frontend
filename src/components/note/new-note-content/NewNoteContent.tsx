@@ -2,7 +2,7 @@ import React, { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { DEFAULT_MARGIN } from '@constants/layout';
-import { Layout, RadioButton, SvgIcon, Typo } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import { FileSelectedData } from '@models/app';
 import { NewNoteForm, PostVisibility } from '@models/post';
@@ -14,6 +14,7 @@ import { FlexRow } from 'src/design-system/layouts';
 import NewNoteImageEdit from '../new-note-image-edit/NewNoteImageEdit';
 import NewNotePhotoUploadBottomSheet from '../new-note-photo-upload-bottom-sheet/NewNotePhotoUploadBottomSheet';
 import { NoteImage, NoteImageWrapper } from '../note-image/NoteImage.styled';
+import VisibilityMultiSelect from '../visibility-multi-select/VisibilityMultiSelect';
 import { NoteInput } from './NoteInputBox.styled';
 
 interface NoteInformationProps {
@@ -25,7 +26,6 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const [t] = useTranslation('translation');
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
-  const { visibility } = noteInfo;
 
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [showPhotoUploadBottomSheet, setShowPhotoUploadBottomSheet] = useState(false);
@@ -100,11 +100,10 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
     }
   };
 
-  const handleChangeVisibility = (e: ChangeEvent<HTMLInputElement>) => {
-    const newVisibility = e.target.value as PostVisibility;
+  const handleChangeVisibility = (visibilities: PostVisibility[]) => {
     setNoteInfo((prevNoteInfo) => ({
       ...prevNoteInfo,
-      visibility: newVisibility,
+      visibility: visibilities,
     }));
   };
 
@@ -187,26 +186,11 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
               <Typo type="label-medium" bold mb={4} fontSize={11}>
                 {t('access_setting.title')}
               </Typo>
-              <Layout.FlexCol justifyContent="flex-start" w="100%" gap={4}>
-                <RadioButton
-                  label={t('access_setting.friend') || ''}
-                  name="friends"
-                  value="friends"
-                  checked={visibility === 'friends'}
-                  onChange={handleChangeVisibility}
-                  labelType="label-large"
-                  buttonSize="small"
-                />
-                <RadioButton
-                  label={t('access_setting.close_friend') || ''}
-                  name="close_friends"
-                  value="close_friends"
-                  checked={visibility === 'close_friends'}
-                  onChange={handleChangeVisibility}
-                  labelType="label-large"
-                  buttonSize="small"
-                />
-              </Layout.FlexCol>
+              <VisibilityMultiSelect
+                selectedVisibilities={noteInfo.visibility}
+                onChange={handleChangeVisibility}
+                availableVisibilities={[PostVisibility.FRIENDS, PostVisibility.CLOSE_FRIENDS]}
+              />
             </Layout.FlexCol>
           </Layout.FlexRow>
 

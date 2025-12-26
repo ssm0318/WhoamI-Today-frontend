@@ -43,8 +43,8 @@ export const postNote = async (noteData: NewNoteForm) => {
       formData.append('images', img.file, `${index}`);
     });
   }
-  if (noteData.visibility) {
-    formData.append('visibility', noteData.visibility);
+  if (noteData.visibility && noteData.visibility.length > 0) {
+    formData.append('visibility', JSON.stringify(noteData.visibility));
   }
 
   const { data } = await axiosFormDataInstance.post<Note>(`notes/`, formData);
@@ -68,8 +68,8 @@ export const patchNote = async (noteId: number, noteData: NewNoteForm) => {
       formData.append('images', img.file, `${index}`);
     });
   }
-  if (noteData.visibility) {
-    formData.append('visibility', noteData.visibility);
+  if (noteData.visibility && noteData.visibility.length > 0) {
+    formData.append('visibility', noteData.visibility[0]);
   }
 
   const { data } = await axiosFormDataInstance.patch<Note>(`notes/${noteId}/`, formData);

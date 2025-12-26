@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import useSWRInfinite from 'swr/infinite';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { PaginationResponse } from '@models/api/common';
@@ -35,15 +35,19 @@ export function useSWRInfiniteScroll<T>({ key }: Props) {
       typeof data[size - 1] === 'undefined' &&
       data[data.length - 1].next !== null);
 
-  const fetchNextData = useCallback(async () => {
+  const handleIntersect = useCallback(async () => {
     if (isEndPage) return;
     setSize((prevSize) => prevSize + 1);
   }, [isEndPage, setSize]);
 
-  const { targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(() => {
-    fetchNextData();
-    setIsLoading(false);
-  });
+  const { targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(handleIntersect);
+
+  // setIsLoading을 fetchNextData 완료 후 호출
+  useEffect(() => {
+    if (!isLoadingMore) {
+      setIsLoading(false);
+    }
+  }, [isLoadingMore, setIsLoading]);
 
   return {
     targetRef,

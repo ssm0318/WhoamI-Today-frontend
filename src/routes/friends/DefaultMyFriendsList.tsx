@@ -14,7 +14,7 @@ function DefaultMyFriendsList() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends' });
 
   const { targetRef, allFriends, isAllFriendsLoading, isLoadingMoreAllFriends, refetchAllFriends } =
-    useInfiniteFetchFriends();
+    useInfiniteFetchFriends({ type: 'all' });
 
   const navigate = useNavigate();
 

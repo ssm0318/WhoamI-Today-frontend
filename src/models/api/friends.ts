@@ -1,5 +1,5 @@
 import { CheckInBase, SocialBattery } from '@models/checkIn';
-import { DayQuestion } from '@models/post';
+import { DayQuestion, RecentPost } from '@models/post';
 import { User } from '@models/user';
 import { PaginationResponse } from './common';
 import { GetMomentResponse } from './moment';
@@ -23,6 +23,7 @@ export interface UpdatedProfile extends User {
   description: string;
   unread_ping_count: number;
   social_battery?: SocialBattery | null;
+  recent_post?: RecentPost;
 }
 
 export type GetAllFriendsResponse = PaginationResponse<UpdatedProfile[]>;
@@ -32,3 +33,5 @@ export enum Connection {
   FRIEND = 'friend',
   CLOSE_FRIEND = 'close_friend',
 }
+
+export type FriendType = 'all' | 'close_friends';

@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react';
 import FilterChip from '@components/_common/filter-chip/FilterChip';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
-import RecentPost from '@components/_common/recent-post/RecentPost';
-import HighlightSection from '@components/discover/HighlightSection/HighlightSection';
+import HighlightQuestionSection from '@components/discover/HighlightQuestionSection/HighlightQuestionSection';
 import SelectInterestSection from '@components/discover/SelectInterestSection/SelectInterestSection';
 import SelectPersonaSection from '@components/discover/SelectPersonaSection/SelectPersonaSection';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
@@ -42,7 +41,9 @@ function Discover() {
     (post: Note | Response | SelectInterest | SelectPersona | Highlight) => {
       switch (post.type) {
         case POST_TYPE.NOTE:
-          return <RecentPost recentPost={post} showNewBadge={false} />;
+          // TODO: discover용 PostItem 새로 만들자
+          // return <RecentPostItem recentPost={post} showNewBadge={false} />;
+          return null;
         case POST_TYPE.RESPONSE:
           return null;
         // TODO: SelectInterestSection에도 animation 로직 필요한지 확인 후 적용
@@ -55,7 +56,13 @@ function Discover() {
             </S.AnimatedCardWrapper>
           ) : null;
         case POST_TYPE.HIGHLIGHT:
-          return <HighlightSection />;
+          return (
+            <HighlightQuestionSection
+              tag="#DailyQuestions"
+              question="What are your two truths and a lie"
+              questionId={1}
+            />
+          );
         default:
           return null;
       }

@@ -311,8 +311,10 @@
     "access_setting": {
         "title": "Visibility",
         "text": "Choose who can see your post.",
-        "friend": "Friends",
-        "close_friend": "Close Friends",
+        "friends": "Friends",
+        "close_friends": "Close Friends",
+        "follower": "Followers",
+        "public": "Public",
         "save": "Save"
     },
     "responses": {

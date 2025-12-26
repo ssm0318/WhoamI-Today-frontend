@@ -135,7 +135,7 @@ function ResponseItem({
                         •
                       </Typo>
                       <Typo type="label-medium" color="BLACK">
-                        {visibility === 'close_friends' ? t('close_friend') : t('friend')}
+                        {visibility.map((v) => v).join(', ')}
                       </Typo>
                     </>
                   )}

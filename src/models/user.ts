@@ -19,7 +19,14 @@ export interface User {
   connection_status: Connection | null;
 }
 
-export interface UserProfile extends User {
+export interface UserFollowStatus {
+  is_following: boolean; // 내가 팔로우하고 있는지
+  is_followed_by: boolean; // 나를 팔로우하고 있는지
+  sent_follow_request_to: boolean; // 내가 팔로우 요청을 보냈는지
+  received_follow_request_from: boolean; // 내가 팔로우 요청을 받았는지
+}
+
+export interface UserProfile extends User, UserFollowStatus {
   are_friends: boolean;
   received_friend_request_from: boolean;
   sent_friend_request_to: boolean;

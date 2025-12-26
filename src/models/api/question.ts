@@ -1,10 +1,10 @@
-import { Question, Response } from '@models/post';
+import { PostVisibility, Question, Response } from '@models/post';
 
 export interface ResponseQuestionRequestParams {
   question_id?: number;
   post_id?: number;
   content: string;
-  visibility: string;
+  visibility: PostVisibility[];
   share_friends?: unknown;
   share_groups?: unknown;
   share_everyone?: unknown;

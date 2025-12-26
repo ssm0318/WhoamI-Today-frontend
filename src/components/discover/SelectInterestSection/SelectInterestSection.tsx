@@ -48,10 +48,10 @@ function SelectInterestSection({ isSaved = false, onSave }: SelectInterestSectio
 
   const handleSave = () => {
     onSave?.();
-    // TODO: 실제 저장 로직 구현
+    // TODO: 실제 저장 API 연동
   };
 
-  // 관심사를 여러 줄로 나누기 (가로 스크롤 가능)
+  // 관심사를 3줄로 나누기
   const interestsPerRow = Math.ceil(availableInterests.length / 3);
   const interestRows = [
     availableInterests.slice(0, interestsPerRow),

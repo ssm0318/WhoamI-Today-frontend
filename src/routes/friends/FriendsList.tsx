@@ -2,38 +2,24 @@ import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import FriendItemWithUpdates from '@components/friends/friend-item-with-updates/FriendItemWithUpdates';
-import FriendTypeChip, { FriendType } from '@components/friends/friend-type-chip/FriendTypeChip';
+import FriendTypeChip from '@components/friends/friend-type-chip/FriendTypeChip';
 import NoCloseFriends from '@components/friends/no-close-friends/NoCloseFriends';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
-// 테스트용으로 주석 처리: 나중에 실제 필터링 로직으로 복원 시 필요
-// import { Connection } from '@models/api/friends';
+import { FriendType } from '@models/api/friends';
 import { SocialBattery } from '@models/checkIn';
-import { POST_TYPE, PostVisibility } from '@models/post';
 import { getMe } from '@utils/apis/my';
 import { MainScrollContainer } from 'src/routes/Root';
 import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
 import { AllFriendItemLoader, AllFriendListLoader } from './FriendsLoader';
 
-const EmptyStateContainer = styled(Layout.FlexCol)<{ isEmpty: boolean }>`
-  width: 100%;
-  padding: 8px 0;
-  ${({ isEmpty }) =>
-    isEmpty &&
-    `
-    flex: 1;
-    justify-content: center;
-    min-height: calc(100vh - ${TOP_NAVIGATION_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px - 60px);
-  `}
-`;
-
 function FriendsList() {
   const [selectedType, setSelectedType] = useState<FriendType>('all');
 
   const { targetRef, allFriends, isAllFriendsLoading, isLoadingMoreAllFriends, refetchAllFriends } =
-    useInfiniteFetchFriends();
+    useInfiniteFetchFriends({ type: selectedType });
 
   const handleRefresh = async () => {
     await Promise.all([refetchAllFriends(), getMe()]);
@@ -50,25 +36,14 @@ function FriendsList() {
       .flatMap(({ results }) => results || [])
       .filter((user) => !user.is_hidden);
 
-    allFriendsList.forEach((friend) => {
-      console.log(
-        `Friend: ${friend.username}, connection_status: ${friend.connection_status}, is_hidden: ${friend.is_hidden}`,
-      );
-    });
-
-    // 테스트용으로 주석 처리: 나중에 실제 필터링 로직으로 복원
-    // const closeFriendsList = allFriendsList.filter(
-    //   (user) => user.connection_status === Connection.CLOSE_FRIEND,
-    // );
-
-    // 테스트용: CloseFriends 선택 시 빈 배열 반환
-    const filtered = selectedType === 'close' ? [] : allFriendsList;
+    // API에서 이미 필터링된 데이터를 받으므로 클라이언트 사이드 필터링 불필요
+    const filtered = allFriendsList;
 
     return {
       allFriendsCount: allFriendsList.length,
       filteredFriends: filtered,
     };
-  }, [allFriends, selectedType]);
+  }, [allFriends]);
 
   const isEmpty = filteredFriends.length === 0 && !isAllFriendsLoading;
 
@@ -87,9 +62,9 @@ function FriendsList() {
                 onClick={() => setSelectedType('all')}
               />
               <FriendTypeChip
-                type="close"
-                isSelected={selectedType === 'close'}
-                onClick={() => setSelectedType('close')}
+                type="close_friends"
+                isSelected={selectedType === 'close_friends'}
+                onClick={() => setSelectedType('close_friends')}
               />
             </Layout.FlexRow>
 
@@ -107,38 +82,14 @@ function FriendsList() {
                           social_battery: SocialBattery.completely_drained,
                         }}
                         key={user.id}
-                        // TODO: 더미 데이터 교체
-                        recentPost={{
-                          content: 'test',
-                          id: 1,
-                          created_at: '2021-01-01',
-                          updated_at: '2021-01-01',
-                          author: 'test',
-                          author_detail: user,
-                          like_count: 0,
-                          current_user_like_id: null,
-                          current_user_reaction_id_list: [],
-                          type: POST_TYPE.NOTE,
-                          images: [],
-                          comment_count: 0,
-                          like_user_sample: [],
-                          like_reaction_user_sample: [],
-                          comments: [],
-                          current_user_read: false,
-                          is_edited: false,
-                          visibility: PostVisibility.FRIENDS,
-                        }}
+                        recentPost={user.recent_post}
                       />
                     ))}
                   </Layout.FlexCol>
-                  {selectedType === 'all' && (
-                    <>
-                      <div ref={targetRef} />
-                      {isLoadingMoreAllFriends && <AllFriendItemLoader />}
-                    </>
-                  )}
+                  <div ref={targetRef} />
+                  {isLoadingMoreAllFriends && <AllFriendItemLoader />}
                 </>
-              ) : selectedType === 'close' ? (
+              ) : selectedType === 'close_friends' ? (
                 <NoCloseFriends />
               ) : null}
             </EmptyStateContainer>
@@ -148,5 +99,17 @@ function FriendsList() {
     </MainScrollContainer>
   );
 }
+
+const EmptyStateContainer = styled(Layout.FlexCol)<{ isEmpty: boolean }>`
+  width: 100%;
+  padding: 8px 0;
+  ${({ isEmpty }) =>
+    isEmpty &&
+    `
+    flex: 1;
+    justify-content: center;
+    min-height: calc(100vh - ${TOP_NAVIGATION_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px - 60px);
+  `}
+`;
 
 export default FriendsList;

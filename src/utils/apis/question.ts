@@ -40,7 +40,6 @@ export const requestResponse = async ({
   onSuccess: () => void;
   onError: (errorMsg?: string) => void;
 }) => {
-  console.log(selectedFriends);
   Promise.all(
     selectedFriends.map((friend) =>
       axios.post(`/qna/questions/response-request/`, {
@@ -78,16 +77,10 @@ export const patchResponse = async ({
   post_id,
   content,
   visibility,
-  share_friends = [],
-  share_groups = [],
-  share_everyone = false,
 }: ResponseQuestionRequestParams) => {
   const { data } = await axios.patch<Response>(`/qna/responses/${post_id}/`, {
     content,
     visibility,
-    share_friends,
-    share_groups,
-    share_everyone,
   });
   return data;
 };
