@@ -40,7 +40,6 @@ export const requestResponse = async ({
   onSuccess: () => void;
   onError: (errorMsg?: string) => void;
 }) => {
-  console.log(selectedFriends);
   Promise.all(
     selectedFriends.map((friend) =>
       axios.post(`/qna/questions/response-request/`, {

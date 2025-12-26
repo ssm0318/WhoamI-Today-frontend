@@ -171,9 +171,27 @@ export type PostReaction = {
 
 export type POST_DP_TYPE = 'LIST' | 'DETAIL' | 'FEED';
 
+export type RecentPost = {
+  id: number;
+  type: POST_TYPE.NOTE | POST_TYPE.RESPONSE;
+  created_at: string;
+  current_user_like_id: number | null;
+  current_user_reaction_id_list: {
+    id: number;
+    emoji: string;
+  }[];
+  preview_content: string;
+  is_read: boolean;
+  like_reaction_user_sample: ReactionUserSample[];
+  images: string[];
+  comment_count: number | null;
+};
+
 export enum PostVisibility {
   FRIENDS = 'friends',
   CLOSE_FRIENDS = 'close_friends',
+  FOLLOWER = 'follower', // 팔로워만 볼 수 있음
+  PUBLIC = 'public', // 모두 볼 수 있음
 }
 
 export interface SelectInterest extends ContentsCommon {
