@@ -1,5 +1,4 @@
 import { Connection } from '@models/api/friends';
-import { Persona } from '@models/persona';
 import { User } from '@models/user';
 
 export const friendList: User[] = [
@@ -12,7 +11,8 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test1/',
     bio: 'test1',
     pronouns: 'test1',
-    persona: [Persona.lurker],
+    user_personas: ['#lurker'],
+    user_interests: ['#hiking', '#dogs'],
     connection_status: Connection.FRIEND,
   },
   {
@@ -24,7 +24,8 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test2/',
     bio: 'test2',
     pronouns: 'test2',
-    persona: [Persona.content_creator],
+    user_personas: ['#content_creator'],
+    user_interests: ['#hiking', '#dogs'],
     connection_status: Connection.FRIEND,
   },
   {
@@ -36,7 +37,8 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test3/',
     bio: 'test3',
     pronouns: 'test3',
-    persona: [Persona.private_reactor],
+    user_personas: ['#private_reactor'],
+    user_interests: ['#hiking', '#dogs'],
     connection_status: Connection.FRIEND,
   },
   {
@@ -48,7 +50,8 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test4/',
     bio: 'test4',
     pronouns: 'test4',
-    persona: [Persona.public_commenter],
+    user_personas: ['#public_commenter'],
+    user_interests: ['#hiking', '#dogs'],
     connection_status: Connection.FRIEND,
   },
   {
@@ -59,7 +62,8 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test5/',
     bio: 'test5',
     pronouns: 'test5',
-    persona: [Persona.instant_responder],
+    user_personas: ['#instant_responder'],
+    user_interests: ['#hiking', '#dogs'],
     connection_status: Connection.FRIEND,
   },
   {
@@ -70,7 +74,8 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test6/',
     bio: 'test6',
     pronouns: 'test6',
-    persona: [Persona.takes_my_time],
+    user_personas: ['#takes_my_time'],
+    user_interests: ['#hiking', '#dogs'],
     connection_status: Connection.FRIEND,
   },
   {
@@ -81,7 +86,8 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test7/',
     bio: 'test7',
     pronouns: 'test7',
-    persona: [Persona.daily_scroller],
+    user_personas: ['#daily_scroller'],
+    user_interests: ['#hiking', '#dogs'],
     connection_status: Connection.FRIEND,
   },
   {
@@ -92,7 +98,8 @@ export const friendList: User[] = [
     url: 'http://localhost:8000/api/user/profile/test8/',
     bio: 'test8',
     pronouns: 'test8',
-    persona: [Persona.occasional_checker],
+    user_personas: ['#occasional_checker'],
+    user_interests: ['#hiking', '#dogs'],
     connection_status: Connection.FRIEND,
   },
 ];

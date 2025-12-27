@@ -27,7 +27,16 @@ export const editProfile = ({
   onError,
 }: {
   profile: Partial<
-    Pick<MyProfile, 'bio' | 'username' | 'pronouns' | 'noti_time' | 'noti_period_days' | 'persona'>
+    Pick<
+      MyProfile,
+      | 'bio'
+      | 'username'
+      | 'pronouns'
+      | 'noti_time'
+      | 'noti_period_days'
+      | 'user_personas'
+      | 'user_interests'
+    >
   > & {
     profile_image?: File;
   };
@@ -47,8 +56,20 @@ export const editProfile = ({
       return;
     }
 
-    if (profile.persona && key === 'persona') {
-      formData.append('persona', JSON.stringify(profile.persona));
+    // user_interests는 interests 키로, user_personas는 personas 키로 변환하여 공백으로 구분된 문자열로 전송
+    if (key === 'user_interests' && Array.isArray(value)) {
+      formData.append('interests', value.join(' '));
+      return;
+    }
+
+    if (key === 'user_personas' && Array.isArray(value)) {
+      formData.append('personas', value.join(' '));
+      return;
+    }
+
+    // 다른 배열인 경우 JSON.stringify로 변환
+    if (Array.isArray(value)) {
+      formData.append(key, JSON.stringify(value));
       return;
     }
 
@@ -108,4 +129,124 @@ export const getResponseRequests = async (page: string | null) => {
     `/user/me/response-requests/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
+};
+
+// interest 목록
+// TODO 실제 API 연동
+export const searchInterests = async (query: string): Promise<string[]> => {
+  // 가짜 데이터 - 실제 API 연동 전까지 사용
+  const allInterests: string[] = [
+    'Climbing',
+    'Gym&lifting',
+    'Cycling',
+    'Sailing',
+    'Tech&gadgets',
+    'Music',
+    'Dogs',
+    'Cuisine',
+    'Travel',
+    'Photography',
+    'Reading',
+    'Cooking',
+    'Art',
+    'Sports',
+    'Movies',
+    'Gaming',
+    'Pottery',
+    'Yoga',
+    'Hiking',
+    'Dancing',
+  ];
+
+  // 검색어가 없으면 전체 목록 반환
+  if (!query.trim()) {
+    return Promise.resolve(allInterests);
+  }
+
+  // 검색어에서 # 제거
+  const cleanQuery = query.replace(/^#+/, '').trim();
+
+  // 검색어로 필터링
+  const filtered = allInterests.filter((interest) =>
+    interest.toLowerCase().includes(cleanQuery.toLowerCase()),
+  );
+
+  // 실제 API 호출을 시뮬레이션하기 위한 약간의 지연
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(filtered);
+    }, 200);
+  });
+};
+
+// persona 목록
+// TODO 실제 API 연동
+export const searchPersonas = async (query: string): Promise<string[]> => {
+  // 가짜 데이터 - 실제 API 연동 전까지 사용
+  const allPersonas: string[] = [
+    'Lurker',
+    'ContentCreator',
+    'PrivateReactor',
+    'PublicCommenter',
+    'InstantResponder',
+    'TakesMyTime',
+    'DailyScroller',
+    'OccasionalChecker',
+    'ScheduledChecker',
+    'NightOwl',
+    'EarlyBird',
+    'EmojiFan',
+    'WordPerson',
+    'Poster',
+    'Commenter',
+    'SelfiePoster',
+    'PhotoHeavy',
+    'TextPoster',
+    'DeepTalks',
+    'CuriousAsker',
+    'OpenBook',
+    'ClosedBook',
+    'NoFilterPurist',
+    'CuratedAesthetic',
+    'WeekendUser',
+    'EverydayPresence',
+    'TrendWatcher',
+    'MemeLover',
+    'FrequentPoster',
+    'OccasionalPoster',
+    'SharesManyAtOnce',
+    'RandomAndCasual',
+    'StreamOfConsciousness',
+    'OneLiners',
+    'Throwbacks',
+    'MusicSharer',
+    'OpinionPoster',
+    'SilentSupporter',
+    'AlwaysOnline',
+    'RarelyPostsButWatchesEverything',
+    'BingeScroller',
+    'SilentObserver',
+    'ActiveListener',
+    'ThoughtfulResponder',
+  ];
+
+  // 검색어가 없으면 전체 목록 반환
+  if (!query.trim()) {
+    return Promise.resolve(allPersonas);
+  }
+
+  // 검색어에서 # 제거
+  const cleanQuery = query.replace(/^#+/, '').trim();
+
+  // 검색어로 필터링
+  const filtered = allPersonas.filter((persona) =>
+    persona.toLowerCase().includes(cleanQuery.toLowerCase()),
+  );
+
+  // 실제 API 호출을 시뮬레이션하기 위한 약간의 지연
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(filtered);
+    }, 200);
+  });
 };
