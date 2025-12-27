@@ -424,6 +424,10 @@
                 "max_persona_limit": "Maximum 10 personas can be selected",
                 "edit": "Edit"
             },
+            "persona": "Persona",
+            "persona_placeholder": "For eg: #Lurker",
+            "interests": "Interests",
+            "interests_placeholder": "For eg: #Climbing",
             "update": "Update",
             "response": {
                 "updated": "Profile updated successfully 🎉"
