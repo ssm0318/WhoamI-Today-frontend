@@ -810,5 +810,8 @@
     "silent_observer": "조용한 관찰자",
     "active_listener": "활발한 대화 참여자",
     "thoughtful_responder": "신중하고 사려 깊은 반응러"
+  },
+  "shared_playlist": {
+    "view_all": "모두 보기"
   }
 }
