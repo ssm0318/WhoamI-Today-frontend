@@ -820,6 +820,7 @@
         "thoughtful_responder": "Thoughtful Responder"
     },
     "shared_playlist": {
-        "view_all": "View All"
+        "view_all": "View All",
+        "empty_message": "Add Songs to shared playlist"
     }
 }

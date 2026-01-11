@@ -71,28 +71,30 @@ function FriendsList() {
 
             {/* Shared Playlist 섹션 */}
             <SharedPlaylistSection
-              tracks={[
-                {
-                  id: 1,
-                  name: 'Playlist 1',
-                  track: '0XtrhP0VnT4WHYArazoVVQ',
-                  sharedBy: {
-                    id: 1,
-                    username: 'user1',
-                    profileImageUrl: null,
-                  },
-                },
-                {
-                  id: 2,
-                  name: 'Playlist 2',
-                  track: '0XtrhP0VnT4WHYArazoVVQ',
-                  sharedBy: {
-                    id: 2,
-                    username: 'user2',
-                    profileImageUrl: null,
-                  },
-                },
-              ]}
+              tracks={
+                [
+                  // {
+                  //   id: 1,
+                  //   name: 'Playlist 1',
+                  //   track: '0XtrhP0VnT4WHYArazoVVQ',
+                  //   sharedBy: {
+                  //     id: 1,
+                  //     username: 'user1',
+                  //     profileImageUrl: null,
+                  //   },
+                  // },
+                  // {
+                  //   id: 2,
+                  //   name: 'Playlist 2',
+                  //   track: '0XtrhP0VnT4WHYArazoVVQ',
+                  //   sharedBy: {
+                  //     id: 2,
+                  //     username: 'user2',
+                  //     profileImageUrl: null,
+                  //   },
+                  // },
+                ]
+              }
               onCreateNew={() => {}}
               onTrackClick={(track) => {
                 console.log(track);

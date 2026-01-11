@@ -137,17 +137,28 @@ function SharedPlaylistSection({
           </Layout.FlexCol>
         </AddNewCard>
 
-        {/* Track Cards */}
-        {tracks.map((track) => (
-          <TrackCardItem key={track.id} track={track} onClick={() => handleTrackClick(track)} />
-        ))}
+        {/* Empty State or Track Cards */}
+        {tracks.length === 0 ? (
+          <Layout.FlexRow style={{ flexShrink: 0 }} alignItems="center">
+            <Typo type="title-medium" color="PRIMARY">
+              {t('empty_message')}
+            </Typo>
+          </Layout.FlexRow>
+        ) : (
+          <>
+            {/* Track Cards */}
+            {tracks.map((track) => (
+              <TrackCardItem key={track.id} track={track} onClick={() => handleTrackClick(track)} />
+            ))}
 
-        {/* View all */}
-        <Layout.FlexRow p={10} style={{ flexShrink: 0 }} onClick={handleViewAll}>
-          <Typo type="title-medium" color="PRIMARY">
-            {t('view_all')}
-          </Typo>
-        </Layout.FlexRow>
+            {/* View all */}
+            <Layout.FlexRow p={10} style={{ flexShrink: 0 }} onClick={handleViewAll}>
+              <Typo type="title-medium" color="PRIMARY">
+                {t('view_all')}
+              </Typo>
+            </Layout.FlexRow>
+          </>
+        )}
       </ScrollableCardList>
     </Layout.FlexCol>
   );

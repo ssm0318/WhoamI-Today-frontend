@@ -812,6 +812,7 @@
     "thoughtful_responder": "신중하고 사려 깊은 반응러"
   },
   "shared_playlist": {
-    "view_all": "모두 보기"
+    "view_all": "모두 보기",
+    "empty_message": "노래를 공유 플레이리스트에 추가해보세요."
   }
 }
