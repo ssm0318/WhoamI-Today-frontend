@@ -2,6 +2,7 @@ import { Track } from '@spotify/web-api-ts-sdk';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import SharedPlaylistBottomSheet from '@components/friends/shared-playlist-bottom-sheet/SharedPlaylistBottomSheet';
 import MusicDetailBottomSheet from '@components/music/music-detail-bottom-sheet/MusicDetailBottomSheet';
 import MusicSearchBottomSheet from '@components/music/music-search-bottom-sheet/MusicSearchBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
@@ -123,6 +124,7 @@ function TrackCardItem({ track }: TrackCardItemProps) {
 function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'shared_playlist' });
   const [showMusicSearch, setShowMusicSearch] = useState(false);
+  const [showPlaylistDetail, setShowPlaylistDetail] = useState(false);
 
   const handleCreateNew = () => {
     setShowMusicSearch(true);
@@ -134,7 +136,7 @@ function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
   };
 
   const handleViewAll = () => {
-    console.log('view all');
+    setShowPlaylistDetail(true);
   };
 
   return (
@@ -176,6 +178,17 @@ function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
         visible={showMusicSearch}
         closeBottomSheet={() => setShowMusicSearch(false)}
         onSelect={handleSelectTrackToAdd}
+      />
+
+      {/* Shared Playlist Detail Bottom Sheet */}
+      <SharedPlaylistBottomSheet
+        visible={showPlaylistDetail}
+        closeBottomSheet={() => setShowPlaylistDetail(false)}
+        tracks={tracks}
+        onAddNew={() => {
+          setShowPlaylistDetail(false);
+          setShowMusicSearch(true);
+        }}
       />
     </Layout.FlexCol>
   );

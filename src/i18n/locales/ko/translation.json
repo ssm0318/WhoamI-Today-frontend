@@ -813,6 +813,11 @@
   },
   "shared_playlist": {
     "view_all": "모두 보기",
-    "empty_message": "노래를 공유 플레이리스트에 추가해보세요."
+    "empty_message": "노래를 공유 플레이리스트에 추가해보세요.",
+    "bottom_sheet": {
+      "title": "공유 플레이리스트",
+      "add": "추가",
+      "you_added": "내가 추가함"
+    }
   }
 }
