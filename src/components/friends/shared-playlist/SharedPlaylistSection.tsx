@@ -2,6 +2,8 @@ import { Track } from '@spotify/web-api-ts-sdk';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import MusicDetailBottomSheet from '@components/music/music-detail-bottom-sheet/MusicDetailBottomSheet';
+import MusicSearchBottomSheet from '@components/music/music-search-bottom-sheet/MusicSearchBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
 import { AddNewCard, PlaylistCard, ScrollableCardList } from './SharedPlaylistSection.styled';
@@ -19,18 +21,20 @@ export interface SharedTrack {
 
 interface SharedPlaylistSectionProps {
   tracks?: SharedTrack[];
-  onCreateNew?: () => void;
-  onTrackClick?: (track: SharedTrack) => void;
 }
 
 interface TrackCardItemProps {
   track: SharedTrack;
-  onClick: () => void;
 }
 
-function TrackCardItem({ track, onClick }: TrackCardItemProps) {
+function TrackCardItem({ track }: TrackCardItemProps) {
   const [trackData, setTrackData] = useState<Track | null>(null);
   const spotifyManager = SpotifyManager.getInstance();
+  const [showMusicDetail, setShowMusicDetail] = useState(false);
+
+  const handleClickTrack = () => {
+    setShowMusicDetail(true);
+  };
 
   useEffect(() => {
     if (!track.track) {
@@ -54,7 +58,7 @@ function TrackCardItem({ track, onClick }: TrackCardItemProps) {
   const albumArtUrl = trackData?.album?.images?.[0]?.url;
 
   return (
-    <PlaylistCard onClick={onClick}>
+    <PlaylistCard onClick={handleClickTrack}>
       {/* Album Art Background */}
       <Layout.LayoutBase
         p={5}
@@ -105,22 +109,28 @@ function TrackCardItem({ track, onClick }: TrackCardItemProps) {
           />
         </div>
       </div>
+      <MusicDetailBottomSheet
+        visible={showMusicDetail}
+        closeBottomSheet={() => {
+          setShowMusicDetail(false);
+        }}
+        track={trackData}
+      />
     </PlaylistCard>
   );
 }
 
-function SharedPlaylistSection({
-  tracks = [],
-  onCreateNew,
-  onTrackClick,
-}: SharedPlaylistSectionProps) {
+function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'shared_playlist' });
+  const [showMusicSearch, setShowMusicSearch] = useState(false);
+
   const handleCreateNew = () => {
-    onCreateNew?.();
+    setShowMusicSearch(true);
   };
 
-  const handleTrackClick = (track: SharedTrack) => {
-    onTrackClick?.(track);
+  const handleSelectTrackToAdd = (trackId: string) => {
+    console.log('selected track:', trackId);
+    // TODO: API 호출하여 shared playlist에 추가
   };
 
   const handleViewAll = () => {
@@ -128,7 +138,7 @@ function SharedPlaylistSection({
   };
 
   return (
-    <Layout.FlexCol w="100%" style={{ overflow: 'visible' }}>
+    <Layout.FlexCol w="100%" mb={8} mt={4} style={{ overflow: 'visible' }}>
       <ScrollableCardList gap={18} ph={16}>
         {/* Add New Playlist */}
         <AddNewCard onClick={handleCreateNew}>
@@ -148,7 +158,7 @@ function SharedPlaylistSection({
           <>
             {/* Track Cards */}
             {tracks.map((track) => (
-              <TrackCardItem key={track.id} track={track} onClick={() => handleTrackClick(track)} />
+              <TrackCardItem key={track.id} track={track} />
             ))}
 
             {/* View all */}
@@ -160,6 +170,13 @@ function SharedPlaylistSection({
           </>
         )}
       </ScrollableCardList>
+
+      {/* Music Search Bottom Sheet */}
+      <MusicSearchBottomSheet
+        visible={showMusicSearch}
+        closeBottomSheet={() => setShowMusicSearch(false)}
+        onSelect={handleSelectTrackToAdd}
+      />
     </Layout.FlexCol>
   );
 }
