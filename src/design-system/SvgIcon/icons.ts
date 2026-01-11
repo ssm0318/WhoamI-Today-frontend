@@ -162,11 +162,14 @@ const comment_message = 'comment_message';
 const hashtag = 'hashtag';
 const hashtag_selected = 'hashtag_selected';
 
+const add_playlist = 'add_playlist';
+
 export {
   add_comment,
   add_default,
   add_emoji,
   add_note,
+  add_playlist,
   add_post,
   add_reaction,
   add_reaction_active,

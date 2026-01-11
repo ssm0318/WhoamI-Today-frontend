@@ -818,5 +818,8 @@
         "silent_observer": "Silent Observer",
         "active_listener": "Active Listener",
         "thoughtful_responder": "Thoughtful Responder"
+    },
+    "shared_playlist": {
+        "view_all": "View All"
     }
 }
