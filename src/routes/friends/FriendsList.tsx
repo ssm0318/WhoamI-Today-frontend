@@ -4,6 +4,7 @@ import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import FriendItemWithUpdates from '@components/friends/friend-item-with-updates/FriendItemWithUpdates';
 import FriendTypeChip from '@components/friends/friend-type-chip/FriendTypeChip';
 import NoCloseFriends from '@components/friends/no-close-friends/NoCloseFriends';
+import SharedPlaylistSection from '@components/friends/shared-playlist/SharedPlaylistSection';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
@@ -67,6 +68,32 @@ function FriendsList() {
                 onClick={() => setSelectedType('close_friends')}
               />
             </Layout.FlexRow>
+
+            {/* Shared Playlist 섹션 */}
+            <SharedPlaylistSection
+              tracks={[
+                {
+                  id: 1,
+                  name: 'Playlist 1',
+                  track: '0XtrhP0VnT4WHYArazoVVQ',
+                  sharedBy: {
+                    id: 1,
+                    username: 'user1',
+                    profileImageUrl: null,
+                  },
+                },
+                {
+                  id: 2,
+                  name: 'Playlist 2',
+                  track: '0XtrhP0VnT4WHYArazoVVQ',
+                  sharedBy: {
+                    id: 2,
+                    username: 'user2',
+                    profileImageUrl: null,
+                  },
+                },
+              ]}
+            />
 
             <EmptyStateContainer isEmpty={isEmpty}>
               {isAllFriendsLoading ? (

@@ -162,11 +162,16 @@ const comment_message = 'comment_message';
 const hashtag = 'hashtag';
 const hashtag_selected = 'hashtag_selected';
 
+const add_playlist = 'add_playlist';
+const trash_can = 'trash_can';
+const plus = 'plus';
+
 export {
   add_comment,
   add_default,
   add_emoji,
   add_note,
+  add_playlist,
   add_post,
   add_reaction,
   add_reaction_active,
@@ -266,6 +271,7 @@ export {
   notification_mute,
   ping_emoji_add,
   ping_send,
+  plus,
   private_comment,
   private_comment_active,
   private_comment_inactive,
@@ -288,4 +294,5 @@ export {
   top_navigation_dots,
   top_navigation_edit,
   top_navigation_friend,
+  trash_can,
 };

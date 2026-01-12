@@ -818,5 +818,14 @@
         "silent_observer": "Silent Observer",
         "active_listener": "Active Listener",
         "thoughtful_responder": "Thoughtful Responder"
+    },
+    "shared_playlist": {
+        "view_all": "View All",
+        "empty_message": "Add Songs to shared playlist",
+        "bottom_sheet": {
+            "title": "Shared playlist",
+            "add": "Add",
+            "you_shared": "You shared"
+        }
     }
 }

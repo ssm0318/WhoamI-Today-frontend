@@ -86,16 +86,18 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
       </Layout.FlexRow>
 
       {/* Status/Mood Chips */}
-      <Layout.FlexCol gap={4}>
-        <Layout.FlexRow gap={4} style={{ minHeight: track_id ? 28 : undefined }}>
+      <Layout.FlexCol gap={4} w="100%">
+        <Layout.FlexRow gap={4} w="100%" style={{ minHeight: track_id ? 28 : undefined }}>
           {social_battery && <SocialBatteryChip socialBattery={social_battery} />}
           {track_id && (
-            <SpotifyMusic
-              track={track_id}
-              useDetailBottomSheet
-              fontType="label-large"
-              useAlbumImg
-            />
+            <Layout.FlexRow style={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
+              <SpotifyMusic
+                track={track_id}
+                useDetailBottomSheet
+                fontType="label-large"
+                useAlbumImg
+              />
+            </Layout.FlexRow>
           )}
         </Layout.FlexRow>
         <Layout.FlexRow style={{ flexWrap: 'wrap' }}>
