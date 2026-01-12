@@ -25,12 +25,7 @@ function My() {
     if (featureFlags?.questionResponseFeature) {
       await Promise.all([mutate('/user/me/all-posts/'), fetchCheckIn(), getMe()]);
     } else {
-      await Promise.all([
-        mutate('/user/me/responses/'),
-        mutate('/user/me/notes/'),
-        fetchCheckIn(),
-        getMe(),
-      ]);
+      await Promise.all([mutate('/user/me/notes/'), fetchCheckIn(), getMe()]);
     }
   }, [featureFlags?.questionResponseFeature, fetchCheckIn]);
 
