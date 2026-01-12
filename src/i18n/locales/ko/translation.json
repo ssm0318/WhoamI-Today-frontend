@@ -414,6 +414,9 @@
       "bio": "소개",
       "pronouns": "대명사",
       "persona": "페르소나",
+      "persona_placeholder": "예: #Lurker",
+      "interests": "관심사",
+      "interests_placeholder": "예: #Climbing",
       "persona_edit_bottom_sheet": {
         "title": "후엠아이 페르소나 수정하기",
         "selected": "선택됨",

@@ -1,7 +1,6 @@
 import { Connection } from '@models/api/friends';
 import { MyProfile } from './api/user';
 import { CheckInBase } from './checkIn';
-import { Persona } from './persona';
 
 export interface User {
   id: number;
@@ -12,11 +11,12 @@ export interface User {
   email?: string;
   bio: string;
   pronouns: string;
-  persona: Persona[];
   has_changed_pw?: boolean;
   unread_noti_cnt?: number;
   unread_ping_count?: number;
   connection_status: Connection | null;
+  user_interests: string[]; // ['#hiking', '#dogs']과 같은 형식
+  user_personas: string[]; // ['#lurker', '#openbook']과 같은 형식
 }
 
 export interface UserFollowStatus {

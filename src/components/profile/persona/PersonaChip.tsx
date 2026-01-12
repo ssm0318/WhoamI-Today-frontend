@@ -4,9 +4,10 @@ import { Layout, Typo } from '@design-system';
 import { Persona } from '@models/persona';
 import { generateRandomColor } from '@utils/colorHelpers';
 
+// NOTE: Persona 타입 대신 string 타입을 사용 (추후 필요시 수정 필요)
 interface PersonaChipProps {
-  persona: Persona;
-  onSelect?: (persona: Persona) => void;
+  persona: string;
+  onSelect?: (persona: string) => void;
   isSelected?: boolean;
   color?: string;
 }

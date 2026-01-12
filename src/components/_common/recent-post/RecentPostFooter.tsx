@@ -90,7 +90,8 @@ function RecentPostFooter({
         username: myProfile.username,
         bio: myProfile.bio,
         pronouns: myProfile.pronouns,
-        persona: myProfile.persona,
+        user_personas: myProfile.user_personas,
+        user_interests: myProfile.user_interests,
         connection_status: myProfile.connection_status,
       };
       return [...prev, newSample];

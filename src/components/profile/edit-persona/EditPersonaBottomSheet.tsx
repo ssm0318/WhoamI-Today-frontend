@@ -11,8 +11,8 @@ import * as S from './EditPersonaBottomSheet.styled';
 type EditPersonaBottomSheetProps = {
   visible: boolean;
   closeBottomSheet: () => void;
-  onSelect: (personas: Persona[]) => void;
-  selectedPersonas: Persona[] | null;
+  onSelect: (personas: string[]) => void;
+  selectedPersonas: string[] | null;
   personaColorMap?: Record<string, string>;
 };
 
@@ -26,9 +26,9 @@ function EditPersonaBottomSheet({
   const [t] = useTranslation('translation', {
     keyPrefix: 'settings.edit_profile.persona_edit_bottom_sheet',
   });
-  const [selected, setSelected] = useState<Persona[]>(selectedPersonas || []);
+  const [selected, setSelected] = useState<string[]>(selectedPersonas || []);
 
-  const handleTogglePersona = (persona: Persona) => {
+  const handleTogglePersona = (persona: string) => {
     setSelected((prev) => {
       // If already selected, remove it
       if (prev.includes(persona)) {

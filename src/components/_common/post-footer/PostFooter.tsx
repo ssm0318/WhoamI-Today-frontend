@@ -92,7 +92,8 @@ function PostFooter({
         username: myProfile.username,
         bio: myProfile.bio,
         pronouns: myProfile.pronouns,
-        persona: myProfile.persona,
+        user_interests: myProfile.user_interests,
+        user_personas: myProfile.user_personas,
         connection_status: myProfile.connection_status,
       };
       return [...prev, newSample];

@@ -33,7 +33,9 @@ function SelectPersonaSection({ isSaved = false, onSave }: SelectPersonaSectionP
     openToast: state.openToast,
     myProfile: state.myProfile,
   }));
-  const [selectedPersonas, setSelectedPersonas] = useState<Persona[]>(myProfile?.persona || []);
+  const [selectedPersonas, setSelectedPersonas] = useState<string[]>(
+    myProfile?.user_personas || [],
+  );
 
   const handleTogglePersona = (persona: Persona) => {
     setSelectedPersonas((prev) => {
@@ -49,7 +51,7 @@ function SelectPersonaSection({ isSaved = false, onSave }: SelectPersonaSectionP
 
     editProfile({
       profile: {
-        persona: selectedPersonas,
+        user_personas: selectedPersonas,
       },
       onSuccess: (data: MyProfile) => {
         updateMyProfile({ ...data });

@@ -1,10 +1,10 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { useState } from 'react';
 import DeleteButton from '@components/_common/delete-button/DeleteButton';
+import SongSearchBottomSheet from '@components/music/music-search-bottom-sheet/MusicSearchBottomSheet';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import { Layout } from '@design-system';
 import CheckInSpotifySearchInput from '../check-in-spotify-search-input/CheckInSpotifySearchInput';
-import SongSearchBottomSheet from '../music-search-bottom-sheet/MusicSearchBottomSheet';
 
 interface CheckInSpotifyMusicProps {
   trackData: Track | null;
