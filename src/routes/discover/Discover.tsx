@@ -1,21 +1,27 @@
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import FilterChip from '@components/_common/filter-chip/FilterChip';
+import NoContents from '@components/_common/no-contents/NoContents';
+import PromptCard from '@components/_common/prompt/PromptCard';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
-import HighlightQuestionSection from '@components/discover/HighlightQuestionSection/HighlightQuestionSection';
 import SelectInterestSection from '@components/discover/SelectInterestSection/SelectInterestSection';
 import SelectPersonaSection from '@components/discover/SelectPersonaSection/SelectPersonaSection';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
+import ResponseItem from '@components/response/response-item/ResponseItem';
+import ResponseLoader from '@components/response/response-loader/ResponseLoader';
 import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSaveAndHide } from '@hooks/useSaveAndHide';
-import { discoverPostList } from '@mock/discovers';
-import { DiscoverFilter, DiscoverFilterLabel } from '@models/discover';
-import { Highlight, Note, POST_TYPE, Response, SelectInterest, SelectPersona } from '@models/post';
+import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
+import { DiscoverFilter, DiscoverFilterLabel, DiscoverResultItem } from '@models/discover';
+import { getDiscoverFeed } from '@utils/apis/discover';
 import { getMe } from '@utils/apis/my';
+import { PromptCardLoader } from 'src/routes/questions/AllQuestionsLoader';
 import { MainScrollContainer } from 'src/routes/Root';
 import * as S from './Discover.styled';
 
 function Discover() {
+  const [t] = useTranslation('translation');
   const [selectedFilter, setSelectedFilter] = useState<DiscoverFilter[]>([]);
   const {
     isSaved: isPersonaSaved,
@@ -31,38 +37,46 @@ function Discover() {
   ];
   const { scrollRef } = useRestoreScrollPosition('discoverPage');
 
-  const handleRefresh = useCallback(async () => {
-    // TODO: Implement refresh logic
-    await Promise.all([getMe()]);
-  }, []);
+  const {
+    targetRef,
+    data: discoverData,
+    isLoadingMore,
+    isLoading,
+    mutate,
+  } = useSWRInfiniteScroll<DiscoverResultItem>({ key: '/user/discover/' });
 
-  // TODO: 실제 데이터 연결 시 props 다시 한번 체크 필요 (테스트용으로 들어가있는거 없는지)
-  const renderPostComponent = useCallback(
-    (post: Note | Response | SelectInterest | SelectPersona | Highlight) => {
-      switch (post.type) {
-        case POST_TYPE.NOTE:
-          // TODO: discover용 PostItem 새로 만들자
-          // return <RecentPostItem recentPost={post} showNewBadge={false} />;
-          return null;
-        case POST_TYPE.RESPONSE:
-          return null;
-        // TODO: SelectInterestSection에도 animation 로직 필요한지 확인 후 적용
-        case POST_TYPE.SELECT_INTEREST:
-          return <SelectInterestSection isSaved />;
-        case POST_TYPE.SELECT_PERSONA:
+  const handleRefresh = useCallback(async () => {
+    await Promise.all([getDiscoverFeed(null), getMe()]);
+    mutate();
+  }, [mutate]);
+
+  const renderDiscoverItem = useCallback(
+    (item: DiscoverResultItem, index: number) => {
+      switch (item.type) {
+        case 'Response':
+          return <ResponseItem key={`response-${item.body.id}`} response={item.body} />;
+        case 'Question':
+          return (
+            <PromptCard
+              key={`question-${item.body.id}`}
+              id={item.body.id}
+              content={item.body.content}
+              widthMode="full"
+            />
+          );
+        case 'Interest':
+          return (
+            <SelectInterestSection
+              key={`interest-${index}`}
+              isSaved={item.body.list.every((interest) => interest.is_selected)}
+            />
+          );
+        case 'Persona':
           return showPersonaCard ? (
-            <S.AnimatedCardWrapper $isAnimating={isPersonaAnimating}>
+            <S.AnimatedCardWrapper key={`persona-${index}`} $isAnimating={isPersonaAnimating}>
               <SelectPersonaSection isSaved={isPersonaSaved} onSave={handlePersonaSave} />
             </S.AnimatedCardWrapper>
           ) : null;
-        case POST_TYPE.HIGHLIGHT:
-          return (
-            <HighlightQuestionSection
-              tag="#DailyQuestions"
-              question="What are your two truths and a lie"
-              questionId={1}
-            />
-          );
         default:
           return null;
       }
@@ -91,12 +105,33 @@ function Discover() {
             ))}
           </S.ScrollableFilterRow>
 
-          {/* POSTS -> Recent Posts */}
+          {/* Discover Feed */}
           <Layout.FlexCol gap={20} mh={16}>
-            {discoverPostList.map((post) => renderPostComponent(post))}
+            {isLoading ? (
+              <>
+                <ResponseLoader />
+                <PromptCardLoader />
+                <ResponseLoader />
+              </>
+            ) : discoverData?.[0] &&
+              discoverData[0].results &&
+              discoverData[0].results.length > 0 ? (
+              <>
+                {discoverData.map((page) =>
+                  page.results?.map((item, index) => renderDiscoverItem(item, index)),
+                )}
+                <div ref={targetRef} />
+                {isLoadingMore && (
+                  <>
+                    <ResponseLoader />
+                    <PromptCardLoader />
+                  </>
+                )}
+              </>
+            ) : (
+              <NoContents text={t('no_contents.discover')} mv={10} />
+            )}
           </Layout.FlexCol>
-
-          {/* SELECT YOUR PERSONA */}
         </Layout.FlexCol>
       </PullToRefresh>
     </MainScrollContainer>
