@@ -47,7 +47,7 @@ function My() {
             <Profile user={myProfile} />
           </Layout.FlexRow>
           <Divider width={8} bgColor="LIGHT" />
-          <Layout.FlexCol ph={12} pb="default" w="100%" bgColor="WHITE" rounded="0px 0px 8px 8px">
+          <Layout.FlexCol pl={12} pb="default" w="100%" bgColor="WHITE" rounded="0px 0px 8px 8px">
             {featureFlags?.questionResponseFeature ? <AllPostSection /> : <NoteSection />}
           </Layout.FlexCol>
         </Layout.FlexCol>
