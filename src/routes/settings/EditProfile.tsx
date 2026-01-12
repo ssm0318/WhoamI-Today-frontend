@@ -1,27 +1,21 @@
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import Icon from '@components/_common/icon/Icon';
+import HashtagSelectInput from '@components/_common/hashtag-select-input/HashtagSelectInput';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
 import ProfileImageEditButton from '@components/_common/profile-image-edit-button/ProfileImageEditButton';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import ValidatedTextArea from '@components/_common/validated-textarea/ValidatedTextArea';
-import PersonaChip from '@components/profile/persona/PersonaChip';
 import { StyledEditProfileButton } from '@components/settings/SettingsButtons.styled';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { MyProfile } from '@models/api/user';
-import { Persona } from '@models/persona';
 import { useBoundStore } from '@stores/useBoundStore';
-import { editProfile } from '@utils/apis/my';
-import { generateRandomColor } from '@utils/colorHelpers';
+import { editProfile, searchInterests, searchPersonas } from '@utils/apis/my';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { MainScrollContainer } from '../Root';
-
-const PERSONA_LIST_LIMIT = 10;
-const PERSONA_LIST_EXPANDED_LIMIT = 10;
 
 function EditProfile() {
   const location = useLocation();
@@ -36,25 +30,29 @@ function EditProfile() {
     featureFlags: state.featureFlags,
   }));
 
-  // Create a persistent color mapping for each persona
-  const personaColorMap = useMemo(() => {
-    const colorMap: Record<string, string> = {};
-    // Initialize with all possible personas
-    Object.values(Persona).forEach((p) => {
-      colorMap[p] = generateRandomColor();
-    });
-    return colorMap;
-  }, []);
-
-  const [draft, setDraft] = useState<Pick<MyProfile, 'bio' | 'username' | 'pronouns' | 'persona'>>({
+  const [draft, setDraft] = useState<
+    Pick<MyProfile, 'bio' | 'username' | 'pronouns' | 'user_personas' | 'user_interests'>
+  >({
     bio: myProfile?.bio ?? '',
     username: myProfile?.username ?? '',
     pronouns: myProfile?.pronouns ?? '',
-    persona: myProfile?.persona ?? [],
+    user_personas: myProfile?.user_personas ?? [],
+    user_interests: myProfile?.user_interests ?? [],
   });
 
   const [usernameError, setUsernameError] = useState<string>();
-  const [isPersonaListExpanded, setIsPersonaListExpanded] = useState(false);
+
+  // Interest 관련 상태
+  const [interestOptions, setInterestOptions] = useState<string[]>([]);
+  const [selectedInterestIds, setSelectedInterestIds] = useState<string[]>([]);
+  const [selectedInterestOptions, setSelectedInterestOptions] = useState<string[]>([]);
+  const [isLoadingInterests, setIsLoadingInterests] = useState(false);
+
+  // Persona 관련 상태
+  const [personaOptions, setPersonaOptions] = useState<string[]>([]);
+  const [selectedPersonaIds, setSelectedPersonaIds] = useState<string[]>([]);
+  const [selectedPersonaOptions, setSelectedPersonaOptions] = useState<string[]>([]);
+  const [isLoadingPersonas, setIsLoadingPersonas] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -66,38 +64,104 @@ function EditProfile() {
   const [imageChanged, setImageChanged] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
+  // 초기 선택된 Interest와 Persona 설정
   useEffect(() => {
+    if (myProfile) {
+      // 배열에서 "#" 접두사를 제거하여 소문자로 변환
+      const interests =
+        Array.isArray(myProfile.user_interests) && myProfile.user_interests.length > 0
+          ? myProfile.user_interests.map((item) => item.replace(/^#+/, '').toLowerCase())
+          : [];
+      const personas =
+        Array.isArray(myProfile.user_personas) && myProfile.user_personas.length > 0
+          ? myProfile.user_personas.map((item) => item.replace(/^#+/, '').toLowerCase())
+          : [];
+
+      setSelectedInterestIds(interests);
+      setSelectedPersonaIds(personas);
+      // 초기 선택된 항목들을 설정
+      setSelectedInterestOptions(interests);
+      setSelectedPersonaOptions(personas);
+    }
+  }, [myProfile]);
+
+  // Interest 검색
+  const handleSearchInterests = useCallback(async (query: string) => {
+    setIsLoadingInterests(true);
+    try {
+      const results = await searchInterests(query);
+      setInterestOptions(results);
+    } catch (error) {
+      console.error('Failed to search interests:', error);
+      setInterestOptions([]);
+    } finally {
+      setIsLoadingInterests(false);
+    }
+  }, []);
+
+  // Persona 검색
+  const handleSearchPersonas = useCallback(async (query: string) => {
+    setIsLoadingPersonas(true);
+    try {
+      const results = await searchPersonas(query);
+      setPersonaOptions(results);
+    } catch (error) {
+      console.error('Failed to search personas:', error);
+      setPersonaOptions([]);
+    } finally {
+      setIsLoadingPersonas(false);
+    }
+  }, []);
+
+  // Interest 선택 변경
+  const handleInterestChange = useCallback((labels: string[]) => {
+    setSelectedInterestIds(labels);
+    setSelectedInterestOptions(labels);
+
+    // 저장할 때는 label에 "#" 접두사를 붙여서 배열로 저장
+    const hashtags = labels.map((label) => {
+      const cleanLabel = label.startsWith('#') ? label : `#${label}`;
+      return cleanLabel;
+    });
+    setDraft((prev) => ({
+      ...prev,
+      user_interests: hashtags,
+    }));
+  }, []);
+
+  // Persona 선택 변경
+  const handlePersonaChange = useCallback((labels: string[]) => {
+    setSelectedPersonaIds(labels);
+    setSelectedPersonaOptions(labels);
+
+    // 저장할 때는 label에 "#" 접두사를 붙여서 배열로 저장
+    const hashtags = labels.map((label) => {
+      const cleanLabel = label.startsWith('#') ? label : `#${label}`;
+      return cleanLabel;
+    });
+    setDraft((prev) => ({
+      ...prev,
+      user_personas: hashtags,
+    }));
+  }, []);
+
+  useEffect(() => {
+    // 배열 비교를 위한 헬퍼 함수
+    const arraysEqual = (a: string[], b: string[]): boolean => {
+      if (a.length !== b.length) return false;
+      return a.every((val, index) => val === b[index]);
+    };
+
     const hasDraftChanged =
       draft.username !== (myProfile?.username ?? '') ||
       draft.pronouns !== (myProfile?.pronouns ?? '') ||
       draft.bio !== (myProfile?.bio ?? '') ||
-      draft.persona !== (myProfile?.persona ?? []) ||
+      !arraysEqual(draft.user_personas ?? [], myProfile?.user_personas ?? []) ||
+      !arraysEqual(draft.user_interests ?? [], myProfile?.user_interests ?? []) ||
       imageChanged;
 
     setHasChanges(hasDraftChanged);
   }, [draft, imageChanged, myProfile]);
-
-  const handleTogglePersona = (persona: Persona) => {
-    setDraft((prev) => {
-      const currentPersonas = [...prev.persona];
-
-      if (currentPersonas.includes(persona)) {
-        return {
-          ...prev,
-          persona: currentPersonas.filter((p) => p !== persona),
-        };
-      }
-
-      if (currentPersonas.length < 10) {
-        return {
-          ...prev,
-          persona: [...currentPersonas, persona],
-        };
-      }
-
-      return prev;
-    });
-  };
 
   const handleClickUpdate = () => {
     inputRef.current?.click();
@@ -236,93 +300,30 @@ function EditProfile() {
           limit={20}
           error={usernameError}
         />
-        {/* persona */}
-        {featureFlags?.persona && (
-          <>
-            <Layout.FlexRow alignItems="center" gap={8}>
-              <img width="14px" src="/whoami-logo.svg" alt="who_am_i" />
-              <Typo type="title-medium" color="MEDIUM_GRAY">
-                {t('persona')}
-              </Typo>
-            </Layout.FlexRow>
 
-            <Layout.FlexCol
-              w="100%"
-              outline="LIGHT_GRAY"
-              rounded={12}
-              style={{ overflow: 'hidden' }}
-            >
-              <Layout.FlexCol w="100%" alignItems="center" ph={12} pv={16}>
-                <Layout.FlexRow mt={8} mb={2}>
-                  <Typo
-                    type="body-medium"
-                    color={draft.persona.length >= PERSONA_LIST_LIMIT ? 'WARNING' : 'DARK'}
-                  >
-                    {draft.persona.length} / {PERSONA_LIST_LIMIT}{' '}
-                    {t('persona_edit_bottom_sheet.selected')}
-                  </Typo>
-                </Layout.FlexRow>
-                {draft.persona.length >= PERSONA_LIST_LIMIT && (
-                  <Layout.FlexRow mb={4}>
-                    <Typo type="body-small" color="WARNING">
-                      {t('persona_edit_bottom_sheet.max_persona_limit')}
-                    </Typo>
-                  </Layout.FlexRow>
-                )}
-                <Layout.FlexRow
-                  gap={6}
-                  pv={16}
-                  style={{
-                    flexWrap: 'wrap',
-                  }}
-                  w="100%"
-                >
-                  {Object.values(Persona)
-                    .slice(0, isPersonaListExpanded ? undefined : PERSONA_LIST_EXPANDED_LIMIT)
-                    .map((persona) => (
-                      <PersonaChip
-                        persona={persona}
-                        key={persona}
-                        onSelect={handleTogglePersona}
-                        isSelected={draft.persona.includes(persona)}
-                        color={personaColorMap[persona]}
-                      />
-                    ))}
-                </Layout.FlexRow>
-                {!isPersonaListExpanded &&
-                  Object.values(Persona).length > PERSONA_LIST_EXPANDED_LIMIT && (
-                    <Layout.FlexRow
-                      w="100%"
-                      justifyContent="center"
-                      alignItems="center"
-                      onClick={() => setIsPersonaListExpanded(true)}
-                      pv={8}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <Layout.FlexRow ml={4}>
-                        <Icon name="chevron_down" size={16} />
-                      </Layout.FlexRow>
-                    </Layout.FlexRow>
-                  )}
-                {isPersonaListExpanded &&
-                  Object.values(Persona).length > PERSONA_LIST_EXPANDED_LIMIT && (
-                    <Layout.FlexRow
-                      w="100%"
-                      justifyContent="center"
-                      alignItems="center"
-                      onClick={() => setIsPersonaListExpanded(false)}
-                      pv={8}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <Layout.FlexRow ml={4}>
-                        <Icon name="chevron_up" size={16} />
-                      </Layout.FlexRow>
-                    </Layout.FlexRow>
-                  )}
-              </Layout.FlexCol>
-            </Layout.FlexCol>
-          </>
-        )}
+        {/* interests */}
+        <HashtagSelectInput
+          label={t('interests')}
+          value={selectedInterestIds}
+          options={interestOptions}
+          selectedOptions={selectedInterestOptions}
+          isLoading={isLoadingInterests}
+          onChange={handleInterestChange}
+          onSearch={handleSearchInterests}
+          placeholder={t('interests_placeholder') || 'Add interests...'}
+        />
+
+        {/* persona */}
+        <HashtagSelectInput
+          label={t('persona')}
+          value={selectedPersonaIds}
+          options={personaOptions}
+          selectedOptions={selectedPersonaOptions}
+          isLoading={isLoadingPersonas}
+          onChange={handlePersonaChange}
+          onSearch={handleSearchPersonas}
+          placeholder={t('persona_placeholder') || 'Add personas...'}
+        />
 
         {/* pronouns */}
         <ValidatedInput

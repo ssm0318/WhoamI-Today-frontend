@@ -89,7 +89,7 @@ function Profile({ user }: ProfileProps) {
       : 0;
 
     setChipHeight(firstRowHeight);
-  }, [user?.persona]);
+  }, [user?.user_personas]);
 
   useEffect(() => {
     if (!personaContainerRef.current) return;
@@ -99,7 +99,7 @@ function Profile({ user }: ProfileProps) {
     const isOverflow = container.scrollHeight > container.clientHeight;
 
     setIsOverflowing(isOverflow);
-  }, [chipHeight, user?.persona]);
+  }, [chipHeight, user?.user_personas]);
 
   return (
     <Layout.FlexCol w="100%" gap={16}>
@@ -222,7 +222,10 @@ function Profile({ user }: ProfileProps) {
       </Layout.FlexRow>
       {featureFlags?.persona && (
         <Layout.FlexCol w="100%">
-          {user && (areFriends(user) || isMyPage) && user?.persona && user?.persona.length > 0 ? (
+          {user &&
+          (areFriends(user) || isMyPage) &&
+          user?.user_personas &&
+          user?.user_personas.length > 0 ? (
             <Layout.FlexRow w="100%">
               <Layout.FlexRow
                 w="100%"
@@ -236,7 +239,7 @@ function Profile({ user }: ProfileProps) {
                 }}
                 ref={personaContainerRef}
               >
-                {user?.persona.map((persona) => (
+                {user?.user_personas.map((persona) => (
                   <PersonaChip key={persona} persona={persona} />
                 ))}
               </Layout.FlexRow>
