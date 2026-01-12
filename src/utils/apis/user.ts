@@ -533,3 +533,15 @@ export const getUserResponses = async (username: string, next?: string | null) =
 export const readUserAllResponses = async (username: string) => {
   await axios.patch('/user/mark-all-responses-as-read/', { username });
 };
+
+/**
+ *
+ * @param username username
+ * @returns PaginationResponse<Response | Note[]>
+ */
+export const getUserAllPosts = async (username: string) => {
+  const { data } = await axios.get<PaginationResponse<Response | Note[]>>(
+    `/user/${encodeURIComponent(username)}/all-posts/`,
+  );
+  return data;
+};

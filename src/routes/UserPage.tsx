@@ -7,8 +7,8 @@ import MainContainer from '@components/_common/main-container/MainContainer';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import UserHeader from '@components/header/user-header/UserHeader';
 import NoteSection from '@components/note/note-section/NoteSection';
+import AllPostSection from '@components/post/AllPostSection';
 import Profile from '@components/profile/Profile';
-import ResponseSection from '@components/response/response-section/ResponseSection';
 import UserMoreModal from '@components/user-page/UserMoreModal';
 import { UserPageContext } from '@components/user-page/UserPage.context';
 import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
@@ -55,10 +55,11 @@ function UserPage() {
 
     const encodedUsername = encodeURIComponent(username);
 
-    await Promise.all([
-      mutate(`/user/${encodedUsername}/responses/`),
-      mutate(`/user/${encodedUsername}/notes/`),
-    ]);
+    if (featureFlags?.questionResponseFeature) {
+      await Promise.all([mutate(`/user/${encodedUsername}/all-posts/`)]);
+    } else {
+      await Promise.all([mutate(`/user/${encodedUsername}/notes/`)]);
+    }
   };
 
   return (
@@ -111,19 +112,13 @@ function UserPage() {
                   >
                     <Profile user={user.data} />
                   </Layout.FlexRow>
-                  {featureFlags?.friendList && (
-                    <>
-                      {/** responses and notes section */}
-                      <Divider width={8} bgColor="LIGHT" />
-                      <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
-                        <ResponseSection username={username} />
-                      </Layout.FlexCol>
-                    </>
-                  )}
-
                   <Divider width={8} bgColor="LIGHT" />
                   <Layout.FlexCol pt={8} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
-                    <NoteSection username={username} />
+                    {featureFlags?.questionResponseFeature ? (
+                      <AllPostSection username={username} />
+                    ) : (
+                      <NoteSection username={username} />
+                    )}
                   </Layout.FlexCol>
                 </>
               )}

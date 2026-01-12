@@ -131,6 +131,14 @@ export const getResponseRequests = async (page: string | null) => {
   return data;
 };
 
+export const getMyAllPosts = async (page: string | null) => {
+  const requestPage = page ? page.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<Response | Note[]>>(
+    `/user/me/all-posts/${!requestPage ? '' : `?page=${requestPage}`}`,
+  );
+  return data;
+};
+
 // interest 목록
 // TODO 실제 API 연동
 export const searchInterests = async (query: string): Promise<string[]> => {
