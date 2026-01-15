@@ -831,5 +831,9 @@
             "add": "Add",
             "you_shared": "You shared"
         }
+    },
+    "pinned_posts": {
+        "title": "Pinned Posts",
+        "entry_title": "{{count}} pinned post{{count > 1 ? 's' : ''}}"
     }
 }

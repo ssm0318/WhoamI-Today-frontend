@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
+import PinnedPostsSection from '@components/profile/pinned-posts-section/PinnedPostsSection';
 import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
 import MusicPlaceholder from '@components/profile/placeholders/MusicPlaceholder';
 import SocialBatteryPlaceholder from '@components/profile/placeholders/SocialBatteryPlaceholder';
@@ -18,9 +19,10 @@ import SocialBatteryChip from '../profile/social-batter-chip/SocialBatteryChip';
 
 interface CheckInProps {
   user: UserProfile | MyProfile;
+  username?: string;
 }
 
-function CheckIn({ user }: CheckInProps) {
+function CheckIn({ user, username }: CheckInProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page.check_in' });
   const {
     myProfile,
@@ -136,6 +138,7 @@ function CheckIn({ user }: CheckInProps) {
             isMyPage && <MoodPlaceholder />
           )}
         </Layout.FlexRow>
+        <PinnedPostsSection username={username} pinnedPostsCount={2} />
         {/* check in time */}
         {checkIn?.created_at && (
           <Layout.FlexRow w="100%" justifyContent="flex-end" gap={4}>

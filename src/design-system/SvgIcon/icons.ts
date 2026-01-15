@@ -165,6 +165,8 @@ const hashtag_selected = 'hashtag_selected';
 const add_playlist = 'add_playlist';
 const trash_can = 'trash_can';
 const plus = 'plus';
+const pin_empty = 'pin_empty';
+const chevron_right = 'chevron_right';
 
 export {
   add_comment,
@@ -199,6 +201,7 @@ export {
   checkbox_rectangle_checked,
   checkbox_rectangle_default,
   chevron_down,
+  chevron_right,
   chevron_up,
   circle_check,
   circle_check_checked,
@@ -269,6 +272,7 @@ export {
   noti_icon_public_comment,
   notification,
   notification_mute,
+  pin_empty,
   ping_emoji_add,
   ping_send,
   plus,
