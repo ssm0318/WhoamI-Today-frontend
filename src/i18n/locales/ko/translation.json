@@ -822,5 +822,9 @@
       "add": "추가",
       "you_added": "내가 추가함"
     }
+  },
+  "pinned_posts": {
+    "title": "고정 게시글",
+    "entry_title": "{{count}} 고정 게시글"
   }
 }

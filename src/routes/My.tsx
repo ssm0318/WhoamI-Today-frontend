@@ -4,8 +4,8 @@ import Divider from '@components/_common/divider/Divider';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import NoteSection from '@components/note/note-section/NoteSection';
+import AllPostSection from '@components/post/AllPostSection';
 import Profile from '@components/profile/Profile';
-import ResponseSection from '@components/response/response-section/ResponseSection';
 import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -22,13 +22,12 @@ function My() {
   const { featureFlags } = useBoundStore(UserSelector);
 
   const handleRefresh = useCallback(async () => {
-    await Promise.all([
-      mutate('/user/me/responses/'),
-      mutate('/user/me/notes/'),
-      fetchCheckIn(),
-      getMe(),
-    ]);
-  }, [fetchCheckIn]);
+    if (featureFlags?.questionResponseFeature) {
+      await Promise.all([mutate('/user/me/all-posts/'), fetchCheckIn(), getMe()]);
+    } else {
+      await Promise.all([mutate('/user/me/notes/'), fetchCheckIn(), getMe()]);
+    }
+  }, [featureFlags?.questionResponseFeature, fetchCheckIn]);
 
   const { scrollRef } = useRestoreScrollPosition('myPage');
 
@@ -48,17 +47,8 @@ function My() {
             <Profile user={myProfile} />
           </Layout.FlexRow>
           <Divider width={8} bgColor="LIGHT" />
-          {featureFlags?.friendList && (
-            <>
-              <Layout.FlexCol pv={12} pl={12} w="100%" bgColor="WHITE" rounded={8}>
-                <ResponseSection />
-              </Layout.FlexCol>
-              <Divider width={8} bgColor="LIGHT" />
-            </>
-          )}
-
-          <Layout.FlexCol ph={12} pb="default" w="100%" bgColor="WHITE" rounded="0px 0px 8px 8px">
-            <NoteSection />
+          <Layout.FlexCol pl={12} pb="default" w="100%" bgColor="WHITE" rounded="0px 0px 8px 8px">
+            {featureFlags?.questionResponseFeature ? <AllPostSection /> : <NoteSection />}
           </Layout.FlexCol>
         </Layout.FlexCol>
       </PullToRefresh>

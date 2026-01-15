@@ -273,7 +273,7 @@ function Profile({ user }: ProfileProps) {
         </>
       )}
       {/* 체크인 (status) */}
-      {featureFlags?.checkIn && user && <CheckInSection user={user} />}
+      {featureFlags?.checkIn && user && <CheckInSection user={user} username={username} />}
     </Layout.FlexCol>
   );
 }
