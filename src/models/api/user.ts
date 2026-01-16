@@ -134,7 +134,7 @@ export interface MyProfile extends User {
   check_in?: MyCheckIn;
   current_ver: VersionType;
   user_group: UserGroup;
-  pinned_posts_count?: number;
+  pinned_cnt: number;
 }
 
 export interface FriendRequest {

@@ -33,7 +33,7 @@ export interface UserProfile extends User, UserFollowStatus {
   check_in: CheckInBase;
   mutuals: User[];
   is_favorite: boolean;
-  pinned_posts_count?: number;
+  pinned_cnt?: number;
 }
 
 export const areFriends = (user: User | UserProfile): user is UserProfile =>

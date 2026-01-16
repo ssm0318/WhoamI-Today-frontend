@@ -166,6 +166,7 @@ const add_playlist = 'add_playlist';
 const trash_can = 'trash_can';
 const plus = 'plus';
 const pin_empty = 'pin_empty';
+const pin_filled = 'pin_filled';
 const chevron_right = 'chevron_right';
 
 export {
@@ -273,6 +274,7 @@ export {
   notification,
   notification_mute,
   pin_empty,
+  pin_filled,
   ping_emoji_add,
   ping_send,
   plus,

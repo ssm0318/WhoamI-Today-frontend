@@ -344,6 +344,8 @@
     "menu": {
       "report": "신고",
       "edit": "수정",
+      "pin": "고정",
+      "unpin": "고정 해제",
       "delete": "삭제"
     },
     "report": {
@@ -360,6 +362,14 @@
       "cancel": "취소",
       "delete": "삭제",
       "success_title": "게시물이 성공적으로 삭제되었습니다 🎉",
+      "error_title": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+    },
+    "pin": {
+      "success_title": "게시물이 고정되었습니다 🎉",
+      "error_title": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+    },
+    "unpin": {
+      "success_title": "게시물 고정이 해제되었습니다 🎉",
       "error_title": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
     }
   },
@@ -826,6 +836,7 @@
   },
   "pinned_posts": {
     "title": "고정 게시글",
-    "entry_title": "{{count}} 고정 게시글"
+    "entry_title": "{{count}} 고정 게시글",
+    "no_contents": "고정된 게시글이 없습니다."
   }
 }

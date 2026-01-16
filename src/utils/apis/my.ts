@@ -17,6 +17,8 @@ export const getMe = async () => {
 // get my profile
 export const getMyProfile = async () => {
   const { data } = await axios.get<UserProfile>(`/user/me/profile/`);
+
+  useBoundStore.getState().updateMyProfile({ pinned_cnt: data.pinned_cnt ?? 0 });
   return data;
 };
 

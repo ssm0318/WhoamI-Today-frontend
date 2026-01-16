@@ -347,6 +347,8 @@
         "menu": {
             "report": "Report",
             "edit": "Edit",
+            "pin": "Pin",
+            "unpin": "Unpin",
             "delete": "Delete"
         },
         "report": {
@@ -363,6 +365,14 @@
             "cancel": "Cancel",
             "delete": "Delete",
             "success_title": "Post deleted succesfully 🎉",
+            "error_title": "A temporary error occurred. Please try again later."
+        },
+        "pin": {
+            "success_title": "Post pinned successfully 🎉",
+            "error_title": "A temporary error occurred. Please try again later."
+        },
+        "unpin": {
+            "success_title": "Post unpinned successfully 🎉",
             "error_title": "A temporary error occurred. Please try again later."
         }
     },
@@ -835,6 +845,8 @@
     },
     "pinned_posts": {
         "title": "Pinned Posts",
-        "entry_title": "{{count}} pinned post{{count > 1 ? 's' : ''}}"
+        "entry_title_one": "{{count}} pinned post",
+        "entry_title_other": "{{count}} pinned posts",
+        "no_contents": "No pinned posts yet."
     }
 }

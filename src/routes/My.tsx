@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { mutate } from 'swr';
 import Divider from '@components/_common/divider/Divider';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
@@ -10,7 +10,7 @@ import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { getMe } from '@utils/apis/my';
+import { getMe, getMyProfile } from '@utils/apis/my';
 import { MainScrollContainer } from './Root';
 
 function My() {
@@ -21,11 +21,16 @@ function My() {
 
   const { featureFlags } = useBoundStore(UserSelector);
 
+  // Load pinned_cnt on mount
+  useEffect(() => {
+    getMyProfile();
+  }, []);
+
   const handleRefresh = useCallback(async () => {
     if (featureFlags?.questionResponseFeature) {
-      await Promise.all([mutate('/user/me/all-posts/'), fetchCheckIn(), getMe()]);
+      await Promise.all([mutate('/user/me/all-posts/'), fetchCheckIn(), getMe(), getMyProfile()]);
     } else {
-      await Promise.all([mutate('/user/me/notes/'), fetchCheckIn(), getMe()]);
+      await Promise.all([mutate('/user/me/notes/'), fetchCheckIn(), getMe(), getMyProfile()]);
     }
   }, [featureFlags?.questionResponseFeature, fetchCheckIn]);
 

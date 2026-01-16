@@ -40,6 +40,8 @@ function CheckIn({ user, username }: CheckInProps) {
   const { social_battery, track_id, mood, description, current_user_read } = checkIn || {};
   const hasCheckIn = checkIn && (mood || description || social_battery || track_id);
 
+  const pinnedCnt = isMyPage ? myProfile?.pinned_cnt : (user as UserProfile)?.pinned_cnt;
+
   const [currentDate] = useState(() => new Date());
   const navigate = useNavigate();
 
@@ -138,7 +140,7 @@ function CheckIn({ user, username }: CheckInProps) {
             isMyPage && <MoodPlaceholder />
           )}
         </Layout.FlexRow>
-        <PinnedPostsSection username={username} pinnedPostsCount={2} />
+        <PinnedPostsSection username={username} pinnedPostsCount={pinnedCnt || 0} />
         {/* check in time */}
         {checkIn?.created_at && (
           <Layout.FlexRow w="100%" justifyContent="flex-end" gap={4}>

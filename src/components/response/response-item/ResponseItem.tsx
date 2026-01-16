@@ -9,9 +9,11 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import { SCREEN_WIDTH } from '@constants/layout';
-import { Layout, Typo } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import { POST_DP_TYPE, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
+import { getMyProfile } from '@utils/apis/my';
+import { pinPost, unpinPost } from '@utils/apis/pin';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
@@ -29,6 +31,7 @@ function ResponseItem({
   refresh,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
+  const [tPin] = useTranslation('translation', { keyPrefix: 'post_more_modal' });
 
   const [overflowSummary, setOverflowSummary] = useState<string>();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
@@ -40,10 +43,15 @@ function ResponseItem({
     setEmojiPickerTarget: state.setEmojiPickerTarget,
   }));
 
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (displayType !== 'LIST') return;
+    if (displayType !== 'LIST') {
+      setOverflowSummary(undefined);
+      return;
+    }
     if (response.content.length > MAX_RESPONSE_CONTENT_LENGTH)
       setOverflowSummary(response.content.slice(0, MAX_RESPONSE_CONTENT_LENGTH));
 
@@ -52,8 +60,18 @@ function ResponseItem({
       setOverflowSummary(contentArrWithNewLine.slice(0, MAX_RESPONSE_NEW_LINE).join('\n'));
   }, [response.content, displayType]);
 
-  const { content, created_at, author_detail, question, is_edited, current_user_read, visibility } =
-    response;
+  const {
+    content,
+    created_at,
+    author_detail,
+    question,
+    is_edited,
+    current_user_read,
+    visibility,
+    is_pinned,
+    current_user_pin_id,
+    id,
+  } = response;
 
   const { username, profile_image } = author_detail ?? {};
 
@@ -81,6 +99,25 @@ function ResponseItem({
   const navigateToProfile = (e: MouseEvent) => {
     e.stopPropagation();
     navigate(`/users/${username}`);
+  };
+
+  const handleClickPin = async (e: MouseEvent) => {
+    e.stopPropagation();
+    try {
+      if (is_pinned && current_user_pin_id) {
+        await unpinPost(current_user_pin_id);
+        openToast({ message: tPin('unpin.success_title') });
+      } else {
+        await pinPost('Response', id);
+        openToast({ message: tPin('pin.success_title') });
+      }
+      await getMyProfile();
+      refresh?.();
+    } catch (error) {
+      openToast({
+        message: is_pinned ? tPin('unpin.error_title') : tPin('pin.error_title'),
+      });
+    }
   };
 
   return (
@@ -142,8 +179,16 @@ function ResponseItem({
                 </Layout.FlexRow>
               </Layout.FlexCol>
             </Layout.FlexRow>
-            {/* More options */}
-            <Layout.FlexRow>
+            {/* Pin and More options */}
+            <Layout.FlexRow alignItems="center" gap={8}>
+              {(isMyPage || is_pinned) && (
+                <SvgIcon
+                  name={is_pinned ? 'pin_filled' : 'pin_empty'}
+                  size={24}
+                  color={is_pinned ? 'BLACK' : 'MEDIUM_GRAY'}
+                  onClick={isMyPage ? handleClickPin : undefined}
+                />
+              )}
               <Icon name="dots_menu" size={24} onClick={handleClickMore} />
             </Layout.FlexRow>
           </Layout.FlexRow>
@@ -157,7 +202,7 @@ function ResponseItem({
             }}
           >
             {displayType === 'DETAIL' ? (
-              <ContentTranslation content={content} translateContent={!isMyPage} />
+              <ContentTranslation content={content || ''} translateContent={!isMyPage} />
             ) : (
               <Typo type="body-large" color="BLACK" pre>
                 {overflowSummary ? (
@@ -168,7 +213,7 @@ function ResponseItem({
                     </Typo>
                   </>
                 ) : (
-                  content
+                  content || ''
                 )}
               </Typo>
             )}
@@ -180,7 +225,7 @@ function ResponseItem({
             )}
             <Layout.FlexRow w="100%" justifyContent="flex-end" />
           </Layout.FlexCol>
-          <QuestionItem question={question} />
+          {question && <QuestionItem question={question} />}
           <PostFooter
             isMyPage={isMyPage}
             post={response}

@@ -9,10 +9,12 @@ import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
-import { Layout, Typo } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import { Note, POST_DP_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
+import { getMyProfile } from '@utils/apis/my';
+import { pinPost, unpinPost } from '@utils/apis/pin';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import { NoteImage } from '../note-image/NoteImage.styled';
 
@@ -34,6 +36,8 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
     is_edited,
     current_user_read,
     visibility,
+    is_pinned,
+    current_user_pin_id,
   } = note;
   const navigate = useNavigate();
   const { featureFlags } = useBoundStore(UserSelector);
@@ -47,8 +51,11 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
     setEmojiPickerTarget: state.setEmojiPickerTarget,
   }));
 
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
+
   const { username, profile_image } = author_detail ?? {};
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
+  const [tPin] = useTranslation('translation', { keyPrefix: 'post_more_modal' });
 
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
@@ -85,6 +92,25 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
     e.stopPropagation();
 
     navigate(`/users/${username}`);
+  };
+
+  const handleClickPin = async (e: MouseEvent) => {
+    e.stopPropagation();
+    try {
+      if (is_pinned && current_user_pin_id) {
+        await unpinPost(current_user_pin_id);
+        openToast({ message: tPin('unpin.success_title') });
+      } else {
+        await pinPost('Note', id);
+        openToast({ message: tPin('pin.success_title') });
+      }
+      await getMyProfile();
+      refresh?.();
+    } catch (error) {
+      openToast({
+        message: is_pinned ? tPin('unpin.error_title') : tPin('pin.error_title'),
+      });
+    }
   };
 
   return (
@@ -148,8 +174,16 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
               </Layout.FlexRow>
             </Layout.FlexCol>
           </Layout.FlexRow>
-          {/* More options */}
-          <Layout.FlexRow>
+          {/* Pin and More options */}
+          <Layout.FlexRow alignItems="center" gap={8}>
+            {(isMyPage || is_pinned) && (
+              <SvgIcon
+                name={is_pinned ? 'pin_filled' : 'pin_empty'}
+                size={24}
+                color={is_pinned ? 'BLACK' : 'MEDIUM_GRAY'}
+                onClick={isMyPage ? handleClickPin : undefined}
+              />
+            )}
             <Icon name="dots_menu" size={24} onClick={handleClickMore} />
           </Layout.FlexRow>
         </Layout.FlexRow>
