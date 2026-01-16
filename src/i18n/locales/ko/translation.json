@@ -821,7 +821,7 @@
     "bottom_sheet": {
       "title": "공유 플레이리스트",
       "add": "추가",
-      "you_added": "내가 추가함"
+      "you_shared": "내가 공유함"
     }
   },
   "pinned_posts": {

@@ -7,6 +7,9 @@ import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
+import { unshareSong } from '@utils/apis/playlist';
 import { SharedTrack } from '../shared-playlist/SharedPlaylistSection';
 import * as S from './SharedPlaylistBottomSheet.styled';
 
@@ -15,6 +18,7 @@ interface SharedPlaylistBottomSheetProps {
   closeBottomSheet: () => void;
   tracks: SharedTrack[];
   onAddNew: () => void;
+  onTrackDeleted?: () => void;
 }
 
 interface TrackItemProps {
@@ -79,7 +83,7 @@ function TrackItem({ track, isOwner, onDelete }: TrackItemProps) {
               {trackData?.name || track.name}
             </Typo>
             <Typo type="body-small" color="MEDIUM_GRAY" numberOfLines={1}>
-              {isOwner ? t('you_added') : track.sharedBy.username}
+              {isOwner ? t('you_shared') : track.sharedBy.username}
             </Typo>
           </Layout.FlexCol>
         </Layout.FlexRow>
@@ -101,17 +105,31 @@ function SharedPlaylistBottomSheet({
   closeBottomSheet,
   tracks,
   onAddNew,
+  onTrackDeleted,
 }: SharedPlaylistBottomSheetProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'shared_playlist.bottom_sheet' });
+  const { myProfile } = useBoundStore(UserSelector);
+  const [isDeleting, setIsDeleting] = useState<number | null>(null);
 
   const handleAddNew = () => {
     closeBottomSheet();
     onAddNew();
   };
 
-  const handleDeleteTrack = (trackId: string | number) => {
-    console.log('delete track:', trackId);
-    // TODO: API 호출하여 shared playlist에서 삭제
+  const handleDeleteTrack = async (trackId: string | number) => {
+    try {
+      setIsDeleting(typeof trackId === 'number' ? trackId : parseInt(trackId.toString(), 10));
+      await unshareSong(typeof trackId === 'number' ? trackId : parseInt(trackId.toString(), 10));
+      onTrackDeleted?.();
+    } catch (error) {
+      console.error('Error deleting track:', error);
+    } finally {
+      setIsDeleting(null);
+    }
+  };
+
+  const isTrackOwner = (track: SharedTrack) => {
+    return myProfile?.id === track.sharedBy.id;
   };
 
   return createPortal(
@@ -134,8 +152,10 @@ function SharedPlaylistBottomSheet({
               <TrackItem
                 key={track.id}
                 track={track}
-                isOwner={false} // TODO: 현재 사용자가 추가한 트랙인지 확인
-                onDelete={() => handleDeleteTrack(track.id)}
+                isOwner={isTrackOwner(track)}
+                onDelete={
+                  isTrackOwner(track) && !isDeleting ? () => handleDeleteTrack(track.id) : undefined
+                }
               />
             ))}
           </Layout.FlexCol>

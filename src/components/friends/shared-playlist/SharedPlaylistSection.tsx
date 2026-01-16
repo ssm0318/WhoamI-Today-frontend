@@ -7,6 +7,7 @@ import MusicDetailBottomSheet from '@components/music/music-detail-bottom-sheet/
 import MusicSearchBottomSheet from '@components/music/music-search-bottom-sheet/MusicSearchBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
+import { shareSong } from '@utils/apis/playlist';
 import { AddNewCard, PlaylistCard, ScrollableCardList } from './SharedPlaylistSection.styled';
 
 export interface SharedTrack {
@@ -22,6 +23,8 @@ export interface SharedTrack {
 
 interface SharedPlaylistSectionProps {
   tracks?: SharedTrack[];
+  onTrackAdded?: () => void;
+  onTrackDeleted?: () => void;
 }
 
 interface TrackCardItemProps {
@@ -121,7 +124,11 @@ function TrackCardItem({ track }: TrackCardItemProps) {
   );
 }
 
-function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
+function SharedPlaylistSection({
+  tracks = [],
+  onTrackAdded,
+  onTrackDeleted,
+}: SharedPlaylistSectionProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'shared_playlist' });
   const [showMusicSearch, setShowMusicSearch] = useState(false);
   const [showPlaylistDetail, setShowPlaylistDetail] = useState(false);
@@ -130,9 +137,14 @@ function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
     setShowMusicSearch(true);
   };
 
-  const handleSelectTrackToAdd = (trackId: string) => {
-    console.log('selected track:', trackId);
-    // TODO: API 호출하여 shared playlist에 추가
+  const handleSelectTrackToAdd = async (trackId: string) => {
+    try {
+      await shareSong(trackId);
+      setShowMusicSearch(false);
+      onTrackAdded?.();
+    } catch (error) {
+      console.error('Error sharing song:', error);
+    }
   };
 
   const handleViewAll = () => {
@@ -189,6 +201,7 @@ function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
           setShowPlaylistDetail(false);
           setShowMusicSearch(true);
         }}
+        onTrackDeleted={onTrackDeleted}
       />
     </Layout.FlexCol>
   );

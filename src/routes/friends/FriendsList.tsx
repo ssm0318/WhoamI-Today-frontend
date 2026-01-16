@@ -1,29 +1,62 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import FriendItemWithUpdates from '@components/friends/friend-item-with-updates/FriendItemWithUpdates';
 import FriendTypeChip from '@components/friends/friend-type-chip/FriendTypeChip';
 import NoCloseFriends from '@components/friends/no-close-friends/NoCloseFriends';
-import SharedPlaylistSection from '@components/friends/shared-playlist/SharedPlaylistSection';
+import SharedPlaylistSection, {
+  SharedTrack,
+} from '@components/friends/shared-playlist/SharedPlaylistSection';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { FriendType } from '@models/api/friends';
 import { SocialBattery } from '@models/checkIn';
+import { PlaylistSong } from '@models/playlist';
 import { getMe } from '@utils/apis/my';
+import { getPlaylistFeed } from '@utils/apis/playlist';
 import { MainScrollContainer } from 'src/routes/Root';
 import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
 import { AllFriendItemLoader, AllFriendListLoader } from './FriendsLoader';
 
 function FriendsList() {
   const [selectedType, setSelectedType] = useState<FriendType>('all');
+  const [playlistTracks, setPlaylistTracks] = useState<SharedTrack[]>([]);
+  const [isPlaylistLoading, setIsPlaylistLoading] = useState(true);
 
   const { targetRef, allFriends, isAllFriendsLoading, isLoadingMoreAllFriends, refetchAllFriends } =
     useInfiniteFetchFriends({ type: selectedType });
 
+  const fetchPlaylistFeed = async () => {
+    try {
+      setIsPlaylistLoading(true);
+      const songs = await getPlaylistFeed();
+      const transformedTracks: SharedTrack[] = songs.map((song: PlaylistSong) => ({
+        id: song.id,
+        name: '', // Will be filled by Spotify API in TrackCardItem
+        track: song.track_id,
+        sharedBy: {
+          id: song.user.id,
+          username: song.user.username,
+          profileImageUrl: song.user.profile_image || null,
+        },
+      }));
+      setPlaylistTracks(transformedTracks);
+    } catch (error) {
+      console.error('Error fetching playlist feed:', error);
+      setPlaylistTracks([]);
+    } finally {
+      setIsPlaylistLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlaylistFeed();
+  }, []);
+
   const handleRefresh = async () => {
-    await Promise.all([refetchAllFriends(), getMe()]);
+    await Promise.all([refetchAllFriends(), getMe(), fetchPlaylistFeed()]);
   };
 
   const { scrollRef } = useRestoreScrollPosition('friendsPage');
@@ -70,30 +103,13 @@ function FriendsList() {
             </Layout.FlexRow>
 
             {/* Shared Playlist 섹션 */}
-            <SharedPlaylistSection
-              tracks={[
-                {
-                  id: 1,
-                  name: 'Playlist 1',
-                  track: '0XtrhP0VnT4WHYArazoVVQ',
-                  sharedBy: {
-                    id: 1,
-                    username: 'user1',
-                    profileImageUrl: null,
-                  },
-                },
-                {
-                  id: 2,
-                  name: 'Playlist 2',
-                  track: '0XtrhP0VnT4WHYArazoVVQ',
-                  sharedBy: {
-                    id: 2,
-                    username: 'user2',
-                    profileImageUrl: null,
-                  },
-                },
-              ]}
-            />
+            {!isPlaylistLoading && (
+              <SharedPlaylistSection
+                tracks={playlistTracks}
+                onTrackAdded={fetchPlaylistFeed}
+                onTrackDeleted={fetchPlaylistFeed}
+              />
+            )}
 
             <EmptyStateContainer isEmpty={isEmpty}>
               {isAllFriendsLoading ? (
