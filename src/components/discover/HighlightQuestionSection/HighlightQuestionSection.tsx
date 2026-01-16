@@ -21,7 +21,6 @@ function HighlightQuestionSection({ question, tag, questionId }: HighlightQuesti
   };
 
   const handleClickSend = (e: MouseEvent) => {
-    // TODO: 실제 저장 로직 구현
     e.stopPropagation();
     setSendPromptBottomModalVisible(true);
   };

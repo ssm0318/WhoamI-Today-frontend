@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import FilterChip from '@components/_common/filter-chip/FilterChip';
-import PromptCard from '@components/_common/prompt/PromptCard';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
+import HighlightQuestionSection from '@components/discover/HighlightQuestionSection/HighlightQuestionSection';
 import SelectInterestSection from '@components/discover/SelectInterestSection/SelectInterestSection';
 import SelectPersonaSection from '@components/discover/SelectPersonaSection/SelectPersonaSection';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
@@ -60,12 +60,11 @@ function Discover() {
           return <ResponseItem key={`response-${item.body.id}`} response={item.body} />;
         case 'Question':
           return (
-            <PromptCard
+            <HighlightQuestionSection
               key={`question-${item.body.id}`}
-              id={item.body.id}
-              content={item.body.content}
-              widthMode="full"
-              authorDetail={item.author_detail}
+              questionId={item.body.id}
+              question={item.body.content}
+              tag={item.body.is_admin_question ? 'Highlight' : 'Question'}
             />
           );
         case 'Interest':
