@@ -1,48 +1,48 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import HashTagPill from '@components/_common/hash-tag-pill/HashTagPill';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Button, Layout, Typo } from '@design-system';
 import { friendList } from '@mock/friends';
 import { MyProfile } from '@models/api/user';
-import { Persona } from '@models/persona';
+import { PersonaItem } from '@models/discover';
 import { useBoundStore } from '@stores/useBoundStore';
 import { editProfile } from '@utils/apis/my';
 import * as S from './SelectPersonaSection.styled';
-
-// Persona enum 값을 표시용 라벨로 변환
-const formatPersonaLabel = (persona: Persona): string => {
-  return persona
-    .split('_')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-};
 
 // Mock data: 친구 프로필 이미지들 (처음 2개)
 const friendProfiles = friendList.slice(0, 1);
 const additionalFriendsCount = 6;
 
 interface SelectPersonaSectionProps {
+  personaList?: PersonaItem[];
   isSaved?: boolean;
   onSave?: () => void;
 }
 
-function SelectPersonaSection({ isSaved = false, onSave }: SelectPersonaSectionProps) {
-  const { myProfile, updateMyProfile, openToast } = useBoundStore((state) => ({
+function SelectPersonaSection({
+  personaList = [],
+  isSaved = false,
+  onSave,
+}: SelectPersonaSectionProps) {
+  const { updateMyProfile, openToast } = useBoundStore((state) => ({
     updateMyProfile: state.updateMyProfile,
     openToast: state.openToast,
-    myProfile: state.myProfile,
   }));
-  const [selectedPersonas, setSelectedPersonas] = useState<string[]>(
-    myProfile?.user_personas || [],
-  );
+  const [selectedPersonas, setSelectedPersonas] = useState<string[]>([]);
 
-  const handleTogglePersona = (persona: Persona) => {
+  useEffect(() => {
+    // API에서 받은 데이터로 초기 선택 상태 설정
+    const initialSelected = personaList.filter((item) => item.is_selected).map((item) => item.key);
+    setSelectedPersonas(initialSelected);
+  }, [personaList]);
+
+  const handleTogglePersona = (personaKey: string) => {
     setSelectedPersonas((prev) => {
-      if (prev.includes(persona)) {
-        return prev.filter((p) => p !== persona);
+      if (prev.includes(personaKey)) {
+        return prev.filter((p) => p !== personaKey);
       }
-      return [...prev, persona];
+      return [...prev, personaKey];
     });
   };
 
@@ -62,14 +62,12 @@ function SelectPersonaSection({ isSaved = false, onSave }: SelectPersonaSectionP
     });
   };
 
-  const availablePersonas = Object.values(Persona);
-
   // Persona를 3줄로 나누기
-  const personasPerRow = Math.ceil(availablePersonas.length / 3);
+  const personasPerRow = Math.ceil(personaList.length / 3);
   const personaRows = [
-    availablePersonas.slice(0, personasPerRow),
-    availablePersonas.slice(personasPerRow, personasPerRow * 2),
-    availablePersonas.slice(personasPerRow * 2, personasPerRow * 3),
+    personaList.slice(0, personasPerRow),
+    personaList.slice(personasPerRow, personasPerRow * 2),
+    personaList.slice(personasPerRow * 2, personasPerRow * 3),
   ];
 
   return (
@@ -78,13 +76,13 @@ function SelectPersonaSection({ isSaved = false, onSave }: SelectPersonaSectionP
 
       <S.PersonaGrid>
         {personaRows.map((row) => (
-          <S.PersonaRow key={row.join(',')}>
-            {row.map((persona) => (
+          <S.PersonaRow key={row.map((p) => p.key).join(',')}>
+            {row.map((personaItem) => (
               <HashTagPill
-                key={persona}
-                isSelected={selectedPersonas.includes(persona)}
-                onClick={() => handleTogglePersona(persona)}
-                label={formatPersonaLabel(persona)}
+                key={personaItem.key}
+                isSelected={selectedPersonas.includes(personaItem.key)}
+                onClick={() => handleTogglePersona(personaItem.key)}
+                label={personaItem.label}
               />
             ))}
           </S.PersonaRow>
