@@ -1,4 +1,5 @@
-import { Response } from './post';
+import { AdminAuthor, Response } from './post';
+import { User } from './user';
 
 export enum DiscoverFilter {
   follow = 'follow',
@@ -57,6 +58,7 @@ export type DiscoverResultItem =
   | {
       type: 'Question';
       body: QuestionCardBody;
+      author_detail?: User | AdminAuthor;
     }
   | {
       type: 'Interest';

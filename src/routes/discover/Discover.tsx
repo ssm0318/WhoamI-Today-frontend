@@ -65,6 +65,7 @@ function Discover() {
               id={item.body.id}
               content={item.body.content}
               widthMode="full"
+              authorDetail={item.author_detail}
             />
           );
         case 'Interest':
