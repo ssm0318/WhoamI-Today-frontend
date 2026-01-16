@@ -140,121 +140,65 @@ export const getMyAllPosts = async (page: string | null) => {
 };
 
 // interest 목록
-// TODO 실제 API 연동
-export const searchInterests = async (query: string): Promise<string[]> => {
-  // 가짜 데이터 - 실제 API 연동 전까지 사용
-  const allInterests: string[] = [
-    'Climbing',
-    'Gym&lifting',
-    'Cycling',
-    'Sailing',
-    'Tech&gadgets',
-    'Music',
-    'Dogs',
-    'Cuisine',
-    'Travel',
-    'Photography',
-    'Reading',
-    'Cooking',
-    'Art',
-    'Sports',
-    'Movies',
-    'Gaming',
-    'Pottery',
-    'Yoga',
-    'Hiking',
-    'Dancing',
-  ];
+interface InterestResponse {
+  id: number;
+  content: string;
+}
 
-  // 검색어가 없으면 전체 목록 반환
+export const searchInterests = async (query: string): Promise<string[]> => {
+  // 검색어가 없으면 recommendation API 호출
   if (!query.trim()) {
-    return Promise.resolve(allInterests);
+    try {
+      const { data } = await axios.get<InterestResponse[]>('/user/recommendations/interests/');
+      return data.map((item) => item.content);
+    } catch (error) {
+      console.error('Failed to get interest recommendations:', error);
+      return [];
+    }
   }
 
   // 검색어에서 # 제거
   const cleanQuery = query.replace(/^#+/, '').trim();
 
-  // 검색어로 필터링
-  const filtered = allInterests.filter((interest) =>
-    interest.toLowerCase().includes(cleanQuery.toLowerCase()),
-  );
-
-  // 실제 API 호출을 시뮬레이션하기 위한 약간의 지연
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(filtered);
-    }, 200);
-  });
+  try {
+    const { data } = await axios.get<InterestResponse[]>('/user/interests/search/', {
+      params: { q: cleanQuery },
+    });
+    return data.map((item) => item.content);
+  } catch (error) {
+    console.error('Failed to search interests:', error);
+    return [];
+  }
 };
 
 // persona 목록
-// TODO 실제 API 연동
-export const searchPersonas = async (query: string): Promise<string[]> => {
-  // 가짜 데이터 - 실제 API 연동 전까지 사용
-  const allPersonas: string[] = [
-    'Lurker',
-    'ContentCreator',
-    'PrivateReactor',
-    'PublicCommenter',
-    'InstantResponder',
-    'TakesMyTime',
-    'DailyScroller',
-    'OccasionalChecker',
-    'ScheduledChecker',
-    'NightOwl',
-    'EarlyBird',
-    'EmojiFan',
-    'WordPerson',
-    'Poster',
-    'Commenter',
-    'SelfiePoster',
-    'PhotoHeavy',
-    'TextPoster',
-    'DeepTalks',
-    'CuriousAsker',
-    'OpenBook',
-    'ClosedBook',
-    'NoFilterPurist',
-    'CuratedAesthetic',
-    'WeekendUser',
-    'EverydayPresence',
-    'TrendWatcher',
-    'MemeLover',
-    'FrequentPoster',
-    'OccasionalPoster',
-    'SharesManyAtOnce',
-    'RandomAndCasual',
-    'StreamOfConsciousness',
-    'OneLiners',
-    'Throwbacks',
-    'MusicSharer',
-    'OpinionPoster',
-    'SilentSupporter',
-    'AlwaysOnline',
-    'RarelyPostsButWatchesEverything',
-    'BingeScroller',
-    'SilentObserver',
-    'ActiveListener',
-    'ThoughtfulResponder',
-  ];
+interface PersonaResponse {
+  id: number;
+  content: string;
+}
 
-  // 검색어가 없으면 전체 목록 반환
+export const searchPersonas = async (query: string): Promise<string[]> => {
+  // 검색어가 없으면 recommendation API 호출
   if (!query.trim()) {
-    return Promise.resolve(allPersonas);
+    try {
+      const { data } = await axios.get<PersonaResponse[]>('/user/recommendations/personas/');
+      return data.map((item) => item.content);
+    } catch (error) {
+      console.error('Failed to get persona recommendations:', error);
+      return [];
+    }
   }
 
   // 검색어에서 # 제거
   const cleanQuery = query.replace(/^#+/, '').trim();
 
-  // 검색어로 필터링
-  const filtered = allPersonas.filter((persona) =>
-    persona.toLowerCase().includes(cleanQuery.toLowerCase()),
-  );
-
-  // 실제 API 호출을 시뮬레이션하기 위한 약간의 지연
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(filtered);
-    }, 200);
-  });
+  try {
+    const { data } = await axios.get<PersonaResponse[]>('/user/personas/search/', {
+      params: { q: cleanQuery },
+    });
+    return data.map((item) => item.content);
+  } catch (error) {
+    console.error('Failed to search personas:', error);
+    return [];
+  }
 };
