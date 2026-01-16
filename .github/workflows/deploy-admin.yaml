@@ -30,7 +30,11 @@ jobs:
           echo "🔄 현재 디렉토리: $(pwd)"
           cd ~/WhoamI-Today-frontend
           echo "🔄 현재 디렉토리: $(pwd)"
+          echo "💾 로컬 변경사항 임시 저장"
+          git stash || true
           git pull
+          echo "📦 임시 저장된 변경사항 복원"
+          git stash pop || true
 
           echo "🛑 기존 컨테이너 종료"
           docker compose -f docker-compose.production.yml down
