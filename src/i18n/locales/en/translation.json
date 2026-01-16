@@ -531,6 +531,7 @@
         "report_error": "A temporary error occurred. Please try again later."
     },
     "no_contents": {
+        "discover": "No posts yet.",
         "friends": "No friends yet.",
         "friends_search": "No results found.",
         "responses": "No responses yet.",

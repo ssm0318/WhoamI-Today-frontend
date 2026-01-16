@@ -1,41 +1,30 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import HashTagPill from '@components/_common/hash-tag-pill/HashTagPill';
 import Icon from '@components/_common/icon/Icon';
 import { Button, Typo } from '@design-system';
+import { InterestItem } from '@models/discover';
 import * as S from './SelectInterestSection.styled';
 
-// 관심사 목록 (이미지 기반)
-const availableInterests: string[] = [
-  'Climbing',
-  'Gym & lifting',
-  'Tech & gadgets',
-  'Music',
-  'Closed Book',
-  'Cycling',
-  'Sailing',
-  'Dogs',
-  'Ear',
-  'Cuisine',
-  'Travel',
-  'Photography',
-  'Reading',
-  'Cooking',
-  'Art',
-  'Sports',
-  'Movies',
-  'Gaming',
-];
-
-// Mock data: 선택된 관심사 (초기값)
-const initialSelectedInterests: string[] = ['Cycling', 'Sailing', 'Dogs'];
-
 interface SelectInterestSectionProps {
+  interestList?: InterestItem[];
   isSaved?: boolean;
   onSave?: () => void;
 }
 
-function SelectInterestSection({ isSaved = false, onSave }: SelectInterestSectionProps) {
-  const [selectedInterests, setSelectedInterests] = useState<string[]>(initialSelectedInterests);
+function SelectInterestSection({
+  interestList = [],
+  isSaved = false,
+  onSave,
+}: SelectInterestSectionProps) {
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+
+  useEffect(() => {
+    // API에서 받은 데이터로 초기 선택 상태 설정
+    const initialSelected = interestList
+      .filter((item) => item.is_selected)
+      .map((item) => item.content);
+    setSelectedInterests(initialSelected);
+  }, [interestList]);
 
   const handleToggleInterest = (interest: string) => {
     setSelectedInterests((prev) => {
@@ -52,11 +41,11 @@ function SelectInterestSection({ isSaved = false, onSave }: SelectInterestSectio
   };
 
   // 관심사를 3줄로 나누기
-  const interestsPerRow = Math.ceil(availableInterests.length / 3);
+  const interestsPerRow = Math.ceil(interestList.length / 3);
   const interestRows = [
-    availableInterests.slice(0, interestsPerRow),
-    availableInterests.slice(interestsPerRow, interestsPerRow * 2),
-    availableInterests.slice(interestsPerRow * 2, interestsPerRow * 3),
+    interestList.slice(0, interestsPerRow),
+    interestList.slice(interestsPerRow, interestsPerRow * 2),
+    interestList.slice(interestsPerRow * 2, interestsPerRow * 3),
   ];
 
   return (
@@ -65,13 +54,13 @@ function SelectInterestSection({ isSaved = false, onSave }: SelectInterestSectio
 
       <S.InterestGrid>
         {interestRows.map((row) => (
-          <S.InterestRow key={row.join(',')}>
-            {row.map((interest) => (
+          <S.InterestRow key={row.map((i) => i.content).join(',')}>
+            {row.map((interestItem) => (
               <HashTagPill
-                key={interest}
-                isSelected={selectedInterests.includes(interest)}
-                onClick={() => handleToggleInterest(interest)}
-                label={interest}
+                key={interestItem.content}
+                isSelected={selectedInterests.includes(interestItem.content)}
+                onClick={() => handleToggleInterest(interestItem.content)}
+                label={interestItem.content}
               />
             ))}
           </S.InterestRow>

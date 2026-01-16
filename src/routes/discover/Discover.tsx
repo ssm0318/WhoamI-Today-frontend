@@ -1,22 +1,21 @@
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import FilterChip from '@components/_common/filter-chip/FilterChip';
-import NoContents from '@components/_common/no-contents/NoContents';
 import PromptCard from '@components/_common/prompt/PromptCard';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import SelectInterestSection from '@components/discover/SelectInterestSection/SelectInterestSection';
 import SelectPersonaSection from '@components/discover/SelectPersonaSection/SelectPersonaSection';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
+import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
-import ResponseLoader from '@components/response/response-loader/ResponseLoader';
-import { Layout } from '@design-system';
+import { SCREEN_WIDTH } from '@constants/layout';
+import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSaveAndHide } from '@hooks/useSaveAndHide';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { DiscoverFilter, DiscoverFilterLabel, DiscoverResultItem } from '@models/discover';
 import { getDiscoverFeed } from '@utils/apis/discover';
 import { getMe } from '@utils/apis/my';
-import { PromptCardLoader } from 'src/routes/questions/AllQuestionsLoader';
 import { MainScrollContainer } from 'src/routes/Root';
 import * as S from './Discover.styled';
 
@@ -37,18 +36,22 @@ function Discover() {
   ];
   const { scrollRef } = useRestoreScrollPosition('discoverPage');
 
+  // Build query string with filters
+  const filterQuery = selectedFilter.length > 0 ? `?filter=${selectedFilter.join(',')}` : '';
+  const swrKey = `/user/discover/${filterQuery}`;
+
   const {
     targetRef,
     data: discoverData,
     isLoadingMore,
     isLoading,
     mutate,
-  } = useSWRInfiniteScroll<DiscoverResultItem>({ key: '/user/discover/' });
+  } = useSWRInfiniteScroll<DiscoverResultItem>({ key: swrKey });
 
   const handleRefresh = useCallback(async () => {
-    await Promise.all([getDiscoverFeed(null), getMe()]);
+    await Promise.all([getDiscoverFeed(null, selectedFilter), getMe()]);
     mutate();
-  }, [mutate]);
+  }, [mutate, selectedFilter]);
 
   const renderDiscoverItem = useCallback(
     (item: DiscoverResultItem, index: number) => {
@@ -68,13 +71,18 @@ function Discover() {
           return (
             <SelectInterestSection
               key={`interest-${index}`}
+              interestList={item.body.list}
               isSaved={item.body.list.every((interest) => interest.is_selected)}
             />
           );
         case 'Persona':
           return showPersonaCard ? (
             <S.AnimatedCardWrapper key={`persona-${index}`} $isAnimating={isPersonaAnimating}>
-              <SelectPersonaSection isSaved={isPersonaSaved} onSave={handlePersonaSave} />
+              <SelectPersonaSection
+                personaList={item.body.list}
+                isSaved={isPersonaSaved}
+                onSave={handlePersonaSave}
+              />
             </S.AnimatedCardWrapper>
           ) : null;
         default:
@@ -85,56 +93,77 @@ function Discover() {
   );
 
   return (
-    <MainScrollContainer scrollRef={scrollRef} showNotificationPermission>
-      <PullToRefresh onRefresh={handleRefresh}>
-        <Layout.FlexCol w="100%" pb={FLOATING_BUTTON_SIZE + 20}>
-          <S.ScrollableFilterRow gap={8} ph={16} pv={12}>
-            {discoverFilterList.map((filter) => (
-              <FilterChip
-                key={filter}
-                label={DiscoverFilterLabel[filter]}
-                isSelected={selectedFilter.includes(filter)}
-                onClick={() => {
-                  if (selectedFilter.includes(filter)) {
-                    setSelectedFilter(selectedFilter.filter((f) => f !== filter));
-                  } else {
-                    setSelectedFilter([...selectedFilter, filter]);
-                  }
-                }}
-              />
-            ))}
-          </S.ScrollableFilterRow>
+    <>
+      <S.HideScrollbarGlobalStyle />
+      <MainScrollContainer
+        scrollRef={scrollRef}
+        showNotificationPermission
+        style={{
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+        }}
+      >
+        <PullToRefresh onRefresh={handleRefresh}>
+          <Layout.FlexCol w="100%" pb={FLOATING_BUTTON_SIZE + 20}>
+            <S.ScrollableFilterRow gap={8} ph={16} pv={12}>
+              {discoverFilterList.map((filter) => (
+                <FilterChip
+                  key={filter}
+                  label={DiscoverFilterLabel[filter]}
+                  isSelected={selectedFilter.includes(filter)}
+                  onClick={() => {
+                    if (selectedFilter.includes(filter)) {
+                      setSelectedFilter(selectedFilter.filter((f) => f !== filter));
+                    } else {
+                      setSelectedFilter([...selectedFilter, filter]);
+                    }
+                  }}
+                />
+              ))}
+            </S.ScrollableFilterRow>
 
-          {/* Discover Feed */}
-          <Layout.FlexCol gap={20} mh={16}>
-            {isLoading ? (
-              <>
-                <ResponseLoader />
-                <PromptCardLoader />
-                <ResponseLoader />
-              </>
-            ) : discoverData?.[0] &&
-              discoverData[0].results &&
-              discoverData[0].results.length > 0 ? (
-              <>
-                {discoverData.map((page) =>
-                  page.results?.map((item, index) => renderDiscoverItem(item, index)),
-                )}
-                <div ref={targetRef} />
-                {isLoadingMore && (
-                  <>
-                    <ResponseLoader />
-                    <PromptCardLoader />
-                  </>
-                )}
-              </>
-            ) : (
-              <NoContents text={t('no_contents.discover')} mv={10} />
-            )}
+            {/* Discover Feed */}
+            <Layout.FlexCol gap={20} mh={20} alignItems="center" w={SCREEN_WIDTH - 40}>
+              {isLoading ? (
+                <div
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 20,
+                    margin: '0 16px',
+                  }}
+                >
+                  <NoteLoader />
+                  <NoteLoader />
+                </div>
+              ) : discoverData?.[0] &&
+                discoverData[0].results &&
+                discoverData[0].results.length > 0 ? (
+                <Layout.FlexCol gap={20} mh={16}>
+                  {discoverData.map((page) =>
+                    page.results?.map((item, index) => renderDiscoverItem(item, index)),
+                  )}
+                  <div ref={targetRef} />
+                  {isLoadingMore && <NoteLoader />}
+                </Layout.FlexCol>
+              ) : (
+                <Layout.FlexCol
+                  w="100%"
+                  style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'stretch' }}
+                >
+                  <div style={{ width: '100%', paddingTop: 20, textAlign: 'center' }}>
+                    <Typo type="body-medium" color="MEDIUM_GRAY" textAlign="center">
+                      {t('no_contents.discover')}
+                    </Typo>
+                  </div>
+                </Layout.FlexCol>
+              )}
+            </Layout.FlexCol>
           </Layout.FlexCol>
-        </Layout.FlexCol>
-      </PullToRefresh>
-    </MainScrollContainer>
+        </PullToRefresh>
+      </MainScrollContainer>
+    </>
   );
 }
 

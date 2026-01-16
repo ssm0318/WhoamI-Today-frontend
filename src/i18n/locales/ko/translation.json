@@ -523,6 +523,7 @@
     "report_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
   },
   "no_contents": {
+    "discover": "아직 게시글이 없습니다.",
     "friends": "아직 친구가 없습니다.",
     "friends_search": "검색 결과가 없습니다.",
     "responses": "답변이 없습니다.",
