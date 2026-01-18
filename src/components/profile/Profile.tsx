@@ -7,8 +7,6 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
-import useInfiniteFetchUserFriends from '@hooks/useInfiniteFetchUserFriends';
 import { Connection } from '@models/api/friends';
 import { MyProfile } from '@models/api/user';
 import { areFriends, isMyProfile, UserProfile } from '@models/user';
@@ -18,9 +16,11 @@ import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
 import PersonaChip from './persona/PersonaChip';
+import PinnedPostsSection from './pinned-posts-section/PinnedPostsSection';
 import BioPlaceholder from './placeholders/BioPlaceholder';
 import PersonaPlaceholder from './placeholders/PersonaPlaceholder';
 import PronounPlaceholder from './placeholders/PronounPlaceholder';
+import SocialMetricsSection from './social-metrics-section/SocialMetricsSection';
 
 interface ProfileProps {
   user?: UserProfile | MyProfile;
@@ -41,18 +41,6 @@ function Profile({ user }: ProfileProps) {
   const handleClickEditProfile = (e: MouseEvent) => {
     e.stopPropagation();
     return navigate('/settings/edit-profile');
-  };
-
-  const { allFriends } = useInfiniteFetchFriends({ type: 'all' });
-  const { allFriends: friendFriends } = useInfiniteFetchUserFriends(username);
-
-  const handleClickFriendList = () => {
-    if (isMyPage) {
-      if (allFriends?.[0].count === 0) return;
-      return navigate('/my/friends/list');
-    }
-    if (friendFriends?.[0].count === 0) return;
-    navigate(`friends/list`);
   };
 
   useAsyncEffect(async () => {
@@ -102,7 +90,7 @@ function Profile({ user }: ProfileProps) {
   }, [chipHeight, user?.user_personas]);
 
   return (
-    <Layout.FlexCol w="100%" gap={16}>
+    <Layout.FlexCol w="100%" gap={8}>
       <Layout.FlexRow w="100%" gap={8}>
         <Layout.FlexRow>
           <ProfileImage imageUrl={user?.profile_image} username={username} size={80} expandible />
@@ -165,14 +153,6 @@ function Profile({ user }: ProfileProps) {
               </Layout.FlexRow>
             )}
           </Layout.FlexRow>
-          {/* 친구 수 */}
-          {featureFlags?.friendFeed && (isMyPage || (user && areFriends(user))) && (
-            <button type="button" onClick={handleClickFriendList}>
-              <Typo type="label-medium" color="DARK_GRAY" underline>
-                {isMyPage ? allFriends?.[0].count : friendFriends?.[0].count} {t('friends')}
-              </Typo>
-            </button>
-          )}
           {/* pronouns */}
           {isMyPage ? (
             !myProfile?.pronouns ? (
@@ -220,8 +200,9 @@ function Profile({ user }: ProfileProps) {
           )}
         </Layout.FlexCol>
       </Layout.FlexRow>
+
       {featureFlags?.persona && (
-        <Layout.FlexCol w="100%">
+        <Layout.FlexCol w="100%" gap={8}>
           {user &&
           (areFriends(user) || isMyPage) &&
           user?.user_personas &&
@@ -254,6 +235,7 @@ function Profile({ user }: ProfileProps) {
           ) : (
             isMyPage && <PersonaPlaceholder />
           )}
+          {isMyPage && <PinnedPostsSection pinnedPostsCount={myProfile?.pinned_cnt ?? 0} />}
         </Layout.FlexCol>
       )}
       {!isMyPage && user && (
@@ -273,7 +255,10 @@ function Profile({ user }: ProfileProps) {
         </>
       )}
       {/* 체크인 (status) */}
-      {featureFlags?.checkIn && user && <CheckInSection user={user} username={username} />}
+      {featureFlags?.checkIn && user && <CheckInSection user={user} />}
+
+      {/* Followers, Following, Friends */}
+      {isMyPage && <SocialMetricsSection />}
     </Layout.FlexCol>
   );
 }
