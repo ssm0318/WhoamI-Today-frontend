@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
-import PinnedPostsSection from '@components/profile/pinned-posts-section/PinnedPostsSection';
 import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
 import MusicPlaceholder from '@components/profile/placeholders/MusicPlaceholder';
 import SocialBatteryPlaceholder from '@components/profile/placeholders/SocialBatteryPlaceholder';
@@ -19,10 +18,9 @@ import SocialBatteryChip from '../profile/social-batter-chip/SocialBatteryChip';
 
 interface CheckInProps {
   user: UserProfile | MyProfile;
-  username?: string;
 }
 
-function CheckIn({ user, username }: CheckInProps) {
+function CheckIn({ user }: CheckInProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page.check_in' });
   const {
     myProfile,
@@ -39,8 +37,6 @@ function CheckIn({ user, username }: CheckInProps) {
   );
   const { social_battery, track_id, mood, description, current_user_read } = checkIn || {};
   const hasCheckIn = checkIn && (mood || description || social_battery || track_id);
-
-  const pinnedCnt = isMyPage ? myProfile?.pinned_cnt : (user as UserProfile)?.pinned_cnt;
 
   const [currentDate] = useState(() => new Date());
   const navigate = useNavigate();
@@ -140,7 +136,6 @@ function CheckIn({ user, username }: CheckInProps) {
             isMyPage && <MoodPlaceholder />
           )}
         </Layout.FlexRow>
-        <PinnedPostsSection username={username} pinnedPostsCount={pinnedCnt || 0} />
         {/* check in time */}
         {checkIn?.created_at && (
           <Layout.FlexRow w="100%" justifyContent="flex-end" gap={4}>

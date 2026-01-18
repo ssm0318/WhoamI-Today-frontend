@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { PinnedPostsSectionWrapper } from './PinnedPostsSection.styled';
 
 interface PinnedPostsSectionProps {
   username?: string;
@@ -23,7 +24,7 @@ function PinnedPostsSection({ username, pinnedPostsCount = 0 }: PinnedPostsSecti
   if (pinnedPostsCount === 0) return null;
 
   return (
-    <Layout.FlexRow
+    <PinnedPostsSectionWrapper
       w="100%"
       alignItems="center"
       justifyContent="space-between"
@@ -41,7 +42,7 @@ function PinnedPostsSection({ username, pinnedPostsCount = 0 }: PinnedPostsSecti
         </Typo>
       </Layout.FlexRow>
       <SvgIcon name="chevron_right" size={24} fill="DARK_GRAY" />
-    </Layout.FlexRow>
+    </PinnedPostsSectionWrapper>
   );
 }
 
