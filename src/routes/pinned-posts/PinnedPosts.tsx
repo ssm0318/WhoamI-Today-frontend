@@ -47,7 +47,7 @@ function PinnedPosts() {
               const contentObject = item.content_object as Note | Response;
               return {
                 ...contentObject,
-                is_pinned: true,
+                pinned: true,
                 current_user_pin_id: pinId,
               };
             }

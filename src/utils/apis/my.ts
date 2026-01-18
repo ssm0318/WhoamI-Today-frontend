@@ -2,7 +2,6 @@ import { PaginationResponse } from '@models/api/common';
 import { ResponseRequest } from '@models/api/question';
 import { MyProfile } from '@models/api/user';
 import { Note, Response } from '@models/post';
-import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import axios, { axiosFormDataInstance } from './axios';
 
@@ -16,9 +15,11 @@ export const getMe = async () => {
 
 // get my profile
 export const getMyProfile = async () => {
-  const { data } = await axios.get<UserProfile>(`/user/me/profile/`);
+  const { data } = await axios.get<MyProfile>(`/user/me/profile/`);
 
-  useBoundStore.getState().updateMyProfile({ pinned_cnt: data.pinned_cnt ?? 0 });
+  useBoundStore.getState().updateMyProfile({
+    ...data,
+  });
   return data;
 };
 

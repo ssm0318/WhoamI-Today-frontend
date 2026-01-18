@@ -68,8 +68,7 @@ function ResponseItem({
     is_edited,
     current_user_read,
     visibility,
-    is_pinned,
-    current_user_pin_id,
+    pinned,
     id,
   } = response;
 
@@ -104,8 +103,9 @@ function ResponseItem({
   const handleClickPin = async (e: MouseEvent) => {
     e.stopPropagation();
     try {
-      if (is_pinned && current_user_pin_id) {
-        await unpinPost(current_user_pin_id);
+      if (pinned) {
+        // TODO: pin_id를 실제 값으로 가져와서 사용해야 함. 현재는 임시로 0을 사용
+        await unpinPost(0);
         openToast({ message: tPin('unpin.success_title') });
       } else {
         await pinPost('Response', id);
@@ -115,7 +115,7 @@ function ResponseItem({
       refresh?.();
     } catch (error) {
       openToast({
-        message: is_pinned ? tPin('unpin.error_title') : tPin('pin.error_title'),
+        message: pinned ? tPin('unpin.error_title') : tPin('pin.error_title'),
       });
     }
   };
@@ -181,12 +181,21 @@ function ResponseItem({
             </Layout.FlexRow>
             {/* Pin and More options */}
             <Layout.FlexRow alignItems="center" gap={8}>
-              {(isMyPage || is_pinned) && (
+              {(isMyPage || pinned) && (
                 <SvgIcon
-                  name={is_pinned ? 'pin_filled' : 'pin_empty'}
+                  name={pinned ? 'pin_filled' : 'pin_empty'}
                   size={24}
-                  color={is_pinned ? 'BLACK' : 'MEDIUM_GRAY'}
-                  onClick={isMyPage ? handleClickPin : undefined}
+                  color={pinned ? 'BLACK' : 'MEDIUM_GRAY'}
+                  onClick={(e) => {
+                    console.log('Pin icon clicked', {
+                      isMyPage,
+                      pinned,
+                      onClickCondition: isMyPage || pinned,
+                    });
+                    if (isMyPage || pinned) {
+                      handleClickPin(e);
+                    }
+                  }}
                 />
               )}
               <Icon name="dots_menu" size={24} onClick={handleClickMore} />

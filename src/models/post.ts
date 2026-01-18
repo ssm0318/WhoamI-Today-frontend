@@ -51,7 +51,7 @@ export interface ContentsCommon {
   }[];
   created_at: string;
   updated_at: string;
-  is_pinned?: boolean;
+  pinned?: boolean;
   current_user_pin_id?: number | null;
 }
 

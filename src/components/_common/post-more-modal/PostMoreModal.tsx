@@ -152,7 +152,7 @@ function PostMoreModal({
             <button type="button" onClick={handleClickEditPost}>
               <Typo type="button-large">{t('menu.edit')}</Typo>
             </button>
-            {post.is_pinned ? (
+            {post.pinned ? (
               <button type="button" onClick={handleClickUnpinPost}>
                 <Typo type="button-large">{t('menu.unpin')}</Typo>
               </button>

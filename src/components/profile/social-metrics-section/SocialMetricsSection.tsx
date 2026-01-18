@@ -1,19 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import { Layout, Typo } from '@design-system';
 
+import { useBoundStore } from '@stores/useBoundStore';
 import { SocialMetricsSectionWrapper } from './SocialMetricsSection.styled';
 
-interface SocialMetricsSectionProps {
-  followingCount?: number;
-  followersCount?: number;
-  friendsCount?: number;
-}
+function SocialMetricsSection() {
+  const { follower_count, following_count, friend_count } = useBoundStore((state) => ({
+    follower_count: state.myProfile?.follower_count,
+    following_count: state.myProfile?.following_count,
+    friend_count: state.myProfile?.friend_count,
+  }));
 
-function SocialMetricsSection({
-  followingCount = 0,
-  followersCount = 0,
-  friendsCount = 0,
-}: SocialMetricsSectionProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
 
   const handleClickFollowing = () => {
@@ -50,7 +47,7 @@ function SocialMetricsSection({
             Following
           </Typo>
           <Typo type="title-medium" color="BLACK">
-            {followingCount}
+            {following_count}
           </Typo>
         </Layout.FlexCol>
         <Layout.FlexCol
@@ -63,7 +60,7 @@ function SocialMetricsSection({
             Followers
           </Typo>
           <Typo type="title-medium" color="BLACK">
-            {followersCount}
+            {follower_count}
           </Typo>
         </Layout.FlexCol>
         <Layout.FlexCol
@@ -76,7 +73,7 @@ function SocialMetricsSection({
             {t('friends')}
           </Typo>
           <Typo type="title-medium" color="BLACK">
-            {friendsCount}
+            {friend_count}
           </Typo>
         </Layout.FlexCol>
       </Layout.FlexRow>

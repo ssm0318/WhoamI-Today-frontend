@@ -135,6 +135,9 @@ export interface MyProfile extends User {
   current_ver: VersionType;
   user_group: UserGroup;
   pinned_cnt: number;
+  follower_count: number;
+  following_count: number;
+  friend_count: number;
 }
 
 export interface FriendRequest {
