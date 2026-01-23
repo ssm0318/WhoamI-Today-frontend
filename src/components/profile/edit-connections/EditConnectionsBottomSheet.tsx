@@ -15,9 +15,15 @@ interface Props {
   user: UserProfile;
   visible: boolean;
   closeBottomSheet: () => void;
+  onConnectionChanged?: (connection: Connection) => void;
 }
 
-function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) {
+function EditConnectionsBottomSheet({
+  user,
+  visible,
+  closeBottomSheet,
+  onConnectionChanged,
+}: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
   const { updateUser } = useContext(UserPageContext);
   const { featureFlags } = useBoundStore(UserSelector);
@@ -46,7 +52,8 @@ function EditConnectionsBottomSheet({ user, visible, closeBottomSheet }: Props) 
     })
       .then(() => {
         closeBottomSheet();
-        updateUser();
+        updateUser?.();
+        onConnectionChanged?.(connection);
         openToast({ message: t('edit_connections.toast.success') });
       })
       .catch(() => {

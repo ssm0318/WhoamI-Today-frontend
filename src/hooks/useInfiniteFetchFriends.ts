@@ -1,5 +1,5 @@
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
-import { GetUpdatedProfileResponse, UpdatedProfile } from '@models/api/friends';
+import { Connection, GetUpdatedProfileResponse, UpdatedProfile } from '@models/api/friends';
 
 interface BreakFriendsParams {
   type: 'break_friends';
@@ -10,8 +10,16 @@ interface UpdateFriendsStateParams {
   item: UpdatedProfile;
   value: boolean;
 }
+interface UpdateConnectionStatusParams {
+  type: 'connection_status';
+  item: UpdatedProfile;
+  value: Connection;
+}
 
-export type UpdateFriendListParams = BreakFriendsParams | UpdateFriendsStateParams;
+export type UpdateFriendListParams =
+  | BreakFriendsParams
+  | UpdateFriendsStateParams
+  | UpdateConnectionStatusParams;
 
 interface UseInfiniteFetchFriendsParams {
   type?: 'all' | 'close_friends';
@@ -47,7 +55,10 @@ const useInfiniteFetchFriends = ({ type: friendType }: UseInfiniteFetchFriendsPa
           ...prev,
           results: [
             ...prev.results.slice(0, selectedFriendIndex),
-            { ...prev.results[selectedFriendIndex], [type]: params.value },
+            {
+              ...prev.results[selectedFriendIndex],
+              [type]: params.value,
+            },
             ...prev.results.slice(selectedFriendIndex + 1),
           ],
         };
