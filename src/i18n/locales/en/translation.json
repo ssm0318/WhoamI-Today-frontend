@@ -47,6 +47,11 @@
         "email_sent_success": "Email sent succesfully 🎉",
         "email_sent_failed": "Failed to send email"
     },
+    "email_verification_complete": {
+        "title": "Email Verification Complete",
+        "success_message": "Your email has been verified!",
+        "description": "Please return to the app and sign in."
+    },
     "sign_up": {
         "create_an_account": "Create an Account",
         "email": "Email",
