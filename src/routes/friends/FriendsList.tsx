@@ -61,9 +61,9 @@ function FriendsList() {
 
   const { scrollRef } = useRestoreScrollPosition('friendsPage');
 
-  const { allFriendsCount, filteredFriends } = useMemo(() => {
+  const { filteredFriends } = useMemo(() => {
     if (!allFriends) {
-      return { allFriendsCount: 0, filteredFriends: [] };
+      return { filteredFriends: [] };
     }
 
     const allFriendsList = allFriends
@@ -92,7 +92,7 @@ function FriendsList() {
               <FriendTypeChip
                 type="all"
                 isSelected={selectedType === 'all'}
-                count={allFriendsCount}
+                // count={allFriendsCount}
                 onClick={() => setSelectedType('all')}
               />
               <FriendTypeChip
