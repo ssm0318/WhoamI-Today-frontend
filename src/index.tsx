@@ -23,6 +23,7 @@ import Chats from './routes/Chats';
 import CheckInEdit from './routes/check-in/CheckInEdit';
 import Discover from './routes/discover/Discover';
 import { EditChats } from './routes/edit-chats/EditChats';
+import EmailVerificationComplete from './routes/EmailVerificationComplete';
 import ForgotPassword from './routes/ForgotPassword';
 import DefaultMyFriendsList from './routes/friends/DefaultMyFriendsList';
 import DefaultUserFriendsList from './routes/friends/DefaultUserFriendsList';
@@ -234,6 +235,7 @@ const router = createBrowserRouter([
         ],
       },
       { path: 'forgot-password', element: <ForgotPassword /> },
+      { path: 'email-verification-complete', element: <EmailVerificationComplete /> },
       { path: 'reset-password/:id/:token', element: <ResetPassword /> },
     ],
   },
