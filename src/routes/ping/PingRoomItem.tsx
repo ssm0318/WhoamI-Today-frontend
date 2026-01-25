@@ -7,34 +7,37 @@ import { PingEmojiDict, PingEmojiType, PingRoom } from '@models/ping';
 
 interface Props {
   room: PingRoom;
-  currentUserId: number;
 }
 
-function getLastMessagePreview(emoji: string, content: string): string {
+function getLastMessagePreview(emoji: string | undefined, content: string): string {
   const emojiStr = emoji && emoji in PingEmojiDict ? PingEmojiDict[emoji as PingEmojiType] : '';
   return [emojiStr, content].filter(Boolean).join(' ') || '—';
 }
 
-export function PingRoomItem({ room, currentUserId }: Props) {
+export function PingRoomItem({ room }: Props) {
   const navigate = useNavigate();
-  const otherUser = room.user1.id === currentUserId ? room.user2 : room.user1;
-  const displayName = otherUser.username?.toLowerCase() === 'me' ? '—' : otherUser.username ?? '—';
-  const hasUnread = room.unread_cnt > 0;
-  const preview = getLastMessagePreview(room.last_ping_emoji, room.last_ping_content);
+  const opponent = room?.opponent;
 
   const handleClick = useCallback(() => {
-    navigate(`/users/${otherUser.id}/ping`);
-  }, [navigate, otherUser.id]);
+    if (opponent) navigate(`/users/${opponent.id}/ping`);
+  }, [navigate, opponent]);
+
+  if (!opponent) return null;
+
+  const displayName = opponent.username?.toLowerCase() === 'me' ? '—' : opponent.username ?? '—';
+  const hasUnread = (opponent.unread_count ?? 0) > 0;
+  const preview = getLastMessagePreview(room.last_ping_emoji, room.last_message ?? '');
 
   return (
     <Layout.FlexRow
       w="100%"
+      pv={12}
       gap={16}
       justifyContent="space-between"
       alignItems="center"
       onMouseDown={handleClick}
     >
-      <ProfileImage imageUrl={otherUser.profile_image} size={55} username={otherUser.username} />
+      <ProfileImage imageUrl={opponent.profile_image} size={55} username={opponent.username} />
       <Layout.FlexCol w="100%" justifyContent="center" gap={5}>
         <Layout.FlexRow w="100%" justifyContent="space-between">
           <Layout.FlexRow gap={4} alignItems="center">
@@ -47,14 +50,14 @@ export function PingRoomItem({ room, currentUserId }: Props) {
                 style={{ background: 'var(--color-primary)', minWidth: 18 }}
               >
                 <Typo type="label-small" color="WHITE">
-                  {room.unread_cnt > 99 ? '99+' : room.unread_cnt}
+                  {(opponent.unread_count ?? 0) > 99 ? '99+' : opponent.unread_count}
                 </Typo>
               </Layout.LayoutBase>
             )}
           </Layout.FlexRow>
-          {room.last_ping_time && (
+          {room.last_message_time && (
             <Typo type="label-small" color="MEDIUM_GRAY">
-              {formatLastMessageTime(room.last_ping_time)}
+              {formatLastMessageTime(room.last_message_time)}
             </Typo>
           )}
         </Layout.FlexRow>

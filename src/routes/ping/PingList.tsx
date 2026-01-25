@@ -10,13 +10,11 @@ import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { PingRoom } from '@models/ping';
-import { useBoundStore } from '@stores/useBoundStore';
 import { getPingRooms } from '@utils/apis/ping';
 import { PingRoomItem } from './PingRoomItem';
 
 function PingList() {
   const [t] = useTranslation('translation', { keyPrefix: 'ping' });
-  const myProfile = useBoundStore((state) => state.myProfile);
 
   const [rooms, setRooms] = useState<PingRoom[]>([]);
   const [nextUrl, setNextUrl] = useState<string | null>(null);
@@ -51,12 +49,10 @@ function PingList() {
   const { isLoading, targetRef, setIsLoading } =
     useInfiniteScroll<HTMLDivElement>(infiniteCallback);
 
-  const currentUserId = myProfile?.id ?? 1;
-
   return (
     <MainContainer>
       <SubHeader title={t('list_title')} LeftComponent={<Layout.LayoutBase w={36} h={36} />} />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} ph={DEFAULT_MARGIN} pb={14} gap={0}>
+      <Layout.FlexCol w="100%" mt={TITLE_HEADER_HEIGHT} ph={DEFAULT_MARGIN} pb={14} gap={0}>
         {loading && rooms.length < 1 && (
           <Layout.FlexRow w="100%" h={40} justifyContent="center">
             <Loader />
@@ -64,10 +60,10 @@ function PingList() {
         )}
         {!loading && (
           <>
-            {rooms.map((room, i) => (
+            {rooms.map((room) => (
               <Fragment key={room.id}>
-                {i > 0 && <Divider width={1} />}
-                <PingRoomItem room={room} currentUserId={currentUserId} />
+                <PingRoomItem room={room} />
+                <Divider width={1} />
               </Fragment>
             ))}
             <div ref={targetRef} />
