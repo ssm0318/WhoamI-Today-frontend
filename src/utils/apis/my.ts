@@ -142,18 +142,24 @@ export const getMyAllPosts = async (page: string | null) => {
   return data;
 };
 
-// interest 목록
-interface InterestResponse {
+// interest 목록 (API는 { count, next, previous, results: [...] } 페이지네이션 형태로 반환)
+interface InterestItem {
   id: number;
   content: string;
 }
+type InterestListResponse = { results: InterestItem[] } | InterestItem[];
+
+const toContentList = (data: InterestListResponse): string[] => {
+  const items = Array.isArray(data) ? data : data?.results ?? [];
+  return items.map((item) => item.content);
+};
 
 export const searchInterests = async (query: string): Promise<string[]> => {
   // 검색어가 없으면 recommendation API 호출
   if (!query.trim()) {
     try {
-      const { data } = await axios.get<InterestResponse[]>('/user/recommendations/interests/');
-      return data.map((item) => item.content);
+      const { data } = await axios.get<InterestListResponse>('/user/recommendations/interests/');
+      return toContentList(data);
     } catch (error) {
       console.error('Failed to get interest recommendations:', error);
       return [];
@@ -164,28 +170,34 @@ export const searchInterests = async (query: string): Promise<string[]> => {
   const cleanQuery = query.replace(/^#+/, '').trim();
 
   try {
-    const { data } = await axios.get<InterestResponse[]>('/user/interests/search/', {
+    const { data } = await axios.get<InterestListResponse>('/user/interests/search/', {
       params: { q: cleanQuery },
     });
-    return data.map((item) => item.content);
+    return toContentList(data);
   } catch (error) {
     console.error('Failed to search interests:', error);
     return [];
   }
 };
 
-// persona 목록
-interface PersonaResponse {
+// persona 목록 (API는 { count, next, previous, results: [...] } 페이지네이션 형태로 반환)
+interface PersonaItem {
   id: number;
   content: string;
 }
+type PersonaListResponse = { results: PersonaItem[] } | PersonaItem[];
+
+const toPersonaContentList = (data: PersonaListResponse): string[] => {
+  const items = Array.isArray(data) ? data : data?.results ?? [];
+  return items.map((item) => item.content);
+};
 
 export const searchPersonas = async (query: string): Promise<string[]> => {
   // 검색어가 없으면 recommendation API 호출
   if (!query.trim()) {
     try {
-      const { data } = await axios.get<PersonaResponse[]>('/user/recommendations/personas/');
-      return data.map((item) => item.content);
+      const { data } = await axios.get<PersonaListResponse>('/user/recommendations/personas/');
+      return toPersonaContentList(data);
     } catch (error) {
       console.error('Failed to get persona recommendations:', error);
       return [];
@@ -196,10 +208,10 @@ export const searchPersonas = async (query: string): Promise<string[]> => {
   const cleanQuery = query.replace(/^#+/, '').trim();
 
   try {
-    const { data } = await axios.get<PersonaResponse[]>('/user/personas/search/', {
+    const { data } = await axios.get<PersonaListResponse>('/user/personas/search/', {
       params: { q: cleanQuery },
     });
-    return data.map((item) => item.content);
+    return toPersonaContentList(data);
   } catch (error) {
     console.error('Failed to search personas:', error);
     return [];

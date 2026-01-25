@@ -27,6 +27,7 @@ export const TagsContainer = styled(Layout.FlexRow).attrs<TagsContainerProps>(
     alignItems: 'center',
   }),
 )<TagsContainerProps>`
+  flex-wrap: wrap;
   padding-top: 12px;
   border: none;
   background-color: transparent;
@@ -94,7 +95,8 @@ export const DropdownContainer = styled.div`
   background-color: ${Colors.WHITE};
   border: 1px solid ${Colors.BLACK};
   border-radius: 8px;
-  max-height: 300px;
+  /* 하단 탭을 가리지 않도록 4개 항목 분만 노출 (항목 높이 ~48px × 4) */
+  max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

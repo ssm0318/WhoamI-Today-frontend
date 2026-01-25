@@ -83,6 +83,19 @@ function HashtagSelectInput({
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace') {
+      if (inputValue.length > 0) {
+        // 글자 있음 → 기본 동작(한 글자 삭제)에 맡김
+        return;
+      }
+      if (value.length > 0) {
+        // 글자 없고 태그만 있을 때: 마지막 태그 삭제
+        e.preventDefault();
+        onChange(value.slice(0, -1));
+      }
+      return;
+    }
+
     if (e.key === 'Enter' || e.key === ',' || e.key === ' ') {
       e.preventDefault();
       const trimmedValue = inputValue.replace(/^#+/, '').trim();
@@ -106,9 +119,13 @@ function HashtagSelectInput({
   };
 
   const handleInputBlur = () => {
-    // 드롭다운 클릭을 위해 약간의 지연
+    // 드롭다운 항목 탭 시 handleSelectOption이 input에 다시 focus함 → 그 경우 닫지 않음
+    // iOS 키보드 '완료'(체크) 등으로 blur된 경우에만 드롭다운 닫기
     setTimeout(() => {
-      setIsFocused(false);
+      if (document.activeElement !== inputRef.current) {
+        setIsFocused(false);
+        setShowDropdown(false);
+      }
     }, 200);
   };
 
@@ -128,13 +145,6 @@ function HashtagSelectInput({
   const handleRemoveTag = (labelToRemove: string) => {
     onChange(value.filter((val) => val !== labelToRemove));
   };
-
-  // 필터링된 옵션 (이미 선택된 것은 제외하지 않고 표시)
-  // 검색어에서 # 제거
-  const cleanInputValue = inputValue.replace(/^#+/, '').trim();
-  const filteredOptions = options.filter((opt) =>
-    opt.toLowerCase().includes(cleanInputValue.toLowerCase()),
-  );
 
   const hasSelectedTags = selectedOptions.length > 0;
 
@@ -171,16 +181,16 @@ function HashtagSelectInput({
         </S.TagsContainer>
       </S.InputWrapper>
 
-      {showDropdown && (inputValue || filteredOptions.length > 0) && (
-        <S.DropdownContainer ref={dropdownRef}>
-          {isLoading ? (
+      {showDropdown && (inputValue || options.length > 0) && (
+        <S.DropdownContainer ref={dropdownRef} data-hashtag-dropdown="">
+          {isLoading && options.length === 0 ? (
             <S.DropdownItem>
               <Typo type="body-medium" color="MEDIUM_GRAY">
                 Loading...
               </Typo>
             </S.DropdownItem>
-          ) : filteredOptions.length > 0 ? (
-            filteredOptions.map((option) => {
+          ) : options.length > 0 ? (
+            options.map((option) => {
               const isSelected = value.includes(option);
               return (
                 <S.DropdownItem
