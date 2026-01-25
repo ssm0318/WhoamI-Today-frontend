@@ -339,6 +339,7 @@ function EditProfile() {
           value={draft.pronouns}
           onChange={handleChangeInput}
         />
+
         {/* bio */}
         <ValidatedTextArea
           label={t('bio')}
