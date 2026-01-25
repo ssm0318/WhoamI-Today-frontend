@@ -1,5 +1,6 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
@@ -71,8 +72,16 @@ function MusicSearchBottomSheet({
     },
   });
 
+  useEffect(() => {
+    if (!visible) {
+      setQuery('');
+      setTrackList([]);
+      setSelected(null);
+    }
+  }, [visible]);
+
   if (!trackList) return null;
-  return (
+  return createPortal(
     <BottomModal
       visible={visible}
       onClose={closeBottomSheet}
@@ -131,7 +140,8 @@ function MusicSearchBottomSheet({
           </Layout.Fixed>
         ) : null}
       </Layout.FlexCol>
-    </BottomModal>
+    </BottomModal>,
+    document.body,
   );
 }
 
