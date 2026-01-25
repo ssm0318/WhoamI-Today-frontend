@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode, RefObject, UIEvent, useEffect } from 'react';
+import React, { CSSProperties, ReactNode, RefObject, UIEvent, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 import NotiPermissionBanner, {
@@ -86,6 +86,18 @@ export function MainScrollContainer({
   const bottomPadding =
     pb !== undefined ? pb : BOTTOM_TABBAR_HEIGHT + (showBanner ? NOTI_PERMISSION_BANNER_HEIGHT : 0);
 
+  // iOS: input 포커스 시 스크롤이 막히는 현상. input/textarea·추천 드롭다운 밖을 터치하면 blur하여 스크롤이 먹히도록 함.
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const target = e.target as Node;
+    if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) return;
+    // 추천 드롭다운 항목 탭(선택) 시에는 blur하지 않음 — 터치하면 입력되도록
+    if (target instanceof Element && target.closest?.('[data-hashtag-dropdown]')) return;
+    const el = document.activeElement;
+    if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+      (el as HTMLInputElement).blur();
+    }
+  };
+
   return (
     <MainWrapper
       id={MAIN_SCROLL_CONTAINER_ID}
@@ -94,6 +106,7 @@ export function MainScrollContainer({
       pt={TOP_NAVIGATION_HEIGHT}
       pb={bottomPadding}
       onScroll={onScroll}
+      onTouchStart={handleTouchStart}
       style={style}
     >
       {children}

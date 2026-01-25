@@ -220,7 +220,13 @@ function EditProfile() {
     editProfile({
       profile: profileData,
       onSuccess: (data: MyProfile) => {
-        updateMyProfile({ ...data });
+        // PATCH 응답에 user_interests/user_personas가 없을 수 있음 → 전송한 값으로 보정
+        updateMyProfile({
+          ...data,
+          user_interests: data.user_interests ?? draft.user_interests,
+          user_personas: data.user_personas ?? draft.user_personas,
+          profile_image: data.profile_image ?? myProfile?.profile_image,
+        });
         openToast({ message: t('response.updated') });
         navigate('/my');
       },
@@ -333,6 +339,7 @@ function EditProfile() {
           value={draft.pronouns}
           onChange={handleChangeInput}
         />
+
         {/* bio */}
         <ValidatedTextArea
           label={t('bio')}

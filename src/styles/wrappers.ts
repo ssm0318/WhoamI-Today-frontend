@@ -6,6 +6,7 @@ export const RootContainer = styled(Layout.FlexCol)`
   max-width: ${MAX_WINDOW_WIDTH}px;
   overflow-y: auto;
   position: relative;
+  -webkit-overflow-scrolling: touch;
 
   /* NOTE: https://github.com/GooJinSun/WhoAmI-Today-frontend/issues/365#issuecomment-2143120139 */
   height: 100vh; // NOTE: 구 브라우저 대응
@@ -17,6 +18,8 @@ export const MainWrapper = styled(Layout.FlexCol)`
   width: 100%;
   overflow-y: auto;
   overflow-x: visible;
+  /* iOS: input 포커스 시 스크롤이 막히는 현상 완화 (곳곳에서 보고된 이슈) */
+  -webkit-overflow-scrolling: touch;
 `;
 
 export const ModalContainer = styled(Layout.Fixed)`
