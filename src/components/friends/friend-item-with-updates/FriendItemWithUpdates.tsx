@@ -1,21 +1,27 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import RecentPostItem from '@components/_common/recent-post/RecentPostItem';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
+import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
+import { FeatureFlagKey } from '@constants/featureFlag';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { Connection, UpdatedProfile } from '@models/api/friends';
 import { RecentPost } from '@models/post';
+import { UserProfile } from '@models/user';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { Container } from './FriendItemWithUpdates.styled';
 
 interface Props {
   user: UpdatedProfile;
   recentPost?: RecentPost;
+  onConnectionChanged?: (userId: number, connection: Connection) => void;
 }
 
-function FriendItemWithUpdates({ user, recentPost }: Props) {
+function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props) {
   const {
     id,
     profile_image,
@@ -28,6 +34,10 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
   } = user;
 
   const navigate = useNavigate();
+  const { featureFlags } = useBoundStore(UserSelector);
+
+  const [isEditConnectionsBottomSheetVisible, setIsEditConnectionsBottomSheetVisible] =
+    useState(false);
 
   const handleClickProfile = () => {
     navigate(`/users/${username}`);
@@ -38,9 +48,11 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
     navigate(`/users/${id}/ping`);
   };
 
-  const handleClickFriendBadge = () => {
-    // TODO: 친한 친구 토글 (CLOSE FRIEND <-> FRIEND)
-    console.log('handleClickFriendBadge');
+  const handleClickFriendBadge = (e: MouseEvent) => {
+    e.stopPropagation();
+    if (featureFlags?.[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
+      setIsEditConnectionsBottomSheetVisible(true);
+    }
   };
 
   return (
@@ -120,6 +132,14 @@ function FriendItemWithUpdates({ user, recentPost }: Props) {
 
       {/* Recent Post 영역 (유저마다 무조건 하나씩은 있음) */}
       {!!recentPost && <RecentPostItem recentPost={recentPost} hideContent />}
+      <EditConnectionsBottomSheet
+        user={user as unknown as UserProfile}
+        visible={isEditConnectionsBottomSheetVisible}
+        closeBottomSheet={() => setIsEditConnectionsBottomSheetVisible(false)}
+        onConnectionChanged={(connection) => {
+          onConnectionChanged?.(user.id, connection);
+        }}
+      />
     </Container>
   );
 }

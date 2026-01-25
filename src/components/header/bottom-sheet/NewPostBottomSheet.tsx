@@ -28,9 +28,6 @@ function NewPostBottomSheet({ visible, closeBottomSheet, setSelectPrompt }: Prop
   const { featureFlags } = useBoundStore(UserSelector);
 
   const BOTTOM_SHEET_LIST: MenuItem[] = [
-    ...(featureFlags?.checkIn
-      ? [{ key: 'check-in', path: '/check-in/edit', icon: 'bottomsheet_checkin' as const }]
-      : []),
     ...(featureFlags?.questionResponseFeature
       ? [{ key: 'prompts', path: '/check-in/prompt', icon: 'bottomsheet_prompt' as const }]
       : []),

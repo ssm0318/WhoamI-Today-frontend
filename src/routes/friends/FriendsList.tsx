@@ -8,10 +8,9 @@ import SharedPlaylistSection, {
   SharedTrack,
 } from '@components/friends/shared-playlist/SharedPlaylistSection';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
-import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
-import { FriendType } from '@models/api/friends';
+import { Connection, FriendType } from '@models/api/friends';
 import { SocialBattery } from '@models/checkIn';
 import { PlaylistSong } from '@models/playlist';
 import { getMe } from '@utils/apis/my';
@@ -25,8 +24,18 @@ function FriendsList() {
   const [playlistTracks, setPlaylistTracks] = useState<SharedTrack[]>([]);
   const [isPlaylistLoading, setIsPlaylistLoading] = useState(true);
 
-  const { targetRef, allFriends, isAllFriendsLoading, isLoadingMoreAllFriends, refetchAllFriends } =
-    useInfiniteFetchFriends({ type: selectedType });
+  const {
+    targetRef,
+    allFriends,
+    isAllFriendsLoading,
+    isLoadingMoreAllFriends,
+    refetchAllFriends,
+    updateFriendList,
+  } = useInfiniteFetchFriends({ type: selectedType });
+
+  // 다른 탭의 hook도 가져와서 함께 업데이트
+  const allFriendsHook = useInfiniteFetchFriends({ type: 'all' });
+  const closeFriendsHook = useInfiniteFetchFriends({ type: 'close_friends' });
 
   const fetchPlaylistFeed = async () => {
     try {
@@ -61,9 +70,9 @@ function FriendsList() {
 
   const { scrollRef } = useRestoreScrollPosition('friendsPage');
 
-  const { allFriendsCount, filteredFriends } = useMemo(() => {
+  const { filteredFriends } = useMemo(() => {
     if (!allFriends) {
-      return { allFriendsCount: 0, filteredFriends: [] };
+      return { filteredFriends: [] };
     }
 
     const allFriendsList = allFriends
@@ -92,7 +101,7 @@ function FriendsList() {
               <FriendTypeChip
                 type="all"
                 isSelected={selectedType === 'all'}
-                count={allFriendsCount}
+                // count={allFriendsCount}
                 onClick={() => setSelectedType('all')}
               />
               <FriendTypeChip
@@ -102,7 +111,7 @@ function FriendsList() {
               />
             </Layout.FlexRow>
 
-            {/* Shared Playlist 섹션 */}
+            {/* Shared Playlist 섹션 - 항상 맨 위에 표시 */}
             {!isPlaylistLoading && (
               <SharedPlaylistSection
                 tracks={playlistTracks}
@@ -111,31 +120,105 @@ function FriendsList() {
               />
             )}
 
-            <EmptyStateContainer isEmpty={isEmpty}>
-              {isAllFriendsLoading ? (
+            {isAllFriendsLoading ? (
+              <EmptyStateContainer isEmpty={isEmpty}>
                 <AllFriendListLoader />
-              ) : filteredFriends.length > 0 ? (
-                <>
-                  {/* 친구 목록 */}
-                  <Layout.FlexCol w="100%" gap={12}>
-                    {filteredFriends.map((user) => (
-                      <FriendItemWithUpdates
-                        user={{
-                          ...user,
-                          social_battery: SocialBattery.completely_drained,
-                        }}
-                        key={user.id}
-                        recentPost={user.recent_post}
-                      />
-                    ))}
-                  </Layout.FlexCol>
-                  <div ref={targetRef} />
-                  {isLoadingMoreAllFriends && <AllFriendItemLoader />}
-                </>
-              ) : selectedType === 'close_friends' ? (
-                <NoCloseFriends />
-              ) : null}
-            </EmptyStateContainer>
+              </EmptyStateContainer>
+            ) : filteredFriends.length > 0 ? (
+              <EmptyStateContainer isEmpty={false}>
+                {/* 친구 목록 */}
+                <Layout.FlexCol w="100%" gap={12}>
+                  {filteredFriends.map((user) => (
+                    <FriendItemWithUpdates
+                      user={{
+                        ...user,
+                        social_battery: SocialBattery.completely_drained,
+                      }}
+                      key={user.id}
+                      recentPost={user.recent_post}
+                      onConnectionChanged={(userId, connection) => {
+                        // close_friends 탭에서 friend로 변경되면 목록에서 제거
+                        if (selectedType === 'close_friends' && connection === Connection.FRIEND) {
+                          updateFriendList({
+                            type: 'break_friends',
+                            item: user,
+                          });
+                          // all 탭의 connection_status도 업데이트
+                          allFriendsHook.updateFriendList({
+                            type: 'connection_status',
+                            item: user,
+                            value: connection,
+                          });
+                        } else {
+                          // 현재 탭 업데이트
+                          updateFriendList({
+                            type: 'connection_status',
+                            item: user,
+                            value: connection,
+                          });
+
+                          // 다른 탭도 업데이트
+                          if (selectedType === 'all') {
+                            // all 탭에서 변경: close_friends 탭도 업데이트
+                            if (connection === Connection.CLOSE_FRIEND) {
+                              // close_friends 탭에 추가 또는 업데이트
+                              const closeFriendsData = closeFriendsHook.allFriends;
+                              if (closeFriendsData) {
+                                const exists = closeFriendsData.some((page) =>
+                                  page.results?.some((u) => u.id === userId),
+                                );
+                                if (!exists) {
+                                  // 첫 페이지에 추가
+                                  const firstPage = closeFriendsData[0];
+                                  if (firstPage?.results) {
+                                    const updatedFirstPage = {
+                                      ...firstPage,
+                                      count: (firstPage.count || 0) + 1,
+                                      results: [
+                                        { ...user, connection_status: Connection.CLOSE_FRIEND },
+                                        ...firstPage.results,
+                                      ],
+                                    };
+                                    closeFriendsHook.refetchAllFriends(
+                                      [updatedFirstPage, ...closeFriendsData.slice(1)],
+                                      { revalidate: false },
+                                    );
+                                  }
+                                } else {
+                                  // 이미 존재하면 connection_status만 업데이트
+                                  closeFriendsHook.updateFriendList({
+                                    type: 'connection_status',
+                                    item: user,
+                                    value: connection,
+                                  });
+                                }
+                              }
+                            } else {
+                              // friend로 변경: close_friends 탭에서 제거
+                              closeFriendsHook.updateFriendList({
+                                type: 'break_friends',
+                                item: user,
+                              });
+                            }
+                          } else {
+                            // close_friends 탭에서 변경: all 탭도 업데이트
+                            allFriendsHook.updateFriendList({
+                              type: 'connection_status',
+                              item: user,
+                              value: connection,
+                            });
+                          }
+                        }
+                      }}
+                    />
+                  ))}
+                </Layout.FlexCol>
+                <div ref={targetRef} />
+                {isLoadingMoreAllFriends && <AllFriendItemLoader />}
+              </EmptyStateContainer>
+            ) : selectedType === 'close_friends' ? (
+              <NoCloseFriends />
+            ) : null}
           </Layout.FlexCol>
         </Layout.FlexCol>
       </PullToRefresh>
@@ -146,13 +229,6 @@ function FriendsList() {
 const EmptyStateContainer = styled(Layout.FlexCol)<{ isEmpty: boolean }>`
   width: 100%;
   padding: 8px 0;
-  ${({ isEmpty }) =>
-    isEmpty &&
-    `
-    flex: 1;
-    justify-content: center;
-    min-height: calc(100vh - ${TOP_NAVIGATION_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px - 60px);
-  `}
 `;
 
 export default FriendsList;
