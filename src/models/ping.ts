@@ -1,5 +1,22 @@
 import { User } from '@models/user';
 
+export interface PingRoomUser {
+  id: number;
+  username: string;
+  profile_image?: string | null;
+  url: string;
+}
+
+export interface PingRoom {
+  id: number;
+  user1: PingRoomUser;
+  user2: PingRoomUser;
+  last_ping_time: string;
+  last_ping_content: string;
+  last_ping_emoji: string;
+  unread_cnt: number;
+}
+
 export interface InputPingMessage {
   emoji: PingEmojiType | '';
   content: string;

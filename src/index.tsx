@@ -38,6 +38,7 @@ import AllNotes from './routes/notes/AllNotes';
 import NewNote from './routes/notes/NewNote';
 import { NoteDetail } from './routes/notes/NoteDetail';
 import Notifications from './routes/Notifications';
+import PingList from './routes/ping/PingList';
 import PinnedPosts from './routes/pinned-posts/PinnedPosts';
 import Reactions from './routes/Reactions';
 import ReceivedPrompts from './routes/ReceivedPrompts';
@@ -90,6 +91,7 @@ const router = createBrowserRouter([
           { path: 'friends/list', element: <DefaultMyFriendsList /> },
           { path: 'responses', element: <AllResponses from="my" /> },
           { path: 'pinned-posts', element: <PinnedPosts /> },
+          { path: 'pings', element: <PingList /> },
         ],
       },
       {

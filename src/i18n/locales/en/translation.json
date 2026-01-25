@@ -388,7 +388,9 @@
     "ping": {
         "input_placeholder": "Send a message...",
         "no_pings": "No messages yet.",
-        "refresh": "Refresh"
+        "refresh": "Refresh",
+        "list_title": "Ping",
+        "no_rooms": "No conversations yet."
     },
     "settings": {
         "title": "Settings",
