@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { mutate } from 'swr';
+import { useShallow } from 'zustand/react/shallow';
 import Divider from '@components/_common/divider/Divider';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
@@ -14,12 +15,14 @@ import { getMe, getMyProfile } from '@utils/apis/my';
 import { MainScrollContainer } from './Root';
 
 function My() {
-  const { myProfile, fetchCheckIn } = useBoundStore((state) => ({
-    myProfile: state.myProfile,
-    fetchCheckIn: state.fetchCheckIn,
-  }));
+  const { myProfile, fetchCheckIn } = useBoundStore(
+    useShallow((state) => ({
+      myProfile: state.myProfile,
+      fetchCheckIn: state.fetchCheckIn,
+    })),
+  );
 
-  const { featureFlags } = useBoundStore(UserSelector);
+  const { featureFlags } = useBoundStore(useShallow(UserSelector));
 
   // Load pinned_cnt on mount
   useEffect(() => {

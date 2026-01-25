@@ -1,6 +1,7 @@
 import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 import FriendStatus from '@components/_common/friend-status/FriendStatus';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -29,9 +30,7 @@ interface ProfileProps {
 function Profile({ user }: ProfileProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
 
-  const { featureFlags } = useBoundStore(UserSelector);
-
-  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+  const { featureFlags, myProfile } = useBoundStore(useShallow(UserSelector));
   const isMyPage = user?.id === myProfile?.id;
   const [friendData, setFriendData] = useState<UserProfile | null>(null);
 

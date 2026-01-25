@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Layout, SvgIcon, Typo } from '@design-system';
@@ -46,4 +47,4 @@ function PinnedPostsSection({ username, pinnedPostsCount = 0 }: PinnedPostsSecti
   );
 }
 
-export default PinnedPostsSection;
+export default memo(PinnedPostsSection);
