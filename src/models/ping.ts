@@ -1,5 +1,25 @@
 import { User } from '@models/user';
 
+/** API /ping/rooms/ 응답의 opponent */
+export interface PingRoomOpponent {
+  id: number;
+  profile_image?: string | null;
+  profile_pic?: string;
+  url: string;
+  username: string;
+  unread_count: number;
+}
+
+/** API /ping/rooms/ 응답의 room 항목 */
+export interface PingRoom {
+  id: number;
+  last_message: string;
+  last_message_time: string;
+  opponent: PingRoomOpponent;
+  /** 이모지(선택) - API에 없을 수 있음 */
+  last_ping_emoji?: string;
+}
+
 export interface InputPingMessage {
   emoji: PingEmojiType | '';
   content: string;

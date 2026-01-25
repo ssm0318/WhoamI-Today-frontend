@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { useLocation } from 'react-router-dom';
+import { useLocation, useMatch } from 'react-router-dom';
 import FloatingButton from '@components/header/floating-button/FloatingButton';
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout, SvgIcon, Typo } from '@design-system';
@@ -13,11 +13,13 @@ interface TabItemProps {
   to: string;
   type: 'friends' | 'my' | 'questions' | 'feed' | 'discover' | 'chats';
   size?: number;
+  end?: boolean;
 }
 
-function TabItem({ to, type, size = 48 }: TabItemProps) {
+function TabItem({ to, type, size = 48, end = false }: TabItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'nav_tab' });
   const myProfile = useBoundStore((state) => state.myProfile);
+  const isPingChat = !!useMatch('/users/:userId/ping');
 
   // TODO: Get unread message count
   // const unReadMsgCnt = 15;
@@ -32,32 +34,38 @@ function TabItem({ to, type, size = 48 }: TabItemProps) {
   };
 
   return (
-    <NavTabItem to={to}>
-      {({ isActive }) => (
-        <StyledTabItem w="100%" alignItems="center" pt={10} onClick={scrollToTop(isActive)}>
-          {type === 'my' && myProfile?.profile_image ? (
-            <img
-              src={myProfile.profile_image}
-              width={32}
-              height={32}
-              alt={`${myProfile?.username ?? 'user'}-profile`}
-              className={`${isActive ? 'active' : ''}`}
-            />
-          ) : (
-            <StyledTabItem>
-              {/* {type === 'chats' && unReadMsg  Cnt > 0 && (
+    <NavTabItem to={to} end={end}>
+      {({ isActive }) => {
+        const resolvedActive = type === 'chats' ? isActive || isPingChat : isActive;
+        return (
+          <StyledTabItem w="100%" alignItems="center" pt={10} onClick={scrollToTop(resolvedActive)}>
+            {type === 'my' && myProfile?.profile_image ? (
+              <img
+                src={myProfile.profile_image}
+                width={32}
+                height={32}
+                alt={`${myProfile?.username ?? 'user'}-profile`}
+                className={resolvedActive ? 'active' : ''}
+              />
+            ) : (
+              <StyledTabItem>
+                {/* {type === 'chats' && unReadMsg  Cnt > 0 && (
                 <StyledMessageCount t={-7} l="70%" pv={1} ph={5}>
                   <Typo type="label-small">{unReadMsgCnt > 999 ? '999+' : unReadMsgCnt}</Typo>
                 </StyledMessageCount>
               )} */}
-              <SvgIcon name={isActive ? `${type}_active` : `${type}_inactive`} size={size} />
-            </StyledTabItem>
-          )}
-          <Typo type="label-large" color={isActive ? 'PRIMARY' : 'LIGHT_GRAY'}>
-            {t(type)}
-          </Typo>
-        </StyledTabItem>
-      )}
+                <SvgIcon
+                  name={resolvedActive ? `${type}_active` : `${type}_inactive`}
+                  size={size}
+                />
+              </StyledTabItem>
+            )}
+            <Typo type="label-large" color={resolvedActive ? 'PRIMARY' : 'LIGHT_GRAY'}>
+              {t(type)}
+            </Typo>
+          </StyledTabItem>
+        );
+      }}
     </NavTabItem>
   );
 }
@@ -85,8 +93,8 @@ export default function Tab() {
         ) : featureFlags?.friendFeed ? (
           <TabItem to="/feed" type="friends" size={28} />
         ) : null}
-        {featureFlags?.pingTab && <TabItem to="/ping" type="chats" size={28} />}
-        <TabItem to="/my" type="my" size={28} />
+        {featureFlags?.pingTab && <TabItem to="/my/pings" type="chats" size={28} />}
+        <TabItem to="/my" type="my" size={28} end />
       </Layout.FlexRow>
       {showFloatingButton && <FloatingButton />}
     </TabWrapper>
