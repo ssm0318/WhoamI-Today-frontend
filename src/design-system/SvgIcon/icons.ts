@@ -168,6 +168,7 @@ const plus = 'plus';
 const pin_empty = 'pin_empty';
 const pin_filled = 'pin_filled';
 const chevron_right = 'chevron_right';
+const eye = 'eye';
 
 export {
   add_comment,
@@ -228,6 +229,7 @@ export {
   edit_outline,
   emoji,
   error,
+  eye,
   expand_close,
   expand_open,
   favorite_false,

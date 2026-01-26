@@ -32,6 +32,7 @@ function ResponseItem({
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
   const [tPin] = useTranslation('translation', { keyPrefix: 'post_more_modal' });
+  const [tAccess] = useTranslation('translation', { keyPrefix: 'access_setting' });
 
   const [overflowSummary, setOverflowSummary] = useState<string>();
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
@@ -165,18 +166,25 @@ function ResponseItem({
                   <Typo type="label-medium" color="MEDIUM_GRAY">
                     {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
                   </Typo>
-                  {/* Visibility scope - only shown on own page */}
-                  {isMyPage && (
-                    <>
-                      <Typo type="label-medium" color="BLACK">
-                        •
-                      </Typo>
-                      <Typo type="label-medium" color="BLACK">
-                        {visibility.map((v) => v).join(', ')}
-                      </Typo>
-                    </>
-                  )}
                 </Layout.FlexRow>
+                {/* Visibility scope - only shown on own page */}
+                {isMyPage && visibility && visibility.length > 0 && (
+                  <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
+                    <SvgIcon name="eye" size={16} color="MEDIUM_GRAY" />
+                    {visibility.map((vis, index) => (
+                      <Layout.FlexRow key={vis} alignItems="center" gap={4}>
+                        <Typo type="label-medium" color="MEDIUM_GRAY" underline>
+                          {tAccess(String(vis).toLowerCase())}
+                        </Typo>
+                        {index < visibility.length - 1 && (
+                          <Typo type="label-medium" color="MEDIUM_GRAY">
+                            ,
+                          </Typo>
+                        )}
+                      </Layout.FlexRow>
+                    ))}
+                  </Layout.FlexRow>
+                )}
               </Layout.FlexCol>
             </Layout.FlexRow>
             {/* Pin and More options */}

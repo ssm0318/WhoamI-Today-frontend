@@ -55,6 +55,7 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
   const { username, profile_image } = author_detail ?? {};
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
   const [tPin] = useTranslation('translation', { keyPrefix: 'post_more_modal' });
+  const [tAccess] = useTranslation('translation', { keyPrefix: 'access_setting' });
 
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
@@ -160,18 +161,31 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
                 <Typo type="label-medium" color="MEDIUM_GRAY">
                   {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
                 </Typo>
-                {/* Visibility scope - only shown on own page */}
-                {isMyPage && (
-                  <>
-                    <Typo type="label-medium" color="BLACK">
-                      •
-                    </Typo>
-                    <Typo type="label-medium" color="BLACK">
-                      {visibility === 'close_friends' ? t('close_friend') : t('friend')}
-                    </Typo>
-                  </>
-                )}
               </Layout.FlexRow>
+              {/* Visibility scope - only shown on own page */}
+              {isMyPage && visibility && (
+                <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
+                  <SvgIcon name="eye" size={16} color="MEDIUM_GRAY" />
+                  {Array.isArray(visibility) ? (
+                    visibility.map((vis, index) => (
+                      <Layout.FlexRow key={vis} alignItems="center" gap={4}>
+                        <Typo type="label-medium" color="MEDIUM_GRAY" underline>
+                          {tAccess(String(vis).toLowerCase())}
+                        </Typo>
+                        {index < visibility.length - 1 && (
+                          <Typo type="label-medium" color="MEDIUM_GRAY">
+                            ,
+                          </Typo>
+                        )}
+                      </Layout.FlexRow>
+                    ))
+                  ) : (
+                    <Typo type="label-medium" color="MEDIUM_GRAY" underline>
+                      {tAccess(String(visibility).toLowerCase())}
+                    </Typo>
+                  )}
+                </Layout.FlexRow>
+              )}
             </Layout.FlexCol>
           </Layout.FlexRow>
           {/* Pin and More options */}
