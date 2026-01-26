@@ -44,7 +44,7 @@ function SocialMetricsSection() {
           style={{ cursor: 'pointer', flex: 1 }}
         >
           <Typo type="body-medium" bold mb={4}>
-            Following
+            {t('following')}
           </Typo>
           <Typo type="title-medium" color="BLACK">
             {following_count}
@@ -57,7 +57,7 @@ function SocialMetricsSection() {
           style={{ cursor: 'pointer', flex: 1 }}
         >
           <Typo type="body-medium" bold mb={4}>
-            Followers
+            {t('followers')}
           </Typo>
           <Typo type="title-medium" color="BLACK">
             {follower_count}

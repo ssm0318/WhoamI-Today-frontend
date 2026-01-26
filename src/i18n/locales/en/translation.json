@@ -246,6 +246,8 @@
         },
         "friend": "Friend",
         "friends": "Friends",
+        "following": "Following",
+        "followers": "Followers",
         "accept": "Accept",
         "reject": "Reject",
         "requested": "Requested",
