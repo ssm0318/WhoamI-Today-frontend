@@ -18,6 +18,7 @@ import Ping from 'src/routes/ping/Ping';
 import './i18n';
 import SpotifyManager from './libs/SpotifyManager';
 import reportWebVitals from './reportWebVitals';
+import ActivateEmail from './routes/ActivateEmail';
 import AllQuestions from './routes/AllQuestions';
 import Chats from './routes/Chats';
 import CheckInEdit from './routes/check-in/CheckInEdit';
@@ -237,6 +238,7 @@ const router = createBrowserRouter([
         ],
       },
       { path: 'forgot-password', element: <ForgotPassword /> },
+      { path: 'activate/:uidb64/:token', element: <ActivateEmail /> },
       { path: 'email-verification-complete', element: <EmailVerificationComplete /> },
       { path: 'reset-password/:id/:token', element: <ResetPassword /> },
     ],

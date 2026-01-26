@@ -25,7 +25,7 @@ function ForgotPassword() {
       email: emailInput,
       onSuccess: () => {
         openToast({ message: t('email_sent_success') });
-        navigate('/email-verification-complete');
+        navigate('/signin');
       },
       onFail: (e) => {
         openToast({ message: e || t('email_sent_failed') });

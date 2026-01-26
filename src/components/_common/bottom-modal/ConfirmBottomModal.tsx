@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { Divider } from '@components/_common/divider/Divider.styled';
@@ -26,7 +27,7 @@ function ConfirmBottomModal({
     setIsVisible(false);
   };
 
-  return (
+  return createPortal(
     <BottomModal visible={isVisible} onClose={handleOnClose}>
       <Layout.LayoutBase w="100%" bgColor="WHITE" pt={16} ph={34} pb={45}>
         <Font.Display type="20_bold" mb={16}>
@@ -51,7 +52,8 @@ function ConfirmBottomModal({
           />
         </Button.RowButtonContainer>
       </Layout.LayoutBase>
-    </BottomModal>
+    </BottomModal>,
+    document.getElementById('root-container') || document.body,
   );
 }
 
