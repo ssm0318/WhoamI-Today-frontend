@@ -189,7 +189,12 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
               <VisibilityMultiSelect
                 selectedVisibilities={noteInfo.visibility}
                 onChange={handleChangeVisibility}
-                availableVisibilities={[PostVisibility.FRIENDS, PostVisibility.CLOSE_FRIENDS]}
+                availableVisibilities={[
+                  PostVisibility.FRIENDS,
+                  PostVisibility.CLOSE_FRIENDS,
+                  PostVisibility.FOLLOWER,
+                  PostVisibility.PUBLIC,
+                ]}
               />
             </Layout.FlexCol>
           </Layout.FlexRow>
