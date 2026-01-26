@@ -64,17 +64,17 @@ function EditProfile() {
   const [imageChanged, setImageChanged] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
-  // 초기 선택된 Interest와 Persona 설정
+  // 초기 선택된 Interest와 Persona 설정 (API에서 받은 대소문자 유지)
   useEffect(() => {
     if (myProfile) {
-      // 배열에서 "#" 접두사를 제거하여 소문자로 변환
+      // 배열에서 "#" 접두사만 제거
       const interests =
         Array.isArray(myProfile.user_interests) && myProfile.user_interests.length > 0
-          ? myProfile.user_interests.map((item) => item.replace(/^#+/, '').toLowerCase())
+          ? myProfile.user_interests.map((item) => item.replace(/^#+/, ''))
           : [];
       const personas =
         Array.isArray(myProfile.user_personas) && myProfile.user_personas.length > 0
-          ? myProfile.user_personas.map((item) => item.replace(/^#+/, '').toLowerCase())
+          ? myProfile.user_personas.map((item) => item.replace(/^#+/, ''))
           : [];
 
       setSelectedInterestIds(interests);

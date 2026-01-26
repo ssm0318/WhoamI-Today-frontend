@@ -59,14 +59,14 @@ export const editProfile = ({
       return;
     }
 
-    // user_interests는 interests 키로, user_personas는 personas 키로 변환하여 공백으로 구분된 문자열로 전송
+    // user_interests, user_personas를 공백으로 구분된 문자열로 전송
     if (key === 'user_interests' && Array.isArray(value)) {
-      formData.append('interests', value.join(' '));
+      formData.append('user_interests', value.join(' '));
       return;
     }
 
     if (key === 'user_personas' && Array.isArray(value)) {
-      formData.append('personas', value.join(' '));
+      formData.append('user_personas', value.join(' '));
       return;
     }
 
