@@ -6,6 +6,7 @@ import SharedPlaylistBottomSheet from '@components/friends/shared-playlist-botto
 import MusicDetailBottomSheet from '@components/music/music-detail-bottom-sheet/MusicDetailBottomSheet';
 import MusicSearchBottomSheet from '@components/music/music-search-bottom-sheet/MusicSearchBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { usePostAppMessage } from '@hooks/useAppMessage';
 import SpotifyManager from '@libs/SpotifyManager';
 import { shareSong } from '@utils/apis/playlist';
 import { AddNewCard, PlaylistCard, ScrollableCardList } from './SharedPlaylistSection.styled';
@@ -129,6 +130,7 @@ function SharedPlaylistSection({
   onTrackAdded,
   onTrackDeleted,
 }: SharedPlaylistSectionProps) {
+  const sendMessage = usePostAppMessage();
   const [t] = useTranslation('translation', { keyPrefix: 'shared_playlist' });
   const [showMusicSearch, setShowMusicSearch] = useState(false);
   const [showPlaylistDetail, setShowPlaylistDetail] = useState(false);
@@ -141,6 +143,9 @@ function SharedPlaylistSection({
     try {
       await shareSong(trackId);
       setShowMusicSearch(false);
+      if (window.ReactNativeWebView) {
+        sendMessage('WIDGET_DATA_UPDATED', {});
+      }
       onTrackAdded?.();
     } catch (error) {
       console.error('Error sharing song:', error);

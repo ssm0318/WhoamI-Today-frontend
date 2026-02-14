@@ -6,6 +6,7 @@ import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { usePostAppMessage } from '@hooks/useAppMessage';
 import SpotifyManager from '@libs/SpotifyManager';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
@@ -107,6 +108,7 @@ function SharedPlaylistBottomSheet({
   onAddNew,
   onTrackDeleted,
 }: SharedPlaylistBottomSheetProps) {
+  const sendMessage = usePostAppMessage();
   const [t] = useTranslation('translation', { keyPrefix: 'shared_playlist.bottom_sheet' });
   const { myProfile } = useBoundStore(UserSelector);
   const [isDeleting, setIsDeleting] = useState<number | null>(null);
@@ -120,6 +122,9 @@ function SharedPlaylistBottomSheet({
     try {
       setIsDeleting(typeof trackId === 'number' ? trackId : parseInt(trackId.toString(), 10));
       await unshareSong(typeof trackId === 'number' ? trackId : parseInt(trackId.toString(), 10));
+      if (window.ReactNativeWebView) {
+        sendMessage('WIDGET_DATA_UPDATED', {});
+      }
       onTrackDeleted?.();
     } catch (error) {
       console.error('Error deleting track:', error);

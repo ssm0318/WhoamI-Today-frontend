@@ -11,7 +11,7 @@ import SectionContainer from '@components/check-in/check-in-edit/section-contain
 import SubHeader from '@components/sub-header/SubHeader';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
-import { useGetAppMessage } from '@hooks/useAppMessage';
+import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
 import { CheckInForm, SocialBattery } from '@models/checkIn';
@@ -24,6 +24,7 @@ function CheckInEdit() {
   const [t] = useTranslation('translation', { keyPrefix: 'check_in_edit' });
   const spotifyManager = SpotifyManager.getInstance();
   const navigate = useNavigate();
+  const sendMessage = usePostAppMessage();
   const { checkInForm, setCheckInForm, fetchCheckIn } = useBoundStore((state) => ({
     checkInForm: state.checkInForm,
     setCheckInForm: state.setCheckInForm,
@@ -55,6 +56,9 @@ function CheckInEdit() {
       mood: checkInForm.mood,
       track_id: checkInForm.track_id,
     });
+    if (window.ReactNativeWebView) {
+      sendMessage('WIDGET_DATA_UPDATED', {});
+    }
     return navigate('/my');
   };
 

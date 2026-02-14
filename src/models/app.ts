@@ -58,6 +58,10 @@ export interface KeyboardOpenedData {
   key: 'KEYBOARD_OPENED';
 }
 
+export interface WidgetDataUpdatedData {
+  key: 'WIDGET_DATA_UPDATED';
+}
+
 // 앱, 웹 서로 약속한 키값에 따른 메시지 타입
 export type PostMessageDataType =
   | ScreenNavigateData
@@ -71,7 +75,8 @@ export type PostMessageDataType =
   | OpenCameraData
   | FileSelectedData
   | KeyboardHeightData
-  | KeyboardOpenedData;
+  | KeyboardOpenedData
+  | WidgetDataUpdatedData;
 
 // 앱, 웹 서로 약속한 키값
 export type PostMessageKeyType = PostMessageDataType['key'];
@@ -90,4 +95,5 @@ export type PostMessageKeyToData = {
   FILE_SELECTED: FileSelectedData;
   KEYBOARD_HEIGHT: KeyboardHeightData;
   KEYBOARD_OPENED: KeyboardOpenedData;
+  WIDGET_DATA_UPDATED: WidgetDataUpdatedData;
 };
