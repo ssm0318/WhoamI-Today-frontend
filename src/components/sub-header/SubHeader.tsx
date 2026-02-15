@@ -28,11 +28,14 @@ function SubHeader({
   const handleGoBack = () => {
     if (onGoBack) {
       onGoBack();
-    } else {
-      navigate(-1);
+      return;
     }
+    if (window.ReactNativeWebView && window.history.length <= 1) {
+      window.ReactNativeWebView.postMessage(JSON.stringify({ actionType: 'NAVIGATE_TO_BASE' }));
+      return;
+    }
+    navigate(-1);
   };
-
   return (
     <SubHeaderWrapper>
       <Layout.FlexRow

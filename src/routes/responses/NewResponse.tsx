@@ -92,6 +92,10 @@ function NewResponse() {
 
   const navigate = useNavigate();
   const handleClickCancel = () => {
+    if (window.ReactNativeWebView && window.history.length <= 1) {
+      window.ReactNativeWebView.postMessage(JSON.stringify({ actionType: 'NAVIGATE_TO_BASE' }));
+      return;
+    }
     navigate(-1);
   };
 
