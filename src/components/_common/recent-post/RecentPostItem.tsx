@@ -22,13 +22,16 @@ function RecentPostItem({ recentPost, hideContent = false, showNewBadge = true }
     // TODO: 더 보기 바텀 시트 연결
   };
 
+  const getPostDetailPath = () =>
+    recentPost.type === POST_TYPE.RESPONSE ? `/responses/${id}` : `/notes/${id}`;
+
   const handleClickPost = (e: MouseEvent) => {
     e.stopPropagation();
-    navigate(`/notes/${id}`);
+    navigate(getPostDetailPath());
   };
 
   const handleShowComments = () => {
-    navigate(`/notes/${id}`);
+    navigate(getPostDetailPath());
   };
 
   const handleSetInputFocus = () => {
