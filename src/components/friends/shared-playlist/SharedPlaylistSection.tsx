@@ -4,12 +4,9 @@ import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SharedPlaylistBottomSheet from '@components/friends/shared-playlist-bottom-sheet/SharedPlaylistBottomSheet';
 import MusicDetailBottomSheet from '@components/music/music-detail-bottom-sheet/MusicDetailBottomSheet';
-import MusicSearchBottomSheet from '@components/music/music-search-bottom-sheet/MusicSearchBottomSheet';
-import { Layout, SvgIcon, Typo } from '@design-system';
-import { usePostAppMessage } from '@hooks/useAppMessage';
+import { Layout, Typo } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
-import { shareSong } from '@utils/apis/playlist';
-import { AddNewCard, PlaylistCard, ScrollableCardList } from './SharedPlaylistSection.styled';
+import { PlaylistCard, ScrollableCardList } from './SharedPlaylistSection.styled';
 
 export interface SharedTrack {
   id: string | number;
@@ -24,8 +21,6 @@ export interface SharedTrack {
 
 interface SharedPlaylistSectionProps {
   tracks?: SharedTrack[];
-  onTrackAdded?: () => void;
-  onTrackDeleted?: () => void;
 }
 
 interface TrackCardItemProps {
@@ -61,6 +56,27 @@ function TrackCardItem({ track }: TrackCardItemProps) {
   }, [spotifyManager, track.track]);
 
   const albumArtUrl = trackData?.album?.images?.[0]?.url;
+  const isLoadingTrack = typeof track.track === 'string' && trackData === null;
+
+  // Reserve space with placeholder until Spotify track data loads (avoids profile images showing first, then album art shifting layout)
+  if (isLoadingTrack) {
+    return (
+      <PlaylistCard as="div" style={{ cursor: 'default' }}>
+        <Layout.LayoutBase
+          p={5}
+          style={{
+            width: 76,
+            height: 76,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#EEE6F4',
+            borderRadius: 12,
+          }}
+        />
+      </PlaylistCard>
+    );
+  }
 
   return (
     <PlaylistCard onClick={handleClickTrack}>
@@ -125,55 +141,18 @@ function TrackCardItem({ track }: TrackCardItemProps) {
   );
 }
 
-function SharedPlaylistSection({
-  tracks = [],
-  onTrackAdded,
-  onTrackDeleted,
-}: SharedPlaylistSectionProps) {
-  const sendMessage = usePostAppMessage();
+function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'shared_playlist' });
-  const [showMusicSearch, setShowMusicSearch] = useState(false);
   const [showPlaylistDetail, setShowPlaylistDetail] = useState(false);
-
-  const handleCreateNew = () => {
-    setShowMusicSearch(true);
-  };
-
-  const handleSelectTrackToAdd = async (trackId: string) => {
-    try {
-      await shareSong(trackId);
-      setShowMusicSearch(false);
-      if (window.ReactNativeWebView) {
-        sendMessage('WIDGET_DATA_UPDATED', {});
-      }
-      onTrackAdded?.();
-    } catch (error) {
-      console.error('Error sharing song:', error);
-    }
-  };
 
   const handleViewAll = () => {
     setShowPlaylistDetail(true);
   };
 
   return (
-    <Layout.FlexCol w="100%" mb={8} mt={4} style={{ overflow: 'visible' }}>
+    <Layout.FlexCol w="100%" mb={12} mt={4} style={{ overflow: 'visible' }}>
       <ScrollableCardList gap={18} ph={16}>
-        {/* Add New Playlist */}
-        <AddNewCard onClick={handleCreateNew}>
-          <Layout.FlexCol w="100%" h="100%" alignItems="center" justifyContent="center">
-            <SvgIcon name="add_playlist" size={60} color="PRIMARY" />
-          </Layout.FlexCol>
-        </AddNewCard>
-
-        {/* Empty State or Track Cards */}
-        {tracks.length === 0 ? (
-          <Layout.FlexRow style={{ flexShrink: 0 }} alignItems="center">
-            <Typo type="title-medium" color="PRIMARY">
-              {t('empty_message')}
-            </Typo>
-          </Layout.FlexRow>
-        ) : (
+        {tracks.length > 0 && (
           <>
             {/* Track Cards */}
             {tracks.map((track) => (
@@ -181,7 +160,7 @@ function SharedPlaylistSection({
             ))}
 
             {/* View all */}
-            <Layout.FlexRow p={10} style={{ flexShrink: 0 }} onClick={handleViewAll}>
+            <Layout.FlexRow p={10} pr={20} style={{ flexShrink: 0 }} onClick={handleViewAll}>
               <Typo type="title-medium" color="PRIMARY">
                 {t('view_all')}
               </Typo>
@@ -190,23 +169,11 @@ function SharedPlaylistSection({
         )}
       </ScrollableCardList>
 
-      {/* Music Search Bottom Sheet */}
-      <MusicSearchBottomSheet
-        visible={showMusicSearch}
-        closeBottomSheet={() => setShowMusicSearch(false)}
-        onSelect={handleSelectTrackToAdd}
-      />
-
       {/* Shared Playlist Detail Bottom Sheet */}
       <SharedPlaylistBottomSheet
         visible={showPlaylistDetail}
         closeBottomSheet={() => setShowPlaylistDetail(false)}
         tracks={tracks}
-        onAddNew={() => {
-          setShowPlaylistDetail(false);
-          setShowMusicSearch(true);
-        }}
-        onTrackDeleted={onTrackDeleted}
       />
     </Layout.FlexCol>
   );
