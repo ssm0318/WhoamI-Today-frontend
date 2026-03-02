@@ -5,33 +5,27 @@ import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import { Layout, SvgIcon, Typo } from '@design-system';
-import { usePostAppMessage } from '@hooks/useAppMessage';
+import { SCREEN_HEIGHT } from '@constants/layout';
+import { Layout, Typo } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
-import { useBoundStore } from '@stores/useBoundStore';
-import { UserSelector } from '@stores/user';
-import { unshareSong } from '@utils/apis/playlist';
 import { SharedTrack } from '../shared-playlist/SharedPlaylistSection';
 import * as S from './SharedPlaylistBottomSheet.styled';
+
+const BOTTOM_SHEET_HEIGHT = Math.round((SCREEN_HEIGHT - 50) * 0.78);
 
 interface SharedPlaylistBottomSheetProps {
   visible: boolean;
   closeBottomSheet: () => void;
   tracks: SharedTrack[];
-  onAddNew: () => void;
-  onTrackDeleted?: () => void;
 }
 
 interface TrackItemProps {
   track: SharedTrack;
-  isOwner: boolean;
-  onDelete?: () => void;
 }
 
-function TrackItem({ track, isOwner, onDelete }: TrackItemProps) {
+function TrackItem({ track }: TrackItemProps) {
   const [trackData, setTrackData] = useState<Track | null>(null);
   const spotifyManager = SpotifyManager.getInstance();
-  const [t] = useTranslation('translation', { keyPrefix: 'shared_playlist.bottom_sheet' });
   useEffect(() => {
     if (!track.track) {
       setTrackData(null);
@@ -52,7 +46,7 @@ function TrackItem({ track, isOwner, onDelete }: TrackItemProps) {
   }, [spotifyManager, track.track]);
 
   const albumArtUrl = trackData?.album?.images?.[0]?.url;
-  // const artistName = trackData?.artists?.[0]?.name;
+  const artistName = trackData?.artists?.map((a) => a.name).join(', ');
 
   return (
     <>
@@ -78,23 +72,34 @@ function TrackItem({ track, isOwner, onDelete }: TrackItemProps) {
             </S.ProfileImageOverlay>
           </S.AlbumArtWrapper>
 
-          {/* Track Info */}
-          <Layout.FlexCol flex={1} gap={4}>
-            <Typo type="body-large" bold numberOfLines={1}>
-              {trackData?.name || track.name}
-            </Typo>
-            <Typo type="body-small" color="MEDIUM_GRAY" numberOfLines={1}>
-              {isOwner ? t('you_shared') : track.sharedBy.username}
-            </Typo>
+          {/* Track Info: title + username on same row (username at far right), artist below */}
+          <Layout.FlexCol flex={1} gap={4} style={{ minWidth: 0, width: '100%' }}>
+            <Layout.FlexRow alignItems="center" justifyContent="space-between" gap={8} w="100%">
+              <Layout.FlexCol flex={1} style={{ minWidth: 0, overflow: 'hidden' }}>
+                <Typo type="body-large" bold numberOfLines={1}>
+                  {trackData?.name || track.name}
+                </Typo>
+              </Layout.FlexCol>
+              <div
+                style={{
+                  flexShrink: 0,
+                  marginLeft: 'auto',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <Typo type="body-small" color="DARK">
+                  {track.sharedBy.username}
+                </Typo>
+              </div>
+            </Layout.FlexRow>
+            {artistName && (
+              <Typo type="body-small" color="MEDIUM_GRAY" numberOfLines={1}>
+                {artistName}
+              </Typo>
+            )}
           </Layout.FlexCol>
         </Layout.FlexRow>
-
-        {/* Delete Button (only for owner) */}
-        {isOwner && onDelete && (
-          <S.DeleteButton onClick={onDelete}>
-            <SvgIcon name="trash_can" size={24} />
-          </S.DeleteButton>
-        )}
       </S.TrackItemContainer>
       <S.TrackItemSeparator />
     </>
@@ -105,63 +110,28 @@ function SharedPlaylistBottomSheet({
   visible,
   closeBottomSheet,
   tracks,
-  onAddNew,
-  onTrackDeleted,
 }: SharedPlaylistBottomSheetProps) {
-  const sendMessage = usePostAppMessage();
   const [t] = useTranslation('translation', { keyPrefix: 'shared_playlist.bottom_sheet' });
-  const { myProfile } = useBoundStore(UserSelector);
-  const [isDeleting, setIsDeleting] = useState<number | null>(null);
-
-  const handleAddNew = () => {
-    closeBottomSheet();
-    onAddNew();
-  };
-
-  const handleDeleteTrack = async (trackId: string | number) => {
-    try {
-      setIsDeleting(typeof trackId === 'number' ? trackId : parseInt(trackId.toString(), 10));
-      await unshareSong(typeof trackId === 'number' ? trackId : parseInt(trackId.toString(), 10));
-      if (window.ReactNativeWebView) {
-        sendMessage('WIDGET_DATA_UPDATED', {});
-      }
-      onTrackDeleted?.();
-    } catch (error) {
-      console.error('Error deleting track:', error);
-    } finally {
-      setIsDeleting(null);
-    }
-  };
-
-  const isTrackOwner = (track: SharedTrack) => {
-    return myProfile?.id === track.sharedBy.id;
-  };
 
   return createPortal(
-    <BottomModal visible={visible} onClose={closeBottomSheet} heightMode="full">
+    <BottomModal
+      visible={visible}
+      onClose={closeBottomSheet}
+      heightMode="full"
+      customHeight={BOTTOM_SHEET_HEIGHT}
+    >
       <S.Container>
         <Icon name="home_indicator" />
-        <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" ph={16} pv={12}>
+        <Layout.FlexRow w="100%" alignItems="center" ph={16} pv={12}>
           <Typo type="title-large">
             {t('title')} ({tracks.length})
           </Typo>
-          <S.AddButton onClick={handleAddNew}>
-            <SvgIcon name="plus" size={24} />
-            <Typo type="title-medium">{t('add')}</Typo>
-          </S.AddButton>
         </Layout.FlexRow>
 
         <S.ScrollContainer>
           <Layout.FlexCol w="100%" ph={16} pb={20}>
             {tracks.map((track) => (
-              <TrackItem
-                key={track.id}
-                track={track}
-                isOwner={isTrackOwner(track)}
-                onDelete={
-                  isTrackOwner(track) && !isDeleting ? () => handleDeleteTrack(track.id) : undefined
-                }
-              />
+              <TrackItem key={track.id} track={track} />
             ))}
           </Layout.FlexCol>
         </S.ScrollContainer>
