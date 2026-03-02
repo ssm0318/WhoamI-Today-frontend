@@ -11,7 +11,6 @@ import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/Floatin
 import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { Connection, FriendType } from '@models/api/friends';
-import { SocialBattery } from '@models/checkIn';
 import { PlaylistSong } from '@models/playlist';
 import { getMe } from '@utils/apis/my';
 import { getPlaylistFeed } from '@utils/apis/playlist';
@@ -130,10 +129,7 @@ function FriendsList() {
                 <Layout.FlexCol w="100%" gap={12}>
                   {filteredFriends.map((user) => (
                     <FriendItemWithUpdates
-                      user={{
-                        ...user,
-                        social_battery: SocialBattery.completely_drained,
-                      }}
+                      user={user}
                       key={user.id}
                       recentPost={user.recent_post}
                       onConnectionChanged={(userId, connection) => {

@@ -9,6 +9,7 @@ import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatt
 import { FeatureFlagKey } from '@constants/featureFlag';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { Connection, UpdatedProfile } from '@models/api/friends';
+import { SocialBattery } from '@models/checkIn';
 import { RecentPost } from '@models/post';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -100,7 +101,9 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
       {/* Status/Mood Chips */}
       <Layout.FlexCol gap={4} w="100%">
         <Layout.FlexRow gap={4} w="100%" style={{ minHeight: track_id ? 28 : undefined }}>
-          {social_battery && <SocialBatteryChip socialBattery={social_battery} />}
+          {social_battery && Object.values(SocialBattery).includes(social_battery) && (
+            <SocialBatteryChip socialBattery={social_battery} />
+          )}
           {track_id && (
             <Layout.FlexRow style={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
               <SpotifyMusic
