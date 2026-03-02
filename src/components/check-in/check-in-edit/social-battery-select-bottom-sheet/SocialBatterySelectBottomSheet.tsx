@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
@@ -33,7 +34,7 @@ function SocialBatterySelectBottomSheet({
     }
   };
 
-  return (
+  return createPortal(
     <BottomModal visible={visible} onClose={closeBottomSheet}>
       <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE">
         <Icon name="home_indicator" />
@@ -63,7 +64,8 @@ function SocialBatterySelectBottomSheet({
           />
         </S.ConfirmButtonContainer>
       </Layout.FlexCol>
-    </BottomModal>
+    </BottomModal>,
+    document.body,
   );
 }
 
