@@ -50,29 +50,3 @@ export const ProfileImageOverlay = styled.div`
   align-items: center;
   justify-content: center;
 `;
-
-export const DeleteButton = styled.button`
-  background: none;
-  border: none;
-  padding: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${({ theme }) => theme.MEDIUM_GRAY};
-
-  &:hover {
-    color: ${({ theme }) => theme.ERROR};
-  }
-`;
-
-export const AddButton = styled.button`
-  background: none;
-  border: none;
-  padding: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: ${({ theme }) => theme.PRIMARY};
-`;

@@ -52,7 +52,9 @@ function BottomModal({
       const bodyHeight = bodyRef.current.scrollHeight;
       let calculatedHeight;
 
-      if (heightMode === 'content') {
+      if (customHeight != null) {
+        calculatedHeight = Math.min(customHeight, maxHeight);
+      } else if (heightMode === 'content') {
         calculatedHeight = bodyHeight > maxHeight ? maxHeight : bodyHeight;
       } else if (heightMode === 'full') {
         calculatedHeight = maxHeight;

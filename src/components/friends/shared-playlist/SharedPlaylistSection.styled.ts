@@ -13,11 +13,6 @@ export const ScrollableCardList = styled(Layout.FlexRow)`
   -ms-overflow-style: none;
 `;
 
-export const AddNewCard = styled(Layout.LayoutBase)`
-  flex-shrink: 0;
-  /* 스타일링은 여기에 추가 */
-`;
-
 export const PlaylistCard = styled(Layout.FlexRow)`
   position: relative;
   flex-shrink: 0;

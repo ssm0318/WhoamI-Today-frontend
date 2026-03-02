@@ -1,10 +1,13 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import FilterChip from '@components/_common/filter-chip/FilterChip';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import HighlightQuestionSection from '@components/discover/HighlightQuestionSection/HighlightQuestionSection';
 import SelectInterestSection from '@components/discover/SelectInterestSection/SelectInterestSection';
 import SelectPersonaSection from '@components/discover/SelectPersonaSection/SelectPersonaSection';
+import SharedPlaylistSection, {
+  SharedTrack,
+} from '@components/friends/shared-playlist/SharedPlaylistSection';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
@@ -14,14 +17,18 @@ import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSaveAndHide } from '@hooks/useSaveAndHide';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { DiscoverFilter, DiscoverFilterLabel, DiscoverResultItem } from '@models/discover';
+import { PlaylistSong } from '@models/playlist';
 import { getDiscoverFeed } from '@utils/apis/discover';
 import { getMe } from '@utils/apis/my';
+import { getPlaylistFeed } from '@utils/apis/playlist';
 import { MainScrollContainer } from 'src/routes/Root';
 import * as S from './Discover.styled';
 
 function Discover() {
   const [t] = useTranslation('translation');
   const [selectedFilter, setSelectedFilter] = useState<DiscoverFilter[]>([]);
+  const [playlistTracks, setPlaylistTracks] = useState<SharedTrack[]>([]);
+  const [isPlaylistLoading, setIsPlaylistLoading] = useState(true);
   const {
     isSaved: isPersonaSaved,
     showCard: showPersonaCard,
@@ -29,11 +36,33 @@ function Discover() {
     handleSave: handlePersonaSave,
   } = useSaveAndHide();
 
-  const discoverFilterList = [
-    DiscoverFilter.follow,
-    DiscoverFilter.MUTUAL_FRIENDS,
-    DiscoverFilter.MUTUAL_TRAITS,
-  ];
+  const fetchPlaylistFeed = useCallback(async () => {
+    try {
+      setIsPlaylistLoading(true);
+      const songs = await getPlaylistFeed();
+      const transformedTracks: SharedTrack[] = songs.map((song: PlaylistSong) => ({
+        id: song.id,
+        name: '',
+        track: song.track_id,
+        sharedBy: {
+          id: song.user.id,
+          username: song.user.username,
+          profileImageUrl: song.user.profile_image || null,
+        },
+      }));
+      setPlaylistTracks(transformedTracks);
+    } catch {
+      setPlaylistTracks([]);
+    } finally {
+      setIsPlaylistLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPlaylistFeed();
+  }, [fetchPlaylistFeed]);
+
+  const discoverFilterList = [DiscoverFilter.MUTUAL_FRIENDS, DiscoverFilter.MUTUAL_TRAITS];
   const { scrollRef } = useRestoreScrollPosition('discoverPage');
 
   // Build query string with filters
@@ -49,9 +78,9 @@ function Discover() {
   } = useSWRInfiniteScroll<DiscoverResultItem>({ key: swrKey });
 
   const handleRefresh = useCallback(async () => {
-    await Promise.all([getDiscoverFeed(null, selectedFilter), getMe()]);
+    await Promise.all([getDiscoverFeed(null, selectedFilter), getMe(), fetchPlaylistFeed()]);
     mutate();
-  }, [mutate, selectedFilter]);
+  }, [mutate, selectedFilter, fetchPlaylistFeed]);
 
   const renderDiscoverItem = useCallback(
     (item: DiscoverResultItem, index: number) => {
@@ -121,6 +150,9 @@ function Discover() {
                 />
               ))}
             </S.ScrollableFilterRow>
+
+            {/* Shared Playlist */}
+            {!isPlaylistLoading && <SharedPlaylistSection tracks={playlistTracks} />}
 
             {/* Discover Feed */}
             <Layout.FlexCol gap={20} mh={20} alignItems="center" w={SCREEN_WIDTH - 40}>

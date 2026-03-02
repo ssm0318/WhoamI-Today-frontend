@@ -1,27 +1,20 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import FriendItemWithUpdates from '@components/friends/friend-item-with-updates/FriendItemWithUpdates';
 import FriendTypeChip from '@components/friends/friend-type-chip/FriendTypeChip';
 import NoCloseFriends from '@components/friends/no-close-friends/NoCloseFriends';
-import SharedPlaylistSection, {
-  SharedTrack,
-} from '@components/friends/shared-playlist/SharedPlaylistSection';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { Connection, FriendType } from '@models/api/friends';
-import { PlaylistSong } from '@models/playlist';
 import { getMe } from '@utils/apis/my';
-import { getPlaylistFeed } from '@utils/apis/playlist';
 import { MainScrollContainer } from 'src/routes/Root';
 import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
 import { AllFriendItemLoader, AllFriendListLoader } from './FriendsLoader';
 
 function FriendsList() {
   const [selectedType, setSelectedType] = useState<FriendType>('all');
-  const [playlistTracks, setPlaylistTracks] = useState<SharedTrack[]>([]);
-  const [isPlaylistLoading, setIsPlaylistLoading] = useState(true);
 
   const {
     targetRef,
@@ -36,35 +29,8 @@ function FriendsList() {
   const allFriendsHook = useInfiniteFetchFriends({ type: 'all' });
   const closeFriendsHook = useInfiniteFetchFriends({ type: 'close_friends' });
 
-  const fetchPlaylistFeed = async () => {
-    try {
-      setIsPlaylistLoading(true);
-      const songs = await getPlaylistFeed();
-      const transformedTracks: SharedTrack[] = songs.map((song: PlaylistSong) => ({
-        id: song.id,
-        name: '', // Will be filled by Spotify API in TrackCardItem
-        track: song.track_id,
-        sharedBy: {
-          id: song.user.id,
-          username: song.user.username,
-          profileImageUrl: song.user.profile_image || null,
-        },
-      }));
-      setPlaylistTracks(transformedTracks);
-    } catch (error) {
-      console.error('Error fetching playlist feed:', error);
-      setPlaylistTracks([]);
-    } finally {
-      setIsPlaylistLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchPlaylistFeed();
-  }, []);
-
   const handleRefresh = async () => {
-    await Promise.all([refetchAllFriends(), getMe(), fetchPlaylistFeed()]);
+    await Promise.all([refetchAllFriends(), getMe()]);
   };
 
   const { scrollRef } = useRestoreScrollPosition('friendsPage');
@@ -109,15 +75,6 @@ function FriendsList() {
                 onClick={() => setSelectedType('close_friends')}
               />
             </Layout.FlexRow>
-
-            {/* Shared Playlist 섹션 - 항상 맨 위에 표시 */}
-            {!isPlaylistLoading && (
-              <SharedPlaylistSection
-                tracks={playlistTracks}
-                onTrackAdded={fetchPlaylistFeed}
-                onTrackDeleted={fetchPlaylistFeed}
-              />
-            )}
 
             {isAllFriendsLoading ? (
               <EmptyStateContainer isEmpty={isEmpty}>
