@@ -1,23 +1,20 @@
-import { useTranslation } from 'react-i18next';
 import { Layout, Typo } from '@design-system';
-import { Persona } from '@models/persona';
+import { Interest } from '@models/interest';
 
-const PERSONA_COLOR = '#8700FF'; // PRIMARY purple
+const INTEREST_COLOR = '#0047FF'; // TERTIARY_BLUE
 
-interface PersonaChipProps {
-  persona: string;
-  onSelect?: (persona: string) => void;
+interface InterestChipProps {
+  interest: string;
+  onSelect?: (interest: string) => void;
   isSelected?: boolean;
 }
 
-function PersonaChip({ persona, onSelect, isSelected }: PersonaChipProps) {
-  const [t] = useTranslation('translation', { keyPrefix: 'persona' });
-
+function InterestChip({ interest, onSelect, isSelected }: InterestChipProps) {
   const handleOnClick = () => {
-    onSelect?.(persona);
+    onSelect?.(interest);
   };
 
-  if (!persona || !Object.keys(Persona).includes(persona)) {
+  if (!interest || !Object.values(Interest).includes(interest as Interest)) {
     return null;
   }
   return (
@@ -32,7 +29,7 @@ function PersonaChip({ persona, onSelect, isSelected }: PersonaChipProps) {
         flexShrink: 0,
         maxWidth: '100%',
         overflow: 'hidden',
-        border: `1px solid ${PERSONA_COLOR}`,
+        border: `1px solid ${INTEREST_COLOR}`,
         WebkitTapHighlightColor: 'transparent',
         userSelect: 'none',
         cursor: 'pointer',
@@ -45,16 +42,16 @@ function PersonaChip({ persona, onSelect, isSelected }: PersonaChipProps) {
         style={{
           width: 14,
           height: 14,
-          backgroundColor: PERSONA_COLOR,
+          backgroundColor: INTEREST_COLOR,
           borderRadius: 12,
           flexShrink: 0,
         }}
       />
       <Typo type="label-large" numberOfLines={1} ellipsis={{ enabled: true }}>
-        {t(persona)}
+        {interest}
       </Typo>
     </Layout.FlexRow>
   );
 }
 
-export default PersonaChip;
+export default InterestChip;

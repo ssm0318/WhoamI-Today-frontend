@@ -13,7 +13,6 @@ type EditPersonaBottomSheetProps = {
   closeBottomSheet: () => void;
   onSelect: (personas: string[]) => void;
   selectedPersonas: string[] | null;
-  personaColorMap?: Record<string, string>;
 };
 
 function EditPersonaBottomSheet({
@@ -21,7 +20,6 @@ function EditPersonaBottomSheet({
   closeBottomSheet,
   onSelect,
   selectedPersonas = [],
-  personaColorMap = {},
 }: EditPersonaBottomSheetProps) {
   const [t] = useTranslation('translation', {
     keyPrefix: 'settings.edit_profile.persona_edit_bottom_sheet',
@@ -81,7 +79,6 @@ function EditPersonaBottomSheet({
               key={persona}
               onSelect={handleTogglePersona}
               isSelected={selected.includes(persona)}
-              color={personaColorMap[persona]}
             />
           ))}
         </Layout.FlexRow>
