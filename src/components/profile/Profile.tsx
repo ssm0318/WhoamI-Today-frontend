@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
@@ -15,13 +15,11 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
+import MoreAboutBottomSheet from './more-about-bottom-sheet/MoreAboutBottomSheet';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
-import PersonaChip from './persona/PersonaChip';
 import PinnedPostsSection from './pinned-posts-section/PinnedPostsSection';
 import BioPlaceholder from './placeholders/BioPlaceholder';
-import PersonaPlaceholder from './placeholders/PersonaPlaceholder';
 import PronounPlaceholder from './placeholders/PronounPlaceholder';
-import SocialMetricsSection from './social-metrics-section/SocialMetricsSection';
 
 interface ProfileProps {
   user?: UserProfile | MyProfile;
@@ -52,41 +50,18 @@ function Profile({ user }: ProfileProps) {
   const reloadPage = () => window.location.reload();
 
   const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
-
   const closeEditConnectionsModal = () => setShowEditConnectionsModal(false);
 
   const handleClickChangeConnection = async () => {
     if (!user || isMyProfile(user) || !areFriends(user)) return;
-
     setShowEditConnectionsModal(true);
   };
 
-  // persona 영역 collapse ui 구현
-  const personaContainerRef = useRef<HTMLDivElement | null>(null);
-  const [isPersonaContainerExpanded, setIsPersonaContainerExpanded] = useState(false);
-  const [isOverflowing, setIsOverflowing] = useState(false);
-  const [chipHeight, setChipHeight] = useState(0);
+  const [showMoreAbout, setShowMoreAbout] = useState(false);
 
-  useEffect(() => {
-    if (!personaContainerRef.current) return;
-
-    const container = personaContainerRef.current;
-    const firstRowHeight = container.firstElementChild
-      ? container.firstElementChild.clientHeight
-      : 0;
-
-    setChipHeight(firstRowHeight);
-  }, [user?.user_personas]);
-
-  useEffect(() => {
-    if (!personaContainerRef.current) return;
-    if (chipHeight === 0) return;
-
-    const container = personaContainerRef.current;
-    const isOverflow = container.scrollHeight > container.clientHeight;
-
-    setIsOverflowing(isOverflow);
-  }, [chipHeight, user?.user_personas]);
+  const hasInterestsOrPersonas =
+    (user?.user_interests && user.user_interests.length > 0) ||
+    (user?.user_personas && user.user_personas.length > 0);
 
   return (
     <Layout.FlexCol w="100%" gap={8}>
@@ -197,46 +172,24 @@ function Profile({ user }: ProfileProps) {
               </Layout.FlexCol>
             )
           )}
+
+          {/* See more details */}
+          {featureFlags?.persona &&
+            (isMyPage || (user && areFriends(user))) &&
+            hasInterestsOrPersonas && (
+              <Layout.FlexRow onClick={() => setShowMoreAbout(true)} style={{ cursor: 'pointer' }}>
+                <Typo type="label-medium" color="PRIMARY">
+                  {t('see_more_details')}
+                </Typo>
+              </Layout.FlexRow>
+            )}
         </Layout.FlexCol>
       </Layout.FlexRow>
 
-      {featureFlags?.persona && (
-        <Layout.FlexCol w="100%" gap={8}>
-          {user &&
-          (areFriends(user) || isMyPage) &&
-          user?.user_personas &&
-          user?.user_personas.length > 0 ? (
-            <Layout.FlexRow w="100%">
-              <Layout.FlexRow
-                w="100%"
-                gap={8}
-                alignItems="center"
-                style={{
-                  position: 'relative',
-                  flexWrap: 'wrap',
-                  maxHeight: isPersonaContainerExpanded ? 'none' : `${chipHeight + 8}px`,
-                  overflow: isPersonaContainerExpanded ? 'visible' : 'hidden',
-                }}
-                ref={personaContainerRef}
-              >
-                {user?.user_personas.map((persona) => (
-                  <PersonaChip key={persona} persona={persona} />
-                ))}
-              </Layout.FlexRow>
-              <Layout.LayoutBase style={{ visibility: isOverflowing ? 'visible' : 'hidden' }}>
-                <Icon
-                  name={isPersonaContainerExpanded ? 'expand_close' : 'expand_open'}
-                  size={24}
-                  onClick={() => setIsPersonaContainerExpanded((prev) => !prev)}
-                />
-              </Layout.LayoutBase>
-            </Layout.FlexRow>
-          ) : (
-            isMyPage && <PersonaPlaceholder />
-          )}
-          {isMyPage && <PinnedPostsSection pinnedPostsCount={myProfile?.pinned_cnt ?? 0} />}
-        </Layout.FlexCol>
+      {featureFlags?.persona && isMyPage && (
+        <PinnedPostsSection pinnedPostsCount={myProfile?.pinned_cnt ?? 0} />
       )}
+
       {!isMyPage && user && (
         <>
           {!isMyProfile(user) && !areFriends(user) && (
@@ -256,8 +209,16 @@ function Profile({ user }: ProfileProps) {
       {/* 체크인 (status) */}
       {featureFlags?.checkIn && user && <CheckInSection user={user} />}
 
-      {/* Followers, Following, Friends */}
-      {isMyPage && <SocialMetricsSection />}
+      {/* More about bottom sheet */}
+      {user && showMoreAbout && (
+        <MoreAboutBottomSheet
+          visible={showMoreAbout}
+          onClose={() => setShowMoreAbout(false)}
+          user={user}
+          username={isMyPage ? myProfile?.username || '' : username || ''}
+          isMyPage={isMyPage}
+        />
+      )}
     </Layout.FlexCol>
   );
 }

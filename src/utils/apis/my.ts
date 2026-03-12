@@ -59,14 +59,16 @@ export const editProfile = ({
       return;
     }
 
-    // user_interests, user_personas를 공백으로 구분된 문자열로 전송
+    // user_interests, user_personas를 공백으로 구분된 문자열로 전송 (# 접두사 없이)
     if (key === 'user_interests' && Array.isArray(value)) {
-      formData.append('user_interests', value.join(' '));
+      const cleanValues = value.map((v: string) => v.replace(/^#+/, ''));
+      formData.append('user_interests', cleanValues.join(' '));
       return;
     }
 
     if (key === 'user_personas' && Array.isArray(value)) {
-      formData.append('user_personas', value.join(' '));
+      const cleanValues = value.map((v: string) => v.replace(/^#+/, ''));
+      formData.append('user_personas', cleanValues.join(' '));
       return;
     }
 
