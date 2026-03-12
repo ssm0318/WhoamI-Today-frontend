@@ -73,7 +73,7 @@ function SpotifyMusic({
           <Layout.FlexRow
             w="100%"
             outline="SPOTIFY_GREEN"
-            rounded={12}
+            rounded={999}
             justifyContent="center"
             alignItems="center"
             pv={4}
@@ -93,7 +93,7 @@ function SpotifyMusic({
             <Layout.FlexRow
               w="100%"
               outline="SPOTIFY_GREEN"
-              rounded={12}
+              rounded={999}
               justifyContent="center"
               alignItems="center"
               pv={4}

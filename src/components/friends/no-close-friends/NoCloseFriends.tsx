@@ -4,7 +4,11 @@ import { Button, Layout, Typo } from '@design-system';
 import SelectCloseFriendsBottomSheet from '../select-close-friends-bottom-sheet/SelectCloseFriendsBottomSheet';
 import { Container, DescriptionText, EmojiContainer } from './NoCloseFriends.styled';
 
-function NoCloseFriends() {
+interface Props {
+  onFriendAdded?: () => void;
+}
+
+function NoCloseFriends({ onFriendAdded }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.list.no_friends' });
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
 
@@ -39,6 +43,7 @@ function NoCloseFriends() {
         <SelectCloseFriendsBottomSheet
           visible={isBottomSheetVisible}
           closeBottomSheet={handleCloseBottomSheet}
+          onFriendAdded={onFriendAdded}
         />
       )}
     </>
