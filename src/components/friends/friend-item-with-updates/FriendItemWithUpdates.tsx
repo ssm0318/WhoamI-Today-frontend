@@ -2,12 +2,14 @@ import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import RecentPostItem from '@components/_common/recent-post/RecentPostItem';
+import CheckInDetailBottomSheet from '@components/check-in/check-in-detail-bottom-sheet/CheckInDetailBottomSheet';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import { FeatureFlagKey } from '@constants/featureFlag';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { usePostAppMessage } from '@hooks/useAppMessage';
+import SpotifyManager from '@libs/SpotifyManager';
 import { Connection, UpdatedProfile } from '@models/api/friends';
 import { SocialBattery } from '@models/checkIn';
 import { RecentPost } from '@models/post';
@@ -35,12 +37,15 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
   } = user;
 
   const navigate = useNavigate();
+  const postMessage = usePostAppMessage();
   const { featureFlags } = useBoundStore(UserSelector);
 
   const [isEditConnectionsBottomSheetVisible, setIsEditConnectionsBottomSheetVisible] =
     useState(false);
+  const [isCheckInDetailVisible, setIsCheckInDetailVisible] = useState(false);
 
-  const handleClickProfile = () => {
+  const handleClickProfile = (e: MouseEvent) => {
+    e.stopPropagation();
     navigate(`/users/${username}`);
   };
 
@@ -56,11 +61,38 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
     }
   };
 
+  const handleClickMusic = () => {
+    if (!track_id) return;
+    const spotifyManager = SpotifyManager.getInstance();
+    spotifyManager
+      .getTrack(track_id)
+      .then((trackData) => {
+        const url = trackData.external_urls.spotify;
+        if (window.ReactNativeWebView) {
+          postMessage('OPEN_BROWSER', { url });
+        } else {
+          window.open(url, '_blank');
+        }
+      })
+      .catch(() => {});
+  };
+
+  const handleClickCheckInChip = () => {
+    setIsCheckInDetailVisible(true);
+  };
+
+  const hasNewPost = !!recentPost && !recentPost.is_read;
+
   return (
-    <Container mh={16} ph={16} pv={12} gap={12} onClick={handleClickProfile} rounded={12}>
-      {/* 프로필 헤더 */}
+    <Container mh={16} ph={16} pv={12} gap={12} rounded={12}>
+      {/* Profile header */}
       <Layout.FlexRow w="100%" gap={4} alignItems="center" justifyContent="space-between">
-        <Layout.FlexRow alignItems="center" gap={7}>
+        <Layout.FlexRow
+          alignItems="center"
+          gap={7}
+          onClick={handleClickProfile}
+          style={{ cursor: 'pointer' }}
+        >
           <ProfileImage imageUrl={profile_image} username={username} size={36} />
           <Layout.FlexRow alignItems="center" gap={4}>
             <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 100 }} mr={4}>
@@ -98,24 +130,24 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
         </Layout.FlexRow>
       </Layout.FlexRow>
 
-      {/* Status/Mood Chips */}
+      {/* Check-in chips */}
       <Layout.FlexCol gap={4} w="100%">
         <Layout.FlexRow gap={4} w="100%" style={{ minHeight: track_id ? 28 : undefined }}>
           {social_battery && Object.values(SocialBattery).includes(social_battery) && (
-            <SocialBatteryChip socialBattery={social_battery} />
+            <SocialBatteryChip socialBattery={social_battery} onClick={handleClickCheckInChip} />
           )}
           {track_id && (
             <Layout.FlexRow style={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
               <SpotifyMusic
                 track={track_id}
-                useDetailBottomSheet
                 fontType="label-large"
                 useAlbumImg
+                onClick={handleClickMusic}
               />
             </Layout.FlexRow>
           )}
         </Layout.FlexRow>
-        <Layout.FlexRow style={{ flexWrap: 'wrap' }}>
+        <Layout.FlexRow style={{ flexWrap: 'wrap' }} gap={4}>
           {description && (
             <Layout.FlexRow
               bgColor="WHITE"
@@ -124,17 +156,41 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
               ph={8}
               outline="LIGHT_GRAY"
               alignItems="center"
-              rounded={12}
-              style={{ flexShrink: 0 }}
+              rounded={999}
+              style={{ flexShrink: 0, cursor: 'pointer' }}
+              onClick={handleClickCheckInChip}
             >
               <Typo type="label-large">{description}</Typo>
+            </Layout.FlexRow>
+          )}
+          {hasNewPost && (
+            <Layout.FlexRow
+              gap={4}
+              pv={4}
+              ph={8}
+              alignItems="center"
+              rounded={999}
+              style={{ backgroundColor: '#EEE6F4', flexShrink: 0 }}
+            >
+              <Typo type="label-large" color="PRIMARY" fontWeight={600}>
+                New post
+              </Typo>
             </Layout.FlexRow>
           )}
         </Layout.FlexRow>
       </Layout.FlexCol>
 
-      {/* Recent Post 영역 (유저마다 무조건 하나씩은 있음) */}
-      {!!recentPost && <RecentPostItem recentPost={recentPost} hideContent />}
+      {/* Check-in detail bottom sheet */}
+      <CheckInDetailBottomSheet
+        visible={isCheckInDetailVisible}
+        closeBottomSheet={() => setIsCheckInDetailVisible(false)}
+        username={username}
+        profileImage={profile_image}
+        socialBattery={social_battery}
+        trackId={track_id}
+        description={description}
+      />
+
       <EditConnectionsBottomSheet
         user={user as unknown as UserProfile}
         visible={isEditConnectionsBottomSheetVisible}
