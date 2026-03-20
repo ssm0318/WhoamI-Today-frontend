@@ -1,43 +1,24 @@
-import { Track } from '@spotify/web-api-ts-sdk';
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import { Layout, SvgIcon } from '@design-system';
-import { usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import SpotifyManager from '@libs/SpotifyManager';
 import { SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
 import { Container } from './MyCheckInCard.styled';
 
 function MyCheckInCard() {
   const navigate = useNavigate();
-  const postMessage = usePostAppMessage();
 
   const { checkIn, fetchCheckIn } = useBoundStore((state) => ({
     checkIn: state.checkIn,
     fetchCheckIn: state.fetchCheckIn,
   }));
 
-  const [trackData, setTrackData] = useState<Track | null>(null);
-
   useAsyncEffect(async () => {
     await fetchCheckIn();
   }, []);
-
-  useEffect(() => {
-    if (!checkIn?.track_id) {
-      setTrackData(null);
-      return;
-    }
-    const spotifyManager = SpotifyManager.getInstance();
-    spotifyManager
-      .getTrack(checkIn.track_id)
-      .then(setTrackData)
-      .catch(() => setTrackData(null));
-  }, [checkIn?.track_id]);
 
   const { social_battery, track_id, mood, description } = checkIn || {};
 
@@ -47,16 +28,6 @@ function MyCheckInCard() {
     navigate('/check-in/edit');
   };
 
-  const handleClickMusic = () => {
-    if (!trackData) return;
-    const url = trackData.external_urls.spotify;
-    if (window.ReactNativeWebView) {
-      postMessage('OPEN_BROWSER', { url });
-    } else {
-      window.open(url, '_blank');
-    }
-  };
-
   if (!hasCheckIn) return null;
 
   return (
@@ -64,12 +35,12 @@ function MyCheckInCard() {
       <Layout.FlexRow w="100%" style={{ flexWrap: 'wrap' }} gap={4} alignItems="center">
         {/* Music chip */}
         {track_id && (
-          <Layout.FlexRow onClick={handleClickMusic} style={{ minWidth: 0, cursor: 'pointer' }}>
+          <Layout.FlexRow style={{ minWidth: 0, cursor: 'pointer' }}>
             <SpotifyMusic
               track={track_id}
               useAlbumImg
               fontType="body-small"
-              onClick={handleClickMusic}
+              onClick={handleClickEdit}
             />
           </Layout.FlexRow>
         )}
