@@ -21,6 +21,7 @@ export interface UpdatedProfile extends User {
   unread_cnt: number;
   track_id?: string;
   description: string;
+  mood?: string;
   unread_ping_count: number;
   social_battery?: SocialBattery | null;
   recent_post?: RecentPost;
