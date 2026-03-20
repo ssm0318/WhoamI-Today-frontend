@@ -16,6 +16,12 @@ class SpotifyManager {
   initialize = async () => {
     const clientId = SPOTIFY_CLIENT_ID;
     const clientSecret = SPOTIFY_CLIENT_SECRET;
+
+    if (!clientId || !clientSecret) {
+      console.warn('Spotify credentials not configured. Using oEmbed fallback.');
+      return;
+    }
+
     const scopes = ['user-read-private'];
 
     try {
@@ -52,18 +58,41 @@ class SpotifyManager {
     }
   };
 
+  /**
+   * Fetch track info via Spotify oEmbed API (no auth required).
+   * Returns a partial Track-like object with album art, title, and Spotify URL.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  private getTrackViaOEmbed = async (trackId: string): Promise<Track> => {
+    const res = await fetch(
+      `https://open.spotify.com/oembed?url=https://open.spotify.com/track/${trackId}`,
+    );
+    if (!res.ok) throw new Error('oEmbed fetch failed');
+    const data = await res.json();
+
+    return {
+      name: data.title || '',
+      album: {
+        images: [{ url: data.thumbnail_url, height: 300, width: 300 }],
+      },
+      artists: [{ name: '' }],
+      external_urls: { spotify: `https://open.spotify.com/track/${trackId}` },
+    } as unknown as Track;
+  };
+
   getTrack = async (trackId: string): Promise<Track> => {
-    if (!this.spotifyApi) {
-      throw new Error('SpotifyApi is not initialized.');
+    // Try SDK first if available
+    if (this.spotifyApi) {
+      try {
+        const res = await this.spotifyApi.makeRequest('GET', `tracks/${trackId}`);
+        return res as Track;
+      } catch (error) {
+        console.warn('Spotify SDK failed, trying oEmbed fallback:', error);
+      }
     }
 
-    try {
-      const res = await this.spotifyApi.makeRequest('GET', `tracks/${trackId}`);
-      return res as Track;
-    } catch (error) {
-      console.error('Error searching music:', error);
-      throw error;
-    }
+    // Fallback to oEmbed (no auth required)
+    return this.getTrackViaOEmbed(trackId);
   };
 }
 
