@@ -17,6 +17,15 @@ export interface User {
   connection_status: Connection | null;
   user_interests: string[]; // ['#hiking', '#dogs']과 같은 형식
   user_personas: string[]; // ['#lurker', '#openbook']과 같은 형식
+  // Friends-only visibility flags
+  interests_friends_only?: boolean;
+  persona_friends_only?: boolean;
+  pronouns_friends_only?: boolean;
+  bio_friends_only?: boolean;
+  // Mutual counts (injected by discover feed API)
+  mutual_friend_count?: number;
+  mutual_interest_count?: number;
+  mutual_persona_count?: number;
 }
 
 export interface UserFollowStatus {
@@ -26,14 +35,24 @@ export interface UserFollowStatus {
   received_follow_request_from: boolean; // 내가 팔로우 요청을 받았는지
 }
 
+export interface MutualTrait {
+  id: number;
+  content: string;
+}
+
 export interface UserProfile extends User, UserFollowStatus {
   are_friends: boolean;
   received_friend_request_from: boolean;
   sent_friend_request_to: boolean;
   check_in: CheckInBase;
   mutuals: User[];
+  mutual_interests?: MutualTrait[];
+  mutual_personas?: MutualTrait[];
   is_favorite: boolean;
   pinned_cnt?: number;
+  friendship_level?: string;
+  // LinkedIn-style connection degree: 1 = direct friend, 2 = friend of friend, 3+ = further
+  connection_degree?: number;
 }
 
 export const areFriends = (user: User | UserProfile): user is UserProfile =>

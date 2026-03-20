@@ -264,7 +264,9 @@
     },
     "connection": {
       "friend": "친구",
-      "close_friend": "친한 친구"
+      "close_friend": "친한 친구",
+      "second_degree": "2촌",
+      "third_degree": "3촌+"
     },
     "edit_connections": {
       "title": "친구 관계 변경",
@@ -280,7 +282,8 @@
     "interests": "관심사",
     "persona": "페르소나",
     "see_more_details": "자세히 보기",
-    "more_about": "{{username}} 더 알아보기"
+    "more_about": "{{username}} 더 알아보기",
+    "shared_traits": "공유 특성"
   },
   "notes": {
     "notes": "{{name}}의 게시글",
@@ -321,9 +324,9 @@
   "access_setting": {
     "title": "공개 범위 설정",
     "text": "해당 게시글의 공개 범위를 설정해주세요.",
-    "friends": "친구",
+    "only_me": "나만 보기",
     "close_friends": "친한 친구",
-    "follower": "팔로워",
+    "friends": "친구",
     "public": "아무나",
     "save": "저장"
   },

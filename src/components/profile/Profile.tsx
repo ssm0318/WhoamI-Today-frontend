@@ -15,8 +15,10 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
+import InterestChip from './interest/InterestChip';
 import MoreAboutBottomSheet from './more-about-bottom-sheet/MoreAboutBottomSheet';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
+import PersonaChip from './persona/PersonaChip';
 import PinnedPostsSection from './pinned-posts-section/PinnedPostsSection';
 import BioPlaceholder from './placeholders/BioPlaceholder';
 import PronounPlaceholder from './placeholders/PronounPlaceholder';
@@ -59,9 +61,18 @@ function Profile({ user }: ProfileProps) {
 
   const [showMoreAbout, setShowMoreAbout] = useState(false);
 
+  // Friends-only visibility: hide fields for non-friends if marked as friends-only
+  const isFriend = user && !isMyProfile(user) && areFriends(user);
+  const canSeeFriendsOnly = isMyPage || isFriend;
+
+  const showPronouns = canSeeFriendsOnly || !friendData?.pronouns_friends_only;
+  const showBio = canSeeFriendsOnly || !friendData?.bio_friends_only;
+  const showInterests = canSeeFriendsOnly || !friendData?.interests_friends_only;
+  const showPersonas = canSeeFriendsOnly || !friendData?.persona_friends_only;
+
   const hasInterestsOrPersonas =
-    (user?.user_interests && user.user_interests.length > 0) ||
-    (user?.user_personas && user.user_personas.length > 0);
+    (showInterests && user?.user_interests && user.user_interests.length > 0) ||
+    (showPersonas && user?.user_personas && user.user_personas.length > 0);
 
   return (
     <Layout.FlexCol w="100%" gap={8}>
@@ -110,6 +121,23 @@ function Profile({ user }: ProfileProps) {
                   )}
                 </>
               )}
+              {/* Connection degree badge for non-friends */}
+              {user && !isMyProfile(user) && !areFriends(user) && friendData?.connection_degree && (
+                <Layout.FlexRow
+                  bgColor="LIGHT_GRAY"
+                  ph={8}
+                  pv={4}
+                  rounded={8}
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Typo type="label-medium" color="DARK_GRAY">
+                    {friendData.connection_degree === 2
+                      ? t('connection.second_degree')
+                      : t('connection.third_degree')}
+                  </Typo>
+                </Layout.FlexRow>
+              )}
             </Layout.FlexRow>
             {/* edit icon */}
             {isMyPage && (
@@ -141,6 +169,7 @@ function Profile({ user }: ProfileProps) {
               </Layout.FlexRow>
             )
           ) : (
+            showPronouns &&
             friendData?.pronouns && (
               <Layout.FlexRow alignItems="center">
                 <Typo type="label-medium">(</Typo>
@@ -164,6 +193,7 @@ function Profile({ user }: ProfileProps) {
               </Layout.FlexCol>
             )
           ) : (
+            showBio &&
             friendData?.bio && (
               <Layout.FlexCol w="100%">
                 <Typo type="body-medium" numberOfLines={2}>
@@ -204,6 +234,26 @@ function Profile({ user }: ProfileProps) {
             />
           )}
           <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />
+          {/* Mutual traits for non-friend users (from discover context) */}
+          {!isMyProfile(user) &&
+            !areFriends(user) &&
+            friendData &&
+            ((friendData.mutual_interests && friendData.mutual_interests.length > 0) ||
+              (friendData.mutual_personas && friendData.mutual_personas.length > 0)) && (
+              <Layout.FlexCol gap={8} w="100%">
+                <Typo type="label-medium" color="MEDIUM_GRAY">
+                  {t('shared_traits')}
+                </Typo>
+                <Layout.FlexRow w="100%" gap={6} style={{ flexWrap: 'wrap' }}>
+                  {friendData.mutual_interests?.map((interest) => (
+                    <InterestChip key={interest.id} interest={interest.content} />
+                  ))}
+                  {friendData.mutual_personas?.map((persona) => (
+                    <PersonaChip key={persona.id} persona={persona.content} />
+                  ))}
+                </Layout.FlexRow>
+              </Layout.FlexCol>
+            )}
         </>
       )}
       {/* 체크인 (status) */}
