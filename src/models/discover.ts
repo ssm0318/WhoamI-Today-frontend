@@ -70,10 +70,12 @@ export interface DiscoverMusicTrack {
 export type DiscoverResultItem =
   | {
       type: 'Response';
+      category?: string;
       body: ResponseCardBody;
     }
   | {
       type: 'Note';
+      category?: string;
       body: NoteCardBody;
     }
   | {

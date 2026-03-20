@@ -47,9 +47,8 @@ function Discover() {
   const discoverFilterList = [DiscoverFilter.MUTUAL_FRIENDS, DiscoverFilter.MUTUAL_TRAITS];
   const { scrollRef } = useRestoreScrollPosition('discoverPage');
 
-  // Build query string with filters
-  const filterQuery = selectedFilter.length > 0 ? `?filter=${selectedFilter.join(',')}` : '';
-  const swrKey = `/user/discover/${filterQuery}`;
+  // SWR key is stable — filtering is done client-side to avoid refetch issues
+  const swrKey = '/user/discover/';
 
   const {
     targetRef,
@@ -75,10 +74,21 @@ function Discover() {
     }));
   }, [discoverData]);
 
+  // Client-side filtering by category
+  const filterItem = useCallback(
+    (item: DiscoverResultItem): boolean => {
+      if (selectedFilter.length === 0) return true;
+      // Non-post items (Question, Interest, Persona) always show
+      if (item.type !== 'Response' && item.type !== 'Note') return true;
+      return selectedFilter.includes(item.category as DiscoverFilter);
+    },
+    [selectedFilter],
+  );
+
   const handleRefresh = useCallback(async () => {
-    await Promise.all([getDiscoverFeed(null, selectedFilter), getMe()]);
+    await Promise.all([getDiscoverFeed(null), getMe()]);
     mutate();
-  }, [mutate, selectedFilter]);
+  }, [mutate]);
 
   const renderDiscoverItem = useCallback(
     (item: DiscoverResultItem, index: number) => {
@@ -139,6 +149,14 @@ function Discover() {
     ],
   );
 
+  // Check if there are any visible items after filtering
+  const hasVisibleItems = useMemo(() => {
+    if (!discoverData) return false;
+    return discoverData.some((page) =>
+      page.results?.some((item) => filterItem(item) && renderDiscoverItem(item, 0) !== null),
+    );
+  }, [discoverData, filterItem, renderDiscoverItem]);
+
   return (
     <>
       <S.HideScrollbarGlobalStyle />
@@ -187,12 +205,12 @@ function Discover() {
                   <NoteLoader />
                   <NoteLoader />
                 </div>
-              ) : discoverData?.[0] &&
-                discoverData[0].results &&
-                discoverData[0].results.length > 0 ? (
+              ) : hasVisibleItems ? (
                 <Layout.FlexCol gap={20} w="100%">
-                  {discoverData.map((page) =>
-                    page.results?.map((item, index) => renderDiscoverItem(item, index)),
+                  {discoverData?.map((page) =>
+                    page.results
+                      ?.filter(filterItem)
+                      .map((item, index) => renderDiscoverItem(item, index)),
                   )}
                   <div ref={targetRef} />
                   {isLoadingMore && <NoteLoader />}
