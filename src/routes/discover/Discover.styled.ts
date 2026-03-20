@@ -13,6 +13,9 @@ export const ScrollableFilterRow = styled(Layout.FlexRow)`
 `;
 
 export const AnimatedCardWrapper = styled.div<{ $isAnimating: boolean }>`
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
   transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
   transform: translateX(0);
   opacity: 1;

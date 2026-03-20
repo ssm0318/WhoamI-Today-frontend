@@ -10,6 +10,8 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { editProfile } from '@utils/apis/my';
 import * as S from './SelectPersonaSection.styled';
 
+const COLLAPSED_COUNT = 10;
+
 // Mock data: 친구 프로필 이미지들 (처음 2개)
 const friendProfiles = friendList.slice(0, 1);
 const additionalFriendsCount = 6;
@@ -30,9 +32,9 @@ function SelectPersonaSection({
     openToast: state.openToast,
   }));
   const [selectedPersonas, setSelectedPersonas] = useState<string[]>([]);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
-    // API에서 받은 데이터로 초기 선택 상태 설정
     const initialSelected = personaList.filter((item) => item.is_selected).map((item) => item.key);
     setSelectedPersonas(initialSelected);
   }, [personaList]);
@@ -62,32 +64,28 @@ function SelectPersonaSection({
     });
   };
 
-  // Persona를 3줄로 나누기
-  const personasPerRow = Math.ceil(personaList.length / 3);
-  const personaRows = [
-    personaList.slice(0, personasPerRow),
-    personaList.slice(personasPerRow, personasPerRow * 2),
-    personaList.slice(personasPerRow * 2, personasPerRow * 3),
-  ];
+  const displayList = isExpanded ? personaList : personaList.slice(0, COLLAPSED_COUNT);
 
   return (
     <S.SelectPersonaSectionWrapper>
       <S.Title>Select your Persona</S.Title>
 
       <S.PersonaGrid>
-        {personaRows.map((row) => (
-          <S.PersonaRow key={row.map((p) => p.key).join(',')}>
-            {row.map((personaItem) => (
-              <HashTagPill
-                key={personaItem.key}
-                isSelected={selectedPersonas.includes(personaItem.key)}
-                onClick={() => handleTogglePersona(personaItem.key)}
-                label={personaItem.label}
-              />
-            ))}
-          </S.PersonaRow>
+        {displayList.map((personaItem) => (
+          <HashTagPill
+            key={personaItem.key}
+            isSelected={selectedPersonas.includes(personaItem.key)}
+            onClick={() => handleTogglePersona(personaItem.key)}
+            label={personaItem.label}
+          />
         ))}
       </S.PersonaGrid>
+
+      {personaList.length > COLLAPSED_COUNT && (
+        <S.ExpandToggle onClick={() => setIsExpanded(!isExpanded)}>
+          <Icon name={isExpanded ? 'chevron_up' : 'chevron_down'} size={20} />
+        </S.ExpandToggle>
+      )}
 
       <S.FriendsSection>
         <S.FriendsProfileList>

@@ -1,14 +1,12 @@
 import styled from 'styled-components';
-import { SCREEN_WIDTH } from '@constants/layout';
 import { Colors, Layout } from '@design-system';
 
 export const SelectInterestSectionWrapper = styled(Layout.FlexCol)`
-  background-color: ${Colors.TERTIARY_PINK};
+  background-color: ${Colors.TERTIARY_BLUE};
   border-radius: 16px;
   padding: 24px 0px;
   gap: 20px;
-  width: ${SCREEN_WIDTH - 32}px;
-  max-width: 100%;
+  width: 100%;
   box-sizing: border-box;
   overflow: hidden;
 `;
@@ -28,33 +26,20 @@ export const Title = styled.h2`
 
 export const InterestGrid = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 8px;
   width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
   box-sizing: border-box;
   padding: 0 16px;
-
-  /* 스크롤바 숨김 */
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-
-  /* 터치 스크롤 활성화 */
-  -webkit-overflow-scrolling: touch;
 `;
 
-export const InterestRow = styled.div`
+export const ExpandToggle = styled.div`
   display: flex;
-  flex-wrap: nowrap;
-  gap: 8px;
-  min-width: max-content;
-  flex-shrink: 0;
-  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 4px 0;
+  cursor: pointer;
 `;
 
 export const SaveButtonWrapper = styled.div`
