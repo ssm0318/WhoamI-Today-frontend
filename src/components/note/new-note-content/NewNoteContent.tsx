@@ -21,9 +21,15 @@ interface NoteInformationProps {
   noteInfo: NewNoteForm;
   setNoteInfo: React.Dispatch<React.SetStateAction<NewNoteForm>>;
   autoOpenImagePicker?: boolean;
+  placeholder?: string;
 }
 
-function NewNoteContent({ noteInfo, setNoteInfo, autoOpenImagePicker }: NoteInformationProps) {
+function NewNoteContent({
+  noteInfo,
+  setNoteInfo,
+  autoOpenImagePicker,
+  placeholder,
+}: NoteInformationProps) {
   const [t] = useTranslation('translation');
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
@@ -165,7 +171,7 @@ function NewNoteContent({ noteInfo, setNoteInfo, autoOpenImagePicker }: NoteInfo
           {/* Text input */}
           <NoteInput
             value={noteInfo.content}
-            placeholder={t('notes.whats_on_your_mind') || ''}
+            placeholder={placeholder || t('notes.whats_on_your_mind') || ''}
             onChange={handleChangeInput}
             minRows={4}
             maxRows={10}

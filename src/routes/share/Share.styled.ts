@@ -2,6 +2,9 @@ import styled from 'styled-components';
 
 export const TmiInputBarWrapper = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   background-color: ${({ theme }) => theme.PRIMARY};
   padding: 24px 16px;
 `;
