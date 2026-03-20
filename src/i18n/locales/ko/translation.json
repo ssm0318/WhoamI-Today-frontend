@@ -118,7 +118,8 @@
   "header": {
     "my": "내 프로필",
     "questions": "질문",
-    "share": "공유"
+    "share": "공유",
+    "discover": "오늘의 발견"
   },
   "home": {
     "moment": {

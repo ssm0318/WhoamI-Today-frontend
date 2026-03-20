@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { DEFAULT_MARGIN } from '@constants/layout';
@@ -20,9 +20,10 @@ import { NoteInput } from './NoteInputBox.styled';
 interface NoteInformationProps {
   noteInfo: NewNoteForm;
   setNoteInfo: React.Dispatch<React.SetStateAction<NewNoteForm>>;
+  autoOpenImagePicker?: boolean;
 }
 
-function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
+function NewNoteContent({ noteInfo, setNoteInfo, autoOpenImagePicker }: NoteInformationProps) {
   const [t] = useTranslation('translation');
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
@@ -35,6 +36,16 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const { isAndroid } = getMobileDeviceInfo();
   const postMessage = usePostAppMessage();
+  const hasAutoOpenedRef = useRef(false);
+
+  useEffect(() => {
+    if (autoOpenImagePicker && !hasAutoOpenedRef.current) {
+      hasAutoOpenedRef.current = true;
+      // Delay slightly to ensure DOM is ready
+      const timer = setTimeout(() => onClickAdd(), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [autoOpenImagePicker]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 앱에서 파일 선택 완료 시 호출되는 콜백
   const handleFileSelected = async (data: FileSelectedData) => {
@@ -190,9 +201,9 @@ function NewNoteContent({ noteInfo, setNoteInfo }: NoteInformationProps) {
                 selectedVisibilities={noteInfo.visibility}
                 onChange={handleChangeVisibility}
                 availableVisibilities={[
-                  PostVisibility.FRIENDS,
+                  PostVisibility.ONLY_ME,
                   PostVisibility.CLOSE_FRIENDS,
-                  PostVisibility.FOLLOWER,
+                  PostVisibility.FRIENDS,
                   PostVisibility.PUBLIC,
                 ]}
               />

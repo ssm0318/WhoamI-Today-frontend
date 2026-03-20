@@ -54,6 +54,7 @@ import DeleteAccount from './routes/settings/DeleteAccount';
 import EditProfile from './routes/settings/EditProfile';
 import ResetPassword from './routes/settings/ResetPassword';
 import Settings from './routes/settings/Settings';
+import Share from './routes/share/Share';
 import Email from './routes/sign-up/Email';
 import Info from './routes/sign-up/Info';
 import NotiSettings from './routes/sign-up/NotiSettings';
@@ -111,6 +112,10 @@ const router = createBrowserRouter([
       {
         path: 'feed',
         children: [{ path: '', element: <FriendsFeed /> }],
+      },
+      {
+        path: 'share',
+        children: [{ path: '', element: <Share /> }],
       },
       {
         path: 'questions',

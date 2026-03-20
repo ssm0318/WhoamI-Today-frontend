@@ -139,6 +139,8 @@ const questions_active = 'questions_active';
 const questions_inactive = 'questions_inactive';
 const discover_active = 'discover_active';
 const discover_inactive = 'discover_inactive';
+const share_active = 'share_active';
+const share_inactive = 'share_inactive';
 
 const delete_button = 'delete_button';
 const top_navigation_friend = 'top_navigation_friend';
@@ -292,7 +294,9 @@ export {
   search,
   search_black,
   sent_by,
+  share_active,
   share_default,
+  share_inactive,
   spotify,
   star,
   star_outline,

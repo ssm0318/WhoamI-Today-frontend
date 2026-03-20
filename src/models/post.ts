@@ -115,12 +115,14 @@ export interface Note extends ContentsCommon {
   current_user_read: boolean;
   is_edited: boolean;
   visibility: PostVisibility;
+  share_type?: ShareType;
 }
 
 export interface NewNoteForm {
   content: string;
   images?: CroppedImg[];
   visibility: PostVisibility[];
+  share_type?: ShareType;
 }
 // Response list for questions
 /** deprecated */
@@ -189,11 +191,17 @@ export type RecentPost = {
   comment_count: number | null;
 };
 
+export enum ShareType {
+  REGULAR = 'regular',
+  TMI_OF_THE_DAY = 'tmi_of_the_day',
+  PHOTO_OF_THE_DAY = 'photo_of_the_day',
+}
+
 export enum PostVisibility {
-  FRIENDS = 'friends',
+  ONLY_ME = 'only_me',
   CLOSE_FRIENDS = 'close_friends',
-  FOLLOWER = 'follower', // 팔로워만 볼 수 있음
-  PUBLIC = 'public', // 모두 볼 수 있음
+  FRIENDS = 'friends',
+  PUBLIC = 'public',
 }
 
 export interface SelectInterest extends ContentsCommon {

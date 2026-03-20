@@ -19,7 +19,7 @@ import { useBoundStore } from '@stores/useBoundStore';
 
 const SIDE_MENU_LIST = [
   { key: 'explore_friends', path: '/friends/explore' },
-  // { key: 'questions', path: '/questions' },
+  { key: 'questions', path: '/questions' },
   { key: 'settings', path: '/settings' },
 ];
 

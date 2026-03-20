@@ -6,6 +6,7 @@ const SESSION_STORAGE_KEY = 'WHOAMI_TODAY_SCROLL_POSITION';
 export interface ScrollPositionStore {
   friendsPage?: number;
   questionsPage?: number;
+  sharePage?: number;
   myPage?: number;
   userPage?: number;
   feeds?: number;

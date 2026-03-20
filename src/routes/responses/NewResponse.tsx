@@ -194,9 +194,9 @@ function NewResponse() {
               selectedVisibilities={visibilityList}
               onChange={handleChangeVisibility}
               availableVisibilities={[
-                PostVisibility.FRIENDS,
+                PostVisibility.ONLY_ME,
                 PostVisibility.CLOSE_FRIENDS,
-                PostVisibility.FOLLOWER,
+                PostVisibility.FRIENDS,
                 PostVisibility.PUBLIC,
               ]}
             />

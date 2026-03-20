@@ -1,5 +1,5 @@
 import { PaginationResponse } from '@models/api/common';
-import { Comment, Like, NewNoteForm, Note, PostReaction, PostVisibility } from '@models/post';
+import { Comment, Like, NewNoteForm, Note, PostReaction } from '@models/post';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 import { objectFormDataSerializer } from '@utils/validateHelpers';
 
@@ -44,11 +44,10 @@ export const postNote = async (noteData: NewNoteForm) => {
     });
   }
   if (noteData.visibility && noteData.visibility.length > 0) {
-    // Note API: 'followers'(복수). PostVisibility.FOLLOWER='follower' → 'followers' 변환
-    const noteVisibility = noteData.visibility.map((v) =>
-      v === PostVisibility.FOLLOWER ? 'followers' : v,
-    );
-    formData.append('visibility', JSON.stringify(noteVisibility));
+    formData.append('visibility', JSON.stringify(noteData.visibility));
+  }
+  if (noteData.share_type) {
+    formData.append('share_type', noteData.share_type);
   }
 
   const { data } = await axiosFormDataInstance.post<Note>(`notes/`, formData);
@@ -73,11 +72,7 @@ export const patchNote = async (noteId: number, noteData: NewNoteForm) => {
     });
   }
   if (noteData.visibility && noteData.visibility.length > 0) {
-    // Note API: form-data에 JSON 문자열로 배열 전송. 'follower' → 'followers' 변환
-    const noteVisibility = noteData.visibility.map((v) =>
-      v === PostVisibility.FOLLOWER ? 'followers' : v,
-    );
-    formData.append('visibility', JSON.stringify(noteVisibility));
+    formData.append('visibility', JSON.stringify(noteData.visibility));
   }
 
   const { data } = await axiosFormDataInstance.patch<Note>(`notes/${noteId}/`, formData);
