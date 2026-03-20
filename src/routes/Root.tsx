@@ -1,5 +1,5 @@
 import React, { CSSProperties, ReactNode, RefObject, UIEvent, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 import NotiPermissionBanner, {
   NOTI_PERMISSION_BANNER_HEIGHT,
@@ -21,7 +21,6 @@ function Root() {
   const { isMobile } = getMobileDeviceInfo();
   const { initializeFcm } = useFcm();
   const postMessage = usePostAppMessage();
-  const location = useLocation();
 
   useAsyncEffect(async () => {
     if (isMobile) return;
@@ -42,19 +41,13 @@ function Root() {
     console.debug('featureFlags', featureFlags);
   }, [featureFlags]);
 
-  // NoteDetail 페이지일 때 Tab 숨기기
-  // 경로 패턴: /notes/:noteId 또는 /users/:username/notes/:noteId
-  const isNoteDetailPage =
-    /^\/notes\/\d+/.test(location.pathname) ||
-    /^\/users\/[^/]+\/notes\/\d+/.test(location.pathname);
-
   return (
     <SWRConfig value={{ provider: () => new Map() }}>
       <Layout.FlexRow justifyContent="center" bgColor="BLACK" w="100%">
         <RootContainer w="100%" bgColor="WHITE" id="root-container">
           <Header />
           <Outlet />
-          {!isNoteDetailPage && <Tab />}
+          <Tab />
         </RootContainer>
       </Layout.FlexRow>
     </SWRConfig>

@@ -8,7 +8,7 @@ import CommentList from '@components/comment-list/CommentList';
 import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import SubHeader from '@components/sub-header/SubHeader';
-import { TITLE_HEADER_HEIGHT } from '@constants/layout';
+import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
@@ -55,7 +55,7 @@ export function NoteDetail() {
   };
 
   return (
-    <MainScrollContainer pb={0}>
+    <MainScrollContainer>
       <SubHeader
         title={
           noteDetail.data
@@ -85,7 +85,7 @@ export function NoteDetail() {
             setReload={setReload}
             inputFocus={inputFocus}
             setInputFocus={setInputFocus}
-            bottomOffset={0}
+            bottomOffset={BOTTOM_TABBAR_HEIGHT}
           />
         </Layout.FlexCol>
       )}
