@@ -118,7 +118,8 @@
     "header": {
         "my": "My Profile",
         "questions": "Questions",
-        "share": "Share"
+        "share": "Share",
+        "discover": "Daily Discover"
     },
     "home": {
         "moment": {

@@ -17,29 +17,8 @@ function VisibilityMultiSelect({
   const [t] = useTranslation('translation');
 
   const handleToggleVisibility = (value: PostVisibility) => {
-    if (selectedVisibilities.includes(value)) {
-      // 체크 해제된 경우 배열에서 제거
-      if (value === PostVisibility.FRIENDS) {
-        // Friends를 해제할 때는 Friends만 제거 (Close Friends는 유지)
-        onChange(selectedVisibilities.filter((v) => v !== PostVisibility.FRIENDS));
-        return;
-      }
-      onChange(selectedVisibilities.filter((v) => v !== value));
-      return;
-    }
-
-    // 체크된 경우 배열에 추가
-    if (value === PostVisibility.FRIENDS) {
-      // Friends를 선택할 때는 Close Friends도 자동으로 선택
-      const newVisibilities = [...selectedVisibilities, PostVisibility.FRIENDS];
-      if (!newVisibilities.includes(PostVisibility.CLOSE_FRIENDS)) {
-        newVisibilities.push(PostVisibility.CLOSE_FRIENDS);
-      }
-      onChange(newVisibilities);
-      return;
-    }
-
-    onChange([...selectedVisibilities, value]);
+    // Single-select: clicking an option selects only that one
+    onChange([value]);
   };
 
   return (

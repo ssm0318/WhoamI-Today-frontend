@@ -11,7 +11,7 @@ import { NavTabItem, StyledTabItem, TabWrapper } from './Tab.styled';
 
 interface TabItemProps {
   to: string;
-  type: 'friends' | 'my' | 'questions' | 'feed' | 'discover' | 'chats';
+  type: 'friends' | 'my' | 'share' | 'feed' | 'discover' | 'chats';
   size?: number;
   end?: boolean;
 }
@@ -78,8 +78,7 @@ export default function Tab() {
   const showFloatingButton =
     location.pathname === '/friends' ||
     location.pathname === '/feed' ||
-    location.pathname === '/my' ||
-    location.pathname === '/questions';
+    location.pathname === '/my';
 
   return (
     <TabWrapper>
@@ -88,7 +87,7 @@ export default function Tab() {
           <>
             <TabItem to="/friends" type="friends" size={28} />
             <TabItem to="/discover" type="discover" size={28} />
-            <TabItem to="/questions" type="questions" size={28} />
+            <TabItem to="/share" type="share" size={28} />
           </>
         ) : featureFlags?.friendFeed ? (
           <TabItem to="/feed" type="friends" size={28} />

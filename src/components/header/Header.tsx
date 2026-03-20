@@ -17,9 +17,11 @@ function Header() {
     case '/feed':
       return <CommonHeader title={t('nav_tab.feed')} />;
     case '/discover':
-      return <CommonHeader title={t('nav_tab.discover')} />;
+      return <CommonHeader title={t('header.discover')} />;
     case '/my':
       return <CommonHeader title={t('header.my')} />;
+    case '/share':
+      return <CommonHeader title={t('header.share')} />;
     case '/questions':
       return <CommonHeader title={t('header.questions')} />;
     case '/chats':
