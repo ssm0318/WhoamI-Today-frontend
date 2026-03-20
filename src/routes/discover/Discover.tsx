@@ -78,8 +78,8 @@ function Discover() {
   const filterItem = useCallback(
     (item: DiscoverResultItem): boolean => {
       if (selectedFilter.length === 0) return true;
-      // Non-post items (Question, Interest, Persona) always show
-      if (item.type !== 'Response' && item.type !== 'Note') return true;
+      // When a filter is active, only show Response/Note items matching the category
+      if (item.type !== 'Response' && item.type !== 'Note') return false;
       return selectedFilter.includes(item.category as DiscoverFilter);
     },
     [selectedFilter],
