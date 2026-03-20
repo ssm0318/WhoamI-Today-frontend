@@ -267,7 +267,9 @@
         },
         "connection": {
             "friend": "Friend",
-            "close_friend": "Close Friend"
+            "close_friend": "Close Friend",
+            "second_degree": "2nd",
+            "third_degree": "3rd+"
         },
         "edit_connections": {
             "title": "Friendship Type",
@@ -283,7 +285,8 @@
         "interests": "Interests",
         "persona": "Persona",
         "see_more_details": "See more details",
-        "more_about": "More about {{username}}"
+        "more_about": "More about {{username}}",
+        "shared_traits": "Shared Traits"
     },
     "notes": {
         "notes": "{{name}}'s Posts",
@@ -324,9 +327,9 @@
     "access_setting": {
         "title": "Visibility",
         "text": "Choose who can see your post.",
-        "friends": "Friends",
+        "only_me": "Only Me",
         "close_friends": "Close Friends",
-        "follower": "Followers",
+        "friends": "Friends",
         "public": "Public",
         "save": "Save"
     },

@@ -31,8 +31,11 @@ function MoreAboutBottomSheet({
     navigate('/settings/edit-profile');
   };
 
-  const interests = user?.user_interests ?? [];
-  const personas = user?.user_personas ?? [];
+  const showInterests = isMyPage || !user?.interests_friends_only;
+  const showPersonas = isMyPage || !user?.persona_friends_only;
+
+  const interests = showInterests ? user?.user_interests ?? [] : [];
+  const personas = showPersonas ? user?.user_personas ?? [] : [];
 
   return (
     <BottomModal visible={visible} onClose={onClose}>

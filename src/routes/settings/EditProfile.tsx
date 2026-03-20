@@ -53,10 +53,10 @@ function EditProfile() {
     pronouns: myProfile?.pronouns ?? '',
     user_personas: (myProfile?.user_personas ?? []).map((p) => p.replace(/^#+/, '')),
     user_interests: (myProfile?.user_interests ?? []).map((i) => i.replace(/^#+/, '')),
-    interests_friends_only: (myProfile as any)?.interests_friends_only ?? false,
-    persona_friends_only: (myProfile as any)?.persona_friends_only ?? false,
-    pronouns_friends_only: (myProfile as any)?.pronouns_friends_only ?? false,
-    bio_friends_only: (myProfile as any)?.bio_friends_only ?? false,
+    interests_friends_only: myProfile?.interests_friends_only ?? false,
+    persona_friends_only: myProfile?.persona_friends_only ?? false,
+    pronouns_friends_only: myProfile?.pronouns_friends_only ?? false,
+    bio_friends_only: myProfile?.bio_friends_only ?? false,
   });
 
   const [usernameError, setUsernameError] = useState<string>();
@@ -90,10 +90,10 @@ function EditProfile() {
       draft.bio !== (myProfile?.bio ?? '') ||
       !arraysEqual(draft.user_personas, originalPersonas) ||
       !arraysEqual(draft.user_interests, originalInterests) ||
-      draft.interests_friends_only !== ((myProfile as any)?.interests_friends_only ?? false) ||
-      draft.persona_friends_only !== ((myProfile as any)?.persona_friends_only ?? false) ||
-      draft.pronouns_friends_only !== ((myProfile as any)?.pronouns_friends_only ?? false) ||
-      draft.bio_friends_only !== ((myProfile as any)?.bio_friends_only ?? false) ||
+      draft.interests_friends_only !== (myProfile?.interests_friends_only ?? false) ||
+      draft.persona_friends_only !== (myProfile?.persona_friends_only ?? false) ||
+      draft.pronouns_friends_only !== (myProfile?.pronouns_friends_only ?? false) ||
+      draft.bio_friends_only !== (myProfile?.bio_friends_only ?? false) ||
       imageChanged;
 
     setHasChanges(hasDraftChanged);
