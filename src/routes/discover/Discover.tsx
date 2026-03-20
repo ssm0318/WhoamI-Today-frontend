@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import FilterChip from '@components/_common/filter-chip/FilterChip';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
@@ -25,12 +25,21 @@ import {
 } from '@models/discover';
 import { getDiscoverFeed } from '@utils/apis/discover';
 import { getMe } from '@utils/apis/my';
+import { getItemFromSessionStorage, setItemToSessionStorage } from '@utils/sessionStorage';
 import { MainScrollContainer } from 'src/routes/Root';
 import * as S from './Discover.styled';
 
 function Discover() {
   const [t] = useTranslation('translation');
-  const [selectedFilter, setSelectedFilter] = useState<DiscoverFilter[]>([]);
+  const DISCOVER_FILTER_KEY = 'WHOAMI_TODAY_DISCOVER_FILTER';
+  const [selectedFilter, setSelectedFilter] = useState<DiscoverFilter[]>(
+    () => getItemFromSessionStorage<DiscoverFilter[]>(DISCOVER_FILTER_KEY, []) ?? [],
+  );
+
+  useEffect(() => {
+    setItemToSessionStorage(DISCOVER_FILTER_KEY, selectedFilter);
+  }, [selectedFilter]);
+
   const {
     isSaved: isInterestSaved,
     showCard: showInterestCard,
