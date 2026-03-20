@@ -8,6 +8,7 @@ export interface User {
   profile_pic: string;
   url: string;
   username: string;
+  name?: string | null;
   email?: string;
   bio: string;
   pronouns: string;
@@ -18,6 +19,7 @@ export interface User {
   user_interests: string[]; // ['#hiking', '#dogs']과 같은 형식
   user_personas: string[]; // ['#lurker', '#openbook']과 같은 형식
   // Friends-only visibility flags
+  name_friends_only?: boolean;
   interests_friends_only?: boolean;
   persona_friends_only?: boolean;
   pronouns_friends_only?: boolean;
@@ -50,9 +52,8 @@ export interface UserProfile extends User, UserFollowStatus {
   mutual_personas?: MutualTrait[];
   is_favorite: boolean;
   pinned_cnt?: number;
+  // LinkedIn-style connection degree: '1st' = direct friend, '2nd' = friend of friend, '3rd+' = further
   friendship_level?: string;
-  // LinkedIn-style connection degree: 1 = direct friend, 2 = friend of friend, 3+ = further
-  connection_degree?: number;
 }
 
 export const areFriends = (user: User | UserProfile): user is UserProfile =>

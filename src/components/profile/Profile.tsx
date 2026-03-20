@@ -61,18 +61,22 @@ function Profile({ user }: ProfileProps) {
 
   const [showMoreAbout, setShowMoreAbout] = useState(false);
 
-  // Friends-only visibility: hide fields for non-friends if marked as friends-only
-  const isFriend = user && !isMyProfile(user) && areFriends(user);
-  const canSeeFriendsOnly = isMyPage || isFriend;
+  // Friends-only visibility: backend strips hidden fields for non-friends
+  const isNonFriend = user && !isMyPage && !isMyProfile(user) && !areFriends(user);
 
-  const showPronouns = canSeeFriendsOnly || !friendData?.pronouns_friends_only;
-  const showBio = canSeeFriendsOnly || !friendData?.bio_friends_only;
-  const showInterests = canSeeFriendsOnly || !friendData?.interests_friends_only;
-  const showPersonas = canSeeFriendsOnly || !friendData?.persona_friends_only;
+  // For non-friends, friendData fields come pre-stripped from the backend:
+  // - username → "****" when name_friends_only
+  // - pronouns → null when pronouns_friends_only
+  // - bio → null when bio_friends_only
+  // - user_interests → [] when interests_friends_only
+  // - user_personas → [] when persona_friends_only
+
+  // Display name (real name): from backend for non-friends (may be "****"), from myProfile for own page
+  const displayedName = isMyPage ? myProfile?.name : friendData?.name;
 
   const hasInterestsOrPersonas =
-    (showInterests && user?.user_interests && user.user_interests.length > 0) ||
-    (showPersonas && user?.user_personas && user.user_personas.length > 0);
+    (user?.user_interests && user.user_interests.length > 0) ||
+    (user?.user_personas && user.user_personas.length > 0);
 
   return (
     <Layout.FlexCol w="100%" gap={8}>
@@ -84,12 +88,16 @@ function Profile({ user }: ProfileProps) {
           <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
             <Layout.FlexRow w="100%" gap={8} alignItems="center">
               <Layout.FlexRow alignItems="center" gap={4}>
-                {/* username */}
                 <Typo type="title-large" numberOfLines={1}>
-                  {isMyPage ? myProfile?.username || '' : username || ''}
+                  {username || ''}
                 </Typo>
+                {displayedName && (
+                  <Typo type="label-medium" color="MEDIUM_GRAY" numberOfLines={1}>
+                    ({displayedName})
+                  </Typo>
+                )}
               </Layout.FlexRow>
-              {/** connections */}
+              {/** friend connection badge */}
               {user && !isMyProfile(user) && areFriends(user) && (
                 <>
                   {user.connection_status && (
@@ -121,23 +129,6 @@ function Profile({ user }: ProfileProps) {
                   )}
                 </>
               )}
-              {/* Connection degree badge for non-friends */}
-              {user && !isMyProfile(user) && !areFriends(user) && friendData?.connection_degree && (
-                <Layout.FlexRow
-                  bgColor="LIGHT_GRAY"
-                  ph={8}
-                  pv={4}
-                  rounded={8}
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Typo type="label-medium" color="DARK_GRAY">
-                    {friendData.connection_degree === 2
-                      ? t('connection.second_degree')
-                      : t('connection.third_degree')}
-                  </Typo>
-                </Layout.FlexRow>
-              )}
             </Layout.FlexRow>
             {/* edit icon */}
             {isMyPage && (
@@ -155,7 +146,7 @@ function Profile({ user }: ProfileProps) {
               </Layout.FlexRow>
             )}
           </Layout.FlexRow>
-          {/* pronouns */}
+          {/* pronouns + connection degree */}
           {isMyPage ? (
             !myProfile?.pronouns ? (
               <PronounPlaceholder />
@@ -168,13 +159,32 @@ function Profile({ user }: ProfileProps) {
                 <Typo type="label-medium">)</Typo>
               </Layout.FlexRow>
             )
+          ) : isNonFriend && friendData ? (
+            // Non-friend: show "pronouns | Nth degree connection"
+            <Layout.FlexRow alignItems="center" gap={4}>
+              {friendData.pronouns && <Typo type="label-medium">{friendData.pronouns}</Typo>}
+              {friendData.pronouns &&
+                friendData.friendship_level &&
+                friendData.friendship_level !== '1st' && (
+                  <Typo type="label-medium" color="MEDIUM_GRAY">
+                    |
+                  </Typo>
+                )}
+              {friendData.friendship_level && friendData.friendship_level !== '1st' && (
+                <Typo type="label-medium" color="MEDIUM_GRAY">
+                  {friendData.friendship_level === '2nd'
+                    ? t('connection.second_degree')
+                    : t('connection.third_degree')}
+                </Typo>
+              )}
+            </Layout.FlexRow>
           ) : (
-            showPronouns &&
+            // Friend: show pronouns in parentheses
             friendData?.pronouns && (
               <Layout.FlexRow alignItems="center">
                 <Typo type="label-medium">(</Typo>
                 <Typo type="label-medium" numberOfLines={1}>
-                  {friendData?.pronouns}
+                  {friendData.pronouns}
                 </Typo>
                 <Typo type="label-medium">)</Typo>
               </Layout.FlexRow>
@@ -193,7 +203,6 @@ function Profile({ user }: ProfileProps) {
               </Layout.FlexCol>
             )
           ) : (
-            showBio &&
             friendData?.bio && (
               <Layout.FlexCol w="100%">
                 <Typo type="body-medium" numberOfLines={2}>
@@ -204,15 +213,13 @@ function Profile({ user }: ProfileProps) {
           )}
 
           {/* See more details */}
-          {featureFlags?.persona &&
-            (isMyPage || (user && areFriends(user))) &&
-            hasInterestsOrPersonas && (
-              <Layout.FlexRow onClick={() => setShowMoreAbout(true)} style={{ cursor: 'pointer' }}>
-                <Typo type="label-medium" color="PRIMARY">
-                  {t('see_more_details')}
-                </Typo>
-              </Layout.FlexRow>
-            )}
+          {featureFlags?.persona && hasInterestsOrPersonas && (
+            <Layout.FlexRow onClick={() => setShowMoreAbout(true)} style={{ cursor: 'pointer' }}>
+              <Typo type="label-medium" color="PRIMARY">
+                {t('see_more_details')}
+              </Typo>
+            </Layout.FlexRow>
+          )}
         </Layout.FlexCol>
       </Layout.FlexRow>
 

@@ -43,7 +43,7 @@ function Share() {
     navigate('/notes/new', {
       state: {
         shareType: ShareType.TMI_OF_THE_DAY,
-        tmiPlaceholder: tmiPlaceholder || t('share_page.tmi_placeholder'),
+        tmiPlaceholder: String(tmiPlaceholder || t('share_page.tmi_placeholder')),
       },
     });
   };
@@ -66,16 +66,8 @@ function Share() {
             <TmiInputBar type="button" onClick={handleClickTmiInput}>
               <Layout.FlexRow gap={8} alignItems="center" style={{ flex: 1, minWidth: 0 }}>
                 <SvgIcon name="add_default" size={24} color="PRIMARY" />
-                <Typo
-                  type="body-medium"
-                  color="MEDIUM_GRAY"
-                  style={{
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {tmiPlaceholder || t('share_page.tmi_placeholder')}
+                <Typo type="body-medium" color="MEDIUM_GRAY" numberOfLines={1}>
+                  {String(tmiPlaceholder || t('share_page.tmi_placeholder'))}
                 </Typo>
               </Layout.FlexRow>
               <SvgIcon name="chat_media_image" size={24} fill="DARK_GRAY" />

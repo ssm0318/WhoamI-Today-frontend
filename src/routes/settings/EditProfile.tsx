@@ -38,21 +38,25 @@ function EditProfile() {
   }));
 
   const [draft, setDraft] = useState<{
+    name: string;
     bio: string;
     username: string;
     pronouns: string;
     user_personas: string[];
     user_interests: string[];
+    name_friends_only: boolean;
     interests_friends_only: boolean;
     persona_friends_only: boolean;
     pronouns_friends_only: boolean;
     bio_friends_only: boolean;
   }>({
+    name: myProfile?.name ?? '',
     bio: myProfile?.bio ?? '',
     username: myProfile?.username ?? '',
     pronouns: myProfile?.pronouns ?? '',
     user_personas: (myProfile?.user_personas ?? []).map((p) => p.replace(/^#+/, '')),
     user_interests: (myProfile?.user_interests ?? []).map((i) => i.replace(/^#+/, '')),
+    name_friends_only: myProfile?.name_friends_only ?? false,
     interests_friends_only: myProfile?.interests_friends_only ?? false,
     persona_friends_only: myProfile?.persona_friends_only ?? false,
     pronouns_friends_only: myProfile?.pronouns_friends_only ?? false,
@@ -85,11 +89,13 @@ function EditProfile() {
     const originalInterests = (myProfile?.user_interests ?? []).map((i) => i.replace(/^#+/, ''));
 
     const hasDraftChanged =
+      draft.name !== (myProfile?.name ?? '') ||
       draft.username !== (myProfile?.username ?? '') ||
       draft.pronouns !== (myProfile?.pronouns ?? '') ||
       draft.bio !== (myProfile?.bio ?? '') ||
       !arraysEqual(draft.user_personas, originalPersonas) ||
       !arraysEqual(draft.user_interests, originalInterests) ||
+      draft.name_friends_only !== (myProfile?.name_friends_only ?? false) ||
       draft.interests_friends_only !== (myProfile?.interests_friends_only ?? false) ||
       draft.persona_friends_only !== (myProfile?.persona_friends_only ?? false) ||
       draft.pronouns_friends_only !== (myProfile?.pronouns_friends_only ?? false) ||
@@ -271,33 +277,55 @@ function EditProfile() {
           error={usernameError}
         />
 
+        {/* name (display name) */}
+        <Layout.FlexCol gap={0} w="100%">
+          <ValidatedInput
+            label={t('name')}
+            name="name"
+            type="text"
+            value={draft.name}
+            onChange={handleChangeInput}
+            limit={50}
+          />
+          <CheckBox
+            name={String(t('friends_only.name'))}
+            checked={draft.name_friends_only}
+            onChange={() => handleToggleVisibility('name_friends_only')}
+          />
+        </Layout.FlexCol>
+
         {/* pronouns */}
-        <ValidatedInput
-          label={t('pronouns')}
-          name="pronouns"
-          type="text"
-          value={draft.pronouns}
-          onChange={handleChangeInput}
-        />
-        <CheckBox
-          name={String(t('friends_only.pronouns'))}
-          checked={draft.pronouns_friends_only}
-          onChange={() => handleToggleVisibility('pronouns_friends_only')}
-        />
+        <Layout.FlexCol gap={0} w="100%">
+          <ValidatedInput
+            label={t('pronouns')}
+            name="pronouns"
+            type="text"
+            value={draft.pronouns}
+            onChange={handleChangeInput}
+            limit={30}
+          />
+          <CheckBox
+            name={String(t('friends_only.pronouns'))}
+            checked={draft.pronouns_friends_only}
+            onChange={() => handleToggleVisibility('pronouns_friends_only')}
+          />
+        </Layout.FlexCol>
 
         {/* bio */}
-        <ValidatedTextArea
-          label={t('bio')}
-          name="bio"
-          value={draft.bio}
-          onChange={handleChangeTextArea}
-          limit={120}
-        />
-        <CheckBox
-          name={String(t('friends_only.bio'))}
-          checked={draft.bio_friends_only}
-          onChange={() => handleToggleVisibility('bio_friends_only')}
-        />
+        <Layout.FlexCol gap={0} w="100%">
+          <ValidatedTextArea
+            label={t('bio')}
+            name="bio"
+            value={draft.bio}
+            onChange={handleChangeTextArea}
+            limit={120}
+          />
+          <CheckBox
+            name={String(t('friends_only.bio'))}
+            checked={draft.bio_friends_only}
+            onChange={() => handleToggleVisibility('bio_friends_only')}
+          />
+        </Layout.FlexCol>
 
         {/* interests */}
         <Layout.FlexCol gap={8}>

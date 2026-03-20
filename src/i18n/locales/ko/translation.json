@@ -266,8 +266,8 @@
     "connection": {
       "friend": "친구",
       "close_friend": "친한 친구",
-      "second_degree": "2촌",
-      "third_degree": "3촌+"
+      "second_degree": "2촌 연결",
+      "third_degree": "3촌+ 연결"
     },
     "edit_connections": {
       "title": "친구 관계 변경",
@@ -437,6 +437,7 @@
       "done": "완료",
       "cancel": "취소",
       "change_picture": "사진 변경하기",
+      "name": "이름",
       "username": "닉네임",
       "username_valiation_error": "영문, 한글, 숫자, _ 만 사용 가능 (최대 20자)",
       "email": "이메일",
@@ -461,6 +462,7 @@
         "read_file_error": "이미지를 불러오는 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
       },
       "friends_only": {
+        "name": "이름을 친구에게만 보이기",
         "interests": "관심사를 친구에게만 보이기",
         "persona": "페르소나를 친구에게만 보이기",
         "pronouns": "대명사를 친구에게만 보이기",

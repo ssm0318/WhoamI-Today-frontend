@@ -269,8 +269,8 @@
         "connection": {
             "friend": "Friend",
             "close_friend": "Close Friend",
-            "second_degree": "2nd",
-            "third_degree": "3rd+"
+            "second_degree": "2nd degree connection",
+            "third_degree": "3rd+ degree connection"
         },
         "edit_connections": {
             "title": "Friendship Type",
@@ -440,6 +440,7 @@
             "done": "Done",
             "cancel": "Cancel",
             "change_picture": "Change Picture",
+            "name": "Name",
             "username": "Username",
             "username_valiation_error": "Letters, numbers, Korean, and _ only (max 20 characters).",
             "email": "Email",
@@ -465,6 +466,7 @@
                 "read_file_error": "Error uploading image. Please try again later."
             },
             "friends_only": {
+                "name": "Show name only to friends",
                 "interests": "Show interests only to friends",
                 "persona": "Show persona only to friends",
                 "pronouns": "Show pronoun only to friends",
