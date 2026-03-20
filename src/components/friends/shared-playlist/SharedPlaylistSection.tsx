@@ -1,6 +1,7 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SharedPlaylistBottomSheet from '@components/friends/shared-playlist-bottom-sheet/SharedPlaylistBottomSheet';
 import MusicDetailBottomSheet from '@components/music/music-detail-bottom-sheet/MusicDetailBottomSheet';
@@ -29,11 +30,18 @@ interface TrackCardItemProps {
 
 function TrackCardItem({ track }: TrackCardItemProps) {
   const [trackData, setTrackData] = useState<Track | null>(null);
+  const [trackError, setTrackError] = useState(false);
   const spotifyManager = SpotifyManager.getInstance();
   const [showMusicDetail, setShowMusicDetail] = useState(false);
+  const navigate = useNavigate();
 
   const handleClickTrack = () => {
     setShowMusicDetail(true);
+  };
+
+  const handleClickProfile = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/users/${track.sharedBy.username}`);
   };
 
   useEffect(() => {
@@ -45,6 +53,7 @@ function TrackCardItem({ track }: TrackCardItemProps) {
       setTrackData(track.track);
       return;
     }
+    setTrackError(false);
     spotifyManager
       .getTrack(track.track)
       .then((data) => {
@@ -52,24 +61,25 @@ function TrackCardItem({ track }: TrackCardItemProps) {
       })
       .catch(() => {
         setTrackData(null);
+        setTrackError(true);
       });
   }, [spotifyManager, track.track]);
 
   const albumArtUrl = trackData?.album?.images?.[0]?.url;
-  const isLoadingTrack = typeof track.track === 'string' && trackData === null;
+  const isLoadingTrack = typeof track.track === 'string' && trackData === null && !trackError;
 
-  // Reserve space with placeholder until Spotify track data loads (avoids profile images showing first, then album art shifting layout)
+  const ALBUM_SIZE = 100;
+  const PROFILE_SIZE = 28;
+  const PROFILE_BORDER = 2;
+
+  // Reserve space with placeholder until Spotify track data loads
   if (isLoadingTrack) {
     return (
       <PlaylistCard as="div" style={{ cursor: 'default' }}>
-        <Layout.LayoutBase
-          p={5}
+        <div
           style={{
-            width: 76,
-            height: 76,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            width: ALBUM_SIZE,
+            height: ALBUM_SIZE,
             backgroundColor: '#EEE6F4',
             borderRadius: 12,
           }}
@@ -80,55 +90,54 @@ function TrackCardItem({ track }: TrackCardItemProps) {
 
   return (
     <PlaylistCard onClick={handleClickTrack}>
-      {/* Album Art Background */}
-      <Layout.LayoutBase
-        p={5}
+      {/* Album Art */}
+      <div
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          width: ALBUM_SIZE,
+          height: ALBUM_SIZE,
           backgroundColor: '#EEE6F4',
           borderRadius: 12,
+          overflow: 'hidden',
         }}
       >
         {albumArtUrl && (
           <img
             src={albumArtUrl}
             alt={track.name}
-            width={76}
-            height={76}
-            style={{ objectFit: 'cover', borderRadius: 12 }}
+            width={ALBUM_SIZE}
+            height={ALBUM_SIZE}
+            style={{ objectFit: 'cover', display: 'block' }}
           />
         )}
-      </Layout.LayoutBase>
+      </div>
 
-      {/* Overlaid Profile Picture - positioned relative to PlaylistCard */}
+      {/* Overlaid Profile Picture */}
       <div
+        role="button"
+        tabIndex={0}
+        onClick={handleClickProfile}
+        onKeyDown={(e) => e.key === 'Enter' && handleClickProfile(e as unknown as React.MouseEvent)}
         style={{
           position: 'absolute',
-          top: -10,
-          right: -10,
+          top: -6,
+          right: -6,
           zIndex: 10,
+          cursor: 'pointer',
+          width: PROFILE_SIZE + PROFILE_BORDER * 2,
+          height: PROFILE_SIZE + PROFILE_BORDER * 2,
+          padding: PROFILE_BORDER,
+          backgroundColor: '#FFFFFF',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        <div
-          style={{
-            width: 47,
-            height: 47,
-            padding: 3,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#D9D9D9',
-            borderRadius: '50%',
-          }}
-        >
-          <ProfileImage
-            imageUrl={track.sharedBy.profileImageUrl}
-            username={track.sharedBy.username}
-            size={41}
-          />
-        </div>
+        <ProfileImage
+          imageUrl={track.sharedBy.profileImageUrl}
+          username={track.sharedBy.username}
+          size={PROFILE_SIZE}
+        />
       </div>
       <MusicDetailBottomSheet
         visible={showMusicDetail}

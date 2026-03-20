@@ -1,4 +1,4 @@
-import { AdminAuthor, Response } from './post';
+import { AdminAuthor, Note, Response } from './post';
 import { User } from './user';
 
 export enum DiscoverFilter {
@@ -9,12 +9,15 @@ export enum DiscoverFilter {
 
 export const DiscoverFilterLabel = {
   [DiscoverFilter.follow]: 'People I follow',
-  [DiscoverFilter.MUTUAL_FRIENDS]: 'People I have mutual friends with',
-  [DiscoverFilter.MUTUAL_TRAITS]: 'People I have mutual traits with',
+  [DiscoverFilter.MUTUAL_FRIENDS]: 'Mutual Friends',
+  [DiscoverFilter.MUTUAL_TRAITS]: 'Mutual Traits',
 };
 
 // Response Card Body (type: "Response")
 export type ResponseCardBody = Response;
+
+// Note Card Body (type: "Note")
+export type NoteCardBody = Note;
 
 // Question Card Body (type: "Question")
 export interface QuestionCardBody {
@@ -49,11 +52,29 @@ export interface PersonaCardBody {
   list: PersonaItem[];
 }
 
+// Music Track in Discover Feed
+export interface DiscoverMusicTrack {
+  id: number;
+  user: {
+    id: number;
+    username: string;
+    profile_pic?: string | null;
+    url: string;
+    profile_image?: string | null;
+  };
+  track_id: string;
+  created_at: string;
+}
+
 // Discover Result Item (discriminated union)
 export type DiscoverResultItem =
   | {
       type: 'Response';
       body: ResponseCardBody;
+    }
+  | {
+      type: 'Note';
+      body: NoteCardBody;
     }
   | {
       type: 'Question';

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import FilterChip from '@components/_common/filter-chip/FilterChip';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
@@ -9,6 +9,7 @@ import SharedPlaylistSection, {
   SharedTrack,
 } from '@components/friends/shared-playlist/SharedPlaylistSection';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
+import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
 import { SCREEN_WIDTH } from '@constants/layout';
@@ -16,51 +17,32 @@ import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSaveAndHide } from '@hooks/useSaveAndHide';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
-import { DiscoverFilter, DiscoverFilterLabel, DiscoverResultItem } from '@models/discover';
-import { PlaylistSong } from '@models/playlist';
+import {
+  DiscoverFilter,
+  DiscoverFilterLabel,
+  DiscoverMusicTrack,
+  DiscoverResultItem,
+} from '@models/discover';
 import { getDiscoverFeed } from '@utils/apis/discover';
 import { getMe } from '@utils/apis/my';
-import { getPlaylistFeed } from '@utils/apis/playlist';
 import { MainScrollContainer } from 'src/routes/Root';
 import * as S from './Discover.styled';
 
 function Discover() {
   const [t] = useTranslation('translation');
   const [selectedFilter, setSelectedFilter] = useState<DiscoverFilter[]>([]);
-  const [playlistTracks, setPlaylistTracks] = useState<SharedTrack[]>([]);
-  const [isPlaylistLoading, setIsPlaylistLoading] = useState(true);
+  const {
+    isSaved: isInterestSaved,
+    showCard: showInterestCard,
+    isAnimating: isInterestAnimating,
+    handleSave: handleInterestSave,
+  } = useSaveAndHide();
   const {
     isSaved: isPersonaSaved,
     showCard: showPersonaCard,
     isAnimating: isPersonaAnimating,
     handleSave: handlePersonaSave,
   } = useSaveAndHide();
-
-  const fetchPlaylistFeed = useCallback(async () => {
-    try {
-      setIsPlaylistLoading(true);
-      const songs = await getPlaylistFeed();
-      const transformedTracks: SharedTrack[] = songs.map((song: PlaylistSong) => ({
-        id: song.id,
-        name: '',
-        track: song.track_id,
-        sharedBy: {
-          id: song.user.id,
-          username: song.user.username,
-          profileImageUrl: song.user.profile_image || null,
-        },
-      }));
-      setPlaylistTracks(transformedTracks);
-    } catch {
-      setPlaylistTracks([]);
-    } finally {
-      setIsPlaylistLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchPlaylistFeed();
-  }, [fetchPlaylistFeed]);
 
   const discoverFilterList = [DiscoverFilter.MUTUAL_FRIENDS, DiscoverFilter.MUTUAL_TRAITS];
   const { scrollRef } = useRestoreScrollPosition('discoverPage');
@@ -77,16 +59,40 @@ function Discover() {
     mutate,
   } = useSWRInfiniteScroll<DiscoverResultItem>({ key: swrKey });
 
+  // Extract music tracks from the first page of the discover API response
+  const musicTracks: SharedTrack[] = useMemo(() => {
+    const firstPage = discoverData?.[0] as Record<string, unknown> | undefined;
+    const tracks = (firstPage?.music_tracks ?? []) as DiscoverMusicTrack[];
+    return tracks.map((song) => ({
+      id: song.id,
+      name: '',
+      track: song.track_id,
+      sharedBy: {
+        id: song.user.id,
+        username: song.user.username,
+        profileImageUrl: song.user.profile_image || null,
+      },
+    }));
+  }, [discoverData]);
+
   const handleRefresh = useCallback(async () => {
-    await Promise.all([getDiscoverFeed(null, selectedFilter), getMe(), fetchPlaylistFeed()]);
+    await Promise.all([getDiscoverFeed(null, selectedFilter), getMe()]);
     mutate();
-  }, [mutate, selectedFilter, fetchPlaylistFeed]);
+  }, [mutate, selectedFilter]);
 
   const renderDiscoverItem = useCallback(
     (item: DiscoverResultItem, index: number) => {
       switch (item.type) {
         case 'Response':
-          return <ResponseItem key={`response-${item.body.id}`} response={item.body} />;
+          return (
+            <ResponseItem
+              key={`response-${item.body.id}`}
+              response={item.body}
+              displayType="FEED"
+            />
+          );
+        case 'Note':
+          return <NoteItem key={`note-${item.body.id}`} note={item.body} isMyPage={false} />;
         case 'Question':
           return (
             <HighlightQuestionSection
@@ -97,13 +103,16 @@ function Discover() {
             />
           );
         case 'Interest':
-          return (
-            <SelectInterestSection
-              key={`interest-${index}`}
-              interestList={item.body.list}
-              isSaved={item.body.list.every((interest) => interest.is_selected)}
-            />
-          );
+          return showInterestCard ? (
+            <S.AnimatedCardWrapper key={`interest-${index}`} $isAnimating={isInterestAnimating}>
+              <SelectInterestSection
+                key={`interest-${index}`}
+                interestList={item.body.list}
+                isSaved={isInterestSaved}
+                onSave={handleInterestSave}
+              />
+            </S.AnimatedCardWrapper>
+          ) : null;
         case 'Persona':
           return showPersonaCard ? (
             <S.AnimatedCardWrapper key={`persona-${index}`} $isAnimating={isPersonaAnimating}>
@@ -118,7 +127,16 @@ function Discover() {
           return null;
       }
     },
-    [isPersonaSaved, showPersonaCard, handlePersonaSave, isPersonaAnimating],
+    [
+      isInterestSaved,
+      showInterestCard,
+      handleInterestSave,
+      isInterestAnimating,
+      isPersonaSaved,
+      showPersonaCard,
+      handlePersonaSave,
+      isPersonaAnimating,
+    ],
   );
 
   return (
@@ -152,7 +170,7 @@ function Discover() {
             </S.ScrollableFilterRow>
 
             {/* Shared Playlist */}
-            {!isPlaylistLoading && <SharedPlaylistSection tracks={playlistTracks} />}
+            {!isLoading && <SharedPlaylistSection tracks={musicTracks} />}
 
             {/* Discover Feed */}
             <Layout.FlexCol gap={20} mh={20} alignItems="center" w={SCREEN_WIDTH - 40}>
@@ -172,7 +190,7 @@ function Discover() {
               ) : discoverData?.[0] &&
                 discoverData[0].results &&
                 discoverData[0].results.length > 0 ? (
-                <Layout.FlexCol gap={20} mh={16}>
+                <Layout.FlexCol gap={20} w="100%">
                   {discoverData.map((page) =>
                     page.results?.map((item, index) => renderDiscoverItem(item, index)),
                   )}
