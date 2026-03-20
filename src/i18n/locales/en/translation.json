@@ -111,12 +111,14 @@
         "my": "MY",
         "chats": "Chats",
         "questions": "Questions",
+        "share": "Share",
         "feed": "Feed",
         "discover": "Discover"
     },
     "header": {
         "my": "My Profile",
-        "questions": "Questions"
+        "questions": "Questions",
+        "share": "Share"
     },
     "home": {
         "moment": {
@@ -458,6 +460,12 @@
             "error": {
                 "read_file_error": "Error uploading image. Please try again later."
             },
+            "friends_only": {
+                "interests": "Show interests only to friends",
+                "persona": "Show persona only to friends",
+                "pronouns": "Show pronoun only to friends",
+                "bio": "Show bio only to friends"
+            },
             "placeholders": {
                 "bio": "Bio",
                 "pronoun": "Pronoun",
@@ -555,6 +563,13 @@
         "report_cancel": "Cancel",
         "report_success": "Comment reported",
         "report_error": "A temporary error occurred. Please try again later."
+    },
+    "share_page": {
+        "tmi_placeholder": "eg: TMI of the day",
+        "photo_of_the_day": "Photo of the day",
+        "photo_description": "Post your favourite photo for the day and let everyone know what you are up to",
+        "share_photo": "Share photo",
+        "questions_of_the_day": "Questions of the day"
     },
     "no_contents": {
         "discover": "No posts yet.",

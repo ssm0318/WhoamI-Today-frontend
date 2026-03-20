@@ -12,7 +12,7 @@ import PersonaChip from '@components/profile/persona/PersonaChip';
 import { StyledEditProfileButton } from '@components/settings/SettingsButtons.styled';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Layout, Typo } from '@design-system';
+import { CheckBox, Layout, Typo } from '@design-system';
 import { MyProfile } from '@models/api/user';
 import { Interest } from '@models/interest';
 import { Persona } from '@models/persona';
@@ -43,12 +43,20 @@ function EditProfile() {
     pronouns: string;
     user_personas: string[];
     user_interests: string[];
+    interests_friends_only: boolean;
+    persona_friends_only: boolean;
+    pronouns_friends_only: boolean;
+    bio_friends_only: boolean;
   }>({
     bio: myProfile?.bio ?? '',
     username: myProfile?.username ?? '',
     pronouns: myProfile?.pronouns ?? '',
     user_personas: (myProfile?.user_personas ?? []).map((p) => p.replace(/^#+/, '')),
     user_interests: (myProfile?.user_interests ?? []).map((i) => i.replace(/^#+/, '')),
+    interests_friends_only: (myProfile as any)?.interests_friends_only ?? false,
+    persona_friends_only: (myProfile as any)?.persona_friends_only ?? false,
+    pronouns_friends_only: (myProfile as any)?.pronouns_friends_only ?? false,
+    bio_friends_only: (myProfile as any)?.bio_friends_only ?? false,
   });
 
   const [usernameError, setUsernameError] = useState<string>();
@@ -82,6 +90,10 @@ function EditProfile() {
       draft.bio !== (myProfile?.bio ?? '') ||
       !arraysEqual(draft.user_personas, originalPersonas) ||
       !arraysEqual(draft.user_interests, originalInterests) ||
+      draft.interests_friends_only !== ((myProfile as any)?.interests_friends_only ?? false) ||
+      draft.persona_friends_only !== ((myProfile as any)?.persona_friends_only ?? false) ||
+      draft.pronouns_friends_only !== ((myProfile as any)?.pronouns_friends_only ?? false) ||
+      draft.bio_friends_only !== ((myProfile as any)?.bio_friends_only ?? false) ||
       imageChanged;
 
     setHasChanges(hasDraftChanged);
@@ -111,6 +123,10 @@ function EditProfile() {
       }
       return prev;
     });
+  };
+
+  const handleToggleVisibility = (field: string) => {
+    setDraft((prev) => ({ ...prev, [field]: !prev[field as keyof typeof prev] }));
   };
 
   const handleClickUpdate = () => {
@@ -243,7 +259,7 @@ function EditProfile() {
           </StyledEditProfileButton>
         </Layout.FlexCol>
       </Layout.FlexCol>
-      <Layout.FlexCol pt={32} ph={24} gap={24} w="100%">
+      <Layout.FlexCol pt={32} ph={24} pb={40} gap={24} w="100%">
         {/* username */}
         <ValidatedInput
           label={t('username')}
@@ -253,6 +269,34 @@ function EditProfile() {
           onChange={handleChangeInput}
           limit={20}
           error={usernameError}
+        />
+
+        {/* pronouns */}
+        <ValidatedInput
+          label={t('pronouns')}
+          name="pronouns"
+          type="text"
+          value={draft.pronouns}
+          onChange={handleChangeInput}
+        />
+        <CheckBox
+          name={String(t('friends_only.pronouns'))}
+          checked={draft.pronouns_friends_only}
+          onChange={() => handleToggleVisibility('pronouns_friends_only')}
+        />
+
+        {/* bio */}
+        <ValidatedTextArea
+          label={t('bio')}
+          name="bio"
+          value={draft.bio}
+          onChange={handleChangeTextArea}
+          limit={120}
+        />
+        <CheckBox
+          name={String(t('friends_only.bio'))}
+          checked={draft.bio_friends_only}
+          onChange={() => handleToggleVisibility('bio_friends_only')}
         />
 
         {/* interests */}
@@ -318,6 +362,11 @@ function EditProfile() {
                 )}
             </Layout.FlexCol>
           </Layout.FlexCol>
+          <CheckBox
+            name={String(t('friends_only.interests'))}
+            checked={draft.interests_friends_only}
+            onChange={() => handleToggleVisibility('interests_friends_only')}
+          />
         </Layout.FlexCol>
 
         {/* persona */}
@@ -392,26 +441,13 @@ function EditProfile() {
                   )}
               </Layout.FlexCol>
             </Layout.FlexCol>
+            <CheckBox
+              name={String(t('friends_only.persona'))}
+              checked={draft.persona_friends_only}
+              onChange={() => handleToggleVisibility('persona_friends_only')}
+            />
           </Layout.FlexCol>
         )}
-
-        {/* pronouns */}
-        <ValidatedInput
-          label={t('pronouns')}
-          name="pronouns"
-          type="text"
-          value={draft.pronouns}
-          onChange={handleChangeInput}
-        />
-
-        {/* bio */}
-        <ValidatedTextArea
-          label={t('bio')}
-          name="bio"
-          value={draft.bio}
-          onChange={handleChangeTextArea}
-          limit={120}
-        />
       </Layout.FlexCol>
       {isEditModalVisible && (
         <ProfileImageEdit

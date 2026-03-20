@@ -111,12 +111,14 @@
     "my": "MY",
     "chats": "채팅",
     "questions": "질문",
+    "share": "공유",
     "feed": "피드",
     "discover": "발견"
   },
   "header": {
     "my": "내 프로필",
-    "questions": "질문"
+    "questions": "질문",
+    "share": "공유"
   },
   "home": {
     "moment": {
@@ -454,6 +456,12 @@
       "error": {
         "read_file_error": "이미지를 불러오는 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
       },
+      "friends_only": {
+        "interests": "관심사를 친구에게만 보이기",
+        "persona": "페르소나를 친구에게만 보이기",
+        "pronouns": "대명사를 친구에게만 보이기",
+        "bio": "소개를 친구에게만 보이기"
+      },
       "placeholders": {
         "bio": "소개",
         "pronoun": "대명사",
@@ -547,6 +555,13 @@
     "report_cancel": "취소",
     "report_success": "댓글이 성공적으로 신고되었습니다.",
     "report_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+  },
+  "share_page": {
+    "tmi_placeholder": "예: 오늘의 TMI",
+    "photo_of_the_day": "오늘의 사진",
+    "photo_description": "오늘의 사진을 공유하고 친구들에게 근황을 알려주세요",
+    "share_photo": "사진 공유",
+    "questions_of_the_day": "오늘의 질문"
   },
   "no_contents": {
     "discover": "아직 게시글이 없습니다.",
