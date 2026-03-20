@@ -569,7 +569,8 @@
         "report_error": "A temporary error occurred. Please try again later."
     },
     "share_page": {
-        "tmi_placeholder": "eg: TMI of the day",
+        "tmi_of_the_day": "TMI of the day",
+        "tmi_placeholder": "had the best reindeer hotdog today!!!",
         "photo_of_the_day": "Photo of the day",
         "photo_description": "Post your favourite photo for the day and let everyone know what you are up to",
         "share_photo": "Share photo",

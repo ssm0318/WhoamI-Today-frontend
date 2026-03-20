@@ -11,6 +11,7 @@ import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { DailyQuestion, ShareType } from '@models/post';
 import { getMe } from '@utils/apis/my';
 import { getTodayQuestions } from '@utils/apis/question';
+import { getTmiPlaceholder } from '@utils/apis/tmi';
 
 import { MainScrollContainer } from '../Root';
 import {
@@ -21,7 +22,7 @@ import {
 } from './Share.styled';
 
 function Share() {
-  const [t] = useTranslation('translation');
+  const [t, i18n] = useTranslation('translation');
   const navigate = useNavigate();
   const { scrollRef } = useRestoreScrollPosition('sharePage');
 
@@ -30,13 +31,20 @@ function Share() {
     getTodayQuestions,
   );
 
+  const { data: tmiPlaceholder } = useSWR(`/user/tmi-placeholder/?lang=${i18n.language}`, () =>
+    getTmiPlaceholder(i18n.language),
+  );
+
   const handleRefresh = useCallback(async () => {
     await Promise.all([mutate(), getMe()]);
   }, [mutate]);
 
   const handleClickTmiInput = () => {
     navigate('/notes/new', {
-      state: { shareType: ShareType.TMI_OF_THE_DAY },
+      state: {
+        shareType: ShareType.TMI_OF_THE_DAY,
+        tmiPlaceholder: tmiPlaceholder || t('share_page.tmi_placeholder'),
+      },
     });
   };
 
@@ -50,13 +58,24 @@ function Share() {
     <MainScrollContainer scrollRef={scrollRef}>
       <PullToRefresh onRefresh={handleRefresh}>
         <Layout.FlexCol w="100%">
-          {/* TMI Input Bar */}
+          {/* TMI of the Day */}
           <TmiInputBarWrapper>
+            <Typo type="head-line" color="WHITE" bold>
+              {t('share_page.tmi_of_the_day')}
+            </Typo>
             <TmiInputBar type="button" onClick={handleClickTmiInput}>
-              <Layout.FlexRow gap={8} alignItems="center">
+              <Layout.FlexRow gap={8} alignItems="center" style={{ flex: 1, minWidth: 0 }}>
                 <SvgIcon name="add_default" size={24} color="PRIMARY" />
-                <Typo type="body-medium" color="DARK_GRAY">
-                  {t('share_page.tmi_placeholder')}
+                <Typo
+                  type="body-medium"
+                  color="MEDIUM_GRAY"
+                  style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {tmiPlaceholder || t('share_page.tmi_placeholder')}
                 </Typo>
               </Layout.FlexRow>
               <SvgIcon name="chat_media_image" size={24} fill="DARK_GRAY" />
