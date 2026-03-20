@@ -2,8 +2,13 @@ import { useEffect, useState } from 'react';
 import HashTagPill from '@components/_common/hash-tag-pill/HashTagPill';
 import Icon from '@components/_common/icon/Icon';
 import { Button, Typo } from '@design-system';
+import { MyProfile } from '@models/api/user';
 import { InterestItem } from '@models/discover';
+import { useBoundStore } from '@stores/useBoundStore';
+import { editProfile } from '@utils/apis/my';
 import * as S from './SelectInterestSection.styled';
+
+const COLLAPSED_COUNT = 10;
 
 interface SelectInterestSectionProps {
   interestList?: InterestItem[];
@@ -16,10 +21,14 @@ function SelectInterestSection({
   isSaved = false,
   onSave,
 }: SelectInterestSectionProps) {
+  const { updateMyProfile, openToast } = useBoundStore((state) => ({
+    updateMyProfile: state.updateMyProfile,
+    openToast: state.openToast,
+  }));
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
-    // API에서 받은 데이터로 초기 선택 상태 설정
     const initialSelected = interestList
       .filter((item) => item.is_selected)
       .map((item) => item.content);
@@ -37,35 +46,42 @@ function SelectInterestSection({
 
   const handleSave = () => {
     onSave?.();
-    // TODO: 실제 저장 API 연동
+
+    editProfile({
+      profile: {
+        user_interests: selectedInterests,
+      },
+      onSuccess: (data: MyProfile) => {
+        updateMyProfile({ ...data });
+      },
+      onError: (error) => {
+        if (error.detail) openToast({ message: error.detail });
+      },
+    });
   };
 
-  // 관심사를 3줄로 나누기
-  const interestsPerRow = Math.ceil(interestList.length / 3);
-  const interestRows = [
-    interestList.slice(0, interestsPerRow),
-    interestList.slice(interestsPerRow, interestsPerRow * 2),
-    interestList.slice(interestsPerRow * 2, interestsPerRow * 3),
-  ];
+  const displayList = isExpanded ? interestList : interestList.slice(0, COLLAPSED_COUNT);
 
   return (
     <S.SelectInterestSectionWrapper>
       <S.Title>Select your interests</S.Title>
 
       <S.InterestGrid>
-        {interestRows.map((row) => (
-          <S.InterestRow key={row.map((i) => i.content).join(',')}>
-            {row.map((interestItem) => (
-              <HashTagPill
-                key={interestItem.content}
-                isSelected={selectedInterests.includes(interestItem.content)}
-                onClick={() => handleToggleInterest(interestItem.content)}
-                label={interestItem.content}
-              />
-            ))}
-          </S.InterestRow>
+        {displayList.map((interestItem) => (
+          <HashTagPill
+            key={interestItem.content}
+            isSelected={selectedInterests.includes(interestItem.content)}
+            onClick={() => handleToggleInterest(interestItem.content)}
+            label={interestItem.content}
+          />
         ))}
       </S.InterestGrid>
+
+      {interestList.length > COLLAPSED_COUNT && (
+        <S.ExpandToggle onClick={() => setIsExpanded(!isExpanded)}>
+          <Icon name={isExpanded ? 'chevron_up' : 'chevron_down'} size={20} />
+        </S.ExpandToggle>
+      )}
 
       {!isSaved ? (
         <S.SaveButtonWrapper>
