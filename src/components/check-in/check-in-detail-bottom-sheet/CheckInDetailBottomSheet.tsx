@@ -40,7 +40,7 @@ function CheckInDetailBottomSheet({
   const [trackData, setTrackData] = useState<Track | null>(null);
 
   useEffect(() => {
-    if (!trackId) {
+    if (!visible || !trackId) {
       setTrackData(null);
       return;
     }
@@ -49,7 +49,7 @@ function CheckInDetailBottomSheet({
       .getTrack(trackId)
       .then(setTrackData)
       .catch(() => setTrackData(null));
-  }, [trackId]);
+  }, [visible, trackId]);
 
   const handleClickGoToSpotify = () => {
     if (!trackData) return;
