@@ -157,10 +157,48 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
                 </Typo>
                 {!current_user_read && !isMyPage && <UpdatedLabel />}
               </Layout.FlexRow>
-              <Layout.FlexRow alignItems="center" gap={4}>
+              <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
                 <Typo type="label-medium" color="MEDIUM_GRAY">
                   {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
                 </Typo>
+                {!isMyPage &&
+                  author_detail &&
+                  ((author_detail.mutual_friend_count ?? 0) > 0 ||
+                    (author_detail.mutual_interest_count ?? 0) > 0 ||
+                    (author_detail.mutual_persona_count ?? 0) > 0) && (
+                    <>
+                      {(author_detail.mutual_friend_count ?? 0) > 0 && (
+                        <>
+                          <Typo type="label-medium" color="MEDIUM_GRAY">
+                            ·
+                          </Typo>
+                          <Typo type="label-medium" color="DARK_GRAY">
+                            {author_detail.mutual_friend_count} mutual{' '}
+                            {author_detail.mutual_friend_count === 1 ? 'friend' : 'friends'}
+                          </Typo>
+                        </>
+                      )}
+                      {(author_detail.mutual_interest_count ?? 0) +
+                        (author_detail.mutual_persona_count ?? 0) >
+                        0 && (
+                        <>
+                          <Typo type="label-medium" color="MEDIUM_GRAY">
+                            ·
+                          </Typo>
+                          <Typo type="label-medium" color="DARK_GRAY">
+                            {(author_detail.mutual_interest_count ?? 0) +
+                              (author_detail.mutual_persona_count ?? 0)}{' '}
+                            shared{' '}
+                            {(author_detail.mutual_interest_count ?? 0) +
+                              (author_detail.mutual_persona_count ?? 0) ===
+                            1
+                              ? 'trait'
+                              : 'traits'}
+                          </Typo>
+                        </>
+                      )}
+                    </>
+                  )}
               </Layout.FlexRow>
               {/* Visibility scope - only shown on own page */}
               {isMyPage && visibility && (
