@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import { Layout, Typo } from '@design-system';
 import { SocialBattery } from '@models/checkIn';
 import { SocialBatteryChipAssets } from './SocialBatteryChip.contants';
@@ -25,6 +26,7 @@ function SocialBatteryChip({
   if (!socialBattery || !Object.keys(SocialBattery).includes(socialBattery)) {
     return null;
   }
+  const { emoji } = SocialBatteryChipAssets[socialBattery];
   return (
     <Layout.FlexRow
       bgColor="WHITE"
@@ -39,8 +41,8 @@ function SocialBatteryChip({
       }}
       onClick={handleOnClick}
     >
-      {SocialBatteryChipAssets[socialBattery].emoji && (
-        <Typo type="label-large">{SocialBatteryChipAssets[socialBattery].emoji}</Typo>
+      {emoji && (
+        <EmojiItem emojiString={emoji} size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
       )}
       <Typo type="label-large">{t(socialBattery)}</Typo>
     </Layout.FlexRow>
