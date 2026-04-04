@@ -23,9 +23,11 @@ export const StyledNewNoteImageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 12px 16px;
+  /* 20px padding on all sides so crop handles (which extend beyond
+     the image) are never clipped by the wrapper edges */
+  padding: 20px;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
 
   .ReactCrop {
     max-height: 100%;
