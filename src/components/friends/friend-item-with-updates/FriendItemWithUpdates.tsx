@@ -4,6 +4,7 @@ import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CheckInDetailBottomSheet from '@components/check-in/check-in-detail-bottom-sheet/CheckInDetailBottomSheet';
+import PokeButton from '@components/friends/poke-button/PokeButton';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
@@ -64,9 +65,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
     setIsCheckInDetailVisible(true);
   };
 
-  const hasNewPost =
-    (!!recentPost && !recentPost.is_read) ||
-    (!user.current_user_read && (user as any).unread_cnt > 0);
+  const hasNewPost = (!!recentPost && !recentPost.is_read) || (user as any).unread_cnt > 0;
 
   return (
     <Container mh={16} ph={16} pv={12} gap={12} rounded={12}>
@@ -118,6 +117,15 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
           )}
         </Layout.FlexRow>
       </Layout.FlexRow>
+
+      {/* Poke buttons for empty components */}
+      {!social_battery && !mood && !description && !track_id && (
+        <Layout.FlexRow gap={4} style={{ flexWrap: 'wrap' }}>
+          <PokeButton receiverId={id} componentType="battery" />
+          <PokeButton receiverId={id} componentType="status" />
+          <PokeButton receiverId={id} componentType="song" />
+        </Layout.FlexRow>
+      )}
 
       {/* Row 2: Status (mood + description) */}
       {(mood || description) && (
