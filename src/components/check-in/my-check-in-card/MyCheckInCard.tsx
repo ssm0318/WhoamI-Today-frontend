@@ -28,6 +28,31 @@ function MyCheckInCard() {
   const handleClickStatus = () => navigate('/check-in/edit?focus=status');
   const handleClickSong = () => navigate('/check-in/edit?focus=song');
 
+  const hasCheckIn = social_battery || track_id || mood || description;
+
+  // When no check-in at all, show compact inline empty-state chips
+  if (!hasCheckIn) {
+    return (
+      <Layout.FlexRow
+        w="100%"
+        gap={6}
+        ph={16}
+        pv={10}
+        alignItems="center"
+        style={{ flexWrap: 'wrap' }}
+      >
+        <ProfileImage
+          imageUrl={myProfile?.profile_image}
+          username={myProfile?.username}
+          size={32}
+        />
+        <EmptyChip label="+ My battery" onClick={handleClickBattery} />
+        <EmptyChip label="+ Add my music 🎵" onClick={handleClickSong} />
+        <EmptyChip label="+ I feel" onClick={handleClickStatus} />
+      </Layout.FlexRow>
+    );
+  }
+
   return (
     <Container>
       {/* Row 1: Profile + username + social battery */}
@@ -43,17 +68,7 @@ function MyCheckInCard() {
         {social_battery && Object.values(SocialBattery).includes(social_battery) ? (
           <SocialBatteryChip socialBattery={social_battery} onClick={handleClickBattery} />
         ) : (
-          <Layout.FlexRow
-            pv={4}
-            ph={8}
-            rounded={999}
-            style={{ cursor: 'pointer', border: '1px dashed #BDBDBD' }}
-            onClick={handleClickBattery}
-          >
-            <Typo type="label-medium" color="MEDIUM_GRAY">
-              Set your vibe
-            </Typo>
-          </Layout.FlexRow>
+          <EmptyChip label="+ My battery" onClick={handleClickBattery} />
         )}
       </Layout.FlexRow>
 
@@ -80,17 +95,7 @@ function MyCheckInCard() {
           )}
         </Layout.FlexRow>
       ) : (
-        <Layout.FlexRow
-          pv={4}
-          ph={8}
-          rounded={999}
-          style={{ cursor: 'pointer', border: '1px dashed #BDBDBD' }}
-          onClick={handleClickStatus}
-        >
-          <Typo type="label-medium" color="MEDIUM_GRAY">
-            Add your status
-          </Typo>
-        </Layout.FlexRow>
+        <EmptyChip label="+ I feel" onClick={handleClickStatus} />
       )}
 
       {/* Row 3: Song (full width) or empty state */}
@@ -104,19 +109,25 @@ function MyCheckInCard() {
           />
         </Layout.FlexRow>
       ) : (
-        <Layout.FlexRow
-          pv={4}
-          ph={8}
-          rounded={999}
-          style={{ cursor: 'pointer', border: '1px dashed #BDBDBD' }}
-          onClick={handleClickSong}
-        >
-          <Typo type="label-medium" color="MEDIUM_GRAY">
-            Add your song
-          </Typo>
-        </Layout.FlexRow>
+        <EmptyChip label="+ Add my music 🎵" onClick={handleClickSong} />
       )}
     </Container>
+  );
+}
+
+function EmptyChip({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <Layout.FlexRow
+      pv={4}
+      ph={8}
+      rounded={999}
+      style={{ cursor: 'pointer', border: '1px dashed #BDBDBD' }}
+      onClick={onClick}
+    >
+      <Typo type="label-medium" color="MEDIUM_GRAY">
+        {label}
+      </Typo>
+    </Layout.FlexRow>
   );
 }
 

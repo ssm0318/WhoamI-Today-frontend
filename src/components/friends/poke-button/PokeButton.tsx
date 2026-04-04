@@ -48,10 +48,10 @@ function PokeButton({ receiverId, componentType, isPoked: initialPoked = false }
 const PokeContainer = styled.div<{ $isPoked: boolean }>`
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
+  padding: 4px 8px;
   border-radius: 999px;
-  border: 1px dashed ${({ $isPoked }) => ($isPoked ? '#E0E0E0' : '#8700FF')};
-  background-color: ${({ $isPoked }) => ($isPoked ? '#F5F5F5' : '#F3E8FF')};
+  border: 1px solid ${({ $isPoked }) => ($isPoked ? '#E0E0E0' : '#D9D9D9')};
+  background-color: ${({ $isPoked }) => ($isPoked ? '#F5F5F5' : '#FFFFFF')};
   cursor: ${({ $isPoked }) => ($isPoked ? 'default' : 'pointer')};
   -webkit-tap-highlight-color: transparent;
   user-select: none;

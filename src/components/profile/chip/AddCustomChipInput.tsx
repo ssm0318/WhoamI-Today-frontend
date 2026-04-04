@@ -74,18 +74,18 @@ function AddCustomChipInput({ category, onAdd, disabled = false }: Props) {
 const InputContainer = styled.div<{ $borderColor: string }>`
   display: inline-flex;
   align-items: center;
-  border: 1.5px solid ${({ $borderColor }) => $borderColor};
-  border-radius: 20px;
-  padding: 4px 12px;
+  border: 1px solid ${({ $borderColor }) => $borderColor};
+  border-radius: 999px;
+  padding: 4px 8px;
   background-color: #ffffff;
 `;
 
 const StyledInput = styled.input<{ $textColor: string }>`
   border: none;
   outline: none;
-  font-size: 14px;
-  line-height: 20px;
-  width: 120px;
+  font-size: 12px;
+  line-height: 16px;
+  width: 100px;
   color: ${({ $textColor }) => $textColor};
   background: transparent;
 
@@ -97,15 +97,15 @@ const StyledInput = styled.input<{ $textColor: string }>`
 const AddButton = styled.div<{ $disabled: boolean }>`
   display: inline-flex;
   align-items: center;
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: 1.5px dashed #bdbdbd;
-  background-color: #fafafa;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px dashed #bdbdbd;
+  background-color: transparent;
   color: #9e9e9e;
   cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
   opacity: ${({ $disabled }) => ($disabled ? 0.5 : 1)};
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 12px;
+  line-height: 16px;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 

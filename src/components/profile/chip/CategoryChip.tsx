@@ -38,9 +38,9 @@ const ChipContainer = styled.div<{
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: 1.5px solid ${({ $borderColor }) => $borderColor};
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid ${({ $borderColor }) => $borderColor};
   background-color: ${({ $bgColor }) => $bgColor};
   color: ${({ $textColor }) => $textColor};
   cursor: pointer;
@@ -48,9 +48,9 @@ const ChipContainer = styled.div<{
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   -webkit-tap-highlight-color: transparent;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: ${({ $isSelected }) => ($isSelected ? 600 : 400)};
-  line-height: 20px;
+  line-height: 16px;
 
   &:active {
     opacity: 0.8;
