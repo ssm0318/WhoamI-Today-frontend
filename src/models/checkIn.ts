@@ -7,6 +7,18 @@ export enum SocialBattery {
   super_social = 'super_social',
 }
 
+export enum ComponentVisibility {
+  PUBLIC = 'public',
+  FRIENDS = 'friends',
+  ONLY_ME = 'only_me',
+}
+
+export const DEFAULT_VISIBILITY = {
+  song: ComponentVisibility.PUBLIC,
+  status: ComponentVisibility.FRIENDS,
+  battery: ComponentVisibility.FRIENDS,
+};
+
 export type CheckInBase = {
   id: number;
   is_active: boolean;
@@ -16,6 +28,9 @@ export type CheckInBase = {
   description: string;
   track_id: string;
   current_user_read: boolean;
+  song_visibility?: ComponentVisibility;
+  status_visibility?: ComponentVisibility;
+  battery_visibility?: ComponentVisibility;
 };
 
 export type MyCheckIn = CheckInBase & {
