@@ -2,14 +2,14 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { Layout, Typo } from '@design-system';
 
-type MissionType = 'song' | 'question' | 'text' | 'compliment';
+export type MissionType = 'song' | 'question' | 'text' | 'compliment';
 
-interface Mission {
+export interface Mission {
   prompt: string;
   type: MissionType;
 }
 
-const MISSION_POOL: Mission[] = [
+export const MISSION_POOL: Mission[] = [
   { prompt: 'Share a song that matches your mood right now', type: 'song' },
   { prompt: 'Ask the community a question', type: 'question' },
   { prompt: 'Compliment someone today', type: 'compliment' },
@@ -42,7 +42,7 @@ const MISSION_POOL: Mission[] = [
   { prompt: 'What is your unpopular opinion?', type: 'text' },
 ];
 
-function getDayOfYear(): number {
+export function getDayOfYear(): number {
   const now = new Date();
   const start = new Date(now.getFullYear(), 0, 0);
   const diff = now.getTime() - start.getTime();

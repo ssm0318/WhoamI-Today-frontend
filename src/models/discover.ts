@@ -66,6 +66,23 @@ export interface DiscoverMusicTrack {
   created_at: string;
 }
 
+// MissionPrompt Card Body (frontend-only injection)
+export interface MissionPromptCardBody {
+  prompt: string;
+  missionType: 'song' | 'question' | 'text' | 'compliment';
+}
+
+// ProfileSuggestion Card Body (frontend-only injection)
+export interface ProfileSuggestionCardBody {
+  missingFields: string[];
+}
+
+// MusicHighlight Card Body (frontend-only injection)
+export interface MusicHighlightCardBody {
+  trackId: string;
+  sharedByUsername: string;
+}
+
 // Discover Result Item (discriminated union)
 export type DiscoverResultItem =
   | {
@@ -90,4 +107,16 @@ export type DiscoverResultItem =
   | {
       type: 'Persona';
       body: PersonaCardBody;
+    }
+  | {
+      type: 'MissionPrompt';
+      body: MissionPromptCardBody;
+    }
+  | {
+      type: 'ProfileSuggestion';
+      body: ProfileSuggestionCardBody;
+    }
+  | {
+      type: 'MusicHighlight';
+      body: MusicHighlightCardBody;
     };
