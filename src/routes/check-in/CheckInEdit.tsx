@@ -167,7 +167,7 @@ function CheckInEdit() {
         }}
       >
         {/* Social Battery */}
-        <div ref={batteryRef}>
+        <div ref={batteryRef} style={{ width: '100%' }}>
           <SectionContainer
             title={t('social_battery.title')}
             description={t('social_battery.description')}
@@ -183,7 +183,7 @@ function CheckInEdit() {
           </SectionContainer>
         </div>
         {/* Song */}
-        <div ref={songRef}>
+        <div ref={songRef} style={{ width: '100%' }}>
           <SectionContainer title={t('song.title')} description={t('song.description')}>
             <CheckInSpotifyMusic
               trackData={trackData}
@@ -198,7 +198,7 @@ function CheckInEdit() {
           </SectionContainer>
         </div>
         {/* Status (emoji & description) */}
-        <div ref={statusRef}>
+        <div ref={statusRef} style={{ width: '100%' }}>
           <SectionContainer title={t('mood.title')} description={t('mood.description')}>
             <CheckInEmoji
               mood={checkInForm?.mood || ''}
