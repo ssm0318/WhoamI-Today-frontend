@@ -18,12 +18,11 @@ export const StyledNewNoteImageWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: ${TOP_NAVIGATION_HEIGHT}px;
+  padding: ${TOP_NAVIGATION_HEIGHT + 16}px 16px 8px 16px;
   overflow: hidden;
   box-sizing: border-box;
   min-height: 0;
 
-  /* Constrain ReactCrop to fit within this container */
   .ReactCrop {
     max-height: 100%;
     max-width: 100%;
@@ -33,7 +32,7 @@ export const StyledNewNoteImageWrapper = styled.div`
 export const StyledNewNoteImage = styled.img`
   display: block;
   max-width: 100%;
-  max-height: calc(100vh - ${TOP_NAVIGATION_HEIGHT + 100}px);
+  max-height: calc(100vh - ${TOP_NAVIGATION_HEIGHT + 120}px);
   object-fit: contain;
 `;
 
