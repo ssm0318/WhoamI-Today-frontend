@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
@@ -30,7 +30,6 @@ function Share() {
   const { scrollRef } = useRestoreScrollPosition('sharePage');
   const [activeTab, setActiveTab] = useState<ShareTab>('snippets');
   const [isSnippetInputVisible, setIsSnippetInputVisible] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: todayQuestions, mutate } = useSWR<DailyQuestion[]>(
     '/qna/questions/daily/',
@@ -62,11 +61,7 @@ function Share() {
   };
 
   const handleClickSharePhoto = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handlePhotoSelected = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.length) return;
+    // Navigate to full note creation with auto-open image picker
     navigate('/notes/new', {
       state: { shareType: ShareType.PHOTO_OF_THE_DAY },
     });
@@ -76,7 +71,10 @@ function Share() {
     if (mission.type === 'song') {
       navigate('/check-in/edit?focus=song');
     } else {
-      setIsSnippetInputVisible(true);
+      // Route to full note creation with mission prompt as placeholder
+      navigate('/notes/new', {
+        state: { tmiPlaceholder: mission.prompt },
+      });
     }
   };
 
@@ -185,13 +183,6 @@ function Share() {
                   </Typo>
                 </SharePhotoButton>
               </PhotoOfTheDayCard>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/jpeg, image/png"
-                onChange={handlePhotoSelected}
-                style={{ display: 'none' }}
-              />
             </Layout.FlexCol>
           )}
 

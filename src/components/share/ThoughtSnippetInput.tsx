@@ -80,7 +80,12 @@ function ThoughtSnippetInput({ visible, onClose, onSubmit }: Props) {
           maxLength={500}
           rows={4}
         />
-        <Layout.FlexRow w="100%" justifyContent="flex-end" pt={4}>
+        <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" pt={4}>
+          <Layout.FlexRow gap={4} alignItems="center">
+            <Typo type="label-small" color="MEDIUM_GRAY">
+              👥 Visible to friends only
+            </Typo>
+          </Layout.FlexRow>
           <Typo type="label-small" color="MEDIUM_GRAY">
             {text.length}/500
           </Typo>
