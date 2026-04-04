@@ -55,7 +55,7 @@ export const CHIP_CATEGORIES: Record<ChipCategory, ChipCategoryInfo> = {
       'Podcasts',
       'Manga/Webtoons',
     ],
-    colors: { bg: '#FFF0E6', text: '#B35400', border: '#F5A623' },
+    colors: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
   },
   [ChipCategory.HOBBIES_ACTIVITIES]: {
     key: ChipCategory.HOBBIES_ACTIVITIES,
@@ -87,7 +87,7 @@ export const CHIP_CATEGORIES: Record<ChipCategory, ChipCategoryInfo> = {
       'Fashion',
       'DIY',
     ],
-    colors: { bg: '#E8F5E9', text: '#1B5E20', border: '#66BB6A' },
+    colors: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
   },
   [ChipCategory.ON_MY_MIND]: {
     key: ChipCategory.ON_MY_MIND,
@@ -109,7 +109,7 @@ export const CHIP_CATEGORIES: Record<ChipCategory, ChipCategoryInfo> = {
       'College/Career',
       'Fitness Journey',
     ],
-    colors: { bg: '#E3F2FD', text: '#0D47A1', border: '#42A5F5' },
+    colors: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
   },
   [ChipCategory.AS_A_FRIEND]: {
     key: ChipCategory.AS_A_FRIEND,
@@ -131,7 +131,7 @@ export const CHIP_CATEGORIES: Record<ChipCategory, ChipCategoryInfo> = {
       'Dry Humor',
       'Keeps It Real',
     ],
-    colors: { bg: '#FFF3E0', text: '#E65100', border: '#FF9800' },
+    colors: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
   },
   [ChipCategory.ONLINE_PERSONA]: {
     key: ChipCategory.ONLINE_PERSONA,
@@ -151,7 +151,7 @@ export const CHIP_CATEGORIES: Record<ChipCategory, ChipCategoryInfo> = {
       'Silent Supporter',
       'Late Replier',
     ],
-    colors: { bg: '#F3E5F5', text: '#6A1B9A', border: '#AB47BC' },
+    colors: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
   },
   [ChipCategory.FAVORITE_PLATFORM]: {
     key: ChipCategory.FAVORITE_PLATFORM,
@@ -169,7 +169,7 @@ export const CHIP_CATEGORIES: Record<ChipCategory, ChipCategoryInfo> = {
       'BeReal',
       'Threads',
     ],
-    colors: { bg: '#E0F7FA', text: '#006064', border: '#26C6DA' },
+    colors: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
   },
   [ChipCategory.LEAST_FAVORITE_PLATFORM]: {
     key: ChipCategory.LEAST_FAVORITE_PLATFORM,
@@ -187,7 +187,7 @@ export const CHIP_CATEGORIES: Record<ChipCategory, ChipCategoryInfo> = {
       'BeReal',
       'Threads',
     ],
-    colors: { bg: '#FCE4EC', text: '#880E4F', border: '#EC407A' },
+    colors: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
   },
 };
 
