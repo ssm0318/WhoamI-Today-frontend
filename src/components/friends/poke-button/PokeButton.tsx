@@ -1,5 +1,6 @@
 import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import { Typo } from '@design-system';
 import { deletePoke, getPokeStatus, Poke, PokeComponentType, sendPoke } from '@utils/apis/poke';
 
@@ -23,6 +24,7 @@ const POKED_LABELS: Record<PokeComponentType, string> = {
 function PokeButton({ receiverId, componentType }: Props) {
   const [pokeRecord, setPokeRecord] = useState<Poke | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const isPoked = pokeRecord !== null;
 
@@ -40,23 +42,26 @@ function PokeButton({ receiverId, componentType }: Props) {
     fetchStatus();
   }, [fetchStatus]);
 
+  const handleUnpoke = async () => {
+    if (!pokeRecord) return;
+    setShowConfirm(false);
+    setIsLoading(true);
+    try {
+      await deletePoke(pokeRecord.id);
+      setPokeRecord(null);
+    } catch {
+      // silently fail
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handlePoke = async (e: MouseEvent) => {
     e.stopPropagation();
     if (isLoading) return;
 
     if (isPoked) {
-      const confirmed = window.confirm('Un-nudge?');
-      if (!confirmed) return;
-
-      setIsLoading(true);
-      try {
-        await deletePoke(pokeRecord.id);
-        setPokeRecord(null);
-      } catch {
-        // silently fail
-      } finally {
-        setIsLoading(false);
-      }
+      setShowConfirm(true);
       return;
     }
 
@@ -72,11 +77,23 @@ function PokeButton({ receiverId, componentType }: Props) {
   };
 
   return (
-    <PokeContainer $isPoked={isPoked} onClick={handlePoke}>
-      <Typo type="label-large" color={isPoked ? 'MEDIUM_GRAY' : 'PRIMARY'}>
-        {isPoked ? POKED_LABELS[componentType] : POKE_LABELS[componentType]}
-      </Typo>
-    </PokeContainer>
+    <>
+      <PokeContainer $isPoked={isPoked} onClick={handlePoke}>
+        <Typo type="label-large" color={isPoked ? 'MEDIUM_GRAY' : 'PRIMARY'}>
+          {isPoked ? POKED_LABELS[componentType] : POKE_LABELS[componentType]}
+        </Typo>
+      </PokeContainer>
+      <CommonDialog
+        visible={showConfirm}
+        title="Un-nudge?"
+        content="This will remove your nudge."
+        cancelText="Cancel"
+        confirmText="Remove"
+        confirmTextColor="WARNING"
+        onClickConfirm={handleUnpoke}
+        onClickClose={() => setShowConfirm(false)}
+      />
+    </>
   );
 }
 

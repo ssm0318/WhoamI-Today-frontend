@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
@@ -95,20 +96,11 @@ function CheckInDetailBottomSheet({
   };
 
   const openToast = useBoundStore((state) => state.openToast);
+  const [confirmRemoveEmoji, setConfirmRemoveEmoji] = useState<string | null>(null);
 
-  const handleReaction = useCallback(
+  const doToggleReaction = useCallback(
     async (emoji: string) => {
-      if (!checkInId || isToggling) return;
-
-      const isRemoving = selectedReactions.has(emoji);
-
-      // Confirm before removing a reaction
-      if (isRemoving) {
-        // eslint-disable-next-line no-alert
-        const confirmed = window.confirm('Remove this reaction?');
-        if (!confirmed) return;
-      }
-
+      if (!checkInId) return;
       setIsToggling(true);
       try {
         const result = await toggleCheckInReaction(checkInId, emoji);
@@ -130,7 +122,19 @@ function CheckInDetailBottomSheet({
         setIsToggling(false);
       }
     },
-    [checkInId, isToggling, selectedReactions, openToast],
+    [checkInId, openToast],
+  );
+
+  const handleReaction = useCallback(
+    (emoji: string) => {
+      if (!checkInId || isToggling) return;
+      if (selectedReactions.has(emoji)) {
+        setConfirmRemoveEmoji(emoji);
+        return;
+      }
+      doToggleReaction(emoji);
+    },
+    [checkInId, isToggling, selectedReactions, doToggleReaction],
   );
 
   const hasContent = socialBattery || trackId || mood || description;
@@ -218,6 +222,19 @@ function CheckInDetailBottomSheet({
           ))}
         </Layout.FlexRow>
       </PopupContainer>
+      <CommonDialog
+        visible={!!confirmRemoveEmoji}
+        title="Remove reaction?"
+        content="This will remove your reaction."
+        cancelText="Cancel"
+        confirmText="Remove"
+        confirmTextColor="WARNING"
+        onClickConfirm={() => {
+          if (confirmRemoveEmoji) doToggleReaction(confirmRemoveEmoji);
+          setConfirmRemoveEmoji(null);
+        }}
+        onClickClose={() => setConfirmRemoveEmoji(null)}
+      />
     </Overlay>,
     document.getElementById('modal-container') || document.body,
   );
