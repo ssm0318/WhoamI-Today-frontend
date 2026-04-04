@@ -10,6 +10,7 @@ export enum SocialBattery {
 export enum ComponentVisibility {
   PUBLIC = 'public',
   FRIENDS = 'friends',
+  CLOSE_FRIENDS = 'close_friends',
   ONLY_ME = 'only_me',
 }
 

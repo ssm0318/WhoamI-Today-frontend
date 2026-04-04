@@ -10,6 +10,7 @@ interface Props {
 const OPTIONS: { value: ComponentVisibility; label: string; icon: string }[] = [
   { value: ComponentVisibility.PUBLIC, label: 'Public', icon: '🌐' },
   { value: ComponentVisibility.FRIENDS, label: 'Friends', icon: '👥' },
+  { value: ComponentVisibility.CLOSE_FRIENDS, label: 'Close', icon: '💜' },
   { value: ComponentVisibility.ONLY_ME, label: 'Only Me', icon: '🔒' },
 ];
 

@@ -56,9 +56,11 @@ function EditProfile() {
   const [draft, setDraft] = useState<{
     bio: string;
     username: string;
+    name: string;
     pronouns: string;
     chipSelections: Record<string, string[]>;
     customChips: CustomChip[];
+    name_friends_only: boolean;
     interests_friends_only: boolean;
     persona_friends_only: boolean;
     pronouns_friends_only: boolean;
@@ -66,9 +68,11 @@ function EditProfile() {
   }>({
     bio: myProfile?.bio ?? '',
     username: myProfile?.username ?? '',
+    name: (myProfile as any)?.name ?? '',
     pronouns: myProfile?.pronouns ?? '',
     chipSelections: parsed.selections,
     customChips: parsed.customs,
+    name_friends_only: (myProfile as any)?.name_friends_only ?? true,
     interests_friends_only: myProfile?.interests_friends_only ?? false,
     persona_friends_only: myProfile?.persona_friends_only ?? false,
     pronouns_friends_only: myProfile?.pronouns_friends_only ?? false,
@@ -204,6 +208,7 @@ function EditProfile() {
     const profileData = {
       bio: draft.bio,
       username: draft.username,
+      name: draft.name,
       pronouns: draft.pronouns,
       user_interests: combinedChips,
       user_personas: [],
@@ -291,8 +296,8 @@ function EditProfile() {
           </StyledEditProfileButton>
         </Layout.FlexCol>
       </Layout.FlexCol>
-      <Layout.FlexCol pt={32} ph={24} pb={40} gap={24} w="100%">
-        {/* username */}
+      <Layout.FlexCol pt={32} ph={24} pb={40} gap={16} w="100%">
+        {/* username (always public) */}
         <ValidatedInput
           label={t('username')}
           name="username"
@@ -303,51 +308,73 @@ function EditProfile() {
           error={usernameError}
         />
 
+        {/* name (friends only option) */}
+        <Layout.FlexCol gap={4}>
+          <ValidatedInput
+            label="Name"
+            name="name"
+            type="text"
+            value={draft.name}
+            onChange={handleChangeInput}
+            limit={50}
+          />
+          <CheckBox
+            name="Show name only to friends"
+            checked={draft.name_friends_only}
+            onChange={() => handleToggleVisibility('name_friends_only')}
+          />
+        </Layout.FlexCol>
+
         {/* pronouns */}
-        <ValidatedInput
-          label={t('pronouns')}
-          name="pronouns"
-          type="text"
-          value={draft.pronouns}
-          onChange={handleChangeInput}
-        />
-        <CheckBox
-          name={String(t('friends_only.pronouns'))}
-          checked={draft.pronouns_friends_only}
-          onChange={() => handleToggleVisibility('pronouns_friends_only')}
-        />
+        <Layout.FlexCol gap={4}>
+          <ValidatedInput
+            label={t('pronouns')}
+            name="pronouns"
+            type="text"
+            value={draft.pronouns}
+            onChange={handleChangeInput}
+          />
+          <CheckBox
+            name={String(t('friends_only.pronouns'))}
+            checked={draft.pronouns_friends_only}
+            onChange={() => handleToggleVisibility('pronouns_friends_only')}
+          />
+        </Layout.FlexCol>
 
         {/* bio */}
-        <ValidatedTextArea
-          label={t('bio')}
-          name="bio"
-          value={draft.bio}
-          onChange={handleChangeTextArea}
-          limit={120}
-        />
-        <CheckBox
-          name={String(t('friends_only.bio'))}
-          checked={draft.bio_friends_only}
-          onChange={() => handleToggleVisibility('bio_friends_only')}
-        />
-
-        {/* Chip Categories (7 categories) */}
-        {ALL_CATEGORIES.map((categoryInfo) => (
-          <ChipCategorySection
-            key={categoryInfo.key}
-            categoryInfo={categoryInfo}
-            selectedChips={draft.chipSelections[categoryInfo.key] || []}
-            customChips={draft.customChips}
-            onToggleChip={handleToggleChip}
-            onAddCustomChip={handleAddCustomChip}
-            onRemoveCustomChip={handleRemoveCustomChip}
+        <Layout.FlexCol gap={4}>
+          <ValidatedTextArea
+            label={t('bio')}
+            name="bio"
+            value={draft.bio}
+            onChange={handleChangeTextArea}
+            limit={120}
           />
+          <CheckBox
+            name={String(t('friends_only.bio'))}
+            checked={draft.bio_friends_only}
+            onChange={() => handleToggleVisibility('bio_friends_only')}
+          />
+        </Layout.FlexCol>
+
+        {/* Chip Categories (7 categories) — each with its own visibility */}
+        {ALL_CATEGORIES.map((categoryInfo) => (
+          <Layout.FlexCol key={categoryInfo.key} gap={4}>
+            <ChipCategorySection
+              categoryInfo={categoryInfo}
+              selectedChips={draft.chipSelections[categoryInfo.key] || []}
+              customChips={draft.customChips}
+              onToggleChip={handleToggleChip}
+              onAddCustomChip={handleAddCustomChip}
+              onRemoveCustomChip={handleRemoveCustomChip}
+            />
+            <CheckBox
+              name={`Show ${categoryInfo.label} only to friends`}
+              checked={draft.interests_friends_only}
+              onChange={() => handleToggleVisibility('interests_friends_only')}
+            />
+          </Layout.FlexCol>
         ))}
-        <CheckBox
-          name={String(t('friends_only.interests'))}
-          checked={draft.interests_friends_only}
-          onChange={() => handleToggleVisibility('interests_friends_only')}
-        />
       </Layout.FlexCol>
       {isEditModalVisible && (
         <ProfileImageEdit
