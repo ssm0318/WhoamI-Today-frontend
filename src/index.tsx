@@ -16,6 +16,7 @@ import { ChatRoom } from 'src/routes/chat-room/ChatRoom';
 import { NotFound } from 'src/routes/NotFound';
 import Ping from 'src/routes/ping/Ping';
 import './i18n';
+import PhotoOfTheDayFlow from './components/share/PhotoOfTheDayFlow';
 import SpotifyManager from './libs/SpotifyManager';
 import reportWebVitals from './reportWebVitals';
 import ActivateEmail from './routes/ActivateEmail';
@@ -117,7 +118,10 @@ const router = createBrowserRouter([
       },
       {
         path: 'share',
-        children: [{ path: '', element: <Share /> }],
+        children: [
+          { path: '', element: <Share /> },
+          { path: 'photo', element: <PhotoOfTheDayFlow /> },
+        ],
       },
       {
         path: 'questions',

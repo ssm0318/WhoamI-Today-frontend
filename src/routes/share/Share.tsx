@@ -61,10 +61,7 @@ function Share() {
   };
 
   const handleClickSharePhoto = () => {
-    // Navigate to full note creation with auto-open image picker
-    navigate('/notes/new', {
-      state: { shareType: ShareType.PHOTO_OF_THE_DAY },
-    });
+    navigate('/share/photo');
   };
 
   const handleDoMission = (mission: { prompt: string; type: string }) => {
