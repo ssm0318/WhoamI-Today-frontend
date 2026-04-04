@@ -64,7 +64,9 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
     setIsCheckInDetailVisible(true);
   };
 
-  const hasNewPost = !!recentPost && !recentPost.is_read;
+  const hasNewPost =
+    (!!recentPost && !recentPost.is_read) ||
+    (!user.current_user_read && (user as any).unread_cnt > 0);
 
   return (
     <Container mh={16} ph={16} pv={12} gap={12} rounded={12}>
@@ -173,7 +175,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
           pv={4}
           ph={8}
           alignItems="center"
-          rounded={999}
+          rounded={8}
           style={{ backgroundColor: '#EEE6F4', flexShrink: 0 }}
         >
           <Typo type="label-large" color="PRIMARY" fontWeight={600}>

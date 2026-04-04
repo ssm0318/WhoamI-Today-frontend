@@ -2,6 +2,9 @@ import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
+import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
+import MusicPlaceholder from '@components/profile/placeholders/MusicPlaceholder';
+import SocialBatteryPlaceholder from '@components/profile/placeholders/SocialBatteryPlaceholder';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -24,35 +27,6 @@ function MyCheckInCard() {
 
   const { social_battery, track_id, mood, description } = checkIn || {};
 
-  const handleClickBattery = () => navigate('/check-in/edit?focus=battery');
-  const handleClickStatus = () => navigate('/check-in/edit?focus=status');
-  const handleClickSong = () => navigate('/check-in/edit?focus=song');
-
-  const hasCheckIn = social_battery || track_id || mood || description;
-
-  // When no check-in at all, show compact inline empty-state chips
-  if (!hasCheckIn) {
-    return (
-      <Layout.FlexRow
-        w="100%"
-        gap={6}
-        ph={16}
-        pv={10}
-        alignItems="center"
-        style={{ flexWrap: 'wrap' }}
-      >
-        <ProfileImage
-          imageUrl={myProfile?.profile_image}
-          username={myProfile?.username}
-          size={32}
-        />
-        <EmptyChip label="+ My battery" onClick={handleClickBattery} />
-        <EmptyChip label="+ Add my music 🎵" onClick={handleClickSong} />
-        <EmptyChip label="+ I feel" onClick={handleClickStatus} />
-      </Layout.FlexRow>
-    );
-  }
-
   return (
     <Container>
       {/* Row 1: Profile + username + social battery */}
@@ -66,9 +40,12 @@ function MyCheckInCard() {
           {myProfile?.username || ''}
         </Typo>
         {social_battery && Object.values(SocialBattery).includes(social_battery) ? (
-          <SocialBatteryChip socialBattery={social_battery} onClick={handleClickBattery} />
+          <SocialBatteryChip
+            socialBattery={social_battery}
+            onClick={() => navigate('/check-in/edit?focus=battery')}
+          />
         ) : (
-          <EmptyChip label="+ My battery" onClick={handleClickBattery} />
+          <SocialBatteryPlaceholder />
         )}
       </Layout.FlexRow>
 
@@ -83,7 +60,7 @@ function MyCheckInCard() {
           alignItems="center"
           rounded={8}
           style={{ flexShrink: 0, cursor: 'pointer' }}
-          onClick={handleClickStatus}
+          onClick={() => navigate('/check-in/edit?focus=status')}
         >
           {mood && (
             <EmojiItem emojiString={mood} size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
@@ -95,7 +72,7 @@ function MyCheckInCard() {
           )}
         </Layout.FlexRow>
       ) : (
-        <EmptyChip label="+ I feel" onClick={handleClickStatus} />
+        <MoodPlaceholder />
       )}
 
       {/* Row 3: Song (full width) or empty state */}
@@ -105,29 +82,13 @@ function MyCheckInCard() {
             track={track_id}
             useAlbumImg
             fontType="label-large"
-            onClick={handleClickSong}
+            onClick={() => navigate('/check-in/edit?focus=song')}
           />
         </Layout.FlexRow>
       ) : (
-        <EmptyChip label="+ Add my music 🎵" onClick={handleClickSong} />
+        <MusicPlaceholder />
       )}
     </Container>
-  );
-}
-
-function EmptyChip({ label, onClick }: { label: string; onClick: () => void }) {
-  return (
-    <Layout.FlexRow
-      pv={4}
-      ph={8}
-      rounded={8}
-      style={{ cursor: 'pointer', border: '1px dashed #D9D9D9' }}
-      onClick={onClick}
-    >
-      <Typo type="label-large" color="MEDIUM_GRAY">
-        {label}
-      </Typo>
-    </Layout.FlexRow>
   );
 }
 
