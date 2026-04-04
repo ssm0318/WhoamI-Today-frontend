@@ -23,15 +23,18 @@ export const StyledNewNoteImageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* 20px padding on all sides so crop handles (which extend beyond
-     the image) are never clipped by the wrapper edges */
-  padding: 20px;
+  padding: 16px;
   box-sizing: border-box;
-  overflow: visible;
+  overflow: hidden;
 
   .ReactCrop {
+    max-height: 100% !important;
+    max-width: 100% !important;
+    overflow: visible;
+  }
+
+  .ReactCrop__child-wrapper {
     max-height: 100%;
-    max-width: 100%;
   }
 `;
 
