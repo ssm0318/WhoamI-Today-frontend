@@ -12,7 +12,7 @@ import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/Floatin
 import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
-import { SCREEN_WIDTH } from '@constants/layout';
+import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSaveAndHide } from '@hooks/useSaveAndHide';
@@ -200,7 +200,13 @@ function Discover() {
             {!isLoading && <SharedPlaylistSection tracks={musicTracks} />}
 
             {/* Discover Feed */}
-            <Layout.FlexCol gap={20} mh={20} alignItems="center" w={SCREEN_WIDTH - 40}>
+            <Layout.FlexCol
+              gap={20}
+              ph={DEFAULT_MARGIN}
+              alignItems="center"
+              w="100%"
+              style={{ boxSizing: 'border-box' }}
+            >
               {isLoading ? (
                 <div
                   style={{
