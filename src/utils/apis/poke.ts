@@ -2,24 +2,32 @@ import axiosInstance from '@utils/apis/axios';
 
 export type PokeComponentType = 'song' | 'status' | 'battery';
 
-export interface PokeStatus {
-  poke_count_today: number;
-  poked_components: PokeComponentType[];
+export interface Poke {
+  id: number;
+  sender: number;
+  receiver: number;
+  component_type: PokeComponentType;
+  created_at: string;
 }
 
 export async function sendPoke(
   receiverId: number,
   componentType: PokeComponentType,
-): Promise<void> {
-  await axiosInstance.post('/check-in/poke/', {
+): Promise<Poke> {
+  const { data } = await axiosInstance.post<Poke>('/check_in/poke/', {
     receiver_id: receiverId,
     component_type: componentType,
   });
+  return data;
 }
 
-export async function getPokeStatus(receiverId: number): Promise<PokeStatus> {
-  const { data } = await axiosInstance.get(`/check-in/poke/status/`, {
+export async function getPokeStatus(receiverId: number): Promise<Poke[]> {
+  const { data } = await axiosInstance.get<Poke[]>('/check_in/poke/sent/', {
     params: { receiver_id: receiverId },
   });
   return data;
+}
+
+export async function deletePoke(pokeId: number): Promise<void> {
+  await axiosInstance.delete(`/check_in/poke/${pokeId}/`);
 }

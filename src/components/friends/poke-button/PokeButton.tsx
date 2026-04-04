@@ -1,12 +1,11 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Typo } from '@design-system';
-import { PokeComponentType, sendPoke } from '@utils/apis/poke';
+import { deletePoke, getPokeStatus, Poke, PokeComponentType, sendPoke } from '@utils/apis/poke';
 
 interface Props {
   receiverId: number;
   componentType: PokeComponentType;
-  isPoked?: boolean;
 }
 
 const POKE_LABELS: Record<PokeComponentType, string> = {
@@ -17,20 +16,52 @@ const POKE_LABELS: Record<PokeComponentType, string> = {
 
 const POKED_LABEL = 'Poked \u{2714}\u{FE0F}';
 
-function PokeButton({ receiverId, componentType, isPoked: initialPoked = false }: Props) {
-  const [isPoked, setIsPoked] = useState(initialPoked);
+function PokeButton({ receiverId, componentType }: Props) {
+  const [pokeRecord, setPokeRecord] = useState<Poke | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const isPoked = pokeRecord !== null;
+
+  const fetchStatus = useCallback(async () => {
+    try {
+      const pokes = await getPokeStatus(receiverId);
+      const match = pokes.find((p) => p.component_type === componentType);
+      setPokeRecord(match ?? null);
+    } catch {
+      // ignore fetch errors
+    }
+  }, [receiverId, componentType]);
+
+  useEffect(() => {
+    fetchStatus();
+  }, [fetchStatus]);
 
   const handlePoke = async (e: MouseEvent) => {
     e.stopPropagation();
-    if (isPoked || isLoading) return;
+    if (isLoading) return;
+
+    if (isPoked) {
+      const confirmed = window.confirm('Un-nudge?');
+      if (!confirmed) return;
+
+      setIsLoading(true);
+      try {
+        await deletePoke(pokeRecord.id);
+        setPokeRecord(null);
+      } catch {
+        // silently fail
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
 
     setIsLoading(true);
     try {
-      await sendPoke(receiverId, componentType);
-      setIsPoked(true);
+      const newPoke = await sendPoke(receiverId, componentType);
+      setPokeRecord(newPoke);
     } catch {
-      // Silently fail — rate limit or network error
+      // Silently fail -- rate limit or network error
     } finally {
       setIsLoading(false);
     }
@@ -52,13 +83,13 @@ const PokeContainer = styled.div<{ $isPoked: boolean }>`
   border-radius: 8px;
   border: 1px solid ${({ $isPoked }) => ($isPoked ? '#E0E0E0' : '#D9D9D9')};
   background-color: ${({ $isPoked }) => ($isPoked ? '#F5F5F5' : '#FFFFFF')};
-  cursor: ${({ $isPoked }) => ($isPoked ? 'default' : 'pointer')};
+  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   transition: all 0.15s ease;
 
   &:active {
-    opacity: ${({ $isPoked }) => ($isPoked ? 1 : 0.7)};
+    opacity: 0.7;
   }
 `;
 
