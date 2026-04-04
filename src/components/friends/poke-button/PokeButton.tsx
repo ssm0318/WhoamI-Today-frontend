@@ -49,7 +49,7 @@ const PokeContainer = styled.div<{ $isPoked: boolean }>`
   display: inline-flex;
   align-items: center;
   padding: 4px 8px;
-  border-radius: 999px;
+  border-radius: 8px;
   border: 1px solid ${({ $isPoked }) => ($isPoked ? '#E0E0E0' : '#D9D9D9')};
   background-color: ${({ $isPoked }) => ($isPoked ? '#F5F5F5' : '#FFFFFF')};
   cursor: ${({ $isPoked }) => ($isPoked ? 'default' : 'pointer')};

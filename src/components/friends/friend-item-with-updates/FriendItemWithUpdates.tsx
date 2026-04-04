@@ -127,7 +127,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
             ph={8}
             outline="LIGHT_GRAY"
             alignItems="center"
-            rounded={999}
+            rounded={8}
             style={{ flexShrink: 0, cursor: 'pointer' }}
             onClick={handleClickCheckInChip}
           >
@@ -142,7 +142,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
               pv={4}
               ph={8}
               alignItems="center"
-              rounded={999}
+              rounded={8}
               style={{ backgroundColor: '#EEE6F4', flexShrink: 0 }}
             >
               <Typo type="label-large" color="PRIMARY" fontWeight={600}>

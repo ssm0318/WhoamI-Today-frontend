@@ -17,7 +17,7 @@ export function PlaceholderWrapper({
   bgColor = 'LIGHT',
   onClick,
   gap = 4,
-  ph = 8,
+  ph = 20,
 }: PlaceholderProps) {
   return (
     <S.PlaceholderWrapper

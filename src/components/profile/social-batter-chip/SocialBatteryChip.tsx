@@ -35,7 +35,7 @@ function SocialBatteryChip({
       ph={8}
       outline={isSelected ? 'PRIMARY' : 'LIGHT_GRAY'}
       alignItems="center"
-      rounded={999}
+      rounded={8}
       style={{
         flexShrink: 0,
       }}

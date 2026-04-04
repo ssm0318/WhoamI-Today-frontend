@@ -81,7 +81,7 @@ function MyCheckInCard() {
           ph={8}
           outline="LIGHT_GRAY"
           alignItems="center"
-          rounded={999}
+          rounded={8}
           style={{ flexShrink: 0, cursor: 'pointer' }}
           onClick={handleClickStatus}
         >
@@ -120,7 +120,7 @@ function EmptyChip({ label, onClick }: { label: string; onClick: () => void }) {
     <Layout.FlexRow
       pv={4}
       ph={8}
-      rounded={999}
+      rounded={8}
       style={{ cursor: 'pointer', border: '1px dashed #D9D9D9' }}
       onClick={onClick}
     >

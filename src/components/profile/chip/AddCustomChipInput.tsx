@@ -75,7 +75,7 @@ const InputContainer = styled.div<{ $borderColor: string }>`
   display: inline-flex;
   align-items: center;
   border: 1px solid ${({ $borderColor }) => $borderColor};
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 4px 8px;
   background-color: #ffffff;
 `;
@@ -98,7 +98,7 @@ const AddButton = styled.div<{ $disabled: boolean }>`
   display: inline-flex;
   align-items: center;
   padding: 4px 8px;
-  border-radius: 999px;
+  border-radius: 8px;
   border: 1px dashed #bdbdbd;
   background-color: transparent;
   color: #9e9e9e;

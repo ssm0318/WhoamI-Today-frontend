@@ -109,7 +109,7 @@ function CheckIn({ user }: CheckInProps) {
               outline="LIGHT_GRAY"
               ph={8}
               pv={4}
-              rounded={999}
+              rounded={8}
               style={{ flexShrink: 0 }}
               onClick={() => {
                 if (!isMyPage) return;
