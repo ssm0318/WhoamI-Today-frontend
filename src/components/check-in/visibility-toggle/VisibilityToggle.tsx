@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Typo } from '@design-system';
+import { SvgIcon, Typo } from '@design-system';
 import { ComponentVisibility } from '@models/checkIn';
 
 interface Props {
@@ -7,10 +7,10 @@ interface Props {
   onChange: (visibility: ComponentVisibility) => void;
 }
 
-const OPTIONS: { value: ComponentVisibility; label: string; icon: string }[] = [
+const OPTIONS: { value: ComponentVisibility; label: string; icon?: string; svgIcon?: string }[] = [
   { value: ComponentVisibility.PUBLIC, label: 'Public', icon: '🌐' },
   { value: ComponentVisibility.FRIENDS, label: 'Friends', icon: '👥' },
-  { value: ComponentVisibility.CLOSE_FRIENDS, label: 'Close', icon: '💜' },
+  { value: ComponentVisibility.CLOSE_FRIENDS, label: 'Close', svgIcon: 'close_friend' },
   { value: ComponentVisibility.ONLY_ME, label: 'Only Me', icon: '🔒' },
 ];
 
@@ -23,7 +23,7 @@ function VisibilityToggle({ value, onChange }: Props) {
           $isSelected={value === opt.value}
           onClick={() => onChange(opt.value)}
         >
-          <span>{opt.icon}</span>
+          {opt.svgIcon ? <SvgIcon name={opt.svgIcon as any} size={14} /> : <span>{opt.icon}</span>}
           <Typo
             type="label-small"
             color={value === opt.value ? 'PRIMARY' : 'MEDIUM_GRAY'}

@@ -309,7 +309,7 @@ function EditProfile() {
         />
 
         {/* name (friends only option) */}
-        <Layout.FlexCol gap={4}>
+        <Layout.FlexCol gap={4} w="100%">
           <ValidatedInput
             label="Name"
             name="name"
@@ -326,7 +326,7 @@ function EditProfile() {
         </Layout.FlexCol>
 
         {/* pronouns */}
-        <Layout.FlexCol gap={4}>
+        <Layout.FlexCol gap={4} w="100%">
           <ValidatedInput
             label={t('pronouns')}
             name="pronouns"
@@ -342,7 +342,7 @@ function EditProfile() {
         </Layout.FlexCol>
 
         {/* bio */}
-        <Layout.FlexCol gap={4}>
+        <Layout.FlexCol gap={4} w="100%">
           <ValidatedTextArea
             label={t('bio')}
             name="bio"
@@ -359,7 +359,7 @@ function EditProfile() {
 
         {/* Chip Categories (7 categories) — each with its own visibility */}
         {ALL_CATEGORIES.map((categoryInfo) => (
-          <Layout.FlexCol key={categoryInfo.key} gap={4}>
+          <Layout.FlexCol key={categoryInfo.key} gap={4} w="100%">
             <ChipCategorySection
               categoryInfo={categoryInfo}
               selectedChips={draft.chipSelections[categoryInfo.key] || []}
