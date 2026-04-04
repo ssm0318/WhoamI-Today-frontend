@@ -51,11 +51,15 @@ function FriendNewPosts() {
           ) : posts.length > 0 ? (
             posts.map((post) => {
               if (post.type === 'Note') {
-                return <NoteItem key={`note-${post.id}`} note={post} isMyPage={false} />;
+                return <NoteItem key={`note-${post.id}`} note={post as any} isMyPage={false} />;
               }
               if (post.type === 'Response') {
                 return (
-                  <ResponseItem key={`response-${post.id}`} response={post} displayType="FEED" />
+                  <ResponseItem
+                    key={`response-${post.id}`}
+                    response={post as any}
+                    displayType="FEED"
+                  />
                 );
               }
               return null;
