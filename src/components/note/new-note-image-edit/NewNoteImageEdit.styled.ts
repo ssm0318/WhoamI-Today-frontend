@@ -6,9 +6,6 @@ export const StyledNoteImageEditContainer = styled(Layout.FixedFullScreen)`
   z-index: 9999;
   top: 0;
   bottom: 0;
-  left: 0;
-  right: 0;
-  position: fixed;
   display: flex;
   flex-direction: column;
 `;
@@ -20,8 +17,9 @@ export const StyledNewNoteImageWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: ${TOP_NAVIGATION_HEIGHT + 8}px 0 ${BOTTOM_TABBAR_HEIGHT}px 0;
+  padding: ${TOP_NAVIGATION_HEIGHT + 8}px 8px ${BOTTOM_TABBAR_HEIGHT}px 8px;
   overflow: auto;
+  box-sizing: border-box;
 `;
 
 export const StyledNewNoteImage = styled.img`
