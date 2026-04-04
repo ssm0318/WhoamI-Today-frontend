@@ -22,10 +22,10 @@ export async function sendPoke(
 }
 
 export async function getPokeStatus(receiverId: number): Promise<Poke[]> {
-  const { data } = await axiosInstance.get<Poke[]>('/check_in/poke/sent/', {
+  const { data } = await axiosInstance.get<{ results: Poke[] }>('/check_in/poke/sent/', {
     params: { receiver_id: receiverId },
   });
-  return data;
+  return data.results ?? data;
 }
 
 export async function deletePoke(pokeId: number): Promise<void> {

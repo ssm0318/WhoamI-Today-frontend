@@ -104,7 +104,7 @@ const router = createBrowserRouter([
           // { path: 'feed', element: <FriendsFeed /> },
           { path: 'explore', element: <ExploreFriends /> },
           { path: 'edit', element: <EditFriends /> },
-          { path: ':userId/new-posts', element: <FriendNewPosts /> },
+          { path: ':username/new-posts', element: <FriendNewPosts /> },
         ],
       },
       {

@@ -68,7 +68,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
 
   const handleClickNewPost = (e: MouseEvent) => {
     e.stopPropagation();
-    navigate(`/friends/${id}/new-posts`);
+    navigate(`/friends/${username}/new-posts`);
   };
 
   const hasNewPost = (!!recentPost && !recentPost.is_read) || (user as any).unread_cnt > 0;
@@ -105,13 +105,13 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
           )}
           {hasNewPost && (
             <Layout.FlexRow
-              pv={2}
-              ph={6}
+              pv={4}
+              ph={8}
               rounded={8}
               onClick={handleClickNewPost}
               style={{ backgroundColor: '#EEE6F4', flexShrink: 0, cursor: 'pointer' }}
             >
-              <Typo type="label-medium" color="PRIMARY" fontWeight={600}>
+              <Typo type="label-large" color="PRIMARY" fontWeight={600}>
                 New post
               </Typo>
             </Layout.FlexRow>
