@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import { TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 
+const HEADER_HEIGHT = TOP_NAVIGATION_HEIGHT; // 44px
+const ASPECT_BAR_HEIGHT = 50; // px
+
 export const StyledNoteImageEditContainer = styled(Layout.FixedFullScreen)`
   z-index: 9999;
   top: 0;
@@ -11,19 +14,18 @@ export const StyledNoteImageEditContainer = styled(Layout.FixedFullScreen)`
   overflow: hidden;
 `;
 
-/* header=44, aspect bar ~50, padding 16+16 = total ~126 */
-const RESERVED_HEIGHT = TOP_NAVIGATION_HEIGHT + 80;
-
 export const StyledNewNoteImageWrapper = styled.div`
-  width: 100%;
-  height: calc(100vh - ${RESERVED_HEIGHT}px);
+  position: absolute;
+  top: ${HEADER_HEIGHT}px;
+  bottom: ${ASPECT_BAR_HEIGHT}px;
+  left: 0;
+  right: 0;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: ${TOP_NAVIGATION_HEIGHT + 12}px 16px 12px 16px;
-  overflow: hidden;
+  padding: 12px 16px;
   box-sizing: border-box;
+  overflow: hidden;
 
   .ReactCrop {
     max-height: 100%;
@@ -39,14 +41,16 @@ export const StyledNewNoteImage = styled.img`
 `;
 
 export const AspectRatioBar = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: ${ASPECT_BAR_HEIGHT}px;
   display: flex;
   gap: 8px;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  padding: 10px 16px;
   background-color: ${({ theme }) => theme.DARK};
-  flex-shrink: 0;
   box-sizing: border-box;
 `;
 
