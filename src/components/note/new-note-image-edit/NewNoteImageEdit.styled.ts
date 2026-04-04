@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
+import { TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 
 export const StyledNoteImageEditContainer = styled(Layout.FixedFullScreen)`
@@ -8,6 +8,7 @@ export const StyledNoteImageEditContainer = styled(Layout.FixedFullScreen)`
   bottom: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 `;
 
 export const StyledNewNoteImageWrapper = styled.div`
@@ -17,23 +18,26 @@ export const StyledNewNoteImageWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: ${TOP_NAVIGATION_HEIGHT + 8}px 8px ${BOTTOM_TABBAR_HEIGHT}px 8px;
-  overflow: auto;
+  padding-top: ${TOP_NAVIGATION_HEIGHT}px;
+  overflow: hidden;
   box-sizing: border-box;
+  min-height: 0;
 `;
 
 export const StyledNewNoteImage = styled.img`
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  display: block;
 `;
 
 export const AspectRatioBar = styled.div`
   display: flex;
   gap: 8px;
   justify-content: center;
-  padding: 8px 16px;
-  background-color: rgba(0, 0, 0, 0.8);
+  padding: 10px 16px;
+  background-color: ${({ theme }) => theme.DARK};
+  flex-shrink: 0;
 `;
 
 export const AspectButton = styled.button<{ $isSelected: boolean }>`
