@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SocialBatteryChipAssets } from '@components/profile/social-batter-chip/SocialBatteryChip.contants';
@@ -98,11 +97,10 @@ function CheckInDetailBottomSheet({
   };
 
   const openToast = useBoundStore((state) => state.openToast);
-  const [confirmRemoveEmoji, setConfirmRemoveEmoji] = useState<string | null>(null);
 
-  const doToggleReaction = useCallback(
+  const handleReaction = useCallback(
     async (emoji: string) => {
-      if (!checkInId) return;
+      if (!checkInId || isToggling) return;
       setIsToggling(true);
       try {
         const result = await toggleCheckInReaction(checkInId, emoji);
@@ -116,7 +114,7 @@ function CheckInDetailBottomSheet({
           return next;
         });
         openToast({
-          message: result.toggled === 'on' ? `Reacted ${emoji}` : 'Reaction removed',
+          message: result.toggled === 'on' ? `Reacted ${emoji}` : `Removed ${emoji}`,
         });
       } catch {
         openToast({ message: 'Failed to react' });
@@ -124,19 +122,7 @@ function CheckInDetailBottomSheet({
         setIsToggling(false);
       }
     },
-    [checkInId, openToast],
-  );
-
-  const handleReaction = useCallback(
-    (emoji: string) => {
-      if (!checkInId || isToggling) return;
-      if (selectedReactions.has(emoji)) {
-        setConfirmRemoveEmoji(emoji);
-        return;
-      }
-      doToggleReaction(emoji);
-    },
-    [checkInId, isToggling, selectedReactions, doToggleReaction],
+    [checkInId, isToggling, openToast],
   );
 
   if (!visible || !focusComponent) return null;
@@ -235,19 +221,6 @@ function CheckInDetailBottomSheet({
           ))}
         </Layout.FlexRow>
       </PopupContainer>
-      <CommonDialog
-        visible={!!confirmRemoveEmoji}
-        title="Remove reaction?"
-        content="This will remove your reaction."
-        cancelText="Cancel"
-        confirmText="Remove"
-        confirmTextColor="WARNING"
-        onClickConfirm={() => {
-          if (confirmRemoveEmoji) doToggleReaction(confirmRemoveEmoji);
-          setConfirmRemoveEmoji(null);
-        }}
-        onClickClose={() => setConfirmRemoveEmoji(null)}
-      />
     </Overlay>,
     document.getElementById('modal-container') || document.body,
   );
