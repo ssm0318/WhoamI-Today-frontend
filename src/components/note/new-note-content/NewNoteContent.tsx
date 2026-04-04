@@ -73,8 +73,8 @@ function NewNoteContent({
   });
 
   const onClickAdd = () => {
-    /* 안드로이드의 경우 권한 문제로 앨범 사진 선택, 카메라 촬영 메뉴 별도 표시 */
-    if (isAndroid) {
+    /* Show camera/gallery choice for Photo of the Day or Android */
+    if (isAndroid || autoOpenImagePicker) {
       setShowPhotoUploadBottomSheet(true);
       return;
     }
@@ -89,11 +89,20 @@ function NewNoteContent({
   };
 
   const handleOpenCamera = () => {
-    postMessage('OPEN_CAMERA', {});
+    if (window.ReactNativeWebView) {
+      postMessage('OPEN_CAMERA', {});
+    } else {
+      // On web, open file input (camera not available)
+      inputRef.current?.click();
+    }
   };
 
   const handleOpenAlbum = () => {
-    postMessage('OPEN_GALLERY', {});
+    if (window.ReactNativeWebView) {
+      postMessage('OPEN_GALLERY', {});
+    } else {
+      inputRef.current?.click();
+    }
   };
 
   const closePhotoUploadBottomSheet = () => {
