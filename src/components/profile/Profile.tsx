@@ -107,7 +107,7 @@ function Profile({ user }: ProfileProps) {
                       </Typo>
                     )}
                     {friendData?.connection_degree && (
-                      <Typo type="label-medium" color="TERTIARY_PINK">
+                      <Typo type="label-medium" color="DARK_GRAY">
                         {friendData.connection_degree === 2
                           ? '2nd degree connection'
                           : '3rd+ degree connection'}
