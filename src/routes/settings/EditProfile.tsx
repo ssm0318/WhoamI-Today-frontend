@@ -14,7 +14,7 @@ import { CheckBox, Layout, Typo } from '@design-system';
 import { MyProfile } from '@models/api/user';
 import { ALL_CATEGORIES, ChipCategory, CustomChip, normalizeChipText } from '@models/chips';
 import { useBoundStore } from '@stores/useBoundStore';
-import { editProfile } from '@utils/apis/my';
+import { editProfile, updateChipsByCategory } from '@utils/apis/my';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { MainScrollContainer } from '../Root';
 
@@ -200,18 +200,18 @@ function EditProfile() {
   const handleClickSave = async () => {
     if (!myProfile) return;
 
-    // Flatten all chip selections + custom chips into interests/personas for API
-    const allChips = Object.entries(draft.chipSelections).flatMap(([, chips]) => chips);
-    const allCustomChipTexts = draft.customChips.map((c) => c.text);
-    const combinedChips = [...allChips, ...allCustomChipTexts];
+    // Save chips by category via dedicated endpoint
+    try {
+      await updateChipsByCategory(draft.chipSelections);
+    } catch {
+      // Chip save failed, continue with profile save
+    }
 
     const profileData = {
       bio: draft.bio,
       username: draft.username,
       name: draft.name,
       pronouns: draft.pronouns,
-      user_interests: combinedChips,
-      user_personas: [],
       name_friends_only: draft.name_friends_only,
       interests_friends_only: draft.interests_friends_only,
       persona_friends_only: draft.persona_friends_only,
@@ -225,8 +225,6 @@ function EditProfile() {
       onSuccess: (data: MyProfile) => {
         updateMyProfile({
           ...data,
-          user_interests: data.user_interests ?? combinedChips,
-          user_personas: data.user_personas ?? [],
           profile_image: data.profile_image ?? myProfile?.profile_image,
         });
         openToast({ message: t('response.updated') });
