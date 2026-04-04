@@ -70,12 +70,18 @@ class SpotifyManager {
     if (!res.ok) throw new Error('oEmbed fetch failed');
     const data = await res.json();
 
+    // oEmbed title is "Artist - Track Name" format
+    const fullTitle: string = data.title || '';
+    const dashIndex = fullTitle.indexOf(' - ');
+    const artistName = dashIndex > -1 ? fullTitle.substring(0, dashIndex) : '';
+    const trackName = dashIndex > -1 ? fullTitle.substring(dashIndex + 3) : fullTitle;
+
     return {
-      name: data.title || '',
+      name: trackName,
       album: {
         images: [{ url: data.thumbnail_url, height: 300, width: 300 }],
       },
-      artists: [{ name: '' }],
+      artists: [{ name: artistName }],
       external_urls: { spotify: `https://open.spotify.com/track/${trackId}` },
     } as unknown as Track;
   };

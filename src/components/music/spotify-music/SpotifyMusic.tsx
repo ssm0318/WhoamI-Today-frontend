@@ -118,7 +118,9 @@ function SpotifyMusic({
                 <SpotifyIcon />
               )}
               <Typo type={fontType} numberOfLines={1}>
-                {trackData.artists[0].name} - {trackData.name}
+                {trackData.artists[0]?.name
+                  ? `${trackData.artists[0].name} - ${trackData.name}`
+                  : trackData.name}
               </Typo>
               {useAlbumImg && <SpotifyIcon />}
             </Layout.FlexRow>
