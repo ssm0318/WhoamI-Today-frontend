@@ -66,15 +66,7 @@ function Share() {
             <TmiInputBar type="button" onClick={handleClickTmiInput}>
               <Layout.FlexRow gap={8} alignItems="center" style={{ flex: 1, minWidth: 0 }}>
                 <SvgIcon name="add_default" size={24} color="PRIMARY" />
-                <Typo
-                  type="body-medium"
-                  color="MEDIUM_GRAY"
-                  style={{
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
+                <Typo type="body-medium" color="MEDIUM_GRAY" ellipsis={{ enabled: true }}>
                   {tmiPlaceholder || t('share_page.tmi_placeholder')}
                 </Typo>
               </Layout.FlexRow>

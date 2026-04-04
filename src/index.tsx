@@ -30,6 +30,7 @@ import DefaultMyFriendsList from './routes/friends/DefaultMyFriendsList';
 import DefaultUserFriendsList from './routes/friends/DefaultUserFriendsList';
 import EditFriends from './routes/friends/EditFriends';
 import ExploreFriends from './routes/friends/ExploreFriends';
+import FriendNewPosts from './routes/friends/FriendNewPosts';
 import FriendsFeed from './routes/friends/FriendsFeed';
 import FriendsList from './routes/friends/FriendsList';
 import Intro from './routes/Intro';
@@ -103,6 +104,7 @@ const router = createBrowserRouter([
           // { path: 'feed', element: <FriendsFeed /> },
           { path: 'explore', element: <ExploreFriends /> },
           { path: 'edit', element: <EditFriends /> },
+          { path: ':userId/new-posts', element: <FriendNewPosts /> },
         ],
       },
       {
