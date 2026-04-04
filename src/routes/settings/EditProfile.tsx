@@ -14,6 +14,7 @@ import { CheckBox, Layout, Typo } from '@design-system';
 import { MyProfile } from '@models/api/user';
 import { ALL_CATEGORIES, ChipCategory, CustomChip, normalizeChipText } from '@models/chips';
 import { useBoundStore } from '@stores/useBoundStore';
+import { createCustomChip, deleteCustomChip } from '@utils/apis/chips';
 import { editProfile, updateChipsByCategory } from '@utils/apis/my';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { MainScrollContainer } from '../Root';
@@ -132,14 +133,29 @@ function EditProfile() {
     });
   };
 
-  const handleAddCustomChip = (category: ChipCategory, text: string) => {
-    setDraft((prev) => ({
-      ...prev,
-      customChips: [...prev.customChips, { text, category }],
-    }));
+  const handleAddCustomChip = async (category: ChipCategory, text: string) => {
+    try {
+      const chip = await createCustomChip(text, category);
+      setDraft((prev) => ({
+        ...prev,
+        customChips: [...prev.customChips, { id: chip.id, text: chip.text, category }],
+      }));
+    } catch {
+      openToast({ message: 'Failed to add custom chip' });
+    }
   };
 
-  const handleRemoveCustomChip = (category: ChipCategory, text: string) => {
+  const handleRemoveCustomChip = async (category: ChipCategory, text: string) => {
+    const chip = draft.customChips.find(
+      (c) => c.category === category && normalizeChipText(c.text) === normalizeChipText(text),
+    );
+    if (chip?.id) {
+      try {
+        await deleteCustomChip(chip.id);
+      } catch {
+        // continue with local removal
+      }
+    }
     setDraft((prev) => ({
       ...prev,
       customChips: prev.customChips.filter(
