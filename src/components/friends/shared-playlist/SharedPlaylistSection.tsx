@@ -159,7 +159,7 @@ function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
   };
 
   return (
-    <Layout.FlexCol w="100%" mb={12} mt={4} style={{ overflow: 'visible' }}>
+    <Layout.FlexCol w="100%" mb={12} mt={4}>
       <ScrollableCardList gap={18} ph={16}>
         {tracks.length > 0 && (
           <>

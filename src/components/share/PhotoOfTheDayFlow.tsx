@@ -1,5 +1,5 @@
 import { ChangeEvent, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import NewNoteImageEdit from '@components/note/new-note-image-edit/NewNoteImageEdit';
@@ -16,10 +16,12 @@ type Step = 'pick' | 'edit' | 'caption';
 
 function PhotoOfTheDayFlow() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const imageFromState = (location.state as any)?.imageDataUrl as string | undefined;
   const openToast = useBoundStore((state) => state.openToast);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [step, setStep] = useState<Step>('pick');
-  const [rawImageUrl, setRawImageUrl] = useState<string>();
+  const [step, setStep] = useState<Step>(imageFromState ? 'edit' : 'pick');
+  const [rawImageUrl, setRawImageUrl] = useState<string | undefined>(imageFromState);
   const [croppedImg, setCroppedImg] = useState<CroppedImg>();
   const [caption, setCaption] = useState('');
   const [visibility, setVisibility] = useState<ComponentVisibility>(ComponentVisibility.FRIENDS);

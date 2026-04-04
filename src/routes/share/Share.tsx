@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { ChangeEvent, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
@@ -30,6 +30,7 @@ function Share() {
   const { scrollRef } = useRestoreScrollPosition('sharePage');
   const [activeTab, setActiveTab] = useState<ShareTab>('snippets');
   const [isSnippetInputVisible, setIsSnippetInputVisible] = useState(false);
+  const photoInputRef = useRef<HTMLInputElement>(null);
 
   const { data: todayQuestions, mutate } = useSWR<DailyQuestion[]>(
     '/qna/questions/daily/',
@@ -61,7 +62,21 @@ function Share() {
   };
 
   const handleClickSharePhoto = () => {
-    navigate('/share/photo');
+    // Open file picker directly — no separate page
+    photoInputRef.current?.click();
+  };
+
+  const handlePhotoFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) return;
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      // Navigate to photo flow with the image already loaded
+      navigate('/share/photo', { state: { imageDataUrl: reader.result as string } });
+    };
+    reader.readAsDataURL(file);
+    // Reset input so same file can be re-selected
+    if (photoInputRef.current) photoInputRef.current.value = '';
   };
 
   const handleDoMission = (mission: { prompt: string; type: string }) => {
@@ -180,6 +195,13 @@ function Share() {
                   </Typo>
                 </SharePhotoButton>
               </PhotoOfTheDayCard>
+              <input
+                ref={photoInputRef}
+                type="file"
+                accept="image/jpeg, image/png"
+                onChange={handlePhotoFileSelected}
+                style={{ display: 'none' }}
+              />
             </Layout.FlexCol>
           )}
 
