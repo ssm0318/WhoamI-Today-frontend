@@ -8,6 +8,7 @@ interface SocialBatteryChipProps {
   socialBattery: SocialBattery;
   onSelect?: (socialBattery: SocialBattery) => void;
   isSelected?: boolean;
+  compact?: boolean;
   onClick?: () => void;
 }
 
@@ -15,6 +16,7 @@ function SocialBatteryChip({
   socialBattery,
   onSelect,
   isSelected,
+  compact = false,
   onClick,
 }: SocialBatteryChipProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'social_battery' });
@@ -36,15 +38,13 @@ function SocialBatteryChip({
       outline={isSelected ? 'PRIMARY' : 'LIGHT_GRAY'}
       alignItems="center"
       rounded={8}
-      style={{
-        flexShrink: 0,
-      }}
+      style={{ flexShrink: 0 }}
       onClick={handleOnClick}
     >
       {emoji && (
         <EmojiItem emojiString={emoji} size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
       )}
-      <Typo type="label-large">{t(socialBattery)}</Typo>
+      {!compact && <Typo type="label-large">{t(socialBattery)}</Typo>}
     </Layout.FlexRow>
   );
 }

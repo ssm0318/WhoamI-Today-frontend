@@ -38,7 +38,7 @@ function PokeButton({ receiverId, componentType, isPoked: initialPoked = false }
 
   return (
     <PokeContainer $isPoked={isPoked} onClick={handlePoke}>
-      <Typo type="label-medium" color={isPoked ? 'MEDIUM_GRAY' : 'PRIMARY'}>
+      <Typo type="label-large" color={isPoked ? 'MEDIUM_GRAY' : 'PRIMARY'}>
         {isPoked ? POKED_LABEL : POKE_LABELS[componentType]}
       </Typo>
     </PokeContainer>
