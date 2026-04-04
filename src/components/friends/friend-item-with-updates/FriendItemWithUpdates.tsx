@@ -61,8 +61,14 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
     }
   };
 
-  const handleClickCheckInChip = () => {
+  const handleClickCheckInChip = (e?: MouseEvent) => {
+    e?.stopPropagation();
     setIsCheckInDetailVisible(true);
+  };
+
+  const handleClickNewPost = (e: MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/friends/${id}/new-posts`);
   };
 
   const hasNewPost = (!!recentPost && !recentPost.is_read) || (user as any).unread_cnt > 0;
@@ -71,21 +77,25 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
     <Container mh={16} ph={16} pv={12} gap={12} rounded={12}>
       {/* Row 1: Profile + username + badge + battery(emoji) + new post + ping */}
       <Layout.FlexRow w="100%" gap={4} alignItems="center" justifyContent="space-between">
-        <Layout.FlexRow
-          alignItems="center"
-          gap={6}
-          onClick={handleClickProfile}
-          style={{ cursor: 'pointer', flex: 1, minWidth: 0 }}
-        >
-          <ProfileImage imageUrl={profile_image} username={username} size={36} />
-          <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 80 }}>
-            {username}
-          </Typo>
-          <SvgIcon
-            name={connection_status === Connection.CLOSE_FRIEND ? 'close_friend' : 'default_friend'}
-            size={16}
-            onClick={handleClickFriendBadge}
-          />
+        <Layout.FlexRow alignItems="center" gap={6} style={{ flex: 1, minWidth: 0 }}>
+          <Layout.FlexRow
+            alignItems="center"
+            gap={6}
+            onClick={handleClickProfile}
+            style={{ cursor: 'pointer' }}
+          >
+            <ProfileImage imageUrl={profile_image} username={username} size={36} />
+            <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 80 }}>
+              {username}
+            </Typo>
+            <SvgIcon
+              name={
+                connection_status === Connection.CLOSE_FRIEND ? 'close_friend' : 'default_friend'
+              }
+              size={16}
+              onClick={handleClickFriendBadge}
+            />
+          </Layout.FlexRow>
           {social_battery && Object.values(SocialBattery).includes(social_battery) && (
             <SocialBatteryChip
               socialBattery={social_battery}
@@ -98,10 +108,11 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
               pv={2}
               ph={6}
               rounded={8}
-              style={{ backgroundColor: '#EEE6F4', flexShrink: 0 }}
+              onClick={handleClickNewPost}
+              style={{ backgroundColor: '#EEE6F4', flexShrink: 0, cursor: 'pointer' }}
             >
               <Typo type="label-medium" color="PRIMARY" fontWeight={600}>
-                New
+                New post
               </Typo>
             </Layout.FlexRow>
           )}

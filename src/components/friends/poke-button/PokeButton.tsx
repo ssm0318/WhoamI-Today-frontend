@@ -14,7 +14,11 @@ const POKE_LABELS: Record<PokeComponentType, string> = {
   battery: 'Nudge to share how they feel \u{1F4AB}',
 };
 
-const POKED_LABEL = 'Poked \u{2714}\u{FE0F}';
+const POKED_LABELS: Record<PokeComponentType, string> = {
+  song: 'Nudged: song \u{2714}\u{FE0F}',
+  status: 'Nudged: vibe \u{2714}\u{FE0F}',
+  battery: 'Nudged: battery \u{2714}\u{FE0F}',
+};
 
 function PokeButton({ receiverId, componentType }: Props) {
   const [pokeRecord, setPokeRecord] = useState<Poke | null>(null);
@@ -70,7 +74,7 @@ function PokeButton({ receiverId, componentType }: Props) {
   return (
     <PokeContainer $isPoked={isPoked} onClick={handlePoke}>
       <Typo type="label-large" color={isPoked ? 'MEDIUM_GRAY' : 'PRIMARY'}>
-        {isPoked ? POKED_LABEL : POKE_LABELS[componentType]}
+        {isPoked ? POKED_LABELS[componentType] : POKE_LABELS[componentType]}
       </Typo>
     </PokeContainer>
   );
