@@ -65,6 +65,7 @@ function Profile({ user }: ProfileProps) {
   const isFriend = user && !isMyProfile(user) && areFriends(user);
   const canSeeFriendsOnly = isMyPage || isFriend;
 
+  const showName = canSeeFriendsOnly || !(friendData as any)?.name_friends_only;
   const showPronouns = canSeeFriendsOnly || !friendData?.pronouns_friends_only;
   const showBio = canSeeFriendsOnly || !friendData?.bio_friends_only;
   const showInterests = canSeeFriendsOnly || !friendData?.interests_friends_only;
@@ -83,13 +84,39 @@ function Profile({ user }: ProfileProps) {
         <Layout.FlexCol gap={8} w="100%">
           <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
             <Layout.FlexRow w="100%" gap={8} alignItems="center">
-              <Layout.FlexRow alignItems="center" gap={4}>
-                {/* username */}
+              <Layout.FlexCol gap={2}>
+                {/* Name or masked */}
                 <Typo type="title-large" numberOfLines={1}>
-                  {isMyPage ? myProfile?.username || '' : username || ''}
+                  {isMyPage
+                    ? (myProfile as any)?.name || myProfile?.username || ''
+                    : showName
+                    ? (friendData as any)?.name || username || ''
+                    : '****'}
                 </Typo>
-              </Layout.FlexRow>
-              {/** connections */}
+                {/* Pronouns | Degree inline */}
+                {!isMyPage && (
+                  <Layout.FlexRow gap={4} alignItems="center">
+                    {showPronouns && friendData?.pronouns && (
+                      <Typo type="label-medium" color="DARK_GRAY">
+                        {friendData.pronouns}
+                      </Typo>
+                    )}
+                    {showPronouns && friendData?.pronouns && friendData?.connection_degree && (
+                      <Typo type="label-medium" color="MEDIUM_GRAY">
+                        |
+                      </Typo>
+                    )}
+                    {friendData?.connection_degree && (
+                      <Typo type="label-medium" color="TERTIARY_PINK">
+                        {friendData.connection_degree === 2
+                          ? '2nd degree connection'
+                          : '3rd+ degree connection'}
+                      </Typo>
+                    )}
+                  </Layout.FlexRow>
+                )}
+              </Layout.FlexCol>
+              {/** connections badge for friends */}
               {user && !isMyProfile(user) && areFriends(user) && (
                 <>
                   {user.connection_status && (
@@ -121,23 +148,6 @@ function Profile({ user }: ProfileProps) {
                   )}
                 </>
               )}
-              {/* Connection degree badge for non-friends */}
-              {user && !isMyProfile(user) && !areFriends(user) && friendData?.connection_degree && (
-                <Layout.FlexRow
-                  bgColor="LIGHT_GRAY"
-                  ph={8}
-                  pv={4}
-                  rounded={8}
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Typo type="label-medium" color="DARK_GRAY">
-                    {friendData.connection_degree === 2
-                      ? t('connection.second_degree')
-                      : t('connection.third_degree')}
-                  </Typo>
-                </Layout.FlexRow>
-              )}
             </Layout.FlexRow>
             {/* edit icon */}
             {isMyPage && (
@@ -155,31 +165,17 @@ function Profile({ user }: ProfileProps) {
               </Layout.FlexRow>
             )}
           </Layout.FlexRow>
-          {/* pronouns */}
-          {isMyPage ? (
-            !myProfile?.pronouns ? (
-              <PronounPlaceholder />
+          {/* pronouns (my page only — friend page shows inline above) */}
+          {isMyPage &&
+            (myProfile?.pronouns ? (
+              <Layout.FlexRow alignItems="center">
+                <Typo type="label-medium" color="DARK_GRAY">
+                  {myProfile.pronouns}
+                </Typo>
+              </Layout.FlexRow>
             ) : (
-              <Layout.FlexRow alignItems="center">
-                <Typo type="label-medium">(</Typo>
-                <Typo type="label-medium" numberOfLines={1}>
-                  {myProfile?.pronouns}
-                </Typo>
-                <Typo type="label-medium">)</Typo>
-              </Layout.FlexRow>
-            )
-          ) : (
-            showPronouns &&
-            friendData?.pronouns && (
-              <Layout.FlexRow alignItems="center">
-                <Typo type="label-medium">(</Typo>
-                <Typo type="label-medium" numberOfLines={1}>
-                  {friendData?.pronouns}
-                </Typo>
-                <Typo type="label-medium">)</Typo>
-              </Layout.FlexRow>
-            )
-          )}
+              <PronounPlaceholder />
+            ))}
 
           {/* bio */}
           {isMyPage ? (
