@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSWRConfig } from 'swr';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
@@ -19,6 +20,7 @@ function FriendNewPosts() {
   const { username } = useParams<{ username: string }>();
   const [posts, setPosts] = useState<UnreadPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { mutate: globalMutate } = useSWRConfig();
 
   const fetchPosts = async () => {
     if (!username) return;
@@ -41,6 +43,12 @@ function FriendNewPosts() {
       setPosts([]);
     } finally {
       setIsLoading(false);
+      // Invalidate friends list cache so "New post" badge disappears on return
+      globalMutate(
+        (key: string) => typeof key === 'string' && key.includes('/user/friends/'),
+        undefined,
+        { revalidate: true },
+      );
     }
   };
 
