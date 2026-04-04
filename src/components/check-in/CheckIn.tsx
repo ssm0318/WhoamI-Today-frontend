@@ -103,14 +103,14 @@ function CheckIn({ user }: CheckInProps) {
         <Layout.FlexRow w="100%" alignItems="center" gap={8}>
           {!!mood || !!description ? (
             <Layout.FlexRow
-              w="100%"
-              gap={8}
+              gap={4}
               bgColor="WHITE"
               alignItems="center"
-              outline="GRAY_1"
+              outline="LIGHT_GRAY"
               ph={8}
               pv={4}
-              rounded={12}
+              rounded={999}
+              style={{ flexShrink: 0 }}
               onClick={() => {
                 if (!isMyPage) return;
                 handleClickEditCheckIn();
@@ -120,7 +120,7 @@ function CheckIn({ user }: CheckInProps) {
               {mood && (
                 <EmojiItem
                   emojiString={mood}
-                  size={24}
+                  size={16}
                   bgColor="TRANSPARENT"
                   outline="TRANSPARENT"
                 />

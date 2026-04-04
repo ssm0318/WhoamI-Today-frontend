@@ -12,7 +12,7 @@ function MusicPlaceholder() {
   };
 
   return (
-    <PlaceholderWrapper outline="SPOTIFY_GREEN" gap={4} ph={12} onClick={handleClickAddMusic}>
+    <PlaceholderWrapper outline="SPOTIFY_GREEN" gap={4} onClick={handleClickAddMusic}>
       <SvgIcon name="add_default" size={12} />
       <Typo type="label-medium" color="BLACK">
         {t('settings.edit_profile.placeholders.music')}
