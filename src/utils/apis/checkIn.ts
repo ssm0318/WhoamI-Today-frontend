@@ -30,3 +30,20 @@ export const deleteCheckIn = async () => {
 export const readFriendCheckIn = async (checkInId: number) => {
   await axios.patch<CheckInBase>(`/check_in/read/${checkInId}/`);
 };
+
+// POST toggle reaction on a check-in (creates or removes)
+export const toggleCheckInReaction = async (checkInId: number, emoji: string) => {
+  const { data } = await axios.post<{ toggled: 'on' | 'off'; id?: number; emoji?: string }>(
+    `/check_in/${checkInId}/react/`,
+    { emoji },
+  );
+  return data;
+};
+
+// GET reactions for a check-in
+export const getCheckInReactions = async (checkInId: number) => {
+  const { data } = await axios.get<
+    { id: number; emoji: string; user: { id: number; username: string } }[]
+  >(`/check_in/${checkInId}/reactions/`);
+  return data;
+};

@@ -1,5 +1,5 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -10,6 +10,7 @@ import { Layout, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import SpotifyManager from '@libs/SpotifyManager';
 import { SocialBattery } from '@models/checkIn';
+import { getCheckInReactions, toggleCheckInReaction } from '@utils/apis/checkIn';
 
 const REACTION_SHORTCUTS = [
   { emoji: '\u{1F917}', label: 'hug' },
@@ -22,6 +23,7 @@ const REACTION_SHORTCUTS = [
 interface Props {
   visible: boolean;
   closeBottomSheet: () => void;
+  checkInId?: number | null;
   username?: string;
   profileImage?: string | null;
   socialBattery?: SocialBattery | null;
@@ -33,6 +35,7 @@ interface Props {
 function CheckInDetailBottomSheet({
   visible,
   closeBottomSheet,
+  checkInId,
   username,
   profileImage,
   socialBattery,
@@ -43,7 +46,30 @@ function CheckInDetailBottomSheet({
   useTranslation('translation', { keyPrefix: 'music_detail' });
   const postMessage = usePostAppMessage();
   const [trackData, setTrackData] = useState<Track | null>(null);
-  const [selectedReaction, setSelectedReaction] = useState<string | null>(null);
+  const [selectedReactions, setSelectedReactions] = useState<Set<string>>(new Set());
+  const [isToggling, setIsToggling] = useState(false);
+
+  // Fetch existing reactions when the bottom sheet opens
+  useEffect(() => {
+    if (!visible || !checkInId) {
+      setSelectedReactions(new Set());
+      return;
+    }
+    getCheckInReactions(checkInId)
+      .then((reactions) => {
+        const myEmojis = new Set<string>();
+        reactions.forEach((r) => {
+          // The ReactionSerializer returns user object with id
+          // We check if the reaction belongs to the current user by checking is_mine or
+          // matching. Since the list endpoint returns all reactions, we mark ones that
+          // are ours. The backend currently returns reactions for the current user only
+          // (when not the author), so all returned reactions are ours.
+          myEmojis.add(r.emoji);
+        });
+        setSelectedReactions(myEmojis);
+      })
+      .catch(() => setSelectedReactions(new Set()));
+  }, [visible, checkInId]);
 
   useEffect(() => {
     if (!visible || !trackId) {
@@ -57,10 +83,6 @@ function CheckInDetailBottomSheet({
       .catch(() => setTrackData(null));
   }, [visible, trackId]);
 
-  useEffect(() => {
-    if (!visible) setSelectedReaction(null);
-  }, [visible]);
-
   const handleClickGoToSpotify = () => {
     if (!trackData) return;
     const url = trackData.external_urls.spotify;
@@ -71,10 +93,51 @@ function CheckInDetailBottomSheet({
     }
   };
 
-  const handleReaction = (emoji: string) => {
-    setSelectedReaction(emoji);
-    // TODO: POST reaction to API
-  };
+  const handleReaction = useCallback(
+    async (emoji: string) => {
+      if (!checkInId || isToggling) return;
+
+      // Optimistic update
+      setSelectedReactions((prev) => {
+        const next = new Set(prev);
+        if (next.has(emoji)) {
+          next.delete(emoji);
+        } else {
+          next.add(emoji);
+        }
+        return next;
+      });
+
+      setIsToggling(true);
+      try {
+        const result = await toggleCheckInReaction(checkInId, emoji);
+        // Reconcile with server response
+        setSelectedReactions((prev) => {
+          const next = new Set(prev);
+          if (result.toggled === 'on') {
+            next.add(emoji);
+          } else {
+            next.delete(emoji);
+          }
+          return next;
+        });
+      } catch {
+        // Revert optimistic update on error
+        setSelectedReactions((prev) => {
+          const next = new Set(prev);
+          if (next.has(emoji)) {
+            next.delete(emoji);
+          } else {
+            next.add(emoji);
+          }
+          return next;
+        });
+      } finally {
+        setIsToggling(false);
+      }
+    },
+    [checkInId, isToggling],
+  );
 
   const hasContent = socialBattery || trackId || mood || description;
   if (!hasContent || !visible) return null;
@@ -151,7 +214,7 @@ function CheckInDetailBottomSheet({
           {REACTION_SHORTCUTS.map(({ emoji, label }) => (
             <ReactionButton
               key={label}
-              $isSelected={selectedReaction === emoji}
+              $isSelected={selectedReactions.has(emoji)}
               onClick={() => handleReaction(emoji)}
             >
               <span role="img" aria-label={label}>

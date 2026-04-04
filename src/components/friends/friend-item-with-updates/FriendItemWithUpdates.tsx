@@ -175,6 +175,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
       <CheckInDetailBottomSheet
         visible={isCheckInDetailVisible}
         closeBottomSheet={() => setIsCheckInDetailVisible(false)}
+        checkInId={user.check_in_id}
         username={username}
         profileImage={profile_image}
         socialBattery={social_battery}
