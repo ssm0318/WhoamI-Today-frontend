@@ -10,6 +10,7 @@ import { Layout, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import SpotifyManager from '@libs/SpotifyManager';
 import { SocialBattery } from '@models/checkIn';
+import { useBoundStore } from '@stores/useBoundStore';
 import { getCheckInReactions, toggleCheckInReaction } from '@utils/apis/checkIn';
 
 const REACTION_SHORTCUTS = [
@@ -93,25 +94,24 @@ function CheckInDetailBottomSheet({
     }
   };
 
+  const openToast = useBoundStore((state) => state.openToast);
+
   const handleReaction = useCallback(
     async (emoji: string) => {
       if (!checkInId || isToggling) return;
 
-      // Optimistic update
-      setSelectedReactions((prev) => {
-        const next = new Set(prev);
-        if (next.has(emoji)) {
-          next.delete(emoji);
-        } else {
-          next.add(emoji);
-        }
-        return next;
-      });
+      const isRemoving = selectedReactions.has(emoji);
+
+      // Confirm before removing a reaction
+      if (isRemoving) {
+        // eslint-disable-next-line no-alert
+        const confirmed = window.confirm('Remove this reaction?');
+        if (!confirmed) return;
+      }
 
       setIsToggling(true);
       try {
         const result = await toggleCheckInReaction(checkInId, emoji);
-        // Reconcile with server response
         setSelectedReactions((prev) => {
           const next = new Set(prev);
           if (result.toggled === 'on') {
@@ -121,22 +121,16 @@ function CheckInDetailBottomSheet({
           }
           return next;
         });
-      } catch {
-        // Revert optimistic update on error
-        setSelectedReactions((prev) => {
-          const next = new Set(prev);
-          if (next.has(emoji)) {
-            next.delete(emoji);
-          } else {
-            next.add(emoji);
-          }
-          return next;
+        openToast({
+          message: result.toggled === 'on' ? `Reacted ${emoji}` : 'Reaction removed',
         });
+      } catch {
+        openToast({ message: 'Failed to react' });
       } finally {
         setIsToggling(false);
       }
     },
-    [checkInId, isToggling],
+    [checkInId, isToggling, selectedReactions, openToast],
   );
 
   const hasContent = socialBattery || trackId || mood || description;
