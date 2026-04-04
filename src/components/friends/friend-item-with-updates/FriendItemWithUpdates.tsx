@@ -68,13 +68,13 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
 
   return (
     <Container mh={16} ph={16} pv={12} gap={12} rounded={12}>
-      {/* Profile header */}
+      {/* Row 1: Profile + username + connection badge + social battery + ping */}
       <Layout.FlexRow w="100%" gap={4} alignItems="center" justifyContent="space-between">
         <Layout.FlexRow
           alignItems="center"
           gap={7}
           onClick={handleClickProfile}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', flex: 1, minWidth: 0 }}
         >
           <ProfileImage imageUrl={profile_image} username={username} size={36} />
           <Layout.FlexRow alignItems="center" gap={4}>
@@ -89,6 +89,10 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
               onClick={handleClickFriendBadge}
             />
           </Layout.FlexRow>
+          {/* Social battery on same line as connection badge */}
+          {social_battery && Object.values(SocialBattery).includes(social_battery) && (
+            <SocialBatteryChip socialBattery={social_battery} onClick={handleClickCheckInChip} />
+          )}
         </Layout.FlexRow>
         <Layout.FlexRow style={{ position: 'relative' }}>
           <Layout.LayoutBase pb={2}>
@@ -113,48 +117,25 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
         </Layout.FlexRow>
       </Layout.FlexRow>
 
-      {/* Check-in chips */}
-      <Layout.FlexCol gap={4} w="100%">
-        <Layout.FlexRow gap={4} w="100%" style={{ minHeight: track_id ? 28 : undefined }}>
-          {social_battery && Object.values(SocialBattery).includes(social_battery) && (
-            <SocialBatteryChip socialBattery={social_battery} onClick={handleClickCheckInChip} />
-          )}
-          {track_id && (
-            <Layout.FlexRow style={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
-              <SpotifyMusic
-                track={track_id}
-                sharer={user}
-                fontType="label-large"
-                useAlbumImg
-                useDetailBottomSheet
-              />
-            </Layout.FlexRow>
-          )}
-        </Layout.FlexRow>
+      {/* Row 2: Status (mood + description) */}
+      {(mood || description) && (
         <Layout.FlexRow style={{ flexWrap: 'wrap' }} gap={4}>
-          {(mood || description) && (
-            <Layout.FlexRow
-              bgColor="WHITE"
-              gap={4}
-              pv={4}
-              ph={8}
-              outline="LIGHT_GRAY"
-              alignItems="center"
-              rounded={999}
-              style={{ flexShrink: 0, cursor: 'pointer' }}
-              onClick={handleClickCheckInChip}
-            >
-              {mood && (
-                <EmojiItem
-                  emojiString={mood}
-                  size={16}
-                  bgColor="TRANSPARENT"
-                  outline="TRANSPARENT"
-                />
-              )}
-              {description && <Typo type="label-large">{description}</Typo>}
-            </Layout.FlexRow>
-          )}
+          <Layout.FlexRow
+            bgColor="WHITE"
+            gap={4}
+            pv={4}
+            ph={8}
+            outline="LIGHT_GRAY"
+            alignItems="center"
+            rounded={999}
+            style={{ flexShrink: 0, cursor: 'pointer' }}
+            onClick={handleClickCheckInChip}
+          >
+            {mood && (
+              <EmojiItem emojiString={mood} size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
+            )}
+            {description && <Typo type="label-large">{description}</Typo>}
+          </Layout.FlexRow>
           {hasNewPost && (
             <Layout.FlexRow
               gap={4}
@@ -170,7 +151,36 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
             </Layout.FlexRow>
           )}
         </Layout.FlexRow>
-      </Layout.FlexCol>
+      )}
+
+      {/* Row 3: Song (full width) */}
+      {track_id && (
+        <Layout.FlexRow w="100%" style={{ minWidth: 0, overflow: 'hidden' }}>
+          <SpotifyMusic
+            track={track_id}
+            sharer={user}
+            fontType="label-large"
+            useAlbumImg
+            useDetailBottomSheet
+          />
+        </Layout.FlexRow>
+      )}
+
+      {/* New post badge (if no status row to attach to) */}
+      {!mood && !description && hasNewPost && (
+        <Layout.FlexRow
+          gap={4}
+          pv={4}
+          ph={8}
+          alignItems="center"
+          rounded={999}
+          style={{ backgroundColor: '#EEE6F4', flexShrink: 0 }}
+        >
+          <Typo type="label-large" color="PRIMARY" fontWeight={600}>
+            New post
+          </Typo>
+        </Layout.FlexRow>
+      )}
 
       {/* Check-in detail bottom sheet */}
       <CheckInDetailBottomSheet
