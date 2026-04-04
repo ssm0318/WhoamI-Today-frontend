@@ -24,8 +24,19 @@ function FriendNewPosts() {
     if (!username) return;
     setIsLoading(true);
     try {
-      const { data } = await axiosInstance.get<UnreadPost[]>(`/user/${username}/unread-posts/`);
-      setPosts(data);
+      // Try unread first; if empty, fall back to recent posts
+      const { data: unread } = await axiosInstance.get<UnreadPost[]>(
+        `/user/${username}/unread-posts/`,
+      );
+      if (unread.length > 0) {
+        setPosts(unread);
+      } else {
+        // Fall back to all posts from this user (most recent)
+        const { data: allPosts } = await axiosInstance.get<{ results: UnreadPost[] }>(
+          `/user/${username}/all-posts/?page=1`,
+        );
+        setPosts((allPosts.results ?? allPosts) as UnreadPost[]);
+      }
     } catch {
       setPosts([]);
     } finally {
@@ -40,7 +51,7 @@ function FriendNewPosts() {
 
   return (
     <MainScrollContainer>
-      <SubHeader title={`${username}'s new posts`} />
+      <SubHeader title={`${username}'s posts`} />
       <PullToRefresh onRefresh={fetchPosts}>
         <Layout.FlexCol w="100%" gap={16} ph={16} pv={12}>
           {isLoading ? (
