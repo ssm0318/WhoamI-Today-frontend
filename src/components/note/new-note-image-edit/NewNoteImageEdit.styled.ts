@@ -11,17 +11,19 @@ export const StyledNoteImageEditContainer = styled(Layout.FixedFullScreen)`
   overflow: hidden;
 `;
 
+/* header=44, aspect bar ~50, padding 16+16 = total ~126 */
+const RESERVED_HEIGHT = TOP_NAVIGATION_HEIGHT + 80;
+
 export const StyledNewNoteImageWrapper = styled.div`
   width: 100%;
-  flex: 1;
+  height: calc(100vh - ${RESERVED_HEIGHT}px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: ${TOP_NAVIGATION_HEIGHT + 16}px 16px 8px 16px;
+  padding: ${TOP_NAVIGATION_HEIGHT + 12}px 16px 12px 16px;
   overflow: hidden;
   box-sizing: border-box;
-  min-height: 0;
 
   .ReactCrop {
     max-height: 100%;
@@ -32,7 +34,7 @@ export const StyledNewNoteImageWrapper = styled.div`
 export const StyledNewNoteImage = styled.img`
   display: block;
   max-width: 100%;
-  max-height: calc(100vh - ${TOP_NAVIGATION_HEIGHT + 180}px);
+  max-height: 100%;
   object-fit: contain;
 `;
 
