@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Typo } from '@design-system';
+import { SvgIcon, Typo } from '@design-system';
 import { ComponentVisibility } from '@models/checkIn';
 
 interface Props {
@@ -7,11 +7,16 @@ interface Props {
   onChange: (visibility: ComponentVisibility) => void;
 }
 
-const OPTIONS: { value: ComponentVisibility; label: string }[] = [
-  { value: ComponentVisibility.PUBLIC, label: 'Public' },
-  { value: ComponentVisibility.FRIENDS, label: 'Friends' },
-  { value: ComponentVisibility.CLOSE_FRIENDS, label: 'Close Friends' },
-  { value: ComponentVisibility.ONLY_ME, label: 'Only Me' },
+const OPTIONS: {
+  value: ComponentVisibility;
+  label: string;
+  svgIcon?: string;
+  textIcon?: string;
+}[] = [
+  { value: ComponentVisibility.PUBLIC, label: 'Public', svgIcon: 'share_default' },
+  { value: ComponentVisibility.FRIENDS, label: 'Friends', svgIcon: 'default_friend' },
+  { value: ComponentVisibility.CLOSE_FRIENDS, label: 'Close', svgIcon: 'close_friend' },
+  { value: ComponentVisibility.ONLY_ME, label: 'Only Me', textIcon: '\u{1F512}' },
 ];
 
 function VisibilityToggle({ value, onChange }: Props) {
@@ -23,6 +28,13 @@ function VisibilityToggle({ value, onChange }: Props) {
           $isSelected={value === opt.value}
           onClick={() => onChange(opt.value)}
         >
+          {opt.svgIcon ? (
+            <IconWrap $muted={value !== opt.value}>
+              <SvgIcon name={opt.svgIcon as any} size={12} />
+            </IconWrap>
+          ) : (
+            <TextIcon $muted={value !== opt.value}>{opt.textIcon}</TextIcon>
+          )}
           <Typo
             type="label-small"
             color={value === opt.value ? 'PRIMARY' : 'MEDIUM_GRAY'}
@@ -47,7 +59,8 @@ const ToggleContainer = styled.div`
 const ToggleOption = styled.div<{ $isSelected: boolean }>`
   display: flex;
   align-items: center;
-  padding: 4px 8px;
+  gap: 3px;
+  padding: 4px 6px;
   border-radius: 6px;
   cursor: pointer;
   background-color: ${({ $isSelected, theme }) => ($isSelected ? theme.WHITE : 'transparent')};
@@ -55,6 +68,19 @@ const ToggleOption = styled.div<{ $isSelected: boolean }>`
   transition: all 0.15s ease;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+`;
+
+const IconWrap = styled.span<{ $muted: boolean }>`
+  display: flex;
+  align-items: center;
+  opacity: ${({ $muted }) => ($muted ? 0.4 : 0.7)};
+  filter: ${({ $muted }) => ($muted ? 'grayscale(1)' : 'grayscale(1)')};
+`;
+
+const TextIcon = styled.span<{ $muted: boolean }>`
+  font-size: 10px;
+  opacity: ${({ $muted }) => ($muted ? 0.4 : 0.7)};
+  filter: grayscale(1);
 `;
 
 export default VisibilityToggle;

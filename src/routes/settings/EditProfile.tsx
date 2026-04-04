@@ -212,6 +212,7 @@ function EditProfile() {
       pronouns: draft.pronouns,
       user_interests: combinedChips,
       user_personas: [],
+      name_friends_only: draft.name_friends_only,
       interests_friends_only: draft.interests_friends_only,
       persona_friends_only: draft.persona_friends_only,
       pronouns_friends_only: draft.pronouns_friends_only,
