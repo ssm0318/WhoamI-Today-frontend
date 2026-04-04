@@ -5,8 +5,6 @@ import { Layout } from '@design-system';
 const HEADER_HEIGHT = TOP_NAVIGATION_HEIGHT; // 44px
 const ASPECT_BAR_HEIGHT = 50;
 const PADDING = 16;
-// Total vertical space consumed: header + aspect bar + padding top/bottom
-const CONSUMED = HEADER_HEIGHT + ASPECT_BAR_HEIGHT + PADDING * 2;
 
 export const StyledNoteImageEditContainer = styled(Layout.FixedFullScreen)`
   z-index: 9999;
@@ -29,13 +27,18 @@ export const StyledNewNoteImageWrapper = styled.div`
   padding: ${PADDING}px;
   box-sizing: border-box;
   overflow: hidden;
+
+  /* ReactCrop sizes itself from the image. We must set max-height on
+     ReactCrop so it inherits down to child-wrapper and then to img
+     via the library's own "max-height: inherit" rules. */
+  .ReactCrop {
+    max-height: calc(100vh - ${HEADER_HEIGHT + ASPECT_BAR_HEIGHT + PADDING * 2}px) !important;
+  }
 `;
 
 export const StyledNewNoteImage = styled.img`
   display: block;
-  /* Use a calc with vh so it's an absolute constraint, not relative */
-  max-height: calc(100vh - ${CONSUMED}px);
-  max-width: calc(100% - ${PADDING * 2}px);
+  max-width: 100%;
   object-fit: contain;
 `;
 
