@@ -42,7 +42,9 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
 
   const [isEditConnectionsBottomSheetVisible, setIsEditConnectionsBottomSheetVisible] =
     useState(false);
-  const [isCheckInDetailVisible, setIsCheckInDetailVisible] = useState(false);
+  const [checkInDetailFocus, setCheckInDetailFocus] = useState<
+    'battery' | 'status' | 'song' | null
+  >(null);
 
   const handleClickProfile = (e: MouseEvent) => {
     e.stopPropagation();
@@ -61,9 +63,14 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
     }
   };
 
-  const handleClickCheckInChip = (e?: MouseEvent) => {
+  const handleClickBattery = (e?: MouseEvent) => {
     e?.stopPropagation();
-    setIsCheckInDetailVisible(true);
+    setCheckInDetailFocus('battery');
+  };
+
+  const handleClickStatus = (e?: MouseEvent) => {
+    e?.stopPropagation();
+    setCheckInDetailFocus('status');
   };
 
   const handleClickNewPost = (e: MouseEvent) => {
@@ -100,7 +107,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
             <SocialBatteryChip
               socialBattery={social_battery}
               compact
-              onClick={handleClickCheckInChip}
+              onClick={handleClickBattery}
             />
           )}
           {hasNewPost && (
@@ -160,7 +167,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
           alignItems="center"
           rounded={8}
           style={{ flexShrink: 0, cursor: 'pointer' }}
-          onClick={handleClickCheckInChip}
+          onClick={() => handleClickStatus()}
         >
           {mood && (
             <EmojiItem emojiString={mood} size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
@@ -184,8 +191,9 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
 
       {/* Check-in detail bottom sheet */}
       <CheckInDetailBottomSheet
-        visible={isCheckInDetailVisible}
-        closeBottomSheet={() => setIsCheckInDetailVisible(false)}
+        visible={!!checkInDetailFocus}
+        closeBottomSheet={() => setCheckInDetailFocus(null)}
+        focusComponent={checkInDetailFocus}
         checkInId={user.check_in_id}
         username={username}
         profileImage={profile_image}

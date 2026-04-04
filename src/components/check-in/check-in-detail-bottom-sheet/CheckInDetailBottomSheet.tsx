@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
+import { SocialBatteryChipAssets } from '@components/profile/social-batter-chip/SocialBatteryChip.contants';
 import { Layout, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import SpotifyManager from '@libs/SpotifyManager';
@@ -25,6 +25,7 @@ const REACTION_SHORTCUTS = [
 interface Props {
   visible: boolean;
   closeBottomSheet: () => void;
+  focusComponent?: 'battery' | 'status' | 'song' | null;
   checkInId?: number | null;
   username?: string;
   profileImage?: string | null;
@@ -37,6 +38,7 @@ interface Props {
 function CheckInDetailBottomSheet({
   visible,
   closeBottomSheet,
+  focusComponent,
   checkInId,
   username,
   profileImage,
@@ -45,7 +47,7 @@ function CheckInDetailBottomSheet({
   mood,
   description,
 }: Props) {
-  useTranslation('translation', { keyPrefix: 'music_detail' });
+  const [t] = useTranslation('translation', { keyPrefix: 'social_battery' });
   const postMessage = usePostAppMessage();
   const [trackData, setTrackData] = useState<Track | null>(null);
   const [selectedReactions, setSelectedReactions] = useState<Set<string>>(new Set());
@@ -137,8 +139,7 @@ function CheckInDetailBottomSheet({
     [checkInId, isToggling, selectedReactions, doToggleReaction],
   );
 
-  const hasContent = socialBattery || trackId || mood || description;
-  if (!hasContent || !visible) return null;
+  if (!visible || !focusComponent) return null;
 
   return createPortal(
     <Overlay onClick={closeBottomSheet}>
@@ -155,17 +156,29 @@ function CheckInDetailBottomSheet({
 
         <Divider />
 
-        {/* Middle: Check-in content (largest area) */}
+        {/* Middle: Only the focused component */}
         <Layout.FlexCol gap={16} pv={20} ph={8} alignItems="center" w="100%">
-          {/* Social battery */}
-          {socialBattery && Object.values(SocialBattery).includes(socialBattery) && (
-            <Layout.FlexRow gap={8} alignItems="center">
-              <SocialBatteryChip socialBattery={socialBattery} />
-            </Layout.FlexRow>
-          )}
+          {/* Social battery (shown like mood: big emoji + label) */}
+          {focusComponent === 'battery' &&
+            socialBattery &&
+            Object.values(SocialBattery).includes(socialBattery) && (
+              <Layout.FlexCol gap={8} alignItems="center" w="100%">
+                {SocialBatteryChipAssets[socialBattery]?.emoji && (
+                  <EmojiItem
+                    emojiString={SocialBatteryChipAssets[socialBattery].emoji!}
+                    size={32}
+                    bgColor="TRANSPARENT"
+                    outline="TRANSPARENT"
+                  />
+                )}
+                <Typo type="body-large" textAlign="center">
+                  {t(socialBattery)}
+                </Typo>
+              </Layout.FlexCol>
+            )}
 
           {/* Mood + Description */}
-          {(mood || description) && (
+          {focusComponent === 'status' && (mood || description) && (
             <Layout.FlexCol gap={8} alignItems="center" w="100%">
               {mood && (
                 <EmojiItem
@@ -184,7 +197,7 @@ function CheckInDetailBottomSheet({
           )}
 
           {/* Spotify track */}
-          {trackData && (
+          {focusComponent === 'song' && trackData && (
             <TrackCard onClick={handleClickGoToSpotify}>
               <img
                 src={trackData.album.images[0]?.url}
