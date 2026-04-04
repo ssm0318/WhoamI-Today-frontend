@@ -71,7 +71,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
     navigate(`/friends/${username}/new-posts`);
   };
 
-  const hasNewPost = (!!recentPost && !recentPost.is_read) || (user as any).unread_cnt > 0;
+  const hasNewPost = (!!recentPost && !recentPost.is_read) || (user as any).unread_post_cnt > 0;
 
   return (
     <Container mh={16} ph={16} pv={12} gap={12} rounded={12}>
