@@ -32,7 +32,7 @@ export const StyledNewNoteImageWrapper = styled.div`
 export const StyledNewNoteImage = styled.img`
   display: block;
   max-width: 100%;
-  max-height: calc(100vh - ${TOP_NAVIGATION_HEIGHT + 120}px);
+  max-height: calc(100vh - ${TOP_NAVIGATION_HEIGHT + 180}px);
   object-fit: contain;
 `;
 
@@ -40,9 +40,12 @@ export const AspectRatioBar = styled.div`
   display: flex;
   gap: 8px;
   justify-content: center;
+  align-items: center;
+  width: 100%;
   padding: 10px 16px;
   background-color: ${({ theme }) => theme.DARK};
   flex-shrink: 0;
+  box-sizing: border-box;
 `;
 
 export const AspectButton = styled.button<{ $isSelected: boolean }>`
