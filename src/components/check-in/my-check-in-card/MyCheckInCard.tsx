@@ -121,10 +121,10 @@ function EmptyChip({ label, onClick }: { label: string; onClick: () => void }) {
       pv={4}
       ph={8}
       rounded={999}
-      style={{ cursor: 'pointer', border: '1px dashed #BDBDBD' }}
+      style={{ cursor: 'pointer', border: '1px dashed #D9D9D9' }}
       onClick={onClick}
     >
-      <Typo type="label-medium" color="MEDIUM_GRAY">
+      <Typo type="label-large" color="MEDIUM_GRAY">
         {label}
       </Typo>
     </Layout.FlexRow>

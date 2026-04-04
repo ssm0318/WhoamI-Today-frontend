@@ -48,9 +48,9 @@ const ChipContainer = styled.div<{
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   -webkit-tap-highlight-color: transparent;
   white-space: nowrap;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: ${({ $isSelected }) => ($isSelected ? 600 : 400)};
-  line-height: 16px;
+  line-height: 20px;
 
   &:active {
     opacity: 0.8;

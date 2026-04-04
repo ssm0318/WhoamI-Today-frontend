@@ -83,8 +83,8 @@ const InputContainer = styled.div<{ $borderColor: string }>`
 const StyledInput = styled.input<{ $textColor: string }>`
   border: none;
   outline: none;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 14px;
+  line-height: 20px;
   width: 100px;
   color: ${({ $textColor }) => $textColor};
   background: transparent;
@@ -104,8 +104,8 @@ const AddButton = styled.div<{ $disabled: boolean }>`
   color: #9e9e9e;
   cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
   opacity: ${({ $disabled }) => ($disabled ? 0.5 : 1)};
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 14px;
+  line-height: 20px;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 
