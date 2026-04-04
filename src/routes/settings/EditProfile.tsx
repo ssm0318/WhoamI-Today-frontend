@@ -1,28 +1,22 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
 import ProfileImageEditButton from '@components/_common/profile-image-edit-button/ProfileImageEditButton';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import ValidatedTextArea from '@components/_common/validated-textarea/ValidatedTextArea';
-import InterestChip from '@components/profile/interest/InterestChip';
-import PersonaChip from '@components/profile/persona/PersonaChip';
+import ChipCategorySection from '@components/profile/chip/ChipCategorySection';
 import { StyledEditProfileButton } from '@components/settings/SettingsButtons.styled';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { CheckBox, Layout, Typo } from '@design-system';
 import { MyProfile } from '@models/api/user';
-import { Interest } from '@models/interest';
-import { Persona } from '@models/persona';
+import { ALL_CATEGORIES, ChipCategory, CustomChip, normalizeChipText } from '@models/chips';
 import { useBoundStore } from '@stores/useBoundStore';
 import { editProfile } from '@utils/apis/my';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { MainScrollContainer } from '../Root';
-
-const CHIP_LIST_LIMIT = 10;
-const CHIP_LIST_COLLAPSED_COUNT = 10;
 
 function EditProfile() {
   const location = useLocation();
@@ -37,12 +31,34 @@ function EditProfile() {
     featureFlags: state.featureFlags,
   }));
 
+  // Parse existing user chips into per-category selections
+  const parseExistingChips = () => {
+    const existing = [
+      ...(myProfile?.user_interests ?? []).map((i) => i.replace(/^#+/, '')),
+      ...(myProfile?.user_personas ?? []).map((p) => p.replace(/^#+/, '')),
+    ];
+    const result: Record<string, string[]> = {};
+    const customResult: CustomChip[] = [];
+
+    ALL_CATEGORIES.forEach((cat) => {
+      const matched = existing.filter((chip) =>
+        cat.chips.some((c) => normalizeChipText(c) === normalizeChipText(chip)),
+      );
+      result[cat.key] = matched.map(
+        (m) => cat.chips.find((c) => normalizeChipText(c) === normalizeChipText(m)) || m,
+      );
+    });
+    return { selections: result, customs: customResult };
+  };
+
+  const parsed = parseExistingChips();
+
   const [draft, setDraft] = useState<{
     bio: string;
     username: string;
     pronouns: string;
-    user_personas: string[];
-    user_interests: string[];
+    chipSelections: Record<string, string[]>;
+    customChips: CustomChip[];
     interests_friends_only: boolean;
     persona_friends_only: boolean;
     pronouns_friends_only: boolean;
@@ -51,8 +67,8 @@ function EditProfile() {
     bio: myProfile?.bio ?? '',
     username: myProfile?.username ?? '',
     pronouns: myProfile?.pronouns ?? '',
-    user_personas: (myProfile?.user_personas ?? []).map((p) => p.replace(/^#+/, '')),
-    user_interests: (myProfile?.user_interests ?? []).map((i) => i.replace(/^#+/, '')),
+    chipSelections: parsed.selections,
+    customChips: parsed.customs,
     interests_friends_only: myProfile?.interests_friends_only ?? false,
     persona_friends_only: myProfile?.persona_friends_only ?? false,
     pronouns_friends_only: myProfile?.pronouns_friends_only ?? false,
@@ -60,8 +76,6 @@ function EditProfile() {
   });
 
   const [usernameError, setUsernameError] = useState<string>();
-  const [isPersonaListExpanded, setIsPersonaListExpanded] = useState(false);
-  const [isInterestListExpanded, setIsInterestListExpanded] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -74,22 +88,12 @@ function EditProfile() {
   const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
-    const arraysEqual = (a: string[], b: string[]): boolean => {
-      if (a.length !== b.length) return false;
-      const sortedA = [...a].sort();
-      const sortedB = [...b].sort();
-      return sortedA.every((val, index) => val === sortedB[index]);
-    };
-
-    const originalPersonas = (myProfile?.user_personas ?? []).map((p) => p.replace(/^#+/, ''));
-    const originalInterests = (myProfile?.user_interests ?? []).map((i) => i.replace(/^#+/, ''));
-
     const hasDraftChanged =
       draft.username !== (myProfile?.username ?? '') ||
       draft.pronouns !== (myProfile?.pronouns ?? '') ||
       draft.bio !== (myProfile?.bio ?? '') ||
-      !arraysEqual(draft.user_personas, originalPersonas) ||
-      !arraysEqual(draft.user_interests, originalInterests) ||
+      JSON.stringify(draft.chipSelections) !== JSON.stringify(parsed.selections) ||
+      draft.customChips.length !== parsed.customs.length ||
       draft.interests_friends_only !== (myProfile?.interests_friends_only ?? false) ||
       draft.persona_friends_only !== (myProfile?.persona_friends_only ?? false) ||
       draft.pronouns_friends_only !== (myProfile?.pronouns_friends_only ?? false) ||
@@ -97,32 +101,47 @@ function EditProfile() {
       imageChanged;
 
     setHasChanges(hasDraftChanged);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draft, imageChanged, myProfile]);
 
-  const handleTogglePersona = (persona: string) => {
+  const handleToggleChip = (category: ChipCategory, chipLabel: string) => {
     setDraft((prev) => {
-      const current = [...prev.user_personas];
-      if (current.includes(persona)) {
-        return { ...prev, user_personas: current.filter((p) => p !== persona) };
+      const current = [...(prev.chipSelections[category] || [])];
+      if (current.some((c) => normalizeChipText(c) === normalizeChipText(chipLabel))) {
+        return {
+          ...prev,
+          chipSelections: {
+            ...prev.chipSelections,
+            [category]: current.filter(
+              (c) => normalizeChipText(c) !== normalizeChipText(chipLabel),
+            ),
+          },
+        };
       }
-      if (current.length < CHIP_LIST_LIMIT) {
-        return { ...prev, user_personas: [...current, persona] };
-      }
-      return prev;
+      return {
+        ...prev,
+        chipSelections: {
+          ...prev.chipSelections,
+          [category]: [...current, chipLabel],
+        },
+      };
     });
   };
 
-  const handleToggleInterest = (interest: string) => {
-    setDraft((prev) => {
-      const current = [...prev.user_interests];
-      if (current.includes(interest)) {
-        return { ...prev, user_interests: current.filter((i) => i !== interest) };
-      }
-      if (current.length < CHIP_LIST_LIMIT) {
-        return { ...prev, user_interests: [...current, interest] };
-      }
-      return prev;
-    });
+  const handleAddCustomChip = (category: ChipCategory, text: string) => {
+    setDraft((prev) => ({
+      ...prev,
+      customChips: [...prev.customChips, { text, category }],
+    }));
+  };
+
+  const handleRemoveCustomChip = (category: ChipCategory, text: string) => {
+    setDraft((prev) => ({
+      ...prev,
+      customChips: prev.customChips.filter(
+        (c) => !(c.category === category && normalizeChipText(c.text) === normalizeChipText(text)),
+      ),
+    }));
   };
 
   const handleToggleVisibility = (field: string) => {
@@ -177,8 +196,21 @@ function EditProfile() {
   const handleClickSave = async () => {
     if (!myProfile) return;
 
+    // Flatten all chip selections + custom chips into interests/personas for API
+    const allChips = Object.entries(draft.chipSelections).flatMap(([, chips]) => chips);
+    const allCustomChipTexts = draft.customChips.map((c) => c.text);
+    const combinedChips = [...allChips, ...allCustomChipTexts];
+
     const profileData = {
-      ...draft,
+      bio: draft.bio,
+      username: draft.username,
+      pronouns: draft.pronouns,
+      user_interests: combinedChips,
+      user_personas: [],
+      interests_friends_only: draft.interests_friends_only,
+      persona_friends_only: draft.persona_friends_only,
+      pronouns_friends_only: draft.pronouns_friends_only,
+      bio_friends_only: draft.bio_friends_only,
       ...(croppedImg ? { profile_image: croppedImg.file } : {}),
     };
 
@@ -187,8 +219,8 @@ function EditProfile() {
       onSuccess: (data: MyProfile) => {
         updateMyProfile({
           ...data,
-          user_interests: data.user_interests ?? draft.user_interests,
-          user_personas: data.user_personas ?? draft.user_personas,
+          user_interests: data.user_interests ?? combinedChips,
+          user_personas: data.user_personas ?? [],
           profile_image: data.profile_image ?? myProfile?.profile_image,
         });
         openToast({ message: t('response.updated') });
@@ -299,155 +331,23 @@ function EditProfile() {
           onChange={() => handleToggleVisibility('bio_friends_only')}
         />
 
-        {/* interests */}
-        <Layout.FlexCol gap={8}>
-          <Typo type="title-medium" color="MEDIUM_GRAY">
-            {t('interests')}
-          </Typo>
-          <Layout.FlexCol w="100%" outline="LIGHT_GRAY" rounded={12} style={{ overflow: 'hidden' }}>
-            <Layout.FlexCol w="100%" alignItems="center" ph={12} pv={16}>
-              <Layout.FlexRow mt={8} mb={2}>
-                <Typo
-                  type="body-medium"
-                  color={draft.user_interests.length >= CHIP_LIST_LIMIT ? 'WARNING' : 'DARK'}
-                >
-                  {draft.user_interests.length} / {CHIP_LIST_LIMIT}{' '}
-                  {t('persona_edit_bottom_sheet.selected')}
-                </Typo>
-              </Layout.FlexRow>
-              {draft.user_interests.length >= CHIP_LIST_LIMIT && (
-                <Layout.FlexRow mb={4}>
-                  <Typo type="body-small" color="WARNING">
-                    {t('persona_edit_bottom_sheet.max_persona_limit')}
-                  </Typo>
-                </Layout.FlexRow>
-              )}
-              <Layout.FlexRow gap={6} pv={16} style={{ flexWrap: 'wrap' }} w="100%">
-                {Object.values(Interest)
-                  .slice(0, isInterestListExpanded ? undefined : CHIP_LIST_COLLAPSED_COUNT)
-                  .map((interest) => (
-                    <InterestChip
-                      interest={interest}
-                      key={interest}
-                      onSelect={handleToggleInterest}
-                      isSelected={draft.user_interests.includes(interest)}
-                    />
-                  ))}
-              </Layout.FlexRow>
-              {!isInterestListExpanded &&
-                Object.values(Interest).length > CHIP_LIST_COLLAPSED_COUNT && (
-                  <Layout.FlexRow
-                    w="100%"
-                    justifyContent="center"
-                    alignItems="center"
-                    onClick={() => setIsInterestListExpanded(true)}
-                    pv={8}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <Icon name="chevron_down" size={16} />
-                  </Layout.FlexRow>
-                )}
-              {isInterestListExpanded &&
-                Object.values(Interest).length > CHIP_LIST_COLLAPSED_COUNT && (
-                  <Layout.FlexRow
-                    w="100%"
-                    justifyContent="center"
-                    alignItems="center"
-                    onClick={() => setIsInterestListExpanded(false)}
-                    pv={8}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <Icon name="chevron_up" size={16} />
-                  </Layout.FlexRow>
-                )}
-            </Layout.FlexCol>
-          </Layout.FlexCol>
-          <CheckBox
-            name={String(t('friends_only.interests'))}
-            checked={draft.interests_friends_only}
-            onChange={() => handleToggleVisibility('interests_friends_only')}
+        {/* Chip Categories (7 categories) */}
+        {ALL_CATEGORIES.map((categoryInfo) => (
+          <ChipCategorySection
+            key={categoryInfo.key}
+            categoryInfo={categoryInfo}
+            selectedChips={draft.chipSelections[categoryInfo.key] || []}
+            customChips={draft.customChips}
+            onToggleChip={handleToggleChip}
+            onAddCustomChip={handleAddCustomChip}
+            onRemoveCustomChip={handleRemoveCustomChip}
           />
-        </Layout.FlexCol>
-
-        {/* persona */}
-        {featureFlags?.persona && (
-          <Layout.FlexCol gap={8}>
-            <Layout.FlexRow alignItems="center" gap={8}>
-              <img width="14px" src="/whoami-logo.svg" alt="who_am_i" />
-              <Typo type="title-medium" color="MEDIUM_GRAY">
-                {t('persona')}
-              </Typo>
-            </Layout.FlexRow>
-            <Layout.FlexCol
-              w="100%"
-              outline="LIGHT_GRAY"
-              rounded={12}
-              style={{ overflow: 'hidden' }}
-            >
-              <Layout.FlexCol w="100%" alignItems="center" ph={12} pv={16}>
-                <Layout.FlexRow mt={8} mb={2}>
-                  <Typo
-                    type="body-medium"
-                    color={draft.user_personas.length >= CHIP_LIST_LIMIT ? 'WARNING' : 'DARK'}
-                  >
-                    {draft.user_personas.length} / {CHIP_LIST_LIMIT}{' '}
-                    {t('persona_edit_bottom_sheet.selected')}
-                  </Typo>
-                </Layout.FlexRow>
-                {draft.user_personas.length >= CHIP_LIST_LIMIT && (
-                  <Layout.FlexRow mb={4}>
-                    <Typo type="body-small" color="WARNING">
-                      {t('persona_edit_bottom_sheet.max_persona_limit')}
-                    </Typo>
-                  </Layout.FlexRow>
-                )}
-                <Layout.FlexRow gap={6} pv={16} style={{ flexWrap: 'wrap' }} w="100%">
-                  {Object.values(Persona)
-                    .slice(0, isPersonaListExpanded ? undefined : CHIP_LIST_COLLAPSED_COUNT)
-                    .map((persona) => (
-                      <PersonaChip
-                        persona={persona}
-                        key={persona}
-                        onSelect={handleTogglePersona}
-                        isSelected={draft.user_personas.includes(persona)}
-                      />
-                    ))}
-                </Layout.FlexRow>
-                {!isPersonaListExpanded &&
-                  Object.values(Persona).length > CHIP_LIST_COLLAPSED_COUNT && (
-                    <Layout.FlexRow
-                      w="100%"
-                      justifyContent="center"
-                      alignItems="center"
-                      onClick={() => setIsPersonaListExpanded(true)}
-                      pv={8}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <Icon name="chevron_down" size={16} />
-                    </Layout.FlexRow>
-                  )}
-                {isPersonaListExpanded &&
-                  Object.values(Persona).length > CHIP_LIST_COLLAPSED_COUNT && (
-                    <Layout.FlexRow
-                      w="100%"
-                      justifyContent="center"
-                      alignItems="center"
-                      onClick={() => setIsPersonaListExpanded(false)}
-                      pv={8}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <Icon name="chevron_up" size={16} />
-                    </Layout.FlexRow>
-                  )}
-              </Layout.FlexCol>
-            </Layout.FlexCol>
-            <CheckBox
-              name={String(t('friends_only.persona'))}
-              checked={draft.persona_friends_only}
-              onChange={() => handleToggleVisibility('persona_friends_only')}
-            />
-          </Layout.FlexCol>
-        )}
+        ))}
+        <CheckBox
+          name={String(t('friends_only.interests'))}
+          checked={draft.interests_friends_only}
+          onChange={() => handleToggleVisibility('interests_friends_only')}
+        />
       </Layout.FlexCol>
       {isEditModalVisible && (
         <ProfileImageEdit

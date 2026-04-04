@@ -10,15 +10,15 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { Connection } from '@models/api/friends';
 import { MyProfile } from '@models/api/user';
+import { ALL_CATEGORIES, normalizeChipText } from '@models/chips';
 import { areFriends, isMyProfile, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
-import InterestChip from './interest/InterestChip';
+import CategoryChip from './chip/CategoryChip';
 import MoreAboutBottomSheet from './more-about-bottom-sheet/MoreAboutBottomSheet';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
-import PersonaChip from './persona/PersonaChip';
 import PinnedPostsSection from './pinned-posts-section/PinnedPostsSection';
 import BioPlaceholder from './placeholders/BioPlaceholder';
 import PronounPlaceholder from './placeholders/PronounPlaceholder';
@@ -245,12 +245,24 @@ function Profile({ user }: ProfileProps) {
                   {t('shared_traits')}
                 </Typo>
                 <Layout.FlexRow w="100%" gap={6} style={{ flexWrap: 'wrap' }}>
-                  {friendData.mutual_interests?.map((interest) => (
-                    <InterestChip key={interest.id} interest={interest.content} />
-                  ))}
-                  {friendData.mutual_personas?.map((persona) => (
-                    <PersonaChip key={persona.id} persona={persona.content} />
-                  ))}
+                  {[
+                    ...(friendData.mutual_interests ?? []),
+                    ...(friendData.mutual_personas ?? []),
+                  ].map((trait) => {
+                    const matchedCat = ALL_CATEGORIES.find((cat) =>
+                      cat.chips.some(
+                        (c) => normalizeChipText(c) === normalizeChipText(trait.content),
+                      ),
+                    );
+                    return (
+                      <CategoryChip
+                        key={trait.id}
+                        label={trait.content}
+                        category={matchedCat?.key ?? ALL_CATEGORIES[0].key}
+                        isSelected
+                      />
+                    );
+                  })}
                 </Layout.FlexRow>
               </Layout.FlexCol>
             )}
