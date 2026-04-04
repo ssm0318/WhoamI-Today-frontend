@@ -42,6 +42,7 @@ function MyCheckInCard() {
         {social_battery && Object.values(SocialBattery).includes(social_battery) ? (
           <SocialBatteryChip
             socialBattery={social_battery}
+            compact
             onClick={() => navigate('/check-in/edit?focus=battery')}
           />
         ) : (
