@@ -22,13 +22,19 @@ export const StyledNewNoteImageWrapper = styled.div`
   overflow: hidden;
   box-sizing: border-box;
   min-height: 0;
+
+  /* Constrain ReactCrop to fit within this container */
+  .ReactCrop {
+    max-height: 100%;
+    max-width: 100%;
+  }
 `;
 
 export const StyledNewNoteImage = styled.img`
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
   display: block;
+  max-width: 100%;
+  max-height: calc(100vh - ${TOP_NAVIGATION_HEIGHT + 100}px);
+  object-fit: contain;
 `;
 
 export const AspectRatioBar = styled.div`
