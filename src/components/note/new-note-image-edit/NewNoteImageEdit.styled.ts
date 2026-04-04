@@ -39,6 +39,7 @@ export const StyledNewNoteImageWrapper = styled.div`
 export const StyledNewNoteImage = styled.img`
   display: block;
   max-width: 100%;
+  max-height: calc(100vh - ${HEADER_HEIGHT + ASPECT_BAR_HEIGHT + PADDING * 2}px);
   object-fit: contain;
 `;
 

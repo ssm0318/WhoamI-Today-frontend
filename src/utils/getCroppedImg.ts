@@ -175,7 +175,7 @@ export async function getReactImageCrop(
   // at the expense of slightly slower render times and needing to
   // size the image back down if you want to download/upload and be
   // true to the images natural size.
-  const pixelRatio = 0.5;
+  const pixelRatio = window.devicePixelRatio || 1;
 
   canvas.width = Math.floor(crop.width * scaleX * pixelRatio);
   canvas.height = Math.floor(crop.height * scaleY * pixelRatio);
