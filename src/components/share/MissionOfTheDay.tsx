@@ -49,16 +49,27 @@ export function getDayOfYear(): number {
   return Math.floor(diff / (1000 * 60 * 60 * 24));
 }
 
-const MISSION_STORAGE_KEY = 'whoami_mission_completed';
+const MISSION_STORAGE_KEY = 'whoami_mission_attempts';
+const MAX_ATTEMPTS = 5;
 
-function isMissionCompletedToday(): boolean {
+function getAttemptsToday(): number {
   const stored = localStorage.getItem(MISSION_STORAGE_KEY);
-  if (!stored) return false;
-  return stored === String(getDayOfYear());
+  if (!stored) return 0;
+  try {
+    const parsed = JSON.parse(stored);
+    if (parsed.day === getDayOfYear()) return parsed.count;
+  } catch {
+    // ignore
+  }
+  return 0;
 }
 
 export function markMissionCompleted(): void {
-  localStorage.setItem(MISSION_STORAGE_KEY, String(getDayOfYear()));
+  const current = getAttemptsToday();
+  localStorage.setItem(
+    MISSION_STORAGE_KEY,
+    JSON.stringify({ day: getDayOfYear(), count: current + 1 }),
+  );
 }
 
 interface Props {
@@ -67,31 +78,35 @@ interface Props {
 
 function MissionOfTheDay({ onDoMission }: Props) {
   const todayMission = MISSION_POOL[getDayOfYear() % MISSION_POOL.length];
-  const [isCompleted, setIsCompleted] = useState(isMissionCompletedToday());
+  const [attempts, setAttempts] = useState(getAttemptsToday());
+
+  const allUsed = attempts >= MAX_ATTEMPTS;
 
   const handleDoIt = () => {
-    if (isCompleted) return;
-    // Don't mark as completed here — only navigate.
-    // Completion is marked after the user actually posts.
+    if (allUsed) return;
     onDoMission(todayMission);
   };
 
-  // Allow parent to refresh completion state when returning to this page
-  const refreshCompleted = () => setIsCompleted(isMissionCompletedToday());
-
-  // Check completion on every render (handles returning from post flow)
-  if (isMissionCompletedToday() !== isCompleted) {
-    refreshCompleted();
+  // Refresh attempts on re-render (e.g. returning from post flow)
+  const currentAttempts = getAttemptsToday();
+  if (currentAttempts !== attempts) {
+    setAttempts(currentAttempts);
   }
+
+  const buttonLabel = allUsed
+    ? `All ${MAX_ATTEMPTS} attempts used`
+    : attempts > 0
+    ? `Do it (${attempts}/${MAX_ATTEMPTS} shared)`
+    : 'Do it';
 
   return (
     <Layout.FlexCol gap={12} w="100%">
       <Typo type="title-medium" color="WHITE">
         {todayMission.prompt}
       </Typo>
-      <ActionButton onClick={handleDoIt} $isCompleted={isCompleted}>
-        <Typo type="label-large" color={isCompleted ? 'MEDIUM_GRAY' : 'PRIMARY'} fontWeight={600}>
-          {isCompleted ? 'Done \u2713' : 'Do it'}
+      <ActionButton onClick={handleDoIt} $isCompleted={allUsed}>
+        <Typo type="label-large" color={allUsed ? 'MEDIUM_GRAY' : 'PRIMARY'} fontWeight={600}>
+          {buttonLabel}
         </Typo>
       </ActionButton>
     </Layout.FlexCol>
@@ -104,7 +119,8 @@ const ActionButton = styled.div<{ $isCompleted: boolean }>`
   justify-content: center;
   padding: 10px 24px;
   border-radius: 12px;
-  background-color: ${({ $isCompleted }) => ($isCompleted ? '#F5F5F5' : '#F3E8FF')};
+  background-color: ${({ $isCompleted }) =>
+    $isCompleted ? '#F5F5F5' : 'rgba(255, 255, 255, 0.95)'};
   cursor: ${({ $isCompleted }) => ($isCompleted ? 'default' : 'pointer')};
   align-self: flex-start;
   -webkit-tap-highlight-color: transparent;
