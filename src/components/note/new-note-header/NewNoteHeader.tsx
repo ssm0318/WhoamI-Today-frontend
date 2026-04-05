@@ -49,7 +49,7 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
         markMissionCompleted();
       }
 
-      navigate(`/notes/${newNoteId}`, { state: 'new' });
+      navigate(`/notes/${newNoteId}`, { state: { new: true, fromShare } });
       openToast({
         message: t(status === 'edit' ? 'updated' : 'posted'),
         actionText: t('view'),

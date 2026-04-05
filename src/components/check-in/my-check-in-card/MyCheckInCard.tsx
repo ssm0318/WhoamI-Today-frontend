@@ -50,6 +50,7 @@ function MyCheckInCard() {
           <SocialBatteryChip
             socialBattery={social_battery}
             compact
+            borderless
             onClick={() => navigate('/check-in/edit?focus=battery')}
           />
         ) : (

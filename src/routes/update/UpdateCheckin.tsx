@@ -162,10 +162,10 @@ export default function UpdateCheckin() {
               <span style={{ fontSize: 40, lineHeight: 1 }}>
                 {SocialBatteryChipAssets[battery]?.emoji || ''}
               </span>
-              <Typo type="label-medium" numberOfLines={1} textAlign="center">
+              <Typo type="body-medium" numberOfLines={1} textAlign="center">
                 {t(battery)}
               </Typo>
-              <Typo type="label-medium" color="MEDIUM_GRAY" numberOfLines={1} textAlign="center">
+              <Typo type="body-medium" color="MEDIUM_GRAY" numberOfLines={1} textAlign="center">
                 Social Battery
               </Typo>
             </Layout.FlexCol>
@@ -213,10 +213,10 @@ export default function UpdateCheckin() {
                   style={{ width: 56, height: 56, borderRadius: 8, objectFit: 'cover' }}
                 />
               )}
-              <Typo type="label-medium" numberOfLines={1} textAlign="center">
+              <Typo type="body-medium" numberOfLines={1} textAlign="center">
                 {trackData.name}
               </Typo>
-              <Typo type="label-medium" color="MEDIUM_GRAY" numberOfLines={1} textAlign="center">
+              <Typo type="body-medium" color="MEDIUM_GRAY" numberOfLines={1} textAlign="center">
                 {trackData.artists?.[0]?.name || ''}
               </Typo>
             </Layout.FlexCol>

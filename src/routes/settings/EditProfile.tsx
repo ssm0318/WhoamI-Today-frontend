@@ -342,13 +342,15 @@ function EditProfile() {
 
         {/* pronouns */}
         <Layout.FlexCol gap={4} w="100%">
-          <ValidatedInput
-            label={t('pronouns')}
-            name="pronouns"
-            type="text"
-            value={draft.pronouns}
-            onChange={handleChangeInput}
-          />
+          <Layout.FlexCol w="100%" mb={4}>
+            <ValidatedInput
+              label={t('pronouns')}
+              name="pronouns"
+              type="text"
+              value={draft.pronouns}
+              onChange={handleChangeInput}
+            />
+          </Layout.FlexCol>
           <CheckBox
             name={String(t('friends_only.pronouns'))}
             checked={draft.pronouns_friends_only}
