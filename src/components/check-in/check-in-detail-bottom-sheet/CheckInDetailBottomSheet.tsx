@@ -51,8 +51,9 @@ function CheckInDetailBottomSheet({
   const [trackData, setTrackData] = useState<Track | null>(null);
   const [selectedReactions, setSelectedReactions] = useState<Set<string>>(new Set());
   const [isToggling, setIsToggling] = useState(false);
+  const myProfile = useBoundStore((state) => state.myProfile);
 
-  // Fetch existing reactions when the bottom sheet opens
+  // Fetch existing reactions when the popup opens — filter to current user's only
   useEffect(() => {
     if (!visible || !checkInId) {
       setSelectedReactions(new Set());
@@ -62,17 +63,14 @@ function CheckInDetailBottomSheet({
       .then((reactions) => {
         const myEmojis = new Set<string>();
         reactions.forEach((r) => {
-          // The ReactionSerializer returns user object with id
-          // We check if the reaction belongs to the current user by checking is_mine or
-          // matching. Since the list endpoint returns all reactions, we mark ones that
-          // are ours. The backend currently returns reactions for the current user only
-          // (when not the author), so all returned reactions are ours.
-          myEmojis.add(r.emoji);
+          if (r.user?.id === myProfile?.id) {
+            myEmojis.add(r.emoji);
+          }
         });
         setSelectedReactions(myEmojis);
       })
       .catch(() => setSelectedReactions(new Set()));
-  }, [visible, checkInId]);
+  }, [visible, checkInId, myProfile?.id]);
 
   useEffect(() => {
     if (!visible || !trackId) {
