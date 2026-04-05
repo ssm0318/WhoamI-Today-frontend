@@ -118,12 +118,16 @@ function Share() {
               </Typo>
             )}
             {todayQuestions && todayQuestions.length > MAX_VISIBLE_QUESTIONS && (
-              <Layout.FlexRow w="100%" justifyContent="center" mt={16}>
-                <ShareActionButton onClick={() => navigate('/questions')}>
-                  <Typo type="label-large" color="PRIMARY" fontWeight={600}>
-                    See all questions
-                  </Typo>
-                </ShareActionButton>
+              <Layout.FlexRow
+                w="100%"
+                justifyContent="center"
+                mt={16}
+                style={{ cursor: 'pointer' }}
+                onClick={() => navigate('/questions')}
+              >
+                <Typo type="title-medium" color="PRIMARY" fontWeight={600}>
+                  See all questions
+                </Typo>
               </Layout.FlexRow>
             )}
           </QuestionsCard>
