@@ -6,7 +6,7 @@ import PromptCard from '@components/_common/prompt/PromptCard';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import MissionOfTheDay, { markMissionCompleted } from '@components/share/MissionOfTheDay';
 import { DEFAULT_MARGIN } from '@constants/layout';
-import { Button, Layout, Typo } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { DailyQuestion } from '@models/post';
 import { getMe } from '@utils/apis/my';
@@ -118,12 +118,12 @@ function Share() {
               </Typo>
             )}
             {todayQuestions && todayQuestions.length > MAX_VISIBLE_QUESTIONS && (
-              <Layout.FlexRow w="100%" justifyContent="center" mt={12}>
-                <Button.Tertiary
-                  text="See all questions"
-                  status="normal"
-                  onClick={() => navigate('/questions')}
-                />
+              <Layout.FlexRow w="100%" justifyContent="center" mt={16}>
+                <ShareActionButton onClick={() => navigate('/questions')}>
+                  <Typo type="label-large" color="PRIMARY" fontWeight={600}>
+                    See all questions
+                  </Typo>
+                </ShareActionButton>
               </Layout.FlexRow>
             )}
           </QuestionsCard>

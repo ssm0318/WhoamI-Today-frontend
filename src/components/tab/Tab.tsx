@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { useLocation, useMatch } from 'react-router-dom';
-import FloatingButton from '@components/header/floating-button/FloatingButton';
+import { useMatch } from 'react-router-dom';
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { resetScrollPosition } from '@hooks/useRestoreScrollPosition';
@@ -71,11 +70,7 @@ function TabItem({ to, type, size = 48, end = false }: TabItemProps) {
 }
 
 export default function Tab() {
-  const location = useLocation();
-
   const { featureFlags } = useBoundStore(UserSelector);
-
-  const showFloatingButton = location.pathname === '/friends' || location.pathname === '/feed';
 
   return (
     <TabWrapper>
@@ -92,7 +87,6 @@ export default function Tab() {
         ) : null}
         {featureFlags?.pingTab && <TabItem to="/my/pings" type="chats" size={28} />}
       </Layout.FlexRow>
-      {showFloatingButton && <FloatingButton />}
     </TabWrapper>
   );
 }
