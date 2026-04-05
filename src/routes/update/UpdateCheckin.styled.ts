@@ -8,7 +8,8 @@ export const GridContainer = styled.div`
   gap: 12px;
   padding: 16px;
   width: 100%;
-  aspect-ratio: 1;
+  height: calc(100vh - 200px);
+  max-height: 500px;
 `;
 
 export const QuadrantCard = styled.div<{ $isEmpty?: boolean; $isArchived?: boolean }>`
