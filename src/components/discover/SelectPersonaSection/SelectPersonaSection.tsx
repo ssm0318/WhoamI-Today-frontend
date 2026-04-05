@@ -68,7 +68,9 @@ function SelectPersonaSection({
 
   return (
     <S.SelectPersonaSectionWrapper>
-      <S.Title>Select your Persona</S.Title>
+      <Typo type="title-medium" color="WHITE" ml={16}>
+        Select your Persona
+      </Typo>
 
       <S.PersonaGrid>
         {displayList.map((personaItem) => (
