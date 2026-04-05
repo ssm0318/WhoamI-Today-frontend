@@ -9,19 +9,6 @@ export const HighlightSectionWrapper = styled(Layout.FlexCol)`
   box-sizing: border-box;
 `;
 
-export const Title = styled.h2`
-  font-size: 24px;
-  font-weight: 700;
-  color: ${Colors.WHITE};
-  margin: 0;
-  width: 100%;
-  box-sizing: border-box;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  line-height: 140%;
-  margin-top: 6px;
-`;
-
 export const SaveButton = styled.div`
   button {
     background-color: ${Colors.WHITE} !important;
