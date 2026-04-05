@@ -60,7 +60,7 @@ export default function SongEditor({
               style={{ cursor: 'pointer' }}
               onClick={() => setShowSearch(true)}
             >
-              <SvgIcon name="search" size={20} />
+              <SvgIcon name="search_black" size={20} />
               <Typo type="body-medium" color="LIGHT_GRAY">
                 Search for a song
               </Typo>
