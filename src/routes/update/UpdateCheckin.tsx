@@ -1,14 +1,15 @@
+import { Track } from '@spotify/web-api-ts-sdk';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import BatteryEditor from '@components/check-in/update-quadrant/BatteryEditor';
 import MoodEditor from '@components/check-in/update-quadrant/MoodEditor';
 import SongEditor from '@components/check-in/update-quadrant/SongEditor';
 import ThoughtEditor from '@components/check-in/update-quadrant/ThoughtEditor';
-import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import { SocialBatteryChipAssets } from '@components/profile/social-batter-chip/SocialBatteryChip.contants';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import SpotifyManager from '@libs/SpotifyManager';
 import { ComponentVisibility, DEFAULT_VISIBILITY, SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
 import { postCheckIn } from '@utils/apis/checkIn';
@@ -47,6 +48,21 @@ export default function UpdateCheckin() {
   const [moodVis, setMoodVis] = useState<ComponentVisibility>(DEFAULT_VISIBILITY.mood);
   const [songVis, setSongVis] = useState<ComponentVisibility>(DEFAULT_VISIBILITY.song);
   const [thoughtVis, setThoughtVis] = useState<ComponentVisibility>(DEFAULT_VISIBILITY.thought);
+
+  // Track data for song quadrant display
+  const [trackData, setTrackData] = useState<Track | null>(null);
+  const spotifyManager = SpotifyManager.getInstance();
+
+  useEffect(() => {
+    if (!trackId) {
+      setTrackData(null);
+      return;
+    }
+    spotifyManager
+      .getTrack(trackId)
+      .then(setTrackData)
+      .catch(() => setTrackData(null));
+  }, [trackId, spotifyManager]);
 
   useAsyncEffect(async () => {
     const ci = await fetchCheckIn();
@@ -170,10 +186,21 @@ export default function UpdateCheckin() {
           onClick={() => setActiveEditor('song')}
         >
           {songArchived && <ArchivedBadge>Only Me</ArchivedBadge>}
-          {trackId ? (
-            <Layout.FlexCol w="100%" alignItems="center" gap={4}>
-              <SpotifyMusic track={trackId} useAlbumImg fontType="label-small" />
-              <QuadrantLabel>Song</QuadrantLabel>
+          {trackId && trackData ? (
+            <Layout.FlexCol w="100%" alignItems="center" gap={6}>
+              {trackData.album?.images?.[0]?.url && (
+                <img
+                  src={trackData.album.images[0].url}
+                  alt="album"
+                  style={{ width: 56, height: 56, borderRadius: 8, objectFit: 'cover' }}
+                />
+              )}
+              <Typo type="label-medium" numberOfLines={1} textAlign="center">
+                {trackData.name}
+              </Typo>
+              <Typo type="label-small" color="MEDIUM_GRAY" numberOfLines={1} textAlign="center">
+                {trackData.artists?.[0]?.name || ''}
+              </Typo>
             </Layout.FlexCol>
           ) : (
             <>
