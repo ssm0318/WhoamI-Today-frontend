@@ -156,13 +156,10 @@ function ResponseItem({
               />
               {/* author, created_at information */}
               <Layout.FlexCol>
-                <Layout.FlexRow onClick={navigateToProfile} gap={4} alignItems="center">
+                <Layout.FlexRow onClick={navigateToProfile}>
                   <Typo type="title-medium" ellipsis={{ enabled: true, maxWidth: 90 }}>
                     {username}
                   </Typo>
-                  {(author_detail as any)?.connection_status === 'close_friend' && (
-                    <SvgIcon name="close_friend" size={16} />
-                  )}
                 </Layout.FlexRow>
                 {!current_user_read && !isMyPage && <UpdatedLabel />}
                 <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>

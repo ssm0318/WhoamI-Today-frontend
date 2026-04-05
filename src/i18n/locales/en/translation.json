@@ -113,8 +113,7 @@
         "questions": "Questions",
         "share": "Share",
         "feed": "Feed",
-        "discover": "Discover",
-        "update": "Check-In"
+        "discover": "Discover"
     },
     "header": {
         "my": "My Profile",
@@ -295,18 +294,18 @@
         "comments": "Comments",
         "likes": "Likes",
         "title": "Posts",
-        "new_note": "Share",
+        "new_note": "New Post",
         "note_header": {
-            "new_note": "Share",
+            "new_note": "New Post",
             "edit_note": "Edit Post"
         },
-        "posted": "Shared successfully 🎉",
+        "posted": "Posted successfully 🎉",
         "updated": "Updated successfully 🎉",
         "temporary_error": "A temporary error occurred. Please try again later.",
         "too_large_file_error": "Image too large. Please resize and try again.",
         "view": "View",
         "cancel": "Cancel",
-        "post": "Share",
+        "post": "Post",
         "whats_on_your_mind": "What's on your mind?",
         "content_restriction": "⚠️ Inappropriate or offensive content may be restricted.",
         "crop_photo": "Crop Photo",

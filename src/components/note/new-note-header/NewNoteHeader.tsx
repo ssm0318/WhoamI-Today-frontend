@@ -1,8 +1,7 @@
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { markMissionCompleted } from '@components/share/MissionOfTheDay';
+import { useNavigate } from 'react-router-dom';
 import { Layout, Typo } from '@design-system';
 import { NewNoteForm } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -21,18 +20,10 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
-  const location = useLocation();
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
-  const fromShare = location.state?.fromShare;
-  const missionMode = location.state?.missionMode;
-
   const cancelPost = () => {
-    if (fromShare) {
-      navigate('/share');
-    } else {
-      navigate(-1);
-    }
+    navigate('/my');
   };
 
   const confirmPost = async () => {
@@ -44,12 +35,7 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
         ? await postNote(noteInfo)
         : await patchNote(noteId, noteInfo);
 
-      // Mark mission as completed only after successful post
-      if (missionMode) {
-        markMissionCompleted();
-      }
-
-      navigate(`/notes/${newNoteId}`, { state: { new: true, fromShare } });
+      navigate(`/notes/${newNoteId}`, { state: 'new' });
       openToast({
         message: t(status === 'edit' ? 'updated' : 'posted'),
         actionText: t('view'),

@@ -155,9 +155,6 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
                 <Typo type="title-medium" ellipsis={{ enabled: true, maxWidth: 140 }}>
                   {username}
                 </Typo>
-                {(author_detail as any)?.connection_status === 'close_friend' && (
-                  <SvgIcon name="close_friend" size={16} />
-                )}
                 {!current_user_read && !isMyPage && <UpdatedLabel />}
               </Layout.FlexRow>
               <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>

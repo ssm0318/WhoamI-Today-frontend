@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
-import { useMatch } from 'react-router-dom';
+import { useLocation, useMatch } from 'react-router-dom';
+import FloatingButton from '@components/header/floating-button/FloatingButton';
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { resetScrollPosition } from '@hooks/useRestoreScrollPosition';
@@ -10,7 +11,7 @@ import { NavTabItem, StyledTabItem, TabWrapper } from './Tab.styled';
 
 interface TabItemProps {
   to: string;
-  type: 'friends' | 'my' | 'share' | 'feed' | 'discover' | 'chats' | 'update';
+  type: 'friends' | 'my' | 'share' | 'feed' | 'discover' | 'chats';
   size?: number;
   end?: boolean;
 }
@@ -70,7 +71,14 @@ function TabItem({ to, type, size = 48, end = false }: TabItemProps) {
 }
 
 export default function Tab() {
+  const location = useLocation();
+
   const { featureFlags } = useBoundStore(UserSelector);
+
+  const showFloatingButton =
+    location.pathname === '/friends' ||
+    location.pathname === '/feed' ||
+    location.pathname === '/my';
 
   return (
     <TabWrapper>
@@ -78,15 +86,16 @@ export default function Tab() {
         {featureFlags?.friendList ? (
           <>
             <TabItem to="/friends" type="friends" size={28} />
-            <TabItem to="/update" type="update" size={28} />
-            <TabItem to="/share" type="share" size={28} />
             <TabItem to="/discover" type="discover" size={28} />
+            <TabItem to="/share" type="share" size={28} />
           </>
         ) : featureFlags?.friendFeed ? (
           <TabItem to="/feed" type="friends" size={28} />
         ) : null}
         {featureFlags?.pingTab && <TabItem to="/my/pings" type="chats" size={28} />}
+        <TabItem to="/my" type="my" size={28} end />
       </Layout.FlexRow>
+      {showFloatingButton && <FloatingButton />}
     </TabWrapper>
   );
 }

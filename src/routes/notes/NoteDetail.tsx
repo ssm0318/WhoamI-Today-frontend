@@ -50,15 +50,8 @@ export function NoteDetail() {
     }
   }, [noteId, reload]);
 
-  const isNew = location.state === 'new' || location.state?.new;
-  const fromShare = location.state?.fromShare;
-
   const handleGoBack = () => {
-    if (fromShare) {
-      navigate('/share');
-    } else {
-      navigate('/my');
-    }
+    navigate('/my');
   };
 
   return (
@@ -69,7 +62,7 @@ export function NoteDetail() {
             ? t('note_detail.title', { username: noteDetail.data.author_detail?.username })
             : ''
         }
-        onGoBack={isNew ? handleGoBack : undefined}
+        onGoBack={location.state === 'new' ? handleGoBack : undefined}
       />
       <Layout.FlexCol w="100%" alignItems="center" mt={12} ph={12}>
         {noteDetail.state === 'loading' && <NoteLoader />}

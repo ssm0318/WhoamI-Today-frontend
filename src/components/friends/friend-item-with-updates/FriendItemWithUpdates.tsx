@@ -107,7 +107,6 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
             <SocialBatteryChip
               socialBattery={social_battery}
               compact
-              borderless
               onClick={handleClickBattery}
             />
           )}

@@ -102,6 +102,7 @@ function Discover() {
   const profileSuggestionCard: DiscoverResultItem | null = useMemo(() => {
     if (!myProfile) return null;
     const missingFields: string[] = [];
+    if (!myProfile.bio) missingFields.push('Bio');
     if (!myProfile.pronouns) missingFields.push('Pronouns');
     if (!myProfile.user_interests || myProfile.user_interests.length === 0)
       missingFields.push('Interests');
@@ -135,23 +136,17 @@ function Discover() {
       if (page.results) flatItems.push(...page.results);
     });
 
-    // Pick at most 2 injected cards per day (rotate daily)
-    const allCards = (
-      [missionPromptCard, profileSuggestionCard, musicHighlightCard] as const
-    ).filter((c) => c !== null) as DiscoverResultItem[];
-    const dayOfYear = getDayOfYear();
-    const selectedCards =
-      allCards.length <= 2
-        ? allCards
-        : [
-            allCards[dayOfYear % allCards.length],
-            allCards[(dayOfYear + 1) % allCards.length],
-          ].filter((card, i, arr) => arr.indexOf(card) === i);
+    // Injection slots: position 3 = MissionPrompt, 6 = ProfileSuggestion, 9 = MusicHighlight
+    const injections: { position: number; card: DiscoverResultItem | null }[] = [
+      { position: 3, card: missionPromptCard },
+      { position: 6, card: profileSuggestionCard },
+      { position: 9, card: musicHighlightCard },
+    ];
 
     const result: DiscoverResultItem[] = [...flatItems];
-    // Insert selected cards at positions 3, 7
-    selectedCards
-      .map((card, i) => ({ position: 3 + i * 4, card }))
+    // Insert from highest position first so earlier inserts don't shift later indices
+    injections
+      .filter((inj): inj is { position: number; card: DiscoverResultItem } => inj.card !== null)
       .sort((a, b) => b.position - a.position)
       .forEach(({ position, card }) => {
         const insertAt = Math.min(position, result.length);
@@ -204,7 +199,7 @@ function Discover() {
               key={`question-${item.body.id}`}
               questionId={item.body.id}
               question={item.body.content}
-              tag="Question of the Day"
+              tag={item.body.is_admin_question ? 'Highlight' : 'Question'}
             />
           );
         case 'Interest':
