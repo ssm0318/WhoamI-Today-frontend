@@ -1,47 +1,38 @@
 import styled from 'styled-components';
 
-export const TmiInputBarWrapper = styled.div`
+export const ColorCard = styled.div<{ $bg: string }>`
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background-color: ${({ theme }) => theme.PRIMARY};
-  padding: 24px 16px;
-`;
-
-export const TmiInputBar = styled.button`
-  width: 100%;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 20px;
-  background-color: ${({ theme }) => theme.WHITE};
-  border: 1.4px solid ${({ theme }) => theme.LIGHT_GRAY};
-  border-radius: 30px;
-  cursor: pointer;
-`;
-
-export const PhotoOfTheDayCard = styled.button`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  background-color: ${({ theme }) => theme.TERTIARY_PINK};
-  border-radius: 12px;
-  cursor: pointer;
+  padding: 20px;
+  border-radius: 16px;
+  background: ${({ $bg }) => $bg};
   text-align: left;
 `;
 
-export const SharePhotoButton = styled.div`
-  width: 100%;
-  display: flex;
+export const ShareActionButton = styled.div`
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px;
-  background-color: ${({ theme }) => theme.DARK};
+  padding: 10px 24px;
   border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.95);
+  cursor: pointer;
+  align-self: flex-start;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    opacity: 0.8;
+  }
+`;
+
+export const QuestionsCard = styled.div`
+  width: 100%;
+  padding: 20px;
+  border-radius: 16px;
+  background-color: #f8f4ff;
+  border: 1px solid #e8d5ff;
 `;
 
 export const SectionCard = styled.div`
