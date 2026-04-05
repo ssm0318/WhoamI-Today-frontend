@@ -31,8 +31,7 @@ export const QuestionsCard = styled.div`
   width: 100%;
   padding: 20px;
   border-radius: 16px;
-  background-color: #e6f0ff;
-  border: 1px solid #b3d4ff;
+  background-color: ${({ theme }) => theme.SECONDARY};
 `;
 
 export const SectionCard = styled.div`
