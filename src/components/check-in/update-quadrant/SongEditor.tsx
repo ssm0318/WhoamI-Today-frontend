@@ -29,15 +29,23 @@ export default function SongEditor({
 }: Props) {
   const [query, setQuery] = useState('');
   const [trackList, setTrackList] = useState<Track[]>([]);
+  const [searchError, setSearchError] = useState('');
   const spotifyManager = SpotifyManager.getInstance();
 
   useAsyncEffect(async () => {
     if (!query) {
       setTrackList([]);
+      setSearchError('');
       return;
     }
-    const tracks = await spotifyManager.searchMusic(query, 10, 0);
-    setTrackList(tracks);
+    try {
+      const tracks = await spotifyManager.searchMusic(query, 10, 0);
+      setTrackList(tracks);
+      setSearchError('');
+    } catch {
+      setTrackList([]);
+      setSearchError('Search unavailable');
+    }
   }, [query]);
 
   const handleSelectTrack = (track: Track) => {
@@ -85,7 +93,12 @@ export default function SongEditor({
           </Layout.FlexCol>
         )}
 
-        {query && trackList.length === 0 && (
+        {searchError && (
+          <Typo type="body-small" color="MEDIUM_GRAY" textAlign="center">
+            {searchError}
+          </Typo>
+        )}
+        {query && !searchError && trackList.length === 0 && (
           <Typo type="body-small" color="MEDIUM_GRAY" textAlign="center">
             No results found
           </Typo>
