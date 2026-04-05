@@ -31,14 +31,21 @@ function MyCheckInCard() {
     <Container>
       {/* Row 1: Profile + username + social battery */}
       <Layout.FlexRow w="100%" gap={7} alignItems="center">
-        <ProfileImage
-          imageUrl={myProfile?.profile_image}
-          username={myProfile?.username}
-          size={36}
-        />
-        <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 100 }}>
-          {myProfile?.username || ''}
-        </Typo>
+        <Layout.FlexRow
+          gap={7}
+          alignItems="center"
+          style={{ cursor: 'pointer' }}
+          onClick={() => navigate('/my')}
+        >
+          <ProfileImage
+            imageUrl={myProfile?.profile_image}
+            username={myProfile?.username}
+            size={36}
+          />
+          <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 100 }}>
+            {myProfile?.username || ''}
+          </Typo>
+        </Layout.FlexRow>
         {social_battery && Object.values(SocialBattery).includes(social_battery) ? (
           <SocialBatteryChip
             socialBattery={social_battery}
