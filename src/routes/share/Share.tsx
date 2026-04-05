@@ -68,11 +68,9 @@ function Share() {
             <Typo type="head-line" color="WHITE" bold>
               Photo of the Day
             </Typo>
-            <Layout.LayoutBase style={{ opacity: 0.85 }}>
-              <Typo type="body-medium" color="WHITE">
-                {t('share_page.photo_description')}
-              </Typo>
-            </Layout.LayoutBase>
+            <Typo type="title-medium" color="WHITE">
+              {t('share_page.photo_description')}
+            </Typo>
             <ShareActionButton onClick={handleClickSharePhoto}>
               <Typo type="label-large" fontWeight={600}>
                 Share photo
@@ -125,7 +123,7 @@ function Share() {
                 style={{ cursor: 'pointer' }}
                 onClick={() => navigate('/questions')}
               >
-                <Typo type="title-medium" color="PRIMARY" fontWeight={600}>
+                <Typo type="title-medium" fontWeight={600}>
                   See all questions
                 </Typo>
               </Layout.FlexRow>
