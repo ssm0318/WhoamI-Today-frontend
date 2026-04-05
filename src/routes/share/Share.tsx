@@ -64,7 +64,7 @@ function Share() {
       <PullToRefresh onRefresh={handleRefresh}>
         <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} pv={16} gap={16} pb={100}>
           {/* Section 1: Photo of the Day */}
-          <ColorCard $bg="linear-gradient(135deg, #E91E63 0%, #AD1457 100%)">
+          <ColorCard $bg="linear-gradient(135deg, #FF00A8 0%, #C2007E 100%)">
             <Typo type="head-line" color="WHITE" bold>
               Photo of the Day
             </Typo>
@@ -97,7 +97,7 @@ function Share() {
 
           {/* Section 3: Questions of the Day */}
           <QuestionsCard>
-            <Typo type="head-line" bold mb={12}>
+            <Typo type="head-line" bold mb={24}>
               Questions of the Day
             </Typo>
             {visibleQuestions.length > 0 ? (

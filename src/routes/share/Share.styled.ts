@@ -31,8 +31,8 @@ export const QuestionsCard = styled.div`
   width: 100%;
   padding: 20px;
   border-radius: 16px;
-  background-color: #f8f4ff;
-  border: 1px solid #e8d5ff;
+  background-color: #e6f0ff;
+  border: 1px solid #b3d4ff;
 `;
 
 export const SectionCard = styled.div`
