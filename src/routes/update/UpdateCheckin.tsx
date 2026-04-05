@@ -1,5 +1,6 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import BatteryEditor from '@components/check-in/update-quadrant/BatteryEditor';
 import MoodEditor from '@components/check-in/update-quadrant/MoodEditor';
@@ -26,6 +27,8 @@ function isArchived(updatedAt?: string): boolean {
 }
 
 export default function UpdateCheckin() {
+  const [t] = useTranslation('translation', { keyPrefix: 'social_battery' });
+
   const { checkIn, fetchCheckIn, setCheckInSaveHandler, setCheckInSaving } = useBoundStore(
     (state) => ({
       checkIn: state.checkIn,
@@ -145,12 +148,17 @@ export default function UpdateCheckin() {
         >
           {batteryArchived && <ArchivedBadge>Only Me</ArchivedBadge>}
           {battery ? (
-            <>
+            <Layout.FlexCol alignItems="center" gap={6}>
               <span style={{ fontSize: 40, lineHeight: 1 }}>
                 {SocialBatteryChipAssets[battery]?.emoji || ''}
               </span>
-              <QuadrantLabel>Social Battery</QuadrantLabel>
-            </>
+              <Typo type="label-medium" numberOfLines={1} textAlign="center">
+                {t(battery)}
+              </Typo>
+              <Typo type="label-medium" color="MEDIUM_GRAY" numberOfLines={1} textAlign="center">
+                Social Battery
+              </Typo>
+            </Layout.FlexCol>
           ) : (
             <>
               <SvgIcon name="add_reaction_default" size={32} />
@@ -198,7 +206,7 @@ export default function UpdateCheckin() {
               <Typo type="label-medium" numberOfLines={1} textAlign="center">
                 {trackData.name}
               </Typo>
-              <Typo type="label-small" color="MEDIUM_GRAY" numberOfLines={1} textAlign="center">
+              <Typo type="label-medium" color="MEDIUM_GRAY" numberOfLines={1} textAlign="center">
                 {trackData.artists?.[0]?.name || ''}
               </Typo>
             </Layout.FlexCol>
