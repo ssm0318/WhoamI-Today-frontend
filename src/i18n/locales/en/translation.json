@@ -113,7 +113,8 @@
         "questions": "Questions",
         "share": "Share",
         "feed": "Feed",
-        "discover": "Discover"
+        "discover": "Discover",
+        "update": "Check-In"
     },
     "header": {
         "my": "My Profile",
