@@ -93,10 +93,11 @@ function MissionOfTheDay({ onDoMission }: Props) {
     setAttempts(currentAttempts);
   }
 
+  const remaining = MAX_ATTEMPTS - attempts;
   const buttonLabel = allUsed
-    ? `All ${MAX_ATTEMPTS} attempts used`
+    ? 'No attempts left today'
     : attempts > 0
-    ? `Do it (${attempts}/${MAX_ATTEMPTS} shared)`
+    ? `Try again (${remaining} left)`
     : 'Do it';
 
   return (
