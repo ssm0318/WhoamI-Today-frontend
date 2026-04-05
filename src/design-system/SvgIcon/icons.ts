@@ -141,6 +141,8 @@ const discover_active = 'discover_active';
 const discover_inactive = 'discover_inactive';
 const share_active = 'share_active';
 const share_inactive = 'share_inactive';
+const update_active = 'update_active';
+const update_inactive = 'update_inactive';
 
 const delete_button = 'delete_button';
 const top_navigation_friend = 'top_navigation_friend';
@@ -307,4 +309,6 @@ export {
   top_navigation_edit,
   top_navigation_friend,
   trash_can,
+  update_active,
+  update_inactive,
 };

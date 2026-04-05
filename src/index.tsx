@@ -64,6 +64,7 @@ import Password from './routes/sign-up/Password';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
 import SuggestQuestions from './routes/SuggestQuestions';
+import UpdateCheckin from './routes/update/UpdateCheckin';
 import UserPage from './routes/UserPage';
 
 const router = createBrowserRouter([
@@ -122,6 +123,10 @@ const router = createBrowserRouter([
           { path: '', element: <Share /> },
           { path: 'photo', element: <PhotoOfTheDayFlow /> },
         ],
+      },
+      {
+        path: 'update',
+        children: [{ path: '', element: <UpdateCheckin /> }],
       },
       {
         path: 'questions',

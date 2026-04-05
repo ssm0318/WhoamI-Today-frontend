@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import { Layout, Typo } from '@design-system';
 import { SocialBattery } from '@models/checkIn';
 import { SocialBatteryChipAssets } from './SocialBatteryChip.contants';
@@ -9,6 +8,7 @@ interface SocialBatteryChipProps {
   onSelect?: (socialBattery: SocialBattery) => void;
   isSelected?: boolean;
   compact?: boolean;
+  borderless?: boolean;
   onClick?: () => void;
 }
 
@@ -17,6 +17,7 @@ function SocialBatteryChip({
   onSelect,
   isSelected,
   compact = false,
+  borderless = false,
   onClick,
 }: SocialBatteryChipProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'social_battery' });
@@ -29,6 +30,21 @@ function SocialBatteryChip({
     return null;
   }
   const { emoji } = SocialBatteryChipAssets[socialBattery];
+
+  if (borderless) {
+    return (
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
+      <span
+        role="button"
+        tabIndex={0}
+        style={{ cursor: onClick ? 'pointer' : undefined, fontSize: 18, lineHeight: 1 }}
+        onClick={handleOnClick}
+      >
+        {emoji}
+      </span>
+    );
+  }
+
   return (
     <Layout.FlexRow
       bgColor="WHITE"
@@ -41,9 +57,7 @@ function SocialBatteryChip({
       style={{ flexShrink: 0 }}
       onClick={handleOnClick}
     >
-      {emoji && (
-        <EmojiItem emojiString={emoji} size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
-      )}
+      {emoji && <span style={{ fontSize: 16, lineHeight: 1 }}>{emoji}</span>}
       {!compact && <Typo type="label-large">{t(socialBattery)}</Typo>}
     </Layout.FlexRow>
   );

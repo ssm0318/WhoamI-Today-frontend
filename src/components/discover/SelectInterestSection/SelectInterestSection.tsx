@@ -64,7 +64,9 @@ function SelectInterestSection({
 
   return (
     <S.SelectInterestSectionWrapper>
-      <S.Title>Select your interests</S.Title>
+      <Typo type="title-medium" color="WHITE" ml={16}>
+        Select your interests
+      </Typo>
 
       <S.InterestGrid>
         {displayList.map((interestItem) => (
