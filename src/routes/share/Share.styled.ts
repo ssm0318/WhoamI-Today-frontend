@@ -43,3 +43,11 @@ export const SharePhotoButton = styled.div`
   background-color: ${({ theme }) => theme.DARK};
   border-radius: 12px;
 `;
+
+export const SectionCard = styled.div`
+  width: 100%;
+  padding: 16px;
+  background-color: ${({ theme }) => theme.WHITE};
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.LIGHT_GRAY};
+`;
