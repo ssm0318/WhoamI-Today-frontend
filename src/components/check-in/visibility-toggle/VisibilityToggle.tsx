@@ -24,7 +24,7 @@ function VisibilityToggle({ value, onChange }: Props) {
           onClick={() => onChange(opt.value)}
         >
           <Typo
-            type="label-small"
+            type="label-large"
             color={value === opt.value ? 'PRIMARY' : 'MEDIUM_GRAY'}
             fontWeight={value === opt.value ? 600 : 400}
           >
@@ -47,8 +47,8 @@ const ToggleContainer = styled.div`
 const ToggleOption = styled.div<{ $isSelected: boolean }>`
   display: flex;
   align-items: center;
-  padding: 4px 8px;
-  border-radius: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
   cursor: pointer;
   background-color: ${({ $isSelected, theme }) => ($isSelected ? theme.WHITE : 'transparent')};
   border: 1px solid ${({ $isSelected, theme }) => ($isSelected ? theme.PRIMARY : 'transparent')};

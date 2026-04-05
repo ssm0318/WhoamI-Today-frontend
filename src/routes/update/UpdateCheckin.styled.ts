@@ -62,7 +62,7 @@ export const ArchivedBadge = styled.div`
 `;
 
 export const QuadrantLabel = styled.span`
-  font-size: 12px;
+  font-size: 14px;
   color: ${Colors.MEDIUM_GRAY};
   font-weight: 500;
 `;
