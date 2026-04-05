@@ -57,7 +57,7 @@ function isMissionCompletedToday(): boolean {
   return stored === String(getDayOfYear());
 }
 
-function markMissionCompleted(): void {
+export function markMissionCompleted(): void {
   localStorage.setItem(MISSION_STORAGE_KEY, String(getDayOfYear()));
 }
 
@@ -71,42 +71,32 @@ function MissionOfTheDay({ onDoMission }: Props) {
 
   const handleDoIt = () => {
     if (isCompleted) return;
-    markMissionCompleted();
-    setIsCompleted(true);
+    // Don't mark as completed here — only navigate.
+    // Completion is marked after the user actually posts.
     onDoMission(todayMission);
   };
 
+  // Allow parent to refresh completion state when returning to this page
+  const refreshCompleted = () => setIsCompleted(isMissionCompletedToday());
+
+  // Check completion on every render (handles returning from post flow)
+  if (isMissionCompletedToday() !== isCompleted) {
+    refreshCompleted();
+  }
+
   return (
-    <MissionCard>
-      <Layout.FlexCol gap={8} w="100%">
-        <Layout.LayoutBase style={{ opacity: 0.8 }}>
-          <Typo type="label-medium" color="WHITE">
-            Mission of the Day
-          </Typo>
-        </Layout.LayoutBase>
-        <Typo type="title-medium" color="WHITE">
-          {todayMission.prompt}
-        </Typo>
-      </Layout.FlexCol>
+    <Layout.FlexCol gap={12} w="100%">
+      <Typo type="title-medium" color="WHITE">
+        {todayMission.prompt}
+      </Typo>
       <ActionButton onClick={handleDoIt} $isCompleted={isCompleted}>
         <Typo type="label-large" color={isCompleted ? 'MEDIUM_GRAY' : 'PRIMARY'} fontWeight={600}>
           {isCompleted ? 'Done \u2713' : 'Do it'}
         </Typo>
       </ActionButton>
-    </MissionCard>
+    </Layout.FlexCol>
   );
 }
-
-const MissionCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 20px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #8700ff 0%, #6200b3 100%);
-  width: 100%;
-  box-sizing: border-box;
-`;
 
 const ActionButton = styled.div<{ $isCompleted: boolean }>`
   display: inline-flex;
@@ -114,7 +104,7 @@ const ActionButton = styled.div<{ $isCompleted: boolean }>`
   justify-content: center;
   padding: 10px 24px;
   border-radius: 12px;
-  background-color: ${({ $isCompleted }) => ($isCompleted ? '#F5F5F5' : '#FFFFFF')};
+  background-color: ${({ $isCompleted }) => ($isCompleted ? '#F5F5F5' : '#F3E8FF')};
   cursor: ${({ $isCompleted }) => ($isCompleted ? 'default' : 'pointer')};
   align-self: flex-start;
   -webkit-tap-highlight-color: transparent;
