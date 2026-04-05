@@ -6,10 +6,9 @@ export const GridContainer = styled.div`
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   gap: 12px;
-  padding: 16px;
+  padding: 12px;
   width: 100%;
-  height: calc(100vh - 200px);
-  max-height: 500px;
+  flex: 1;
 `;
 
 export const QuadrantCard = styled.div<{ $isEmpty?: boolean; $isArchived?: boolean }>`
@@ -66,9 +65,4 @@ export const QuadrantLabel = styled.span`
   font-size: 12px;
   color: ${Colors.MEDIUM_GRAY};
   font-weight: 500;
-`;
-
-export const SaveButtonWrapper = styled.div`
-  padding: 0 16px 16px 16px;
-  width: 100%;
 `;

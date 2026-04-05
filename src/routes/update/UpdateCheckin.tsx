@@ -1,29 +1,23 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
-import MainContainer from '@components/_common/main-container/MainContainer';
 import BatteryEditor from '@components/check-in/update-quadrant/BatteryEditor';
 import MoodEditor from '@components/check-in/update-quadrant/MoodEditor';
 import SongEditor from '@components/check-in/update-quadrant/SongEditor';
 import ThoughtEditor from '@components/check-in/update-quadrant/ThoughtEditor';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import { SocialBatteryChipAssets } from '@components/profile/social-batter-chip/SocialBatteryChip.contants';
-import { Button, Layout, SvgIcon, Typo } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { ComponentVisibility, DEFAULT_VISIBILITY, SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
 import { postCheckIn } from '@utils/apis/checkIn';
-import {
-  ArchivedBadge,
-  GridContainer,
-  QuadrantCard,
-  QuadrantLabel,
-  SaveButtonWrapper,
-} from './UpdateCheckin.styled';
+import { MainScrollContainer } from '../Root';
+import { ArchivedBadge, GridContainer, QuadrantCard, QuadrantLabel } from './UpdateCheckin.styled';
 
 type EditorTarget = 'battery' | 'mood' | 'song' | 'thought' | null;
 
-const ARCHIVE_THRESHOLD_MS = 12 * 60 * 60 * 1000; // 12 hours
+const ARCHIVE_THRESHOLD_MS = 12 * 60 * 60 * 1000;
 
 function isArchived(updatedAt?: string): boolean {
   if (!updatedAt) return false;
@@ -31,29 +25,29 @@ function isArchived(updatedAt?: string): boolean {
 }
 
 export default function UpdateCheckin() {
-  const { checkIn, fetchCheckIn } = useBoundStore((state) => ({
-    checkIn: state.checkIn,
-    fetchCheckIn: state.fetchCheckIn,
-  }));
+  const { checkIn, fetchCheckIn, setCheckInSaveHandler, setCheckInSaving } = useBoundStore(
+    (state) => ({
+      checkIn: state.checkIn,
+      fetchCheckIn: state.fetchCheckIn,
+      setCheckInSaveHandler: state.setCheckInSaveHandler,
+      setCheckInSaving: state.setCheckInSaving,
+    }),
+  );
 
   const sendMessage = usePostAppMessage();
 
   const [activeEditor, setActiveEditor] = useState<EditorTarget>(null);
-  const [saving, setSaving] = useState(false);
 
-  // Draft state for all 4 components
   const [battery, setBattery] = useState<SocialBattery | null>(null);
   const [mood, setMood] = useState('');
   const [trackId, setTrackId] = useState('');
   const [thought, setThought] = useState('');
 
-  // Per-component visibility
   const [batteryVis, setBatteryVis] = useState<ComponentVisibility>(DEFAULT_VISIBILITY.battery);
   const [moodVis, setMoodVis] = useState<ComponentVisibility>(DEFAULT_VISIBILITY.mood);
   const [songVis, setSongVis] = useState<ComponentVisibility>(DEFAULT_VISIBILITY.song);
   const [thoughtVis, setThoughtVis] = useState<ComponentVisibility>(DEFAULT_VISIBILITY.thought);
 
-  // Load existing check-in data
   useAsyncEffect(async () => {
     const ci = await fetchCheckIn();
     if (!ci) return;
@@ -67,7 +61,6 @@ export default function UpdateCheckin() {
     if (ci.thought_visibility) setThoughtVis(ci.thought_visibility);
   }, []);
 
-  // Detect archived state per component
   const batteryArchived = useMemo(
     () => !!battery && isArchived(checkIn?.battery_updated_at),
     [battery, checkIn?.battery_updated_at],
@@ -86,7 +79,7 @@ export default function UpdateCheckin() {
   );
 
   const handleSave = useCallback(async () => {
-    setSaving(true);
+    setCheckInSaving(true);
     try {
       await postCheckIn({
         social_battery: battery,
@@ -103,7 +96,7 @@ export default function UpdateCheckin() {
       }
       await fetchCheckIn();
     } finally {
-      setSaving(false);
+      setCheckInSaving(false);
     }
   }, [
     battery,
@@ -116,10 +109,17 @@ export default function UpdateCheckin() {
     thoughtVis,
     fetchCheckIn,
     sendMessage,
+    setCheckInSaving,
   ]);
 
+  // Register save handler for the header Save button
+  useEffect(() => {
+    setCheckInSaveHandler(handleSave);
+    return () => setCheckInSaveHandler(null);
+  }, [handleSave, setCheckInSaveHandler]);
+
   return (
-    <MainContainer>
+    <MainScrollContainer>
       <GridContainer>
         {/* Top-Left: Social Battery */}
         <QuadrantCard
@@ -206,14 +206,6 @@ export default function UpdateCheckin() {
         </QuadrantCard>
       </GridContainer>
 
-      <SaveButtonWrapper>
-        <Button.Primary
-          text={saving ? 'Saving...' : 'Save'}
-          status={saving ? 'disabled' : 'normal'}
-          onClick={handleSave}
-        />
-      </SaveButtonWrapper>
-
       {/* Editor Popups */}
       <BatteryEditor
         isOpen={activeEditor === 'battery'}
@@ -247,6 +239,6 @@ export default function UpdateCheckin() {
         visibility={thoughtVis}
         onVisibilityChange={setThoughtVis}
       />
-    </MainContainer>
+    </MainScrollContainer>
   );
 }
