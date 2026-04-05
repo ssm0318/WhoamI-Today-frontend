@@ -12,9 +12,9 @@ function SocialBatteryPlaceholder() {
   };
 
   return (
-    <PlaceholderWrapper onClick={handleClickAddSocialBattery} ph={12} gap={4}>
-      <SvgIcon name="add_default" size={12} />
-      <Typo type="label-medium" color="BLACK">
+    <PlaceholderWrapper onClick={handleClickAddSocialBattery} gap={4}>
+      <SvgIcon name="add_default" size={14} />
+      <Typo type="label-large" color="BLACK">
         {t('settings.edit_profile.placeholders.social_battery')} 🔋
       </Typo>
     </PlaceholderWrapper>

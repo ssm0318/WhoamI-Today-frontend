@@ -1,10 +1,12 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import { FileSelectedData } from '@models/app';
+import { ComponentVisibility } from '@models/checkIn';
 import { NewNoteForm, PostVisibility } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
@@ -14,7 +16,6 @@ import { FlexRow } from 'src/design-system/layouts';
 import NewNoteImageEdit from '../new-note-image-edit/NewNoteImageEdit';
 import NewNotePhotoUploadBottomSheet from '../new-note-photo-upload-bottom-sheet/NewNotePhotoUploadBottomSheet';
 import { NoteImage, NoteImageWrapper } from '../note-image/NoteImage.styled';
-import VisibilityMultiSelect from '../visibility-multi-select/VisibilityMultiSelect';
 import { NoteInput } from './NoteInputBox.styled';
 
 interface NoteInformationProps {
@@ -72,8 +73,8 @@ function NewNoteContent({
   });
 
   const onClickAdd = () => {
-    /* 안드로이드의 경우 권한 문제로 앨범 사진 선택, 카메라 촬영 메뉴 별도 표시 */
-    if (isAndroid) {
+    /* Show camera/gallery choice for Photo of the Day or Android */
+    if (isAndroid || autoOpenImagePicker) {
       setShowPhotoUploadBottomSheet(true);
       return;
     }
@@ -88,11 +89,20 @@ function NewNoteContent({
   };
 
   const handleOpenCamera = () => {
-    postMessage('OPEN_CAMERA', {});
+    if (window.ReactNativeWebView) {
+      postMessage('OPEN_CAMERA', {});
+    } else {
+      // On web, open file input (camera not available)
+      inputRef.current?.click();
+    }
   };
 
   const handleOpenAlbum = () => {
-    postMessage('OPEN_GALLERY', {});
+    if (window.ReactNativeWebView) {
+      postMessage('OPEN_GALLERY', {});
+    } else {
+      inputRef.current?.click();
+    }
   };
 
   const closePhotoUploadBottomSheet = () => {
@@ -196,24 +206,15 @@ function NewNoteContent({
           )}
 
           {/* Media button and visibility options */}
-          <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="flex-start" mt={20}>
+          <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" mt={20}>
             <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
-            {/** visibility options */}
-            <Layout.FlexCol gap={2} bgColor="LIGHT" p={6} rounded={8}>
-              <Typo type="label-medium" bold mb={4} fontSize={11}>
-                {t('access_setting.title')}
-              </Typo>
-              <VisibilityMultiSelect
-                selectedVisibilities={noteInfo.visibility}
-                onChange={handleChangeVisibility}
-                availableVisibilities={[
-                  PostVisibility.ONLY_ME,
-                  PostVisibility.CLOSE_FRIENDS,
-                  PostVisibility.FRIENDS,
-                  PostVisibility.PUBLIC,
-                ]}
-              />
-            </Layout.FlexCol>
+            <VisibilityToggle
+              value={
+                (noteInfo.visibility[0] as unknown as ComponentVisibility) ||
+                ComponentVisibility.FRIENDS
+              }
+              onChange={(v) => handleChangeVisibility([v as unknown as PostVisibility])}
+            />
           </Layout.FlexRow>
 
           <input

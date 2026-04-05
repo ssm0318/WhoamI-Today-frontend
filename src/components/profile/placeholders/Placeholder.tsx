@@ -13,11 +13,11 @@ interface PlaceholderProps {
 
 export function PlaceholderWrapper({
   children,
-  outline = 'MEDIUM_GRAY',
-  bgColor = 'LIGHT',
+  outline = 'LIGHT_GRAY',
+  bgColor = 'WHITE',
   onClick,
   gap = 4,
-  ph = 20,
+  ph = 8,
 }: PlaceholderProps) {
   return (
     <S.PlaceholderWrapper

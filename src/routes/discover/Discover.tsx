@@ -3,6 +3,9 @@ import { useTranslation } from 'react-i18next';
 import FilterChip from '@components/_common/filter-chip/FilterChip';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import HighlightQuestionSection from '@components/discover/HighlightQuestionSection/HighlightQuestionSection';
+import MissionPromptCard from '@components/discover/MissionPromptCard/MissionPromptCard';
+import MusicHighlightCard from '@components/discover/MusicHighlightCard/MusicHighlightCard';
+import ProfileSuggestionCard from '@components/discover/ProfileSuggestionCard/ProfileSuggestionCard';
 import SelectInterestSection from '@components/discover/SelectInterestSection/SelectInterestSection';
 import SelectPersonaSection from '@components/discover/SelectPersonaSection/SelectPersonaSection';
 import SharedPlaylistSection, {
@@ -12,7 +15,8 @@ import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/Floatin
 import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
-import { SCREEN_WIDTH } from '@constants/layout';
+import { getDayOfYear, MISSION_POOL } from '@components/share/MissionOfTheDay';
+import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSaveAndHide } from '@hooks/useSaveAndHide';
@@ -23,6 +27,7 @@ import {
   DiscoverMusicTrack,
   DiscoverResultItem,
 } from '@models/discover';
+import { useBoundStore } from '@stores/useBoundStore';
 import { getDiscoverFeed } from '@utils/apis/discover';
 import { getMe } from '@utils/apis/my';
 import { getItemFromSessionStorage, setItemToSessionStorage } from '@utils/sessionStorage';
@@ -52,6 +57,8 @@ function Discover() {
     isAnimating: isPersonaAnimating,
     handleSave: handlePersonaSave,
   } = useSaveAndHide();
+
+  const myProfile = useBoundStore((state) => state.myProfile);
 
   const discoverFilterList = [DiscoverFilter.MUTUAL_FRIENDS, DiscoverFilter.MUTUAL_TRAITS];
   const { scrollRef } = useRestoreScrollPosition('discoverPage');
@@ -83,9 +90,88 @@ function Discover() {
     }));
   }, [discoverData]);
 
+  // Build synthetic cards to inject into the feed
+  const missionPromptCard: DiscoverResultItem | null = useMemo(() => {
+    const todayMission = MISSION_POOL[getDayOfYear() % MISSION_POOL.length];
+    return {
+      type: 'MissionPrompt' as const,
+      body: { prompt: todayMission.prompt, missionType: todayMission.type },
+    };
+  }, []);
+
+  const profileSuggestionCard: DiscoverResultItem | null = useMemo(() => {
+    if (!myProfile) return null;
+    const missingFields: string[] = [];
+    if (!myProfile.pronouns) missingFields.push('Pronouns');
+    if (!myProfile.user_interests || myProfile.user_interests.length === 0)
+      missingFields.push('Interests');
+    if (!myProfile.user_personas || myProfile.user_personas.length === 0)
+      missingFields.push('Personas');
+    if (!myProfile.profile_image) missingFields.push('Profile Photo');
+    if (missingFields.length === 0) return null;
+    return {
+      type: 'ProfileSuggestion' as const,
+      body: { missingFields },
+    };
+  }, [myProfile]);
+
+  const musicHighlightCard: DiscoverResultItem | null = useMemo(() => {
+    if (musicTracks.length === 0) return null;
+    const randomTrack = musicTracks[getDayOfYear() % musicTracks.length];
+    const trackId = typeof randomTrack.track === 'string' ? randomTrack.track : null;
+    if (!trackId) return null;
+    return {
+      type: 'MusicHighlight' as const,
+      body: { trackId, sharedByUsername: randomTrack.sharedBy.username },
+    };
+  }, [musicTracks]);
+
+  // Inject synthetic cards at specific positions in the flattened feed
+  const feedWithInjections = useMemo(() => {
+    if (!discoverData) return [];
+    // Flatten all pages into a single list
+    const flatItems: DiscoverResultItem[] = [];
+    discoverData.forEach((page) => {
+      if (page.results) flatItems.push(...page.results);
+    });
+
+    // Pick at most 2 injected cards per day (rotate daily)
+    const allCards = (
+      [missionPromptCard, profileSuggestionCard, musicHighlightCard] as const
+    ).filter((c) => c !== null) as DiscoverResultItem[];
+    const dayOfYear = getDayOfYear();
+    const selectedCards =
+      allCards.length <= 2
+        ? allCards
+        : [
+            allCards[dayOfYear % allCards.length],
+            allCards[(dayOfYear + 1) % allCards.length],
+          ].filter((card, i, arr) => arr.indexOf(card) === i);
+
+    const result: DiscoverResultItem[] = [...flatItems];
+    // Insert selected cards at positions 3, 7
+    selectedCards
+      .map((card, i) => ({ position: 3 + i * 4, card }))
+      .sort((a, b) => b.position - a.position)
+      .forEach(({ position, card }) => {
+        const insertAt = Math.min(position, result.length);
+        result.splice(insertAt, 0, card);
+      });
+
+    return result;
+  }, [discoverData, missionPromptCard, profileSuggestionCard, musicHighlightCard]);
+
   // Client-side filtering by category
   const filterItem = useCallback(
     (item: DiscoverResultItem): boolean => {
+      // Always show injected synthetic cards
+      if (
+        item.type === 'MissionPrompt' ||
+        item.type === 'ProfileSuggestion' ||
+        item.type === 'MusicHighlight'
+      ) {
+        return true;
+      }
       if (selectedFilter.length === 0) return true;
       // When a filter is active, only show Response/Note items matching the category
       if (item.type !== 'Response' && item.type !== 'Note') return false;
@@ -118,7 +204,7 @@ function Discover() {
               key={`question-${item.body.id}`}
               questionId={item.body.id}
               question={item.body.content}
-              tag={item.body.is_admin_question ? 'Highlight' : 'Question'}
+              tag="Question of the Day"
             />
           );
         case 'Interest':
@@ -142,6 +228,14 @@ function Discover() {
               />
             </S.AnimatedCardWrapper>
           ) : null;
+        case 'MissionPrompt':
+          return <MissionPromptCard key={`mission-${index}`} mission={item.body} />;
+        case 'ProfileSuggestion':
+          return (
+            <ProfileSuggestionCard key={`profile-suggestion-${index}`} suggestion={item.body} />
+          );
+        case 'MusicHighlight':
+          return <MusicHighlightCard key={`music-highlight-${index}`} highlight={item.body} />;
         default:
           return null;
       }
@@ -160,11 +254,11 @@ function Discover() {
 
   // Check if there are any visible items after filtering
   const hasVisibleItems = useMemo(() => {
-    if (!discoverData) return false;
-    return discoverData.some((page) =>
-      page.results?.some((item) => filterItem(item) && renderDiscoverItem(item, 0) !== null),
+    if (feedWithInjections.length === 0) return false;
+    return feedWithInjections.some(
+      (item) => filterItem(item) && renderDiscoverItem(item, 0) !== null,
     );
-  }, [discoverData, filterItem, renderDiscoverItem]);
+  }, [feedWithInjections, filterItem, renderDiscoverItem]);
 
   return (
     <>
@@ -200,7 +294,13 @@ function Discover() {
             {!isLoading && <SharedPlaylistSection tracks={musicTracks} />}
 
             {/* Discover Feed */}
-            <Layout.FlexCol gap={20} mh={20} alignItems="center" w={SCREEN_WIDTH - 40}>
+            <Layout.FlexCol
+              gap={20}
+              ph={DEFAULT_MARGIN}
+              alignItems="center"
+              w="100%"
+              style={{ boxSizing: 'border-box' }}
+            >
               {isLoading ? (
                 <div
                   style={{
@@ -216,11 +316,9 @@ function Discover() {
                 </div>
               ) : hasVisibleItems ? (
                 <Layout.FlexCol gap={20} w="100%">
-                  {discoverData?.map((page) =>
-                    page.results
-                      ?.filter(filterItem)
-                      .map((item, index) => renderDiscoverItem(item, index)),
-                  )}
+                  {feedWithInjections
+                    .filter(filterItem)
+                    .map((item, index) => renderDiscoverItem(item, index))}
                   <div ref={targetRef} />
                   {isLoadingMore && <NoteLoader />}
                 </Layout.FlexCol>

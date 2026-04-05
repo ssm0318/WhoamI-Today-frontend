@@ -13,8 +13,8 @@ function BioPlaceholder() {
 
   return (
     <PlaceholderWrapper onClick={handleClickAddBio}>
-      <SvgIcon name="add_default" size={12} />
-      <Typo type="label-medium" color="BLACK">
+      <SvgIcon name="add_default" size={14} />
+      <Typo type="label-large" color="BLACK">
         {t('settings.edit_profile.placeholders.bio')}
       </Typo>
     </PlaceholderWrapper>

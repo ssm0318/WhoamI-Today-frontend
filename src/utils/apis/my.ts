@@ -89,6 +89,13 @@ export const editProfile = ({
     });
 };
 
+// update chips by category
+export const updateChipsByCategory = async (
+  chipSelections: Record<string, string[]>,
+): Promise<void> => {
+  await axios.post('/user/me/chips/', { chips_by_category: chipSelections });
+};
+
 // sync timezone
 export const syncTimeZone = async (timezone?: string) => {
   const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;

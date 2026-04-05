@@ -3,9 +3,12 @@ import { Layout } from '@design-system';
 
 export const ScrollableCardList = styled(Layout.FlexRow)`
   overflow-x: auto;
+  overflow-y: visible;
   flex-wrap: nowrap;
   align-items: center;
   padding-top: 10px;
+  padding-bottom: 10px;
+  -webkit-overflow-scrolling: touch;
   &::-webkit-scrollbar {
     display: none;
   }

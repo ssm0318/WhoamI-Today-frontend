@@ -113,7 +113,8 @@
     "questions": "질문",
     "share": "공유",
     "feed": "피드",
-    "discover": "발견"
+    "discover": "발견",
+    "update": "체크인"
   },
   "header": {
     "my": "내 프로필",
@@ -291,18 +292,18 @@
     "comments": "댓글",
     "likes": "좋아요",
     "title": "게시글",
-    "new_note": "새로운 게시글",
+    "new_note": "공유",
     "note_header": {
-      "new_note": "새 게시글 작성",
+      "new_note": "공유",
       "edit_note": "게시글 편집"
     },
-    "posted": "업로드 완료 🎉",
+    "posted": "공유 완료 🎉",
     "updated": "수정 완료 🎉",
     "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
     "too_large_file_error": "이미지 크기가 너무 큽니다. 크기를 조정한 후 다시 시도해 주세요.",
     "view": "보기",
     "cancel": "취소",
-    "post": "게시",
+    "post": "공유",
     "whats_on_your_mind": "지금 무슨 생각을 하고 계신가요?",
     "content_restriction": "⚠️ 부적절하거나 불쾌한 내용은 제한될 수 있습니다.",
     "crop_photo": "이미지 자르기",

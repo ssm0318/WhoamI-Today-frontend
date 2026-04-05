@@ -296,6 +296,15 @@ export const getFriendList = async (next?: string | null) => {
 
 export const getUserProfile = async (username: string) => {
   const { data } = await axios.get<UserProfile>(`/user/${encodeURIComponent(username)}/profile/`);
+  // Map friendship_level string to numeric connection_degree
+  if (data.friendship_level && !data.connection_degree) {
+    if (data.friendship_level === '2nd') {
+      data.connection_degree = 2;
+    } else if (data.friendship_level === '3rd+') {
+      data.connection_degree = 3;
+    }
+    // '1st' = direct friend, no degree badge needed
+  }
   return data;
 };
 

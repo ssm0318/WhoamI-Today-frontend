@@ -4,6 +4,7 @@ import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CheckInDetailBottomSheet from '@components/check-in/check-in-detail-bottom-sheet/CheckInDetailBottomSheet';
+import PokeButton from '@components/friends/poke-button/PokeButton';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
@@ -41,7 +42,9 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
 
   const [isEditConnectionsBottomSheetVisible, setIsEditConnectionsBottomSheetVisible] =
     useState(false);
-  const [isCheckInDetailVisible, setIsCheckInDetailVisible] = useState(false);
+  const [checkInDetailFocus, setCheckInDetailFocus] = useState<
+    'battery' | 'status' | 'song' | null
+  >(null);
 
   const handleClickProfile = (e: MouseEvent) => {
     e.stopPropagation();
@@ -60,25 +63,36 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
     }
   };
 
-  const handleClickCheckInChip = () => {
-    setIsCheckInDetailVisible(true);
+  const handleClickBattery = (e?: MouseEvent) => {
+    e?.stopPropagation();
+    setCheckInDetailFocus('battery');
   };
 
-  const hasNewPost = !!recentPost && !recentPost.is_read;
+  const handleClickStatus = (e?: MouseEvent) => {
+    e?.stopPropagation();
+    setCheckInDetailFocus('status');
+  };
+
+  const handleClickNewPost = (e: MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/friends/${username}/new-posts`);
+  };
+
+  const hasNewPost = (!!recentPost && !recentPost.is_read) || (user as any).unread_post_cnt > 0;
 
   return (
     <Container mh={16} ph={16} pv={12} gap={12} rounded={12}>
-      {/* Profile header */}
+      {/* Row 1: Profile + username + badge + battery(emoji) + new post + ping */}
       <Layout.FlexRow w="100%" gap={4} alignItems="center" justifyContent="space-between">
-        <Layout.FlexRow
-          alignItems="center"
-          gap={7}
-          onClick={handleClickProfile}
-          style={{ cursor: 'pointer' }}
-        >
-          <ProfileImage imageUrl={profile_image} username={username} size={36} />
-          <Layout.FlexRow alignItems="center" gap={4}>
-            <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 100 }} mr={4}>
+        <Layout.FlexRow alignItems="center" gap={6} style={{ flex: 1, minWidth: 0 }}>
+          <Layout.FlexRow
+            alignItems="center"
+            gap={6}
+            onClick={handleClickProfile}
+            style={{ cursor: 'pointer' }}
+          >
+            <ProfileImage imageUrl={profile_image} username={username} size={36} />
+            <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 80 }}>
               {username}
             </Typo>
             <SvgIcon
@@ -89,6 +103,27 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
               onClick={handleClickFriendBadge}
             />
           </Layout.FlexRow>
+          {social_battery && Object.values(SocialBattery).includes(social_battery) && (
+            <SocialBatteryChip
+              socialBattery={social_battery}
+              compact
+              borderless
+              onClick={handleClickBattery}
+            />
+          )}
+          {hasNewPost && (
+            <Layout.FlexRow
+              pv={4}
+              ph={8}
+              rounded={8}
+              onClick={handleClickNewPost}
+              style={{ backgroundColor: '#EEE6F4', flexShrink: 0, cursor: 'pointer' }}
+            >
+              <Typo type="label-large" color="PRIMARY" fontWeight={600}>
+                New post
+              </Typo>
+            </Layout.FlexRow>
+          )}
         </Layout.FlexRow>
         <Layout.FlexRow style={{ position: 'relative' }}>
           <Layout.LayoutBase pb={2}>
@@ -113,69 +148,54 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
         </Layout.FlexRow>
       </Layout.FlexRow>
 
-      {/* Check-in chips */}
-      <Layout.FlexCol gap={4} w="100%">
-        <Layout.FlexRow gap={4} w="100%" style={{ minHeight: track_id ? 28 : undefined }}>
-          {social_battery && Object.values(SocialBattery).includes(social_battery) && (
-            <SocialBatteryChip socialBattery={social_battery} onClick={handleClickCheckInChip} />
-          )}
-          {track_id && (
-            <Layout.FlexRow style={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
-              <SpotifyMusic
-                track={track_id}
-                sharer={user}
-                fontType="label-large"
-                useAlbumImg
-                useDetailBottomSheet
-              />
-            </Layout.FlexRow>
-          )}
+      {/* Poke buttons for empty components */}
+      {!social_battery && !mood && !description && !track_id && (
+        <Layout.FlexRow gap={4} style={{ flexWrap: 'wrap' }}>
+          <PokeButton receiverId={id} componentType="battery" />
+          <PokeButton receiverId={id} componentType="status" />
+          <PokeButton receiverId={id} componentType="song" />
         </Layout.FlexRow>
-        <Layout.FlexRow style={{ flexWrap: 'wrap' }} gap={4}>
-          {(mood || description) && (
-            <Layout.FlexRow
-              bgColor="WHITE"
-              gap={4}
-              pv={4}
-              ph={8}
-              outline="LIGHT_GRAY"
-              alignItems="center"
-              rounded={999}
-              style={{ flexShrink: 0, cursor: 'pointer' }}
-              onClick={handleClickCheckInChip}
-            >
-              {mood && (
-                <EmojiItem
-                  emojiString={mood}
-                  size={16}
-                  bgColor="TRANSPARENT"
-                  outline="TRANSPARENT"
-                />
-              )}
-              {description && <Typo type="label-large">{description}</Typo>}
-            </Layout.FlexRow>
+      )}
+
+      {/* Row 2: Status (mood + description) */}
+      {(mood || description) && (
+        <Layout.FlexRow
+          bgColor="WHITE"
+          gap={4}
+          pv={4}
+          ph={8}
+          outline="LIGHT_GRAY"
+          alignItems="center"
+          rounded={8}
+          style={{ flexShrink: 0, cursor: 'pointer' }}
+          onClick={() => handleClickStatus()}
+        >
+          {mood && (
+            <EmojiItem emojiString={mood} size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
           )}
-          {hasNewPost && (
-            <Layout.FlexRow
-              gap={4}
-              pv={4}
-              ph={8}
-              alignItems="center"
-              rounded={999}
-              style={{ backgroundColor: '#EEE6F4', flexShrink: 0 }}
-            >
-              <Typo type="label-large" color="PRIMARY" fontWeight={600}>
-                New post
-              </Typo>
-            </Layout.FlexRow>
-          )}
+          {description && <Typo type="label-large">{description}</Typo>}
         </Layout.FlexRow>
-      </Layout.FlexCol>
+      )}
+
+      {/* Row 3: Song (full width) */}
+      {track_id && (
+        <Layout.FlexRow w="100%" style={{ minWidth: 0, overflow: 'hidden' }}>
+          <SpotifyMusic
+            track={track_id}
+            sharer={user}
+            fontType="label-large"
+            useAlbumImg
+            useDetailBottomSheet
+          />
+        </Layout.FlexRow>
+      )}
 
       {/* Check-in detail bottom sheet */}
       <CheckInDetailBottomSheet
-        visible={isCheckInDetailVisible}
-        closeBottomSheet={() => setIsCheckInDetailVisible(false)}
+        visible={!!checkInDetailFocus}
+        closeBottomSheet={() => setCheckInDetailFocus(null)}
+        focusComponent={checkInDetailFocus}
+        checkInId={user.check_in_id}
         username={username}
         profileImage={profile_image}
         socialBattery={social_battery}

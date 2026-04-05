@@ -16,6 +16,7 @@ import { ChatRoom } from 'src/routes/chat-room/ChatRoom';
 import { NotFound } from 'src/routes/NotFound';
 import Ping from 'src/routes/ping/Ping';
 import './i18n';
+import PhotoOfTheDayFlow from './components/share/PhotoOfTheDayFlow';
 import SpotifyManager from './libs/SpotifyManager';
 import reportWebVitals from './reportWebVitals';
 import ActivateEmail from './routes/ActivateEmail';
@@ -30,6 +31,7 @@ import DefaultMyFriendsList from './routes/friends/DefaultMyFriendsList';
 import DefaultUserFriendsList from './routes/friends/DefaultUserFriendsList';
 import EditFriends from './routes/friends/EditFriends';
 import ExploreFriends from './routes/friends/ExploreFriends';
+import FriendNewPosts from './routes/friends/FriendNewPosts';
 import FriendsFeed from './routes/friends/FriendsFeed';
 import FriendsList from './routes/friends/FriendsList';
 import Intro from './routes/Intro';
@@ -62,6 +64,7 @@ import Password from './routes/sign-up/Password';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
 import SuggestQuestions from './routes/SuggestQuestions';
+import UpdateCheckin from './routes/update/UpdateCheckin';
 import UserPage from './routes/UserPage';
 
 const router = createBrowserRouter([
@@ -103,6 +106,7 @@ const router = createBrowserRouter([
           // { path: 'feed', element: <FriendsFeed /> },
           { path: 'explore', element: <ExploreFriends /> },
           { path: 'edit', element: <EditFriends /> },
+          { path: ':username/new-posts', element: <FriendNewPosts /> },
         ],
       },
       {
@@ -115,7 +119,14 @@ const router = createBrowserRouter([
       },
       {
         path: 'share',
-        children: [{ path: '', element: <Share /> }],
+        children: [
+          { path: '', element: <Share /> },
+          { path: 'photo', element: <PhotoOfTheDayFlow /> },
+        ],
+      },
+      {
+        path: 'update',
+        children: [{ path: '', element: <UpdateCheckin /> }],
       },
       {
         path: 'questions',

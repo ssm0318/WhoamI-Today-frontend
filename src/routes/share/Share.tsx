@@ -1,110 +1,106 @@
-import { useCallback } from 'react';
+import { ChangeEvent, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
-
 import PromptCard from '@components/_common/prompt/PromptCard';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
+import MissionOfTheDay, { markMissionCompleted } from '@components/share/MissionOfTheDay';
 import { DEFAULT_MARGIN } from '@constants/layout';
-import { Layout, SvgIcon, Typo } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
-import { DailyQuestion, ShareType } from '@models/post';
+import { DailyQuestion } from '@models/post';
 import { getMe } from '@utils/apis/my';
 import { getTodayQuestions } from '@utils/apis/question';
-import { getTmiPlaceholder } from '@utils/apis/tmi';
-
 import { MainScrollContainer } from '../Root';
-import {
-  PhotoOfTheDayCard,
-  SharePhotoButton,
-  TmiInputBar,
-  TmiInputBarWrapper,
-} from './Share.styled';
+import { ColorCard, QuestionsCard, ShareActionButton } from './Share.styled';
+
+const MAX_VISIBLE_QUESTIONS = 3;
 
 function Share() {
-  const [t, i18n] = useTranslation('translation');
+  const [t] = useTranslation('translation');
   const navigate = useNavigate();
   const { scrollRef } = useRestoreScrollPosition('sharePage');
+  const photoInputRef = useRef<HTMLInputElement>(null);
 
   const { data: todayQuestions, mutate } = useSWR<DailyQuestion[]>(
     '/qna/questions/daily/',
     getTodayQuestions,
   );
 
-  const { data: tmiPlaceholder } = useSWR(`/user/tmi-placeholder/?lang=${i18n.language}`, () =>
-    getTmiPlaceholder(i18n.language),
-  );
-
   const handleRefresh = useCallback(async () => {
     await Promise.all([mutate(), getMe()]);
   }, [mutate]);
 
-  const handleClickTmiInput = () => {
-    navigate('/notes/new', {
-      state: {
-        shareType: ShareType.TMI_OF_THE_DAY,
-        tmiPlaceholder: tmiPlaceholder || t('share_page.tmi_placeholder'),
-      },
-    });
+  const handleClickSharePhoto = () => {
+    photoInputRef.current?.click();
   };
 
-  const handleClickSharePhoto = () => {
-    navigate('/notes/new', {
-      state: { shareType: ShareType.PHOTO_OF_THE_DAY },
-    });
+  const handlePhotoFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) return;
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      navigate('/share/photo', { state: { imageDataUrl: reader.result as string } });
+    };
+    reader.readAsDataURL(file);
+    if (photoInputRef.current) photoInputRef.current.value = '';
   };
+
+  const handleDoMission = (mission: { prompt: string; type: string }) => {
+    if (mission.type === 'song') {
+      markMissionCompleted();
+      navigate('/update');
+    } else {
+      navigate('/notes/new', {
+        state: { tmiPlaceholder: mission.prompt, fromShare: true, missionMode: true },
+      });
+    }
+  };
+
+  const visibleQuestions = todayQuestions?.slice(0, MAX_VISIBLE_QUESTIONS) ?? [];
 
   return (
     <MainScrollContainer scrollRef={scrollRef}>
       <PullToRefresh onRefresh={handleRefresh}>
-        <Layout.FlexCol w="100%">
-          {/* TMI of the Day */}
-          <TmiInputBarWrapper>
+        <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} pv={16} gap={16} pb={100}>
+          {/* Section 1: Photo of the Day */}
+          <ColorCard $bg="linear-gradient(135deg, #FF00A8 0%, #C2007E 100%)">
             <Typo type="head-line" color="WHITE" bold>
-              {t('share_page.tmi_of_the_day')}
+              Photo of the Day
             </Typo>
-            <TmiInputBar type="button" onClick={handleClickTmiInput}>
-              <Layout.FlexRow gap={8} alignItems="center" style={{ flex: 1, minWidth: 0 }}>
-                <SvgIcon name="add_default" size={24} color="PRIMARY" />
-                <Typo
-                  type="body-medium"
-                  color="MEDIUM_GRAY"
-                  style={{
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {tmiPlaceholder || t('share_page.tmi_placeholder')}
-                </Typo>
-              </Layout.FlexRow>
-              <SvgIcon name="chat_media_image" size={24} fill="DARK_GRAY" />
-            </TmiInputBar>
-          </TmiInputBarWrapper>
+            <Typo type="title-medium" color="WHITE">
+              {t('share_page.photo_description')}
+            </Typo>
+            <ShareActionButton onClick={handleClickSharePhoto}>
+              <Typo type="label-large" fontWeight={600}>
+                Share photo
+              </Typo>
+            </ShareActionButton>
+          </ColorCard>
+          <input
+            ref={photoInputRef}
+            type="file"
+            accept="image/jpeg, image/png"
+            onChange={handlePhotoFileSelected}
+            style={{ display: 'none' }}
+          />
 
-          <Layout.FlexCol pv={14} w="100%" ph={DEFAULT_MARGIN} gap={20} pb={100}>
-            {/* Photo of the Day Card */}
-            <PhotoOfTheDayCard type="button" onClick={handleClickSharePhoto}>
-              <Typo type="head-line" color="WHITE" bold>
-                {t('share_page.photo_of_the_day')}
-              </Typo>
-              <Typo type="body-medium" color="WHITE">
-                {t('share_page.photo_description')}
-              </Typo>
-              <SharePhotoButton>
-                <Typo type="body-large" color="WHITE">
-                  {t('share_page.share_photo')}
-                </Typo>
-              </SharePhotoButton>
-            </PhotoOfTheDayCard>
+          {/* Section 2: Mission of the Day */}
+          <ColorCard $bg="linear-gradient(135deg, #8700FF 0%, #6200B3 100%)">
+            <Typo type="head-line" color="WHITE" bold>
+              Mission of the Day
+            </Typo>
+            <MissionOfTheDay onDoMission={handleDoMission} />
+          </ColorCard>
 
-            {/* Questions of the Day */}
-            <Layout.FlexCol w="100%" gap={10}>
-              <Typo type="body-large" color="BLACK" bold>
-                {t('share_page.questions_of_the_day')}
-              </Typo>
-              {todayQuestions && todayQuestions.length > 0 ? (
-                todayQuestions.map((question) => (
+          {/* Section 3: Questions of the Day */}
+          <QuestionsCard>
+            <Typo type="head-line" bold mb={24}>
+              Questions of the Day
+            </Typo>
+            {visibleQuestions.length > 0 ? (
+              <Layout.FlexCol w="100%" gap={10}>
+                {visibleQuestions.map((question) => (
                   <PromptCard
                     key={question.id}
                     id={question.id}
@@ -112,14 +108,27 @@ function Share() {
                     widthMode="full"
                     authorDetail={question.author_detail}
                   />
-                ))
-              ) : (
-                <Typo type="body-medium" color="MEDIUM_GRAY">
-                  {t('no_contents.question')}
+                ))}
+              </Layout.FlexCol>
+            ) : (
+              <Typo type="body-medium" color="MEDIUM_GRAY">
+                {t('no_contents.question')}
+              </Typo>
+            )}
+            {todayQuestions && todayQuestions.length > MAX_VISIBLE_QUESTIONS && (
+              <Layout.FlexRow
+                w="100%"
+                justifyContent="center"
+                mt={16}
+                style={{ cursor: 'pointer' }}
+                onClick={() => navigate('/questions')}
+              >
+                <Typo type="title-medium" fontWeight={600}>
+                  See all questions
                 </Typo>
-              )}
-            </Layout.FlexCol>
-          </Layout.FlexCol>
+              </Layout.FlexRow>
+            )}
+          </QuestionsCard>
         </Layout.FlexCol>
       </PullToRefresh>
     </MainScrollContainer>

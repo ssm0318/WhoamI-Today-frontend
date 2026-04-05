@@ -30,3 +30,39 @@ export const deleteCheckIn = async () => {
 export const readFriendCheckIn = async (checkInId: number) => {
   await axios.patch<CheckInBase>(`/check_in/read/${checkInId}/`);
 };
+
+// POST toggle reaction on a check-in (creates or removes)
+export const toggleCheckInReaction = async (checkInId: number, emoji: string) => {
+  const { data } = await axios.post<{ toggled: 'on' | 'off'; id?: number; emoji?: string }>(
+    `/check_in/${checkInId}/react/`,
+    { emoji },
+  );
+  return data;
+};
+
+// GET active song
+export const getActiveSong = async () => {
+  const { data } = await axios.get<{ results: { id: number; track_id: string }[] }>(
+    `/check_in/song/`,
+  );
+  return data.results?.[0] || null;
+};
+
+// POST song (create or update active song)
+export const postSong = async (trackId: string) => {
+  const { data } = await axios.post(`/check_in/song/`, { track_id: trackId });
+  return data;
+};
+
+// DELETE song (deactivate)
+export const deactivateSong = async (songId: number) => {
+  await axios.patch(`/check_in/song/${songId}/`);
+};
+
+// GET reactions for a check-in
+export const getCheckInReactions = async (checkInId: number) => {
+  const { data } = await axios.get<
+    { id: number; emoji: string; user: { id: number; username: string } }[]
+  >(`/check_in/${checkInId}/reactions/`);
+  return data;
+};

@@ -11,19 +11,6 @@ export const SelectInterestSectionWrapper = styled(Layout.FlexCol)`
   overflow: hidden;
 `;
 
-export const Title = styled.h2`
-  font-size: 24px;
-  font-weight: 700;
-  color: ${Colors.WHITE};
-  margin: 0;
-  width: 100%;
-  margin-left: 16px;
-  max-width: 100%;
-  box-sizing: border-box;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-`;
-
 export const InterestGrid = styled.div`
   display: flex;
   flex-wrap: wrap;

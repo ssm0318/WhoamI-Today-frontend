@@ -14,8 +14,8 @@ function MoodPlaceholder() {
   return (
     <PlaceholderWrapper onClick={handleClickAddMood}>
       {/* <SvgIcon name="add_reaction_default" size={12} /> */}
-      <SvgIcon name="add_reaction" size={12} />
-      <Typo type="label-medium" color="BLACK">
+      <SvgIcon name="add_reaction" size={14} />
+      <Typo type="label-large" color="BLACK">
         {t('settings.edit_profile.placeholders.mood')}
       </Typo>
     </PlaceholderWrapper>

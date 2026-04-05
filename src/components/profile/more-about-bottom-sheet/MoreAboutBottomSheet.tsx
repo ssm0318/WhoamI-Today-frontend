@@ -4,9 +4,9 @@ import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import Icon from '@components/_common/icon/Icon';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { MyProfile } from '@models/api/user';
+import { ALL_CATEGORIES, normalizeChipText } from '@models/chips';
 import { UserProfile } from '@models/user';
-import InterestChip from '../interest/InterestChip';
-import PersonaChip from '../persona/PersonaChip';
+import CategoryChip from '../chip/CategoryChip';
 
 interface MoreAboutBottomSheetProps {
   visible: boolean;
@@ -31,11 +31,21 @@ function MoreAboutBottomSheet({
     navigate('/settings/edit-profile');
   };
 
-  const showInterests = isMyPage || !user?.interests_friends_only;
-  const showPersonas = isMyPage || !user?.persona_friends_only;
+  const showChips = isMyPage || !user?.interests_friends_only;
+  const allUserChips = showChips
+    ? [
+        ...(user?.user_interests ?? []).map((i) => i.replace(/^#+/, '')),
+        ...(user?.user_personas ?? []).map((p) => p.replace(/^#+/, '')),
+      ]
+    : [];
 
-  const interests = showInterests ? user?.user_interests ?? [] : [];
-  const personas = showPersonas ? user?.user_personas ?? [] : [];
+  // Group chips by category
+  const groupedByCategory = ALL_CATEGORIES.map((cat) => ({
+    category: cat,
+    chips: allUserChips.filter((chip) =>
+      cat.chips.some((c) => normalizeChipText(c) === normalizeChipText(chip)),
+    ),
+  })).filter((group) => group.chips.length > 0);
 
   return (
     <BottomModal visible={visible} onClose={onClose}>
@@ -55,33 +65,19 @@ function MoreAboutBottomSheet({
           )}
         </Layout.FlexRow>
 
-        {/* Interests */}
-        {interests.length > 0 && (
-          <Layout.FlexCol gap={8}>
+        {/* Chips grouped by category */}
+        {groupedByCategory.map(({ category, chips }) => (
+          <Layout.FlexCol key={category.key} gap={6}>
             <Typo type="label-medium" color="MEDIUM_GRAY">
-              {t('interests')}
+              {category.label}
             </Typo>
             <Layout.FlexRow w="100%" gap={8} style={{ flexWrap: 'wrap' }}>
-              {interests.map((interest) => (
-                <InterestChip key={interest} interest={interest} />
+              {chips.map((chip) => (
+                <CategoryChip key={chip} label={chip} category={category.key} isSelected />
               ))}
             </Layout.FlexRow>
           </Layout.FlexCol>
-        )}
-
-        {/* Personas */}
-        {personas.length > 0 && (
-          <Layout.FlexCol gap={8}>
-            <Typo type="label-medium" color="MEDIUM_GRAY">
-              {t('persona')}
-            </Typo>
-            <Layout.FlexRow w="100%" gap={8} style={{ flexWrap: 'wrap' }}>
-              {personas.map((persona) => (
-                <PersonaChip key={persona} persona={persona} />
-              ))}
-            </Layout.FlexRow>
-          </Layout.FlexCol>
-        )}
+        ))}
       </Layout.FlexCol>
     </BottomModal>
   );
