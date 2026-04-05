@@ -199,7 +199,7 @@ export default function UpdateCheckin() {
             </Layout.FlexCol>
           ) : (
             <>
-              <SvgIcon name="edit_outline" size={32} />
+              <SvgIcon name="edit" size={32} />
               <QuadrantLabel>Thought Snippet</QuadrantLabel>
             </>
           )}
