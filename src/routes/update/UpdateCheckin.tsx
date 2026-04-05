@@ -13,7 +13,7 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
 import { ComponentVisibility, DEFAULT_VISIBILITY, SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
-import { postCheckIn } from '@utils/apis/checkIn';
+import { getActiveSong, postCheckIn, postSong } from '@utils/apis/checkIn';
 import { MainScrollContainer } from '../Root';
 import { ArchivedBadge, GridContainer, QuadrantCard, QuadrantLabel } from './UpdateCheckin.styled';
 
@@ -68,16 +68,19 @@ export default function UpdateCheckin() {
   }, [trackId, spotifyManager]);
 
   useAsyncEffect(async () => {
-    const ci = await fetchCheckIn();
-    if (!ci) return;
-    setBattery(ci.social_battery || null);
-    setMood(ci.mood || '');
-    setTrackId(ci.track_id || '');
-    setThought(ci.description || '');
-    if (ci.battery_visibility) setBatteryVis(ci.battery_visibility);
-    if (ci.mood_visibility) setMoodVis(ci.mood_visibility);
-    if (ci.song_visibility) setSongVis(ci.song_visibility);
-    if (ci.thought_visibility) setThoughtVis(ci.thought_visibility);
+    const [ci, activeSong] = await Promise.all([fetchCheckIn(), getActiveSong()]);
+    if (ci) {
+      setBattery(ci.social_battery || null);
+      setMood(ci.mood || '');
+      setThought(ci.description || '');
+      if (ci.battery_visibility) setBatteryVis(ci.battery_visibility);
+      if (ci.mood_visibility) setMoodVis(ci.mood_visibility);
+      if (ci.song_visibility) setSongVis(ci.song_visibility);
+      if (ci.thought_visibility) setThoughtVis(ci.thought_visibility);
+    }
+    if (activeSong) {
+      setTrackId(activeSong.track_id || '');
+    }
   }, []);
 
   const batteryArchived = useMemo(
@@ -100,16 +103,23 @@ export default function UpdateCheckin() {
   const handleSave = useCallback(async () => {
     setCheckInSaving(true);
     try {
-      await postCheckIn({
+      // Save check-in (battery, mood, thought, visibility)
+      const checkInPromise = postCheckIn({
         social_battery: battery,
         mood,
         description: thought,
-        track_id: trackId,
+        track_id: '',
         battery_visibility: batteryVis,
         mood_visibility: moodVis,
         song_visibility: songVis,
         thought_visibility: thoughtVis,
       });
+
+      // Save song separately (Song is a separate backend model)
+      const songPromise = trackId ? postSong(trackId) : Promise.resolve();
+
+      await Promise.all([checkInPromise, songPromise]);
+
       if (window.ReactNativeWebView) {
         sendMessage('WIDGET_DATA_UPDATED', {});
       }
