@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import PromptCard from '@components/_common/prompt/PromptCard';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
-import MissionOfTheDay from '@components/share/MissionOfTheDay';
+import MissionOfTheDay, { markMissionCompleted } from '@components/share/MissionOfTheDay';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Button, Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
@@ -12,7 +12,7 @@ import { DailyQuestion } from '@models/post';
 import { getMe } from '@utils/apis/my';
 import { getTodayQuestions } from '@utils/apis/question';
 import { MainScrollContainer } from '../Root';
-import { PhotoOfTheDayCard, SectionCard, SharePhotoButton } from './Share.styled';
+import { ColorCard, QuestionsCard, ShareActionButton } from './Share.styled';
 
 const MAX_VISIBLE_QUESTIONS = 3;
 
@@ -48,10 +48,11 @@ function Share() {
 
   const handleDoMission = (mission: { prompt: string; type: string }) => {
     if (mission.type === 'song') {
+      markMissionCompleted();
       navigate('/update');
     } else {
       navigate('/notes/new', {
-        state: { tmiPlaceholder: mission.prompt },
+        state: { tmiPlaceholder: mission.prompt, fromShare: true, missionMode: true },
       });
     }
   };
@@ -63,19 +64,21 @@ function Share() {
       <PullToRefresh onRefresh={handleRefresh}>
         <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} pv={16} gap={16} pb={100}>
           {/* Section 1: Photo of the Day */}
-          <PhotoOfTheDayCard type="button" onClick={handleClickSharePhoto}>
+          <ColorCard $bg="linear-gradient(135deg, #E91E63 0%, #AD1457 100%)">
             <Typo type="head-line" color="WHITE" bold>
-              {t('share_page.photo_of_the_day')}
+              Photo of the Day
             </Typo>
-            <Typo type="body-medium" color="WHITE">
-              {t('share_page.photo_description')}
-            </Typo>
-            <SharePhotoButton>
-              <Typo type="body-large" color="WHITE">
-                {t('share_page.share_photo')}
+            <Layout.LayoutBase style={{ opacity: 0.85 }}>
+              <Typo type="body-medium" color="WHITE">
+                {t('share_page.photo_description')}
               </Typo>
-            </SharePhotoButton>
-          </PhotoOfTheDayCard>
+            </Layout.LayoutBase>
+            <ShareActionButton onClick={handleClickSharePhoto}>
+              <Typo type="label-large" fontWeight={600}>
+                Share photo
+              </Typo>
+            </ShareActionButton>
+          </ColorCard>
           <input
             ref={photoInputRef}
             type="file"
@@ -85,13 +88,16 @@ function Share() {
           />
 
           {/* Section 2: Mission of the Day */}
-          <SectionCard>
+          <ColorCard $bg="linear-gradient(135deg, #8700FF 0%, #6200B3 100%)">
+            <Typo type="head-line" color="WHITE" bold>
+              Mission of the Day
+            </Typo>
             <MissionOfTheDay onDoMission={handleDoMission} />
-          </SectionCard>
+          </ColorCard>
 
           {/* Section 3: Questions of the Day */}
-          <SectionCard>
-            <Typo type="title-medium" mb={12}>
+          <QuestionsCard>
+            <Typo type="head-line" bold mb={12}>
               Questions of the Day
             </Typo>
             {visibleQuestions.length > 0 ? (
@@ -120,7 +126,7 @@ function Share() {
                 />
               </Layout.FlexRow>
             )}
-          </SectionCard>
+          </QuestionsCard>
         </Layout.FlexCol>
       </PullToRefresh>
     </MainScrollContainer>
