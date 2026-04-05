@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+import SubHeader from '@components/sub-header/SubHeader';
 import ChatsHeader from './chats-header/ChatsHeader';
 import CheckInHeader from './check-in-header/CheckInHeader';
 import CommonHeader from './common-header/CommonHeader';
@@ -26,7 +27,7 @@ function Header() {
     case '/share':
       return <CommonHeader title={t('header.share')} />;
     case '/questions':
-      return <CommonHeader title={t('header.questions')} />;
+      return <SubHeader title={t('header.questions')} />;
     case '/chats':
       return <ChatsHeader />;
     default:
