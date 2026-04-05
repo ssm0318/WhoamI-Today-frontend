@@ -16,8 +16,7 @@ export enum ComponentVisibility {
 
 export const DEFAULT_VISIBILITY = {
   song: ComponentVisibility.PUBLIC,
-  mood: ComponentVisibility.FRIENDS,
-  thought: ComponentVisibility.FRIENDS,
+  status: ComponentVisibility.FRIENDS,
   battery: ComponentVisibility.FRIENDS,
 };
 
@@ -31,13 +30,8 @@ export type CheckInBase = {
   track_id: string;
   current_user_read: boolean;
   song_visibility?: ComponentVisibility;
-  mood_visibility?: ComponentVisibility;
-  thought_visibility?: ComponentVisibility;
+  status_visibility?: ComponentVisibility;
   battery_visibility?: ComponentVisibility;
-  battery_updated_at?: string;
-  mood_updated_at?: string;
-  song_updated_at?: string;
-  thought_updated_at?: string;
 };
 
 export type MyCheckIn = CheckInBase & {
