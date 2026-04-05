@@ -50,7 +50,7 @@ function CheckInEdit() {
     DEFAULT_VISIBILITY.song,
   );
   const [statusVisibility, setStatusVisibility] = useState<ComponentVisibility>(
-    DEFAULT_VISIBILITY.status,
+    DEFAULT_VISIBILITY.mood,
   );
   const [batteryVisibility, setBatteryVisibility] = useState<ComponentVisibility>(
     DEFAULT_VISIBILITY.battery,
@@ -80,13 +80,14 @@ function CheckInEdit() {
       mood: checkInForm.mood,
       track_id: checkInForm.track_id,
       song_visibility: songVisibility,
-      status_visibility: statusVisibility,
+      mood_visibility: statusVisibility,
+      thought_visibility: statusVisibility,
       battery_visibility: batteryVisibility,
     });
     if (window.ReactNativeWebView) {
       sendMessage('WIDGET_DATA_UPDATED', {});
     }
-    return navigate('/my');
+    return navigate('/update');
   };
 
   useEffect(() => {
@@ -99,7 +100,7 @@ function CheckInEdit() {
     if (!myCheckIn) return;
     setCheckInForm(myCheckIn);
     if (myCheckIn.song_visibility) setSongVisibility(myCheckIn.song_visibility);
-    if (myCheckIn.status_visibility) setStatusVisibility(myCheckIn.status_visibility);
+    if (myCheckIn.mood_visibility) setStatusVisibility(myCheckIn.mood_visibility);
     if (myCheckIn.battery_visibility) setBatteryVisibility(myCheckIn.battery_visibility);
   }, []);
 
