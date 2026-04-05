@@ -32,12 +32,14 @@ function HighlightQuestionSection({ question, tag, questionId }: HighlightQuesti
   return (
     <>
       <S.HighlightSectionWrapper>
-        <Layout.FlexRow bgColor="TERTIARY_PINK" ph={8} rounded={100}>
+        <Layout.FlexRow bgColor="TERTIARY_PINK" ph={8} pv={2} rounded={100}>
           <Typo bold type="label-medium" color="WHITE">
             {tag}
           </Typo>
         </Layout.FlexRow>
-        <S.Title>{question}</S.Title>
+        <Typo type="title-medium" color="WHITE" mt={6}>
+          {question}
+        </Typo>
 
         <Layout.FlexRow w="100%" justifyContent="flex-end" gap={18}>
           <Icon name="question_respond" size={22} onClick={handleClickRespond} />
