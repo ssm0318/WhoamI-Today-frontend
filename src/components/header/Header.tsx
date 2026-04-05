@@ -30,6 +30,8 @@ function Header() {
       return <SubHeader title={t('header.questions')} />;
     case '/chats':
       return <ChatsHeader />;
+    case '/my/pings':
+      return <CommonHeader title={t('nav_tab.chats')} />;
     default:
       return null;
   }
