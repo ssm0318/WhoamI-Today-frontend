@@ -17,7 +17,7 @@ function EditorPopup({ isOpen, onClose, title, children }: PropsWithChildren<Edi
       <Content onClick={(e) => e.stopPropagation()}>
         <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" mb={12}>
           <Typo type="title-medium">{title}</Typo>
-          <CloseButton onClick={onClose}>Done</CloseButton>
+          <CloseButton onClick={onClose}>Share</CloseButton>
         </Layout.FlexRow>
         {children}
       </Content>
