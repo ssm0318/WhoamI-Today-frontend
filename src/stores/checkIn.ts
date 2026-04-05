@@ -6,10 +6,14 @@ import { SliceStateCreator } from './useBoundStore';
 interface CheckInState {
   checkIn: MyCheckIn | null;
   checkInForm: CheckInForm;
+  checkInSaveHandler: (() => Promise<void>) | null;
+  checkInSaving: boolean;
 }
 interface CheckInAction {
   fetchCheckIn: () => Promise<MyCheckIn | null>;
   setCheckInForm: (checkInForm: Partial<CheckInForm>) => void;
+  setCheckInSaveHandler: (handler: (() => Promise<void>) | null) => void;
+  setCheckInSaving: (saving: boolean) => void;
 }
 
 const initialState = {
@@ -21,6 +25,8 @@ const initialState = {
     mood: '',
     track_id: '',
   },
+  checkInSaveHandler: null as (() => Promise<void>) | null,
+  checkInSaving: false,
 };
 
 export type CheckInSlice = CheckInState & CheckInAction;
@@ -40,5 +46,7 @@ export const createCheckInSlice: SliceStateCreator<CheckInSlice> = (set) => {
     },
     setCheckInForm: (checkInForm) =>
       set((state) => ({ checkInForm: { ...state.checkInForm, ...checkInForm } })),
+    setCheckInSaveHandler: (handler) => set({ checkInSaveHandler: handler }),
+    setCheckInSaving: (saving) => set({ checkInSaving: saving }),
   };
 };
