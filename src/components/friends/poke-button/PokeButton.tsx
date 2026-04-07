@@ -1,24 +1,26 @@
+import { Emoji } from 'emoji-picker-react';
 import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import { Typo } from '@design-system';
 import { deletePoke, getPokeStatus, Poke, PokeComponentType, sendPoke } from '@utils/apis/poke';
+import { getUnifiedEmoji } from '@utils/emojiHelpers';
 
 interface Props {
   receiverId: number;
   componentType: PokeComponentType;
 }
 
-const POKE_LABELS: Record<PokeComponentType, string> = {
-  song: 'Nudge for a song \u{1F3B5}',
-  status: 'Nudge for a vibe check \u{270C}\u{FE0F}',
-  battery: 'Nudge to share how they feel \u{1F4AB}',
+const POKE_LABELS: Record<PokeComponentType, { text: string; emoji: string }> = {
+  song: { text: 'Nudge for a song', emoji: '\u{1F3B5}' },
+  status: { text: 'Nudge for a vibe check', emoji: '\u{270C}\u{FE0F}' },
+  battery: { text: 'Nudge to share how they feel', emoji: '\u{1F4AB}' },
 };
 
-const POKED_LABELS: Record<PokeComponentType, string> = {
-  song: 'Nudged: song \u{2714}\u{FE0F}',
-  status: 'Nudged: vibe \u{2714}\u{FE0F}',
-  battery: 'Nudged: battery \u{2714}\u{FE0F}',
+const POKED_LABELS: Record<PokeComponentType, { text: string; emoji: string }> = {
+  song: { text: 'Nudged: song', emoji: '\u{2714}\u{FE0F}' },
+  status: { text: 'Nudged: vibe', emoji: '\u{2714}\u{FE0F}' },
+  battery: { text: 'Nudged: battery', emoji: '\u{2714}\u{FE0F}' },
 };
 
 function PokeButton({ receiverId, componentType }: Props) {
@@ -76,12 +78,15 @@ function PokeButton({ receiverId, componentType }: Props) {
     }
   };
 
+  const label = isPoked ? POKED_LABELS[componentType] : POKE_LABELS[componentType];
+
   return (
     <>
       <PokeContainer $isPoked={isPoked} onClick={handlePoke}>
         <Typo type="label-large" color={isPoked ? 'MEDIUM_GRAY' : 'PRIMARY'}>
-          {isPoked ? POKED_LABELS[componentType] : POKE_LABELS[componentType]}
+          {label.text}
         </Typo>
+        <Emoji unified={getUnifiedEmoji(label.emoji)} size={14} lazyLoad />
       </PokeContainer>
       <CommonDialog
         visible={showConfirm}
@@ -100,6 +105,7 @@ function PokeButton({ receiverId, componentType }: Props) {
 const PokeContainer = styled.div<{ $isPoked: boolean }>`
   display: inline-flex;
   align-items: center;
+  gap: 4px;
   padding: 4px 8px;
   border-radius: 8px;
   border: 1px solid ${({ $isPoked }) => ($isPoked ? '#E0E0E0' : '#D9D9D9')};

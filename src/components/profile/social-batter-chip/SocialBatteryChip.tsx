@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import { Layout, Typo } from '@design-system';
 import { SocialBattery } from '@models/checkIn';
 import { SocialBatteryChipAssets } from './SocialBatteryChip.contants';
@@ -37,10 +38,12 @@ function SocialBatteryChip({
       <span
         role="button"
         tabIndex={0}
-        style={{ cursor: onClick ? 'pointer' : undefined, fontSize: 18, lineHeight: 1 }}
+        style={{ cursor: onClick ? 'pointer' : undefined, lineHeight: 1 }}
         onClick={handleOnClick}
       >
-        {emoji}
+        {emoji && (
+          <EmojiItem emojiString={emoji} size={18} bgColor="TRANSPARENT" outline="TRANSPARENT" />
+        )}
       </span>
     );
   }
@@ -57,7 +60,9 @@ function SocialBatteryChip({
       style={{ flexShrink: 0 }}
       onClick={handleOnClick}
     >
-      {emoji && <span style={{ fontSize: 16, lineHeight: 1 }}>{emoji}</span>}
+      {emoji && (
+        <EmojiItem emojiString={emoji} size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
+      )}
       {!compact && <Typo type="label-large">{t(socialBattery)}</Typo>}
     </Layout.FlexRow>
   );
