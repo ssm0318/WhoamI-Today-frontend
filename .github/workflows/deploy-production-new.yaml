@@ -28,9 +28,11 @@ jobs:
         script: |
           set -e
 
-          echo "🚀 최신 코드 Pull 받기"
+          echo "🚀 선택한 브랜치(${{ github.ref_name }})로 강제 checkout"
           cd ~/WhoamI-Today-frontend
-          git pull
+          git fetch --all --prune
+          git checkout ${{ github.ref_name }}
+          git reset --hard origin/${{ github.ref_name }}
 
           echo "📂 frontend_build_volume 존재 확인 (없으면 생성)"
           docker volume inspect frontend_build_volume >/dev/null 2>&1 \
