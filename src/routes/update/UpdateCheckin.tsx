@@ -159,9 +159,12 @@ export default function UpdateCheckin() {
           {batteryArchived && <ArchivedBadge>Only Me</ArchivedBadge>}
           {battery ? (
             <Layout.FlexCol alignItems="center" gap={6}>
-              <span style={{ fontSize: 40, lineHeight: 1 }}>
-                {SocialBatteryChipAssets[battery]?.emoji || ''}
-              </span>
+              <EmojiItem
+                emojiString={SocialBatteryChipAssets[battery]?.emoji || ''}
+                size={40}
+                bgColor="TRANSPARENT"
+                outline="TRANSPARENT"
+              />
               <Typo type="body-medium" numberOfLines={1} textAlign="center">
                 {t(battery)}
               </Typo>
