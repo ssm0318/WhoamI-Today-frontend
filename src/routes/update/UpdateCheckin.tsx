@@ -121,7 +121,18 @@ export default function UpdateCheckin() {
       await Promise.all([checkInPromise, songPromise]);
 
       if (window.ReactNativeWebView) {
-        sendMessage('WIDGET_DATA_UPDATED', {});
+        sendMessage('WIDGET_DATA_UPDATED', {
+          check_in: {
+            id: checkIn?.id ?? 0,
+            is_active: true,
+            created_at: checkIn?.created_at ?? new Date().toISOString(),
+            mood,
+            social_battery: battery,
+            description: thought,
+            track_id: trackId,
+            album_image_url: trackData?.album?.images?.[0]?.url ?? null,
+          },
+        });
       }
       await fetchCheckIn();
     } finally {
@@ -136,6 +147,9 @@ export default function UpdateCheckin() {
     moodVis,
     songVis,
     thoughtVis,
+    checkIn?.id,
+    checkIn?.created_at,
+    trackData?.album?.images,
     fetchCheckIn,
     sendMessage,
     setCheckInSaving,

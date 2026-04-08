@@ -60,6 +60,16 @@ export interface KeyboardOpenedData {
 
 export interface WidgetDataUpdatedData {
   key: 'WIDGET_DATA_UPDATED';
+  check_in?: {
+    id: number;
+    is_active: boolean;
+    created_at: string;
+    mood: string;
+    social_battery: string | null;
+    description: string;
+    track_id: string;
+    album_image_url: string | null;
+  };
 }
 
 // 앱, 웹 서로 약속한 키값에 따른 메시지 타입
