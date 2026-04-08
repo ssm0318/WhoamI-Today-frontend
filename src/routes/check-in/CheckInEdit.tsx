@@ -22,7 +22,7 @@ import {
   SocialBattery,
 } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
-import { postCheckIn } from '@utils/apis/checkIn';
+import { postCheckIn, postSong } from '@utils/apis/checkIn';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import { MainScrollContainer } from '../Root';
 
@@ -78,14 +78,33 @@ function CheckInEdit() {
       social_battery: checkInForm.social_battery,
       description: checkInForm.description,
       mood: checkInForm.mood,
-      track_id: checkInForm.track_id,
+      track_id: '',
       song_visibility: songVisibility,
       mood_visibility: statusVisibility,
       thought_visibility: statusVisibility,
       battery_visibility: batteryVisibility,
     });
+
+    // Song is a separate backend model — must be saved via its own endpoint.
+    // The check-in serializer ignores `track_id`, so without this call the
+    // selected song is never persisted.
+    if (checkInForm.track_id) {
+      await postSong(checkInForm.track_id);
+    }
+
     if (window.ReactNativeWebView) {
-      sendMessage('WIDGET_DATA_UPDATED', {});
+      sendMessage('WIDGET_DATA_UPDATED', {
+        check_in: {
+          id: 0,
+          is_active: true,
+          created_at: new Date().toISOString(),
+          mood: checkInForm.mood,
+          social_battery: checkInForm.social_battery,
+          description: checkInForm.description,
+          track_id: checkInForm.track_id,
+          album_image_url: trackData?.album?.images?.[0]?.url ?? null,
+        },
+      });
     }
     return navigate('/update');
   };
