@@ -26,40 +26,24 @@ jobs:
         username: ${{ secrets.NEW_SERVER_USER }}
         key: ${{ secrets.NEW_SERVER_KEY }}
         script: |
+          set -e
+
           echo "🚀 최신 코드 Pull 받기"
-          echo "🔄 현재 디렉토리: $(pwd)"
           cd ~/WhoamI-Today-frontend
-          echo "🔄 현재 디렉토리: $(pwd)"
           git pull
+
+          echo "📂 frontend_build_volume 존재 확인 (없으면 생성)"
+          docker volume inspect frontend_build_volume >/dev/null 2>&1 \
+            || docker volume create frontend_build_volume
 
           echo "🛑 기존 컨테이너 종료"
           docker compose -f docker-compose.production.yml down
 
-          echo "🛑 기존 nginx-reverse-proxy 컨테이너 종료"
-          docker stop nginx-reverse-proxy || true
-          docker rm nginx-reverse-proxy || true
-
-          echo "🗑 기존 볼륨 삭제"
-          docker volume rm frontend_build_volume || true
-
-          echo "📂 새로운 볼륨 생성"
-          docker volume create frontend_build_volume
+          echo "🧹 Legacy 컨테이너 정리 (compose 바깥에서 떠 있던 것들)"
+          docker rm -f nginx-reverse-proxy 2>/dev/null || true
+          docker rm -f whoami-frontend 2>/dev/null || true
 
           echo "🔄 컨테이너 재배포 (Build & Run)"
           docker compose -f docker-compose.production.yml up --build -d
-
-          echo "🏠 홈으로 이동"
-          cd ~
-
-          echo "🔄 nginx-reverse-proxy 재시작"
-          docker run -d \
-            --name nginx-reverse-proxy \
-            --network whoamitoday-network \
-            -p 80:80 -p 443:443 \
-            -v frontend_build_volume:/usr/share/nginx/html \
-            -v /home/ubuntu/nginx_conf:/etc/nginx/conf.d \
-            -v /etc/letsencrypt:/etc/letsencrypt:ro \
-            -v whoami-today-backend_whoami-backend-media:/app/adoorback/adoorback/adoorback/media \
-            nginx:alpine
 
           echo "✅ 배포 완료!"

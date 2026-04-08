@@ -1,21 +1,41 @@
-version: '3.8'
-
 services:
-  app:
-    container_name: whoami-frontend
+  frontend-builder:
+    container_name: whoami-frontend-builder
     build:
       context: .
       target: production
     volumes:
+      - frontend_build_volume:/output
+    command: >
+      sh -c "rm -rf /output/* /output/.[!.]* 2>/dev/null;
+             cp -a /usr/share/nginx/html/. /output/ &&
+             echo 'frontend build copied to volume'"
+    restart: "no"
+
+  nginx-reverse-proxy:
+    container_name: nginx-reverse-proxy
+    image: nginx:alpine
+    depends_on:
+      frontend-builder:
+        condition: service_completed_successfully
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - frontend_build_volume:/usr/share/nginx/html:ro
+      - whoami_backend_media:/app/adoorback/adoorback/adoorback/media:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
-      - frontend_build_volume:/usr/share/nginx/html
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
     networks:
       - whoamitoday-network
     restart: unless-stopped
 
 volumes:
-  frontend_build_volume: 
+  frontend_build_volume:
     external: true
+  whoami_backend_media:
+    external: true
+    name: whoami-today-backend_whoami-backend-media
 
 networks:
   whoamitoday-network:
