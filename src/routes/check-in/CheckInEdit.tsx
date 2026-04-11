@@ -76,7 +76,7 @@ function CheckInEdit() {
   const handleConfirmSave = async () => {
     await postCheckIn({
       social_battery: checkInForm.social_battery,
-      description: checkInForm.description,
+      thought: checkInForm.thought,
       mood: checkInForm.mood,
       track_id: '',
       song_visibility: songVisibility,
@@ -221,16 +221,20 @@ function CheckInEdit() {
         <div ref={statusRef} style={{ width: '100%' }}>
           <SectionContainer title={t('mood.title')} description={t('mood.description')}>
             <CheckInEmoji
-              mood={checkInForm?.mood || ''}
+              mood={
+                Array.isArray(checkInForm?.mood)
+                  ? checkInForm.mood[0] || ''
+                  : checkInForm?.mood || ''
+              }
               onDelete={() => handleDelete('mood')}
               onSelectEmoji={(e: EmojiClickData) => {
-                handleChange('mood', e.emoji);
+                handleChange('mood', [e.emoji] as any);
               }}
             />
             <CheckInDescription
-              description={checkInForm?.description || ''}
-              onDelete={() => handleDelete('description')}
-              onChange={(e) => handleChange('description', e.target.value)}
+              description={checkInForm?.thought || ''}
+              onDelete={() => handleDelete('thought')}
+              onChange={(e) => handleChange('thought', e.target.value)}
             />
             <Layout.FlexRow mt={8}>
               <VisibilityToggle value={statusVisibility} onChange={setStatusVisibility} />

@@ -1,5 +1,5 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
@@ -30,16 +30,13 @@ function isArchived(updatedAt?: string): boolean {
 export default function UpdateCheckin() {
   const [t] = useTranslation('translation', { keyPrefix: 'social_battery' });
 
-  const { checkIn, fetchCheckIn, setCheckInSaveHandler, setCheckInSaving } = useBoundStore(
-    (state) => ({
-      checkIn: state.checkIn,
-      fetchCheckIn: state.fetchCheckIn,
-      setCheckInSaveHandler: state.setCheckInSaveHandler,
-      setCheckInSaving: state.setCheckInSaving,
-    }),
-  );
+  const { checkIn, fetchCheckIn } = useBoundStore((state) => ({
+    checkIn: state.checkIn,
+    fetchCheckIn: state.fetchCheckIn,
+  }));
 
   const sendMessage = usePostAppMessage();
+  const openToast = useBoundStore((state) => state.openToast);
 
   const [activeEditor, setActiveEditor] = useState<EditorTarget>(null);
 
@@ -53,7 +50,7 @@ export default function UpdateCheckin() {
   }, [searchParams]);
 
   const [battery, setBattery] = useState<SocialBattery | null>(null);
-  const [mood, setMood] = useState('');
+  const [mood, setMood] = useState<string[]>([]);
   const [trackId, setTrackId] = useState('');
   const [thought, setThought] = useState('');
 
@@ -81,8 +78,8 @@ export default function UpdateCheckin() {
     const [ci, activeSong] = await Promise.all([fetchCheckIn(), getActiveSong()]);
     if (ci) {
       setBattery(ci.social_battery || null);
-      setMood(ci.mood || '');
-      setThought(ci.description || '');
+      setMood(Array.isArray(ci.mood) ? ci.mood : ci.mood ? [ci.mood] : []);
+      setThought(ci.thought || '');
       if (ci.battery_visibility) setBatteryVis(ci.battery_visibility);
       if (ci.mood_visibility) setMoodVis(ci.mood_visibility);
       if (ci.song_visibility) setSongVis(ci.song_visibility);
@@ -98,7 +95,7 @@ export default function UpdateCheckin() {
     [battery, checkIn?.battery_updated_at],
   );
   const moodArchived = useMemo(
-    () => !!mood && isArchived(checkIn?.mood_updated_at),
+    () => mood.length > 0 && isArchived(checkIn?.mood_updated_at),
     [mood, checkIn?.mood_updated_at],
   );
   const songArchived = useMemo(
@@ -110,45 +107,8 @@ export default function UpdateCheckin() {
     [thought, checkIn?.thought_updated_at],
   );
 
-  const handleSave = useCallback(async () => {
-    setCheckInSaving(true);
-    try {
-      // Save check-in (battery, mood, thought, visibility)
-      const checkInPromise = postCheckIn({
-        social_battery: battery,
-        mood,
-        description: thought,
-        track_id: '',
-        battery_visibility: batteryVis,
-        mood_visibility: moodVis,
-        song_visibility: songVis,
-        thought_visibility: thoughtVis,
-      });
-
-      // Save song separately (Song is a separate backend model)
-      const songPromise = trackId ? postSong(trackId) : Promise.resolve();
-
-      await Promise.all([checkInPromise, songPromise]);
-
-      if (window.ReactNativeWebView) {
-        sendMessage('WIDGET_DATA_UPDATED', {
-          check_in: {
-            id: checkIn?.id ?? 0,
-            is_active: true,
-            created_at: checkIn?.created_at ?? new Date().toISOString(),
-            mood,
-            social_battery: battery,
-            description: thought,
-            track_id: trackId,
-            album_image_url: trackData?.album?.images?.[0]?.url ?? null,
-          },
-        });
-      }
-      await fetchCheckIn();
-    } finally {
-      setCheckInSaving(false);
-    }
-  }, [
+  // Refs to always have latest values for saving (avoids stale closure issues)
+  const stateRef = useRef({
     battery,
     mood,
     thought,
@@ -157,19 +117,50 @@ export default function UpdateCheckin() {
     moodVis,
     songVis,
     thoughtVis,
-    checkIn?.id,
-    checkIn?.created_at,
-    trackData?.album?.images,
-    fetchCheckIn,
-    sendMessage,
-    setCheckInSaving,
-  ]);
+  });
+  stateRef.current = { battery, mood, thought, trackId, batteryVis, moodVis, songVis, thoughtVis };
 
-  // Register save handler for the header Save button
-  useEffect(() => {
-    setCheckInSaveHandler(handleSave);
-    return () => setCheckInSaveHandler(null);
-  }, [handleSave, setCheckInSaveHandler]);
+  const doSave = useCallback(async () => {
+    const s = stateRef.current;
+    try {
+      const checkInPromise = postCheckIn({
+        social_battery: s.battery,
+        mood: s.mood,
+        thought: s.thought,
+        track_id: '',
+        battery_visibility: s.batteryVis,
+        mood_visibility: s.moodVis,
+        song_visibility: s.songVis,
+        thought_visibility: s.thoughtVis,
+      });
+      const songPromise = s.trackId ? postSong(s.trackId) : Promise.resolve();
+      await Promise.all([checkInPromise, songPromise]);
+
+      if (window.ReactNativeWebView) {
+        sendMessage('WIDGET_DATA_UPDATED', {
+          check_in: {
+            id: 0,
+            is_active: true,
+            created_at: new Date().toISOString(),
+            mood: s.mood,
+            social_battery: s.battery,
+            description: s.thought,
+            track_id: s.trackId,
+          },
+        });
+      }
+      await fetchCheckIn();
+      openToast({ message: 'Shared!' });
+    } catch {
+      openToast({ message: 'Failed to save' });
+    }
+  }, [fetchCheckIn, sendMessage, openToast]);
+
+  const handleEditorClose = useCallback(() => {
+    setActiveEditor(null);
+    // Use rAF to ensure React has committed the state update from the editor
+    requestAnimationFrame(() => doSave());
+  }, [doSave]);
 
   return (
     <MainScrollContainer>
@@ -206,14 +197,20 @@ export default function UpdateCheckin() {
 
         {/* Top-Right: Mood */}
         <QuadrantCard
-          $isEmpty={!mood}
+          $isEmpty={mood.length === 0}
           $isArchived={moodArchived}
           onClick={() => setActiveEditor('mood')}
         >
           {moodArchived && <ArchivedBadge>Only Me</ArchivedBadge>}
-          {mood ? (
+          {mood.length > 0 ? (
             <>
-              <EmojiItem emojiString={mood} size={40} bgColor="TRANSPARENT" outline="TRANSPARENT" />
+              <Layout.FlexRow gap={4} alignItems="center">
+                {mood.map((emoji) => (
+                  <span key={emoji} style={{ fontSize: 32, lineHeight: 1 }}>
+                    {emoji}
+                  </span>
+                ))}
+              </Layout.FlexRow>
               <QuadrantLabel>Mood</QuadrantLabel>
             </>
           ) : (
@@ -278,10 +275,10 @@ export default function UpdateCheckin() {
         </QuadrantCard>
       </GridContainer>
 
-      {/* Editor Popups */}
+      {/* Editor Popups — "Share" auto-saves */}
       <BatteryEditor
         isOpen={activeEditor === 'battery'}
-        onClose={() => setActiveEditor(null)}
+        onClose={() => handleEditorClose()}
         value={battery}
         onChange={setBattery}
         visibility={batteryVis}
@@ -289,7 +286,7 @@ export default function UpdateCheckin() {
       />
       <MoodEditor
         isOpen={activeEditor === 'mood'}
-        onClose={() => setActiveEditor(null)}
+        onClose={() => handleEditorClose()}
         value={mood}
         onChange={setMood}
         visibility={moodVis}
@@ -297,7 +294,7 @@ export default function UpdateCheckin() {
       />
       <SongEditor
         isOpen={activeEditor === 'song'}
-        onClose={() => setActiveEditor(null)}
+        onClose={() => handleEditorClose()}
         trackId={trackId}
         onChange={setTrackId}
         visibility={songVis}
@@ -305,7 +302,7 @@ export default function UpdateCheckin() {
       />
       <ThoughtEditor
         isOpen={activeEditor === 'thought'}
-        onClose={() => setActiveEditor(null)}
+        onClose={() => handleEditorClose()}
         value={thought}
         onChange={setThought}
         visibility={thoughtVis}

@@ -21,8 +21,8 @@ const initialState = {
   checkInForm: {
     social_battery: null,
     bio: '',
-    description: '',
-    mood: '',
+    thought: '',
+    mood: [] as string[],
     track_id: '',
   },
   checkInSaveHandler: null as (() => Promise<void>) | null,

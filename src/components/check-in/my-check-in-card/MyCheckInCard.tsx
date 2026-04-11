@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import EmojiItem from '@components/_common/emoji-item/EmojiItem';
+import styled from 'styled-components';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
-import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
 import MusicPlaceholder from '@components/profile/placeholders/MusicPlaceholder';
 import SocialBatteryPlaceholder from '@components/profile/placeholders/SocialBatteryPlaceholder';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
@@ -25,11 +24,16 @@ function MyCheckInCard() {
     await fetchCheckIn();
   }, []);
 
-  const { social_battery, track_id, mood, description } = checkIn || {};
+  const { social_battery, track_id, mood, thought } = checkIn || {};
+  const moodArray: string[] = Array.isArray(mood) ? mood : mood ? [mood] : [];
+  const hasMood = moodArray.length > 0;
+  const hasBattery = !!social_battery && Object.values(SocialBattery).includes(social_battery);
+
+  const goToCheckIn = () => navigate('/update');
 
   return (
     <Container>
-      {/* Row 1: Profile + username + social battery */}
+      {/* Row 1: Profile + username + battery | mood emojis */}
       <Layout.FlexRow w="100%" gap={7} alignItems="center">
         <Layout.FlexRow
           gap={7}
@@ -46,53 +50,55 @@ function MyCheckInCard() {
             {myProfile?.username || ''}
           </Typo>
         </Layout.FlexRow>
-        {social_battery && Object.values(SocialBattery).includes(social_battery) ? (
-          <SocialBatteryChip
-            socialBattery={social_battery}
-            compact
-            borderless
-            onClick={() => navigate('/check-in/edit?focus=battery')}
-          />
-        ) : (
-          <SocialBatteryPlaceholder />
-        )}
+        <Layout.FlexRow alignItems="center" gap={2}>
+          {hasBattery ? (
+            <SocialBatteryChip
+              socialBattery={social_battery}
+              compact
+              borderless
+              onClick={goToCheckIn}
+            />
+          ) : (
+            <SocialBatteryPlaceholder />
+          )}
+          {hasBattery && hasMood && <InlineDivider />}
+          {hasMood && (
+            <StackedEmojis onClick={goToCheckIn}>
+              {moodArray.map((emoji, idx) => {
+                const dupeCount = moodArray.slice(0, idx).filter((e) => e === emoji).length;
+                return (
+                  <StackedEmoji key={`${emoji}${dupeCount}`} $offset={idx}>
+                    {emoji}
+                  </StackedEmoji>
+                );
+              })}
+            </StackedEmojis>
+          )}
+        </Layout.FlexRow>
       </Layout.FlexRow>
 
-      {/* Row 2: Status (mood + description) or empty state */}
-      {mood || description ? (
+      {/* Thought pill */}
+      {thought ? (
         <Layout.FlexRow
           bgColor="WHITE"
-          gap={4}
           pv={4}
           ph={8}
           outline="LIGHT_GRAY"
           alignItems="center"
           rounded={8}
-          style={{ flexShrink: 0, cursor: 'pointer' }}
-          onClick={() => navigate('/check-in/edit?focus=status')}
+          style={{ flexShrink: 0, cursor: 'pointer', alignSelf: 'flex-start' }}
+          onClick={goToCheckIn}
         >
-          {mood && (
-            <EmojiItem emojiString={mood} size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
-          )}
-          {description && (
-            <Typo type="label-large" numberOfLines={1}>
-              {description}
-            </Typo>
-          )}
+          <Typo type="label-large" numberOfLines={1}>
+            {thought}
+          </Typo>
         </Layout.FlexRow>
-      ) : (
-        <MoodPlaceholder />
-      )}
+      ) : null}
 
-      {/* Row 3: Song (full width) or empty state */}
+      {/* Song */}
       {track_id ? (
         <Layout.FlexRow w="100%" style={{ minWidth: 0, cursor: 'pointer' }}>
-          <SpotifyMusic
-            track={track_id}
-            useAlbumImg
-            fontType="label-large"
-            onClick={() => navigate('/check-in/edit?focus=song')}
-          />
+          <SpotifyMusic track={track_id} useAlbumImg fontType="label-large" onClick={goToCheckIn} />
         </Layout.FlexRow>
       ) : (
         <MusicPlaceholder />
@@ -100,5 +106,28 @@ function MyCheckInCard() {
     </Container>
   );
 }
+
+const StackedEmojis = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 2px 0;
+`;
+
+const StackedEmoji = styled.span<{ $offset: number }>`
+  font-size: 16px;
+  line-height: 1;
+  margin-left: ${({ $offset }) => ($offset > 0 ? '-4px' : '0')};
+  z-index: ${({ $offset }) => 5 - $offset};
+  position: relative;
+`;
+
+const InlineDivider = styled.span`
+  width: 1px;
+  height: 14px;
+  background-color: #d9d9d9;
+  margin: 0 2px;
+  flex-shrink: 0;
+`;
 
 export default MyCheckInCard;

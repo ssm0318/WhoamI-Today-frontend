@@ -24,13 +24,13 @@ const REACTION_SHORTCUTS = [
 interface Props {
   visible: boolean;
   closeBottomSheet: () => void;
-  focusComponent?: 'battery' | 'status' | 'song' | null;
+  focusComponent?: 'battery' | 'mood' | 'thought' | 'song' | null;
   checkInId?: number | null;
   username?: string;
   profileImage?: string | null;
   socialBattery?: SocialBattery | null;
   trackId?: string;
-  mood?: string;
+  mood?: string[];
   description?: string;
 }
 
@@ -161,22 +161,23 @@ function CheckInDetailBottomSheet({
               </Layout.FlexCol>
             )}
 
-          {/* Mood + Description */}
-          {focusComponent === 'status' && (mood || description) && (
+          {/* Mood (emojis) */}
+          {focusComponent === 'mood' && mood && mood.length > 0 && (
+            <Layout.FlexRow gap={8} alignItems="center" justifyContent="center" w="100%">
+              {mood.map((emoji) => (
+                <span key={emoji} style={{ fontSize: 32, lineHeight: 1 }}>
+                  {emoji}
+                </span>
+              ))}
+            </Layout.FlexRow>
+          )}
+
+          {/* Thought (text) */}
+          {focusComponent === 'thought' && description && (
             <Layout.FlexCol gap={8} alignItems="center" w="100%">
-              {mood && (
-                <EmojiItem
-                  emojiString={mood}
-                  size={32}
-                  bgColor="TRANSPARENT"
-                  outline="TRANSPARENT"
-                />
-              )}
-              {description && (
-                <Typo type="body-large" textAlign="center" numberOfLines={5}>
-                  {description}
-                </Typo>
-              )}
+              <Typo type="body-large" textAlign="center" numberOfLines={5}>
+                {description}
+              </Typo>
             </Layout.FlexCol>
           )}
 
