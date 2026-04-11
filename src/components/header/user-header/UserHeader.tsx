@@ -1,9 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import SubHeader from '@components/sub-header/SubHeader';
 import { UserPageContext } from '@components/user-page/UserPage.context';
 import { Layout, Typo } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
+import axios from '@utils/apis/axios';
 
 interface UserHeaderProps {
   username?: string;
@@ -15,11 +17,26 @@ interface UserHeaderProps {
 function UserHeader({ username, userId, unreadCount, onClickMore }: UserHeaderProps) {
   const navigate = useNavigate();
   const { user } = useContext(UserPageContext);
+  const currentUser = useBoundStore((state) => state.myProfile);
   const areFriends = user?.data?.are_friends === true;
+  const isMyPage = currentUser && userId ? Number(currentUser.id) === Number(userId) : false;
 
-  const handleClickPing = async () => {
+  const [requestSent, setRequestSent] = useState(false);
+
+  const handleClickChat = () => {
     if (!userId) return;
-    navigate(`/users/${userId}/ping`);
+    navigate(`/users/${userId}/chat`);
+  };
+
+  const handleRequestChat = async () => {
+    if (!userId || requestSent) return;
+    try {
+      await axios.post('/chat/requests/', { requestee_id: userId });
+      setRequestSent(true);
+    } catch {
+      // Request may already exist
+      setRequestSent(true);
+    }
   };
 
   const handleClickMore = () => {
@@ -33,10 +50,10 @@ function UserHeader({ username, userId, unreadCount, onClickMore }: UserHeaderPr
       RightComponent={
         <Layout.FlexRow gap={8} alignItems="center">
           <Icon name="dots_menu" size={44} onClick={handleClickMore} />
-          {areFriends && (
+          {!isMyPage && areFriends && (
             <Layout.FlexRow>
               <Layout.LayoutBase pb={2}>
-                <Icon name="ping_send" size={20} onClick={handleClickPing} />
+                <Icon name="chat_outline" size={44} onClick={handleClickChat} />
               </Layout.LayoutBase>
               {!!unreadCount && unreadCount > 0 && (
                 <Layout.Absolute
@@ -55,6 +72,24 @@ function UserHeader({ username, userId, unreadCount, onClickMore }: UserHeaderPr
                 </Layout.Absolute>
               )}
             </Layout.FlexRow>
+          )}
+          {!isMyPage && !areFriends && (
+            <button
+              type="button"
+              onClick={requestSent ? undefined : handleRequestChat}
+              style={{
+                background: requestSent ? '#F0F0F0' : '#8700FF',
+                color: requestSent ? '#999' : 'white',
+                border: 'none',
+                borderRadius: 8,
+                padding: '4px 10px',
+                fontSize: 12,
+                fontWeight: 600,
+                cursor: requestSent ? 'default' : 'pointer',
+              }}
+            >
+              {requestSent ? 'Requested' : 'Chat'}
+            </button>
           )}
         </Layout.FlexRow>
       }

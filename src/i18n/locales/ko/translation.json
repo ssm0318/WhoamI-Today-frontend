@@ -395,11 +395,11 @@
     "see_translation": "번역보기",
     "see_original": "원문보기"
   },
-  "ping": {
+  "chat": {
     "input_placeholder": "메시지 입력",
-    "no_pings": "아직 메시지가 없습니다.",
+    "no_messages": "아직 메시지가 없습니다.",
     "refresh": "새로고침",
-    "list_title": "Ping",
+    "list_title": "Chats",
     "no_rooms": "아직 대화가 없습니다."
   },
   "settings": {

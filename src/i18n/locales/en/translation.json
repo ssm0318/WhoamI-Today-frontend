@@ -398,11 +398,11 @@
         "see_translation": "See Translation",
         "see_original": "See Original"
     },
-    "ping": {
+    "chat": {
         "input_placeholder": "Send a message...",
-        "no_pings": "No messages yet.",
+        "no_messages": "No messages yet.",
         "refresh": "Refresh",
-        "list_title": "Ping",
+        "list_title": "Chats",
         "no_rooms": "No conversations yet."
     },
     "settings": {

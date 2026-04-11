@@ -19,8 +19,8 @@ export enum FeatureFlagKey {
   POST_VISIBILITY_DEFAULT_CLOSE_FRIEND = 'postVisibilityDefaultCloseFriend',
   /** DISCOVER 탭 */
   DISCOVER = 'discover',
-  /** Ping 탭 */
-  PING_TAB = 'pingTab',
+  /** Chat 탭 */
+  CHAT_TAB = 'chatTab',
 }
 
 export type FeatureFlagMap = { [feature in FeatureFlagKey]: boolean };
@@ -39,7 +39,7 @@ const DEFAULT_FLAGS = {
   [FeatureFlagKey.PERSONA]: false,
   [FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]: false,
   [FeatureFlagKey.DISCOVER]: false,
-  [FeatureFlagKey.PING_TAB]: false,
+  [FeatureFlagKey.CHAT_TAB]: false,
 };
 
 export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
@@ -56,6 +56,6 @@ export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
     [FeatureFlagKey.PERSONA]: true,
     [FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]: true,
     [FeatureFlagKey.DISCOVER]: true,
-    [FeatureFlagKey.PING_TAB]: true,
+    [FeatureFlagKey.CHAT_TAB]: true,
   },
 };

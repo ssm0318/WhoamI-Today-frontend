@@ -6,7 +6,7 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import { resetScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { NavTabItem, StyledTabItem, TabWrapper } from './Tab.styled';
+import { NavTabItem, StyledMessageCount, StyledTabItem, TabWrapper } from './Tab.styled';
 
 interface TabItemProps {
   to: string;
@@ -18,10 +18,9 @@ interface TabItemProps {
 function TabItem({ to, type, size = 48, end = false }: TabItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'nav_tab' });
   const myProfile = useBoundStore((state) => state.myProfile);
-  const isPingChat = !!useMatch('/users/:userId/ping');
+  const isChatPage = !!useMatch('/users/:username/chat');
 
-  // TODO: Get unread message count
-  // const unReadMsgCnt = 15;
+  const unreadMsgCnt = myProfile?.unread_message_cnt ?? 0;
 
   const scrollToTop = (isActive: boolean) => () => {
     if (!isActive) return;
@@ -35,7 +34,7 @@ function TabItem({ to, type, size = 48, end = false }: TabItemProps) {
   return (
     <NavTabItem to={to} end={end}>
       {({ isActive }) => {
-        const resolvedActive = type === 'chats' ? isActive || isPingChat : isActive;
+        const resolvedActive = type === 'chats' ? isActive || isChatPage : isActive;
         return (
           <StyledTabItem w="100%" alignItems="center" pt={10} onClick={scrollToTop(resolvedActive)}>
             {type === 'my' && myProfile?.profile_image ? (
@@ -48,11 +47,11 @@ function TabItem({ to, type, size = 48, end = false }: TabItemProps) {
               />
             ) : (
               <StyledTabItem>
-                {/* {type === 'chats' && unReadMsg  Cnt > 0 && (
-                <StyledMessageCount t={-7} l="70%" pv={1} ph={5}>
-                  <Typo type="label-small">{unReadMsgCnt > 999 ? '999+' : unReadMsgCnt}</Typo>
-                </StyledMessageCount>
-              )} */}
+                {type === 'chats' && unreadMsgCnt > 0 && (
+                  <StyledMessageCount t={-7} l="70%" pv={1} ph={5}>
+                    <Typo type="label-small">{unreadMsgCnt > 999 ? '999+' : unreadMsgCnt}</Typo>
+                  </StyledMessageCount>
+                )}
                 <SvgIcon
                   name={resolvedActive ? `${type}_active` : `${type}_inactive`}
                   size={size}
@@ -85,7 +84,7 @@ export default function Tab() {
         ) : featureFlags?.friendFeed ? (
           <TabItem to="/feed" type="friends" size={28} />
         ) : null}
-        {featureFlags?.pingTab && <TabItem to="/my/pings" type="chats" size={28} />}
+        {featureFlags?.chatTab && <TabItem to="/chats" type="chats" size={28} />}
       </Layout.FlexRow>
     </TabWrapper>
   );

@@ -12,19 +12,22 @@ import { useGetAppMessage } from '@hooks/useAppMessage';
 import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
 import { checkIfSignIn } from '@utils/apis/user';
-import { ChatRoom } from 'src/routes/chat-room/ChatRoom';
+import AddGroupMembers from 'src/routes/chat/AddGroupMembers';
+import Chat from 'src/routes/chat/Chat';
+import ChatList from 'src/routes/chat/ChatList';
+import ChatSearch from 'src/routes/chat/ChatSearch';
+import CreateGroupChat from 'src/routes/chat/CreateGroupChat';
+import GroupChat from 'src/routes/chat/GroupChat';
 import { NotFound } from 'src/routes/NotFound';
-import Ping from 'src/routes/ping/Ping';
 import './i18n';
 import PhotoOfTheDayFlow from './components/share/PhotoOfTheDayFlow';
 import SpotifyManager from './libs/SpotifyManager';
 import reportWebVitals from './reportWebVitals';
 import ActivateEmail from './routes/ActivateEmail';
 import AllQuestions from './routes/AllQuestions';
-import Chats from './routes/Chats';
+// Chats tab now uses ChatList directly
 import CheckInEdit from './routes/check-in/CheckInEdit';
 import Discover from './routes/discover/Discover';
-import { EditChats } from './routes/edit-chats/EditChats';
 import EmailVerificationComplete from './routes/EmailVerificationComplete';
 import ForgotPassword from './routes/ForgotPassword';
 import DefaultMyFriendsList from './routes/friends/DefaultMyFriendsList';
@@ -41,7 +44,7 @@ import AllNotes from './routes/notes/AllNotes';
 import NewNote from './routes/notes/NewNote';
 import { NoteDetail } from './routes/notes/NoteDetail';
 import Notifications from './routes/Notifications';
-import PingList from './routes/ping/PingList';
+// PingList replaced by ChatList
 import PinnedPosts from './routes/pinned-posts/PinnedPosts';
 import Reactions from './routes/Reactions';
 import ReceivedPrompts from './routes/ReceivedPrompts';
@@ -83,11 +86,23 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'chats',
-        element: <Chats />,
-        children: [
-          { path: 'edit', element: <EditChats /> },
-          { path: ':roomId', element: <ChatRoom /> },
-        ],
+        element: <ChatList />,
+      },
+      {
+        path: 'chats/search',
+        element: <ChatSearch />,
+      },
+      {
+        path: 'chats/new-group',
+        element: <CreateGroupChat />,
+      },
+      {
+        path: 'chats/group/:roomId',
+        element: <GroupChat />,
+      },
+      {
+        path: 'chats/group/:roomId/add-members',
+        element: <AddGroupMembers />,
       },
       {
         path: 'my',
@@ -96,7 +111,7 @@ const router = createBrowserRouter([
           { path: 'friends/list', element: <DefaultMyFriendsList /> },
           { path: 'responses', element: <AllResponses from="my" /> },
           { path: 'pinned-posts', element: <PinnedPosts /> },
-          { path: 'pings', element: <PingList /> },
+          { path: 'chats', element: <ChatList /> },
         ],
       },
       {
@@ -146,6 +161,10 @@ const router = createBrowserRouter([
         path: 'users/:username',
         children: [
           {
+            path: 'chat',
+            element: <Chat />,
+          },
+          {
             path: '',
             element: (
               <UserPageContextProvider>
@@ -170,20 +189,6 @@ const router = createBrowserRouter([
               },
               { path: 'friends/list', element: <DefaultUserFriendsList /> },
               { path: 'pinned-posts', element: <PinnedPosts /> },
-            ],
-          },
-        ],
-      },
-      {
-        path: 'users/:userId',
-        children: [
-          {
-            path: '',
-            children: [
-              {
-                path: 'ping',
-                element: <Ping />,
-              },
             ],
           },
         ],
