@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import SubHeader from '@components/sub-header/SubHeader';
 import ChatsHeader from './chats-header/ChatsHeader';
-import CheckInHeader from './check-in-header/CheckInHeader';
 import CommonHeader from './common-header/CommonHeader';
 import FriendHeader from './friends-header/FriendsHeader';
 
@@ -23,7 +22,7 @@ function Header() {
     case '/my':
       return <CommonHeader title={t('header.my')} />;
     case '/update':
-      return <CheckInHeader />;
+      return <CommonHeader title="Check-In" />;
     case '/share':
       return <CommonHeader title={t('header.share')} />;
     case '/questions':

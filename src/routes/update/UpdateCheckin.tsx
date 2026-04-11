@@ -28,16 +28,13 @@ function isArchived(updatedAt?: string): boolean {
 export default function UpdateCheckin() {
   const [t] = useTranslation('translation', { keyPrefix: 'social_battery' });
 
-  const { checkIn, fetchCheckIn, setCheckInSaveHandler, setCheckInSaving } = useBoundStore(
-    (state) => ({
-      checkIn: state.checkIn,
-      fetchCheckIn: state.fetchCheckIn,
-      setCheckInSaveHandler: state.setCheckInSaveHandler,
-      setCheckInSaving: state.setCheckInSaving,
-    }),
-  );
+  const { checkIn, fetchCheckIn } = useBoundStore((state) => ({
+    checkIn: state.checkIn,
+    fetchCheckIn: state.fetchCheckIn,
+  }));
 
   const sendMessage = usePostAppMessage();
+  const openToast = useBoundStore((state) => state.openToast);
 
   const [activeEditor, setActiveEditor] = useState<EditorTarget>(null);
 
@@ -99,10 +96,9 @@ export default function UpdateCheckin() {
     [thought, checkIn?.thought_updated_at],
   );
 
-  const handleSave = useCallback(async () => {
-    setCheckInSaving(true);
+  // Save all check-in fields + song to backend
+  const saveAll = useCallback(async () => {
     try {
-      // Save check-in (battery, mood, thought, visibility)
       const checkInPromise = postCheckIn({
         social_battery: battery,
         mood,
@@ -113,10 +109,7 @@ export default function UpdateCheckin() {
         song_visibility: songVis,
         thought_visibility: thoughtVis,
       });
-
-      // Save song separately (Song is a separate backend model)
       const songPromise = trackId ? postSong(trackId) : Promise.resolve();
-
       await Promise.all([checkInPromise, songPromise]);
 
       if (window.ReactNativeWebView) {
@@ -134,8 +127,9 @@ export default function UpdateCheckin() {
         });
       }
       await fetchCheckIn();
-    } finally {
-      setCheckInSaving(false);
+      openToast({ message: 'Shared!' });
+    } catch {
+      openToast({ message: 'Failed to save' });
     }
   }, [
     battery,
@@ -151,14 +145,15 @@ export default function UpdateCheckin() {
     trackData?.album?.images,
     fetchCheckIn,
     sendMessage,
-    setCheckInSaving,
+    openToast,
   ]);
 
-  // Register save handler for the header Save button
-  useEffect(() => {
-    setCheckInSaveHandler(handleSave);
-    return () => setCheckInSaveHandler(null);
-  }, [handleSave, setCheckInSaveHandler]);
+  // When an editor popup closes via "Share", auto-save
+  const handleEditorClose = useCallback(() => {
+    setActiveEditor(null);
+    // Save after state update settles
+    setTimeout(() => saveAll(), 0);
+  }, [saveAll]);
 
   return (
     <MainScrollContainer>
@@ -273,10 +268,10 @@ export default function UpdateCheckin() {
         </QuadrantCard>
       </GridContainer>
 
-      {/* Editor Popups */}
+      {/* Editor Popups — "Share" auto-saves */}
       <BatteryEditor
         isOpen={activeEditor === 'battery'}
-        onClose={() => setActiveEditor(null)}
+        onClose={() => handleEditorClose()}
         value={battery}
         onChange={setBattery}
         visibility={batteryVis}
@@ -284,7 +279,7 @@ export default function UpdateCheckin() {
       />
       <MoodEditor
         isOpen={activeEditor === 'mood'}
-        onClose={() => setActiveEditor(null)}
+        onClose={() => handleEditorClose()}
         value={mood}
         onChange={setMood}
         visibility={moodVis}
@@ -292,7 +287,7 @@ export default function UpdateCheckin() {
       />
       <SongEditor
         isOpen={activeEditor === 'song'}
-        onClose={() => setActiveEditor(null)}
+        onClose={() => handleEditorClose()}
         trackId={trackId}
         onChange={setTrackId}
         visibility={songVis}
@@ -300,7 +295,7 @@ export default function UpdateCheckin() {
       />
       <ThoughtEditor
         isOpen={activeEditor === 'thought'}
-        onClose={() => setActiveEditor(null)}
+        onClose={() => handleEditorClose()}
         value={thought}
         onChange={setThought}
         visibility={thoughtVis}
