@@ -26,6 +26,7 @@ export const getMyProfile = async () => {
 // update my profile
 export const editProfile = ({
   profile,
+  interestCategory,
   onSuccess,
   onError,
 }: {
@@ -43,6 +44,7 @@ export const editProfile = ({
   > & {
     profile_image?: File;
   };
+  interestCategory?: string;
   onSuccess: (data: MyProfile) => void;
   onError?: (error: any) => void;
 }) => {
@@ -59,10 +61,15 @@ export const editProfile = ({
       return;
     }
 
-    // user_interests, user_personas를 공백으로 구분된 문자열로 전송 (# 접두사 없이)
+    // When interestCategory is set, send as JSON array (chip names can contain spaces)
     if (key === 'user_interests' && Array.isArray(value)) {
       const cleanValues = value.map((v: string) => v.replace(/^#+/, ''));
-      formData.append('user_interests', cleanValues.join(' '));
+      if (interestCategory) {
+        formData.append('user_interests', JSON.stringify(cleanValues));
+        formData.append('interest_category', interestCategory);
+      } else {
+        formData.append('user_interests', cleanValues.join(' '));
+      }
       return;
     }
 

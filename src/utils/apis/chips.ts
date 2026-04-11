@@ -1,5 +1,10 @@
-import { CustomChip } from '@models/chips';
+import { ChipCategoryData, CustomChip } from '@models/chips';
 import axiosInstance from '@utils/apis/axios';
+
+export async function getChipCategories(): Promise<ChipCategoryData[]> {
+  const { data } = await axiosInstance.get<ChipCategoryData[]>('/user/chip-categories/');
+  return Array.isArray(data) ? data : (data as any).results ?? [];
+}
 
 export async function getCustomChips(): Promise<CustomChip[]> {
   const { data } = await axiosInstance.get<CustomChip[]>('/user/me/custom-chips/');

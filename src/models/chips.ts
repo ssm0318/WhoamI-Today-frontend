@@ -1,6 +1,6 @@
 /**
- * Expanded chip system with 7 distinct categories.
- * Each category has a unique color scheme (WCAG AA compliant).
+ * Chip category system — colors and types live here,
+ * chip names are fetched from the backend (single source of truth).
  */
 
 export enum ChipCategory {
@@ -13,6 +13,15 @@ export enum ChipCategory {
   LEAST_FAVORITE_PLATFORM = 'least_favorite_platform',
 }
 
+/** Shape returned by GET /user/chip-categories/ */
+export interface ChipCategoryData {
+  key: string;
+  label: string;
+  description: string;
+  chips: string[];
+}
+
+/** Full category info used by components (API data + local colors). */
 export interface ChipCategoryInfo {
   key: ChipCategory;
   label: string;
@@ -30,168 +39,27 @@ export interface CustomChip {
 export const MAX_CUSTOM_CHIPS_PER_CATEGORY = 5;
 export const MAX_CUSTOM_CHIP_LENGTH = 25;
 
-export const CHIP_CATEGORIES: Record<ChipCategory, ChipCategoryInfo> = {
-  [ChipCategory.MUSIC_ENTERTAINMENT]: {
-    key: ChipCategory.MUSIC_ENTERTAINMENT,
-    label: 'Music & Entertainment',
-    description: 'What you consume — genres, media, formats.',
-    chips: [
-      'Hip-Hop',
-      'R&B',
-      'Pop',
-      'Indie',
-      'K-Pop',
-      'Rock',
-      'EDM',
-      'Jazz',
-      'Lo-Fi',
-      'Anime',
-      'K-Drama',
-      'Reality TV',
-      'Horror',
-      'Sci-Fi',
-      'Documentaries',
-      'Comedy',
-      'Podcasts',
-      'Manga/Webtoons',
-    ],
-    colors: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
-  },
-  [ChipCategory.HOBBIES_ACTIVITIES]: {
-    key: ChipCategory.HOBBIES_ACTIVITIES,
-    label: 'Hobbies & Activities',
-    description: 'What you do with your time — sports, creative work, lifestyle.',
-    chips: [
-      'Gaming',
-      'Basketball',
-      'Soccer',
-      'Volleyball',
-      'Tennis',
-      'Gym',
-      'Running',
-      'Skating',
-      'Climbing',
-      'Hiking',
-      'Surfing',
-      'Cycling',
-      'Drawing',
-      'Photography',
-      'Cooking',
-      'Baking',
-      'Thrifting',
-      'Journaling',
-      'Reading',
-      'Coding',
-      'Music Production',
-      'Video Editing',
-      'Fashion',
-      'DIY',
-    ],
-    colors: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
-  },
-  [ChipCategory.ON_MY_MIND]: {
-    key: ChipCategory.ON_MY_MIND,
-    label: 'On My Mind',
-    description: 'Current rabbit holes, intellectual interests, life-phase topics.',
-    chips: [
-      'Astrology',
-      'Psychology',
-      'Philosophy',
-      'Sustainability',
-      'Mental Health',
-      'Skincare',
-      'Spirituality',
-      'Finance',
-      'Language Learning',
-      'AI & Tech',
-      'Design',
-      'Writing',
-      'College/Career',
-      'Fitness Journey',
-    ],
-    colors: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
-  },
-  [ChipCategory.AS_A_FRIEND]: {
-    key: ChipCategory.AS_A_FRIEND,
-    label: 'As a Friend',
-    description: 'How you show up in relationships — personality and values.',
-    chips: [
-      'Good Listener',
-      'Brutally Honest',
-      'Hype Person',
-      'Low Maintenance',
-      'Planner',
-      'Spontaneous',
-      'Night Owl',
-      'Early Bird',
-      'Overthinker',
-      'Go With the Flow',
-      'Needs Alone Time',
-      'Always Down to Talk',
-      'Dry Humor',
-      'Keeps It Real',
-    ],
-    colors: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
-  },
-  [ChipCategory.ONLINE_PERSONA]: {
-    key: ChipCategory.ONLINE_PERSONA,
-    label: 'Online Persona',
-    description: 'How you behave on the internet — distinct behavioral archetypes.',
-    chips: [
-      'Lurker',
-      'Content Creator',
-      'Meme Collector',
-      'Night Scroller',
-      'Occasional Poster',
-      'Story Watcher',
-      'Always in the Comments',
-      'Curated Feed',
-      'Posts and Deletes',
-      'Oversharer',
-      'Silent Supporter',
-      'Late Replier',
-    ],
-    colors: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
-  },
-  [ChipCategory.FAVORITE_PLATFORM]: {
-    key: ChipCategory.FAVORITE_PLATFORM,
-    label: 'Favorite Platform',
-    description: 'The platforms you love most.',
-    chips: [
-      'Instagram',
-      'TikTok',
-      'YouTube',
-      'Snapchat',
-      'X / Twitter',
-      'Discord',
-      'Reddit',
-      'Pinterest',
-      'BeReal',
-      'Threads',
-    ],
-    colors: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
-  },
-  [ChipCategory.LEAST_FAVORITE_PLATFORM]: {
-    key: ChipCategory.LEAST_FAVORITE_PLATFORM,
-    label: 'Least Favorite Platform',
-    description: 'The platforms you could do without.',
-    chips: [
-      'Instagram',
-      'TikTok',
-      'YouTube',
-      'Snapchat',
-      'X / Twitter',
-      'Discord',
-      'Reddit',
-      'Pinterest',
-      'BeReal',
-      'Threads',
-    ],
-    colors: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
-  },
+/** Per-category color scheme (WCAG AA compliant). */
+export const CHIP_CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
+  [ChipCategory.MUSIC_ENTERTAINMENT]: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
+  [ChipCategory.HOBBIES_ACTIVITIES]: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
+  [ChipCategory.ON_MY_MIND]: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
+  [ChipCategory.AS_A_FRIEND]: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
+  [ChipCategory.ONLINE_PERSONA]: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
+  [ChipCategory.FAVORITE_PLATFORM]: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
+  [ChipCategory.LEAST_FAVORITE_PLATFORM]: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
 };
 
-export const ALL_CATEGORIES = Object.values(CHIP_CATEGORIES);
+const DEFAULT_COLORS = { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' };
+
+/** Merge backend category data with local colors. */
+export function toChipCategoryInfo(data: ChipCategoryData): ChipCategoryInfo {
+  return {
+    ...data,
+    key: data.key as ChipCategory,
+    colors: CHIP_CATEGORY_COLORS[data.key] ?? DEFAULT_COLORS,
+  };
+}
 
 /**
  * Normalize chip text for comparison (case-insensitive matching for custom chips).
