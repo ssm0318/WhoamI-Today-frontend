@@ -11,12 +11,16 @@ import * as S from './SelectInterestSection.styled';
 const COLLAPSED_COUNT = 10;
 
 interface SelectInterestSectionProps {
+  category?: string;
+  categoryLabel?: string;
   interestList?: InterestItem[];
   isSaved?: boolean;
   onSave?: () => void;
 }
 
 function SelectInterestSection({
+  category,
+  categoryLabel,
   interestList = [],
   isSaved = false,
   onSave,
@@ -51,6 +55,7 @@ function SelectInterestSection({
       profile: {
         user_interests: selectedInterests,
       },
+      interestCategory: category,
       onSuccess: (data: MyProfile) => {
         updateMyProfile({ ...data });
       },
@@ -65,7 +70,7 @@ function SelectInterestSection({
   return (
     <S.SelectInterestSectionWrapper>
       <Typo type="title-medium" color="WHITE" ml={16}>
-        Select your interests
+        {categoryLabel || 'Select your interests'}
       </Typo>
 
       <S.InterestGrid>

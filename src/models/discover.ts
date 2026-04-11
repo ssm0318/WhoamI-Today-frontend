@@ -37,6 +37,8 @@ export interface InterestItem {
 
 // Interest Card Body (type: "Interest")
 export interface InterestCardBody {
+  category: string;
+  category_label: string;
   list: InterestItem[];
 }
 

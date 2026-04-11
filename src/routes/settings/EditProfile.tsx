@@ -11,8 +11,9 @@ import { StyledEditProfileButton } from '@components/settings/SettingsButtons.st
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { CheckBox, Layout, Typo } from '@design-system';
+import { useChipCategories } from '@hooks/useChipCategories';
 import { MyProfile } from '@models/api/user';
-import { ALL_CATEGORIES, ChipCategory, CustomChip, normalizeChipText } from '@models/chips';
+import { ChipCategory, CustomChip, normalizeChipText } from '@models/chips';
 import { useBoundStore } from '@stores/useBoundStore';
 import { createCustomChip, deleteCustomChip } from '@utils/apis/chips';
 import { editProfile, updateChipsByCategory } from '@utils/apis/my';
@@ -32,6 +33,8 @@ function EditProfile() {
     featureFlags: state.featureFlags,
   }));
 
+  const { categories } = useChipCategories();
+
   // Parse existing user chips into per-category selections
   const parseExistingChips = () => {
     const existing = [
@@ -41,7 +44,7 @@ function EditProfile() {
     const result: Record<string, string[]> = {};
     const customResult: CustomChip[] = [];
 
-    ALL_CATEGORIES.forEach((cat) => {
+    categories.forEach((cat) => {
       const matched = existing.filter((chip) =>
         cat.chips.some((c) => normalizeChipText(c) === normalizeChipText(chip)),
       );
@@ -375,7 +378,7 @@ function EditProfile() {
         </Layout.FlexCol>
 
         {/* Chip Categories (7 categories) — each with its own visibility */}
-        {ALL_CATEGORIES.map((categoryInfo) => (
+        {categories.map((categoryInfo) => (
           <Layout.FlexCol key={categoryInfo.key} gap={4} w="100%">
             <ChipCategorySection
               categoryInfo={categoryInfo}

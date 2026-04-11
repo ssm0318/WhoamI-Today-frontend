@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import Icon from '@components/_common/icon/Icon';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { useChipCategories } from '@hooks/useChipCategories';
 import { MyProfile } from '@models/api/user';
-import { ALL_CATEGORIES, normalizeChipText } from '@models/chips';
+import { normalizeChipText } from '@models/chips';
 import { UserProfile } from '@models/user';
 import CategoryChip from '../chip/CategoryChip';
 
@@ -24,6 +25,7 @@ function MoreAboutBottomSheet({
   isMyPage,
 }: MoreAboutBottomSheetProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
+  const { categories } = useChipCategories();
   const navigate = useNavigate();
 
   const handleClickEdit = () => {
@@ -40,12 +42,14 @@ function MoreAboutBottomSheet({
     : [];
 
   // Group chips by category
-  const groupedByCategory = ALL_CATEGORIES.map((cat) => ({
-    category: cat,
-    chips: allUserChips.filter((chip) =>
-      cat.chips.some((c) => normalizeChipText(c) === normalizeChipText(chip)),
-    ),
-  })).filter((group) => group.chips.length > 0);
+  const groupedByCategory = categories
+    .map((cat) => ({
+      category: cat,
+      chips: allUserChips.filter((chip) =>
+        cat.chips.some((c) => normalizeChipText(c) === normalizeChipText(chip)),
+      ),
+    }))
+    .filter((group) => group.chips.length > 0);
 
   return (
     <BottomModal visible={visible} onClose={onClose}>

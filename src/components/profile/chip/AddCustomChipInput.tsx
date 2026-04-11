@@ -1,6 +1,6 @@
 import { KeyboardEvent, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { CHIP_CATEGORIES, ChipCategory, MAX_CUSTOM_CHIP_LENGTH } from '@models/chips';
+import { CHIP_CATEGORY_COLORS, ChipCategory, MAX_CUSTOM_CHIP_LENGTH } from '@models/chips';
 
 interface Props {
   category: ChipCategory;
@@ -12,7 +12,11 @@ function AddCustomChipInput({ category, onAdd, disabled = false }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const { colors } = CHIP_CATEGORIES[category];
+  const colors = CHIP_CATEGORY_COLORS[category] ?? {
+    bg: '#F3E8FF',
+    text: '#8700FF',
+    border: '#8700FF',
+  };
 
   const handleStartEditing = () => {
     if (disabled) return;

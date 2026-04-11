@@ -1,6 +1,8 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
+import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import BatteryEditor from '@components/check-in/update-quadrant/BatteryEditor';
 import MoodEditor from '@components/check-in/update-quadrant/MoodEditor';
 import SongEditor from '@components/check-in/update-quadrant/SongEditor';
@@ -37,6 +39,15 @@ export default function UpdateCheckin() {
   const openToast = useBoundStore((state) => state.openToast);
 
   const [activeEditor, setActiveEditor] = useState<EditorTarget>(null);
+
+  // Auto-open editor popup from deep link query param (e.g. /update?editor=mood)
+  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    const editorParam = searchParams.get('editor');
+    if (editorParam && ['battery', 'mood', 'song', 'thought'].includes(editorParam)) {
+      setActiveEditor(editorParam as EditorTarget);
+    }
+  }, [searchParams]);
 
   const [battery, setBattery] = useState<SocialBattery | null>(null);
   const [mood, setMood] = useState<string[]>([]);
@@ -128,14 +139,13 @@ export default function UpdateCheckin() {
       if (window.ReactNativeWebView) {
         sendMessage('WIDGET_DATA_UPDATED', {
           check_in: {
-            id: checkIn?.id ?? 0,
+            id: 0,
             is_active: true,
-            created_at: checkIn?.created_at ?? new Date().toISOString(),
-            mood,
-            social_battery: battery,
-            description: thought,
-            track_id: trackId,
-            album_image_url: trackData?.album?.images?.[0]?.url ?? null,
+            created_at: new Date().toISOString(),
+            mood: s.mood,
+            social_battery: s.battery,
+            description: s.thought,
+            track_id: s.trackId,
           },
         });
       }
