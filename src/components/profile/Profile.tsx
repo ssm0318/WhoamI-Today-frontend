@@ -10,7 +10,8 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { Connection } from '@models/api/friends';
 import { MyProfile } from '@models/api/user';
-import { ALL_CATEGORIES, normalizeChipText } from '@models/chips';
+import { normalizeChipText } from '@models/chips';
+import { useChipCategories } from '@hooks/useChipCategories';
 import { areFriends, isMyProfile, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
@@ -29,6 +30,7 @@ interface ProfileProps {
 
 function Profile({ user }: ProfileProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
+  const { categories } = useChipCategories();
 
   const { featureFlags, myProfile } = useBoundStore(useShallow(UserSelector));
   const isMyPage = user?.id === myProfile?.id;
@@ -245,7 +247,7 @@ function Profile({ user }: ProfileProps) {
                     ...(friendData.mutual_interests ?? []),
                     ...(friendData.mutual_personas ?? []),
                   ].map((trait) => {
-                    const matchedCat = ALL_CATEGORIES.find((cat) =>
+                    const matchedCat = categories.find((cat) =>
                       cat.chips.some(
                         (c) => normalizeChipText(c) === normalizeChipText(trait.content),
                       ),
@@ -254,7 +256,7 @@ function Profile({ user }: ProfileProps) {
                       <CategoryChip
                         key={trait.id}
                         label={trait.content}
-                        category={matchedCat?.key ?? ALL_CATEGORIES[0].key}
+                        category={matchedCat?.key ?? categories[0].key}
                         isSelected
                       />
                     );
