@@ -1,6 +1,6 @@
 import axiosInstance from '@utils/apis/axios';
 
-export type PokeComponentType = 'song' | 'status' | 'battery';
+export type PokeComponentType = 'song' | 'mood' | 'thought' | 'battery';
 
 export interface Poke {
   id: number;

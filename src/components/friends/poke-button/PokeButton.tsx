@@ -12,15 +12,17 @@ interface Props {
 }
 
 const POKE_LABELS: Record<PokeComponentType, { text: string; emoji: string }> = {
-  song: { text: 'Nudge for a song', emoji: '\u{1F3B5}' },
-  status: { text: 'Nudge for a vibe check', emoji: '\u{270C}\u{FE0F}' },
-  battery: { text: 'Nudge to share how they feel', emoji: '\u{1F4AB}' },
+  battery: { text: 'Nudge for social battery', emoji: '🔋' },
+  mood: { text: 'Nudge for mood', emoji: '😊' },
+  thought: { text: 'Nudge for random thoughts', emoji: '💭' },
+  song: { text: 'Nudge for a song', emoji: '🎵' },
 };
 
 const POKED_LABELS: Record<PokeComponentType, { text: string; emoji: string }> = {
-  song: { text: 'Nudged: song', emoji: '\u{2714}\u{FE0F}' },
-  status: { text: 'Nudged: vibe', emoji: '\u{2714}\u{FE0F}' },
-  battery: { text: 'Nudged: battery', emoji: '\u{2714}\u{FE0F}' },
+  battery: { text: 'Nudged: battery', emoji: '✔️' },
+  mood: { text: 'Nudged: mood', emoji: '✔️' },
+  thought: { text: 'Nudged: thoughts', emoji: '✔️' },
+  song: { text: 'Nudged: song', emoji: '✔️' },
 };
 
 function PokeButton({ receiverId, componentType }: Props) {

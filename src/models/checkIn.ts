@@ -25,9 +25,9 @@ export type CheckInBase = {
   id: number;
   is_active: boolean;
   created_at: string;
-  mood: string;
+  mood: string[];
   social_battery: SocialBattery | null;
-  description: string;
+  thought: string;
   track_id: string;
   current_user_read: boolean;
   song_visibility?: ComponentVisibility;
