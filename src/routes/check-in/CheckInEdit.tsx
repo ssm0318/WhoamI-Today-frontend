@@ -100,7 +100,7 @@ function CheckInEdit() {
           created_at: new Date().toISOString(),
           mood: checkInForm.mood,
           social_battery: checkInForm.social_battery,
-          description: checkInForm.description,
+          description: checkInForm.thought,
           track_id: checkInForm.track_id,
           album_image_url: trackData?.album?.images?.[0]?.url ?? null,
         },
