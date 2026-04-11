@@ -9,6 +9,7 @@ interface SubHeaderProps {
   title?: string | null;
   typo?: FontType;
   onGoBack?: () => void;
+  onClickTitle?: () => void;
   RightComponent?: React.ReactNode;
   LeftComponent?: React.ReactNode;
 }
@@ -20,6 +21,7 @@ function SubHeader({
   title,
   typo = 'title-large',
   onGoBack,
+  onClickTitle,
   RightComponent,
   LeftComponent,
 }: SubHeaderProps) {
@@ -52,15 +54,30 @@ function SubHeader({
             </button>
           </Layout.LayoutBase>
         )}
-        {title && (
-          <Typo
-            type={typo}
-            textAlign="center"
-            ellipsis={{ enabled: true, maxWidth: SCREEN_WIDTH - 2 * DEFAULT_MARGIN }}
-          >
-            {title}
-          </Typo>
-        )}
+        {title &&
+          (onClickTitle ? (
+            <button
+              type="button"
+              onClick={onClickTitle}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+            >
+              <Typo
+                type={typo}
+                textAlign="center"
+                ellipsis={{ enabled: true, maxWidth: SCREEN_WIDTH - 2 * DEFAULT_MARGIN }}
+              >
+                {title}
+              </Typo>
+            </button>
+          ) : (
+            <Typo
+              type={typo}
+              textAlign="center"
+              ellipsis={{ enabled: true, maxWidth: SCREEN_WIDTH - 2 * DEFAULT_MARGIN }}
+            >
+              {title}
+            </Typo>
+          ))}
         <Layout.LayoutBase w={title && !RightComponent ? 36 : undefined}>
           {RightComponent && RightComponent}
         </Layout.LayoutBase>

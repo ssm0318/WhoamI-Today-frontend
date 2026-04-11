@@ -1,0 +1,579 @@
+import { isSameDay } from 'date-fns';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import Icon from '@components/_common/icon/Icon';
+import { Loader } from '@components/_common/loader/Loader.styled';
+import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
+import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
+import ChatMessageInput from '@components/chat/chat-message-input/ChatMessageInput';
+import ChatMessageItem from '@components/chat/chat-message-item/ChatMessageItem';
+import { CHAT_MESSAGE_INPUT_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
+import { Layout, Typo } from '@design-system';
+import useInfiniteScroll from '@hooks/useInfiniteScroll';
+import { ChatMessage, ChatRoom, PostChatMessageRes, RefinedChatMessage } from '@models/chat';
+import { useBoundStore } from '@stores/useBoundStore';
+import axios from '@utils/apis/axios';
+import {
+  getGroupMessages,
+  leaveGroupChat,
+  markGroupMessagesRead,
+  updateGroupChat,
+} from '@utils/apis/chat';
+import { getMyProfile } from '@utils/apis/my';
+import { MainScrollContainer } from '../Root';
+
+function getGroupWsUrl(roomId: number, token: string) {
+  if (process.env.NODE_ENV === 'development') {
+    return `ws://localhost:8000/ws/chat/group/${roomId}/?token=${token}`;
+  }
+  const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+  return `${protocol}://${window.location.host}/ws/chat/group/${roomId}/?token=${token}`;
+}
+
+function GroupChat() {
+  const { roomId } = useParams<{ roomId: string }>();
+  const navigate = useNavigate();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [room, setRoom] = useState<ChatRoom>();
+  const [nextUrl, setNextUrl] = useState<string | null>(null);
+  const [firstLoad, setFirstLoad] = useState(true);
+  const [replyTarget, setReplyTarget] = useState<ChatMessage | null>(null);
+  const [showMemberDrawer, setShowMemberDrawer] = useState(false);
+  const socketRef = useRef<WebSocket>();
+
+  const [typingUsers, setTypingUsers] = useState<Record<number, string>>({});
+  const typingTimers = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
+
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editName, setEditName] = useState('');
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  const currentUser = useBoundStore((state) => state.myProfile);
+
+  useEffect(() => {
+    if (!roomId) return;
+    axios
+      .get<ChatRoom>(`/chat/groups/${roomId}/`)
+      .then(({ data }) => {
+        setRoom(data);
+        setEditName(data.name || 'Group Chat');
+      })
+      .catch(() => {});
+  }, [roomId]);
+
+  const fetchMessages = useCallback(async (id: number) => {
+    const { next, results } = await getGroupMessages(id);
+    // Mark all fetched messages as read locally (user is viewing them now)
+    const msgs = results ? [...results].reverse().map((m) => ({ ...m, is_read: true })) : [];
+    setMessages(msgs);
+    setNextUrl(next);
+    setFirstLoad(false);
+  }, []);
+
+  useEffect(() => {
+    if (!roomId) return;
+    fetchMessages(Number(roomId));
+  }, [fetchMessages, roomId]);
+
+  useEffect(() => {
+    if (!firstLoad && scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [firstLoad]);
+
+  // Mark messages as read on page entry
+  const markRead = useCallback(() => {
+    if (!roomId) return;
+    markGroupMessagesRead(Number(roomId))
+      .then(() => getMyProfile())
+      .catch(() => {});
+    setMessages((prev) => prev.map((m) => ({ ...m, is_read: true })));
+  }, [roomId]);
+
+  useEffect(() => {
+    if (!roomId || firstLoad) return;
+    markRead();
+  }, [roomId, firstLoad, markRead]);
+
+  // WebSocket
+  useEffect(() => {
+    if (!roomId) return;
+    const token = document.cookie
+      .split('; ')
+      .find((c) => c.startsWith('access_token='))
+      ?.split('=')[1];
+    if (!token) return;
+
+    const ws = new WebSocket(getGroupWsUrl(Number(roomId), token));
+    ws.addEventListener('message', (e) => {
+      const data = JSON.parse(e.data);
+      if (data.action === 'typing') {
+        if (currentUser && data.user_id !== currentUser.id) {
+          setTypingUsers((prev) => ({ ...prev, [data.user_id]: data.username }));
+          clearTimeout(typingTimers.current[data.user_id]);
+          typingTimers.current[data.user_id] = setTimeout(() => {
+            setTypingUsers((prev) => {
+              const next = { ...prev };
+              delete next[data.user_id];
+              return next;
+            });
+          }, 3000);
+        }
+      } else if (data.action === 'reaction') {
+        setMessages((prev) =>
+          prev.map((m) => (m.id === data.message_id ? { ...m, reactions: data.reactions } : m)),
+        );
+      } else if (currentUser && Number(data.sender?.id) !== Number(currentUser.id)) {
+        setTypingUsers((prev) => {
+          const next = { ...prev };
+          delete next[data.sender.id];
+          return next;
+        });
+        setPrevScrollHeight(scrollRef.current?.clientHeight);
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === data.id)) return prev;
+          return [...prev, { ...data, is_read: true }];
+        });
+        // Mark as read since user is viewing the room
+        if (roomId) {
+          markGroupMessagesRead(Number(roomId)).catch(() => {});
+        }
+      }
+    });
+    socketRef.current = ws;
+    return () => {
+      ws.close();
+    };
+  }, [roomId, currentUser]);
+
+  const sendTyping = useCallback(() => {
+    const ws = socketRef.current;
+    if (ws?.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ action: 'typing' }));
+    }
+  }, []);
+
+  const refinedMessages = useMemo((): RefinedChatMessage[] => {
+    return messages.reduce<RefinedChatMessage[]>((acc, curr) => {
+      const last = acc[acc.length - 1];
+      if (!last || !isSameDay(new Date(last.created_at), new Date(curr.created_at))) {
+        acc.push({ ...curr, show_date: true });
+      } else {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
+  }, [messages]);
+
+  const { isLoading, targetRef, setIsLoading } = useInfiniteScroll<HTMLDivElement>(async () => {
+    if (nextUrl && roomId) {
+      setPrevScrollHeight(scrollRef.current?.scrollHeight);
+      const { next, results } = await getGroupMessages(Number(roomId), nextUrl);
+      setNextUrl(next);
+      if (!results) {
+        setIsLoading(false);
+        return;
+      }
+      setMessages((prev) => [
+        ...[...results].reverse().map((m) => ({ ...m, is_read: true })),
+        ...prev,
+      ]);
+      setIsLoading(false);
+      return;
+    }
+    setIsLoading(false);
+  });
+
+  useEffect(() => {
+    if (!scrollRef.current || !prevScrollHeight) return;
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight - prevScrollHeight;
+    setPrevScrollHeight(undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages]);
+
+  const handleMessageSent = (newMsg: PostChatMessageRes) => {
+    setPrevScrollHeight(scrollRef.current?.clientHeight);
+    setMessages((prev) => {
+      if (prev.some((m) => m.id === newMsg.id)) return prev;
+      return [...prev, newMsg];
+    });
+  };
+
+  useEffect(() => {
+    if (isEditingName && nameInputRef.current) {
+      nameInputRef.current.focus();
+      nameInputRef.current.select();
+    }
+  }, [isEditingName]);
+
+  const handleSaveName = async () => {
+    setIsEditingName(false);
+    const groupTitle = room?.name || 'Group Chat';
+    if (editName.trim() && editName !== groupTitle && roomId) {
+      await updateGroupChat(Number(roomId), { name: editName.trim() });
+      setRoom((prev) => (prev ? { ...prev, name: editName.trim() } : prev));
+    }
+  };
+
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+
+  const handleLeave = async () => {
+    if (!roomId) return;
+    await leaveGroupChat(Number(roomId));
+    navigate('/chats');
+  };
+
+  const groupTitle = room?.name || 'Group Chat';
+  const members = room?.members_detail || [];
+  const typingNames = Object.values(typingUsers);
+
+  return (
+    <MainScrollContainer scrollRef={scrollRef} style={{ paddingTop: 0 }}>
+      {/* Custom header: back | centered title + pencil | members icon */}
+      <Layout.FlexRow
+        w="100%"
+        alignItems="center"
+        ph="default"
+        pv={4}
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 10,
+          background: 'white',
+          borderBottom: '1px solid #F0F0F0',
+          height: TOP_NAVIGATION_HEIGHT,
+        }}
+      >
+        {/* Left: back arrow */}
+        <Layout.LayoutBase w={36} h={36}>
+          <button
+            type="button"
+            onClick={() => navigate('/chats')}
+            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+          >
+            <Icon name="arrow_left" size={36} color="BLACK" />
+          </button>
+        </Layout.LayoutBase>
+
+        {/* Center: title + pencil (or edit input) */}
+        <Layout.FlexRow style={{ flex: 1 }} justifyContent="center" alignItems="center" gap={4}>
+          {isEditingName ? (
+            <input
+              ref={nameInputRef}
+              type="text"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSaveName();
+              }}
+              onBlur={handleSaveName}
+              style={{
+                width: '70%',
+                fontSize: 18,
+                fontWeight: 700,
+                border: 'none',
+                borderBottom: '1.5px solid #000',
+                outline: 'none',
+                fontFamily: 'inherit',
+                padding: '2px 4px',
+                textAlign: 'center',
+                background: 'transparent',
+              }}
+            />
+          ) : (
+            <>
+              <Typo type="title-large">{groupTitle}</Typo>
+              <button
+                type="button"
+                onClick={() => setIsEditingName(true)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: 2,
+                  display: 'flex',
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path
+                    d="M10.5 1.75L12.25 3.5L3.5 12.25H1.75V10.5L10.5 1.75Z"
+                    stroke="#000"
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </>
+          )}
+        </Layout.FlexRow>
+
+        {/* Right: members icon — vertically centered */}
+        <Layout.FlexRow w={36} h={36} alignItems="center" justifyContent="center">
+          <button
+            type="button"
+            onClick={() => setShowMemberDrawer(true)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2,
+              padding: 0,
+            }}
+          >
+            <span style={{ fontSize: 16, lineHeight: 1 }}>👤</span>
+            <span style={{ fontSize: 12, color: '#666', lineHeight: 1 }}>{members.length}</span>
+          </button>
+        </Layout.FlexRow>
+      </Layout.FlexRow>
+
+      {/* Right-side member drawer */}
+      {showMemberDrawer && (
+        <>
+          {/* Backdrop — constrained to app width */}
+          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+          <div
+            onClick={() => setShowMemberDrawer(false)}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '100%',
+              maxWidth: 500,
+              height: '100%',
+              background: 'rgba(0,0,0,0.3)',
+              zIndex: 999,
+            }}
+          />
+          {/* Drawer — right-aligned within app width */}
+          <Layout.FlexCol
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: '50%',
+              marginLeft: Math.min(window.innerWidth, 500) / 2 - 260,
+              width: 260,
+              height: '100%',
+              background: 'white',
+              zIndex: 1000,
+              boxShadow: '-2px 0 8px rgba(0,0,0,0.15)',
+              padding: '16px 0',
+            }}
+          >
+            <Layout.FlexRow
+              w="100%"
+              ph={16}
+              pv={8}
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typo type="title-medium">Members</Typo>
+              <button
+                type="button"
+                onClick={() => setShowMemberDrawer(false)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 }}
+              >
+                ✕
+              </button>
+            </Layout.FlexRow>
+            {/* Add member button */}
+            <Layout.FlexRow
+              w="100%"
+              ph={16}
+              pv={10}
+              gap={10}
+              alignItems="center"
+              cursor="pointer"
+              onClick={() => {
+                setShowMemberDrawer(false);
+                navigate(`/chats/group/${roomId}/add-members`);
+              }}
+              style={{ borderBottom: '1px solid #F0F0F0' }}
+            >
+              <Layout.FlexRow
+                w={32}
+                h={32}
+                rounded={16}
+                bgColor="LIGHT"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <span style={{ fontSize: 16, lineHeight: 1 }}>+</span>
+              </Layout.FlexRow>
+              <Typo type="body-medium" color="PRIMARY">
+                Add Member
+              </Typo>
+            </Layout.FlexRow>
+            {/* Member list — clickable to profile */}
+            <Layout.FlexCol w="100%" style={{ flex: 1, overflowY: 'auto' }}>
+              {members.map((m) => (
+                <Layout.FlexRow
+                  key={m.id}
+                  gap={10}
+                  alignItems="center"
+                  ph={16}
+                  pv={8}
+                  cursor="pointer"
+                  onClick={() => {
+                    setShowMemberDrawer(false);
+                    navigate(`/users/${m.username}`);
+                  }}
+                >
+                  <ProfileImage imageUrl={m.profile_image} size={32} />
+                  <Typo type="body-medium" color="BLACK">
+                    {m.username}
+                  </Typo>
+                  {currentUser && Number(m.id) === Number(currentUser.id) && (
+                    <Typo type="label-small" color="MEDIUM_GRAY">
+                      (you)
+                    </Typo>
+                  )}
+                </Layout.FlexRow>
+              ))}
+            </Layout.FlexCol>
+            <Layout.FlexCol w="100%" ph={16} pv={12} gap={8}>
+              {showLeaveConfirm ? (
+                <>
+                  <Typo type="body-small" color="BLACK">
+                    Are you sure you want to leave this group?
+                  </Typo>
+                  <Layout.FlexRow gap={12}>
+                    <button
+                      type="button"
+                      onClick={handleLeave}
+                      style={{
+                        background: '#FF3B30',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: 6,
+                        padding: '6px 16px',
+                        fontSize: 13,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Leave
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowLeaveConfirm(false)}
+                      style={{
+                        background: '#F0F0F0',
+                        color: '#333',
+                        border: 'none',
+                        borderRadius: 6,
+                        padding: '6px 16px',
+                        fontSize: 13,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </Layout.FlexRow>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowLeaveConfirm(true)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                >
+                  <Typo type="label-medium" color="WARNING">
+                    Leave Group
+                  </Typo>
+                </button>
+              )}
+            </Layout.FlexCol>
+          </Layout.FlexCol>
+        </>
+      )}
+
+      {firstLoad && (
+        <Layout.FlexCol w="100%" alignItems="center" mt={30}>
+          <Loader />
+        </Layout.FlexCol>
+      )}
+      {!firstLoad && refinedMessages.length > 0 && (
+        <SwipeLayoutList>
+          <Layout.FlexCol w="100%" gap={15} p={10} mb={CHAT_MESSAGE_INPUT_HEIGHT}>
+            <div ref={targetRef} />
+            {isLoading && <Loader />}
+            {refinedMessages.map((message) => {
+              const isMine = currentUser
+                ? Number(message.sender.id) === Number(currentUser.id)
+                : false;
+              return (
+                <Layout.FlexCol key={message.id} w="100%">
+                  {!isMine && (
+                    <Layout.FlexRow pl={17} gap={6} alignItems="center" mb={2}>
+                      <Typo type="label-small" color="MEDIUM_GRAY">
+                        {message.sender.username}
+                      </Typo>
+                    </Layout.FlexRow>
+                  )}
+                  <SwipeLayout
+                    leftContent={[
+                      <Layout.FlexRow
+                        key="reply"
+                        w={50}
+                        h="100%"
+                        alignItems="center"
+                        justifyContent="center"
+                        onClick={() => setReplyTarget(message)}
+                      >
+                        <Icon name="arrow_left" size={20} color="MEDIUM_GRAY" />
+                      </Layout.FlexRow>,
+                    ]}
+                  >
+                    <ChatMessageItem message={message} isMine={isMine} />
+                  </SwipeLayout>
+                </Layout.FlexCol>
+              );
+            })}
+          </Layout.FlexCol>
+        </SwipeLayoutList>
+      )}
+      {!firstLoad && refinedMessages.length === 0 && (
+        <Layout.FlexCol w="100%" alignItems="center" mt={50}>
+          <Typo type="body-medium" color="MEDIUM_GRAY">
+            No messages yet. Say hi!
+          </Typo>
+        </Layout.FlexCol>
+      )}
+
+      {typingNames.length > 0 && (
+        <Layout.Fixed
+          b={145}
+          z={11}
+          style={{ left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 500 }}
+        >
+          <Layout.FlexRow pl={17} pv={4}>
+            <Typo type="body-small" color="MEDIUM_GRAY">
+              {typingNames.length === 1
+                ? `${typingNames[0]} is typing...`
+                : typingNames.length === 2
+                ? `${typingNames[0]} and ${typingNames[1]} are typing...`
+                : `${typingNames[0]} and ${typingNames.length - 1} others are typing...`}
+            </Typo>
+          </Layout.FlexRow>
+        </Layout.Fixed>
+      )}
+
+      <ChatMessageInput
+        userId={Number(roomId)}
+        replyTarget={replyTarget}
+        onClearReply={() => setReplyTarget(null)}
+        onMessageSent={handleMessageSent}
+        onTyping={sendTyping}
+        isGroup
+      />
+    </MainScrollContainer>
+  );
+}
+
+export default GroupChat;

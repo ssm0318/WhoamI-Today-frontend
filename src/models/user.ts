@@ -13,7 +13,8 @@ export interface User {
   pronouns: string;
   has_changed_pw?: boolean;
   unread_noti_cnt?: number;
-  unread_ping_count?: number;
+  unread_chat_count?: number;
+  unread_message_cnt?: number;
   connection_status: Connection | null;
   user_interests: string[]; // ['#hiking', '#dogs']과 같은 형식
   user_personas: string[]; // ['#lurker', '#openbook']과 같은 형식
