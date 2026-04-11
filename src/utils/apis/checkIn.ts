@@ -60,9 +60,11 @@ export const deactivateSong = async (songId: number) => {
 };
 
 // GET reactions for a check-in
-export const getCheckInReactions = async (checkInId: number) => {
-  const { data } = await axios.get<
-    { id: number; emoji: string; user: { id: number; username: string } }[]
-  >(`/check_in/${checkInId}/reactions/`);
-  return data;
+type ReactionItem = { id: number; emoji: string; user: { id: number; username: string } };
+export const getCheckInReactions = async (checkInId: number): Promise<ReactionItem[]> => {
+  const { data } = await axios.get(`/check_in/${checkInId}/reactions/`);
+  // Handle both paginated ({ results: [...] }) and flat array responses
+  if (Array.isArray(data)) return data;
+  if (data.results && Array.isArray(data.results)) return data.results;
+  return [];
 };
