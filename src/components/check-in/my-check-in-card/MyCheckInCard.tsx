@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
@@ -25,7 +24,11 @@ function MyCheckInCard() {
     await fetchCheckIn();
   }, []);
 
-  const { social_battery, track_id, mood, description } = checkIn || {};
+  const { social_battery, track_id, mood, thought } = checkIn || {};
+  const moodArray: string[] = Array.isArray(mood) ? mood : mood ? [mood] : [];
+  const hasMood = moodArray.length > 0;
+
+  const goToCheckIn = () => navigate('/update');
 
   return (
     <Container>
@@ -51,48 +54,58 @@ function MyCheckInCard() {
             socialBattery={social_battery}
             compact
             borderless
-            onClick={() => navigate('/check-in/edit?focus=battery')}
+            onClick={goToCheckIn}
           />
         ) : (
           <SocialBatteryPlaceholder />
         )}
       </Layout.FlexRow>
 
-      {/* Row 2: Status (mood + description) or empty state */}
-      {mood || description ? (
+      {/* Mood pill */}
+      {hasMood ? (
         <Layout.FlexRow
           bgColor="WHITE"
-          gap={4}
+          gap={2}
           pv={4}
           ph={8}
           outline="LIGHT_GRAY"
           alignItems="center"
           rounded={8}
-          style={{ flexShrink: 0, cursor: 'pointer' }}
-          onClick={() => navigate('/check-in/edit?focus=status')}
+          style={{ flexShrink: 0, cursor: 'pointer', alignSelf: 'flex-start' }}
+          onClick={goToCheckIn}
         >
-          {mood && (
-            <EmojiItem emojiString={mood} size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
-          )}
-          {description && (
-            <Typo type="label-large" numberOfLines={1}>
-              {description}
-            </Typo>
-          )}
+          {moodArray.map((emoji) => (
+            <span key={emoji} style={{ fontSize: 16, lineHeight: 1 }}>
+              {emoji}
+            </span>
+          ))}
         </Layout.FlexRow>
       ) : (
         <MoodPlaceholder />
       )}
 
-      {/* Row 3: Song (full width) or empty state */}
+      {/* Thought pill */}
+      {thought ? (
+        <Layout.FlexRow
+          bgColor="WHITE"
+          pv={4}
+          ph={8}
+          outline="LIGHT_GRAY"
+          alignItems="center"
+          rounded={8}
+          style={{ flexShrink: 0, cursor: 'pointer', alignSelf: 'flex-start' }}
+          onClick={goToCheckIn}
+        >
+          <Typo type="label-large" numberOfLines={1}>
+            {thought}
+          </Typo>
+        </Layout.FlexRow>
+      ) : null}
+
+      {/* Song */}
       {track_id ? (
         <Layout.FlexRow w="100%" style={{ minWidth: 0, cursor: 'pointer' }}>
-          <SpotifyMusic
-            track={track_id}
-            useAlbumImg
-            fontType="label-large"
-            onClick={() => navigate('/check-in/edit?focus=song')}
-          />
+          <SpotifyMusic track={track_id} useAlbumImg fontType="label-large" onClick={goToCheckIn} />
         </Layout.FlexRow>
       ) : (
         <MusicPlaceholder />

@@ -1,7 +1,6 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import BatteryEditor from '@components/check-in/update-quadrant/BatteryEditor';
 import MoodEditor from '@components/check-in/update-quadrant/MoodEditor';
 import SongEditor from '@components/check-in/update-quadrant/SongEditor';
@@ -43,7 +42,7 @@ export default function UpdateCheckin() {
   const [activeEditor, setActiveEditor] = useState<EditorTarget>(null);
 
   const [battery, setBattery] = useState<SocialBattery | null>(null);
-  const [mood, setMood] = useState('');
+  const [mood, setMood] = useState<string[]>([]);
   const [trackId, setTrackId] = useState('');
   const [thought, setThought] = useState('');
 
@@ -71,8 +70,8 @@ export default function UpdateCheckin() {
     const [ci, activeSong] = await Promise.all([fetchCheckIn(), getActiveSong()]);
     if (ci) {
       setBattery(ci.social_battery || null);
-      setMood(ci.mood || '');
-      setThought(ci.description || '');
+      setMood(Array.isArray(ci.mood) ? ci.mood : ci.mood ? [ci.mood] : []);
+      setThought(ci.thought || '');
       if (ci.battery_visibility) setBatteryVis(ci.battery_visibility);
       if (ci.mood_visibility) setMoodVis(ci.mood_visibility);
       if (ci.song_visibility) setSongVis(ci.song_visibility);
@@ -88,7 +87,7 @@ export default function UpdateCheckin() {
     [battery, checkIn?.battery_updated_at],
   );
   const moodArchived = useMemo(
-    () => !!mood && isArchived(checkIn?.mood_updated_at),
+    () => mood.length > 0 && isArchived(checkIn?.mood_updated_at),
     [mood, checkIn?.mood_updated_at],
   );
   const songArchived = useMemo(
@@ -107,7 +106,7 @@ export default function UpdateCheckin() {
       const checkInPromise = postCheckIn({
         social_battery: battery,
         mood,
-        description: thought,
+        thought,
         track_id: '',
         battery_visibility: batteryVis,
         mood_visibility: moodVis,
@@ -196,14 +195,20 @@ export default function UpdateCheckin() {
 
         {/* Top-Right: Mood */}
         <QuadrantCard
-          $isEmpty={!mood}
+          $isEmpty={mood.length === 0}
           $isArchived={moodArchived}
           onClick={() => setActiveEditor('mood')}
         >
           {moodArchived && <ArchivedBadge>Only Me</ArchivedBadge>}
-          {mood ? (
+          {mood.length > 0 ? (
             <>
-              <EmojiItem emojiString={mood} size={40} bgColor="TRANSPARENT" outline="TRANSPARENT" />
+              <Layout.FlexRow gap={4} alignItems="center">
+                {mood.map((emoji) => (
+                  <span key={emoji} style={{ fontSize: 32, lineHeight: 1 }}>
+                    {emoji}
+                  </span>
+                ))}
+              </Layout.FlexRow>
               <QuadrantLabel>Mood</QuadrantLabel>
             </>
           ) : (

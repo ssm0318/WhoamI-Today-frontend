@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
@@ -35,8 +34,8 @@ function CheckIn({ user }: CheckInProps) {
   const [checkIn, setCheckIn] = useState<CheckInBase | null | undefined>(
     isMyPage ? initialCheckIn : user.check_in,
   );
-  const { social_battery, track_id, mood, description, current_user_read } = checkIn || {};
-  const hasCheckIn = checkIn && (mood || description || social_battery || track_id);
+  const { social_battery, track_id, mood, thought, current_user_read } = checkIn || {};
+  const hasCheckIn = checkIn && (mood || thought || social_battery || track_id);
 
   const [currentDate] = useState(() => new Date());
   const navigate = useNavigate();
@@ -101,7 +100,7 @@ function CheckIn({ user }: CheckInProps) {
           </Layout.FlexRow>
         </Layout.FlexRow>
         <Layout.FlexRow w="100%" alignItems="center" gap={8}>
-          {!!mood || !!description ? (
+          {!!mood || !!thought ? (
             <Layout.FlexRow
               gap={4}
               bgColor="WHITE"
@@ -117,18 +116,16 @@ function CheckIn({ user }: CheckInProps) {
               }}
             >
               {/* emoji */}
-              {mood && (
-                <EmojiItem
-                  emojiString={mood}
-                  size={16}
-                  bgColor="TRANSPARENT"
-                  outline="TRANSPARENT"
-                />
-              )}
-              {/* description */}
-              {description && (
+              {mood &&
+                (Array.isArray(mood) ? mood : [mood]).filter(Boolean).map((emoji) => (
+                  <span key={emoji} style={{ fontSize: 16, lineHeight: 1 }}>
+                    {emoji}
+                  </span>
+                ))}
+              {/* thought */}
+              {thought && (
                 <Typo type="label-large" numberOfLines={2}>
-                  {description}
+                  {thought}
                 </Typo>
               )}
             </Layout.FlexRow>

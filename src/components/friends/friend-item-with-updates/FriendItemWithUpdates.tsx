@@ -1,6 +1,5 @@
 import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CheckInDetailBottomSheet from '@components/check-in/check-in-detail-bottom-sheet/CheckInDetailBottomSheet';
@@ -31,11 +30,11 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
     username,
     unread_ping_count,
     track_id,
-    description,
     mood,
     social_battery,
     connection_status,
   } = user;
+  const thought = (user as any).thought ?? (user as any).description ?? '';
 
   const navigate = useNavigate();
   const { featureFlags } = useBoundStore(UserSelector);
@@ -43,7 +42,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
   const [isEditConnectionsBottomSheetVisible, setIsEditConnectionsBottomSheetVisible] =
     useState(false);
   const [checkInDetailFocus, setCheckInDetailFocus] = useState<
-    'battery' | 'status' | 'song' | null
+    'battery' | 'mood' | 'thought' | 'song' | null
   >(null);
 
   const handleClickProfile = (e: MouseEvent) => {
@@ -63,16 +62,6 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
     }
   };
 
-  const handleClickBattery = (e?: MouseEvent) => {
-    e?.stopPropagation();
-    setCheckInDetailFocus('battery');
-  };
-
-  const handleClickStatus = (e?: MouseEvent) => {
-    e?.stopPropagation();
-    setCheckInDetailFocus('status');
-  };
-
   const handleClickNewPost = (e: MouseEvent) => {
     e.stopPropagation();
     navigate(`/friends/${username}/new-posts`);
@@ -80,9 +69,16 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
 
   const hasNewPost = (!!recentPost && !recentPost.is_read) || (user as any).unread_post_cnt > 0;
 
+  // Normalize mood to array
+  const moodArray: string[] = Array.isArray(mood) ? mood : mood ? [mood] : [];
+  const hasMood = moodArray.length > 0;
+  const hasThought = !!thought;
+  const hasBattery = !!social_battery && Object.values(SocialBattery).includes(social_battery);
+  const hasSong = !!track_id;
+
   return (
     <Container mh={16} ph={16} pv={12} gap={12} rounded={12}>
-      {/* Row 1: Profile + username + badge + battery(emoji) + new post + ping */}
+      {/* Row 1: Profile + username + badge + battery(emoji or nudge) + new post + ping */}
       <Layout.FlexRow w="100%" gap={4} alignItems="center" justifyContent="space-between">
         <Layout.FlexRow alignItems="center" gap={6} style={{ flex: 1, minWidth: 0 }}>
           <Layout.FlexRow
@@ -103,13 +99,15 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
               onClick={handleClickFriendBadge}
             />
           </Layout.FlexRow>
-          {social_battery && Object.values(SocialBattery).includes(social_battery) && (
+          {hasBattery ? (
             <SocialBatteryChip
               socialBattery={social_battery}
               compact
               borderless
-              onClick={handleClickBattery}
+              onClick={() => setCheckInDetailFocus('battery')}
             />
+          ) : (
+            <PokeButton receiverId={id} componentType="battery" />
           )}
           {hasNewPost && (
             <Layout.FlexRow
@@ -148,37 +146,51 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
         </Layout.FlexRow>
       </Layout.FlexRow>
 
-      {/* Poke buttons for empty components */}
-      {!social_battery && !mood && !description && !track_id && (
-        <Layout.FlexRow gap={4} style={{ flexWrap: 'wrap' }}>
-          <PokeButton receiverId={id} componentType="battery" />
-          <PokeButton receiverId={id} componentType="status" />
-          <PokeButton receiverId={id} componentType="song" />
-        </Layout.FlexRow>
-      )}
-
-      {/* Row 2: Status (mood + description) */}
-      {(mood || description) && (
+      {/* Mood pill (separate from thought) */}
+      {hasMood ? (
         <Layout.FlexRow
           bgColor="WHITE"
-          gap={4}
+          gap={2}
           pv={4}
           ph={8}
           outline="LIGHT_GRAY"
           alignItems="center"
           rounded={8}
-          style={{ flexShrink: 0, cursor: 'pointer' }}
-          onClick={() => handleClickStatus()}
+          style={{ flexShrink: 0, cursor: 'pointer', alignSelf: 'flex-start' }}
+          onClick={() => setCheckInDetailFocus('mood')}
         >
-          {mood && (
-            <EmojiItem emojiString={mood} size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
-          )}
-          {description && <Typo type="label-large">{description}</Typo>}
+          {moodArray.map((emoji) => (
+            <span key={emoji} style={{ fontSize: 16, lineHeight: 1 }}>
+              {emoji}
+            </span>
+          ))}
         </Layout.FlexRow>
+      ) : (
+        <PokeButton receiverId={id} componentType="mood" />
       )}
 
-      {/* Row 3: Song (full width) */}
-      {track_id && (
+      {/* Thought pill (separate from mood) */}
+      {hasThought ? (
+        <Layout.FlexRow
+          bgColor="WHITE"
+          pv={4}
+          ph={8}
+          outline="LIGHT_GRAY"
+          alignItems="center"
+          rounded={8}
+          style={{ flexShrink: 0, cursor: 'pointer', alignSelf: 'flex-start' }}
+          onClick={() => setCheckInDetailFocus('thought')}
+        >
+          <Typo type="label-large" numberOfLines={1}>
+            {thought}
+          </Typo>
+        </Layout.FlexRow>
+      ) : (
+        <PokeButton receiverId={id} componentType="thought" />
+      )}
+
+      {/* Song */}
+      {hasSong ? (
         <Layout.FlexRow w="100%" style={{ minWidth: 0, overflow: 'hidden' }}>
           <SpotifyMusic
             track={track_id}
@@ -188,9 +200,11 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
             useDetailBottomSheet
           />
         </Layout.FlexRow>
+      ) : (
+        <PokeButton receiverId={id} componentType="song" />
       )}
 
-      {/* Check-in detail bottom sheet */}
+      {/* Check-in detail popup */}
       <CheckInDetailBottomSheet
         visible={!!checkInDetailFocus}
         closeBottomSheet={() => setCheckInDetailFocus(null)}
@@ -199,8 +213,8 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
         username={username}
         profileImage={profile_image}
         socialBattery={social_battery}
-        mood={mood}
-        description={description}
+        mood={moodArray}
+        description={thought}
       />
 
       <EditConnectionsBottomSheet
