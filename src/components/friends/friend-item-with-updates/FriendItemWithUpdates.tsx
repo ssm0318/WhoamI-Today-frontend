@@ -101,6 +101,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
           </Layout.FlexRow>
 
           {/* Battery + Mood emojis inline */}
+          {(hasBattery || hasMood) && <Divider />}
           <Layout.FlexRow alignItems="center" gap={2}>
             {hasBattery && (
               <SocialBatteryChip
