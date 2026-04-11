@@ -1,6 +1,7 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import BatteryEditor from '@components/check-in/update-quadrant/BatteryEditor';
 import MoodEditor from '@components/check-in/update-quadrant/MoodEditor';
@@ -41,6 +42,15 @@ export default function UpdateCheckin() {
   const sendMessage = usePostAppMessage();
 
   const [activeEditor, setActiveEditor] = useState<EditorTarget>(null);
+
+  // Auto-open editor popup from deep link query param (e.g. /update?editor=mood)
+  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    const editorParam = searchParams.get('editor');
+    if (editorParam && ['battery', 'mood', 'song', 'thought'].includes(editorParam)) {
+      setActiveEditor(editorParam as EditorTarget);
+    }
+  }, [searchParams]);
 
   const [battery, setBattery] = useState<SocialBattery | null>(null);
   const [mood, setMood] = useState('');
