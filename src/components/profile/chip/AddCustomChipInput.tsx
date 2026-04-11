@@ -12,7 +12,11 @@ function AddCustomChipInput({ category, onAdd, disabled = false }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const colors = CHIP_CATEGORY_COLORS[category] ?? { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' };
+  const colors = CHIP_CATEGORY_COLORS[category] ?? {
+    bg: '#F3E8FF',
+    text: '#8700FF',
+    border: '#8700FF',
+  };
 
   const handleStartEditing = () => {
     if (disabled) return;
