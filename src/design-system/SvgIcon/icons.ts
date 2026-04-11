@@ -74,7 +74,7 @@ const noti_icon_emoji = 'noti_icon_emoji';
 const noti_icon_public_comment = 'noti_icon_public_comment';
 const noti_icon_private_comment = 'noti_icon_private_comment';
 const noti_icon_prompt = 'noti_icon_prompt';
-const noti_icon_ping = 'noti_icon_ping';
+const noti_icon_chat = 'noti_icon_chat';
 const add_default = 'add_default';
 const star = 'star';
 const star_outline = 'star_outline';
@@ -82,6 +82,7 @@ const friend_requests = 'friend_requests';
 const friend_pinned = 'friend_pinned';
 const friend_unpinned = 'friend_unpinned';
 const friend_item_chat = 'friend_item_chat';
+const group_chat_new = 'group_chat_new';
 const close_friend = 'close_friend';
 const default_friend = 'default_friend';
 
@@ -118,9 +119,9 @@ const search_black = 'search_black';
 
 // Pings
 const refresh = 'refresh';
-const ping_emoji_add = 'ping_emoji_add';
-const favorite_ping = 'favorite_ping';
-const ping_send = 'ping_send';
+const chat_emoji_add = 'chat_emoji_add';
+const favorite_chat = 'favorite_chat';
+const chat_send = 'chat_send';
 
 // Note
 const delete_image = 'delete_image';
@@ -237,11 +238,12 @@ export {
   expand_close,
   expand_open,
   favorite_false,
-  favorite_ping,
+  favorite_chat,
   favorite_true,
   feed_active,
   feed_inactive,
   friend_item_chat,
+  group_chat_new,
   friend_pinned,
   friend_requests,
   friend_unpinned,
@@ -273,7 +275,7 @@ export {
   new_chat,
   noti_icon_emoji,
   noti_icon_like,
-  noti_icon_ping,
+  noti_icon_chat,
   noti_icon_private_comment,
   noti_icon_prompt,
   noti_icon_public_comment,
@@ -281,8 +283,8 @@ export {
   notification_mute,
   pin_empty,
   pin_filled,
-  ping_emoji_add,
-  ping_send,
+  chat_emoji_add,
+  chat_send,
   plus,
   private_comment,
   private_comment_active,

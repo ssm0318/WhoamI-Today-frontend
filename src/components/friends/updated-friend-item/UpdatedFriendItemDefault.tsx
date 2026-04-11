@@ -13,16 +13,16 @@ interface Props {
 }
 
 function UpdatedFriendItemDefault({ user, isMyPage }: Props) {
-  const { id, profile_image, username, current_user_read, unread_ping_count, description } = user;
+  const { id, profile_image, username, current_user_read, unread_chat_count, description } = user;
 
   const navigate = useNavigate();
   const handleClickProfile = () => {
     navigate(`/users/${username}`);
   };
 
-  const handleClickPing = (e: MouseEvent) => {
+  const handleClickChat = (e: MouseEvent) => {
     e.stopPropagation();
-    navigate(`/users/${id}/ping`);
+    navigate(`/users/${id}/chat`);
   };
 
   return (
@@ -60,9 +60,9 @@ function UpdatedFriendItemDefault({ user, isMyPage }: Props) {
             gap={2}
           >
             <Layout.LayoutBase pb={2}>
-              <Icon name="ping_send" size={22} onClick={handleClickPing} />
+              <Icon name="chat_send" size={22} onClick={handleClickChat} />
             </Layout.LayoutBase>
-            {unread_ping_count > 0 && (
+            {unread_chat_count > 0 && (
               <Layout.Absolute
                 bgColor="BLACK"
                 alignItems="center"
@@ -74,7 +74,7 @@ function UpdatedFriendItemDefault({ user, isMyPage }: Props) {
                 tl={['100%', 0]}
               >
                 <Typo type="label-small" color="WHITE" fontSize={7} fontWeight={700}>
-                  {unread_ping_count > 99 ? '99+' : unread_ping_count}
+                  {unread_chat_count > 99 ? '99+' : unread_chat_count}
                 </Typo>
               </Layout.Absolute>
             )}

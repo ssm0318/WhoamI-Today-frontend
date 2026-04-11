@@ -29,7 +29,7 @@ function UserPage() {
 
   const { user, updateUser } = useContext(UserPageContext);
   const userId = user.data?.id;
-  const unreadCount = user.data?.unread_ping_count;
+  const unreadCount = user.data?.unread_chat_count;
 
   const readCheckIn = async () => {
     if (!username || !user.data || !user.data.check_in.id) return;

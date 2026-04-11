@@ -20,7 +20,7 @@ export type NotificationType =
   | 'Like'
   | 'Comment'
   | 'Response'
-  | 'Ping'
+  | 'Message'
   | 'User'
   | 'DailySurvey'
   | 'QuestionSuggest';

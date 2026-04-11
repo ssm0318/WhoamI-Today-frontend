@@ -119,7 +119,6 @@ function PostMoreModal({
   const handleClickPinPost = async () => {
     try {
       await pinPost(post.type, post.id);
-      // Update user profile to refresh pinned_cnt
       await getMyProfile();
       openToast({ message: t('pin.success_title') });
       onConfirmReport?.();
@@ -133,7 +132,6 @@ function PostMoreModal({
     try {
       if (current_user_pin_id) {
         await unpinPost(current_user_pin_id);
-        // Update user profile to refresh pinned_cnt
         await getMyProfile();
         openToast({ message: t('unpin.success_title') });
         onConfirmReport?.();

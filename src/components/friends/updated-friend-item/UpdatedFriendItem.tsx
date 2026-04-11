@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import AlertDialog from '@components/_common/alert-dialog/AlertDialog';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import { StyledSwipeButton } from '@components/_common/swipe-layout/SwipeButton.styled';
 import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
-import { StyledSwipeButton } from '@components/chats/chat-room-list/ChatRoomItem.styled';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import UserRelatedAlert, { Alert } from '@components/user-page/UserRelatedAlert';
 import { Layout, SvgIcon, Typo } from '@design-system';
@@ -28,7 +28,7 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
     username,
     is_favorite,
     current_user_read,
-    unread_ping_count,
+    unread_chat_count,
     track_id,
     description,
     connection_status,
@@ -86,9 +86,9 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
 
   const handleOnCloseBreakFriendsAlert = () => setShowBreakFriendsAlert(undefined);
 
-  const handleClickPing = (e: MouseEvent) => {
+  const handleClickChat = (e: MouseEvent) => {
     e.stopPropagation();
-    navigate(`/users/${id}/ping`);
+    navigate(`/users/${id}/chat`);
   };
 
   return (
@@ -181,9 +181,9 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
               {track_id && <SpotifyMusic track={track_id} sharer={user} useDetailBottomSheet />}
             </Layout.FlexRow>
             <Layout.LayoutBase pb={2}>
-              <Icon name="ping_send" size={22} onClick={handleClickPing} />
+              <Icon name="chat_send" size={22} onClick={handleClickChat} />
             </Layout.LayoutBase>
-            {unread_ping_count > 0 && (
+            {unread_chat_count > 0 && (
               <Layout.Absolute
                 bgColor="BLACK"
                 alignItems="center"
@@ -195,7 +195,7 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
                 tl={['100%', 0]}
               >
                 <Typo type="label-small" color="WHITE" fontSize={7} fontWeight={700}>
-                  {unread_ping_count > 99 ? '99+' : unread_ping_count}
+                  {unread_chat_count > 99 ? '99+' : unread_chat_count}
                 </Typo>
               </Layout.Absolute>
             )}

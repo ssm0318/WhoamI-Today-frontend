@@ -23,7 +23,7 @@ export interface UpdatedProfile extends User {
   track_id?: string;
   description: string;
   mood?: string;
-  unread_ping_count: number;
+  unread_chat_count: number;
   social_battery?: SocialBattery | null;
   recent_post?: RecentPost;
 }

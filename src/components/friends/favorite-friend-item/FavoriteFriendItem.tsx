@@ -19,7 +19,7 @@ function FavoriteFriendItem({ user }: Props) {
     track_id,
     description,
     connection_status,
-    unread_ping_count,
+    unread_chat_count,
   } = user;
 
   const [t] = useTranslation('translation', { keyPrefix: 'friend' });
@@ -29,8 +29,8 @@ function FavoriteFriendItem({ user }: Props) {
     navigate(`/users/${username}`);
   };
 
-  const handleClickPing = () => {
-    navigate(`/users/${userId}/ping`);
+  const handleClickChat = () => {
+    navigate(`/users/${userId}/chat`);
   };
 
   return (
@@ -77,9 +77,9 @@ function FavoriteFriendItem({ user }: Props) {
           {username}
         </Typo>
         <Layout.LayoutBase pb={2}>
-          <Icon name="ping_send" size={20} onClick={handleClickPing} />
+          <Icon name="chat_send" size={20} onClick={handleClickChat} />
         </Layout.LayoutBase>
-        {unread_ping_count > 0 && (
+        {unread_chat_count > 0 && (
           <Layout.Absolute
             bgColor="BLACK"
             alignItems="center"
@@ -91,7 +91,7 @@ function FavoriteFriendItem({ user }: Props) {
             tl={['100%', 0]}
           >
             <Typo type="label-small" color="WHITE" fontSize={7} fontWeight={700}>
-              {unread_ping_count > 99 ? '99+' : unread_ping_count}
+              {unread_chat_count > 99 ? '99+' : unread_chat_count}
             </Typo>
           </Layout.Absolute>
         )}

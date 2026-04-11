@@ -29,7 +29,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
     id,
     profile_image,
     username,
-    unread_ping_count,
+    unread_chat_count,
     track_id,
     mood,
     social_battery,
@@ -51,9 +51,9 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
     navigate(`/users/${username}`);
   };
 
-  const handleClickPing = (e: MouseEvent) => {
+  const handleClickChat = (e: MouseEvent) => {
     e.stopPropagation();
-    navigate(`/users/${id}/ping`);
+    navigate(`/users/${id}/chat`);
   };
 
   const handleClickFriendBadge = (e: MouseEvent) => {
@@ -78,7 +78,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
 
   return (
     <Container mh={16} ph={16} pv={12} gap={8} rounded={12}>
-      {/* Row 1: Profile + username + badge + battery | mood emojis + new post + ping */}
+      {/* Row 1: Profile + username + badge + battery | mood emojis + new post + chat */}
       <Layout.FlexRow w="100%" gap={4} alignItems="center" justifyContent="space-between">
         <Layout.FlexRow alignItems="center" gap={6} style={{ flex: 1, minWidth: 0 }}>
           <Layout.FlexRow
@@ -142,9 +142,9 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
         </Layout.FlexRow>
         <Layout.FlexRow style={{ position: 'relative' }}>
           <Layout.LayoutBase pb={2}>
-            <Icon name="friend_item_chat" color="BLACK" size={20} onClick={handleClickPing} />
+            <Icon name="friend_item_chat" color="BLACK" size={20} onClick={handleClickChat} />
           </Layout.LayoutBase>
-          {unread_ping_count > 0 && (
+          {unread_chat_count > 0 && (
             <Layout.Absolute
               bgColor="BLACK"
               alignItems="center"
@@ -156,7 +156,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
               tl={['100%', 0]}
             >
               <Typo type="label-small" color="WHITE" fontSize={7} fontWeight={700}>
-                {unread_ping_count > 99 ? '99+' : unread_ping_count}
+                {unread_chat_count > 99 ? '99+' : unread_chat_count}
               </Typo>
             </Layout.Absolute>
           )}

@@ -1,4 +1,4 @@
-import React, { CSSProperties, ReactNode, RefObject, UIEvent, useEffect } from 'react';
+import React, { CSSProperties, ReactNode, RefObject, UIEvent, useCallback, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 import NotiPermissionBanner, {
@@ -15,7 +15,9 @@ import useFcm from '@hooks/useFcm';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { MainWrapper, RootContainer } from '@styles/wrappers';
+import { getMyProfile } from '@utils/apis/my';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
+import { useChatListSocket } from './chat/_hooks/useChatListSocket';
 
 function Root() {
   const { isMobile } = getMobileDeviceInfo();
@@ -40,6 +42,38 @@ function Root() {
   useEffect(() => {
     console.debug('featureFlags', featureFlags);
   }, [featureFlags]);
+
+  // Refresh unread badge: WebSocket + poll + visibility change
+  const refreshUnreadCount = useCallback(() => {
+    getMyProfile().catch(() => {});
+  }, []);
+  const onChatListSocketUpdate = useCallback(
+    (data: { unread_count: number }) => {
+      if (data.unread_count > 0) {
+        refreshUnreadCount();
+      }
+    },
+    [refreshUnreadCount],
+  );
+  useChatListSocket(onChatListSocketUpdate);
+
+  useEffect(() => {
+    // Poll every 60s for unread count (WebSocket handles real-time)
+    const interval = setInterval(refreshUnreadCount, 60000);
+
+    // Also refresh when tab becomes visible
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        refreshUnreadCount();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [refreshUnreadCount]);
 
   return (
     <SWRConfig value={{ provider: () => new Map() }}>
