@@ -11,7 +11,11 @@ interface Props {
 }
 
 function CategoryChip({ label, category, isSelected = false, isCustom = false, onClick }: Props) {
-  const colors = CHIP_CATEGORY_COLORS[category] ?? { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' };
+  const colors = CHIP_CATEGORY_COLORS[category] ?? {
+    bg: '#F3E8FF',
+    text: '#8700FF',
+    border: '#8700FF',
+  };
 
   return (
     <ChipContainer

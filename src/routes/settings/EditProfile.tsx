@@ -11,9 +11,9 @@ import { StyledEditProfileButton } from '@components/settings/SettingsButtons.st
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { CheckBox, Layout, Typo } from '@design-system';
+import { useChipCategories } from '@hooks/useChipCategories';
 import { MyProfile } from '@models/api/user';
 import { ChipCategory, CustomChip, normalizeChipText } from '@models/chips';
-import { useChipCategories } from '@hooks/useChipCategories';
 import { useBoundStore } from '@stores/useBoundStore';
 import { createCustomChip, deleteCustomChip } from '@utils/apis/chips';
 import { editProfile, updateChipsByCategory } from '@utils/apis/my';
