@@ -1,5 +1,6 @@
 import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CheckInDetailBottomSheet from '@components/check-in/check-in-detail-bottom-sheet/CheckInDetailBottomSheet';
@@ -69,7 +70,6 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
 
   const hasNewPost = (!!recentPost && !recentPost.is_read) || (user as any).unread_post_cnt > 0;
 
-  // Normalize mood to array
   const moodArray: string[] = Array.isArray(mood) ? mood : mood ? [mood] : [];
   const hasMood = moodArray.length > 0;
   const hasThought = !!thought;
@@ -77,8 +77,8 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
   const hasSong = !!track_id;
 
   return (
-    <Container mh={16} ph={16} pv={12} gap={12} rounded={12}>
-      {/* Row 1: Profile + username + badge + battery(emoji or nudge) + new post + ping */}
+    <Container mh={16} ph={16} pv={12} gap={8} rounded={12}>
+      {/* Row 1: Profile + username + badge + battery | mood emojis + new post + ping */}
       <Layout.FlexRow w="100%" gap={4} alignItems="center" justifyContent="space-between">
         <Layout.FlexRow alignItems="center" gap={6} style={{ flex: 1, minWidth: 0 }}>
           <Layout.FlexRow
@@ -99,16 +99,32 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
               onClick={handleClickFriendBadge}
             />
           </Layout.FlexRow>
-          {hasBattery ? (
-            <SocialBatteryChip
-              socialBattery={social_battery}
-              compact
-              borderless
-              onClick={() => setCheckInDetailFocus('battery')}
-            />
-          ) : (
-            <PokeButton receiverId={id} componentType="battery" />
-          )}
+
+          {/* Battery + Mood emojis inline */}
+          <Layout.FlexRow alignItems="center" gap={2}>
+            {hasBattery && (
+              <SocialBatteryChip
+                socialBattery={social_battery}
+                compact
+                borderless
+                onClick={() => setCheckInDetailFocus('battery')}
+              />
+            )}
+            {hasBattery && hasMood && <Divider />}
+            {hasMood && (
+              <StackedEmojis onClick={() => setCheckInDetailFocus('mood')}>
+                {moodArray.map((emoji, idx) => {
+                  const dupeCount = moodArray.slice(0, idx).filter((e) => e === emoji).length;
+                  return (
+                    <StackedEmoji key={`${emoji}${dupeCount}`} $offset={idx}>
+                      {emoji}
+                    </StackedEmoji>
+                  );
+                })}
+              </StackedEmojis>
+            )}
+          </Layout.FlexRow>
+
           {hasNewPost && (
             <Layout.FlexRow
               pv={4}
@@ -146,30 +162,15 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
         </Layout.FlexRow>
       </Layout.FlexRow>
 
-      {/* Mood pill (separate from thought) */}
-      {hasMood ? (
-        <Layout.FlexRow
-          bgColor="WHITE"
-          gap={2}
-          pv={4}
-          ph={8}
-          outline="LIGHT_GRAY"
-          alignItems="center"
-          rounded={8}
-          style={{ flexShrink: 0, cursor: 'pointer', alignSelf: 'flex-start' }}
-          onClick={() => setCheckInDetailFocus('mood')}
-        >
-          {moodArray.map((emoji) => (
-            <span key={emoji} style={{ fontSize: 16, lineHeight: 1 }}>
-              {emoji}
-            </span>
-          ))}
+      {/* Nudge row for battery + mood if both empty */}
+      {(!hasBattery || !hasMood) && (
+        <Layout.FlexRow gap={4} style={{ flexWrap: 'wrap' }}>
+          {!hasBattery && <PokeButton receiverId={id} componentType="battery" />}
+          {!hasMood && <PokeButton receiverId={id} componentType="mood" />}
         </Layout.FlexRow>
-      ) : (
-        <PokeButton receiverId={id} componentType="mood" />
       )}
 
-      {/* Thought pill (separate from mood) */}
+      {/* Thought pill */}
       {hasThought ? (
         <Layout.FlexRow
           bgColor="WHITE"
@@ -228,5 +229,28 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
     </Container>
   );
 }
+
+const StackedEmojis = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 2px 0;
+`;
+
+const StackedEmoji = styled.span<{ $offset: number }>`
+  font-size: 16px;
+  line-height: 1;
+  margin-left: ${({ $offset }) => ($offset > 0 ? '-4px' : '0')};
+  z-index: ${({ $offset }) => 5 - $offset};
+  position: relative;
+`;
+
+const Divider = styled.span`
+  width: 1px;
+  height: 14px;
+  background-color: #d9d9d9;
+  margin: 0 2px;
+  flex-shrink: 0;
+`;
 
 export default FriendItemWithUpdates;
