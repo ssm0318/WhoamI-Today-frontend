@@ -1,5 +1,5 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import BatteryEditor from '@components/check-in/update-quadrant/BatteryEditor';
 import MoodEditor from '@components/check-in/update-quadrant/MoodEditor';
@@ -96,20 +96,33 @@ export default function UpdateCheckin() {
     [thought, checkIn?.thought_updated_at],
   );
 
-  // Save all check-in fields + song to backend
-  const saveAll = useCallback(async () => {
+  // Refs to always have latest values for saving (avoids stale closure issues)
+  const stateRef = useRef({
+    battery,
+    mood,
+    thought,
+    trackId,
+    batteryVis,
+    moodVis,
+    songVis,
+    thoughtVis,
+  });
+  stateRef.current = { battery, mood, thought, trackId, batteryVis, moodVis, songVis, thoughtVis };
+
+  const doSave = useCallback(async () => {
+    const s = stateRef.current;
     try {
       const checkInPromise = postCheckIn({
-        social_battery: battery,
-        mood,
-        thought,
+        social_battery: s.battery,
+        mood: s.mood,
+        thought: s.thought,
         track_id: '',
-        battery_visibility: batteryVis,
-        mood_visibility: moodVis,
-        song_visibility: songVis,
-        thought_visibility: thoughtVis,
+        battery_visibility: s.batteryVis,
+        mood_visibility: s.moodVis,
+        song_visibility: s.songVis,
+        thought_visibility: s.thoughtVis,
       });
-      const songPromise = trackId ? postSong(trackId) : Promise.resolve();
+      const songPromise = s.trackId ? postSong(s.trackId) : Promise.resolve();
       await Promise.all([checkInPromise, songPromise]);
 
       if (window.ReactNativeWebView) {
@@ -131,29 +144,13 @@ export default function UpdateCheckin() {
     } catch {
       openToast({ message: 'Failed to save' });
     }
-  }, [
-    battery,
-    mood,
-    thought,
-    trackId,
-    batteryVis,
-    moodVis,
-    songVis,
-    thoughtVis,
-    checkIn?.id,
-    checkIn?.created_at,
-    trackData?.album?.images,
-    fetchCheckIn,
-    sendMessage,
-    openToast,
-  ]);
+  }, [fetchCheckIn, sendMessage, openToast]);
 
-  // When an editor popup closes via "Share", auto-save
   const handleEditorClose = useCallback(() => {
     setActiveEditor(null);
-    // Save after state update settles
-    setTimeout(() => saveAll(), 0);
-  }, [saveAll]);
+    // Use rAF to ensure React has committed the state update from the editor
+    requestAnimationFrame(() => doSave());
+  }, [doSave]);
 
   return (
     <MainScrollContainer>
