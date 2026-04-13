@@ -161,7 +161,7 @@ function FriendItemWithUpdates({ user, onConnectionChanged }: Props) {
         </Layout.FlexRow>
       </Layout.FlexRow>
 
-      {/* Nudge row for battery + mood if both empty */}
+      {/* Ping row for battery + mood if both empty */}
       {(!hasBattery || !hasMood) && (
         <Layout.FlexRow gap={4} style={{ flexWrap: 'wrap' }}>
           {!hasBattery && <PokeButton receiverId={id} componentType="battery" />}
