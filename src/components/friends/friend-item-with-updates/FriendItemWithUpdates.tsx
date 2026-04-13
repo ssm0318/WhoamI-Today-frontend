@@ -12,7 +12,6 @@ import { FeatureFlagKey } from '@constants/featureFlag';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { Connection, UpdatedProfile } from '@models/api/friends';
 import { SocialBattery } from '@models/checkIn';
-import { RecentPost } from '@models/post';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
@@ -20,11 +19,10 @@ import { Container } from './FriendItemWithUpdates.styled';
 
 interface Props {
   user: UpdatedProfile;
-  recentPost?: RecentPost;
   onConnectionChanged?: (userId: number, connection: Connection) => void;
 }
 
-function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props) {
+function FriendItemWithUpdates({ user, onConnectionChanged }: Props) {
   const {
     id,
     profile_image,
@@ -63,12 +61,7 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
     }
   };
 
-  const handleClickNewPost = (e: MouseEvent) => {
-    e.stopPropagation();
-    navigate(`/friends/${username}/new-posts`);
-  };
-
-  const hasNewPost = (!!recentPost && !recentPost.is_read) || (user as any).unread_post_cnt > 0;
+  const hasUpdate = !user.current_user_read;
 
   const moodArray: string[] = Array.isArray(mood) ? mood : mood ? [mood] : [];
   const hasMood = moodArray.length > 0;
@@ -126,16 +119,15 @@ function FriendItemWithUpdates({ user, recentPost, onConnectionChanged }: Props)
             )}
           </Layout.FlexRow>
 
-          {hasNewPost && (
+          {hasUpdate && (
             <Layout.FlexRow
               pv={4}
               ph={8}
               rounded={8}
-              onClick={handleClickNewPost}
-              style={{ backgroundColor: '#EEE6F4', flexShrink: 0, cursor: 'pointer' }}
+              style={{ backgroundColor: '#EEE6F4', flexShrink: 0 }}
             >
               <Typo type="label-large" color="PRIMARY" fontWeight={600}>
-                New post
+                Update
               </Typo>
             </Layout.FlexRow>
           )}
