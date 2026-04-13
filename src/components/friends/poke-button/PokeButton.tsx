@@ -12,17 +12,17 @@ interface Props {
 }
 
 const POKE_LABELS: Record<PokeComponentType, { text: string; emoji: string }> = {
-  battery: { text: 'Nudge for social battery', emoji: '🔋' },
-  mood: { text: 'Nudge for mood', emoji: '😊' },
-  thought: { text: 'Nudge for random thoughts', emoji: '💭' },
-  song: { text: 'Nudge for a song', emoji: '🎵' },
+  battery: { text: 'Ping for social battery', emoji: '🔋' },
+  mood: { text: 'Ping for mood', emoji: '😊' },
+  thought: { text: 'Ping for random thoughts', emoji: '💭' },
+  song: { text: 'Ping for a song', emoji: '🎵' },
 };
 
 const POKED_LABELS: Record<PokeComponentType, { text: string; emoji: string }> = {
-  battery: { text: 'Nudged: battery', emoji: '✔️' },
-  mood: { text: 'Nudged: mood', emoji: '✔️' },
-  thought: { text: 'Nudged: thoughts', emoji: '✔️' },
-  song: { text: 'Nudged: song', emoji: '✔️' },
+  battery: { text: 'Pinged: battery', emoji: '✔️' },
+  mood: { text: 'Pinged: mood', emoji: '✔️' },
+  thought: { text: 'Pinged: thoughts', emoji: '✔️' },
+  song: { text: 'Pinged: song', emoji: '✔️' },
 };
 
 function PokeButton({ receiverId, componentType }: Props) {
@@ -92,8 +92,8 @@ function PokeButton({ receiverId, componentType }: Props) {
       </PokeContainer>
       <CommonDialog
         visible={showConfirm}
-        title="Un-nudge?"
-        content="This will remove your nudge."
+        title="Un-ping?"
+        content="This will remove your ping."
         cancelText="Cancel"
         confirmText="Remove"
         confirmTextColor="WARNING"
