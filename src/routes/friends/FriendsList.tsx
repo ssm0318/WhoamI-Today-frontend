@@ -57,7 +57,7 @@ function FriendsList() {
     isLoadingMore: isFeedLoadingMore,
     mutate: refetchFeed,
   } = useSWRInfiniteScroll<Note | Response>({
-    key: `/user/feed/full`,
+    key: selectedTab === 'posts' ? `/user/feed/full` : '',
   });
 
   const handleRefresh = async () => {
@@ -164,7 +164,6 @@ function FriendsList() {
                       <FriendItemWithUpdates
                         user={user}
                         key={user.id}
-                        recentPost={user.recent_post}
                         onConnectionChanged={(userId, connection) => {
                           if (closeFriendsOnly && connection === Connection.FRIEND) {
                             updateFriendList({
