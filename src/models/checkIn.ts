@@ -30,6 +30,7 @@ export type CheckInBase = {
   thought: string;
   track_id: string;
   current_user_read: boolean;
+  visibility?: string[];
   song_visibility?: ComponentVisibility;
   mood_visibility?: ComponentVisibility;
   thought_visibility?: ComponentVisibility;

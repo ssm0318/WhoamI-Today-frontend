@@ -54,6 +54,7 @@ export default function UpdateCheckin() {
   const [trackId, setTrackId] = useState('');
   const [thought, setThought] = useState('');
 
+  const [visibility, setVisibility] = useState<string[]>(['public']);
   const [batteryVis, setBatteryVis] = useState<ComponentVisibility>(DEFAULT_VISIBILITY.battery);
   const [moodVis, setMoodVis] = useState<ComponentVisibility>(DEFAULT_VISIBILITY.mood);
   const [songVis, setSongVis] = useState<ComponentVisibility>(DEFAULT_VISIBILITY.song);
@@ -80,6 +81,7 @@ export default function UpdateCheckin() {
       setBattery(ci.social_battery || null);
       setMood(Array.isArray(ci.mood) ? ci.mood : ci.mood ? [ci.mood] : []);
       setThought(ci.thought || '');
+      if (ci.visibility) setVisibility(ci.visibility);
       if (ci.battery_visibility) setBatteryVis(ci.battery_visibility);
       if (ci.mood_visibility) setMoodVis(ci.mood_visibility);
       if (ci.song_visibility) setSongVis(ci.song_visibility);
@@ -113,12 +115,23 @@ export default function UpdateCheckin() {
     mood,
     thought,
     trackId,
+    visibility,
     batteryVis,
     moodVis,
     songVis,
     thoughtVis,
   });
-  stateRef.current = { battery, mood, thought, trackId, batteryVis, moodVis, songVis, thoughtVis };
+  stateRef.current = {
+    battery,
+    mood,
+    thought,
+    trackId,
+    visibility,
+    batteryVis,
+    moodVis,
+    songVis,
+    thoughtVis,
+  };
 
   const doSave = useCallback(async () => {
     const s = stateRef.current;
@@ -128,6 +141,7 @@ export default function UpdateCheckin() {
         mood: s.mood,
         thought: s.thought,
         track_id: '',
+        visibility: s.visibility || ['public'],
         battery_visibility: s.batteryVis,
         mood_visibility: s.moodVis,
         song_visibility: s.songVis,

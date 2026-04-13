@@ -79,6 +79,7 @@ function CheckInEdit() {
       thought: checkInForm.thought,
       mood: checkInForm.mood,
       track_id: '',
+      visibility: checkInForm.visibility || ['public'],
       song_visibility: songVisibility,
       mood_visibility: statusVisibility,
       thought_visibility: statusVisibility,
