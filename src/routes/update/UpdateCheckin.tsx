@@ -170,7 +170,11 @@ export default function UpdateCheckin() {
     }
   }, [fetchCheckIn, sendMessage, openToast]);
 
-  const handleEditorClose = useCallback(() => {
+  const handleEditorDismiss = useCallback(() => {
+    setActiveEditor(null);
+  }, []);
+
+  const handleEditorShare = useCallback(() => {
     setActiveEditor(null);
     // Use rAF to ensure React has committed the state update from the editor
     requestAnimationFrame(() => doSave());
@@ -292,7 +296,8 @@ export default function UpdateCheckin() {
       {/* Editor Popups — "Share" auto-saves */}
       <BatteryEditor
         isOpen={activeEditor === 'battery'}
-        onClose={() => handleEditorClose()}
+        onClose={handleEditorDismiss}
+        onShare={handleEditorShare}
         value={battery}
         onChange={setBattery}
         visibility={batteryVis}
@@ -300,7 +305,8 @@ export default function UpdateCheckin() {
       />
       <MoodEditor
         isOpen={activeEditor === 'mood'}
-        onClose={() => handleEditorClose()}
+        onClose={handleEditorDismiss}
+        onShare={handleEditorShare}
         value={mood}
         onChange={setMood}
         visibility={moodVis}
@@ -308,7 +314,8 @@ export default function UpdateCheckin() {
       />
       <SongEditor
         isOpen={activeEditor === 'song'}
-        onClose={() => handleEditorClose()}
+        onClose={handleEditorDismiss}
+        onShare={handleEditorShare}
         trackId={trackId}
         onChange={setTrackId}
         visibility={songVis}
@@ -316,7 +323,8 @@ export default function UpdateCheckin() {
       />
       <ThoughtEditor
         isOpen={activeEditor === 'thought'}
-        onClose={() => handleEditorClose()}
+        onClose={handleEditorDismiss}
+        onShare={handleEditorShare}
         value={thought}
         onChange={setThought}
         visibility={thoughtVis}

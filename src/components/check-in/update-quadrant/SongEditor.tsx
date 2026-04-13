@@ -12,6 +12,7 @@ import EditorPopup from './EditorPopup';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  onShare: () => void;
   trackId: string;
   onChange: (trackId: string) => void;
   visibility: ComponentVisibility;
@@ -21,6 +22,7 @@ interface Props {
 export default function SongEditor({
   isOpen,
   onClose,
+  onShare,
   trackId,
   onChange,
   visibility,
@@ -53,7 +55,7 @@ export default function SongEditor({
   };
 
   return (
-    <EditorPopup isOpen={isOpen} onClose={onClose} title="Song">
+    <EditorPopup isOpen={isOpen} onClose={onClose} onShare={onShare} title="Song">
       <Layout.FlexCol w="100%" gap={12} mb={16}>
         <SearchInput
           query={query}

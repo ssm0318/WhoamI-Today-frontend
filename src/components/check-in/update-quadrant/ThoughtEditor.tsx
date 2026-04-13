@@ -10,6 +10,7 @@ const MAX_LENGTH = 100;
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  onShare: () => void;
   value: string;
   onChange: (value: string) => void;
   visibility: ComponentVisibility;
@@ -19,6 +20,7 @@ interface Props {
 export default function ThoughtEditor({
   isOpen,
   onClose,
+  onShare,
   value,
   onChange,
   visibility,
@@ -31,7 +33,7 @@ export default function ThoughtEditor({
   };
 
   return (
-    <EditorPopup isOpen={isOpen} onClose={onClose} title="Thought Snippet">
+    <EditorPopup isOpen={isOpen} onClose={onClose} onShare={onShare} title="Thought Snippet">
       <Layout.FlexCol w="100%" gap={8} mb={16}>
         <StyledTextArea
           value={value}

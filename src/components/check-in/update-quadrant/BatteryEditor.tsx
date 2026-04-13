@@ -7,6 +7,7 @@ import EditorPopup from './EditorPopup';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  onShare: () => void;
   value: SocialBattery | null;
   onChange: (value: SocialBattery | null) => void;
   visibility: ComponentVisibility;
@@ -18,13 +19,14 @@ const BATTERY_OPTIONS = Object.values(SocialBattery);
 export default function BatteryEditor({
   isOpen,
   onClose,
+  onShare,
   value,
   onChange,
   visibility,
   onVisibilityChange,
 }: Props) {
   return (
-    <EditorPopup isOpen={isOpen} onClose={onClose} title="Social Battery">
+    <EditorPopup isOpen={isOpen} onClose={onClose} onShare={onShare} title="Social Battery">
       <Layout.FlexRow w="100%" gap={8} mb={16} style={{ flexWrap: 'wrap' }}>
         {BATTERY_OPTIONS.map((battery) => (
           <SocialBatteryChip

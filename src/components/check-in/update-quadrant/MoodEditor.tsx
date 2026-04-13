@@ -11,6 +11,7 @@ const MAX_MOOD_EMOJIS = 5;
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  onShare: () => void;
   value: string[];
   onChange: (value: string[]) => void;
   visibility: ComponentVisibility;
@@ -20,6 +21,7 @@ interface Props {
 export default function MoodEditor({
   isOpen,
   onClose,
+  onShare,
   value,
   onChange,
   visibility,
@@ -41,7 +43,7 @@ export default function MoodEditor({
   );
 
   return (
-    <EditorPopup isOpen={isOpen} onClose={onClose} title="Mood">
+    <EditorPopup isOpen={isOpen} onClose={onClose} onShare={onShare} title="Mood">
       <Layout.FlexCol w="100%" alignItems="center" gap={12} mb={16}>
         {value.length > 0 ? (
           <Layout.FlexCol w="100%" gap={8} alignItems="center">
