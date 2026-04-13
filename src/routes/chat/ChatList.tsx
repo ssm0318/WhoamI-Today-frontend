@@ -86,6 +86,7 @@ function ChatList() {
     <MainScrollContainer>
       <SubHeader
         title="Chats"
+        LeftComponent={<Layout.LayoutBase w={36} h={36} />}
         RightComponent={
           <Layout.FlexRow gap={4} alignItems="center">
             <Icon name="search_black" size={38} onClick={() => navigate('/chats/search')} />
