@@ -33,4 +33,6 @@ export const Logo = styled.div`
 export const Noti = styled(Link)`
   text-decoration: none;
   position: relative;
+  display: inline-flex;
+  align-items: center;
 `;
