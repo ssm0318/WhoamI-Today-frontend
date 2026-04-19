@@ -15,11 +15,7 @@ import {
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 
-const SIDE_MENU_LIST = [
-  { key: 'explore_friends', path: '/friends/explore' },
-  { key: 'questions', path: '/questions' },
-  { key: 'settings', path: '/settings' },
-];
+const SIDE_MENU_LIST = [{ key: 'settings', path: '/settings' }];
 
 interface Props {
   closeSideMenu: () => void;
