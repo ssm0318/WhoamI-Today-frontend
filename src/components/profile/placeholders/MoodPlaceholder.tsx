@@ -8,7 +8,7 @@ function MoodPlaceholder() {
   const navigate = useNavigate();
 
   const handleClickAddMood = () => {
-    return navigate('/check-in/edit');
+    return navigate('/update');
   };
 
   return (

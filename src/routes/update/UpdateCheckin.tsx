@@ -207,7 +207,7 @@ export default function UpdateCheckin() {
             </Layout.FlexCol>
           ) : (
             <>
-              <SvgIcon name="add_reaction_default" size={32} />
+              <SvgIcon name="add_battery" size={32} />
               <QuadrantLabel>Social Battery</QuadrantLabel>
             </>
           )}

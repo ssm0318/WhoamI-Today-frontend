@@ -483,8 +483,9 @@
                     "add": "Add your interests"
                 },
                 "social_battery": "My Social Battery Level",
-                "music": "Your song",
-                "mood": "#mood"
+                "music": "My song",
+                "mood": "#mood",
+                "thought": "My thought snippet"
             }
         },
         "daily_noti_setting": {

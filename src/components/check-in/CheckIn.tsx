@@ -6,6 +6,7 @@ import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
 import MusicPlaceholder from '@components/profile/placeholders/MusicPlaceholder';
 import SocialBatteryPlaceholder from '@components/profile/placeholders/SocialBatteryPlaceholder';
+import ThoughtPlaceholder from '@components/profile/placeholders/ThoughtPlaceholder';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { MyProfile } from '@models/api/user';
@@ -41,7 +42,7 @@ function CheckIn({ user }: CheckInProps) {
   const navigate = useNavigate();
 
   const handleClickEditCheckIn = () => {
-    return navigate('/check-in/edit');
+    return navigate('/update');
   };
 
   useAsyncEffect(async () => {
@@ -99,40 +100,66 @@ function CheckIn({ user }: CheckInProps) {
             )}
           </Layout.FlexRow>
         </Layout.FlexRow>
-        <Layout.FlexRow w="100%" alignItems="center" gap={8}>
-          {!!mood || !!thought ? (
-            <Layout.FlexRow
-              gap={4}
-              bgColor="WHITE"
-              alignItems="center"
-              outline="LIGHT_GRAY"
-              ph={8}
-              pv={4}
-              rounded={8}
-              style={{ flexShrink: 0 }}
-              onClick={() => {
-                if (!isMyPage) return;
-                handleClickEditCheckIn();
-              }}
-            >
-              {/* emoji */}
-              {mood &&
-                (Array.isArray(mood) ? mood : [mood]).filter(Boolean).map((emoji) => (
-                  <span key={emoji} style={{ fontSize: 16, lineHeight: 1 }}>
-                    {emoji}
-                  </span>
-                ))}
-              {/* thought */}
-              {thought && (
-                <Typo type="label-large" numberOfLines={2}>
-                  {thought}
-                </Typo>
-              )}
-            </Layout.FlexRow>
-          ) : (
-            isMyPage && <MoodPlaceholder />
-          )}
-        </Layout.FlexRow>
+        {(isMyPage || mood || thought) && (
+          <Layout.FlexRow w="100%" alignItems="center" gap={8} style={{ flexWrap: 'wrap' }}>
+            {(isMyPage || mood) &&
+              (mood ? (
+                <Layout.FlexRow
+                  gap={4}
+                  bgColor="WHITE"
+                  alignItems="center"
+                  outline="LIGHT_GRAY"
+                  ph={8}
+                  pv={4}
+                  rounded={8}
+                  style={{ flexShrink: 0 }}
+                  onClick={() => {
+                    if (!isMyPage) return;
+                    handleClickEditCheckIn();
+                  }}
+                >
+                  {(Array.isArray(mood) ? mood : [mood]).filter(Boolean).map((emoji) => (
+                    <span key={emoji} style={{ fontSize: 16, lineHeight: 1 }}>
+                      {emoji}
+                    </span>
+                  ))}
+                </Layout.FlexRow>
+              ) : (
+                isMyPage && (
+                  <div style={{ flexShrink: 0 }}>
+                    <MoodPlaceholder />
+                  </div>
+                )
+              ))}
+            {(isMyPage || thought) &&
+              (thought ? (
+                <Layout.FlexRow
+                  gap={4}
+                  bgColor="WHITE"
+                  alignItems="center"
+                  outline="LIGHT_GRAY"
+                  ph={8}
+                  pv={4}
+                  rounded={8}
+                  style={{ minWidth: 0, maxWidth: '100%' }}
+                  onClick={() => {
+                    if (!isMyPage) return;
+                    handleClickEditCheckIn();
+                  }}
+                >
+                  <Typo type="label-large" numberOfLines={2}>
+                    {thought}
+                  </Typo>
+                </Layout.FlexRow>
+              ) : (
+                isMyPage && (
+                  <div style={{ flexShrink: 0 }}>
+                    <ThoughtPlaceholder />
+                  </div>
+                )
+              ))}
+          </Layout.FlexRow>
+        )}
         {/* check in time */}
         {checkIn?.created_at && (
           <Layout.FlexRow w="100%" justifyContent="flex-end" gap={4}>

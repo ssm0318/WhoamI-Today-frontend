@@ -8,7 +8,7 @@ function MusicPlaceholder() {
   const navigate = useNavigate();
 
   const handleClickAddMusic = () => {
-    return navigate('/check-in/edit');
+    return navigate('/update');
   };
 
   return (

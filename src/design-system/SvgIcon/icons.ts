@@ -153,6 +153,7 @@ const top_navigation_chat = 'top_navigation_chat';
 const top_navigation_back = 'top_navigation_back';
 const edit = 'edit';
 const new_add = 'new_add';
+const add_battery = 'add_battery';
 const add_reaction_default = 'add_reaction_default';
 const add_reaction_active = 'add_reaction_active';
 const add_reaction = 'add_reaction';
@@ -176,6 +177,7 @@ const chevron_right = 'chevron_right';
 const eye = 'eye';
 
 export {
+  add_battery,
   add_comment,
   add_default,
   add_emoji,

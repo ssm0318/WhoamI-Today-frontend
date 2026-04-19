@@ -7,7 +7,7 @@ function AddNewCheckIn() {
   const navigate = useNavigate();
 
   const handleClickAdd = () => {
-    return navigate('/check-in/edit');
+    return navigate('/update');
   };
 
   return (

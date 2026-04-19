@@ -480,7 +480,8 @@
         },
         "social_battery": "나의 소셜 배터리 수준",
         "music": "내 노래",
-        "mood": "#현재 무드"
+        "mood": "#현재 무드",
+        "thought": "나의 생각"
       }
     },
     "daily_noti_setting": {
