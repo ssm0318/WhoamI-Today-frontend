@@ -29,6 +29,8 @@ export const ShareActionButton = styled.div`
 
 export const QuestionsCard = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
   border-radius: 16px;
   background-color: ${({ theme }) => theme.SECONDARY};

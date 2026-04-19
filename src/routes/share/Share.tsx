@@ -2,6 +2,7 @@ import { ChangeEvent, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
+import Icon from '@components/_common/icon/Icon';
 import PromptCard from '@components/_common/prompt/PromptCard';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import MissionOfTheDay, { markMissionCompleted } from '@components/share/MissionOfTheDay';
@@ -115,10 +116,12 @@ function Share() {
                 {t('no_contents.question')}
               </Typo>
             )}
-            {todayQuestions && todayQuestions.length > MAX_VISIBLE_QUESTIONS && (
+            {todayQuestions && todayQuestions.length > 0 && (
               <Layout.FlexRow
                 w="100%"
                 justifyContent="center"
+                alignItems="center"
+                gap={4}
                 mt={16}
                 style={{ cursor: 'pointer' }}
                 onClick={() => navigate('/questions')}
@@ -126,6 +129,7 @@ function Share() {
                 <Typo type="title-medium" fontWeight={600}>
                   See all questions
                 </Typo>
+                <Icon name="chevron_right" size={14} color="BLACK" />
               </Layout.FlexRow>
             )}
           </QuestionsCard>
