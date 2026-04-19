@@ -42,7 +42,7 @@ function NotificationItem({ item }: NotificationItemProps) {
       case 'ResponseRequest':
         return 'noti_icon_prompt';
       case 'Message':
-        return 'noti_icon_chat';
+        return 'chat_filled';
       // User, FriendRequest already have profile images so no icon needed
       // Other cases don't exist yet so no icon
       case 'DailySurvey':
