@@ -12,8 +12,6 @@ import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { POST_DP_TYPE, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getMyProfile } from '@utils/apis/my';
-import { pinPost, unpinPost } from '@utils/apis/pin';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
@@ -31,7 +29,6 @@ function ResponseItem({
   refresh,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
-  const [tPin] = useTranslation('translation', { keyPrefix: 'post_more_modal' });
   const [tAccess] = useTranslation('translation', { keyPrefix: 'access_setting' });
 
   const [overflowSummary, setOverflowSummary] = useState<string>();
@@ -43,8 +40,6 @@ function ResponseItem({
     emojiPickerTarget: state.emojiPickerTarget,
     setEmojiPickerTarget: state.setEmojiPickerTarget,
   }));
-
-  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
   const navigate = useNavigate();
 
@@ -61,17 +56,8 @@ function ResponseItem({
       setOverflowSummary(contentArrWithNewLine.slice(0, MAX_RESPONSE_NEW_LINE).join('\n'));
   }, [response.content, displayType]);
 
-  const {
-    content,
-    created_at,
-    author_detail,
-    question,
-    is_edited,
-    current_user_read,
-    visibility,
-    pinned,
-    id,
-  } = response;
+  const { content, created_at, author_detail, question, is_edited, current_user_read, visibility } =
+    response;
 
   const { username, profile_image } = author_detail ?? {};
 
@@ -99,26 +85,6 @@ function ResponseItem({
   const navigateToProfile = (e: MouseEvent) => {
     e.stopPropagation();
     navigate(`/users/${username}`);
-  };
-
-  const handleClickPin = async (e: MouseEvent) => {
-    e.stopPropagation();
-    try {
-      if (pinned) {
-        // TODO: pin_id를 실제 값으로 가져와서 사용해야 함. 현재는 임시로 0을 사용
-        await unpinPost(0);
-        openToast({ message: tPin('unpin.success_title') });
-      } else {
-        await pinPost('Response', id);
-        openToast({ message: tPin('pin.success_title') });
-      }
-      await getMyProfile();
-      refresh?.();
-    } catch (error) {
-      openToast({
-        message: pinned ? tPin('unpin.error_title') : tPin('pin.error_title'),
-      });
-    }
   };
 
   return (
@@ -228,25 +194,8 @@ function ResponseItem({
                 )}
               </Layout.FlexCol>
             </Layout.FlexRow>
-            {/* Pin and More options */}
+            {/* More options */}
             <Layout.FlexRow alignItems="center" gap={8}>
-              {(isMyPage || pinned) && (
-                <SvgIcon
-                  name={pinned ? 'pin_filled' : 'pin_empty'}
-                  size={24}
-                  color={pinned ? 'BLACK' : 'MEDIUM_GRAY'}
-                  onClick={(e) => {
-                    console.log('Pin icon clicked', {
-                      isMyPage,
-                      pinned,
-                      onClickCondition: isMyPage || pinned,
-                    });
-                    if (isMyPage || pinned) {
-                      handleClickPin(e);
-                    }
-                  }}
-                />
-              )}
               <Icon name="dots_menu" size={24} onClick={handleClickMore} />
             </Layout.FlexRow>
           </Layout.FlexRow>

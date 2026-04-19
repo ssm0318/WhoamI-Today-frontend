@@ -13,8 +13,6 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import { Note, POST_DP_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { getMyProfile } from '@utils/apis/my';
-import { pinPost, unpinPost } from '@utils/apis/pin';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import { NoteImage } from '../note-image/NoteImage.styled';
 
@@ -36,7 +34,6 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
     is_edited,
     current_user_read,
     visibility,
-    pinned,
   } = note;
   const navigate = useNavigate();
   const { featureFlags } = useBoundStore(UserSelector);
@@ -50,11 +47,8 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
     setEmojiPickerTarget: state.setEmojiPickerTarget,
   }));
 
-  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
-
   const { username, profile_image } = author_detail ?? {};
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
-  const [tPin] = useTranslation('translation', { keyPrefix: 'post_more_modal' });
   const [tAccess] = useTranslation('translation', { keyPrefix: 'access_setting' });
 
   const handleClickMore = (e: MouseEvent) => {
@@ -92,26 +86,6 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
     e.stopPropagation();
 
     navigate(`/users/${username}`);
-  };
-
-  const handleClickPin = async (e: MouseEvent) => {
-    e.stopPropagation();
-    try {
-      if (pinned) {
-        // TODO: pin_id를 실제 값으로 가져와서 사용해야 함. 현재는 임시로 0을 사용
-        await unpinPost(0);
-        openToast({ message: tPin('unpin.success_title') });
-      } else {
-        await pinPost('Note', id);
-        openToast({ message: tPin('pin.success_title') });
-      }
-      await getMyProfile();
-      refresh?.();
-    } catch (error) {
-      openToast({
-        message: pinned ? tPin('unpin.error_title') : tPin('pin.error_title'),
-      });
-    }
   };
 
   return (
@@ -229,25 +203,8 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
               )}
             </Layout.FlexCol>
           </Layout.FlexRow>
-          {/* Pin and More options */}
+          {/* More options */}
           <Layout.FlexRow alignItems="center" gap={8}>
-            {(isMyPage || pinned) && (
-              <SvgIcon
-                name={pinned ? 'pin_filled' : 'pin_empty'}
-                size={24}
-                color={pinned ? 'BLACK' : 'MEDIUM_GRAY'}
-                onClick={(e) => {
-                  console.log('Pin icon clicked', {
-                    isMyPage,
-                    pinned,
-                    onClickCondition: isMyPage || pinned,
-                  });
-                  if (isMyPage || pinned) {
-                    handleClickPin(e);
-                  }
-                }}
-              />
-            )}
             <Icon name="dots_menu" size={24} onClick={handleClickMore} />
           </Layout.FlexRow>
         </Layout.FlexRow>
