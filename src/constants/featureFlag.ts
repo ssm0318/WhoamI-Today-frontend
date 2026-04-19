@@ -43,9 +43,10 @@ const DEFAULT_FLAGS = {
 };
 
 export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
-  [VersionType.DEFAULT]: { ...DEFAULT_FLAGS },
-  // Experiment (Ver. A)
-  [VersionType.EXPERIMENT]: {
+  // Ver. Q
+  [VersionType.VER_Q]: { ...DEFAULT_FLAGS },
+  // Ver. W
+  [VersionType.VER_W]: {
     ...DEFAULT_FLAGS,
     [FeatureFlagKey.FRIEND_FEED]: false,
     [FeatureFlagKey.FRIEND_LIST]: true,

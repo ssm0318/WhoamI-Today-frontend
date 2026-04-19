@@ -17,8 +17,8 @@ const initialState = {
     username: '',
     password: '',
     noti_time: '16:00',
-    current_ver: VersionType.DEFAULT,
-    user_group: UserGroup.GROUP_1,
+    current_ver: VersionType.VER_Q,
+    user_group: UserGroup.GROUP_Q_FIRST,
     inviter_id: 0,
   },
 };

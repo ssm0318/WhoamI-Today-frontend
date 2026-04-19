@@ -2,18 +2,24 @@ import { useTranslation } from 'react-i18next';
 import { Navigate, useLoaderData } from 'react-router-dom';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import { Button, Layout } from '@design-system';
+import { MyProfile, VersionType } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 
 function Intro() {
   const [t] = useTranslation('translation', { keyPrefix: 'intro' });
-  const data = useLoaderData();
+  const data = useLoaderData() as MyProfile | null;
 
-  const { featureFlags } = useBoundStore((state) => ({
-    featureFlags: state.featureFlags,
+  const { myProfile } = useBoundStore((state) => ({
+    myProfile: state.myProfile,
   }));
 
-  if (data)
-    return <Navigate to={featureFlags?.friendFeed ? '/friends/feed' : '/friends'} replace />;
+  if (data) {
+    // Use current_ver from data or myProfile to determine redirect path
+    const currentVer = data.current_ver || myProfile?.current_ver;
+    const shouldGoToFeed = currentVer === VersionType.VER_Q;
+    const targetPath = shouldGoToFeed ? '/feed' : '/friends';
+    return <Navigate to={targetPath} replace />;
+  }
   return (
     <MainContainer>
       <Layout.FlexCol w="100%" h="100%" justifyContent="center" alignItems="center" mb={100}>

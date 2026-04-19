@@ -8,11 +8,11 @@ export const PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_KO =
 export const LEARN_MORE_ABOUT_WHOAMI_TODAY_NOTION_URL =
   'https://www.notion.so/jinsungoo/What-is-WhoAmI-Today-TBU-7466713e676a42eca7d7d99c3ac341e9';
 
-// Ver.Q redirection path
+// Ver.W redirection path
 export const FRIEND_DEFAULT_REDIRECTION_PATH = '/friends';
 
-// Ver.R redirection path
-export const FEED_DEFAULT_REDIRECTION_PATH = '/friends/feed';
+// Ver.Q redirection path
+export const FEED_DEFAULT_REDIRECTION_PATH = '/feed';
 
 export const AFTER_SIGNUP_PATH = '/my';
 

@@ -210,7 +210,7 @@ function EditProfile() {
     if (isFromResetPassword) {
       navigate('/my');
     } else if (isFromSignUp) {
-      navigate(featureFlags?.friendFeed ? '/friends/feed' : '/friends');
+      navigate(featureFlags?.friendFeed ? '/feed' : '/friends');
     } else {
       navigate(-1);
     }

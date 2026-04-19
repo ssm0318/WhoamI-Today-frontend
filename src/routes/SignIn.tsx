@@ -35,7 +35,7 @@ function SignIn() {
           // 로그인하자마자 버전 확인하여 버전에 따라 리다이렉션
           const currVersion = me.current_ver;
           navigate(
-            currVersion === VersionType.EXPERIMENT
+            currVersion === VersionType.VER_W
               ? FRIEND_DEFAULT_REDIRECTION_PATH
               : FEED_DEFAULT_REDIRECTION_PATH,
           );

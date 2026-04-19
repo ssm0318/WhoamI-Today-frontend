@@ -14,8 +14,6 @@ import {
 } from '@constants/url';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
-import { UserGroup } from '@models/api/user';
-import { useBoundStore } from '@stores/useBoundStore';
 
 const SIDE_MENU_LIST = [
   { key: 'explore_friends', path: '/friends/explore' },
@@ -33,12 +31,7 @@ function SideMenu({ closeSideMenu }: Props) {
   const navigate = useNavigate();
   const postMessage = usePostAppMessage();
 
-  const { myProfile } = useBoundStore((state) => ({
-    myProfile: state.myProfile,
-  }));
-
-  const isUSParticipant =
-    myProfile?.user_group === UserGroup.GROUP_1 || myProfile?.user_group === UserGroup.GROUP_2;
+  const isUSParticipant = true;
 
   const handleClickMenu = (path: string) => () => {
     navigate(path);

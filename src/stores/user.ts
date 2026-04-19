@@ -67,8 +67,7 @@ export const createUserSlice: SliceStateCreator<UserSlice> = (set, get) => {
       if (!currVersion) return;
 
       const featureFlags =
-        FEATURE_FLAG_MAP_COLLECTION[currVersion] ??
-        FEATURE_FLAG_MAP_COLLECTION[VersionType.DEFAULT];
+        FEATURE_FLAG_MAP_COLLECTION[currVersion] ?? FEATURE_FLAG_MAP_COLLECTION[VersionType.VER_Q];
       set(() => ({ featureFlags }), false, 'user/setFeatureFlags');
     },
   };

@@ -33,7 +33,7 @@ function ExploreFriends() {
   const [query, setQuery] = useState('');
 
   const handleClickDone = () => {
-    navigate(featureFlags?.friendFeed ? '/friends/feed' : '/friends');
+    navigate(featureFlags?.friendFeed ? '/feed' : '/friends');
   };
 
   return (

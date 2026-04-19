@@ -105,15 +105,13 @@ export type UsernameValidateErrorType =
 export type DayOfWeek = '0' | '1' | '2' | '3' | '4' | '5' | '6'; // 0 = Sunday, 1 = Monday, etc.
 
 export enum VersionType {
-  DEFAULT = 'default',
-  EXPERIMENT = 'experiment',
+  VER_W = 'version_w',
+  VER_Q = 'version_q',
 }
 
 export enum UserGroup {
-  GROUP_1 = 'group_1', // 'Group 1: US / default (ver.R) -> experiment (ver.Q)'
-  GROUP_2 = 'group_2', // 'Group 2: US / experiment (ver.Q) -> default (ver.R)'
-  GROUP_3 = 'group_3', // 'Group 3: Korea / default (ver.R) -> experiment (ver.Q)'
-  GROUP_4 = 'group_4', // 'Group 4: Korea / experiment (ver.Q) -> default (ver.R)'
+  GROUP_W_FIRST = 'group_w_first',
+  GROUP_Q_FIRST = 'group_q_first',
 }
 
 export interface MyProfile extends User {
