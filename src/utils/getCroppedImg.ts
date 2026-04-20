@@ -125,9 +125,10 @@ const getCroppedImg = async (
     pixelCrop.height,
   );
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     croppedCanvas.toBlob((blob) => {
       if (!blob) {
+        reject(new Error('Failed to create blob from cropped canvas'));
         return;
       }
       const result = {
@@ -214,9 +215,10 @@ export async function getReactImageCrop(
     image.naturalHeight,
   );
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     canvas.toBlob((blob) => {
       if (!blob) {
+        reject(new Error('Failed to create blob from cropped canvas'));
         return;
       }
       const result = {

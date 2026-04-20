@@ -81,21 +81,17 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
     if (!imageUrl || !imgRef.current || !crop) return;
 
     try {
-      // Convert percentage crop to pixel crop for the actual cropping
-      const pixelCrop: PixelCrop = {
-        unit: 'px',
-        x: (crop.x / 100) * imgRef.current.naturalWidth,
-        y: (crop.y / 100) * imgRef.current.naturalHeight,
-        width: (crop.width / 100) * imgRef.current.naturalWidth,
-        height: (crop.height / 100) * imgRef.current.naturalHeight,
-      };
-      if (crop.unit === 'px') {
-        pixelCrop.x = crop.x;
-        pixelCrop.y = crop.y;
-        pixelCrop.width = crop.width;
-        pixelCrop.height = crop.height;
-      }
-      const img = await getReactImageCrop(imgRef.current, pixelCrop);
+      const displayPixelCrop: PixelCrop =
+        crop.unit === 'px'
+          ? (crop as PixelCrop)
+          : {
+              unit: 'px',
+              x: (crop.x / 100) * imgRef.current.width,
+              y: (crop.y / 100) * imgRef.current.height,
+              width: (crop.width / 100) * imgRef.current.width,
+              height: (crop.height / 100) * imgRef.current.height,
+            };
+      const img = await getReactImageCrop(imgRef.current, displayPixelCrop);
       setCroppedImage(img);
     } catch (err) {
       // eslint-disable-next-line no-console
