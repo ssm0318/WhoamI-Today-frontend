@@ -172,27 +172,24 @@ export async function getReactImageCrop(
   const scaleX = image.naturalWidth / image.width;
   const scaleY = image.naturalHeight / image.height;
 
-  // devicePixelRatio slightly increases sharpness on retina devices
-  // at the expense of slightly slower render times and needing to
-  // size the image back down if you want to download/upload and be
-  // true to the images natural size.
-  const pixelRatio = window.devicePixelRatio || 1;
-
-  canvas.width = Math.floor(crop.width * scaleX * pixelRatio);
-  canvas.height = Math.floor(crop.height * scaleY * pixelRatio);
-
-  // eslint-disable-next-line no-console
-  console.log(
-    '[CropDebug] getReactImageCrop',
-    JSON.stringify({
-      scaleX,
-      scaleY,
-      pixelRatio,
-      cropInput: { x: crop.x, y: crop.y, w: crop.width, h: crop.height },
-      canvas: { w: canvas.width, h: canvas.height },
-      area: canvas.width * canvas.height,
-    }),
+  // iOS Safari caps canvas around 4096x4096 / ~16M px². If we blindly
+  // multiply by devicePixelRatio, large photos overflow that cap and
+  // toBlob() returns null. Clamp pixelRatio so width/height and area
+  // stay within safe bounds; retina sharpness is preserved for small
+  // inputs where the natural crop fits comfortably.
+  const MAX_CANVAS_DIM = 4096;
+  const MAX_CANVAS_AREA = MAX_CANVAS_DIM * MAX_CANVAS_DIM;
+  const baseWidth = crop.width * scaleX;
+  const baseHeight = crop.height * scaleY;
+  const maxRatioByDim = Math.min(MAX_CANVAS_DIM / baseWidth, MAX_CANVAS_DIM / baseHeight);
+  const maxRatioByArea = Math.sqrt(MAX_CANVAS_AREA / (baseWidth * baseHeight));
+  const pixelRatio = Math.max(
+    1,
+    Math.min(window.devicePixelRatio || 1, maxRatioByDim, maxRatioByArea),
   );
+
+  canvas.width = Math.floor(baseWidth * pixelRatio);
+  canvas.height = Math.floor(baseHeight * pixelRatio);
 
   ctx.scale(pixelRatio, pixelRatio);
   ctx.imageSmoothingQuality = 'high';
