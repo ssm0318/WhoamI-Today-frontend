@@ -109,6 +109,11 @@ export default function UpdateCheckin() {
     [thought, checkIn?.thought_updated_at],
   );
 
+  const effectiveBatteryVis = batteryArchived ? ComponentVisibility.ONLY_ME : batteryVis;
+  const effectiveMoodVis = moodArchived ? ComponentVisibility.ONLY_ME : moodVis;
+  const effectiveSongVis = songArchived ? ComponentVisibility.ONLY_ME : songVis;
+  const effectiveThoughtVis = thoughtArchived ? ComponentVisibility.ONLY_ME : thoughtVis;
+
   // Refs to always have latest values for saving (avoids stale closure issues)
   const stateRef = useRef({
     battery,
@@ -300,7 +305,7 @@ export default function UpdateCheckin() {
         onShare={handleEditorShare}
         value={battery}
         onChange={setBattery}
-        visibility={batteryVis}
+        visibility={effectiveBatteryVis}
         onVisibilityChange={setBatteryVis}
       />
       <MoodEditor
@@ -309,7 +314,7 @@ export default function UpdateCheckin() {
         onShare={handleEditorShare}
         value={mood}
         onChange={setMood}
-        visibility={moodVis}
+        visibility={effectiveMoodVis}
         onVisibilityChange={setMoodVis}
       />
       <SongEditor
@@ -318,7 +323,7 @@ export default function UpdateCheckin() {
         onShare={handleEditorShare}
         trackId={trackId}
         onChange={setTrackId}
-        visibility={songVis}
+        visibility={effectiveSongVis}
         onVisibilityChange={setSongVis}
       />
       <ThoughtEditor
@@ -327,7 +332,7 @@ export default function UpdateCheckin() {
         onShare={handleEditorShare}
         value={thought}
         onChange={setThought}
-        visibility={thoughtVis}
+        visibility={effectiveThoughtVis}
         onVisibilityChange={setThoughtVis}
       />
     </MainScrollContainer>
