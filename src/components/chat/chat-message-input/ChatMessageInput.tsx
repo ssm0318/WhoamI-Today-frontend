@@ -1,16 +1,10 @@
-import EmojiPicker, {
-  Categories,
-  EmojiClickData,
-  EmojiStyle,
-  SkinTonePickerLocation,
-  SuggestionMode,
-} from 'emoji-picker-react';
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import Icon from '@components/_common/icon/Icon';
-import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
-import { Layout, Typo } from '@design-system';
+import { BOTTOM_TABBAR_HEIGHT, Z_INDEX } from '@constants/layout';
+import { Colors, Layout, Typo } from '@design-system';
 import {
   ChatEmojiDict,
   ChatEmojiType,
@@ -19,49 +13,6 @@ import {
   PostChatMessageRes,
 } from '@models/chat';
 import { postChatMessage, postGroupMessage } from '@utils/apis/chat';
-
-const EmojiPickerWrapper = styled.div`
-  .EmojiPickerReact .epr-header {
-    padding: 4px 6px 0 !important;
-    min-height: 0 !important;
-  }
-  .EmojiPickerReact .epr-search-container {
-    padding: 0 !important;
-  }
-  .EmojiPickerReact .epr-search-container input {
-    height: 32px !important;
-    font-size: 12px !important;
-  }
-  .EmojiPickerReact .epr-search-container .epr-icn-search {
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-  }
-  .EmojiPickerReact .epr-category-nav {
-    display: flex !important;
-    padding: 2px 0 !important;
-    min-height: 0 !important;
-  }
-  .EmojiPickerReact .epr-category-nav button {
-    padding: 2px 4px !important;
-  }
-  .EmojiPickerReact .epr-body {
-    padding: 0 2px !important;
-  }
-  .EmojiPickerReact li.epr-emoji-category > .epr-emoji-category-label,
-  .EmojiPickerReact .epr-emoji-category > .epr-emoji-category-label {
-    display: flex !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    padding: 2px 6px !important;
-    margin: 0 !important;
-    height: auto !important;
-    min-height: 0 !important;
-    line-height: 1.4 !important;
-  }
-  .EmojiPickerReact button.epr-emoji {
-    padding: 2px !important;
-  }
-`;
 
 const StyledTextarea = styled.textarea`
   flex: 1;
@@ -109,6 +60,29 @@ const RemoveButton = styled.button`
   align-items: center;
   justify-content: center;
   line-height: 1;
+`;
+
+const EmojiOverlay = styled(Layout.FlexCol)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: ${Z_INDEX.COMMENT_LIKES_POPUP};
+  justify-content: center;
+  align-items: center;
+`;
+
+const EmojiContent = styled.div`
+  position: relative;
+  width: 85%;
+  max-width: 400px;
+  max-height: 70vh;
+  padding: 20px;
+  border-radius: 16px;
+  background-color: ${Colors.WHITE};
+  overflow-y: auto;
 `;
 
 interface Props {
@@ -266,48 +240,19 @@ function ChatMessageInput({
           position: 'relative',
         }}
       >
-        {/* Emoji picker rendered via portal to avoid overflow clipping */}
         {showEmojiPicker &&
           createPortal(
-            <div
-              style={{
-                position: 'fixed',
-                bottom: BOTTOM_TABBAR_HEIGHT + 52,
-                left: '50%',
-                transform: 'translateX(-50%)',
-                maxWidth: 500,
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'flex-end',
-                paddingRight: 8,
-                zIndex: 50,
-              }}
-            >
-              <EmojiPickerWrapper>
+            <EmojiOverlay onClick={() => setShowEmojiPicker(false)}>
+              <EmojiContent onClick={(e) => e.stopPropagation()}>
                 <EmojiPicker
                   onEmojiClick={handleEmojiClick}
-                  height={320}
-                  width={350}
-                  searchPlaceHolder="Search emoji..."
-                  skinTonesDisabled={false}
-                  skinTonePickerLocation={SkinTonePickerLocation.SEARCH}
-                  suggestedEmojisMode={SuggestionMode.RECENT}
-                  emojiStyle={EmojiStyle.APPLE}
-                  categories={[
-                    { category: Categories.SUGGESTED, name: 'Recently Used' },
-                    { category: Categories.SMILEYS_PEOPLE, name: 'Smileys & People' },
-                    { category: Categories.ANIMALS_NATURE, name: 'Animals & Nature' },
-                    { category: Categories.FOOD_DRINK, name: 'Food & Drink' },
-                    { category: Categories.TRAVEL_PLACES, name: 'Travel & Places' },
-                    { category: Categories.ACTIVITIES, name: 'Activities' },
-                    { category: Categories.OBJECTS, name: 'Objects' },
-                    { category: Categories.SYMBOLS, name: 'Symbols' },
-                    { category: Categories.FLAGS, name: 'Flags' },
-                  ]}
+                  width="100%"
+                  height={350}
+                  skinTonesDisabled
                   previewConfig={{ showPreview: false }}
                 />
-              </EmojiPickerWrapper>
-            </div>,
+              </EmojiContent>
+            </EmojiOverlay>,
             document.body,
           )}
         {/* Image preview */}

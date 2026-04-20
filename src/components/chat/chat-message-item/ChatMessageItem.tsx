@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import SharedContentCard from '@components/chat/shared-content-card/SharedContentCard';
 import { Layout, Typo } from '@design-system';
@@ -47,8 +47,58 @@ function ChatMessageItem({ message, isMine, onReactionUpdate }: Props) {
   const lastTapRef = useRef<number>(0);
   const longPressTimer = useRef<ReturnType<typeof setTimeout>>();
   const touchStartPos = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const bubbleRef = useRef<HTMLDivElement>(null);
+  const openedAtRef = useRef<number>(0);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [pickerPos, setPickerPos] = useState<{ top: number; left: number } | null>(null);
   const [showImagePopup, setShowImagePopup] = useState(false);
+
+  const POPUP_APPROX_HEIGHT = 52;
+  const POPUP_APPROX_WIDTH = 220;
+  const SUBHEADER_HEIGHT = 44;
+  const EDGE_PADDING = 8;
+
+  const openEmojiPicker = () => {
+    const rect = bubbleRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const container = document.getElementById('main-scroll-container');
+    const containerTop = container?.getBoundingClientRect().top ?? 0;
+    const headerBottom = containerTop + SUBHEADER_HEIGHT;
+    const spaceAbove = rect.top - headerBottom;
+    const placeBelow = spaceAbove < POPUP_APPROX_HEIGHT + EDGE_PADDING;
+    const top = placeBelow ? rect.bottom + 4 : rect.top - POPUP_APPROX_HEIGHT - 4;
+    const viewportWidth = window.innerWidth;
+    let left = isMine ? rect.right - POPUP_APPROX_WIDTH : rect.left;
+    if (left < EDGE_PADDING) left = EDGE_PADDING;
+    if (left + POPUP_APPROX_WIDTH > viewportWidth - EDGE_PADDING) {
+      left = viewportWidth - POPUP_APPROX_WIDTH - EDGE_PADDING;
+    }
+    setPickerPos({ top, left });
+    setShowEmojiPicker(true);
+    openedAtRef.current = Date.now();
+  };
+
+  const closeEmojiPicker = () => {
+    setShowEmojiPicker(false);
+    setPickerPos(null);
+  };
+
+  const handleBackdropClick = () => {
+    if (Date.now() - openedAtRef.current < 300) return;
+    closeEmojiPicker();
+  };
+
+  useEffect(() => {
+    if (!showEmojiPicker) return undefined;
+    const container = document.getElementById('main-scroll-container');
+    const onScroll = () => closeEmojiPicker();
+    container?.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      container?.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [showEmojiPicker]);
 
   // Double-tap (mobile)
   const handleTouchEnd = () => {
@@ -72,7 +122,7 @@ function ChatMessageItem({ message, isMine, onReactionUpdate }: Props) {
     const touch = e.touches[0];
     touchStartPos.current = { x: touch.clientX, y: touch.clientY };
     longPressTimer.current = setTimeout(() => {
-      setShowEmojiPicker(true);
+      openEmojiPicker();
     }, LONG_PRESS_DELAY);
   };
 
@@ -89,7 +139,11 @@ function ChatMessageItem({ message, isMine, onReactionUpdate }: Props) {
   // Right-click as desktop long-press alternative
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
-    setShowEmojiPicker(!showEmojiPicker);
+    if (showEmojiPicker) {
+      closeEmojiPicker();
+    } else {
+      openEmojiPicker();
+    }
   };
 
   const handleHeartToggle = async () => {
@@ -103,7 +157,7 @@ function ChatMessageItem({ message, isMine, onReactionUpdate }: Props) {
   };
 
   const handleEmojiReact = async (emojiType: ChatEmojiType) => {
-    setShowEmojiPicker(false);
+    closeEmojiPicker();
     const existing = reactions.find((r) => r.emoji === emojiType && r.my_reaction_id);
     if (existing?.my_reaction_id) {
       await removeMessageReaction(existing.my_reaction_id);
@@ -135,44 +189,62 @@ function ChatMessageItem({ message, isMine, onReactionUpdate }: Props) {
           </Typo>
         </ParentPreview>
       )}
-      {showEmojiPicker && (
-        <Layout.Absolute
-          b="100%"
-          style={{
-            [isMine ? 'right' : 'left']: 0,
-            marginBottom: 4,
-            zIndex: 20,
-          }}
-        >
-          <Layout.FlexRow
-            gap={4}
-            bgColor="WHITE"
-            rounded={16}
-            ph={8}
-            pv={6}
-            style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
-          >
-            {REACTION_EMOJIS.map((key) => {
-              const isActive = reactions.some((r) => r.emoji === key && r.my_reaction_id);
-              return (
-                <Layout.FlexRow
-                  key={key}
-                  w={32}
-                  h={32}
-                  alignItems="center"
-                  justifyContent="center"
-                  cursor="pointer"
-                  rounded={16}
-                  onClick={() => handleEmojiReact(key)}
-                  style={{ background: isActive ? '#E8E0F0' : 'transparent' }}
-                >
-                  <span style={{ fontSize: 18 }}>{ChatEmojiDict[key]}</span>
-                </Layout.FlexRow>
-              );
-            })}
-          </Layout.FlexRow>
-        </Layout.Absolute>
-      )}
+      {showEmojiPicker &&
+        pickerPos &&
+        createPortal(
+          <>
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+            <div
+              onClick={handleBackdropClick}
+              style={{
+                position: 'fixed',
+                inset: 0,
+                zIndex: 9998,
+              }}
+            />
+            <div
+              style={{
+                position: 'fixed',
+                top: pickerPos.top,
+                left: pickerPos.left,
+                zIndex: 9999,
+                display: 'flex',
+                flexDirection: 'row',
+                gap: 4,
+                background: 'white',
+                borderRadius: 16,
+                padding: '6px 8px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+              }}
+            >
+              {REACTION_EMOJIS.map((key) => {
+                const isActive = reactions.some((r) => r.emoji === key && r.my_reaction_id);
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => handleEmojiReact(key)}
+                    style={{
+                      width: 32,
+                      height: 32,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 16,
+                      border: 'none',
+                      cursor: 'pointer',
+                      background: isActive ? '#E8E0F0' : 'transparent',
+                      padding: 0,
+                    }}
+                  >
+                    <span style={{ fontSize: 18 }}>{ChatEmojiDict[key]}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </>,
+          document.body,
+        )}
       {shared_content_preview && <SharedContentCard preview={shared_content_preview} />}
       {message.image && (
         <>
@@ -228,6 +300,7 @@ function ChatMessageItem({ message, isMine, onReactionUpdate }: Props) {
       )}
       {(content || emoji) && (
         <Bubble
+          ref={bubbleRef}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
