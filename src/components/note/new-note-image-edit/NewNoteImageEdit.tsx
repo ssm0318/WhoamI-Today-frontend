@@ -91,6 +91,19 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
               width: (crop.width / 100) * imgRef.current.width,
               height: (crop.height / 100) * imgRef.current.height,
             };
+      // eslint-disable-next-line no-console
+      console.log(
+        '[CropDebug]',
+        JSON.stringify({
+          imageUrlPrefix: imageUrl.slice(0, 60),
+          imageUrlLength: imageUrl.length,
+          natural: { w: imgRef.current.naturalWidth, h: imgRef.current.naturalHeight },
+          display: { w: imgRef.current.width, h: imgRef.current.height },
+          devicePixelRatio: window.devicePixelRatio,
+          crop,
+          displayPixelCrop,
+        }),
+      );
       const img = await getReactImageCrop(imgRef.current, displayPixelCrop);
       setCroppedImage(img);
     } catch (err) {

@@ -181,6 +181,19 @@ export async function getReactImageCrop(
   canvas.width = Math.floor(crop.width * scaleX * pixelRatio);
   canvas.height = Math.floor(crop.height * scaleY * pixelRatio);
 
+  // eslint-disable-next-line no-console
+  console.log(
+    '[CropDebug] getReactImageCrop',
+    JSON.stringify({
+      scaleX,
+      scaleY,
+      pixelRatio,
+      cropInput: { x: crop.x, y: crop.y, w: crop.width, h: crop.height },
+      canvas: { w: canvas.width, h: canvas.height },
+      area: canvas.width * canvas.height,
+    }),
+  );
+
   ctx.scale(pixelRatio, pixelRatio);
   ctx.imageSmoothingQuality = 'high';
 
@@ -218,7 +231,13 @@ export async function getReactImageCrop(
   return new Promise((resolve, reject) => {
     canvas.toBlob((blob) => {
       if (!blob) {
-        reject(new Error('Failed to create blob from cropped canvas'));
+        reject(
+          new Error(
+            `Failed to create blob from cropped canvas (canvas=${canvas.width}x${
+              canvas.height
+            }, area=${canvas.width * canvas.height})`,
+          ),
+        );
         return;
       }
       const result = {
