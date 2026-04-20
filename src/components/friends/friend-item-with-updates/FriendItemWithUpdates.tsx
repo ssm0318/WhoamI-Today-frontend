@@ -20,9 +20,18 @@ import { Container } from './FriendItemWithUpdates.styled';
 interface Props {
   user: UpdatedProfile;
   onConnectionChanged?: (userId: number, connection: Connection) => void;
+  tabMode?: 'check-in' | 'posts';
+  onViewPosts?: () => void;
+  hasNewPost?: boolean;
 }
 
-function FriendItemWithUpdates({ user, onConnectionChanged }: Props) {
+function FriendItemWithUpdates({
+  user,
+  onConnectionChanged,
+  tabMode = 'check-in',
+  onViewPosts,
+  hasNewPost = false,
+}: Props) {
   const {
     id,
     profile_image,
@@ -62,6 +71,8 @@ function FriendItemWithUpdates({ user, onConnectionChanged }: Props) {
   };
 
   const hasUpdate = !user.current_user_read;
+  const showUpdateBadge = tabMode === 'check-in' && hasUpdate;
+  const showNewBadge = tabMode === 'posts' && hasNewPost;
 
   const moodArray: string[] = Array.isArray(mood) ? mood : mood ? [mood] : [];
   const hasMood = moodArray.length > 0;
@@ -119,7 +130,7 @@ function FriendItemWithUpdates({ user, onConnectionChanged }: Props) {
             )}
           </Layout.FlexRow>
 
-          {hasUpdate && (
+          {showUpdateBadge && (
             <Layout.FlexRow
               pv={4}
               ph={8}
@@ -128,6 +139,18 @@ function FriendItemWithUpdates({ user, onConnectionChanged }: Props) {
             >
               <Typo type="label-large" color="PRIMARY" fontWeight={600}>
                 Update
+              </Typo>
+            </Layout.FlexRow>
+          )}
+          {showNewBadge && (
+            <Layout.FlexRow
+              pv={4}
+              ph={8}
+              rounded={8}
+              style={{ backgroundColor: '#EEE6F4', flexShrink: 0 }}
+            >
+              <Typo type="label-large" color="PRIMARY" fontWeight={600}>
+                New
               </Typo>
             </Layout.FlexRow>
           )}
@@ -218,6 +241,19 @@ function FriendItemWithUpdates({ user, onConnectionChanged }: Props) {
         />
       )}
 
+      {tabMode === 'posts' && onViewPosts && (
+        <Layout.FlexRow w="100%" justifyContent="flex-end">
+          <ViewPostsButton
+            onClick={(e) => {
+              e.stopPropagation();
+              onViewPosts();
+            }}
+          >
+            View Posts
+          </ViewPostsButton>
+        </Layout.FlexRow>
+      )}
+
       {/* Check-in detail popup */}
       <CheckInDetailBottomSheet
         visible={!!checkInDetailFocus}
@@ -264,6 +300,17 @@ const Divider = styled.span`
   background-color: #d9d9d9;
   margin: 0 2px;
   flex-shrink: 0;
+`;
+
+const ViewPostsButton = styled.button`
+  border: none;
+  border-radius: 8px;
+  background: #f3ecfb;
+  color: #8700ff;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
 `;
 
 export default FriendItemWithUpdates;
