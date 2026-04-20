@@ -11,7 +11,6 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { deleteReaction, postReaction } from '@utils/apis/reaction';
 import EmojiButton from '../emoji-button/EmojiButton';
 import Icon from '../icon/Icon';
-import LikeButton from '../like-button/LikeButton';
 import PostReactionList from '../post-reaction-list/PostReactionList';
 
 type PostFooterProps = {
@@ -20,7 +19,6 @@ type PostFooterProps = {
   displayType?: POST_DP_TYPE;
   showComments: () => void;
   setInputFocus: () => void;
-  refresh?: () => void;
 };
 
 function PostFooter({
@@ -29,7 +27,6 @@ function PostFooter({
   displayType = 'LIST',
   showComments,
   setInputFocus,
-  refresh,
 }: PostFooterProps) {
   const { comment_count, type, current_user_reaction_id_list, like_reaction_user_sample } = post;
   const navigate = useNavigate();
@@ -158,27 +155,16 @@ function PostFooter({
     >
       <Layout.FlexRow alignItems="center">
         {!isMyPage && (
-          <>
-            <LikeButton
-              postType={type}
-              postId={post.id}
-              currentUserLikeId={post.current_user_like_id}
-              iconSize={23}
-              m={0}
-              outerSize={48}
-              refresh={refresh}
-            />
-            <Layout.FlexRow ref={toggleButtonRef} alignItems="center">
-              {(myEmojiList || []).length === 0 ? (
+          <Layout.FlexRow ref={toggleButtonRef} alignItems="center">
+            {(myEmojiList || []).length === 0 ? (
+              <EmojiButton onClick={handleClickEmojiButton} />
+            ) : (
+              <>
+                {/* <PostMyEmojiList emojiList={myEmojiList} /> */}
                 <EmojiButton onClick={handleClickEmojiButton} />
-              ) : (
-                <>
-                  {/* <PostMyEmojiList emojiList={myEmojiList} /> */}
-                  <EmojiButton onClick={handleClickEmojiButton} />
-                </>
-              )}
-            </Layout.FlexRow>
-          </>
+              </>
+            )}
+          </Layout.FlexRow>
         )}
         {displayType === 'LIST' && (
           <Layout.FlexRow w={48} h={48} alignItems="center" justifyContent="center">

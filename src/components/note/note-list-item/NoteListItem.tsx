@@ -1,7 +1,6 @@
 import { MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from '@components/_common/icon/Icon';
-import LikeButton from '@components/_common/like-button/LikeButton';
 import { Layout, Typo } from '@design-system';
 import { Note } from '@models/post';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
@@ -12,7 +11,7 @@ interface NoteListItemProps {
 }
 
 function NoteListItem({ note }: NoteListItemProps) {
-  const { content, created_at, like_count, comment_count } = note;
+  const { content, created_at, comment_count } = note;
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
 
   const handleClickMore = (e: MouseEvent) => {
@@ -37,19 +36,10 @@ function NoteListItem({ note }: NoteListItemProps) {
           {content}
         </Typo>
         <Layout.FlexRow gap={12}>
-          <LikeButton
-            postType="Note"
-            postId={note.id}
-            currentUserLikeId={note.current_user_like_id}
-            iconSize={24}
-            m={0}
-          />
           <Icon name="add_comment" size={24} onClick={handleClickComment} />
         </Layout.FlexRow>
         <Layout.FlexRow>
           <Typo type="label-large" color="BLACK">
-            {like_count || 0} {t('likes')}
-            {' ・ '}
             {comment_count || 0} {t('comments')}
           </Typo>
         </Layout.FlexRow>

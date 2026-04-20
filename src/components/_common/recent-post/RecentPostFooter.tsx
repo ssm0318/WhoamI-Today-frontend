@@ -11,7 +11,6 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { deleteReaction, postReaction } from '@utils/apis/reaction';
 import EmojiButton from '../emoji-button/EmojiButton';
 import Icon from '../icon/Icon';
-import LikeButton from '../like-button/LikeButton';
 import PostReactionList from '../post-reaction-list/PostReactionList';
 
 type RecentPostFooterProps = {
@@ -19,16 +18,9 @@ type RecentPostFooterProps = {
   post: RecentPost;
   showComments: () => void;
   setInputFocus: () => void;
-  refresh?: () => void;
 };
 
-function RecentPostFooter({
-  isMyPage,
-  post,
-  showComments,
-  setInputFocus,
-  refresh,
-}: RecentPostFooterProps) {
+function RecentPostFooter({ isMyPage, post, showComments, setInputFocus }: RecentPostFooterProps) {
   const { comment_count, type, current_user_reaction_id_list, like_reaction_user_sample } = post;
   const navigate = useNavigate();
   const toggleButtonRef = useRef<HTMLDivElement>(null);
@@ -148,27 +140,16 @@ function RecentPostFooter({
     <Layout.FlexRow gap={8} w="100%" alignItems="center">
       <Layout.FlexRow alignItems="center">
         {!isMyPage && (
-          <>
-            <LikeButton
-              postType={type}
-              postId={post.id}
-              currentUserLikeId={post.current_user_like_id}
-              iconSize={23}
-              m={0}
-              outerSize={48}
-              refresh={refresh}
-            />
-            <Layout.FlexRow ref={toggleButtonRef} alignItems="center">
-              {(myEmojiList || []).length === 0 ? (
+          <Layout.FlexRow ref={toggleButtonRef} alignItems="center">
+            {(myEmojiList || []).length === 0 ? (
+              <EmojiButton onClick={handleClickEmojiButton} />
+            ) : (
+              <>
+                {/* <PostMyEmojiList emojiList={myEmojiList} /> */}
                 <EmojiButton onClick={handleClickEmojiButton} />
-              ) : (
-                <>
-                  {/* <PostMyEmojiList emojiList={myEmojiList} /> */}
-                  <EmojiButton onClick={handleClickEmojiButton} />
-                </>
-              )}
-            </Layout.FlexRow>
-          </>
+              </>
+            )}
+          </Layout.FlexRow>
         )}
         <Layout.FlexRow w={48} h={48} alignItems="center" justifyContent="center">
           <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
