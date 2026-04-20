@@ -24,6 +24,14 @@ export interface UpdatedProfile extends User {
   description: string;
   mood?: string;
   unread_chat_count: number;
+  unread_post_cnt?: number;
+  latest_unread_post?: {
+    id: number;
+    type: 'Note' | 'Response';
+    content?: string;
+    images?: string[];
+    created_at?: string;
+  } | null;
   social_battery?: SocialBattery | null;
   recent_post?: RecentPost;
   sent_pokes?: Partial<Record<'battery' | 'mood' | 'thought' | 'song', number>>;
