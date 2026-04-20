@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { Colors, Layout, Typo } from '@design-system';
@@ -26,17 +26,34 @@ export default function ThoughtEditor({
   visibility,
   onVisibilityChange,
 }: Props) {
+  const [draftValue, setDraftValue] = useState<string>(value);
+  const [draftVisibility, setDraftVisibility] = useState<ComponentVisibility>(visibility);
+
+  useEffect(() => {
+    if (isOpen) {
+      setDraftValue(value);
+      setDraftVisibility(visibility);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     if (e.target.value.length <= MAX_LENGTH) {
-      onChange(e.target.value);
+      setDraftValue(e.target.value);
     }
   };
 
+  const handleShare = useCallback(() => {
+    onChange(draftValue);
+    onVisibilityChange(draftVisibility);
+    onShare();
+  }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare]);
+
   return (
-    <EditorPopup isOpen={isOpen} onClose={onClose} onShare={onShare} title="Thought Snippet">
+    <EditorPopup isOpen={isOpen} onClose={onClose} onShare={handleShare} title="Thought Snippet">
       <Layout.FlexCol w="100%" gap={8} mb={16}>
         <StyledTextArea
-          value={value}
+          value={draftValue}
           onChange={handleChange}
           placeholder="What's on your mind?"
           rows={3}
@@ -44,11 +61,11 @@ export default function ThoughtEditor({
         />
         <Layout.FlexRow w="100%" justifyContent="flex-end">
           <Typo type="label-small" color="MEDIUM_GRAY">
-            {value.length}/{MAX_LENGTH}
+            {draftValue.length}/{MAX_LENGTH}
           </Typo>
         </Layout.FlexRow>
       </Layout.FlexCol>
-      <VisibilityToggle value={visibility} onChange={onVisibilityChange} />
+      <VisibilityToggle value={draftVisibility} onChange={setDraftVisibility} />
     </EditorPopup>
   );
 }

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import FriendStatus from '@components/_common/friend-status/FriendStatus';
-import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
@@ -122,24 +121,15 @@ function Profile({ user }: ProfileProps) {
               {user && !isMyProfile(user) && areFriends(user) && (
                 <>
                   {user.connection_status && (
-                    <Layout.FlexRow
+                    <SvgIcon
+                      name={
+                        user.connection_status === Connection.CLOSE_FRIEND
+                          ? 'close_friend'
+                          : 'default_friend'
+                      }
+                      size={16}
                       onClick={handleClickChangeConnection}
-                      bgColor="SECONDARY"
-                      pl={10}
-                      pr={8}
-                      pv={5}
-                      rounded={8}
-                      gap={5}
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <Typo type="label-large" color="BLACK">
-                        {user.connection_status === Connection.FRIEND
-                          ? t('connection.friend')
-                          : t('connection.close_friend')}
-                      </Typo>
-                      <Icon name="chevron_down" size={18} color="BLACK" />
-                    </Layout.FlexRow>
+                    />
                   )}
                   {showEditConnectionsModal && (
                     <EditConnectionsBottomSheet

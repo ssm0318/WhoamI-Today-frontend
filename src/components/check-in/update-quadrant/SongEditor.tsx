@@ -1,5 +1,5 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import SearchInput from '@components/_common/search-input/SearchInput';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import MusicItem from '@components/music/music-search-bottom-sheet/music-item/MusicItem';
@@ -28,10 +28,20 @@ export default function SongEditor({
   visibility,
   onVisibilityChange,
 }: Props) {
+  const [draftTrackId, setDraftTrackId] = useState<string>(trackId);
+  const [draftVisibility, setDraftVisibility] = useState<ComponentVisibility>(visibility);
   const [query, setQuery] = useState('');
   const [trackList, setTrackList] = useState<Track[]>([]);
   const [searchError, setSearchError] = useState('');
   const spotifyManager = SpotifyManager.getInstance();
+
+  useEffect(() => {
+    if (isOpen) {
+      setDraftTrackId(trackId);
+      setDraftVisibility(visibility);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   useAsyncEffect(async () => {
     if (!query) {
@@ -50,12 +60,17 @@ export default function SongEditor({
   }, [query]);
 
   const handleSelectTrack = (track: Track) => {
-    // Toggle: tap selected track to deselect, tap new track to select
-    onChange(trackId === track.id ? '' : track.id);
+    setDraftTrackId(draftTrackId === track.id ? '' : track.id);
   };
 
+  const handleShare = useCallback(() => {
+    onChange(draftTrackId);
+    onVisibilityChange(draftVisibility);
+    onShare();
+  }, [draftTrackId, draftVisibility, onChange, onVisibilityChange, onShare]);
+
   return (
-    <EditorPopup isOpen={isOpen} onClose={onClose} onShare={onShare} title="Song">
+    <EditorPopup isOpen={isOpen} onClose={onClose} onShare={handleShare} title="Song">
       <Layout.FlexCol w="100%" gap={12} mb={16}>
         <SearchInput
           query={query}
@@ -72,7 +87,7 @@ export default function SongEditor({
                 key={track.id}
                 track={track}
                 onSelect={handleSelectTrack}
-                selected={trackId === track.id}
+                selected={draftTrackId === track.id}
               />
             ))}
           </Layout.FlexCol>
@@ -89,7 +104,7 @@ export default function SongEditor({
           </Typo>
         )}
       </Layout.FlexCol>
-      <VisibilityToggle value={visibility} onChange={onVisibilityChange} />
+      <VisibilityToggle value={draftVisibility} onChange={setDraftVisibility} />
     </EditorPopup>
   );
 }
