@@ -35,8 +35,9 @@ function CheckIn({ user }: CheckInProps) {
   const [checkIn, setCheckIn] = useState<CheckInBase | null | undefined>(
     isMyPage ? initialCheckIn : user.check_in,
   );
+  // Per-component visibility is enforced on the API; render payload as returned.
   const { social_battery, track_id, mood, thought, current_user_read } = checkIn || {};
-  const hasCheckIn = checkIn && (mood || thought || social_battery || track_id);
+  const hasCheckIn = checkIn && !!(mood?.length || thought || social_battery || track_id);
 
   const [currentDate] = useState(() => new Date());
   const navigate = useNavigate();
