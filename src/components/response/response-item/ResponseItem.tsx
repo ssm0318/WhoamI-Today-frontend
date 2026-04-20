@@ -239,7 +239,6 @@ function ResponseItem({
             showComments={() => setBottomSheet(true)}
             setInputFocus={() => setInputFocus(true)}
             displayType={displayType}
-            refresh={refresh}
           />
         </Layout.FlexCol>
       </Layout.FlexRow>

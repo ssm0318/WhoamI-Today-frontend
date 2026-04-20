@@ -2,8 +2,10 @@ import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
+import UploadLoadingOverlay from '@components/_common/upload-loading-overlay/UploadLoadingOverlay';
 import { markMissionCompleted } from '@components/share/MissionOfTheDay';
 import { Layout, Typo } from '@design-system';
+import { useDelayedVisible } from '@hooks/useDelayedVisible';
 import { NewNoteForm } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { patchNote, postNote } from '@utils/apis/note';
@@ -19,6 +21,7 @@ interface NewNoteHeaderProps {
 function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'notes' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const showUploadOverlay = useDelayedVisible(isSubmitting);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -70,25 +73,28 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
   const canPost = !!noteInfo.content && !isSubmitting;
 
   return (
-    <NewNoteHeaderWrapper>
-      <Layout.FlexRow justifyContent="space-between" w="100%" h="100%" alignItems="center">
-        <Layout.FlexRow gap={8} alignItems="center" onClick={cancelPost}>
-          <Typo type="title-large" color="BLACK">
-            {t('cancel')}
-          </Typo>
-        </Layout.FlexRow>
-        <Layout.FlexRow>
-          <Typo type="head-line">{title}</Typo>
-        </Layout.FlexRow>
-        <Layout.FlexRow gap={8} alignItems="center">
-          <button type="button" disabled={!canPost} onClick={confirmPost}>
-            <Typo type="title-large" color={canPost ? 'PRIMARY' : 'MEDIUM_GRAY'}>
-              {t('post')}
+    <>
+      <NewNoteHeaderWrapper>
+        <Layout.FlexRow justifyContent="space-between" w="100%" h="100%" alignItems="center">
+          <Layout.FlexRow gap={8} alignItems="center" onClick={cancelPost}>
+            <Typo type="title-large" color="BLACK">
+              {t('cancel')}
             </Typo>
-          </button>
+          </Layout.FlexRow>
+          <Layout.FlexRow>
+            <Typo type="head-line">{title}</Typo>
+          </Layout.FlexRow>
+          <Layout.FlexRow gap={8} alignItems="center">
+            <button type="button" disabled={!canPost} onClick={confirmPost}>
+              <Typo type="title-large" color={canPost ? 'PRIMARY' : 'MEDIUM_GRAY'}>
+                {t('post')}
+              </Typo>
+            </button>
+          </Layout.FlexRow>
         </Layout.FlexRow>
-      </Layout.FlexRow>
-    </NewNoteHeaderWrapper>
+      </NewNoteHeaderWrapper>
+      <UploadLoadingOverlay visible={showUploadOverlay} />
+    </>
   );
 }
 

@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
 import ProfileImageEditButton from '@components/_common/profile-image-edit-button/ProfileImageEditButton';
+import UploadLoadingOverlay from '@components/_common/upload-loading-overlay/UploadLoadingOverlay';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import ValidatedTextArea from '@components/_common/validated-textarea/ValidatedTextArea';
 import ChipCategorySection from '@components/profile/chip/ChipCategorySection';
@@ -12,6 +13,7 @@ import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { CheckBox, Layout, Typo } from '@design-system';
 import { useChipCategories } from '@hooks/useChipCategories';
+import { useDelayedVisible } from '@hooks/useDelayedVisible';
 import { MyProfile } from '@models/api/user';
 import { ChipCategory, CustomChip, normalizeChipText } from '@models/chips';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -94,6 +96,8 @@ function EditProfile() {
 
   const [imageChanged, setImageChanged] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const showUploadOverlay = useDelayedVisible(isSaving);
 
   useEffect(() => {
     const hasDraftChanged =
@@ -217,9 +221,9 @@ function EditProfile() {
   };
 
   const handleClickSave = async () => {
-    if (!myProfile) return;
+    if (!myProfile || isSaving) return;
 
-    // Save chips by category via dedicated endpoint
+    setIsSaving(true);
     try {
       await updateChipsByCategory(draft.chipSelections);
     } catch {
@@ -242,6 +246,7 @@ function EditProfile() {
     editProfile({
       profile: profileData,
       onSuccess: (data: MyProfile) => {
+        setIsSaving(false);
         updateMyProfile({
           ...data,
           profile_image: data.profile_image ?? myProfile?.profile_image,
@@ -250,6 +255,7 @@ function EditProfile() {
         navigate('/my');
       },
       onError: (error) => {
+        setIsSaving(false);
         if (error?.username) {
           return setUsernameError(t('username_valiation_error') || '');
         }
@@ -287,8 +293,8 @@ function EditProfile() {
           </button>
         }
         RightComponent={
-          <button type="button" onClick={handleClickSave} disabled={!hasChanges}>
-            <Typo type="title-large" color={hasChanges ? 'PRIMARY' : 'LIGHT_GRAY'}>
+          <button type="button" onClick={handleClickSave} disabled={!hasChanges || isSaving}>
+            <Typo type="title-large" color={hasChanges && !isSaving ? 'PRIMARY' : 'LIGHT_GRAY'}>
               {t('done')}
             </Typo>
           </button>
@@ -404,6 +410,7 @@ function EditProfile() {
           setImageChanged={setImageChanged}
         />
       )}
+      <UploadLoadingOverlay visible={showUploadOverlay} />
     </MainScrollContainer>
   );
 }

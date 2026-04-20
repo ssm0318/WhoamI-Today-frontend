@@ -10,7 +10,8 @@
   },
   "common": {
     "done": "완료",
-    "cancel": "취소"
+    "cancel": "취소",
+    "uploading": "업로드 중..."
   },
   "intro": {
     "sign_in": "로그인",
