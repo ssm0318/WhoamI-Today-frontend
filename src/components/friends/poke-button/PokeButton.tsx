@@ -9,6 +9,7 @@ import { getUnifiedEmoji } from '@utils/emojiHelpers';
 interface Props {
   receiverId: number;
   componentType: PokeComponentType;
+  initialPokeId?: number | null;
 }
 
 const POKE_LABELS: Record<PokeComponentType, { text: string; emoji: string }> = {
@@ -25,8 +26,12 @@ const POKED_LABELS: Record<PokeComponentType, { text: string; emoji: string }> =
   song: { text: 'Pinged: song', emoji: '✔️' },
 };
 
-function PokeButton({ receiverId, componentType }: Props) {
-  const [pokeRecord, setPokeRecord] = useState<Poke | null>(null);
+function PokeButton({ receiverId, componentType, initialPokeId }: Props) {
+  const [pokeRecord, setPokeRecord] = useState<Poke | null>(
+    initialPokeId
+      ? ({ id: initialPokeId, component_type: componentType, receiver: receiverId } as Poke)
+      : null,
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -43,8 +48,9 @@ function PokeButton({ receiverId, componentType }: Props) {
   }, [receiverId, componentType]);
 
   useEffect(() => {
+    if (initialPokeId !== undefined) return;
     fetchStatus();
-  }, [fetchStatus]);
+  }, [fetchStatus, initialPokeId]);
 
   const handleUnpoke = async () => {
     if (!pokeRecord) return;

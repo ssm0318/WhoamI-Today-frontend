@@ -26,6 +26,7 @@ export interface UpdatedProfile extends User {
   unread_chat_count: number;
   social_battery?: SocialBattery | null;
   recent_post?: RecentPost;
+  sent_pokes?: Partial<Record<'battery' | 'mood' | 'thought' | 'song', number>>;
 }
 
 export type GetAllFriendsResponse = PaginationResponse<UpdatedProfile[]>;

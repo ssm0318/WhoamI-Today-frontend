@@ -158,8 +158,20 @@ function FriendItemWithUpdates({ user, onConnectionChanged }: Props) {
       {/* Ping row for battery + mood if both empty */}
       {(!hasBattery || !hasMood) && (
         <Layout.FlexRow gap={4} style={{ flexWrap: 'wrap' }}>
-          {!hasBattery && <PokeButton receiverId={id} componentType="battery" />}
-          {!hasMood && <PokeButton receiverId={id} componentType="mood" />}
+          {!hasBattery && (
+            <PokeButton
+              receiverId={id}
+              componentType="battery"
+              initialPokeId={user.sent_pokes?.battery ?? null}
+            />
+          )}
+          {!hasMood && (
+            <PokeButton
+              receiverId={id}
+              componentType="mood"
+              initialPokeId={user.sent_pokes?.mood ?? null}
+            />
+          )}
         </Layout.FlexRow>
       )}
 
@@ -180,7 +192,11 @@ function FriendItemWithUpdates({ user, onConnectionChanged }: Props) {
           </Typo>
         </Layout.FlexRow>
       ) : (
-        <PokeButton receiverId={id} componentType="thought" />
+        <PokeButton
+          receiverId={id}
+          componentType="thought"
+          initialPokeId={user.sent_pokes?.thought ?? null}
+        />
       )}
 
       {/* Song */}
@@ -195,7 +211,11 @@ function FriendItemWithUpdates({ user, onConnectionChanged }: Props) {
           />
         </Layout.FlexRow>
       ) : (
-        <PokeButton receiverId={id} componentType="song" />
+        <PokeButton
+          receiverId={id}
+          componentType="song"
+          initialPokeId={user.sent_pokes?.song ?? null}
+        />
       )}
 
       {/* Check-in detail popup */}
