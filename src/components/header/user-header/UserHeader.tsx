@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import SubHeader from '@components/sub-header/SubHeader';
@@ -19,9 +19,14 @@ function UserHeader({ username, userId, unreadCount, onClickMore }: UserHeaderPr
   const { user } = useContext(UserPageContext);
   const currentUser = useBoundStore((state) => state.myProfile);
   const areFriends = user?.data?.are_friends === true;
+  const alreadyRequested = user?.data?.sent_chat_request_to === true;
   const isMyPage = currentUser && userId ? Number(currentUser.id) === Number(userId) : false;
 
   const [requestSent, setRequestSent] = useState(false);
+
+  useEffect(() => {
+    if (alreadyRequested) setRequestSent(true);
+  }, [alreadyRequested]);
 
   const handleClickChat = () => {
     if (!userId) return;
@@ -46,7 +51,6 @@ function UserHeader({ username, userId, unreadCount, onClickMore }: UserHeaderPr
   if (!username) return null;
   return (
     <SubHeader
-      title={username}
       RightComponent={
         <Layout.FlexRow gap={8} alignItems="center">
           <Icon name="dots_menu" size={44} onClick={handleClickMore} />
