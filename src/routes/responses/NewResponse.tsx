@@ -6,6 +6,7 @@ import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledNewResponsePrompt } from '@components/_common/prompt/PromptCard.styled';
 import VisibilityMultiSelect from '@components/note/visibility-multi-select/VisibilityMultiSelect';
+import { markMissionCompleted } from '@components/share/MissionOfTheDay';
 import SubHeader from '@components/sub-header/SubHeader';
 import { Layout, TextArea, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -24,6 +25,7 @@ function NewResponse() {
   const location = useLocation();
   const { questionId, responseId } = useParams();
   const isEdit = location.pathname.includes('/edit');
+  const missionMode = location.state?.missionMode;
 
   const currentUser = useBoundStore.getState().myProfile;
 
@@ -37,7 +39,7 @@ function NewResponse() {
   const [visibilityList, setVisibilityList] = useState<PostVisibility[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const title = !location.state
+  const title = !isEdit
     ? t('question.response.new_response')
     : t('question.response.edit_response');
 
@@ -118,6 +120,10 @@ function NewResponse() {
             content: newResponse || '',
             visibility: visibilityList,
           });
+
+      if (missionMode) {
+        markMissionCompleted();
+      }
 
       openToast({
         message: t(isEdit ? 'question.response.edited' : 'question.response.posted'),

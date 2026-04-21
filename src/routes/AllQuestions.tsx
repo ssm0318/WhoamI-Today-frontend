@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import NoContents from '@components/_common/no-contents/NoContents';
 import PromptCard from '@components/_common/prompt/PromptCard';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
@@ -17,6 +18,8 @@ import { MainScrollContainer } from './Root';
 
 function AllQuestions() {
   const [t] = useTranslation('translation');
+  const location = useLocation();
+  const missionMode = location.state?.missionMode;
 
   const {
     targetRef,
@@ -62,6 +65,7 @@ function AllQuestions() {
                           id={question.id}
                           content={question.content}
                           widthMode="full"
+                          missionMode={missionMode}
                         />
                       ))}
                     </Layout.FlexCol>
