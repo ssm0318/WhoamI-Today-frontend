@@ -2,6 +2,7 @@ import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CheckInDetailBottomSheet from '@components/check-in/check-in-detail-bottom-sheet/CheckInDetailBottomSheet';
@@ -136,7 +137,12 @@ function FriendItemWithUpdates({
                   const dupeCount = moodArray.slice(0, idx).filter((e) => e === emoji).length;
                   return (
                     <StackedEmoji key={`${emoji}${dupeCount}`} $offset={idx}>
-                      {emoji}
+                      <EmojiItem
+                        emojiString={emoji}
+                        size={16}
+                        bgColor="TRANSPARENT"
+                        outline="TRANSPARENT"
+                      />
                     </StackedEmoji>
                   );
                 })}
@@ -190,7 +196,12 @@ function FriendItemWithUpdates({
                 cursor: 'pointer',
               }}
             >
-              {isSubscribed ? '🔔' : '🔕'}
+              <EmojiItem
+                emojiString={isSubscribed ? '🔔' : '🔕'}
+                size={18}
+                bgColor="TRANSPARENT"
+                outline="TRANSPARENT"
+              />
             </button>
           )}
           <Layout.LayoutBase pb={2}>

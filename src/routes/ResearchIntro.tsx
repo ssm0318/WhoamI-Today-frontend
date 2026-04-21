@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import {
   RESEARCH_INQUIRY_DISCORD_LINK,
   RESEARCH_INQUIRY_INSTAGRAM_LINK,
@@ -239,7 +240,12 @@ function ResearchIntro() {
                     </Typo>
                   </a>
                   <Layout.FlexRow alignItems="center" gap={8}>
-                    <span>📧</span>
+                    <EmojiItem
+                      emojiString="📧"
+                      size={18}
+                      bgColor="TRANSPARENT"
+                      outline="TRANSPARENT"
+                    />
                     <Typo type="body-medium">
                       <Typo type="body-medium" bold>
                         {t('email')} :{' '}

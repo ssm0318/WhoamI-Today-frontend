@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
+import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import { Button, Font, Layout } from '@design-system';
 
 interface ResponseCompleteModalProps {
@@ -31,7 +32,7 @@ function ResponseCompleteModal({
   return (
     <BottomModal visible={isVisible} onClose={handleOnClose}>
       <Layout.FlexCol w="100%" alignItems="center" bgColor="WHITE" pt={80} pb={60}>
-        <Font.Body type="18_regular">🥳</Font.Body>
+        <EmojiItem emojiString="🥳" size={32} bgColor="TRANSPARENT" outline="TRANSPARENT" />
         <Font.Body type="18_regular" mt={4}>
           {t('complete')}
         </Font.Body>

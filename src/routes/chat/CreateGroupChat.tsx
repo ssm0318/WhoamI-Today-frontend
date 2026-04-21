@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SearchInput from '@components/_common/search-input/SearchInput';
@@ -124,7 +125,7 @@ function CreateGroupChat() {
               gap: 8,
             }}
           >
-            <span style={{ fontSize: 16 }}>👥</span>
+            <EmojiItem emojiString="👥" size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
             <span style={{ fontSize: 14, fontWeight: 600, color: 'white' }}>New Group Chat</span>
           </button>
         )}

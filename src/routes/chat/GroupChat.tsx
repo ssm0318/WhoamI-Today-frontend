@@ -1,6 +1,7 @@
 import { isSameDay } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -326,7 +327,7 @@ function GroupChat() {
               padding: 0,
             }}
           >
-            <span style={{ fontSize: 16, lineHeight: 1 }}>👤</span>
+            <EmojiItem emojiString="👤" size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
             <span style={{ fontSize: 12, color: '#666', lineHeight: 1 }}>{members.length}</span>
           </button>
         </Layout.FlexRow>

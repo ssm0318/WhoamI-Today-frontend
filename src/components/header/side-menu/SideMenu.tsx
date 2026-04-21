@@ -1,6 +1,7 @@
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import { Z_INDEX } from '@constants/layout';
 import {
   DAILY_SURVEY_URL_EN,
@@ -129,9 +130,7 @@ function SideMenu({ closeSideMenu }: Props) {
                   handleClickQuestionSuggest();
                 }}
               >
-                <Typo type="title-large" color="BLACK">
-                  ❓{' '}
-                </Typo>
+                <EmojiItem emojiString="❓" size={20} bgColor="TRANSPARENT" outline="TRANSPARENT" />
                 <Typo type="title-large" color="BLACK" underline>
                   {t('question_suggest')}
                 </Typo>
@@ -147,10 +146,13 @@ function SideMenu({ closeSideMenu }: Props) {
                   handleClickDailySurvery();
                 }}
               >
-                <Layout.FlexRow gap={4}>
-                  <Typo type="title-large" color="BLACK">
-                    📝{' '}
-                  </Typo>
+                <Layout.FlexRow gap={4} alignItems="center">
+                  <EmojiItem
+                    emojiString="📝"
+                    size={20}
+                    bgColor="TRANSPARENT"
+                    outline="TRANSPARENT"
+                  />
                   <Typo type="title-large" color="BLACK" underline>
                     {t('feedback_to_researcher')}
                   </Typo>
@@ -167,9 +169,7 @@ function SideMenu({ closeSideMenu }: Props) {
                   handleClickOnboardingVideo();
                 }}
               >
-                <Typo type="title-large" color="BLACK">
-                  📺{' '}
-                </Typo>
+                <EmojiItem emojiString="📺" size={20} bgColor="TRANSPARENT" outline="TRANSPARENT" />
                 <Typo type="title-large" color="BLACK" underline>
                   {t('onboarding_video')}
                 </Typo>
@@ -192,15 +192,25 @@ function SideMenu({ closeSideMenu }: Props) {
                       handleClickKakaoInquiry();
                     }}
                   >
-                    <Typo type="title-medium">
-                      💬{' '}
+                    <Layout.FlexRow gap={4} alignItems="center">
+                      <EmojiItem
+                        emojiString="💬"
+                        size={18}
+                        bgColor="TRANSPARENT"
+                        outline="TRANSPARENT"
+                      />
                       <Typo type="title-medium" bold underline>
                         {t('kakao_inquiry')}
                       </Typo>
-                    </Typo>
+                    </Layout.FlexRow>
                   </a>
-                  <Typo type="title-medium">
-                    🎮{' '}
+                  <Layout.FlexRow gap={4} alignItems="center" style={{ flexWrap: 'wrap' }}>
+                    <EmojiItem
+                      emojiString="🎮"
+                      size={18}
+                      bgColor="TRANSPARENT"
+                      outline="TRANSPARENT"
+                    />
                     <Typo type="title-medium" bold>
                       {t('discord_inquiry')} :{' '}
                     </Typo>
@@ -218,7 +228,7 @@ function SideMenu({ closeSideMenu }: Props) {
                       </Typo>
                     </a>
                     <Typo type="title-medium"> (밑줄 3개)</Typo>
-                  </Typo>
+                  </Layout.FlexRow>
                   <a
                     href={RESEARCH_INQUIRY_INSTAGRAM_LINK}
                     target="_blank"
@@ -228,21 +238,31 @@ function SideMenu({ closeSideMenu }: Props) {
                       handleClickInstagramLink();
                     }}
                   >
-                    <Typo type="title-medium">
-                      📸{' '}
+                    <Layout.FlexRow gap={4} alignItems="center">
+                      <EmojiItem
+                        emojiString="📸"
+                        size={18}
+                        bgColor="TRANSPARENT"
+                        outline="TRANSPARENT"
+                      />
                       <Typo type="title-medium" bold>
                         {t('instagram_inquiry')}
                       </Typo>
                       <Typo type="title-medium" underline>
                         @whoami.today.official
                       </Typo>
-                    </Typo>
+                    </Layout.FlexRow>
                   </a>
                 </Layout.FlexCol>
               ) : (
                 <Layout.FlexCol gap={15} pl={4}>
-                  <Typo type="title-medium">
-                    🎮{' '}
+                  <Layout.FlexRow gap={4} alignItems="center" style={{ flexWrap: 'wrap' }}>
+                    <EmojiItem
+                      emojiString="🎮"
+                      size={18}
+                      bgColor="TRANSPARENT"
+                      outline="TRANSPARENT"
+                    />
                     <Typo type="title-medium" bold>
                       {t('discord_inquiry')} :{' '}
                     </Typo>
@@ -262,7 +282,7 @@ function SideMenu({ closeSideMenu }: Props) {
                       </Typo>
                     </a>
                     <Typo type="title-medium"> (three underscores)</Typo>
-                  </Typo>
+                  </Layout.FlexRow>
                   <a
                     href="sms:+1-206-730-2178"
                     target="_blank"
@@ -274,15 +294,20 @@ function SideMenu({ closeSideMenu }: Props) {
                       }
                     }}
                   >
-                    <Typo type="title-medium">
-                      📱{' '}
+                    <Layout.FlexRow gap={4} alignItems="center">
+                      <EmojiItem
+                        emojiString="📱"
+                        size={18}
+                        bgColor="TRANSPARENT"
+                        outline="TRANSPARENT"
+                      />
                       <Typo type="title-medium" bold>
                         {t('text_message_inquiry')} :{' '}
                       </Typo>
                       <Typo type="title-medium" underline>
                         +1-206-730-2178
                       </Typo>
-                    </Typo>
+                    </Layout.FlexRow>
                   </a>
                   <a
                     href={RESEARCH_INQUIRY_INSTAGRAM_LINK}
@@ -293,15 +318,20 @@ function SideMenu({ closeSideMenu }: Props) {
                       handleClickInstagramLink();
                     }}
                   >
-                    <Typo type="title-medium">
-                      📸{' '}
+                    <Layout.FlexRow gap={4} alignItems="center">
+                      <EmojiItem
+                        emojiString="📸"
+                        size={18}
+                        bgColor="TRANSPARENT"
+                        outline="TRANSPARENT"
+                      />
                       <Typo type="title-medium" bold>
                         {t('instagram_inquiry')} :{' '}
                       </Typo>
                       <Typo type="title-medium" underline>
                         @whoami.today.official
                       </Typo>
-                    </Typo>
+                    </Layout.FlexRow>
                   </a>
                 </Layout.FlexCol>
               )}

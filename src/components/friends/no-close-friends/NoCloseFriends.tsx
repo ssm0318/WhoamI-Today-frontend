@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import { Button, Layout, Typo } from '@design-system';
 import SelectCloseFriendsBottomSheet from '../select-close-friends-bottom-sheet/SelectCloseFriendsBottomSheet';
-import { Container, DescriptionText, EmojiContainer } from './NoCloseFriends.styled';
+import { Container, DescriptionText } from './NoCloseFriends.styled';
 
 interface Props {
   onFriendAdded?: () => void;
@@ -23,7 +24,7 @@ function NoCloseFriends({ onFriendAdded }: Props) {
   return (
     <>
       <Container ph={75} pv={40} gap={16} alignItems="center">
-        <EmojiContainer>👀</EmojiContainer>
+        <EmojiItem emojiString="👀" size={40} bgColor="TRANSPARENT" outline="TRANSPARENT" />
         <Layout.FlexCol gap={8} alignItems="center">
           <Typo type="title-medium" color="BLACK">
             {t('close_friends_title')}
