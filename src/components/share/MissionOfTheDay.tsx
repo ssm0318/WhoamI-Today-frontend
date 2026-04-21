@@ -52,7 +52,7 @@ export function getDayOfYear(): number {
 const MISSION_STORAGE_KEY = 'whoami_mission_attempts';
 const MAX_ATTEMPTS = 5;
 
-function getAttemptsToday(): number {
+export function getAttemptsToday(): number {
   const stored = localStorage.getItem(MISSION_STORAGE_KEY);
   if (!stored) return 0;
   try {

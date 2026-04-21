@@ -13,13 +13,20 @@ interface PromptCardProps {
   id: number;
   content: string;
   authorDetail?: User | AdminAuthor;
+  missionMode?: boolean;
 }
-function PromptCard({ id, content, widthMode = 'normal', authorDetail }: PromptCardProps) {
+function PromptCard({
+  id,
+  content,
+  widthMode = 'normal',
+  authorDetail,
+  missionMode,
+}: PromptCardProps) {
   const navigate = useNavigate();
 
   const [sendPromptModalVisible, setSendPromptBottomModalVisible] = useState(false);
   const handleClickRespond = () => {
-    navigate(`/questions/${id}/new`);
+    navigate(`/questions/${id}/new`, missionMode ? { state: { missionMode: true } } : undefined);
   };
 
   const handleClickSend = (e: MouseEvent) => {

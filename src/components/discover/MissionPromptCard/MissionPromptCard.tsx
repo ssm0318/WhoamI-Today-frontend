@@ -1,21 +1,8 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getDayOfYear } from '@components/share/MissionOfTheDay';
+import { getAttemptsToday } from '@components/share/MissionOfTheDay';
 import { Layout, Typo } from '@design-system';
 import { MissionPromptCardBody } from '@models/discover';
 import * as S from './MissionPromptCard.styled';
-
-const MISSION_STORAGE_KEY = 'whoami_mission_completed';
-
-function isMissionCompletedToday(): boolean {
-  const stored = localStorage.getItem(MISSION_STORAGE_KEY);
-  if (!stored) return false;
-  return stored === String(getDayOfYear());
-}
-
-function markMissionCompleted(): void {
-  localStorage.setItem(MISSION_STORAGE_KEY, String(getDayOfYear()));
-}
 
 interface MissionPromptCardProps {
   mission: MissionPromptCardBody;
@@ -23,18 +10,16 @@ interface MissionPromptCardProps {
 
 function MissionPromptCard({ mission }: MissionPromptCardProps) {
   const navigate = useNavigate();
-  const [isCompleted, setIsCompleted] = useState(isMissionCompletedToday());
+  const isCompleted = getAttemptsToday() > 0;
 
   const handleDoIt = () => {
     if (isCompleted) return;
-    markMissionCompleted();
-    setIsCompleted(true);
 
-    // Navigate based on mission type
+    // Navigate to creation page — completion is marked after successful post
     if (mission.missionType === 'question') {
-      navigate('/questions');
+      navigate('/questions', { state: { missionMode: true } });
     } else {
-      navigate('/notes/new');
+      navigate('/notes/new', { state: { missionMode: true } });
     }
   };
 
