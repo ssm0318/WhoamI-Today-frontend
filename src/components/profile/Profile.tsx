@@ -1,12 +1,15 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import FriendStatus from '@components/_common/friend-status/FriendStatus';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
+import { UserPageContext } from '@components/user-page/UserPage.context';
+import { FeatureFlagKey } from '@constants/featureFlag';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { useCheckInSubscription } from '@hooks/useCheckInSubscription';
 import { useChipCategories } from '@hooks/useChipCategories';
 import { Connection } from '@models/api/friends';
 import { MyProfile } from '@models/api/user';
@@ -34,9 +37,25 @@ function Profile({ user }: ProfileProps) {
   const { featureFlags, myProfile } = useBoundStore(useShallow(UserSelector));
   const isMyPage = user?.id === myProfile?.id;
   const [friendData, setFriendData] = useState<UserProfile | null>(null);
+  const checkInEnabled = !!featureFlags?.[FeatureFlagKey.CHECK_IN];
+  const isFriendUser = !!user && !isMyProfile(user) && areFriends(user);
+
+  const { updateUser } = useContext(UserPageContext);
+  const { isSubscribed, toggle: toggleCheckInSubscription } = useCheckInSubscription({
+    userId: isFriendUser ? user.id : undefined,
+    initialSubscribed: isFriendUser ? user.is_check_in_subscribed : undefined,
+    onChange: () => {
+      updateUser();
+    },
+  });
 
   const { username } = useParams();
   const navigate = useNavigate();
+
+  const handleToggleSubscription = (e: MouseEvent) => {
+    e.stopPropagation();
+    toggleCheckInSubscription();
+  };
 
   const handleClickEditProfile = (e: MouseEvent) => {
     e.stopPropagation();
@@ -130,6 +149,30 @@ function Profile({ user }: ProfileProps) {
                       size={16}
                       onClick={handleClickChangeConnection}
                     />
+                  )}
+                  {checkInEnabled && (
+                    <button
+                      type="button"
+                      onClick={handleToggleSubscription}
+                      aria-label={
+                        t(
+                          isSubscribed
+                            ? 'check_in_subscription.aria.unsubscribe'
+                            : 'check_in_subscription.aria.subscribe',
+                          { defaultValue: '' },
+                        ) ?? ''
+                      }
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        padding: 0,
+                        fontSize: 16,
+                        lineHeight: 1,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {isSubscribed ? '🔔' : '🔕'}
+                    </button>
                   )}
                   {showEditConnectionsModal && (
                     <EditConnectionsBottomSheet
