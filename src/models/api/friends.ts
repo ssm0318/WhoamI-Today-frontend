@@ -16,6 +16,7 @@ export type GetUpdatedProfileResponse = PaginationResponse<UpdatedProfile[]>;
 
 export interface UpdatedProfile extends User {
   is_favorite: boolean;
+  is_check_in_subscribed?: boolean;
   is_hidden: boolean;
   current_user_read: boolean;
   unread_cnt: number;

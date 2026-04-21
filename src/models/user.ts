@@ -45,11 +45,13 @@ export interface UserProfile extends User, UserFollowStatus {
   are_friends: boolean;
   received_friend_request_from: boolean;
   sent_friend_request_to: boolean;
+  sent_chat_request_to: boolean;
   check_in: CheckInBase;
   mutuals: User[];
   mutual_interests?: MutualTrait[];
   mutual_personas?: MutualTrait[];
   is_favorite: boolean;
+  is_check_in_subscribed?: boolean;
   pinned_cnt?: number;
   friendship_level?: string;
   // LinkedIn-style connection degree: 1 = direct friend, 2 = friend of friend, 3+ = further

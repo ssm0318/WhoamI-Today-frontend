@@ -68,6 +68,16 @@ export const deleteFavorite = async (userId: number) => {
   await axios.delete(`/user/friends/${userId}/favorites/`);
 };
 
+export const subscribeCheckIn = async (userId: number) => {
+  await axios.post(`/user/friends/check-in-subscribe/`, {
+    friend_id: userId,
+  });
+};
+
+export const unsubscribeCheckIn = async (userId: number) => {
+  await axios.delete(`/user/friends/${userId}/check-in-subscribe/`);
+};
+
 export const hideFriend = async (userId: number) => {
   await axios.post(`/user/friends/hidden/`, {
     friend_id: userId,
