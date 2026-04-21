@@ -1,4 +1,5 @@
 import { MouseEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Icon from '@components/_common/icon/Icon';
@@ -10,6 +11,7 @@ import EditConnectionsBottomSheet from '@components/profile/edit-connections/Edi
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import { FeatureFlagKey } from '@constants/featureFlag';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { useCheckInSubscription } from '@hooks/useCheckInSubscription';
 import { Connection, UpdatedProfile } from '@models/api/friends';
 import { SocialBattery } from '@models/checkIn';
 import { UserProfile } from '@models/user';
@@ -45,7 +47,19 @@ function FriendItemWithUpdates({
   const thought = (user as any).thought ?? (user as any).description ?? '';
 
   const navigate = useNavigate();
+  const [t] = useTranslation('translation');
   const { featureFlags } = useBoundStore(UserSelector);
+  const checkInEnabled = !!featureFlags?.[FeatureFlagKey.CHECK_IN];
+
+  const { isSubscribed, toggle: toggleCheckInSubscription } = useCheckInSubscription({
+    userId: id,
+    initialSubscribed: user.is_check_in_subscribed,
+  });
+
+  const handleToggleSubscription = (e: MouseEvent) => {
+    e.stopPropagation();
+    toggleCheckInSubscription();
+  };
 
   const [isEditConnectionsBottomSheetVisible, setIsEditConnectionsBottomSheetVisible] =
     useState(false);
@@ -155,7 +169,30 @@ function FriendItemWithUpdates({
             </Layout.FlexRow>
           )}
         </Layout.FlexRow>
-        <Layout.FlexRow style={{ position: 'relative' }}>
+        <Layout.FlexRow style={{ position: 'relative' }} alignItems="center" gap={12}>
+          {checkInEnabled && (
+            <button
+              type="button"
+              onClick={handleToggleSubscription}
+              aria-label={
+                t(
+                  isSubscribed
+                    ? 'check_in_subscription.aria.unsubscribe'
+                    : 'check_in_subscription.aria.subscribe',
+                ) ?? ''
+              }
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: 2,
+                fontSize: 18,
+                lineHeight: 1,
+                cursor: 'pointer',
+              }}
+            >
+              {isSubscribed ? '🔔' : '🔕'}
+            </button>
+          )}
           <Layout.LayoutBase pb={2}>
             <Icon name="friend_item_chat" color="BLACK" size={20} onClick={handleClickChat} />
           </Layout.LayoutBase>
