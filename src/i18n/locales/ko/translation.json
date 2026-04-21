@@ -1,4 +1,15 @@
 {
+  "check_in_subscription": {
+    "toast": {
+      "subscribed": "구독했어요",
+      "unsubscribed": "구독 해제했어요",
+      "error": "문제가 생겼어요. 잠시 후 다시 시도해 주세요."
+    },
+    "aria": {
+      "subscribe": "체크인 구독하기",
+      "unsubscribe": "체크인 구독 해제하기"
+    }
+  },
   "friend": {
     "hide": "숨김",
     "unfriend": "삭제",

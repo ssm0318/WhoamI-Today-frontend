@@ -1,4 +1,15 @@
 {
+    "check_in_subscription": {
+        "toast": {
+            "subscribed": "Subscribed",
+            "unsubscribed": "Unsubscribed",
+            "error": "Something went wrong. Please try again later."
+        },
+        "aria": {
+            "subscribe": "Subscribe to check-in updates",
+            "unsubscribe": "Unsubscribe from check-in updates"
+        }
+    },
     "friend": {
         "hide": "Hide",
         "unfriend": "Unfriend",
