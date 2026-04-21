@@ -1,8 +1,10 @@
 import { Emoji } from 'emoji-picker-react';
 import { MouseEvent, useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import { Typo } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
 import { deletePoke, getPokeStatus, Poke, PokeComponentType, sendPoke } from '@utils/apis/poke';
 import { getUnifiedEmoji } from '@utils/emojiHelpers';
 
@@ -27,6 +29,8 @@ const POKED_LABELS: Record<PokeComponentType, { text: string; emoji: string }> =
 };
 
 function PokeButton({ receiverId, componentType, initialPokeId }: Props) {
+  const [t] = useTranslation('translation', { keyPrefix: 'friend' });
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const [pokeRecord, setPokeRecord] = useState<Poke | null>(
     initialPokeId
       ? ({ id: initialPokeId, component_type: componentType, receiver: receiverId } as Poke)
@@ -79,8 +83,13 @@ function PokeButton({ receiverId, componentType, initialPokeId }: Props) {
     try {
       const newPoke = await sendPoke(receiverId, componentType);
       setPokeRecord(newPoke);
-    } catch {
-      // Silently fail -- rate limit or network error
+    } catch (err: unknown) {
+      if (err && typeof err === 'object' && 'response' in err) {
+        const status = (err as { response: { status: number } }).response?.status;
+        if (status === 429) {
+          openToast({ message: t('ping_daily_limit') });
+        }
+      }
     } finally {
       setIsLoading(false);
     }

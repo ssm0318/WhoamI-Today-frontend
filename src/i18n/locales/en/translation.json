@@ -6,7 +6,8 @@
         "close_friend": "Close Friend",
         "are_you_sure_you_want_to_delete_this_friend": "Remove this friend?",
         "temporary_error": "A temporary error occurred. Please try again later.",
-        "view_all_updates_this_week": "View all updates this week"
+        "view_all_updates_this_week": "View all updates this week",
+        "ping_daily_limit": "Today's ping limit reached! Try again tomorrow."
     },
     "common": {
         "done": "Done",
