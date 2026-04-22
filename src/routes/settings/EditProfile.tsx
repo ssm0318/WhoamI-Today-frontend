@@ -1,6 +1,7 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import styled from 'styled-components';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
 import ProfileImageEditButton from '@components/_common/profile-image-edit-button/ProfileImageEditButton';
@@ -11,7 +12,7 @@ import ChipCategorySection from '@components/profile/chip/ChipCategorySection';
 import { StyledEditProfileButton } from '@components/settings/SettingsButtons.styled';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { CheckBox, Layout, Typo } from '@design-system';
+import { CheckBox, Colors, Layout, Typo } from '@design-system';
 import { useChipCategories } from '@hooks/useChipCategories';
 import { useDelayedVisible } from '@hooks/useDelayedVisible';
 import { MyProfile } from '@models/api/user';
@@ -23,6 +24,7 @@ import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { MainScrollContainer } from '../Root';
 
 function EditProfile() {
+  type EditProfileTab = 'basic' | 'interests';
   const location = useLocation();
   const isFromSignUp = !!location.state?.fromSignUp;
   const [searchParams] = useSearchParams();
@@ -36,6 +38,10 @@ function EditProfile() {
   }));
 
   const { categories } = useChipCategories();
+  const profileWithOptionalName = myProfile as MyProfile & {
+    name?: string;
+    name_friends_only?: boolean;
+  };
 
   // Parse existing user chips into per-category selections
   const parseExistingChips = () => {
@@ -74,11 +80,11 @@ function EditProfile() {
   }>({
     bio: myProfile?.bio ?? '',
     username: myProfile?.username ?? '',
-    name: (myProfile as any)?.name ?? '',
+    name: profileWithOptionalName?.name ?? '',
     pronouns: myProfile?.pronouns ?? '',
     chipSelections: parsed.selections,
     customChips: parsed.customs,
-    name_friends_only: (myProfile as any)?.name_friends_only ?? true,
+    name_friends_only: profileWithOptionalName?.name_friends_only ?? true,
     interests_friends_only: myProfile?.interests_friends_only ?? false,
     persona_friends_only: myProfile?.persona_friends_only ?? false,
     pronouns_friends_only: myProfile?.pronouns_friends_only ?? false,
@@ -94,27 +100,10 @@ function EditProfile() {
 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
-  const [imageChanged, setImageChanged] = useState(false);
-  const [hasChanges, setHasChanges] = useState(false);
+  const [, setImageChanged] = useState(false);
+  const [activeTab, setActiveTab] = useState<EditProfileTab>('basic');
   const [isSaving, setIsSaving] = useState(false);
   const showUploadOverlay = useDelayedVisible(isSaving);
-
-  useEffect(() => {
-    const hasDraftChanged =
-      draft.username !== (myProfile?.username ?? '') ||
-      draft.pronouns !== (myProfile?.pronouns ?? '') ||
-      draft.bio !== (myProfile?.bio ?? '') ||
-      JSON.stringify(draft.chipSelections) !== JSON.stringify(parsed.selections) ||
-      draft.customChips.length !== parsed.customs.length ||
-      draft.interests_friends_only !== (myProfile?.interests_friends_only ?? false) ||
-      draft.persona_friends_only !== (myProfile?.persona_friends_only ?? false) ||
-      draft.pronouns_friends_only !== (myProfile?.pronouns_friends_only ?? false) ||
-      draft.bio_friends_only !== (myProfile?.bio_friends_only ?? false) ||
-      imageChanged;
-
-    setHasChanges(hasDraftChanged);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draft, imageChanged, myProfile]);
 
   const handleToggleChip = (category: ChipCategory, chipLabel: string) => {
     setDraft((prev) => {
@@ -293,8 +282,8 @@ function EditProfile() {
           </button>
         }
         RightComponent={
-          <button type="button" onClick={handleClickSave} disabled={!hasChanges || isSaving}>
-            <Typo type="title-large" color={hasChanges && !isSaving ? 'PRIMARY' : 'LIGHT_GRAY'}>
+          <button type="button" onClick={handleClickSave} disabled={isSaving}>
+            <Typo type="title-large" color={!isSaving ? 'PRIMARY' : 'LIGHT_GRAY'}>
               {t('done')}
             </Typo>
           </button>
@@ -321,86 +310,104 @@ function EditProfile() {
         </Layout.FlexCol>
       </Layout.FlexCol>
       <Layout.FlexCol pt={32} ph={24} pb={40} gap={16} w="100%">
-        {/* username (always public) */}
-        <ValidatedInput
-          label={t('username')}
-          name="username"
-          type="text"
-          value={draft.username}
-          onChange={handleChangeInput}
-          limit={20}
-          error={usernameError}
-        />
+        <EditProfileTabRow w="100%">
+          <EditProfileTabButton
+            type="button"
+            $active={activeTab === 'basic'}
+            onClick={() => setActiveTab('basic')}
+          >
+            Basic Info
+          </EditProfileTabButton>
+          <EditProfileTabButton
+            type="button"
+            $active={activeTab === 'interests'}
+            onClick={() => setActiveTab('interests')}
+          >
+            Interests & Visibility
+          </EditProfileTabButton>
+        </EditProfileTabRow>
 
-        {/* name (friends only option) */}
-        <Layout.FlexCol gap={4} w="100%">
-          <ValidatedInput
-            label="Name"
-            name="name"
-            type="text"
-            value={draft.name}
-            onChange={handleChangeInput}
-            limit={50}
-          />
-          <CheckBox
-            name="Show name only to friends"
-            checked={draft.name_friends_only}
-            onChange={() => handleToggleVisibility('name_friends_only')}
-          />
-        </Layout.FlexCol>
-
-        {/* pronouns */}
-        <Layout.FlexCol gap={4} w="100%">
-          <Layout.FlexCol w="100%" mb={4}>
+        {activeTab === 'basic' ? (
+          <>
             <ValidatedInput
-              label={t('pronouns')}
-              name="pronouns"
+              label={t('username')}
+              name="username"
               type="text"
-              value={draft.pronouns}
+              value={draft.username}
               onChange={handleChangeInput}
+              limit={20}
+              error={usernameError}
             />
-          </Layout.FlexCol>
-          <CheckBox
-            name={String(t('friends_only.pronouns'))}
-            checked={draft.pronouns_friends_only}
-            onChange={() => handleToggleVisibility('pronouns_friends_only')}
-          />
-        </Layout.FlexCol>
 
-        {/* bio */}
-        <Layout.FlexCol gap={4} w="100%">
-          <ValidatedTextArea
-            label={t('bio')}
-            name="bio"
-            value={draft.bio}
-            onChange={handleChangeTextArea}
-            limit={120}
-          />
-          <CheckBox
-            name={String(t('friends_only.bio'))}
-            checked={draft.bio_friends_only}
-            onChange={() => handleToggleVisibility('bio_friends_only')}
-          />
-        </Layout.FlexCol>
+            <Layout.FlexCol gap={4} w="100%">
+              <ValidatedInput
+                label="Name"
+                name="name"
+                type="text"
+                value={draft.name}
+                onChange={handleChangeInput}
+                limit={50}
+              />
+              <CheckBox
+                name="Show name only to friends"
+                checked={draft.name_friends_only}
+                onChange={() => handleToggleVisibility('name_friends_only')}
+              />
+            </Layout.FlexCol>
 
-        {/* Chip Categories (7 categories) — each with its own visibility */}
-        {categories.map((categoryInfo) => (
-          <Layout.FlexCol key={categoryInfo.key} gap={4} w="100%">
-            <ChipCategorySection
-              categoryInfo={categoryInfo}
-              selectedChips={draft.chipSelections[categoryInfo.key] || []}
-              customChips={draft.customChips}
-              onToggleChip={handleToggleChip}
-              onAddCustomChip={handleAddCustomChip}
-              onRemoveCustomChip={handleRemoveCustomChip}
-            />
-            <CheckBox
-              name={`Show ${categoryInfo.label} only to friends`}
-              checked={draft.interests_friends_only}
-              onChange={() => handleToggleVisibility('interests_friends_only')}
-            />
-          </Layout.FlexCol>
-        ))}
+            <Layout.FlexCol gap={4} w="100%">
+              <Layout.FlexCol w="100%" mb={4}>
+                <ValidatedInput
+                  label={t('pronouns')}
+                  name="pronouns"
+                  type="text"
+                  value={draft.pronouns}
+                  onChange={handleChangeInput}
+                />
+              </Layout.FlexCol>
+              <CheckBox
+                name={String(t('friends_only.pronouns'))}
+                checked={draft.pronouns_friends_only}
+                onChange={() => handleToggleVisibility('pronouns_friends_only')}
+              />
+            </Layout.FlexCol>
+
+            <Layout.FlexCol gap={4} w="100%">
+              <ValidatedTextArea
+                label={t('bio')}
+                name="bio"
+                value={draft.bio}
+                onChange={handleChangeTextArea}
+                limit={120}
+              />
+              <CheckBox
+                name={String(t('friends_only.bio'))}
+                checked={draft.bio_friends_only}
+                onChange={() => handleToggleVisibility('bio_friends_only')}
+              />
+            </Layout.FlexCol>
+          </>
+        ) : (
+          <>
+            {categories.map((categoryInfo) => (
+              <Layout.FlexCol key={categoryInfo.key} gap={4} w="100%">
+                <ChipCategorySection
+                  categoryInfo={categoryInfo}
+                  selectedChips={draft.chipSelections[categoryInfo.key] || []}
+                  customChips={draft.customChips}
+                  onToggleChip={handleToggleChip}
+                  onAddCustomChip={handleAddCustomChip}
+                  onRemoveCustomChip={handleRemoveCustomChip}
+                />
+                <CheckBox
+                  name={`Show ${categoryInfo.label} only to friends`}
+                  checked={draft.interests_friends_only}
+                  onChange={() => handleToggleVisibility('interests_friends_only')}
+                />
+              </Layout.FlexCol>
+            ))}
+          </>
+        )}
       </Layout.FlexCol>
       {isEditModalVisible && (
         <ProfileImageEdit
@@ -416,3 +423,23 @@ function EditProfile() {
 }
 
 export default EditProfile;
+
+const EditProfileTabRow = styled(Layout.FlexRow)`
+  border-bottom: 1px solid ${Colors.LIGHT};
+  gap: 16px;
+`;
+
+const EditProfileTabButton = styled.button<{ $active: boolean }>`
+  background: none;
+  border: none;
+  padding: 12px 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: ${({ $active }) => ($active ? 700 : 400)};
+  color: ${({ $active }) => ($active ? Colors.BLACK : Colors.MEDIUM_GRAY)};
+  border-bottom: 2px solid ${({ $active }) => ($active ? Colors.PRIMARY : 'transparent')};
+  margin-bottom: -1px;
+`;
