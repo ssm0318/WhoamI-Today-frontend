@@ -70,7 +70,7 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
     }
   };
 
-  const canPost = !!noteInfo.content && !isSubmitting;
+  const canPost = (missionMode || !!noteInfo.content) && !isSubmitting;
 
   return (
     <>
