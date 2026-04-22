@@ -158,13 +158,9 @@ function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
     setShowPlaylistDetail(true);
   };
 
-  const stopTouchPropagation = (e: React.TouchEvent) => {
-    e.stopPropagation();
-  };
-
   return (
     <Layout.FlexCol w="100%" mb={12} mt={4} style={{ minWidth: 0 }}>
-      <ScrollableCardList gap={18} ph={16} onTouchStart={stopTouchPropagation}>
+      <ScrollableCardList gap={18} ph={16}>
         {tracks.length > 0 && (
           <>
             {/* Track Cards */}

@@ -273,29 +273,28 @@ function Discover() {
           msOverflowStyle: 'none',
         }}
       >
-        <PullToRefresh onRefresh={handleRefresh}>
-          <Layout.FlexCol w="100%" pb={FLOATING_BUTTON_SIZE + 20}>
-            <S.ScrollableFilterRow gap={8} ph={16} pv={12}>
-              {discoverFilterList.map((filter) => (
-                <FilterChip
-                  key={filter}
-                  label={DiscoverFilterLabel[filter]}
-                  isSelected={selectedFilter.includes(filter)}
-                  onClick={() => {
-                    if (selectedFilter.includes(filter)) {
-                      setSelectedFilter(selectedFilter.filter((f) => f !== filter));
-                    } else {
-                      setSelectedFilter([...selectedFilter, filter]);
-                    }
-                  }}
-                />
-              ))}
-            </S.ScrollableFilterRow>
+        {/* Filter + shared playlist sit outside ptr__children so WebView can pan horizontal lists. */}
+        <Layout.FlexCol w="100%" pb={FLOATING_BUTTON_SIZE + 20}>
+          <S.ScrollableFilterRow gap={8} ph={16} pv={12}>
+            {discoverFilterList.map((filter) => (
+              <FilterChip
+                key={filter}
+                label={DiscoverFilterLabel[filter]}
+                isSelected={selectedFilter.includes(filter)}
+                onClick={() => {
+                  if (selectedFilter.includes(filter)) {
+                    setSelectedFilter(selectedFilter.filter((f) => f !== filter));
+                  } else {
+                    setSelectedFilter([...selectedFilter, filter]);
+                  }
+                }}
+              />
+            ))}
+          </S.ScrollableFilterRow>
 
-            {/* Shared Playlist */}
-            {!isLoading && <SharedPlaylistSection tracks={musicTracks} />}
+          {!isLoading && <SharedPlaylistSection tracks={musicTracks} />}
 
-            {/* Discover Feed */}
+          <PullToRefresh onRefresh={handleRefresh}>
             <Layout.FlexCol
               gap={20}
               ph={DEFAULT_MARGIN}
@@ -337,8 +336,8 @@ function Discover() {
                 </Layout.FlexCol>
               )}
             </Layout.FlexCol>
-          </Layout.FlexCol>
-        </PullToRefresh>
+          </PullToRefresh>
+        </Layout.FlexCol>
       </MainScrollContainer>
     </>
   );

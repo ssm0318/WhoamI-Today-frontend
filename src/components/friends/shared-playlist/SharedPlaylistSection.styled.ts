@@ -9,6 +9,7 @@ export const ScrollableCardList = styled(Layout.FlexRow)`
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  touch-action: pan-x;
   align-items: center;
   padding-top: 10px;
   padding-bottom: 10px;
