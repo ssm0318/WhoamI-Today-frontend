@@ -303,6 +303,7 @@ function App() {
         <RouterProvider router={router} />
         {toast?.message && (
           <ToastBar
+            key={toast.id ?? toast.message}
             text={toast.message}
             RightComponent={
               toast.action &&

@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { BOTTOM_TABBAR_HEIGHT, DEFAULT_MARGIN, SCREEN_WIDTH, Z_INDEX } from '@constants/layout';
+import { BOTTOM_TABBAR_HEIGHT, DEFAULT_MARGIN, MAX_WINDOW_WIDTH, Z_INDEX } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { AnimatedToastBarContainer, AnimationState } from './ToastBar.styled';
 
@@ -51,7 +51,8 @@ export default function ToastBar({
         rounded={12}
         ph={12}
         pv={16}
-        w={SCREEN_WIDTH - 2 * DEFAULT_MARGIN}
+        w={`calc(100vw - ${2 * DEFAULT_MARGIN}px)`}
+        style={{ maxWidth: `${MAX_WINDOW_WIDTH - 2 * DEFAULT_MARGIN}px` }}
       >
         <Typo color="DARK_GRAY" type="body-large" pre>
           {text}
