@@ -20,18 +20,39 @@ function EditorPopup({
   if (!isOpen) return null;
 
   const handleOverlayClick = (e: MouseEvent<HTMLDivElement>) => {
+    console.log('[EditorPopup] overlay click', {
+      title,
+      isBackdrop: e.target === e.currentTarget,
+      targetTag: (e.target as HTMLElement).tagName,
+    });
     // Close only when the backdrop itself is clicked.
     if (e.target === e.currentTarget) {
+      console.log('[EditorPopup] onClose from overlay', { title });
       onClose();
     }
   };
 
   return (
     <Overlay onClick={handleOverlayClick}>
-      <Content onClick={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
+      <Content
+        onClick={(e) => {
+          console.log('[EditorPopup] content click stopPropagation', { title });
+          e.stopPropagation();
+        }}
+        onMouseDown={(e) => {
+          console.log('[EditorPopup] content mousedown stopPropagation', { title });
+          e.stopPropagation();
+        }}
+      >
         <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" mb={12}>
           <Typo type="title-medium">{title}</Typo>
-          <CloseButton type="button" onClick={onShare}>
+          <CloseButton
+            type="button"
+            onClick={() => {
+              console.log('[EditorPopup] Share clicked', { title });
+              onShare();
+            }}
+          >
             Share
           </CloseButton>
         </Layout.FlexRow>

@@ -150,6 +150,12 @@ export default function UpdateCheckin() {
 
   const doSave = useCallback(async () => {
     const s = stateRef.current;
+    console.log('[UpdateCheckin] doSave start', {
+      battery: s.battery,
+      moodCount: s.mood.length,
+      thoughtLength: s.thought.length,
+      trackId: s.trackId,
+    });
     try {
       const checkInPromise = postCheckIn({
         social_battery: s.battery,
@@ -179,18 +185,25 @@ export default function UpdateCheckin() {
         });
       }
       await fetchCheckIn();
+      console.log('[UpdateCheckin] doSave success');
       openToast({ message: 'Shared!' });
     } catch {
+      console.log('[UpdateCheckin] doSave failed');
       openToast({ message: 'Failed to save' });
     }
   }, [fetchCheckIn, sendMessage, openToast]);
 
   const handleEditorDismiss = useCallback(() => {
+    console.log('[UpdateCheckin] handleEditorDismiss');
     setActiveEditor(null);
   }, []);
 
   const handleThoughtShare = useCallback(
     (nextThought: string, nextThoughtVis: ComponentVisibility) => {
+      console.log('[UpdateCheckin] handleThoughtShare', {
+        nextThoughtLength: nextThought.length,
+        nextThoughtVis,
+      });
       // Commit these first so save reads the latest values.
       setThought(nextThought);
       setThoughtVis(nextThoughtVis);
