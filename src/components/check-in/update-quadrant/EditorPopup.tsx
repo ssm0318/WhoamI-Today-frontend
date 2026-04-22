@@ -1,4 +1,4 @@
-import { MouseEvent, PropsWithChildren } from 'react';
+import { MouseEvent, PropsWithChildren, TouchEvent, useRef } from 'react';
 import styled from 'styled-components';
 import { Z_INDEX } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
@@ -17,23 +17,52 @@ function EditorPopup({
   title,
   children,
 }: PropsWithChildren<EditorPopupProps>) {
-  if (!isOpen) return null;
+  const shouldCloseFromBackdropRef = useRef(false);
 
-  const handleOverlayClick = (e: MouseEvent<HTMLDivElement>) => {
-    console.log('[EditorPopup] overlay click', {
+  const markBackdropMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    const isBackdrop = e.target === e.currentTarget;
+    shouldCloseFromBackdropRef.current = isBackdrop;
+    console.log('[EditorPopup] overlay interaction start', {
       title,
-      isBackdrop: e.target === e.currentTarget,
+      isBackdrop,
       targetTag: (e.target as HTMLElement).tagName,
     });
-    // Close only when the backdrop itself is clicked.
-    if (e.target === e.currentTarget) {
+  };
+
+  const markBackdropTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    const isBackdrop = e.target === e.currentTarget;
+    shouldCloseFromBackdropRef.current = isBackdrop;
+    console.log('[EditorPopup] overlay touch start', {
+      title,
+      isBackdrop,
+      targetTag: (e.target as HTMLElement).tagName,
+    });
+  };
+
+  const handleOverlayClick = (e: MouseEvent<HTMLDivElement>) => {
+    const isBackdrop = e.target === e.currentTarget;
+    console.log('[EditorPopup] overlay click', {
+      title,
+      isBackdrop,
+      shouldCloseFromBackdrop: shouldCloseFromBackdropRef.current,
+      targetTag: (e.target as HTMLElement).tagName,
+    });
+    // Close only when interaction starts and ends on backdrop.
+    if (isBackdrop && shouldCloseFromBackdropRef.current) {
       console.log('[EditorPopup] onClose from overlay', { title });
       onClose();
     }
+    shouldCloseFromBackdropRef.current = false;
   };
 
+  if (!isOpen) return null;
+
   return (
-    <Overlay onClick={handleOverlayClick}>
+    <Overlay
+      onMouseDown={markBackdropMouseDown}
+      onTouchStart={markBackdropTouchStart}
+      onClick={handleOverlayClick}
+    >
       <Content
         onClick={(e) => {
           console.log('[EditorPopup] content click stopPropagation', { title });
