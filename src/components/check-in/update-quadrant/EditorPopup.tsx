@@ -18,8 +18,19 @@ function EditorPopup({
   children,
 }: PropsWithChildren<EditorPopupProps>) {
   const shouldCloseFromBackdropRef = useRef(false);
+  const suppressBackdropCloseUntilRef = useRef(0);
+
+  const triggerShare = () => {
+    console.log('[EditorPopup] Share triggered', { title });
+    onShare();
+  };
 
   const markBackdropMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    if (Date.now() < suppressBackdropCloseUntilRef.current) {
+      shouldCloseFromBackdropRef.current = false;
+      console.log('[EditorPopup] ignore overlay mousedown (suppressed)', { title });
+      return;
+    }
     const isBackdrop = e.target === e.currentTarget;
     shouldCloseFromBackdropRef.current = isBackdrop;
     console.log('[EditorPopup] overlay interaction start', {
@@ -31,6 +42,10 @@ function EditorPopup({
 
   const markBackdropTouchStart = (e: TouchEvent<HTMLDivElement>) => {
     const isBackdrop = e.target === e.currentTarget;
+    if (!isBackdrop) {
+      // iOS WebView can emit follow-up ghost mouse events on backdrop.
+      suppressBackdropCloseUntilRef.current = Date.now() + 700;
+    }
     shouldCloseFromBackdropRef.current = isBackdrop;
     console.log('[EditorPopup] overlay touch start', {
       title,
@@ -40,6 +55,11 @@ function EditorPopup({
   };
 
   const handleOverlayClick = (e: MouseEvent<HTMLDivElement>) => {
+    if (Date.now() < suppressBackdropCloseUntilRef.current) {
+      shouldCloseFromBackdropRef.current = false;
+      console.log('[EditorPopup] ignore overlay click (suppressed)', { title });
+      return;
+    }
     const isBackdrop = e.target === e.currentTarget;
     console.log('[EditorPopup] overlay click', {
       title,
@@ -77,9 +97,15 @@ function EditorPopup({
           <Typo type="title-medium">{title}</Typo>
           <CloseButton
             type="button"
-            onClick={() => {
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              triggerShare();
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
               console.log('[EditorPopup] Share clicked', { title });
-              onShare();
+              triggerShare();
             }}
           >
             Share
