@@ -5,6 +5,10 @@ export const ScrollableCardList = styled(Layout.FlexRow)`
   overflow-x: auto;
   overflow-y: visible;
   flex-wrap: nowrap;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   align-items: center;
   padding-top: 10px;
   padding-bottom: 10px;
