@@ -43,7 +43,8 @@ export default function UpdateCheckin() {
 
   // Auto-open editor popup from deep link query param (e.g. /update?editor=mood).
   // Gated on isDataLoaded so that editor captures current values, not initial empty defaults.
-  const [searchParams] = useSearchParams();
+  // Param is stripped from URL after opening so that a later reload doesn't re-trigger.
+  const [searchParams, setSearchParams] = useSearchParams();
   const hasAutoOpenedRef = useRef(false);
   useEffect(() => {
     if (!isDataLoaded || hasAutoOpenedRef.current) return;
@@ -51,8 +52,11 @@ export default function UpdateCheckin() {
     if (editorParam && ['battery', 'mood', 'song', 'thought'].includes(editorParam)) {
       setActiveEditor(editorParam as EditorTarget);
       hasAutoOpenedRef.current = true;
+      const next = new URLSearchParams(searchParams);
+      next.delete('editor');
+      setSearchParams(next, { replace: true });
     }
-  }, [isDataLoaded, searchParams]);
+  }, [isDataLoaded, searchParams, setSearchParams]);
 
   const [battery, setBattery] = useState<SocialBattery | null>(null);
   const [mood, setMood] = useState<string[]>([]);
