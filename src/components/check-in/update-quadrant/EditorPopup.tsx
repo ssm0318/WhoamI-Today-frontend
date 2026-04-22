@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { MouseEvent, PropsWithChildren } from 'react';
 import styled from 'styled-components';
 import { Z_INDEX } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
@@ -19,12 +19,21 @@ function EditorPopup({
 }: PropsWithChildren<EditorPopupProps>) {
   if (!isOpen) return null;
 
+  const handleOverlayClick = (e: MouseEvent<HTMLDivElement>) => {
+    // Close only when the backdrop itself is clicked.
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <Overlay onClick={onClose}>
-      <Content onClick={(e) => e.stopPropagation()}>
+    <Overlay onClick={handleOverlayClick}>
+      <Content onClick={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
         <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" mb={12}>
           <Typo type="title-medium">{title}</Typo>
-          <CloseButton onClick={onShare}>Share</CloseButton>
+          <CloseButton type="button" onClick={onShare}>
+            Share
+          </CloseButton>
         </Layout.FlexRow>
         {children}
       </Content>
