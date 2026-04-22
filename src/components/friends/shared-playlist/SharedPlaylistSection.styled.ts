@@ -3,13 +3,8 @@ import { Layout } from '@design-system';
 
 export const ScrollableCardList = styled(Layout.FlexRow)`
   overflow-x: auto;
-  overflow-y: visible;
   flex-wrap: nowrap;
-  min-width: 0;
   width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  touch-action: pan-x;
   align-items: center;
   padding-top: 10px;
   padding-bottom: 10px;
