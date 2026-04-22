@@ -130,10 +130,17 @@ function SideMenu({ closeSideMenu }: Props) {
                   handleClickQuestionSuggest();
                 }}
               >
-                <EmojiItem emojiString="❓" size={20} bgColor="TRANSPARENT" outline="TRANSPARENT" />
-                <Typo type="title-large" color="BLACK" underline>
-                  {t('question_suggest')}
-                </Typo>
+                <Layout.FlexRow gap={4} alignItems="center">
+                  <EmojiItem
+                    emojiString="❓"
+                    size={20}
+                    bgColor="TRANSPARENT"
+                    outline="TRANSPARENT"
+                  />
+                  <Typo type="title-large" color="BLACK" underline>
+                    {t('question_suggest')}
+                  </Typo>
+                </Layout.FlexRow>
               </a>
             </Layout.FlexCol>
             <Layout.FlexCol>
@@ -169,10 +176,17 @@ function SideMenu({ closeSideMenu }: Props) {
                   handleClickOnboardingVideo();
                 }}
               >
-                <EmojiItem emojiString="📺" size={20} bgColor="TRANSPARENT" outline="TRANSPARENT" />
-                <Typo type="title-large" color="BLACK" underline>
-                  {t('onboarding_video')}
-                </Typo>
+                <Layout.FlexRow gap={4} alignItems="center">
+                  <EmojiItem
+                    emojiString="📺"
+                    size={20}
+                    bgColor="TRANSPARENT"
+                    outline="TRANSPARENT"
+                  />
+                  <Typo type="title-large" color="BLACK" underline>
+                    {t('onboarding_video')}
+                  </Typo>
+                </Layout.FlexRow>
               </a>
             </Layout.FlexCol>
 
@@ -204,7 +218,7 @@ function SideMenu({ closeSideMenu }: Props) {
                       </Typo>
                     </Layout.FlexRow>
                   </a>
-                  <Layout.FlexRow gap={4} alignItems="center" style={{ flexWrap: 'wrap' }}>
+                  <Layout.FlexRow gap={4} alignItems="flex-start" style={{ flexWrap: 'wrap' }}>
                     <EmojiItem
                       emojiString="🎮"
                       size={18}
@@ -238,25 +252,23 @@ function SideMenu({ closeSideMenu }: Props) {
                       handleClickInstagramLink();
                     }}
                   >
-                    <Layout.FlexRow gap={4} alignItems="center">
+                    <Layout.FlexRow gap={4} alignItems="flex-start">
                       <EmojiItem
                         emojiString="📸"
                         size={18}
                         bgColor="TRANSPARENT"
                         outline="TRANSPARENT"
                       />
-                      <Typo type="title-medium" bold>
-                        {t('instagram_inquiry')}
-                      </Typo>
-                      <Typo type="title-medium" underline>
-                        @whoami.today.official
+                      <Typo type="title-medium">
+                        <b>{`${t('instagram_inquiry')} `}</b>
+                        <u>@whoami.today.official</u>
                       </Typo>
                     </Layout.FlexRow>
                   </a>
                 </Layout.FlexCol>
               ) : (
                 <Layout.FlexCol gap={15} pl={4}>
-                  <Layout.FlexRow gap={4} alignItems="center" style={{ flexWrap: 'wrap' }}>
+                  <Layout.FlexRow gap={4} alignItems="flex-start" style={{ flexWrap: 'wrap' }}>
                     <EmojiItem
                       emojiString="🎮"
                       size={18}
@@ -294,18 +306,16 @@ function SideMenu({ closeSideMenu }: Props) {
                       }
                     }}
                   >
-                    <Layout.FlexRow gap={4} alignItems="center">
+                    <Layout.FlexRow gap={4} alignItems="flex-start">
                       <EmojiItem
                         emojiString="📱"
                         size={18}
                         bgColor="TRANSPARENT"
                         outline="TRANSPARENT"
                       />
-                      <Typo type="title-medium" bold>
-                        {t('text_message_inquiry')} :{' '}
-                      </Typo>
-                      <Typo type="title-medium" underline>
-                        +1-206-730-2178
+                      <Typo type="title-medium">
+                        <b>{t('text_message_inquiry')} : </b>
+                        <u>+1-206-730-2178</u>
                       </Typo>
                     </Layout.FlexRow>
                   </a>
@@ -318,18 +328,16 @@ function SideMenu({ closeSideMenu }: Props) {
                       handleClickInstagramLink();
                     }}
                   >
-                    <Layout.FlexRow gap={4} alignItems="center">
+                    <Layout.FlexRow gap={4} alignItems="flex-start">
                       <EmojiItem
                         emojiString="📸"
                         size={18}
                         bgColor="TRANSPARENT"
                         outline="TRANSPARENT"
                       />
-                      <Typo type="title-medium" bold>
-                        {t('instagram_inquiry')} :{' '}
-                      </Typo>
-                      <Typo type="title-medium" underline>
-                        @whoami.today.official
+                      <Typo type="title-medium">
+                        <b>{t('instagram_inquiry')} : </b>
+                        <u>@whoami.today.official</u>
                       </Typo>
                     </Layout.FlexRow>
                   </a>
