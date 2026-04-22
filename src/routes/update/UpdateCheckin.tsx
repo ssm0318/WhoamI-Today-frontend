@@ -39,15 +39,20 @@ export default function UpdateCheckin() {
   const openToast = useBoundStore((state) => state.openToast);
 
   const [activeEditor, setActiveEditor] = useState<EditorTarget>(null);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  // Auto-open editor popup from deep link query param (e.g. /update?editor=mood)
+  // Auto-open editor popup from deep link query param (e.g. /update?editor=mood).
+  // Gated on isDataLoaded so that editor captures current values, not initial empty defaults.
   const [searchParams] = useSearchParams();
+  const hasAutoOpenedRef = useRef(false);
   useEffect(() => {
+    if (!isDataLoaded || hasAutoOpenedRef.current) return;
     const editorParam = searchParams.get('editor');
     if (editorParam && ['battery', 'mood', 'song', 'thought'].includes(editorParam)) {
       setActiveEditor(editorParam as EditorTarget);
+      hasAutoOpenedRef.current = true;
     }
-  }, [searchParams]);
+  }, [isDataLoaded, searchParams]);
 
   const [battery, setBattery] = useState<SocialBattery | null>(null);
   const [mood, setMood] = useState<string[]>([]);
@@ -90,6 +95,7 @@ export default function UpdateCheckin() {
     if (activeSong) {
       setTrackId(activeSong.track_id || '');
     }
+    setIsDataLoaded(true);
   }, []);
 
   const batteryArchived = useMemo(
