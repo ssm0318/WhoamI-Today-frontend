@@ -10,7 +10,7 @@ const MAX_LENGTH = 100;
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onShare: () => void;
+  onShare: (value: string, visibility: ComponentVisibility) => void;
   value: string;
   onChange: (value: string) => void;
   visibility: ComponentVisibility;
@@ -46,7 +46,7 @@ export default function ThoughtEditor({
   const handleShare = useCallback(() => {
     onChange(draftValue);
     onVisibilityChange(draftVisibility);
-    onShare();
+    onShare(draftValue, draftVisibility);
   }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare]);
 
   return (

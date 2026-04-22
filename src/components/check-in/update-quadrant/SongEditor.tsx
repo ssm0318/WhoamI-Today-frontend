@@ -12,7 +12,7 @@ import EditorPopup from './EditorPopup';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onShare: () => void;
+  onShare: (trackId: string, visibility: ComponentVisibility) => void;
   trackId: string;
   onChange: (trackId: string) => void;
   visibility: ComponentVisibility;
@@ -66,7 +66,7 @@ export default function SongEditor({
   const handleShare = useCallback(() => {
     onChange(draftTrackId);
     onVisibilityChange(draftVisibility);
-    onShare();
+    onShare(draftTrackId, draftVisibility);
   }, [draftTrackId, draftVisibility, onChange, onVisibilityChange, onShare]);
 
   return (

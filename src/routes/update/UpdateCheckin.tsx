@@ -189,11 +189,78 @@ export default function UpdateCheckin() {
     setActiveEditor(null);
   }, []);
 
-  const handleEditorShare = useCallback(() => {
-    setActiveEditor(null);
-    // Use rAF to ensure React has committed the state update from the editor
-    requestAnimationFrame(() => doSave());
-  }, [doSave]);
+  const handleThoughtShare = useCallback(
+    (nextThought: string, nextThoughtVis: ComponentVisibility) => {
+      // Commit these first so save reads the latest values.
+      setThought(nextThought);
+      setThoughtVis(nextThoughtVis);
+      setActiveEditor(null);
+      requestAnimationFrame(() => {
+        const s = stateRef.current;
+        stateRef.current = {
+          ...s,
+          thought: nextThought,
+          thoughtVis: nextThoughtVis,
+        };
+        doSave();
+      });
+    },
+    [doSave],
+  );
+
+  const handleBatteryShare = useCallback(
+    (nextBattery: SocialBattery | null, nextBatteryVis: ComponentVisibility) => {
+      setBattery(nextBattery);
+      setBatteryVis(nextBatteryVis);
+      setActiveEditor(null);
+      requestAnimationFrame(() => {
+        const s = stateRef.current;
+        stateRef.current = {
+          ...s,
+          battery: nextBattery,
+          batteryVis: nextBatteryVis,
+        };
+        doSave();
+      });
+    },
+    [doSave],
+  );
+
+  const handleMoodShare = useCallback(
+    (nextMood: string[], nextMoodVis: ComponentVisibility) => {
+      setMood(nextMood);
+      setMoodVis(nextMoodVis);
+      setActiveEditor(null);
+      requestAnimationFrame(() => {
+        const s = stateRef.current;
+        stateRef.current = {
+          ...s,
+          mood: nextMood,
+          moodVis: nextMoodVis,
+        };
+        doSave();
+      });
+    },
+    [doSave],
+  );
+
+  const handleSongShare = useCallback(
+    (nextTrackId: string, nextSongVis: ComponentVisibility) => {
+      setTrackId(nextTrackId);
+      setSongVis(nextSongVis);
+      setActiveEditor(null);
+      requestAnimationFrame(() => {
+        const s = stateRef.current;
+        stateRef.current = {
+          ...s,
+          trackId: nextTrackId,
+          songVis: nextSongVis,
+        };
+        doSave();
+      });
+    },
+    [doSave],
+  );
 
   return (
     <MainScrollContainer>
@@ -312,7 +379,7 @@ export default function UpdateCheckin() {
       <BatteryEditor
         isOpen={activeEditor === 'battery'}
         onClose={handleEditorDismiss}
-        onShare={handleEditorShare}
+        onShare={handleBatteryShare}
         value={battery}
         onChange={setBattery}
         visibility={effectiveBatteryVis}
@@ -321,7 +388,7 @@ export default function UpdateCheckin() {
       <MoodEditor
         isOpen={activeEditor === 'mood'}
         onClose={handleEditorDismiss}
-        onShare={handleEditorShare}
+        onShare={handleMoodShare}
         value={mood}
         onChange={setMood}
         visibility={effectiveMoodVis}
@@ -330,7 +397,7 @@ export default function UpdateCheckin() {
       <SongEditor
         isOpen={activeEditor === 'song'}
         onClose={handleEditorDismiss}
-        onShare={handleEditorShare}
+        onShare={handleSongShare}
         trackId={trackId}
         onChange={setTrackId}
         visibility={effectiveSongVis}
@@ -339,7 +406,7 @@ export default function UpdateCheckin() {
       <ThoughtEditor
         isOpen={activeEditor === 'thought'}
         onClose={handleEditorDismiss}
-        onShare={handleEditorShare}
+        onShare={handleThoughtShare}
         value={thought}
         onChange={setThought}
         visibility={effectiveThoughtVis}

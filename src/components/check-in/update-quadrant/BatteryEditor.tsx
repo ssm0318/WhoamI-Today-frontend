@@ -8,7 +8,7 @@ import EditorPopup from './EditorPopup';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onShare: () => void;
+  onShare: (value: SocialBattery | null, visibility: ComponentVisibility) => void;
   value: SocialBattery | null;
   onChange: (value: SocialBattery | null) => void;
   visibility: ComponentVisibility;
@@ -40,7 +40,7 @@ export default function BatteryEditor({
   const handleShare = useCallback(() => {
     onChange(draftValue);
     onVisibilityChange(draftVisibility);
-    onShare();
+    onShare(draftValue, draftVisibility);
   }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare]);
 
   return (

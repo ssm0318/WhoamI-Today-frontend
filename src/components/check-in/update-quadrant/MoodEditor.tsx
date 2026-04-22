@@ -11,7 +11,7 @@ const MAX_MOOD_EMOJIS = 5;
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onShare: () => void;
+  onShare: (value: string[], visibility: ComponentVisibility) => void;
   value: string[];
   onChange: (value: string[]) => void;
   visibility: ComponentVisibility;
@@ -56,7 +56,7 @@ export default function MoodEditor({
   const handleShare = useCallback(() => {
     onChange(draftValue);
     onVisibilityChange(draftVisibility);
-    onShare();
+    onShare(draftValue, draftVisibility);
   }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare]);
 
   return (
