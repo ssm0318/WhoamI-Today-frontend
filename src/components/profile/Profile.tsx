@@ -24,7 +24,9 @@ import MoreAboutBottomSheet from './more-about-bottom-sheet/MoreAboutBottomSheet
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
 import PinnedPostsSection from './pinned-posts-section/PinnedPostsSection';
 import BioPlaceholder from './placeholders/BioPlaceholder';
+import InterestPlaceholder from './placeholders/InterestPlaceholder';
 import PronounPlaceholder from './placeholders/PronounPlaceholder';
+import PronounsBioPlaceholder from './placeholders/PronounsBioPlaceholder';
 
 interface ProfileProps {
   user?: UserProfile | MyProfile;
@@ -200,28 +202,31 @@ function Profile({ user }: ProfileProps) {
               </Layout.FlexRow>
             )}
           </Layout.FlexRow>
-          {/* pronouns (my page only — friend page shows inline above) */}
-          {isMyPage &&
-            (myProfile?.pronouns ? (
-              <Layout.FlexRow alignItems="center">
-                <Typo type="label-medium" color="DARK_GRAY">
-                  {myProfile.pronouns}
-                </Typo>
-              </Layout.FlexRow>
-            ) : (
-              <PronounPlaceholder />
-            ))}
-
-          {/* bio */}
+          {/* pronouns + bio (my page only — friend page shows inline above) */}
           {isMyPage ? (
-            !myProfile?.bio ? (
-              <BioPlaceholder />
+            !myProfile?.pronouns && !myProfile?.bio ? (
+              <PronounsBioPlaceholder />
             ) : (
-              <Layout.FlexCol w="100%">
-                <Typo type="body-medium" numberOfLines={2}>
-                  {myProfile?.bio}
-                </Typo>
-              </Layout.FlexCol>
+              <>
+                {myProfile?.pronouns ? (
+                  <Layout.FlexRow alignItems="center">
+                    <Typo type="label-medium" color="DARK_GRAY">
+                      {myProfile.pronouns}
+                    </Typo>
+                  </Layout.FlexRow>
+                ) : (
+                  <PronounPlaceholder />
+                )}
+                {myProfile?.bio ? (
+                  <Layout.FlexCol w="100%">
+                    <Typo type="body-medium" numberOfLines={2}>
+                      {myProfile.bio}
+                    </Typo>
+                  </Layout.FlexCol>
+                ) : (
+                  <BioPlaceholder />
+                )}
+              </>
             )
           ) : (
             showBio &&
@@ -233,6 +238,9 @@ function Profile({ user }: ProfileProps) {
               </Layout.FlexCol>
             )
           )}
+
+          {/* interests placeholder (my page only, when user has no interests) */}
+          {isMyPage && (myProfile?.user_interests ?? []).length === 0 && <InterestPlaceholder />}
 
           {/* See more details */}
           {featureFlags?.persona &&

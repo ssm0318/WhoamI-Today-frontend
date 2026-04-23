@@ -3,22 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import { SvgIcon, Typo } from '@design-system';
 import { PlaceholderWrapper } from './Placeholder';
 
-function InterestPlaceholder() {
+function PronounsBioPlaceholder() {
   const [t] = useTranslation('translation');
   const navigate = useNavigate();
 
-  const handleClickAddInterest = () => {
-    return navigate('/settings/edit-profile?tab=interests');
+  const handleClick = () => {
+    return navigate('/settings/edit-profile?tab=pronouns_bio');
   };
 
   return (
-    <PlaceholderWrapper onClick={handleClickAddInterest}>
+    <PlaceholderWrapper onClick={handleClick}>
       <SvgIcon name="add_default" size={14} />
       <Typo type="label-large" color="BLACK">
-        {t('settings.edit_profile.placeholders.interest.add')}
+        {t('settings.edit_profile.placeholders.pronouns_bio')}
       </Typo>
     </PlaceholderWrapper>
   );
 }
 
-export default InterestPlaceholder;
+export default PronounsBioPlaceholder;

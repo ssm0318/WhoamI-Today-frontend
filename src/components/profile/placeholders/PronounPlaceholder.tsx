@@ -9,7 +9,7 @@ function PronounPlaceholder() {
   const navigate = useNavigate();
 
   const handleClickAddPronoun = () => {
-    return navigate('/settings/edit-profile');
+    return navigate('/settings/edit-profile?tab=pronouns_bio');
   };
 
   return (

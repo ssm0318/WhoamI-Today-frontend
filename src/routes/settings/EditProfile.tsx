@@ -24,11 +24,13 @@ import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { MainScrollContainer } from '../Root';
 
 function EditProfile() {
-  type EditProfileTab = 'basic' | 'interests';
+  type EditProfileTab = 'pronouns_bio' | 'interests';
   const location = useLocation();
   const isFromSignUp = !!location.state?.fromSignUp;
   const [searchParams] = useSearchParams();
   const isFromResetPassword = searchParams.get('from_reset_password') === 'true';
+  const tabParam = searchParams.get('tab');
+  const initialTab: EditProfileTab = tabParam === 'interests' ? 'interests' : 'pronouns_bio';
   const [t] = useTranslation('translation', { keyPrefix: 'settings.edit_profile' });
   const { myProfile, updateMyProfile, openToast, featureFlags } = useBoundStore((state) => ({
     myProfile: state.myProfile,
@@ -101,7 +103,7 @@ function EditProfile() {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
   const [, setImageChanged] = useState(false);
-  const [activeTab, setActiveTab] = useState<EditProfileTab>('basic');
+  const [activeTab, setActiveTab] = useState<EditProfileTab>(initialTab);
   const [isSaving, setIsSaving] = useState(false);
   const showUploadOverlay = useDelayedVisible(isSaving);
 
@@ -313,21 +315,21 @@ function EditProfile() {
         <EditProfileTabRow w="100%">
           <EditProfileTabButton
             type="button"
-            $active={activeTab === 'basic'}
-            onClick={() => setActiveTab('basic')}
+            $active={activeTab === 'pronouns_bio'}
+            onClick={() => setActiveTab('pronouns_bio')}
           >
-            Basic Info
+            Pronouns/Bio
           </EditProfileTabButton>
           <EditProfileTabButton
             type="button"
             $active={activeTab === 'interests'}
             onClick={() => setActiveTab('interests')}
           >
-            Interests & Visibility
+            Interests
           </EditProfileTabButton>
         </EditProfileTabRow>
 
-        {activeTab === 'basic' ? (
+        {activeTab === 'pronouns_bio' ? (
           <>
             <ValidatedInput
               label={t('username')}
@@ -425,21 +427,20 @@ function EditProfile() {
 export default EditProfile;
 
 const EditProfileTabRow = styled(Layout.FlexRow)`
-  border-bottom: 1px solid ${Colors.LIGHT};
-  gap: 16px;
+  gap: 8px;
 `;
 
 const EditProfileTabButton = styled.button<{ $active: boolean }>`
-  background: none;
+  background: ${({ $active }) => ($active ? Colors.PRIMARY : Colors.LIGHT)};
+  color: ${({ $active }) => ($active ? Colors.WHITE : Colors.DARK_GRAY)};
   border: none;
-  padding: 12px 0;
+  border-radius: 999px;
+  padding: 8px 18px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  font-weight: ${({ $active }) => ($active ? 700 : 400)};
-  color: ${({ $active }) => ($active ? Colors.BLACK : Colors.MEDIUM_GRAY)};
-  border-bottom: 2px solid ${({ $active }) => ($active ? Colors.PRIMARY : 'transparent')};
-  margin-bottom: -1px;
+  font-size: 15px;
+  font-weight: ${({ $active }) => ($active ? 700 : 500)};
+  transition: background 0.15s ease, color 0.15s ease;
 `;

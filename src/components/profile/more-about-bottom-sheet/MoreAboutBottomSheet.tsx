@@ -30,7 +30,7 @@ function MoreAboutBottomSheet({
 
   const handleClickEdit = () => {
     onClose();
-    navigate('/settings/edit-profile');
+    navigate('/settings/edit-profile?tab=interests');
   };
 
   const showChips = isMyPage || !user?.interests_friends_only;

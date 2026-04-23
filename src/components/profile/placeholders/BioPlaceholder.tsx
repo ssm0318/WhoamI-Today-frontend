@@ -8,7 +8,7 @@ function BioPlaceholder() {
   const navigate = useNavigate();
 
   const handleClickAddBio = () => {
-    return navigate('/settings/edit-profile');
+    return navigate('/settings/edit-profile?tab=pronouns_bio');
   };
 
   return (

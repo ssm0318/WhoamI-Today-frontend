@@ -1,7 +1,9 @@
+import { MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
+import MyCheckInCard from '@components/check-in/my-check-in-card/MyCheckInCard';
 import { Z_INDEX } from '@constants/layout';
 import {
   DAILY_SURVEY_URL_EN,
@@ -15,6 +17,7 @@ import {
 } from '@constants/url';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
+import { useBoundStore } from '@stores/useBoundStore';
 
 const SIDE_MENU_LIST = [{ key: 'settings', path: '/settings' }];
 
@@ -27,6 +30,7 @@ function SideMenu({ closeSideMenu }: Props) {
   const [t, i18n] = useTranslation('translation', { keyPrefix: 'home.header.side_menu' });
   const navigate = useNavigate();
   const postMessage = usePostAppMessage();
+  const myProfile = useBoundStore((state) => state.myProfile);
 
   const isUSParticipant = true;
 
@@ -36,6 +40,16 @@ function SideMenu({ closeSideMenu }: Props) {
 
   const handleClickDimmed = () => {
     closeSideMenu();
+  };
+
+  const handleCardInteract = () => {
+    closeSideMenu();
+  };
+
+  const handleClickEditProfile = (e: MouseEvent) => {
+    e.stopPropagation();
+    closeSideMenu();
+    navigate('/settings/edit-profile');
   };
 
   const handleClickKakaoInquiry = () => {
@@ -112,8 +126,26 @@ function SideMenu({ closeSideMenu }: Props) {
     <Layout.Absolute t={0} l={0} r={0} b={0} z={Z_INDEX.MODAL_CONTAINER}>
       <Layout.Absolute w="100%" h="100%" bgColor="DIM" onClick={handleClickDimmed} />
       <Layout.Absolute r={0} w={250} h="100%" bgColor="WHITE">
-        <Layout.FlexCol pt={56} pl={24}>
+        <Layout.FlexCol pt={20} pl={24}>
           <SvgIcon name="close" color="BLACK" size={24} onClick={handleClickDimmed} />
+          {myProfile && (
+            <Layout.FlexCol pt={16} pr={8} gap={8}>
+              <div onClick={handleCardInteract} role="presentation" style={{ cursor: 'pointer' }}>
+                <MyCheckInCard />
+              </div>
+              <Layout.FlexRow
+                gap={2}
+                alignItems="center"
+                onClick={handleClickEditProfile}
+                style={{ cursor: 'pointer', paddingLeft: 4 }}
+              >
+                <SvgIcon name="edit_filled" fill="DARK_GRAY" size={12} />
+                <Typo type="label-medium" color="DARK_GRAY" underline>
+                  {t('edit_profile')}
+                </Typo>
+              </Layout.FlexRow>
+            </Layout.FlexCol>
+          )}
           <Layout.FlexCol gap={12} pt={30}>
             {SIDE_MENU_LIST.map((menu) => (
               <button type="button" key={menu.key} onClick={handleClickMenu(menu.path)}>
