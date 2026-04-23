@@ -31,14 +31,26 @@ interface TypingEvent {
   username: string;
 }
 
+interface FriendshipBrokenEvent {
+  action: 'friendship_broken';
+  broken_by: number;
+}
+
 interface Props {
   userId: number | undefined;
   onMessage: (msg: PostChatMessageRes) => void;
   onReaction?: (data: ReactionEvent) => void;
   onTyping?: (data: TypingEvent) => void;
+  onFriendshipBroken?: (data: FriendshipBrokenEvent) => void;
 }
 
-export function useChatSocketProvider({ userId, onMessage, onReaction, onTyping }: Props) {
+export function useChatSocketProvider({
+  userId,
+  onMessage,
+  onReaction,
+  onTyping,
+  onFriendshipBroken,
+}: Props) {
   const socketRef = useRef<WebSocket>();
   const reconnectAttempts = useRef(0);
   const reconnectTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -61,6 +73,8 @@ export function useChatSocketProvider({ userId, onMessage, onReaction, onTyping 
           onReaction?.(data);
         } else if (data.action === 'typing') {
           onTyping?.(data);
+        } else if (data.action === 'friendship_broken') {
+          onFriendshipBroken?.(data);
         } else {
           onMessage(data);
         }
@@ -81,7 +95,7 @@ export function useChatSocketProvider({ userId, onMessage, onReaction, onTyping 
 
       socketRef.current = socket;
     },
-    [onMessage, onReaction, onTyping],
+    [onFriendshipBroken, onMessage, onReaction, onTyping],
   );
 
   useEffect(() => {

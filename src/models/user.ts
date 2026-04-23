@@ -46,6 +46,7 @@ export interface UserProfile extends User, UserFollowStatus {
   received_friend_request_from: boolean;
   sent_friend_request_to: boolean;
   sent_chat_request_to: boolean;
+  received_chat_request_from: number | null;
   check_in: CheckInBase;
   mutuals: User[];
   mutual_interests?: MutualTrait[];

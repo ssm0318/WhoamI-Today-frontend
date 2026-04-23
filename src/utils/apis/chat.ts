@@ -41,6 +41,14 @@ export const markMessagesRead = async (userId: number) => {
   return axios.post(`/chat/user/${userId}/mark-read/`);
 };
 
+export const sendChatRequest = async (requesteeId: number) => {
+  return axios.post('/chat/requests/', { requestee_id: requesteeId });
+};
+
+export const respondToChatRequest = async (requestId: number, accepted: boolean) => {
+  return axios.patch(`/chat/requests/${requestId}/respond/`, { accepted });
+};
+
 export const markGroupMessagesRead = async (roomId: number) => {
   return axios.post(`/chat/groups/${roomId}/mark-read/`);
 };

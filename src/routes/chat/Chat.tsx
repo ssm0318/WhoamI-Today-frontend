@@ -8,6 +8,7 @@ import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
 import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
 import ChatMessageInput from '@components/chat/chat-message-input/ChatMessageInput';
 import ChatMessageItem from '@components/chat/chat-message-item/ChatMessageItem';
+import ChatRequestBar from '@components/chat/chat-request-bar/ChatRequestBar';
 import SubHeader from '@components/sub-header/SubHeader';
 import { CHAT_MESSAGE_INPUT_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
@@ -21,6 +22,7 @@ import {
 import { useBoundStore } from '@stores/useBoundStore';
 import { getChatMessages, markMessagesRead } from '@utils/apis/chat';
 import { getMyProfile } from '@utils/apis/my';
+import { getUserProfile } from '@utils/apis/user';
 import { MainScrollContainer } from '../Root';
 import { useChatSocketProvider } from './_hooks/useChatSocketProvider';
 
@@ -40,21 +42,42 @@ function Chat() {
   const [firstLoad, setFirstLoad] = useState(true);
   const [replyTarget, setReplyTarget] = useState<ChatMessage | null>(null);
 
+  const [areFriends, setAreFriends] = useState<boolean | null>(null);
+  const [sentChatRequest, setSentChatRequest] = useState(false);
+  const [receivedChatRequestId, setReceivedChatRequestId] = useState<number | null>(null);
+
   const currentUser = useBoundStore((state) => state.myProfile);
 
-  const fetchMessages = useCallback(async (_userId: number) => {
-    const { next, results, username: _username } = await getChatMessages(_userId);
-    setUsername(_username ?? '');
-    if (!results) {
-      setNextUrl(next);
-      setMessages([]);
-      setFirstLoad(false);
-      return;
+  const loadRelationship = useCallback(async (profileUsername: string) => {
+    if (!profileUsername) return;
+    try {
+      const profile = await getUserProfile(profileUsername);
+      setAreFriends(profile.are_friends === true);
+      setSentChatRequest(profile.sent_chat_request_to === true);
+      setReceivedChatRequestId(profile.received_chat_request_from ?? null);
+    } catch {
+      setAreFriends(true);
     }
-    setMessages([...results].reverse());
-    setNextUrl(next);
-    setFirstLoad(false);
   }, []);
+
+  const fetchMessages = useCallback(
+    async (_userId: number) => {
+      const { next, results, username: _username } = await getChatMessages(_userId);
+      const resolvedUsername = _username ?? '';
+      setUsername(resolvedUsername);
+      if (resolvedUsername) loadRelationship(resolvedUsername);
+      if (!results) {
+        setNextUrl(next);
+        setMessages([]);
+        setFirstLoad(false);
+        return;
+      }
+      setMessages([...results].reverse());
+      setNextUrl(next);
+      setFirstLoad(false);
+    },
+    [loadRelationship],
+  );
 
   useEffect(() => {
     if (!userId) return;
@@ -178,12 +201,21 @@ function Chat() {
     typingTimerRef.current = setTimeout(() => setIsOpponentTyping(false), 3000);
   }, []);
 
+  const onFriendshipBroken = useCallback(() => {
+    setAreFriends(false);
+    setSentChatRequest(false);
+    setReceivedChatRequestId(null);
+  }, []);
+
   const { sendTyping } = useChatSocketProvider({
     userId: userId ? Number(userId) : undefined,
     onMessage: onSocketMessage,
     onReaction: onSocketReaction,
     onTyping: onSocketTyping,
+    onFriendshipBroken,
   });
+
+  const showRequestBar = areFriends === false;
 
   return (
     <MainScrollContainer scrollRef={scrollRef}>
@@ -197,7 +229,12 @@ function Chat() {
         )}
         {!firstLoad && refinedMessages.length > 0 && (
           <SwipeLayoutList>
-            <Layout.FlexCol w="100%" gap={15} p={10} mb={CHAT_MESSAGE_INPUT_HEIGHT}>
+            <Layout.FlexCol
+              w="100%"
+              gap={15}
+              p={10}
+              mb={showRequestBar ? 110 : CHAT_MESSAGE_INPUT_HEIGHT}
+            >
               <div ref={targetRef} />
               {isLoading && <Loader />}
               {refinedMessages.map((message) => (
@@ -248,13 +285,26 @@ function Chat() {
           </Layout.FlexRow>
         </Layout.Fixed>
       )}
-      <ChatMessageInput
-        userId={Number(userId)}
-        replyTarget={replyTarget}
-        onClearReply={() => setReplyTarget(null)}
-        onMessageSent={handleMessageSent}
-        onTyping={sendTyping}
-      />
+      {showRequestBar ? (
+        <ChatRequestBar
+          userId={Number(userId)}
+          sentRequest={sentChatRequest}
+          receivedRequestId={receivedChatRequestId}
+          onRequestSent={() => setSentChatRequest(true)}
+          onAccepted={() => {
+            if (username) loadRelationship(username);
+          }}
+          onDeclined={() => navigate(-1)}
+        />
+      ) : (
+        <ChatMessageInput
+          userId={Number(userId)}
+          replyTarget={replyTarget}
+          onClearReply={() => setReplyTarget(null)}
+          onMessageSent={handleMessageSent}
+          onTyping={sendTyping}
+        />
+      )}
     </MainScrollContainer>
   );
 }
