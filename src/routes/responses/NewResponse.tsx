@@ -5,12 +5,13 @@ import { Loader } from '@components/_common/loader/Loader.styled';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledNewResponsePrompt } from '@components/_common/prompt/PromptCard.styled';
-import VisibilityMultiSelect from '@components/note/visibility-multi-select/VisibilityMultiSelect';
+import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { markMissionCompleted } from '@components/share/MissionOfTheDay';
 import SubHeader from '@components/sub-header/SubHeader';
-import { Layout, TextArea, Typo } from '@design-system';
+import { TextArea, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
+import { ComponentVisibility } from '@models/checkIn';
 import { PostVisibility, Question } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getQuestionDetail, patchResponse, postResponse } from '@utils/apis/question';
@@ -88,9 +89,13 @@ function NewResponse() {
     setNewResponse(e.target.value);
   };
 
-  const handleChangeVisibility = (visibilities: PostVisibility[]) => {
-    setVisibilityList(visibilities);
+  const handleChangeVisibility = (visibility: ComponentVisibility) => {
+    setVisibilityList([visibility as unknown as PostVisibility]);
   };
+
+  const currentVisibility =
+    (visibilityList[0] as unknown as ComponentVisibility | undefined) ??
+    ComponentVisibility.ONLY_ME;
 
   const navigate = useNavigate();
   const handleClickCancel = () => {
@@ -106,9 +111,8 @@ function NewResponse() {
     if ((!questionId && !responseId) || isSubmitting) return;
 
     setIsSubmitting(true);
+    openToast({ message: t('question.response.posting') });
     try {
-      navigate('/my');
-      openToast({ message: t('question.response.posting') });
       const { id: newResponseId } = !isEdit
         ? await postResponse({
             question_id: Number(questionId),
@@ -125,12 +129,13 @@ function NewResponse() {
         markMissionCompleted();
       }
 
+      navigate(`/responses/${newResponseId}`, { state: 'new' });
       openToast({
         message: t(isEdit ? 'question.response.edited' : 'question.response.posted'),
         actionText: t('question.response.view'),
       });
-
-      navigate(`/responses/${newResponseId}`, { state: 'new' });
+    } catch {
+      openToast({ message: t('question.response.temporary_error') });
     } finally {
       setIsSubmitting(false);
     }
@@ -192,21 +197,7 @@ function NewResponse() {
 
         {/** visibility options */}
         <FlexRow pt={15} w="100%" justifyContent="flex-end">
-          <Layout.FlexCol gap={2} bgColor="LIGHT" p={6} rounded={8}>
-            <Typo type="label-medium" bold mb={4} fontSize={11}>
-              {t('access_setting.title')}
-            </Typo>
-            <VisibilityMultiSelect
-              selectedVisibilities={visibilityList}
-              onChange={handleChangeVisibility}
-              availableVisibilities={[
-                PostVisibility.ONLY_ME,
-                PostVisibility.CLOSE_FRIENDS,
-                PostVisibility.FRIENDS,
-                PostVisibility.PUBLIC,
-              ]}
-            />
-          </Layout.FlexCol>
+          <VisibilityToggle value={currentVisibility} onChange={handleChangeVisibility} />
         </FlexRow>
         <FlexRow w="100%" justifyContent="flex-end" pt={10}>
           <Typo type="label-medium" color="MEDIUM_GRAY" mt={8}>

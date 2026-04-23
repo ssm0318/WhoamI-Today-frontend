@@ -61,6 +61,18 @@ export const ArchivedBadge = styled.div`
   border-radius: 4px;
 `;
 
+export const VisibilityBadge = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: ${Colors.LIGHT};
+  color: ${Colors.DARK_GRAY};
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+`;
+
 export const QuadrantLabel = styled.span`
   font-size: 14px;
   color: ${Colors.MEDIUM_GRAY};

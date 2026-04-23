@@ -7,6 +7,7 @@ import BatteryEditor from '@components/check-in/update-quadrant/BatteryEditor';
 import MoodEditor from '@components/check-in/update-quadrant/MoodEditor';
 import SongEditor from '@components/check-in/update-quadrant/SongEditor';
 import ThoughtEditor from '@components/check-in/update-quadrant/ThoughtEditor';
+import { getVisibilityLabel } from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { SocialBatteryChipAssets } from '@components/profile/social-batter-chip/SocialBatteryChip.contants';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
@@ -16,7 +17,13 @@ import { ComponentVisibility, DEFAULT_VISIBILITY, SocialBattery } from '@models/
 import { useBoundStore } from '@stores/useBoundStore';
 import { getActiveSong, postCheckIn, postSong } from '@utils/apis/checkIn';
 import { MainScrollContainer } from '../Root';
-import { ArchivedBadge, GridContainer, QuadrantCard, QuadrantLabel } from './UpdateCheckin.styled';
+import {
+  ArchivedBadge,
+  GridContainer,
+  QuadrantCard,
+  QuadrantLabel,
+  VisibilityBadge,
+} from './UpdateCheckin.styled';
 
 type EditorTarget = 'battery' | 'mood' | 'song' | 'thought' | null;
 
@@ -284,7 +291,13 @@ export default function UpdateCheckin() {
           $isArchived={batteryArchived}
           onClick={() => setActiveEditor('battery')}
         >
-          {batteryArchived && <ArchivedBadge>Only Me</ArchivedBadge>}
+          {battery ? (
+            effectiveBatteryVis === ComponentVisibility.ONLY_ME ? (
+              <ArchivedBadge>Only Me</ArchivedBadge>
+            ) : (
+              <VisibilityBadge>{getVisibilityLabel(effectiveBatteryVis)}</VisibilityBadge>
+            )
+          ) : null}
           {battery ? (
             <Layout.FlexCol alignItems="center" gap={6}>
               <EmojiItem
@@ -314,7 +327,13 @@ export default function UpdateCheckin() {
           $isArchived={moodArchived}
           onClick={() => setActiveEditor('mood')}
         >
-          {moodArchived && <ArchivedBadge>Only Me</ArchivedBadge>}
+          {mood.length > 0 ? (
+            effectiveMoodVis === ComponentVisibility.ONLY_ME ? (
+              <ArchivedBadge>Only Me</ArchivedBadge>
+            ) : (
+              <VisibilityBadge>{getVisibilityLabel(effectiveMoodVis)}</VisibilityBadge>
+            )
+          ) : null}
           {mood.length > 0 ? (
             <>
               <Layout.FlexRow gap={4} alignItems="center">
@@ -340,7 +359,13 @@ export default function UpdateCheckin() {
           $isArchived={songArchived}
           onClick={() => setActiveEditor('song')}
         >
-          {songArchived && <ArchivedBadge>Only Me</ArchivedBadge>}
+          {trackId ? (
+            effectiveSongVis === ComponentVisibility.ONLY_ME ? (
+              <ArchivedBadge>Only Me</ArchivedBadge>
+            ) : (
+              <VisibilityBadge>{getVisibilityLabel(effectiveSongVis)}</VisibilityBadge>
+            )
+          ) : null}
           {trackId && trackData ? (
             <Layout.FlexCol w="100%" alignItems="center" gap={6}>
               {trackData.album?.images?.[0]?.url && (
@@ -371,7 +396,13 @@ export default function UpdateCheckin() {
           $isArchived={thoughtArchived}
           onClick={() => setActiveEditor('thought')}
         >
-          {thoughtArchived && <ArchivedBadge>Only Me</ArchivedBadge>}
+          {thought ? (
+            effectiveThoughtVis === ComponentVisibility.ONLY_ME ? (
+              <ArchivedBadge>Only Me</ArchivedBadge>
+            ) : (
+              <VisibilityBadge>{getVisibilityLabel(effectiveThoughtVis)}</VisibilityBadge>
+            )
+          ) : null}
           {thought ? (
             <Layout.FlexCol w="100%" alignItems="center" gap={4} ph={4}>
               <Typo type="body-medium" numberOfLines={3} textAlign="center">
