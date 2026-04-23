@@ -20,6 +20,7 @@ interface ResponseItemProps {
   isMyPage?: boolean;
   displayType?: POST_DP_TYPE;
   refresh?: () => void;
+  emojiPickerPortalId?: string;
 }
 
 function ResponseItem({
@@ -27,6 +28,7 @@ function ResponseItem({
   isMyPage = false,
   displayType = 'LIST',
   refresh,
+  emojiPickerPortalId,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
   const [tAccess] = useTranslation('translation', { keyPrefix: 'access_setting' });
@@ -93,7 +95,7 @@ function ResponseItem({
         p={WRAPPER_PADDING}
         rounded={12}
         outline="LIGHT"
-        w={displayType === 'DETAIL' || displayType === 'FEED' ? '100%' : RESPONSE_WIDTH}
+        w="100%"
         onClick={handleClickDetail}
         style={{
           overflow: displayType === 'DETAIL' ? 'visible' : undefined,
@@ -239,6 +241,7 @@ function ResponseItem({
             showComments={() => setBottomSheet(true)}
             setInputFocus={() => setInputFocus(true)}
             displayType={displayType}
+            emojiPickerPortalId={emojiPickerPortalId}
           />
         </Layout.FlexCol>
       </Layout.FlexRow>

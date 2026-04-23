@@ -13,7 +13,7 @@ import { Response } from '@models/post';
 import axios from '@utils/apis/axios';
 import { readUserAllResponses } from '@utils/apis/user';
 import MoreResponseButton from '../more-response-button/MoreResponseButton';
-import ResponseItem from '../response-item/ResponseItem';
+import ResponseItem, { RESPONSE_WIDTH } from '../response-item/ResponseItem';
 import ResponseLoader from '../response-loader/ResponseLoader';
 import * as S from './ResponseSection.styled';
 
@@ -112,16 +112,16 @@ function ResponseSection({ username }: ResponseSectionProps) {
                   />
                 </Layout.FlexRow>
               ) : (
-                responses.results
-                  ?.slice(0, RESPONSE_VIEW_MAX_COUNT)
-                  .map((response) => (
+                responses.results?.slice(0, RESPONSE_VIEW_MAX_COUNT).map((response) => (
+                  <Layout.FlexRow key={response.id} w={RESPONSE_WIDTH} style={{ flex: '0 0 auto' }}>
                     <ResponseItem
-                      key={response.id}
                       response={response}
                       isMyPage={!username}
                       refresh={refreshResponses}
+                      emojiPickerPortalId="response_section_emoji_picker"
                     />
-                  ))
+                  </Layout.FlexRow>
+                ))
               )}
             </Layout.FlexRow>
           </Layout.FlexRow>

@@ -19,6 +19,7 @@ type PostFooterProps = {
   displayType?: POST_DP_TYPE;
   showComments: () => void;
   setInputFocus: () => void;
+  emojiPickerPortalId?: string;
 };
 
 function PostFooter({
@@ -27,6 +28,7 @@ function PostFooter({
   displayType = 'LIST',
   showComments,
   setInputFocus,
+  emojiPickerPortalId,
 }: PostFooterProps) {
   const { comment_count, type, current_user_reaction_id_list, like_reaction_user_sample } = post;
   const navigate = useNavigate();
@@ -192,11 +194,7 @@ function PostFooter({
       <EmojiPicker
         postId={post.id}
         postType={post.type}
-        createPortalId={
-          displayType === 'LIST' && post.type === 'Response'
-            ? 'response_section_emoji_picker'
-            : undefined
-        }
+        createPortalId={emojiPickerPortalId}
         selectedEmojis={myEmojiList}
         onSelectEmoji={handleSelectEmoji}
         onUnselectEmoji={handleUnselectEmoji}

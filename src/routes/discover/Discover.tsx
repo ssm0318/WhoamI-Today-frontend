@@ -193,7 +193,7 @@ function Discover() {
             <ResponseItem
               key={`response-${item.body.id}`}
               response={item.body}
-              displayType="FEED"
+              displayType="LIST"
             />
           );
         case 'Note':
