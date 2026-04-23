@@ -151,6 +151,7 @@
                 "explore_friends": "Add Friends",
                 "questions": "Questions",
                 "settings": "Settings",
+                "edit_profile": "Edit Profile",
                 "inquiry": "Contact & Inquiries",
                 "kakao_inquiry": "Kakaotalk 1:1 Open Chat",
                 "discord_inquiry": "Discord",
@@ -184,7 +185,8 @@
             "posting": "Posting...",
             "posted": "Posted. 🎉",
             "edited": "Updated. 🎉",
-            "view": "View"
+            "view": "View",
+            "temporary_error": "A temporary error occurred. Please try again later."
         },
         "send": {
             "ask": "Ask",
@@ -416,7 +418,16 @@
         "no_messages": "No messages yet.",
         "refresh": "Refresh",
         "list_title": "Chats",
-        "no_rooms": "No conversations yet."
+        "no_rooms": "No conversations yet.",
+        "request": {
+            "send": "Send chat request",
+            "sent": "Requested",
+            "sent_hint": "You'll be able to chat once they accept.",
+            "accept": "Accept",
+            "decline": "Decline",
+            "received_hint": "They sent you a chat request.",
+            "not_friends_hint": "You need to send a chat request first since you aren't friends."
+        }
     },
     "settings": {
         "title": "Settings",
@@ -487,13 +498,14 @@
             "placeholders": {
                 "bio": "Bio",
                 "pronoun": "Pronoun",
+                "pronouns_bio": "Pronouns/bio",
                 "persona": {
                     "my": "My",
                     "WIT": "WIT",
                     "persona": "Persona"
                 },
                 "interest": {
-                    "add": "Add your interests"
+                    "add": "Interests"
                 },
                 "social_battery": "My Social Battery Level",
                 "music": "My song",

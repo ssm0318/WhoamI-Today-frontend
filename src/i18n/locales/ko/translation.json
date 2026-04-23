@@ -151,6 +151,7 @@
         "explore_friends": "친구 추가",
         "questions": "전체 질문",
         "settings": "설정",
+        "edit_profile": "프로필 편집",
         "inquiry": "문의 & 연락처",
         "kakao_inquiry": "카카오톡 1:1 오픈채팅",
         "discord_inquiry": "디스코드",
@@ -184,7 +185,8 @@
       "posting": "답변을 업로드 중입니다...",
       "posted": "업로드 완료 🎉",
       "edited": "수정 완료 🎉",
-      "view": "보기"
+      "view": "보기",
+      "temporary_error": "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
     },
     "send": {
       "ask": "보내기",
@@ -413,7 +415,16 @@
     "no_messages": "아직 메시지가 없습니다.",
     "refresh": "새로고침",
     "list_title": "Chats",
-    "no_rooms": "아직 대화가 없습니다."
+    "no_rooms": "아직 대화가 없습니다.",
+    "request": {
+      "send": "채팅 요청 보내기",
+      "sent": "요청됨",
+      "sent_hint": "상대방이 수락하면 대화할 수 있어요.",
+      "accept": "수락",
+      "decline": "거절",
+      "received_hint": "상대방이 채팅을 요청했어요.",
+      "not_friends_hint": "친구가 아니어서 먼저 채팅 요청을 보내야 해요."
+    }
   },
   "settings": {
     "title": "설정",
@@ -483,13 +494,14 @@
       "placeholders": {
         "bio": "소개",
         "pronoun": "대명사",
+        "pronouns_bio": "대명사/소개",
         "persona": {
           "my": "나의",
           "WIT": "WIT",
           "persona": "페르소나"
         },
         "interest": {
-          "add": "관심사를 추가해 보세요"
+          "add": "관심사"
         },
         "social_battery": "나의 소셜 배터리 수준",
         "music": "내 노래",
