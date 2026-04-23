@@ -9,9 +9,7 @@ import { Typo } from '@design-system';
 import { Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { reportContent } from '@utils/apis/common';
-import { getMyProfile } from '@utils/apis/my';
 import { deleteNote } from '@utils/apis/note';
-import { pinPost, unpinPost } from '@utils/apis/pin';
 import { deleteResponse } from '@utils/apis/responses';
 
 interface PostMoreModalProps {
@@ -38,8 +36,6 @@ function PostMoreModal({
   const [showAlert, setShowAlert] = useState<AlertProps>();
 
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
-
-  const { current_user_pin_id } = post;
 
   const navigate = useNavigate();
 
@@ -116,32 +112,6 @@ function PostMoreModal({
     closeMoreModal();
   };
 
-  const handleClickPinPost = async () => {
-    try {
-      await pinPost(post.type, post.id);
-      await getMyProfile();
-      openToast({ message: t('pin.success_title') });
-      onConfirmReport?.();
-      closeMoreModal();
-    } catch (error) {
-      openToast({ message: t('pin.error_title') });
-    }
-  };
-
-  const handleClickUnpinPost = async () => {
-    try {
-      if (current_user_pin_id) {
-        await unpinPost(current_user_pin_id);
-        await getMyProfile();
-        openToast({ message: t('unpin.success_title') });
-        onConfirmReport?.();
-        closeMoreModal();
-      }
-    } catch (error) {
-      openToast({ message: t('unpin.error_title') });
-    }
-  };
-
   return (
     <>
       <BottomMenuDialog visible={isVisible} onClickClose={closeMoreModal}>
@@ -150,15 +120,6 @@ function PostMoreModal({
             <button type="button" onClick={handleClickEditPost}>
               <Typo type="button-large">{t('menu.edit')}</Typo>
             </button>
-            {post.pinned ? (
-              <button type="button" onClick={handleClickUnpinPost}>
-                <Typo type="button-large">{t('menu.unpin')}</Typo>
-              </button>
-            ) : (
-              <button type="button" onClick={handleClickPinPost}>
-                <Typo type="button-large">{t('menu.pin')}</Typo>
-              </button>
-            )}
             <button type="button" onClick={handleClickDeletePost}>
               <Typo type="button-large">{t('menu.delete')}</Typo>
             </button>
