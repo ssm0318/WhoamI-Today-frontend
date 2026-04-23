@@ -52,14 +52,14 @@ function PhotoOfTheDayFlow() {
     if (!croppedImg || isPosting) return;
     setIsPosting(true);
     try {
-      await postNote({
+      const { id: newNoteId } = await postNote({
         content: caption,
         images: [croppedImg],
         visibility: [visibility as unknown as PostVisibility],
         share_type: ShareType.PHOTO_OF_THE_DAY,
       });
+      navigate(`/notes/${newNoteId}`, { state: { new: true } });
       openToast({ message: 'Photo posted!' });
-      navigate('/share');
     } catch {
       openToast({ message: 'Failed to post' });
     } finally {
