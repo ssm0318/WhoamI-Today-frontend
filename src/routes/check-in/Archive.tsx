@@ -191,7 +191,10 @@ function Archive() {
     <MainContainer>
       <SubHeader title={t('title')} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" ph={DEFAULT_MARGIN}>
-        {/* Segmented control — styled per the 8px chip rules */}
+        {/* Segmented control — filled pill buttons that read as navigation
+            distinct from the surrounding check-in content cards. All and
+            Pinned share the same visual treatment; only the active state
+            (purple fill) marks which tab is currently selected. */}
         <Layout.FlexRow w="100%" mt={12} mb={14} gap={6}>
           <SegmentButton active={tab === 'all'} onClick={() => setTab('all')}>
             {t('segmented.all')} ({archivedCount})
@@ -279,19 +282,24 @@ interface SegmentButtonProps {
 }
 
 function SegmentButton({ active, onClick, children }: SegmentButtonProps) {
+  // Ghost pill — subtle light-gray fill for the inactive state, near-black
+  // fill for the active state. Distinct from the surrounding check-in
+  // cards (which use the white-bg + gray-outline 8px-chip pattern), and
+  // All and Pinned share the same tone; the active fill marks the
+  // currently-selected tab.
   return (
     <button
       type="button"
       onClick={onClick}
       style={{
-        borderRadius: 8,
-        padding: '4px 8px',
+        borderRadius: 999,
+        padding: '4px 12px',
         fontSize: 14,
         lineHeight: 1.4,
-        fontWeight: active ? 600 : 400,
-        border: `1px solid ${active ? Colors.PRIMARY : '#D9D9D9'}`,
-        background: active ? '#F3E8FF' : Colors.WHITE,
-        color: active ? Colors.PRIMARY : Colors.DARK_GRAY,
+        fontWeight: active ? 600 : 500,
+        border: 'none',
+        background: active ? Colors.DARK : '#F5F5F5',
+        color: active ? Colors.WHITE : Colors.PRIMARY,
         cursor: 'pointer',
       }}
     >
