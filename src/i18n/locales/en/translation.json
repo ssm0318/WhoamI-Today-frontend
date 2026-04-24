@@ -809,6 +809,8 @@
     },
     "archive": {
         "title": "Archive",
+        "today": "Today",
+        "yesterday": "Yesterday",
         "segmented": {
             "all": "All",
             "pinned": "Pinned"
@@ -817,7 +819,10 @@
             "all": "No archived check-ins yet. Check-ins move here after 12 hours or when you update them.",
             "pinned": "Pin check-ins from All to surface them on your profile."
         },
-        "end_of_feed": "That's everything."
+        "end_of_feed": "That's everything.",
+        "thought_modal": {
+            "close": "Close"
+        }
     },
     "check_in_edit": {
         "title": "Edit Check-In",

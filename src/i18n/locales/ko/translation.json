@@ -800,6 +800,8 @@
   },
   "archive": {
     "title": "보관함",
+    "today": "오늘",
+    "yesterday": "어제",
     "segmented": {
       "all": "전체",
       "pinned": "고정됨"
@@ -808,7 +810,10 @@
       "all": "아직 보관된 체크인이 없어요. 12시간이 지나거나 업데이트하면 여기로 이동돼요.",
       "pinned": "전체에서 체크인을 고정하면 프로필에 표시돼요."
     },
-    "end_of_feed": "마지막 기록이에요."
+    "end_of_feed": "마지막 기록이에요.",
+    "thought_modal": {
+      "close": "닫기"
+    }
   },
   "check_in_edit": {
     "title": "상태 수정",
