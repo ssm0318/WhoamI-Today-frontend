@@ -25,7 +25,11 @@ function CheckInArchiveChip() {
   const { archivedCount, pinnedCount } = useArchiveCounts();
 
   return (
-    <Layout.FlexRow gap={6} alignItems="center">
+    // 2px inter-segment gap so All Archived + Pinned read as a tight
+    // matched pair distinct from the "Most Recent Check-In" title to
+    // the left; the pair's far edge sits flush with the card's right
+    // padding thanks to the parent justify-content=space-between.
+    <Layout.FlexRow gap={2} alignItems="center">
       <Segment onClick={() => navigate('/check-in/archive?tab=all')}>
         {t('all')} ({archivedCount})
       </Segment>
