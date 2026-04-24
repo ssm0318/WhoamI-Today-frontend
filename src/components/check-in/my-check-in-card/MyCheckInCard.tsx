@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
 import MusicPlaceholder from '@components/profile/placeholders/MusicPlaceholder';
@@ -8,6 +9,7 @@ import SocialBatteryPlaceholder from '@components/profile/placeholders/SocialBat
 import ThoughtPlaceholder from '@components/profile/placeholders/ThoughtPlaceholder';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import { Layout, Typo } from '@design-system';
+import { useArchiveCounts } from '@hooks/useArchiveCounts';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -160,7 +162,26 @@ function MyCheckInCard() {
       ) : (
         <MusicPlaceholder />
       )}
+
+      <MyPinnedLink />
     </Container>
+  );
+}
+
+/**
+ * Own `📌 Pinned Check-ins (N)` link on the self-card at the top of the
+ * Friends feed. Mirrors the friend card layout so the row matches visually.
+ * Navigates to `/check-in/archive?tab=pinned` (own archive with pin
+ * controls) rather than the read-only `/users/<u>/check-in/pinned` path
+ * that FriendPinnedChip uses on friend cards.
+ */
+function MyPinnedLink() {
+  const { pinnedCount } = useArchiveCounts();
+  if (pinnedCount <= 0) return null;
+  return (
+    <Layout.FlexRow alignSelf="flex-start">
+      <FriendPinnedChip pinnedCount={pinnedCount} to="/check-in/archive?tab=pinned" />
+    </Layout.FlexRow>
   );
 }
 

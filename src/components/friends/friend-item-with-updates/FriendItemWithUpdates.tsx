@@ -350,7 +350,7 @@ function FriendItemWithUpdates({
           chip only surfaces friends who have pins visible to this viewer). */}
       {pinnedCount > 0 && (
         <Layout.FlexRow w="100%" alignSelf="flex-start">
-          <FriendPinnedChip username={username} pinnedCount={pinnedCount} />
+          <FriendPinnedChip pinnedCount={pinnedCount} to={`/users/${username}/check-in/pinned`} />
         </Layout.FlexRow>
       )}
 

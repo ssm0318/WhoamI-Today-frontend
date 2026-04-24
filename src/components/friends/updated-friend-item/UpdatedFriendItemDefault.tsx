@@ -52,7 +52,10 @@ function UpdatedFriendItemDefault({ user, isMyPage }: Props) {
               )}
               {pinnedCount > 0 && (
                 <Layout.FlexRow mt={4}>
-                  <FriendPinnedChip username={username} pinnedCount={pinnedCount} />
+                  <FriendPinnedChip
+                    pinnedCount={pinnedCount}
+                    to={`/users/${username}/check-in/pinned`}
+                  />
                 </Layout.FlexRow>
               )}
             </Layout.FlexCol>

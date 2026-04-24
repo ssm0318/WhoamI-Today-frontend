@@ -100,9 +100,14 @@ function PokeButton({ receiverId, componentType, initialPokeId }: Props) {
   return (
     <>
       <PokeContainer $isPoked={isPoked} onClick={handlePoke}>
-        <Typo type="label-large" color={isPoked ? 'MEDIUM_GRAY' : 'DARK_GRAY'}>
-          {label.text}
-        </Typo>
+        {/* ~10% lighter than DARK_GRAY/MEDIUM_GRAY via wrapper opacity —
+            keeps the palette key intact but softens the label visually
+            so it reads as a gentle prompt rather than a filled CTA. */}
+        <span style={{ opacity: 0.88 }}>
+          <Typo type="label-large" color={isPoked ? 'MEDIUM_GRAY' : 'DARK_GRAY'}>
+            {label.text}
+          </Typo>
+        </span>
         <Emoji unified={getUnifiedEmoji(label.emoji)} size={14} lazyLoad />
       </PokeContainer>
       <CommonDialog

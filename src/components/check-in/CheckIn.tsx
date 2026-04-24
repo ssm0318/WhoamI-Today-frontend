@@ -74,7 +74,10 @@ function CheckIn({ user }: CheckInProps) {
           ) : (
             friendUsername &&
             friendPinnedCount > 0 && (
-              <FriendPinnedChip username={friendUsername} pinnedCount={friendPinnedCount} />
+              <FriendPinnedChip
+                pinnedCount={friendPinnedCount}
+                to={`/users/${friendUsername}/check-in/pinned`}
+              />
             )
           )}
         </Layout.FlexRow>

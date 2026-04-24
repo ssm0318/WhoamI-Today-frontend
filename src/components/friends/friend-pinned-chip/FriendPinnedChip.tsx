@@ -4,28 +4,28 @@ import { useNavigate } from 'react-router-dom';
 import { SvgIcon, Typo } from '@design-system';
 
 interface Props {
-  username: string;
-  /** Viewer-visible pinned count from FriendListSerializer.pinned_count. */
+  /** Viewer-visible pinned count — hides the chip entirely when 0. */
   pinnedCount: number;
+  /** Navigation target on tap. Callers route to `/users/<u>/check-in/pinned`
+   *  for a friend, and `/check-in/archive?tab=pinned` for the viewer's own
+   *  self-card so the tap lands on the full-control archive screen. */
+  to: string;
 }
 
 /**
- * `📌 Pinned Check-ins (N)` inline link surfaced on each friend's card
- * and on the friend profile's Most Recent Check-In row.
+ * `📌 Pinned Check-ins (N)` inline link surfaced on friend cards, the
+ * friend profile's Most Recent Check-In row, and the viewer's self card
+ * at the top of the Friends feed.
  *
- * Rendered as a text link (no border/background, underlined label)
- * rather than a bordered chip so it doesn't compete visually with the
- * dense cluster of other pill-shaped affordances around it (battery,
- * mood, thought, song, new-post badge, etc). The pin icon prefix
- * keeps it recognizable at a glance.
+ * Rendered as a text link (no border/background, underlined label) so
+ * it doesn't compete visually with the dense cluster of other pills
+ * around it (battery, mood, thought, song, new-post badge, etc). The
+ * pin icon prefix keeps it recognizable at a glance.
  *
- * Visible only when the friend has at least one pin visible to this
- * viewer (N > 0 per the backend's visibility filter). Tapping navigates
- * to the read-only friend pinned feed; the outer card click handler is
- * short-circuited via stopPropagation so users don't get accidentally
- * dropped on the profile page.
+ * Visible only when `pinnedCount > 0`. Click stops propagation so it
+ * doesn't fire the outer card click handler.
  */
-function FriendPinnedChip({ username, pinnedCount }: Props) {
+function FriendPinnedChip({ pinnedCount, to }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'archive.friend_card' });
   const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ function FriendPinnedChip({ username, pinnedCount }: Props) {
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
-    navigate(`/users/${username}/check-in/pinned`);
+    navigate(to);
   };
 
   return (

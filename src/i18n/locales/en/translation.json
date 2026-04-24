@@ -812,7 +812,7 @@
         "today": "Today",
         "yesterday": "Yesterday",
         "segmented": {
-            "all": "All",
+            "all": "All Archived",
             "pinned": "Pinned"
         },
         "empty": {
