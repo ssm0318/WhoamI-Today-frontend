@@ -152,6 +152,8 @@ function PostFooter({
       w="100%"
       style={{
         position: displayType === 'DETAIL' ? 'relative' : undefined,
+        flexShrink: 0,
+        marginTop: 'auto',
       }}
       alignItems="center"
     >

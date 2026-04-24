@@ -1,6 +1,7 @@
 import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import ContentTranslation from '@components/_common/content-translation/ContentTranslation';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
@@ -21,6 +22,8 @@ interface ResponseItemProps {
   displayType?: POST_DP_TYPE;
   refresh?: () => void;
   emojiPickerPortalId?: string;
+  profileImageSize?: number;
+  previewMode?: boolean;
 }
 
 function ResponseItem({
@@ -29,6 +32,8 @@ function ResponseItem({
   displayType = 'LIST',
   refresh,
   emojiPickerPortalId,
+  profileImageSize = PROFILE_IMAGE_SIZE,
+  previewMode = false,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
   const [tAccess] = useTranslation('translation', { keyPrefix: 'access_setting' });
@@ -89,6 +94,154 @@ function ResponseItem({
     navigate(`/users/${username}`);
   };
 
+  const headerJsx = (
+    <Layout.FlexRow
+      w="100%"
+      alignItems="center"
+      justifyContent="space-between"
+      h={profileImageSize}
+    >
+      <Layout.FlexRow w="100%" alignItems="center" gap={8}>
+        <ProfileImage
+          imageUrl={profile_image}
+          username={username}
+          size={profileImageSize}
+          onClick={navigateToProfile}
+        />
+        {/* author, created_at information */}
+        <Layout.FlexCol>
+          <Layout.FlexRow onClick={navigateToProfile} gap={4} alignItems="center">
+            <Typo type="title-medium" ellipsis={{ enabled: true, maxWidth: 90 }}>
+              {username}
+            </Typo>
+            {(author_detail as any)?.connection_status === 'close_friend' && (
+              <SvgIcon name="close_friend" size={16} />
+            )}
+          </Layout.FlexRow>
+          {!current_user_read && !isMyPage && !previewMode && <UpdatedLabel />}
+          <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
+            </Typo>
+            {!isMyPage &&
+              author_detail &&
+              ((author_detail.mutual_friend_count ?? 0) > 0 ||
+                (author_detail.mutual_interest_count ?? 0) > 0 ||
+                (author_detail.mutual_persona_count ?? 0) > 0) && (
+                <>
+                  {(author_detail.mutual_friend_count ?? 0) > 0 && (
+                    <>
+                      <Typo type="label-medium" color="MEDIUM_GRAY">
+                        ·
+                      </Typo>
+                      <Typo type="label-medium" color="DARK_GRAY">
+                        {author_detail.mutual_friend_count} mutual{' '}
+                        {author_detail.mutual_friend_count === 1 ? 'friend' : 'friends'}
+                      </Typo>
+                    </>
+                  )}
+                  {(author_detail.mutual_interest_count ?? 0) +
+                    (author_detail.mutual_persona_count ?? 0) >
+                    0 && (
+                    <>
+                      <Typo type="label-medium" color="MEDIUM_GRAY">
+                        ·
+                      </Typo>
+                      <Typo type="label-medium" color="DARK_GRAY">
+                        {(author_detail.mutual_interest_count ?? 0) +
+                          (author_detail.mutual_persona_count ?? 0)}{' '}
+                        shared{' '}
+                        {(author_detail.mutual_interest_count ?? 0) +
+                          (author_detail.mutual_persona_count ?? 0) ===
+                        1
+                          ? 'trait'
+                          : 'traits'}
+                      </Typo>
+                    </>
+                  )}
+                </>
+              )}
+          </Layout.FlexRow>
+          {/* Visibility scope - only shown on own page */}
+          {isMyPage && visibility && visibility.length > 0 && (
+            <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
+              <SvgIcon name="eye" size={16} color="MEDIUM_GRAY" />
+              {visibility.map((vis, index) => (
+                <Layout.FlexRow key={vis} alignItems="center" gap={4}>
+                  <Typo type="label-medium" color="MEDIUM_GRAY" underline>
+                    {tAccess(String(vis).toLowerCase())}
+                  </Typo>
+                  {index < visibility.length - 1 && (
+                    <Typo type="label-medium" color="MEDIUM_GRAY">
+                      ,
+                    </Typo>
+                  )}
+                </Layout.FlexRow>
+              ))}
+            </Layout.FlexRow>
+          )}
+        </Layout.FlexCol>
+      </Layout.FlexRow>
+      {/* More options */}
+      <Layout.FlexRow alignItems="center" gap={8}>
+        <Icon name="dots_menu" size={24} onClick={handleClickMore} />
+      </Layout.FlexRow>
+    </Layout.FlexRow>
+  );
+
+  const contentJsx = (
+    <Layout.FlexCol
+      w="100%"
+      mb={8}
+      style={{
+        whiteSpace: 'pre-wrap',
+        overflowWrap: 'break-word',
+        wordBreak: 'break-word',
+      }}
+    >
+      {previewMode ? (
+        <Typo type="body-medium" color="BLACK" pre>
+          {content || ''}
+        </Typo>
+      ) : displayType === 'DETAIL' ? (
+        <ContentTranslation content={content || ''} translateContent={!isMyPage} />
+      ) : (
+        <Typo type="body-large" color="BLACK" pre>
+          {overflowSummary ? (
+            <>
+              {`${overflowSummary}...`}
+              <Typo type="body-medium" color="BLACK" italic underline ml={3}>
+                {t('more').toLowerCase()}
+              </Typo>
+            </>
+          ) : (
+            content || ''
+          )}
+        </Typo>
+      )}
+      {/* (Edited) */}
+      {!previewMode && is_edited && (
+        <Typo type="label-medium" color="MEDIUM_GRAY">
+          {`(${t('edited')})`}
+        </Typo>
+      )}
+      <Layout.FlexRow w="100%" justifyContent="flex-end" />
+    </Layout.FlexCol>
+  );
+
+  const questionJsx = question ? <QuestionItem question={question} /> : null;
+
+  const footerJsx = (
+    <PostFooter
+      isMyPage={isMyPage}
+      post={response}
+      showComments={() => setBottomSheet(true)}
+      setInputFocus={() => setInputFocus(true)}
+      displayType={displayType}
+      emojiPickerPortalId={emojiPickerPortalId}
+    />
+  );
+
   return (
     <>
       <Layout.FlexRow
@@ -97,9 +250,11 @@ function ResponseItem({
         outline="LIGHT"
         w="100%"
         onClick={handleClickDetail}
-        style={{
-          overflow: displayType === 'DETAIL' ? 'visible' : undefined,
-        }}
+        style={
+          previewMode
+            ? { height: '100%', minHeight: 0 }
+            : { overflow: displayType === 'DETAIL' ? 'visible' : undefined }
+        }
       >
         <PostMoreModal
           isVisible={showMore}
@@ -108,141 +263,29 @@ function ResponseItem({
           isMyPage={isMyPage}
           onConfirmReport={refresh}
         />
-        <Layout.FlexCol gap={8} w="100%">
-          <Layout.FlexRow
-            w="100%"
-            alignItems="center"
-            justifyContent="space-between"
-            h={PROFILE_IMAGE_SIZE}
-          >
-            <Layout.FlexRow w="100%" alignItems="center" gap={8}>
-              <ProfileImage
-                imageUrl={profile_image}
-                username={username}
-                size={PROFILE_IMAGE_SIZE}
-                onClick={navigateToProfile}
-              />
-              {/* author, created_at information */}
-              <Layout.FlexCol>
-                <Layout.FlexRow onClick={navigateToProfile} gap={4} alignItems="center">
-                  <Typo type="title-medium" ellipsis={{ enabled: true, maxWidth: 90 }}>
-                    {username}
-                  </Typo>
-                  {(author_detail as any)?.connection_status === 'close_friend' && (
-                    <SvgIcon name="close_friend" size={16} />
-                  )}
-                </Layout.FlexRow>
-                {!current_user_read && !isMyPage && <UpdatedLabel />}
-                <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
-                  <Typo type="label-medium" color="MEDIUM_GRAY">
-                    {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
-                  </Typo>
-                  {!isMyPage &&
-                    author_detail &&
-                    ((author_detail.mutual_friend_count ?? 0) > 0 ||
-                      (author_detail.mutual_interest_count ?? 0) > 0 ||
-                      (author_detail.mutual_persona_count ?? 0) > 0) && (
-                      <>
-                        {(author_detail.mutual_friend_count ?? 0) > 0 && (
-                          <>
-                            <Typo type="label-medium" color="MEDIUM_GRAY">
-                              ·
-                            </Typo>
-                            <Typo type="label-medium" color="DARK_GRAY">
-                              {author_detail.mutual_friend_count} mutual{' '}
-                              {author_detail.mutual_friend_count === 1 ? 'friend' : 'friends'}
-                            </Typo>
-                          </>
-                        )}
-                        {(author_detail.mutual_interest_count ?? 0) +
-                          (author_detail.mutual_persona_count ?? 0) >
-                          0 && (
-                          <>
-                            <Typo type="label-medium" color="MEDIUM_GRAY">
-                              ·
-                            </Typo>
-                            <Typo type="label-medium" color="DARK_GRAY">
-                              {(author_detail.mutual_interest_count ?? 0) +
-                                (author_detail.mutual_persona_count ?? 0)}{' '}
-                              shared{' '}
-                              {(author_detail.mutual_interest_count ?? 0) +
-                                (author_detail.mutual_persona_count ?? 0) ===
-                              1
-                                ? 'trait'
-                                : 'traits'}
-                            </Typo>
-                          </>
-                        )}
-                      </>
-                    )}
-                </Layout.FlexRow>
-                {/* Visibility scope - only shown on own page */}
-                {isMyPage && visibility && visibility.length > 0 && (
-                  <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
-                    <SvgIcon name="eye" size={16} color="MEDIUM_GRAY" />
-                    {visibility.map((vis, index) => (
-                      <Layout.FlexRow key={vis} alignItems="center" gap={4}>
-                        <Typo type="label-medium" color="MEDIUM_GRAY" underline>
-                          {tAccess(String(vis).toLowerCase())}
-                        </Typo>
-                        {index < visibility.length - 1 && (
-                          <Typo type="label-medium" color="MEDIUM_GRAY">
-                            ,
-                          </Typo>
-                        )}
-                      </Layout.FlexRow>
-                    ))}
-                  </Layout.FlexRow>
-                )}
-              </Layout.FlexCol>
-            </Layout.FlexRow>
-            {/* More options */}
-            <Layout.FlexRow alignItems="center" gap={8}>
-              <Icon name="dots_menu" size={24} onClick={handleClickMore} />
-            </Layout.FlexRow>
-          </Layout.FlexRow>
-          <Layout.FlexCol
-            w="100%"
-            mb={8}
-            style={{
-              whiteSpace: 'pre-wrap',
-              overflowWrap: 'break-word', // Line break by whitespace units
-              wordBreak: 'break-word', // Allow line break even when there's no whitespace
-            }}
-          >
-            {displayType === 'DETAIL' ? (
-              <ContentTranslation content={content || ''} translateContent={!isMyPage} />
-            ) : (
-              <Typo type="body-large" color="BLACK" pre>
-                {overflowSummary ? (
-                  <>
-                    {`${overflowSummary}...`}
-                    <Typo type="body-medium" color="BLACK" italic underline ml={3}>
-                      {t('more').toLowerCase()}
-                    </Typo>
-                  </>
-                ) : (
-                  content || ''
-                )}
-              </Typo>
-            )}
-            {/* (Edited) */}
-            {is_edited && (
-              <Typo type="label-medium" color="MEDIUM_GRAY">
-                {`(${t('edited')})`}
-              </Typo>
-            )}
-            <Layout.FlexRow w="100%" justifyContent="flex-end" />
-          </Layout.FlexCol>
-          {question && <QuestionItem question={question} />}
-          <PostFooter
-            isMyPage={isMyPage}
-            post={response}
-            showComments={() => setBottomSheet(true)}
-            setInputFocus={() => setInputFocus(true)}
-            displayType={displayType}
-            emojiPickerPortalId={emojiPickerPortalId}
-          />
+        <Layout.FlexCol
+          gap={8}
+          w="100%"
+          style={previewMode ? { height: '100%', minHeight: 0 } : undefined}
+        >
+          {previewMode ? (
+            <>
+              <PreviewBody>
+                {headerJsx}
+                {contentJsx}
+                {questionJsx}
+                <PreviewFade />
+              </PreviewBody>
+              <PreviewFooterWrap>{footerJsx}</PreviewFooterWrap>
+            </>
+          ) : (
+            <>
+              {headerJsx}
+              {contentJsx}
+              {questionJsx}
+              {footerJsx}
+            </>
+          )}
         </Layout.FlexCol>
       </Layout.FlexRow>
       {bottomSheet && (
@@ -267,6 +310,30 @@ export default ResponseItem;
 
 const PROFILE_IMAGE_SIZE = 44;
 export const WRAPPER_PADDING = 12;
+
+const PreviewBody = styled.div`
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const PreviewFooterWrap = styled.div`
+  flex-shrink: 0;
+`;
+
+const PreviewFade = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 32px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 95%);
+  pointer-events: none;
+`;
 
 const RESPONSE_GAP = 16;
 const RESPONSE_MARGIN = 12;

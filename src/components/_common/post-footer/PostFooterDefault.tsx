@@ -37,7 +37,7 @@ function PostFooterDefault({
   };
 
   return (
-    <Layout.FlexRow gap={8} alignItems="center">
+    <Layout.FlexRow gap={8} alignItems="center" style={{ flexShrink: 0, marginTop: 'auto' }}>
       <Layout.FlexRow gap={8} alignItems="center">
         {displayType === 'LIST' && (
           <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />

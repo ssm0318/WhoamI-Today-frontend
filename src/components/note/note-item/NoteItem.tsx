@@ -1,6 +1,7 @@
 import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import ContentTranslation from '@components/_common/content-translation/ContentTranslation';
 import Icon from '@components/_common/icon/Icon';
 import PostFooter from '@components/_common/post-footer/PostFooter';
@@ -21,9 +22,18 @@ interface NoteItemProps {
   isMyPage: boolean;
   displayType?: POST_DP_TYPE;
   refresh?: () => void;
+  profileImageSize?: number;
+  previewMode?: boolean;
 }
 
-function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemProps) {
+function NoteItem({
+  note,
+  isMyPage,
+  displayType = 'LIST',
+  refresh,
+  profileImageSize = PROFILE_IMAGE_SIZE,
+  previewMode = false,
+}: NoteItemProps) {
   const {
     content,
     created_at,
@@ -87,127 +97,118 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
     navigate(`/users/${username}`);
   };
 
-  return (
-    <>
-      <Layout.FlexCol
-        w="100%"
-        p={12}
-        gap={8}
-        outline="LIGHT"
-        rounded={12}
-        onClick={featureFlags?.friendList ? handleClickNote : handleClickNoteDefault}
-        style={
-          featureFlags?.friendList
-            ? { overflow: displayType === 'DETAIL' ? 'visible' : undefined }
-            : undefined
-        }
-      >
-        <PostMoreModal
-          isVisible={showMore}
-          setIsVisible={setShowMore}
-          post={note}
-          isMyPage={isMyPage}
-          onConfirmReport={refresh}
+  const headerJsx = (
+    <Layout.FlexRow
+      w="100%"
+      alignItems="center"
+      justifyContent="space-between"
+      h={profileImageSize}
+    >
+      <Layout.FlexRow w="100%" alignItems="center" gap={8}>
+        <ProfileImage
+          imageUrl={profile_image}
+          username={username}
+          size={profileImageSize}
+          onClick={navigateToProfile}
         />
-        <Layout.FlexRow
-          w="100%"
-          alignItems="center"
-          justifyContent="space-between"
-          h={PROFILE_IMAGE_SIZE}
-        >
-          <Layout.FlexRow w="100%" alignItems="center" gap={8}>
-            <ProfileImage
-              imageUrl={profile_image}
-              username={username}
-              size={PROFILE_IMAGE_SIZE}
-              onClick={navigateToProfile}
-            />
-            {/* author, created_at information */}
-            <Layout.FlexCol>
-              <Layout.FlexRow onClick={navigateToProfile} gap={4} alignItems="center">
-                <Typo type="title-medium" ellipsis={{ enabled: true, maxWidth: 140 }}>
-                  {username}
-                </Typo>
-                {(author_detail as any)?.connection_status === 'close_friend' && (
-                  <SvgIcon name="close_friend" size={16} />
-                )}
-                {!current_user_read && !isMyPage && <UpdatedLabel />}
-              </Layout.FlexRow>
-              <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
-                <Typo type="label-medium" color="MEDIUM_GRAY">
-                  {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
-                </Typo>
-                {!isMyPage &&
-                  author_detail &&
-                  ((author_detail.mutual_friend_count ?? 0) > 0 ||
-                    (author_detail.mutual_interest_count ?? 0) > 0 ||
-                    (author_detail.mutual_persona_count ?? 0) > 0) && (
+        {/* author, created_at information */}
+        <Layout.FlexCol>
+          <Layout.FlexRow onClick={navigateToProfile} gap={4} alignItems="center">
+            <Typo type="title-medium" ellipsis={{ enabled: true, maxWidth: 140 }}>
+              {username}
+            </Typo>
+            {(author_detail as any)?.connection_status === 'close_friend' && (
+              <SvgIcon name="close_friend" size={16} />
+            )}
+            {!current_user_read && !isMyPage && !previewMode && <UpdatedLabel />}
+          </Layout.FlexRow>
+          <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
+            </Typo>
+            {!isMyPage &&
+              author_detail &&
+              ((author_detail.mutual_friend_count ?? 0) > 0 ||
+                (author_detail.mutual_interest_count ?? 0) > 0 ||
+                (author_detail.mutual_persona_count ?? 0) > 0) && (
+                <>
+                  {(author_detail.mutual_friend_count ?? 0) > 0 && (
                     <>
-                      {(author_detail.mutual_friend_count ?? 0) > 0 && (
-                        <>
-                          <Typo type="label-medium" color="MEDIUM_GRAY">
-                            ·
-                          </Typo>
-                          <Typo type="label-medium" color="DARK_GRAY">
-                            {author_detail.mutual_friend_count} mutual{' '}
-                            {author_detail.mutual_friend_count === 1 ? 'friend' : 'friends'}
-                          </Typo>
-                        </>
-                      )}
-                      {(author_detail.mutual_interest_count ?? 0) +
-                        (author_detail.mutual_persona_count ?? 0) >
-                        0 && (
-                        <>
-                          <Typo type="label-medium" color="MEDIUM_GRAY">
-                            ·
-                          </Typo>
-                          <Typo type="label-medium" color="DARK_GRAY">
-                            {(author_detail.mutual_interest_count ?? 0) +
-                              (author_detail.mutual_persona_count ?? 0)}{' '}
-                            shared{' '}
-                            {(author_detail.mutual_interest_count ?? 0) +
-                              (author_detail.mutual_persona_count ?? 0) ===
-                            1
-                              ? 'trait'
-                              : 'traits'}
-                          </Typo>
-                        </>
-                      )}
+                      <Typo type="label-medium" color="MEDIUM_GRAY">
+                        ·
+                      </Typo>
+                      <Typo type="label-medium" color="DARK_GRAY">
+                        {author_detail.mutual_friend_count} mutual{' '}
+                        {author_detail.mutual_friend_count === 1 ? 'friend' : 'friends'}
+                      </Typo>
                     </>
                   )}
-              </Layout.FlexRow>
-              {/* Visibility scope - only shown on own page */}
-              {isMyPage && visibility && (
-                <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
-                  <SvgIcon name="eye" size={16} color="MEDIUM_GRAY" />
-                  {Array.isArray(visibility) ? (
-                    visibility.map((vis, index) => (
-                      <Layout.FlexRow key={vis} alignItems="center" gap={4}>
-                        <Typo type="label-medium" color="MEDIUM_GRAY" underline>
-                          {tAccess(String(vis).toLowerCase())}
-                        </Typo>
-                        {index < visibility.length - 1 && (
-                          <Typo type="label-medium" color="MEDIUM_GRAY">
-                            ,
-                          </Typo>
-                        )}
-                      </Layout.FlexRow>
-                    ))
-                  ) : (
-                    <Typo type="label-medium" color="MEDIUM_GRAY" underline>
-                      {tAccess(String(visibility).toLowerCase())}
-                    </Typo>
+                  {(author_detail.mutual_interest_count ?? 0) +
+                    (author_detail.mutual_persona_count ?? 0) >
+                    0 && (
+                    <>
+                      <Typo type="label-medium" color="MEDIUM_GRAY">
+                        ·
+                      </Typo>
+                      <Typo type="label-medium" color="DARK_GRAY">
+                        {(author_detail.mutual_interest_count ?? 0) +
+                          (author_detail.mutual_persona_count ?? 0)}{' '}
+                        shared{' '}
+                        {(author_detail.mutual_interest_count ?? 0) +
+                          (author_detail.mutual_persona_count ?? 0) ===
+                        1
+                          ? 'trait'
+                          : 'traits'}
+                      </Typo>
+                    </>
                   )}
-                </Layout.FlexRow>
+                </>
               )}
-            </Layout.FlexCol>
           </Layout.FlexRow>
-          {/* More options */}
-          <Layout.FlexRow alignItems="center" gap={8}>
-            <Icon name="dots_menu" size={24} onClick={handleClickMore} />
-          </Layout.FlexRow>
+          {/* Visibility scope - only shown on own page */}
+          {isMyPage && visibility && (
+            <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
+              <SvgIcon name="eye" size={16} color="MEDIUM_GRAY" />
+              {Array.isArray(visibility) ? (
+                visibility.map((vis, index) => (
+                  <Layout.FlexRow key={vis} alignItems="center" gap={4}>
+                    <Typo type="label-medium" color="MEDIUM_GRAY" underline>
+                      {tAccess(String(vis).toLowerCase())}
+                    </Typo>
+                    {index < visibility.length - 1 && (
+                      <Typo type="label-medium" color="MEDIUM_GRAY">
+                        ,
+                      </Typo>
+                    )}
+                  </Layout.FlexRow>
+                ))
+              ) : (
+                <Typo type="label-medium" color="MEDIUM_GRAY" underline>
+                  {tAccess(String(visibility).toLowerCase())}
+                </Typo>
+              )}
+            </Layout.FlexRow>
+          )}
+        </Layout.FlexCol>
+      </Layout.FlexRow>
+      {/* More options */}
+      <Layout.FlexRow alignItems="center" gap={8}>
+        <Icon name="dots_menu" size={24} onClick={handleClickMore} />
+      </Layout.FlexRow>
+    </Layout.FlexRow>
+  );
+
+  const contentJsx = (
+    <Layout.FlexCol>
+      {previewMode ? (
+        <Layout.FlexRow w="100%" alignItems="flex-start" gap={4}>
+          {images[0] && <Typo type="body-medium">📷</Typo>}
+          <Typo type="body-medium" color="BLACK" pre>
+            {content}
+          </Typo>
         </Layout.FlexRow>
-        <Layout.FlexCol>
+      ) : (
+        <>
           <ContentTranslation
             content={content}
             translateContent={!isMyPage && displayType === 'DETAIL'}
@@ -224,24 +225,68 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
               {`(${t('edited')})`}
             </Typo>
           )}
-        </Layout.FlexCol>
-        {/* ver Q */}
-        {featureFlags?.friendList ? (
-          <PostFooter
-            isMyPage={isMyPage}
-            post={note}
-            showComments={() => setBottomSheet(true)}
-            setInputFocus={() => setInputFocus(true)}
-            displayType={displayType}
-          />
+        </>
+      )}
+    </Layout.FlexCol>
+  );
+
+  const footerJsx = featureFlags?.friendList ? (
+    <PostFooter
+      isMyPage={isMyPage}
+      post={note}
+      showComments={() => setBottomSheet(true)}
+      setInputFocus={() => setInputFocus(true)}
+      displayType={displayType}
+    />
+  ) : (
+    // ver R
+    <PostFooterDefault
+      post={note}
+      showComments={() => setBottomSheet(true)}
+      setInputFocus={() => setInputFocus(true)}
+      displayType={displayType}
+    />
+  );
+
+  return (
+    <>
+      <Layout.FlexCol
+        w="100%"
+        p={12}
+        gap={8}
+        outline="LIGHT"
+        rounded={12}
+        onClick={featureFlags?.friendList ? handleClickNote : handleClickNoteDefault}
+        style={
+          previewMode
+            ? { height: '100%', minHeight: 0 }
+            : featureFlags?.friendList
+            ? { overflow: displayType === 'DETAIL' ? 'visible' : undefined }
+            : undefined
+        }
+      >
+        <PostMoreModal
+          isVisible={showMore}
+          setIsVisible={setShowMore}
+          post={note}
+          isMyPage={isMyPage}
+          onConfirmReport={refresh}
+        />
+        {previewMode ? (
+          <>
+            <PreviewBody>
+              {headerJsx}
+              {contentJsx}
+              <PreviewFade />
+            </PreviewBody>
+            <PreviewFooterWrap>{footerJsx}</PreviewFooterWrap>
+          </>
         ) : (
-          // ver R
-          <PostFooterDefault
-            post={note}
-            showComments={() => setBottomSheet(true)}
-            setInputFocus={() => setInputFocus(true)}
-            displayType={displayType}
-          />
+          <>
+            {headerJsx}
+            {contentJsx}
+            {footerJsx}
+          </>
         )}
       </Layout.FlexCol>
       {bottomSheet && (
@@ -265,3 +310,27 @@ function NoteItem({ note, isMyPage, displayType = 'LIST', refresh }: NoteItemPro
 export default NoteItem;
 
 const PROFILE_IMAGE_SIZE = 44;
+
+const PreviewBody = styled.div`
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const PreviewFooterWrap = styled.div`
+  flex-shrink: 0;
+`;
+
+const PreviewFade = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 32px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 95%);
+  pointer-events: none;
+`;
