@@ -16,8 +16,7 @@ function Intro() {
   if (data) {
     // Use current_ver from data or myProfile to determine redirect path
     const currentVer = data.current_ver || myProfile?.current_ver;
-    const shouldGoToFeed = currentVer === VersionType.VER_Q;
-    const targetPath = shouldGoToFeed ? '/feed' : '/friends';
+    const targetPath = currentVer === VersionType.VER_Q ? '/friends-q' : '/friends';
     return <Navigate to={targetPath} replace />;
   }
   return (

@@ -75,10 +75,9 @@ function EditProfile() {
     chipSelections: Record<string, string[]>;
     customChips: CustomChip[];
     name_friends_only: boolean;
-    interests_friends_only: boolean;
-    persona_friends_only: boolean;
     pronouns_friends_only: boolean;
     bio_friends_only: boolean;
+    categoryFriendsOnly: Record<string, boolean>;
   }>({
     bio: myProfile?.bio ?? '',
     username: myProfile?.username ?? '',
@@ -87,10 +86,17 @@ function EditProfile() {
     chipSelections: parsed.selections,
     customChips: parsed.customs,
     name_friends_only: profileWithOptionalName?.name_friends_only ?? true,
-    interests_friends_only: myProfile?.interests_friends_only ?? false,
-    persona_friends_only: myProfile?.persona_friends_only ?? false,
     pronouns_friends_only: myProfile?.pronouns_friends_only ?? false,
     bio_friends_only: myProfile?.bio_friends_only ?? false,
+    categoryFriendsOnly: {
+      music_entertainment: myProfile?.music_entertainment_friends_only ?? false,
+      hobbies_activities: myProfile?.hobbies_activities_friends_only ?? false,
+      on_my_mind: myProfile?.on_my_mind_friends_only ?? false,
+      as_a_friend: myProfile?.as_a_friend_friends_only ?? false,
+      online_persona: myProfile?.online_persona_friends_only ?? false,
+      favorite_platform: myProfile?.favorite_platform_friends_only ?? false,
+      least_favorite_platform: myProfile?.least_favorite_platform_friends_only ?? false,
+    },
   });
 
   const [usernameError, setUsernameError] = useState<string>();
@@ -166,6 +172,16 @@ function EditProfile() {
     setDraft((prev) => ({ ...prev, [field]: !prev[field as keyof typeof prev] }));
   };
 
+  const handleToggleCategoryVisibility = (categoryKey: string) => {
+    setDraft((prev) => ({
+      ...prev,
+      categoryFriendsOnly: {
+        ...prev.categoryFriendsOnly,
+        [categoryKey]: !prev.categoryFriendsOnly[categoryKey],
+      },
+    }));
+  };
+
   const handleClickUpdate = () => {
     inputRef.current?.click();
   };
@@ -205,7 +221,7 @@ function EditProfile() {
     if (isFromResetPassword) {
       navigate('/my');
     } else if (isFromSignUp) {
-      navigate(featureFlags?.friendFeed ? '/feed' : '/friends');
+      navigate(featureFlags?.friendUpdatesTab ? '/friends-q' : '/friends');
     } else {
       navigate(-1);
     }
@@ -227,10 +243,15 @@ function EditProfile() {
       name: draft.name,
       pronouns: draft.pronouns,
       name_friends_only: draft.name_friends_only,
-      interests_friends_only: draft.interests_friends_only,
-      persona_friends_only: draft.persona_friends_only,
       pronouns_friends_only: draft.pronouns_friends_only,
       bio_friends_only: draft.bio_friends_only,
+      music_entertainment_friends_only: draft.categoryFriendsOnly.music_entertainment,
+      hobbies_activities_friends_only: draft.categoryFriendsOnly.hobbies_activities,
+      on_my_mind_friends_only: draft.categoryFriendsOnly.on_my_mind,
+      as_a_friend_friends_only: draft.categoryFriendsOnly.as_a_friend,
+      online_persona_friends_only: draft.categoryFriendsOnly.online_persona,
+      favorite_platform_friends_only: draft.categoryFriendsOnly.favorite_platform,
+      least_favorite_platform_friends_only: draft.categoryFriendsOnly.least_favorite_platform,
       ...(croppedImg ? { profile_image: croppedImg.file } : {}),
     };
 
@@ -403,8 +424,8 @@ function EditProfile() {
                 />
                 <CheckBox
                   name={`Show ${categoryInfo.label} only to friends`}
-                  checked={draft.interests_friends_only}
-                  onChange={() => handleToggleVisibility('interests_friends_only')}
+                  checked={!!draft.categoryFriendsOnly[categoryInfo.key]}
+                  onChange={() => handleToggleCategoryVisibility(categoryInfo.key)}
                 />
               </Layout.FlexCol>
             ))}

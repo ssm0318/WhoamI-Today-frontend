@@ -33,13 +33,11 @@ function MoreAboutBottomSheet({
     navigate('/settings/edit-profile?tab=interests');
   };
 
-  const showChips = isMyPage || !user?.interests_friends_only;
-  const allUserChips = showChips
-    ? [
-        ...(user?.user_interests ?? []).map((i) => i.replace(/^#+/, '')),
-        ...(user?.user_personas ?? []).map((p) => p.replace(/^#+/, '')),
-      ]
-    : [];
+  // Backend filters user_interests / user_personas per-category for non-friends already.
+  const allUserChips = [
+    ...(user?.user_interests ?? []).map((i) => i.replace(/^#+/, '')),
+    ...(user?.user_personas ?? []).map((p) => p.replace(/^#+/, '')),
+  ];
 
   // Group chips by category
   const groupedByCategory = categories

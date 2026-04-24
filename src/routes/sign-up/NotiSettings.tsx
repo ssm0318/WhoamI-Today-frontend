@@ -1,7 +1,10 @@
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { FEED_DEFAULT_REDIRECTION_PATH, FRIEND_DEFAULT_REDIRECTION_PATH } from '@constants/url';
+import {
+  FRIEND_DEFAULT_REDIRECTION_PATH,
+  FRIENDS_Q_DEFAULT_REDIRECTION_PATH,
+} from '@constants/url';
 import { Button, Font, Layout } from '@design-system';
 import { hasMandatorySignUpParams } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -59,7 +62,7 @@ function NotiSettings() {
         navigate(
           featureFlags?.friendList
             ? FRIEND_DEFAULT_REDIRECTION_PATH
-            : FEED_DEFAULT_REDIRECTION_PATH,
+            : FRIENDS_Q_DEFAULT_REDIRECTION_PATH,
         );
       },
       onError: (e) => {

@@ -3,7 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
-import { FEED_DEFAULT_REDIRECTION_PATH, FRIEND_DEFAULT_REDIRECTION_PATH } from '@constants/url';
+import {
+  FRIEND_DEFAULT_REDIRECTION_PATH,
+  FRIENDS_Q_DEFAULT_REDIRECTION_PATH,
+} from '@constants/url';
 import { Button, Font, Layout } from '@design-system';
 import { SignInParams, VersionType } from '@models/api/user';
 import { getMe } from '@utils/apis/my';
@@ -37,7 +40,7 @@ function SignIn() {
           navigate(
             currVersion === VersionType.VER_W
               ? FRIEND_DEFAULT_REDIRECTION_PATH
-              : FEED_DEFAULT_REDIRECTION_PATH,
+              : FRIENDS_Q_DEFAULT_REDIRECTION_PATH,
           );
 
           if (!me.has_changed_pw) {

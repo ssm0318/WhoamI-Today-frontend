@@ -12,7 +12,7 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import { useCheckInSubscription } from '@hooks/useCheckInSubscription';
 import { useChipCategories } from '@hooks/useChipCategories';
 import { Connection } from '@models/api/friends';
-import { MyProfile } from '@models/api/user';
+import { MyProfile, VersionType } from '@models/api/user';
 import { normalizeChipText } from '@models/chips';
 import { areFriends, isMyProfile, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -40,6 +40,7 @@ function Profile({ user }: ProfileProps) {
   const isMyPage = user?.id === myProfile?.id;
   const [friendData, setFriendData] = useState<UserProfile | null>(null);
   const checkInEnabled = !!featureFlags?.[FeatureFlagKey.CHECK_IN];
+  const subscriptionBellEnabled = checkInEnabled && myProfile?.current_ver !== VersionType.VER_Q;
   const isFriendUser = !!user && !isMyProfile(user) && areFriends(user);
 
   const { updateUser } = useContext(UserPageContext);
@@ -90,12 +91,12 @@ function Profile({ user }: ProfileProps) {
   const showName = canSeeFriendsOnly || !(friendData as any)?.name_friends_only;
   const showPronouns = canSeeFriendsOnly || !friendData?.pronouns_friends_only;
   const showBio = canSeeFriendsOnly || !friendData?.bio_friends_only;
-  const showInterests = canSeeFriendsOnly || !friendData?.interests_friends_only;
-  const showPersonas = canSeeFriendsOnly || !friendData?.persona_friends_only;
 
+  // Backend already filters user_interests / user_personas per-category for non-friends,
+  // so presence of items is the source of truth for whether to render the sections.
   const hasInterestsOrPersonas =
-    (showInterests && user?.user_interests && user.user_interests.length > 0) ||
-    (showPersonas && user?.user_personas && user.user_personas.length > 0);
+    (user?.user_interests && user.user_interests.length > 0) ||
+    (user?.user_personas && user.user_personas.length > 0);
 
   return (
     <Layout.FlexCol w="100%" gap={8}>
@@ -152,7 +153,7 @@ function Profile({ user }: ProfileProps) {
                       onClick={handleClickChangeConnection}
                     />
                   )}
-                  {checkInEnabled && (
+                  {subscriptionBellEnabled && (
                     <button
                       type="button"
                       onClick={handleToggleSubscription}
