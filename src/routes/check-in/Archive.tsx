@@ -1,6 +1,7 @@
-import { ReactNode, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
+import { mutate as globalMutate } from 'swr';
 import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
@@ -84,6 +85,21 @@ function Archive() {
   };
 
   /**
+   * Revalidate sibling cache keys that don't share the infinite-scroll cache
+   * with the current screen. Called after any successful mutation so the
+   * profile's `[ All (N) | Pinned (M) ]` chip (useSWR on `/check_in/entries/`)
+   * and the opposite tab's infinite cache refresh on next visit.
+   *
+   * Note: the archive's own `useSWRInfinite` cache is keyed separately from
+   * `useSWR` with the same URL string, so the archive's local `mutate()`
+   * cannot invalidate the profile chip's entry — we must fire a global
+   * invalidation here.
+   */
+  const invalidateSiblingCaches = useCallback(() => {
+    globalMutate('/check_in/entries/');
+  }, []);
+
+  /**
    * Optimistically flip the pin icon, revalidate, and roll back on error.
    * The `is_pinned` toggle is the most frequent archive interaction — the
    * user sees instant feedback even before the round-trip.
@@ -116,6 +132,7 @@ function Archive() {
     });
 
     openToast({ message: nextPinned ? tPin('pinned') : tPin('unpinned') });
+    invalidateSiblingCaches();
   };
 
   const handleMoreClick = (entry: CheckInComponentEntry) => {
@@ -132,6 +149,7 @@ function Archive() {
       const updated = await updatePinVisibility(visibilityEntry.id, visibility);
       await mutate((pages) => patchEntryInPages(pages, updated), { revalidate: false });
       openToast({ message: t('visibility_modal.updated_toast') });
+      invalidateSiblingCaches();
     } catch {
       openToast({ message: t('visibility_modal.error') });
     }
@@ -143,6 +161,7 @@ function Archive() {
       await deleteArchiveEntry(entry.id);
       await mutate();
       openToast({ message: tDelete('toast_deleted') });
+      invalidateSiblingCaches();
     } catch {
       openToast({ message: tDelete('error') });
     }
