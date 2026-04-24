@@ -129,6 +129,9 @@
         "discover": "Discover",
         "update": "Check-In"
     },
+    "version_guard": {
+        "not_available": "This page isn't available in your current version."
+    },
     "header": {
         "my": "My Profile",
         "questions": "Questions",
