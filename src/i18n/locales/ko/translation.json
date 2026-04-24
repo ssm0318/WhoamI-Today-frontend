@@ -813,6 +813,31 @@
     "end_of_feed": "마지막 기록이에요.",
     "thought_modal": {
       "close": "닫기"
+    },
+    "pin": {
+      "pinned": "고정했어요",
+      "unpinned": "고정을 해제했어요",
+      "error": "고정에 실패했어요. 다시 시도해주세요."
+    },
+    "more_modal": {
+      "modify_visibility": "공개 범위 수정",
+      "delete": "삭제"
+    },
+    "delete_confirm": {
+      "title": "보관함에서 삭제할까요?",
+      "content": "되돌릴 수 없어요.",
+      "cancel": "취소",
+      "confirm": "삭제",
+      "toast_deleted": "보관함에서 삭제했어요",
+      "error": "삭제에 실패했어요. 다시 시도해주세요."
+    },
+    "visibility_modal": {
+      "title": "누가 이 고정을 볼 수 있나요?",
+      "visibility_label": "공개 범위",
+      "cancel": "취소",
+      "save": "저장",
+      "updated_toast": "공개 범위를 수정했어요",
+      "error": "수정에 실패했어요. 다시 시도해주세요."
     }
   },
   "check_in_edit": {

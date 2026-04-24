@@ -4,13 +4,23 @@ import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ArchiveDateSection from '@components/check-in/archive/ArchiveDateSection';
+import ArchiveEntryMoreModal from '@components/check-in/archive/ArchiveEntryMoreModal';
+import ModifyVisibilityModal from '@components/check-in/archive/ModifyVisibilityModal';
 import ThoughtFullTextModal from '@components/check-in/archive/ThoughtFullTextModal';
 import SubHeader from '@components/sub-header/SubHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import { useSWRInfiniteCursor } from '@hooks/useSWRInfiniteCursor';
+import { ComponentVisibility } from '@models/checkIn';
 import { ArchiveTab, CheckInComponentEntry, ComponentType } from '@models/checkInEntry';
-import { archiveEntriesFetcher, ArchiveEntriesResponse } from '@utils/apis/archive';
+import { useBoundStore } from '@stores/useBoundStore';
+import {
+  archiveEntriesFetcher,
+  ArchiveEntriesResponse,
+  deleteArchiveEntry,
+  togglePin,
+  updatePinVisibility,
+} from '@utils/apis/archive';
 import { groupEntriesByDate } from '@utils/archiveHelpers';
 
 /**
@@ -18,20 +28,28 @@ import { groupEntriesByDate } from '@utils/archiveHelpers';
  * newest first. The `All | Pinned (N)` segmented control toggles between
  * the full archive and the curated pinned subset.
  *
- * This branch replaces the placeholder JSON render with the real card
- * renderers (battery / mood / thought / song) and wires up the thought
- * full-text modal. Pin + ⋯ actions remain visual only — click handlers
- * that hit the pin/pin_visibility/delete endpoints land in the next
- * stacked branch feat/archive-entry-actions.
+ * This branch wires up the per-card actions: pin toggle (optimistic +
+ * SWR revalidate), `⋯` bottom menu with Modify visibility + Delete (the
+ * latter gated behind a CommonDialog confirmation), and the visibility-
+ * edit modal for pinned entries. Modify visibility is only offered for
+ * pinned rows — unpinned archived entries have no audience beyond the
+ * owner, so there's nothing to modify until they're pinned.
  */
 function Archive() {
   const [t] = useTranslation('translation', { keyPrefix: 'archive' });
+  const [tPin] = useTranslation('translation', { keyPrefix: 'archive.pin' });
+  const [tDelete] = useTranslation('translation', { keyPrefix: 'archive.delete_confirm' });
+
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
+
   const [tab, setTab] = useState<ArchiveTab>('all');
   const [thoughtModalEntry, setThoughtModalEntry] = useState<CheckInComponentEntry | null>(null);
+  const [moreEntry, setMoreEntry] = useState<CheckInComponentEntry | null>(null);
+  const [visibilityEntry, setVisibilityEntry] = useState<CheckInComponentEntry | null>(null);
 
   const baseKey = `/check_in/entries/${tab === 'pinned' ? '?tab=pinned' : ''}`;
 
-  const { data, isLoading, isLoadingMore, targetRef, isEndPage } = useSWRInfiniteCursor<
+  const { data, isLoading, isLoadingMore, targetRef, isEndPage, mutate } = useSWRInfiniteCursor<
     CheckInComponentEntry,
     ArchiveEntriesResponse
   >({
@@ -47,16 +65,81 @@ function Archive() {
   const sections = useMemo(() => groupEntriesByDate(flat), [flat]);
 
   // Counts come back on every page; pull from the latest page so they stay
-  // fresh as entries are pinned/unpinned/deleted in other branches.
+  // fresh as entries are pinned/unpinned/deleted.
   const latest = data?.[data.length - 1];
   const archivedCount = latest?.archived_count ?? 0;
   const pinnedCount = latest?.pinned_count ?? 0;
 
   const handleBodyClick = (entry: CheckInComponentEntry) => {
-    // Song bottom-sheet + battery/mood full-size popup wiring lands in
-    // feat/archive-entry-actions; for now only the thought modal opens.
+    // Song bottom-sheet + battery/mood full-size popup wiring remains a
+    // polish step; for now only the thought modal opens.
     if (entry.component === ComponentType.THOUGHT) {
       setThoughtModalEntry(entry);
+    }
+  };
+
+  /**
+   * Optimistically flip the pin icon, revalidate, and roll back on error.
+   * The `is_pinned` toggle is the most frequent archive interaction — the
+   * user sees instant feedback even before the round-trip.
+   */
+  const handlePinClick = async (entry: CheckInComponentEntry) => {
+    const nextPinned = !entry.is_pinned;
+
+    await mutate(
+      async (pages) => {
+        try {
+          const updated = await togglePin(entry.id);
+          return patchEntryInPages(pages, updated);
+        } catch (err) {
+          openToast({ message: tPin('error') });
+          throw err;
+        }
+      },
+      {
+        optimisticData: (pages) =>
+          patchEntryInPages(pages, {
+            ...entry,
+            is_pinned: nextPinned,
+            pin_visibility: nextPinned ? entry.visibility : null,
+          }),
+        rollbackOnError: true,
+        revalidate: true,
+      },
+    ).catch(() => {
+      /* error already surfaced via toast */
+    });
+
+    openToast({ message: nextPinned ? tPin('pinned') : tPin('unpinned') });
+  };
+
+  const handleMoreClick = (entry: CheckInComponentEntry) => {
+    setMoreEntry(entry);
+  };
+
+  const handleModifyVisibility = (entry: CheckInComponentEntry) => {
+    setVisibilityEntry(entry);
+  };
+
+  const handleConfirmVisibility = async (visibility: ComponentVisibility) => {
+    if (!visibilityEntry) return;
+    try {
+      const updated = await updatePinVisibility(visibilityEntry.id, visibility);
+      await mutate((pages) => patchEntryInPages(pages, updated), { revalidate: false });
+      openToast({ message: t('visibility_modal.updated_toast') });
+    } catch {
+      openToast({ message: t('visibility_modal.error') });
+    }
+    setVisibilityEntry(null);
+  };
+
+  const handleDelete = async (entry: CheckInComponentEntry) => {
+    try {
+      await deleteArchiveEntry(entry.id);
+      await mutate();
+      openToast({ message: tDelete('toast_deleted') });
+    } catch {
+      openToast({ message: tDelete('error') });
     }
   };
 
@@ -80,6 +163,8 @@ function Archive() {
               key={section.key}
               label={section.label}
               items={section.items}
+              onPinClick={handlePinClick}
+              onMoreClick={handleMoreClick}
               onBodyClick={handleBodyClick}
             />
           ))}
@@ -103,11 +188,43 @@ function Archive() {
       </Layout.FlexCol>
 
       <ThoughtFullTextModal entry={thoughtModalEntry} onClose={() => setThoughtModalEntry(null)} />
+
+      <ArchiveEntryMoreModal
+        entry={moreEntry}
+        onClose={() => setMoreEntry(null)}
+        onModifyVisibility={handleModifyVisibility}
+        onDelete={handleDelete}
+      />
+
+      <ModifyVisibilityModal
+        entry={visibilityEntry}
+        onClose={() => setVisibilityEntry(null)}
+        onConfirm={handleConfirmVisibility}
+      />
     </MainContainer>
   );
 }
 
 export default Archive;
+
+// ---- helpers ----
+
+/**
+ * Return a new pages array with the given entry patched in place.
+ * Used by both the optimistic update and the server-response commit
+ * so the SWR cache stays consistent without a full refetch on each
+ * PATCH.
+ */
+function patchEntryInPages(
+  pages: ArchiveEntriesResponse[] | undefined,
+  patched: CheckInComponentEntry,
+): ArchiveEntriesResponse[] {
+  if (!pages) return [];
+  return pages.map((page) => ({
+    ...page,
+    results: (page.results ?? []).map((e) => (e.id === patched.id ? patched : e)),
+  }));
+}
 
 // ---- local UI primitives kept inline for this first screen pass ----
 

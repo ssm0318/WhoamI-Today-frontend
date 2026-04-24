@@ -822,6 +822,31 @@
         "end_of_feed": "That's everything.",
         "thought_modal": {
             "close": "Close"
+        },
+        "pin": {
+            "pinned": "Pinned",
+            "unpinned": "Unpinned",
+            "error": "Couldn't update pin. Please try again."
+        },
+        "more_modal": {
+            "modify_visibility": "Modify visibility",
+            "delete": "Delete"
+        },
+        "delete_confirm": {
+            "title": "Delete from archive?",
+            "content": "This cannot be undone.",
+            "cancel": "Cancel",
+            "confirm": "Delete",
+            "toast_deleted": "Deleted from archive",
+            "error": "Couldn't delete. Please try again."
+        },
+        "visibility_modal": {
+            "title": "Who can see this pin?",
+            "visibility_label": "Visibility",
+            "cancel": "Cancel",
+            "save": "Save",
+            "updated_toast": "Updated visibility",
+            "error": "Couldn't update visibility. Please try again."
         }
     },
     "check_in_edit": {
