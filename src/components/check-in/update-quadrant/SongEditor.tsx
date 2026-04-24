@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import SearchInput from '@components/_common/search-input/SearchInput';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import MusicItem from '@components/music/music-search-bottom-sheet/music-item/MusicItem';
-import { Layout, Typo } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
 import { ComponentVisibility } from '@models/checkIn';
@@ -33,15 +33,30 @@ export default function SongEditor({
   const [query, setQuery] = useState('');
   const [trackList, setTrackList] = useState<Track[]>([]);
   const [searchError, setSearchError] = useState('');
+  const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const spotifyManager = SpotifyManager.getInstance();
 
   useEffect(() => {
     if (isOpen) {
       setDraftTrackId(trackId);
       setDraftVisibility(visibility);
+      setQuery('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
+
+  useAsyncEffect(async () => {
+    if (!draftTrackId) {
+      setCurrentTrack(null);
+      return;
+    }
+    try {
+      const track = await spotifyManager.getTrack(draftTrackId);
+      setCurrentTrack(track);
+    } catch {
+      setCurrentTrack(null);
+    }
+  }, [draftTrackId]);
 
   useAsyncEffect(async () => {
     if (!query) {
@@ -72,6 +87,40 @@ export default function SongEditor({
   return (
     <EditorPopup isOpen={isOpen} onClose={onClose} onShare={handleShare} title="Song">
       <Layout.FlexCol w="100%" gap={12} mb={16}>
+        {currentTrack && !query && (
+          <Layout.FlexCol w="100%" gap={8}>
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              Currently shared
+            </Typo>
+            <Layout.FlexRow justifyContent="space-between" w="100%" alignItems="center">
+              <Layout.FlexRow gap={12} flex={1}>
+                {currentTrack.album.images.length > 0 && currentTrack.album.images[0].url ? (
+                  <img
+                    src={currentTrack.album.images[0].url}
+                    width={44}
+                    height={44}
+                    alt={`${currentTrack.name}-album`}
+                    style={{ borderRadius: 4 }}
+                  />
+                ) : (
+                  <Layout.FlexRow w={44} h={44} bgColor="LIGHT" rounded={4} />
+                )}
+                <Layout.FlexCol justifyContent="center" w="100%" flex={1}>
+                  <Typo type="body-large" numberOfLines={1}>
+                    {currentTrack.name}
+                  </Typo>
+                  <Typo type="body-small" numberOfLines={1} color="MEDIUM_GRAY">
+                    {currentTrack.artists[0].name}
+                  </Typo>
+                </Layout.FlexCol>
+              </Layout.FlexRow>
+              <Layout.FlexRow onClick={() => setDraftTrackId('')} pl={8} pr={4}>
+                <SvgIcon name="close" size={20} color="MEDIUM_GRAY" />
+              </Layout.FlexRow>
+            </Layout.FlexRow>
+          </Layout.FlexCol>
+        )}
+
         <SearchInput
           query={query}
           setQuery={setQuery}
