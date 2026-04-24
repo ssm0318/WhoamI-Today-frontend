@@ -12,6 +12,18 @@ interface Props {
 type Resolved = { title: string; artist: string; cover: string | null };
 
 /**
+ * Spotify track ids are 22-char base62. Bogus ids (test fixtures like
+ * `fixtureXYZ` or truncated strings) cause the Spotify SDK + oEmbed to
+ * bounce back with 400 / CORS errors after a noticeable delay and then
+ * fall through to the failure placeholder anyway — worst of both worlds.
+ * Short-circuit those straight to the failure fallback and never hit the
+ * network.
+ */
+const SPOTIFY_TRACK_ID_RE = /^(?:spotify:track:)?[A-Za-z0-9]{22}$/;
+const isValidTrackId = (trackId: string | undefined | null): boolean =>
+  !!trackId && SPOTIFY_TRACK_ID_RE.test(trackId);
+
+/**
  * Song card body — album cover + title + artist.
  *
  * Prefers the metadata cached in `entry.data` (populated at save time by
@@ -46,20 +58,24 @@ function SongCardBody({ entry }: Props) {
       }
     : null;
 
+  const trackIdLooksValid = isValidTrackId(data.track_id);
+
   const [resolved, setResolved] = useState<Resolved | null>(initial);
-  const [isResolving, setIsResolving] = useState<boolean>(!initial && Boolean(data.track_id));
-  const [didFail, setDidFail] = useState<boolean>(false);
+  const [isResolving, setIsResolving] = useState<boolean>(!initial && trackIdLooksValid);
+  const [didFail, setDidFail] = useState<boolean>(
+    !initial && !trackIdLooksValid && Boolean(data.track_id),
+  );
 
   useEffect(() => {
     if (resolved) return;
-    if (!data.track_id) {
+    if (!trackIdLooksValid) {
       setIsResolving(false);
       return;
     }
     let cancelled = false;
     setIsResolving(true);
     SpotifyManager.getInstance()
-      .getTrack(data.track_id)
+      .getTrack(data.track_id!)
       .then((track: Track | null) => {
         if (cancelled) return;
         if (!track) {
@@ -82,7 +98,7 @@ function SongCardBody({ entry }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [data.track_id, resolved]);
+  }, [data.track_id, resolved, trackIdLooksValid]);
 
   if (resolved) {
     return (
