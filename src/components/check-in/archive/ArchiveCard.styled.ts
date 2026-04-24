@@ -74,3 +74,35 @@ export const AlbumCover = styled.img`
   object-fit: cover;
   flex-shrink: 0;
 `;
+
+/**
+ * Gray pulsing block used as a placeholder while oEmbed resolves, or as a
+ * fallback when resolution fails outright. Sized to match {@link AlbumCover}
+ * so the card height does not jump when the real image arrives.
+ */
+const shimmer = `
+  @keyframes archive-shimmer {
+    0% { opacity: 1; }
+    50% { opacity: 0.55; }
+    100% { opacity: 1; }
+  }
+`;
+
+export const AlbumCoverSkeleton = styled.div`
+  ${shimmer}
+  width: 68px;
+  height: 68px;
+  border-radius: 8px;
+  background: #ebebeb;
+  flex-shrink: 0;
+  animation: archive-shimmer 1.2s ease-in-out infinite;
+`;
+
+export const TextLineSkeleton = styled.div<{ $width?: number }>`
+  ${shimmer}
+  width: ${({ $width }) => $width ?? 80}px;
+  height: 10px;
+  border-radius: 4px;
+  background: #ebebeb;
+  animation: archive-shimmer 1.2s ease-in-out infinite;
+`;

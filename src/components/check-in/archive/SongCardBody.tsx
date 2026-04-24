@@ -1,6 +1,6 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { useEffect, useState } from 'react';
-import { Layout, Typo } from '@design-system';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
 import { CheckInComponentEntry } from '@models/checkInEntry';
 import * as S from './ArchiveCard.styled';
@@ -9,6 +9,8 @@ interface Props {
   entry: CheckInComponentEntry;
 }
 
+type Resolved = { title: string; artist: string; cover: string | null };
+
 /**
  * Song card body — album cover + title + artist.
  *
@@ -16,6 +18,14 @@ interface Props {
  * the Song post_save signal's oEmbed fetch) to avoid an extra HTTP call
  * per card. Falls back to the Spotify SDK when metadata is missing —
  * this covers backfilled rows that were written with just `{track_id}`.
+ *
+ * Render states:
+ *   * resolved   → album cover + title + artist
+ *   * loading    → skeleton (cover block + title/artist lines). Flickers
+ *                  briefly for every backfilled row on first render.
+ *   * failed     → neutral "Song" fallback with music-note icon, so a
+ *                  transient Spotify outage or a revoked track never
+ *                  drops a raw `spotify:track:XYZ` string onto the card.
  *
  * Tapping the card opens the shared Spotify bottom sheet via the
  * Archive screen's `onBodyClick` handler.
@@ -28,29 +38,34 @@ function SongCardBody({ entry }: Props) {
     album_cover_url?: string | null;
   };
 
-  const [resolved, setResolved] = useState<{
-    title: string;
-    artist: string;
-    cover: string | null;
-  } | null>(() => {
-    if (data.title) {
-      return {
+  const initial: Resolved | null = data.title
+    ? {
         title: data.title,
         artist: data.artist ?? '',
         cover: data.album_cover_url ?? null,
-      };
-    }
-    return null;
-  });
+      }
+    : null;
+
+  const [resolved, setResolved] = useState<Resolved | null>(initial);
+  const [isResolving, setIsResolving] = useState<boolean>(!initial && Boolean(data.track_id));
+  const [didFail, setDidFail] = useState<boolean>(false);
 
   useEffect(() => {
     if (resolved) return;
-    if (!data.track_id) return;
-    const mgr = SpotifyManager.getInstance();
-    mgr
+    if (!data.track_id) {
+      setIsResolving(false);
+      return;
+    }
+    let cancelled = false;
+    setIsResolving(true);
+    SpotifyManager.getInstance()
       .getTrack(data.track_id)
       .then((track: Track | null) => {
-        if (!track) return;
+        if (cancelled) return;
+        if (!track) {
+          setDidFail(true);
+          return;
+        }
         setResolved({
           title: track.name,
           artist: track.artists?.map((a) => a.name).join(', ') ?? '',
@@ -58,39 +73,73 @@ function SongCardBody({ entry }: Props) {
         });
       })
       .catch(() => {
-        // Leave `resolved` null; body will render an empty state silently
+        if (cancelled) return;
+        setDidFail(true);
+      })
+      .finally(() => {
+        if (!cancelled) setIsResolving(false);
       });
+    return () => {
+      cancelled = true;
+    };
   }, [data.track_id, resolved]);
 
-  if (!resolved) {
+  if (resolved) {
     return (
-      <Layout.FlexCol w="100%" alignItems="center" justifyContent="center">
+      <Layout.FlexCol w="100%" alignItems="center" gap={6}>
+        {resolved.cover && <S.AlbumCover src={resolved.cover} alt={resolved.title} />}
+        <Layout.FlexCol w="100%" alignItems="center" gap={0}>
+          <S.ClampText lines={1}>
+            <Typo type="label-medium" color="DARK">
+              {resolved.title}
+            </Typo>
+          </S.ClampText>
+          {resolved.artist && (
+            <S.ClampText lines={1}>
+              <Typo type="label-small" color="DARK_GRAY">
+                {resolved.artist}
+              </Typo>
+            </S.ClampText>
+          )}
+        </Layout.FlexCol>
+      </Layout.FlexCol>
+    );
+  }
+
+  if (isResolving) {
+    return (
+      <Layout.FlexCol w="100%" alignItems="center" gap={6}>
+        <S.AlbumCoverSkeleton aria-hidden />
+        <Layout.FlexCol alignItems="center" gap={3}>
+          <S.TextLineSkeleton $width={80} />
+          <S.TextLineSkeleton $width={60} />
+        </Layout.FlexCol>
+      </Layout.FlexCol>
+    );
+  }
+
+  if (didFail || !data.track_id) {
+    // Unresolvable song — render a neutral fallback rather than leak raw ids.
+    return (
+      <Layout.FlexCol w="100%" alignItems="center" gap={6}>
+        <Layout.FlexCol
+          w={68}
+          h={68}
+          rounded={8}
+          bgColor="LIGHT"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <SvgIcon name="spotify" size={28} color="MEDIUM_GRAY" />
+        </Layout.FlexCol>
         <Typo type="label-small" color="MEDIUM_GRAY">
-          {data.track_id ?? ''}
+          Song
         </Typo>
       </Layout.FlexCol>
     );
   }
 
-  return (
-    <Layout.FlexCol w="100%" alignItems="center" gap={6}>
-      {resolved.cover && <S.AlbumCover src={resolved.cover} alt={resolved.title} />}
-      <Layout.FlexCol w="100%" alignItems="center" gap={0}>
-        <S.ClampText lines={1}>
-          <Typo type="label-medium" color="DARK">
-            {resolved.title}
-          </Typo>
-        </S.ClampText>
-        {resolved.artist && (
-          <S.ClampText lines={1}>
-            <Typo type="label-small" color="DARK_GRAY">
-              {resolved.artist}
-            </Typo>
-          </S.ClampText>
-        )}
-      </Layout.FlexCol>
-    </Layout.FlexCol>
-  );
+  return null;
 }
 
 export default SongCardBody;
