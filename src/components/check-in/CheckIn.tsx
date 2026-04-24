@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import CheckInArchiveChip from '@components/check-in/archive/CheckInArchiveChip';
+import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
 import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
@@ -10,6 +11,7 @@ import SocialBatteryPlaceholder from '@components/profile/placeholders/SocialBat
 import ThoughtPlaceholder from '@components/profile/placeholders/ThoughtPlaceholder';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { useFriendPinnedCount } from '@hooks/useFriendPinnedCount';
 import { MyProfile } from '@models/api/user';
 import { CheckInBase } from '@models/checkIn';
 import { UserProfile } from '@models/user';
@@ -33,6 +35,8 @@ function CheckIn({ user }: CheckInProps) {
     fetchCheckIn: state.fetchCheckIn,
   }));
   const isMyPage = user?.id === myProfile?.id;
+  const friendUsername = !isMyPage && 'username' in user ? (user as UserProfile).username : null;
+  const { pinnedCount: friendPinnedCount } = useFriendPinnedCount(friendUsername);
   const [checkIn, setCheckIn] = useState<CheckInBase | null | undefined>(
     isMyPage ? initialCheckIn : user.check_in,
   );
@@ -162,15 +166,25 @@ function CheckIn({ user }: CheckInProps) {
               ))}
           </Layout.FlexRow>
         )}
-        {/* Archive entry chip (own profile, bottom-left) + check-in time (bottom-right) */}
-        {(isMyPage || checkIn?.created_at) && (
+        {/* Bottom row: archive chip (own page) OR friend-pinned chip + check-in timestamp.
+            Own profile → [All | Pinned (N)] segmented on the left.
+            Friend profile → [Pinned Check-ins (N)] chip on the left when the
+            viewer has ≥1 visible pin; hidden entirely when friendPinnedCount is 0
+            (matches the spec: the entry point shows up only when there's
+            something to see). */}
+        {(isMyPage || checkIn?.created_at || (friendUsername && friendPinnedCount > 0)) && (
           <Layout.FlexRow
             w="100%"
-            justifyContent={isMyPage ? 'space-between' : 'flex-end'}
+            justifyContent={
+              isMyPage || (friendUsername && friendPinnedCount > 0) ? 'space-between' : 'flex-end'
+            }
             alignItems="center"
             gap={4}
           >
             {isMyPage && <CheckInArchiveChip />}
+            {!isMyPage && friendUsername && friendPinnedCount > 0 && (
+              <FriendPinnedChip username={friendUsername} pinnedCount={friendPinnedCount} />
+            )}
             {checkIn?.created_at && (
               <Layout.FlexRow alignItems="center" gap={4}>
                 <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
