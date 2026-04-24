@@ -92,6 +92,7 @@ interface Props {
   onMessageSent: (msg: PostChatMessageRes) => void;
   onTyping?: () => void;
   isGroup?: boolean;
+  typingText?: string | null;
 }
 
 const TYPING_DEBOUNCE_MS = 2000;
@@ -103,6 +104,7 @@ function ChatMessageInput({
   onMessageSent,
   onTyping,
   isGroup,
+  typingText,
 }: Props) {
   const [inputValue, setInputValue] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -207,6 +209,19 @@ function ChatMessageInput({
         maxWidth: 500,
       }}
     >
+      {typingText && (
+        <Layout.FlexRow
+          w="100%"
+          pl={17}
+          pv={4}
+          bgColor="WHITE"
+          style={{ borderTop: '1px solid #D9D9D9' }}
+        >
+          <Typo type="body-small" color="MEDIUM_GRAY">
+            {typingText}
+          </Typo>
+        </Layout.FlexRow>
+      )}
       {replyTarget && (
         <Layout.FlexRow
           w="100%"

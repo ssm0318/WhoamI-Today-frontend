@@ -11,7 +11,7 @@ import ChatMessageItem from '@components/chat/chat-message-item/ChatMessageItem'
 import ChatRequestBar from '@components/chat/chat-request-bar/ChatRequestBar';
 import SubHeader from '@components/sub-header/SubHeader';
 import { CHAT_MESSAGE_INPUT_HEIGHT } from '@constants/layout';
-import { Layout, Typo } from '@design-system';
+import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import {
   ChatMessage,
@@ -26,6 +26,8 @@ import { getUserProfile } from '@utils/apis/user';
 import { MainScrollContainer } from '../Root';
 import { useChatSocketProvider } from './_hooks/useChatSocketProvider';
 
+const NEAR_BOTTOM_PX = 120;
+
 function Chat() {
   const { username: userId } = useParams<{ username: string }>();
   const navigate = useNavigate();
@@ -35,6 +37,8 @@ function Chat() {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
+  const justSentIdsRef = useRef<Set<number>>(new Set());
+  const shouldPinToBottomRef = useRef<Set<number>>(new Set());
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [username, setUsername] = useState<string>('');
@@ -139,11 +143,21 @@ function Chat() {
   }, [messages]);
 
   const handleMessageSent = (newMsg: PostChatMessageRes) => {
+    justSentIdsRef.current.add(newMsg.id);
     setPrevScrollHeight(scrollRef.current?.clientHeight);
     setMessages((prev) => {
       if (prev.some((m) => m.id === newMsg.id)) return prev;
       return [...prev, newMsg];
     });
+  };
+
+  const handleImageLoaded = (messageId: number) => {
+    const shouldScroll =
+      justSentIdsRef.current.has(messageId) || shouldPinToBottomRef.current.has(messageId);
+    if (!shouldScroll || !scrollRef.current) return;
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    justSentIdsRef.current.delete(messageId);
+    shouldPinToBottomRef.current.delete(messageId);
   };
 
   // Mark messages as read on page entry and on any click/tap
@@ -167,6 +181,12 @@ function Chat() {
         // Clear typing indicator since they sent a message
         setIsOpponentTyping(false);
         clearTimeout(typingTimerRef.current);
+
+        const el = scrollRef.current;
+        const isNearBottom = el
+          ? el.scrollHeight - el.scrollTop - el.clientHeight < NEAR_BOTTOM_PX
+          : true;
+        if (isNearBottom) shouldPinToBottomRef.current.add(msg.id);
 
         setPrevScrollHeight(scrollRef.current?.clientHeight);
         setMessages((prev) => {
@@ -258,6 +278,7 @@ function Chat() {
                     isMine={
                       currentUser ? Number(message.sender.id) === Number(currentUser.id) : false
                     }
+                    onImageLoad={handleImageLoaded}
                   />
                 </SwipeLayout>
               ))}
@@ -272,19 +293,6 @@ function Chat() {
           </Layout.FlexCol>
         )}
       </div>
-      {isOpponentTyping && (
-        <Layout.Fixed
-          b={145}
-          z={11}
-          style={{ left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 500 }}
-        >
-          <Layout.FlexRow pl={17} pv={4}>
-            <Typo type="body-small" color="MEDIUM_GRAY">
-              {username} is typing...
-            </Typo>
-          </Layout.FlexRow>
-        </Layout.Fixed>
-      )}
       {showRequestBar ? (
         <ChatRequestBar
           userId={Number(userId)}
@@ -303,6 +311,7 @@ function Chat() {
           onClearReply={() => setReplyTarget(null)}
           onMessageSent={handleMessageSent}
           onTyping={sendTyping}
+          typingText={isOpponentTyping ? `${username} is typing...` : null}
         />
       )}
     </MainScrollContainer>

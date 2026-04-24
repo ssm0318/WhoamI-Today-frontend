@@ -24,6 +24,8 @@ import {
 import { getMyProfile } from '@utils/apis/my';
 import { MainScrollContainer } from '../Root';
 
+const NEAR_BOTTOM_PX = 120;
+
 function getGroupWsUrl(roomId: number, token: string) {
   if (process.env.NODE_ENV === 'development') {
     return `ws://localhost:8000/ws/chat/group/${roomId}/?token=${token}`;
@@ -37,6 +39,8 @@ function GroupChat() {
   const navigate = useNavigate();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
+  const justSentIdsRef = useRef<Set<number>>(new Set());
+  const shouldPinToBottomRef = useRef<Set<number>>(new Set());
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [room, setRoom] = useState<ChatRoom>();
   const [nextUrl, setNextUrl] = useState<string | null>(null);
@@ -133,6 +137,11 @@ function GroupChat() {
           delete next[data.sender.id];
           return next;
         });
+        const el = scrollRef.current;
+        const isNearBottom = el
+          ? el.scrollHeight - el.scrollTop - el.clientHeight < NEAR_BOTTOM_PX
+          : true;
+        if (isNearBottom) shouldPinToBottomRef.current.add(data.id);
         setPrevScrollHeight(scrollRef.current?.clientHeight);
         setMessages((prev) => {
           if (prev.some((m) => m.id === data.id)) return prev;
@@ -196,11 +205,21 @@ function GroupChat() {
   }, [messages]);
 
   const handleMessageSent = (newMsg: PostChatMessageRes) => {
+    justSentIdsRef.current.add(newMsg.id);
     setPrevScrollHeight(scrollRef.current?.clientHeight);
     setMessages((prev) => {
       if (prev.some((m) => m.id === newMsg.id)) return prev;
       return [...prev, newMsg];
     });
+  };
+
+  const handleImageLoaded = (messageId: number) => {
+    const shouldScroll =
+      justSentIdsRef.current.has(messageId) || shouldPinToBottomRef.current.has(messageId);
+    if (!shouldScroll || !scrollRef.current) return;
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    justSentIdsRef.current.delete(messageId);
+    shouldPinToBottomRef.current.delete(messageId);
   };
 
   useEffect(() => {
@@ -531,7 +550,11 @@ function GroupChat() {
                       </Layout.FlexRow>,
                     ]}
                   >
-                    <ChatMessageItem message={message} isMine={isMine} />
+                    <ChatMessageItem
+                      message={message}
+                      isMine={isMine}
+                      onImageLoad={handleImageLoaded}
+                    />
                   </SwipeLayout>
                 </Layout.FlexCol>
               );
@@ -547,24 +570,6 @@ function GroupChat() {
         </Layout.FlexCol>
       )}
 
-      {typingNames.length > 0 && (
-        <Layout.Fixed
-          b={145}
-          z={11}
-          style={{ left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 500 }}
-        >
-          <Layout.FlexRow pl={17} pv={4}>
-            <Typo type="body-small" color="MEDIUM_GRAY">
-              {typingNames.length === 1
-                ? `${typingNames[0]} is typing...`
-                : typingNames.length === 2
-                ? `${typingNames[0]} and ${typingNames[1]} are typing...`
-                : `${typingNames[0]} and ${typingNames.length - 1} others are typing...`}
-            </Typo>
-          </Layout.FlexRow>
-        </Layout.Fixed>
-      )}
-
       <ChatMessageInput
         userId={Number(roomId)}
         replyTarget={replyTarget}
@@ -572,6 +577,15 @@ function GroupChat() {
         onMessageSent={handleMessageSent}
         onTyping={sendTyping}
         isGroup
+        typingText={
+          typingNames.length === 0
+            ? null
+            : typingNames.length === 1
+            ? `${typingNames[0]} is typing...`
+            : typingNames.length === 2
+            ? `${typingNames[0]} and ${typingNames[1]} are typing...`
+            : `${typingNames[0]} and ${typingNames.length - 1} others are typing...`
+        }
       />
     </MainScrollContainer>
   );

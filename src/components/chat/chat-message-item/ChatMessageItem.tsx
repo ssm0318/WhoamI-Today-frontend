@@ -30,9 +30,10 @@ interface Props {
   message: RefinedChatMessage;
   isMine: boolean;
   onReactionUpdate?: () => void;
+  onImageLoad?: (messageId: number) => void;
 }
 
-function ChatMessageItem({ message, isMine, onReactionUpdate }: Props) {
+function ChatMessageItem({ message, isMine, onReactionUpdate, onImageLoad }: Props) {
   const {
     content,
     emoji,
@@ -175,8 +176,36 @@ function ChatMessageItem({ message, isMine, onReactionUpdate }: Props) {
     </Typo>
   );
 
+  const hasImageAndText = Boolean(message.image && (content || emoji));
+
+  const textBubble = (content || emoji) && (
+    <Bubble
+      ref={bubbleRef}
+      mt={message.image ? 4 : 0}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onDoubleClick={handleDoubleClick}
+      onContextMenu={handleContextMenu}
+    >
+      <Layout.FlexRow alignItems="center" justifyContent="center" gap={10}>
+        {emoji && ChatEmojiDict[emoji as ChatEmojiType] && (
+          <Typo type="body-medium">{ChatEmojiDict[emoji as ChatEmojiType]}</Typo>
+        )}
+        {content && (
+          <Typo type="body-large" color="BLACK">
+            {content}
+          </Typo>
+        )}
+      </Layout.FlexRow>
+    </Bubble>
+  );
+
   const bubbleContent = (
-    <Layout.FlexCol style={{ position: 'relative' }}>
+    <Layout.FlexCol
+      alignItems={isMine ? 'flex-end' : 'flex-start'}
+      style={{ position: 'relative' }}
+    >
       {parent_preview && (
         <ParentPreview>
           <Typo type="label-small" color="MEDIUM_GRAY">
@@ -262,6 +291,7 @@ function ChatMessageItem({ message, isMine, onReactionUpdate }: Props) {
             onClick={() => setShowImagePopup(true)}
             onDoubleClick={handleDoubleClick}
             onContextMenu={handleContextMenu}
+            onLoad={() => onImageLoad?.(message.id)}
           />
           {showImagePopup &&
             createPortal(
@@ -298,26 +328,18 @@ function ChatMessageItem({ message, isMine, onReactionUpdate }: Props) {
             )}
         </>
       )}
-      {(content || emoji) && (
-        <Bubble
-          ref={bubbleRef}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          onDoubleClick={handleDoubleClick}
-          onContextMenu={handleContextMenu}
+      {hasImageAndText ? (
+        <Layout.FlexRow
+          alignItems="flex-end"
+          justifyContent={isMine ? 'flex-end' : 'flex-start'}
+          gap={6}
         >
-          <Layout.FlexRow alignItems="center" justifyContent="center" gap={10}>
-            {emoji && ChatEmojiDict[emoji as ChatEmojiType] && (
-              <Typo type="body-medium">{ChatEmojiDict[emoji as ChatEmojiType]}</Typo>
-            )}
-            {content && (
-              <Typo type="body-large" color="BLACK">
-                {content}
-              </Typo>
-            )}
-          </Layout.FlexRow>
-        </Bubble>
+          {!isMine && timestamp}
+          {textBubble}
+          {isMine && timestamp}
+        </Layout.FlexRow>
+      ) : (
+        textBubble
       )}
       {reactions.length > 0 && (
         <Layout.FlexRow gap={4} mt={2} justifyContent={isMine ? 'flex-end' : 'flex-start'}>
@@ -347,13 +369,13 @@ function ChatMessageItem({ message, isMine, onReactionUpdate }: Props) {
       )}
       {isMine ? (
         <RightMessageWrapper id={`msg_${message.id}`}>
-          {timestamp}
+          {!hasImageAndText && timestamp}
           {bubbleContent}
         </RightMessageWrapper>
       ) : (
         <LeftMessageWrapper id={`msg_${message.id}`}>
           {bubbleContent}
-          {timestamp}
+          {!hasImageAndText && timestamp}
         </LeftMessageWrapper>
       )}
     </>
