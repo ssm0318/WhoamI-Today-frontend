@@ -15,12 +15,17 @@ interface Props {
 /**
  * `⋯` bottom-menu for an archive card.
  *
- * Two rows: `Modify visibility` (only when the entry is pinned — per
- * the backend's PATCH /entries/<pk>/pin_visibility/ constraint) and
- * `Delete`. Delete opens a CommonDialog for confirmation — only live-
- * archived rows may be deleted server-side, which the backend enforces
- * with a 400 for live entries; in practice this menu never opens for
- * live rows because they don't appear in the archive feed at all.
+ * Two rows: `Modify visibility` and `Delete`. Modify visibility is
+ * always offered because the user's mental model is "change who sees
+ * this," regardless of whether the card is currently pinned. When the
+ * caller receives a modify-visibility request on an unpinned entry,
+ * it auto-pins first (which seeds pin_visibility from entry.visibility
+ * server-side) and then opens the visibility modal — see
+ * Archive.tsx::handleModifyVisibility. Delete is surfaced in WARNING
+ * red and opens a CommonDialog for confirmation; only archived rows
+ * can be deleted server-side, which the backend enforces with a 400
+ * on live entries (in practice this menu never opens for live rows
+ * because they don't appear in the archive feed at all).
  */
 function ArchiveEntryMoreModal({ entry, onClose, onModifyVisibility, onDelete }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'archive.more_modal' });
@@ -51,13 +56,11 @@ function ArchiveEntryMoreModal({ entry, onClose, onModifyVisibility, onDelete }:
   return (
     <>
       <BottomMenuDialog visible={entry !== null && !confirmDelete} onClickClose={onClose}>
-        {entry?.is_pinned && (
-          <MenuRow onClick={handleClickModify}>
-            <Typo type="button-large" color="DARK">
-              {t('modify_visibility')}
-            </Typo>
-          </MenuRow>
-        )}
+        <MenuRow onClick={handleClickModify}>
+          <Typo type="button-large" color="DARK">
+            {t('modify_visibility')}
+          </Typo>
+        </MenuRow>
         <MenuRow onClick={handleClickDelete}>
           <Typo type="button-large" color="WARNING">
             {t('delete')}

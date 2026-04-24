@@ -139,8 +139,28 @@ function Archive() {
     setMoreEntry(entry);
   };
 
-  const handleModifyVisibility = (entry: CheckInComponentEntry) => {
-    setVisibilityEntry(entry);
+  /**
+   * Open the modify-visibility modal. The backend's PATCH
+   * /entries/<pk>/pin_visibility/ only accepts already-pinned rows, so
+   * when the user picks this action on an unpinned entry we auto-pin
+   * it first (which server-side seeds pin_visibility from
+   * entry.visibility) and then open the modal on the updated row.
+   * Intent: the user is asking "who can see this?" — they shouldn't
+   * need to think about whether the card is already pinned.
+   */
+  const handleModifyVisibility = async (entry: CheckInComponentEntry) => {
+    if (entry.is_pinned) {
+      setVisibilityEntry(entry);
+      return;
+    }
+    try {
+      const updated = await togglePin(entry.id);
+      await mutate((pages) => patchEntryInPages(pages, updated), { revalidate: false });
+      invalidateSiblingCaches();
+      setVisibilityEntry(updated);
+    } catch {
+      openToast({ message: tPin('error') });
+    }
   };
 
   const handleConfirmVisibility = async (visibility: ComponentVisibility) => {

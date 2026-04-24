@@ -34,9 +34,10 @@ export const CardHeader = styled(Layout.FlexRow)`
   gap: 4px;
 `;
 
-export const HeaderActions = styled(Layout.FlexCol)`
-  align-items: flex-end;
-  gap: 2px;
+export const HeaderActions = styled(Layout.FlexRow)`
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
 `;
 
 export const CardBodyWrapper = styled(Layout.FlexCol)`

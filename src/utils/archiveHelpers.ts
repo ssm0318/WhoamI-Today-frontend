@@ -61,7 +61,7 @@ export function formatDateSectionLabel(date: Date, now: Date = new Date()): stri
 }
 
 export interface ArchiveDateSection {
-  /** ISO date (yyyy-MM-dd) — stable key for React. */
+  /** ISO date (yyyy-MM-dd) in local time — stable key for React. */
   key: string;
   label: string;
   items: CheckInComponentEntry[];
@@ -71,27 +71,38 @@ export interface ArchiveDateSection {
  * Group entries by calendar day (local time), newest day first. Within
  * each day the input order is preserved; callers should pass entries
  * that are already sorted by `created_at` desc.
+ *
+ * We keep the original local-time Date alongside the string key so the
+ * section label renders off the same Date object we bucketed by. Going
+ * through `new Date(key)` on the string instead re-parses as UTC
+ * midnight, which can shift the label by a day in negative-offset
+ * timezones (that's what caused the `Apr 10 header / Apr 11 card`
+ * mismatch in KST when an entry was created around midnight local).
  */
 export function groupEntriesByDate(
   entries: CheckInComponentEntry[],
   now: Date = new Date(),
 ): ArchiveDateSection[] {
-  const buckets = new Map<string, CheckInComponentEntry[]>();
+  interface Bucket {
+    day: Date;
+    items: CheckInComponentEntry[];
+  }
+  const buckets = new Map<string, Bucket>();
   entries.forEach((entry) => {
     const day = startOfDay(new Date(entry.created_at));
     const key = format(day, 'yyyy-MM-dd');
     const bucket = buckets.get(key);
     if (bucket) {
-      bucket.push(entry);
+      bucket.items.push(entry);
     } else {
-      buckets.set(key, [entry]);
+      buckets.set(key, { day, items: [entry] });
     }
   });
   // Map insertion order is the iteration order, and we fed it in
   // newest-first, so the resulting sections are already sorted.
-  return Array.from(buckets, ([key, items]) => ({
+  return Array.from(buckets, ([key, { day, items }]) => ({
     key,
-    label: formatDateSectionLabel(new Date(key), now),
+    label: formatDateSectionLabel(day, now),
     items,
   }));
 }
