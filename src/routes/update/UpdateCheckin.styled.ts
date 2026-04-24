@@ -78,3 +78,11 @@ export const QuadrantLabel = styled.span`
   color: ${Colors.MEDIUM_GRAY};
   font-weight: 500;
 `;
+
+export const ArchiveDescription = styled.p`
+  font-size: 12px;
+  color: ${Colors.MEDIUM_GRAY};
+  text-align: center;
+  padding: 0 12px;
+  margin: 8px 0 24px;
+`;

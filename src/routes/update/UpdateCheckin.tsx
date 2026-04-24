@@ -19,6 +19,7 @@ import { getActiveSong, postCheckIn, postSong } from '@utils/apis/checkIn';
 import { MainScrollContainer } from '../Root';
 import {
   ArchivedBadge,
+  ArchiveDescription,
   GridContainer,
   QuadrantCard,
   QuadrantLabel,
@@ -292,10 +293,10 @@ export default function UpdateCheckin() {
           onClick={() => setActiveEditor('battery')}
         >
           {battery ? (
-            effectiveBatteryVis === ComponentVisibility.ONLY_ME ? (
-              <ArchivedBadge>Only Me</ArchivedBadge>
+            batteryArchived ? (
+              <ArchivedBadge>Only Me (Archived)</ArchivedBadge>
             ) : (
-              <VisibilityBadge>{getVisibilityLabel(effectiveBatteryVis)}</VisibilityBadge>
+              <VisibilityBadge>{getVisibilityLabel(batteryVis)}</VisibilityBadge>
             )
           ) : null}
           {battery ? (
@@ -328,10 +329,10 @@ export default function UpdateCheckin() {
           onClick={() => setActiveEditor('mood')}
         >
           {mood.length > 0 ? (
-            effectiveMoodVis === ComponentVisibility.ONLY_ME ? (
-              <ArchivedBadge>Only Me</ArchivedBadge>
+            moodArchived ? (
+              <ArchivedBadge>Only Me (Archived)</ArchivedBadge>
             ) : (
-              <VisibilityBadge>{getVisibilityLabel(effectiveMoodVis)}</VisibilityBadge>
+              <VisibilityBadge>{getVisibilityLabel(moodVis)}</VisibilityBadge>
             )
           ) : null}
           {mood.length > 0 ? (
@@ -360,10 +361,10 @@ export default function UpdateCheckin() {
           onClick={() => setActiveEditor('song')}
         >
           {trackId ? (
-            effectiveSongVis === ComponentVisibility.ONLY_ME ? (
-              <ArchivedBadge>Only Me</ArchivedBadge>
+            songArchived ? (
+              <ArchivedBadge>Only Me (Archived)</ArchivedBadge>
             ) : (
-              <VisibilityBadge>{getVisibilityLabel(effectiveSongVis)}</VisibilityBadge>
+              <VisibilityBadge>{getVisibilityLabel(songVis)}</VisibilityBadge>
             )
           ) : null}
           {trackId && trackData ? (
@@ -397,10 +398,10 @@ export default function UpdateCheckin() {
           onClick={() => setActiveEditor('thought')}
         >
           {thought ? (
-            effectiveThoughtVis === ComponentVisibility.ONLY_ME ? (
-              <ArchivedBadge>Only Me</ArchivedBadge>
+            thoughtArchived ? (
+              <ArchivedBadge>Only Me (Archived)</ArchivedBadge>
             ) : (
-              <VisibilityBadge>{getVisibilityLabel(effectiveThoughtVis)}</VisibilityBadge>
+              <VisibilityBadge>{getVisibilityLabel(thoughtVis)}</VisibilityBadge>
             )
           ) : null}
           {thought ? (
@@ -418,6 +419,10 @@ export default function UpdateCheckin() {
           )}
         </QuadrantCard>
       </GridContainer>
+
+      <ArchiveDescription>
+        Items automatically archive after 12 hours and become visible only to you.
+      </ArchiveDescription>
 
       {/* Editor Popups — "Share" auto-saves */}
       <BatteryEditor
