@@ -10,8 +10,11 @@ import ThoughtCardBody from './ThoughtCardBody';
 
 interface ArchiveCardProps {
   entry: CheckInComponentEntry;
-  /** Optional handlers — this branch wires up appearance only; actions
-   *  (pin toggle, modify visibility, delete) land in feat/archive-entry-actions. */
+  /** Optional action handlers. Omit both `onPinClick` and `onMoreClick` to
+   *  render the card in read-only mode (no header icons) — that's how the
+   *  friend pinned feed renders: every item in that feed is already pinned
+   *  and the viewer has no control over someone else's pins, so the icons
+   *  would only be visual clutter. */
   onPinClick?: (entry: CheckInComponentEntry) => void;
   onMoreClick?: (entry: CheckInComponentEntry) => void;
   onBodyClick?: (entry: CheckInComponentEntry) => void;
@@ -20,9 +23,12 @@ interface ArchiveCardProps {
 /**
  * Square archive grid cell.
  *
- * Header: timestamp (top-left) stacked with pin-icon + ⋯ button (top-right).
- * Body:   per-component renderer (BatteryCardBody / MoodCardBody /
- *         ThoughtCardBody / SongCardBody).
+ * Header: timestamp (top-left). Pin + ⋯ buttons (top-right) render when
+ * the caller provides the matching handler, and are omitted entirely
+ * otherwise.
+ *
+ * Body: per-component renderer (BatteryCardBody / MoodCardBody /
+ *        ThoughtCardBody / SongCardBody).
  *
  * Left-column click → body handler (opens component-specific interaction
  * like the thought full-text modal or Spotify bottom sheet). Right-column
@@ -32,6 +38,9 @@ function ArchiveCard({ entry, onPinClick, onMoreClick, onBodyClick }: ArchiveCar
   const timestamp = formatEntryTimestamp(entry.created_at);
 
   const body = renderBody(entry);
+  const showPin = Boolean(onPinClick);
+  const showMore = Boolean(onMoreClick);
+  const showHeaderActions = showPin || showMore;
 
   const handleBody = () => onBodyClick?.(entry);
   const handlePin = (e: MouseEvent) => {
@@ -49,18 +58,24 @@ function ArchiveCard({ entry, onPinClick, onMoreClick, onBodyClick }: ArchiveCar
         <Typo type="label-small" color="MEDIUM_GRAY">
           {timestamp}
         </Typo>
-        <S.HeaderActions>
-          <IconButton ariaLabel="pin" onClick={handlePin}>
-            <SvgIcon
-              name={entry.is_pinned ? 'pin_filled' : 'pin_empty'}
-              size={16}
-              color={entry.is_pinned ? 'PRIMARY' : 'DARK_GRAY'}
-            />
-          </IconButton>
-          <IconButton ariaLabel="more" onClick={handleMore}>
-            <SvgIcon name="dots_menu" size={16} color="DARK_GRAY" />
-          </IconButton>
-        </S.HeaderActions>
+        {showHeaderActions && (
+          <S.HeaderActions>
+            {showPin && (
+              <IconButton ariaLabel="pin" onClick={handlePin}>
+                <SvgIcon
+                  name={entry.is_pinned ? 'pin_filled' : 'pin_empty'}
+                  size={16}
+                  color={entry.is_pinned ? 'PRIMARY' : 'DARK_GRAY'}
+                />
+              </IconButton>
+            )}
+            {showMore && (
+              <IconButton ariaLabel="more" onClick={handleMore}>
+                <SvgIcon name="dots_menu" size={16} color="DARK_GRAY" />
+              </IconButton>
+            )}
+          </S.HeaderActions>
+        )}
       </S.CardHeader>
       <S.CardBodyWrapper>{body}</S.CardBodyWrapper>
     </S.CardShell>
