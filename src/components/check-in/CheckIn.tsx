@@ -156,6 +156,9 @@ function CheckIn({ user }: CheckInProps) {
                     handleClickEditCheckIn();
                   }}
                 >
+                  <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden>
+                    💭
+                  </span>
                   <Typo type="label-large" numberOfLines={2}>
                     {thought}
                   </Typo>

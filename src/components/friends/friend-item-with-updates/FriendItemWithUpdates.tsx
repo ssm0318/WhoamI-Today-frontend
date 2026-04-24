@@ -276,18 +276,22 @@ function FriendItemWithUpdates({
             </Layout.FlexRow>
           )}
 
-          {/* Thought pill */}
+          {/* Thought pill — leading 💭 emoji reads as a quoted thought. */}
           {hasThought ? (
             <Layout.FlexRow
               bgColor="WHITE"
               pv={4}
               ph={8}
+              gap={4}
               outline="LIGHT_GRAY"
               alignItems="center"
               rounded={8}
               style={{ flexShrink: 0, cursor: 'pointer', alignSelf: 'flex-start' }}
               onClick={() => setCheckInDetailFocus('thought')}
             >
+              <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden>
+                💭
+              </span>
               <Typo type="label-large" numberOfLines={1}>
                 {thought}
               </Typo>
