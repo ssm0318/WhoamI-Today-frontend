@@ -1,5 +1,6 @@
 import { ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import Loader from '@components/_common/loader/Loader';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
@@ -42,7 +43,11 @@ function Archive() {
 
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
-  const [tab, setTab] = useState<ArchiveTab>('all');
+  // Initial tab can be driven by `?tab=pinned` from the profile chip.
+  // Unknown / missing values fall back to 'all' so the URL is forgiving.
+  const [searchParams] = useSearchParams();
+  const initialTab: ArchiveTab = searchParams.get('tab') === 'pinned' ? 'pinned' : 'all';
+  const [tab, setTab] = useState<ArchiveTab>(initialTab);
   const [thoughtModalEntry, setThoughtModalEntry] = useState<CheckInComponentEntry | null>(null);
   const [moreEntry, setMoreEntry] = useState<CheckInComponentEntry | null>(null);
   const [visibilityEntry, setVisibilityEntry] = useState<CheckInComponentEntry | null>(null);

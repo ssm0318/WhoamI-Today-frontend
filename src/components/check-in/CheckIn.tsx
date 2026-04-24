@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import CheckInArchiveChip from '@components/check-in/archive/CheckInArchiveChip';
 import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
@@ -161,18 +162,28 @@ function CheckIn({ user }: CheckInProps) {
               ))}
           </Layout.FlexRow>
         )}
-        {/* check in time */}
-        {checkIn?.created_at && (
-          <Layout.FlexRow w="100%" justifyContent="flex-end" gap={4}>
-            <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
-              {t('checked_in_time', {
-                time: convertTimeDiffByString({
-                  now: currentDate,
-                  day: new Date(checkIn?.created_at),
-                }),
-              })}
-            </Typo>
-            {!current_user_read && !isMyPage && hasCheckIn && <UpdatedLabel />}
+        {/* Archive entry chip (own profile, bottom-left) + check-in time (bottom-right) */}
+        {(isMyPage || checkIn?.created_at) && (
+          <Layout.FlexRow
+            w="100%"
+            justifyContent={isMyPage ? 'space-between' : 'flex-end'}
+            alignItems="center"
+            gap={4}
+          >
+            {isMyPage && <CheckInArchiveChip />}
+            {checkIn?.created_at && (
+              <Layout.FlexRow alignItems="center" gap={4}>
+                <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
+                  {t('checked_in_time', {
+                    time: convertTimeDiffByString({
+                      now: currentDate,
+                      day: new Date(checkIn?.created_at),
+                    }),
+                  })}
+                </Typo>
+                {!current_user_read && !isMyPage && hasCheckIn && <UpdatedLabel />}
+              </Layout.FlexRow>
+            )}
           </Layout.FlexRow>
         )}
       </>
