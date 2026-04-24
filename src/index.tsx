@@ -7,8 +7,10 @@ import MainContainer from '@components/_common/main-container/MainContainer';
 import ToastBar from '@components/_common/toast-bar/ToastBar';
 import ErrorPage from '@components/error-page/ErrorPage';
 import { UserPageContextProvider } from '@components/user-page/UserPage.context';
+import VersionGuard from '@components/version-guard/VersionGuard';
 import { Colors, Typo } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
+import { VersionType } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import GlobalStyle from '@styles/global-styles';
 import { checkIfSignIn } from '@utils/apis/user';
@@ -39,6 +41,7 @@ import FriendNewPosts from './routes/friends/FriendNewPosts';
 import FriendPinnedFeed from './routes/friends/FriendPinnedFeed';
 import FriendsFeed from './routes/friends/FriendsFeed';
 import FriendsList from './routes/friends/FriendsList';
+import FriendsUpdates from './routes/friends/FriendsUpdates';
 import Intro from './routes/Intro';
 import Likes from './routes/Likes';
 import My from './routes/My';
@@ -119,23 +122,50 @@ const router = createBrowserRouter([
       {
         path: 'friends',
         children: [
-          { path: '', element: <FriendsList /> },
-          // { path: 'feed', element: <FriendsFeed /> },
+          {
+            path: '',
+            element: (
+              <VersionGuard allowedVersions={[VersionType.VER_W]}>
+                <FriendsList />
+              </VersionGuard>
+            ),
+          },
           { path: 'explore', element: <ExploreFriends /> },
           { path: 'edit', element: <EditFriends /> },
           { path: ':username/new-posts', element: <FriendNewPosts /> },
         ],
       },
       {
+        path: 'friends-q',
+        element: (
+          <VersionGuard allowedVersions={[VersionType.VER_Q]}>
+            <FriendsUpdates />
+          </VersionGuard>
+        ),
+      },
+      {
         path: 'discover',
-        children: [{ path: '', element: <Discover /> }],
+        element: (
+          <VersionGuard allowedVersions={[VersionType.VER_W]}>
+            <Discover />
+          </VersionGuard>
+        ),
       },
       {
         path: 'feed',
-        children: [{ path: '', element: <FriendsFeed /> }],
+        element: (
+          <VersionGuard allowedVersions={[VersionType.VER_Q]}>
+            <FriendsFeed />
+          </VersionGuard>
+        ),
       },
       {
         path: 'share',
+        element: (
+          <VersionGuard allowedVersions={[VersionType.VER_W]}>
+            <Outlet />
+          </VersionGuard>
+        ),
         children: [
           { path: '', element: <Share /> },
           { path: 'photo', element: <PhotoOfTheDayFlow /> },
