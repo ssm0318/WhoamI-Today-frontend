@@ -807,6 +807,57 @@
         "title": "Page Not Found",
         "go_home": "Go to main page"
     },
+    "archive": {
+        "title": "Archive",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "segmented": {
+            "all": "All Archived",
+            "pinned": "Pinned"
+        },
+        "empty": {
+            "all": "No archived check-ins yet. Check-ins move here after 12 hours or when you update them.",
+            "pinned": "Pin check-ins from All to surface them on your profile."
+        },
+        "end_of_feed": "That's everything.",
+        "thought_modal": {
+            "close": "Close"
+        },
+        "pin": {
+            "pinned": "Pinned",
+            "unpinned": "Unpinned",
+            "error": "Couldn't update pin. Please try again."
+        },
+        "more_modal": {
+            "modify_visibility": "Modify visibility",
+            "delete": "Delete"
+        },
+        "delete_confirm": {
+            "title": "Delete from archive?",
+            "content": "This cannot be undone.",
+            "cancel": "Cancel",
+            "confirm": "Delete",
+            "toast_deleted": "Deleted from archive",
+            "error": "Couldn't delete. Please try again."
+        },
+        "visibility_modal": {
+            "title": "Who can see this pin?",
+            "visibility_label": "Visibility",
+            "cancel": "Cancel",
+            "save": "Save",
+            "updated_toast": "Updated visibility",
+            "error": "Couldn't update visibility. Please try again."
+        },
+        "friend_card": {
+            "pinned_count_one": "Pinned Check-ins ({{count}})",
+            "pinned_count_other": "Pinned Check-ins ({{count}})"
+        },
+        "friend_feed": {
+            "title": "Pinned Check-ins",
+            "title_with_username": "{{username}}'s Pinned Check-ins",
+            "empty": "No pinned check-ins visible to you yet."
+        }
+    },
     "check_in_edit": {
         "title": "Edit Check-In",
         "save": "Save",

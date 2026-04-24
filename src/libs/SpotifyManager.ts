@@ -1,10 +1,31 @@
 import { SpotifyApi, Track } from '@spotify/web-api-ts-sdk';
 import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '../key';
 
+/**
+ * Accept bare 22-char base62 ids and `spotify:track:<id>` URIs alike,
+ * returning the bare id. The SDK and oEmbed both expect the bare form
+ * on the wire; passing the URI form hits a 404/400 and wastes a round
+ * trip before falling back.
+ */
+const normalizeTrackId = (trackId: string): string => {
+  const prefix = 'spotify:track:';
+  return trackId.startsWith(prefix) ? trackId.slice(prefix.length) : trackId;
+};
+
 class SpotifyManager {
   private static instance: SpotifyManager | null = null;
 
   private spotifyApi: SpotifyApi | null = null;
+
+  // Per-session cache. Once a track resolves, re-renders and newly-mounted
+  // song cards using the same id resolve synchronously instead of firing
+  // another network call.
+  private trackCache = new Map<string, Track>();
+
+  // In-flight request dedup. If N cards mount at once requesting the same
+  // track, they share a single promise instead of racing N identical
+  // HTTP requests against Spotify's API.
+  private pendingFetches = new Map<string, Promise<Track>>();
 
   static getInstance(): SpotifyManager {
     if (!this.instance) {
@@ -87,18 +108,43 @@ class SpotifyManager {
   };
 
   getTrack = async (trackId: string): Promise<Track> => {
-    // Try SDK first if available
+    const bareId = normalizeTrackId(trackId);
+
+    // Session cache — resolve synchronously for already-fetched ids.
+    const cached = this.trackCache.get(bareId);
+    if (cached) return cached;
+
+    // In-flight dedup — concurrent callers share one promise.
+    const pending = this.pendingFetches.get(bareId);
+    if (pending) return pending;
+
+    const fetchPromise = this.fetchTrackUncached(bareId)
+      .then((track) => {
+        this.trackCache.set(bareId, track);
+        return track;
+      })
+      .finally(() => {
+        this.pendingFetches.delete(bareId);
+      });
+
+    this.pendingFetches.set(bareId, fetchPromise);
+    return fetchPromise;
+  };
+
+  private fetchTrackUncached = async (bareId: string): Promise<Track> => {
+    // Try SDK first if available — gets the full Track shape with
+    // structured artist array + higher-res album images.
     if (this.spotifyApi) {
       try {
-        const res = await this.spotifyApi.makeRequest('GET', `tracks/${trackId}`);
+        const res = await this.spotifyApi.makeRequest('GET', `tracks/${bareId}`);
         return res as Track;
       } catch (error) {
         console.warn('Spotify SDK failed, trying oEmbed fallback:', error);
       }
     }
 
-    // Fallback to oEmbed (no auth required)
-    return this.getTrackViaOEmbed(trackId);
+    // Fallback to oEmbed (no auth required).
+    return this.getTrackViaOEmbed(bareId);
   };
 }
 

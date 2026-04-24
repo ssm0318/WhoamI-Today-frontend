@@ -36,6 +36,8 @@ export interface UpdatedProfile extends User {
   social_battery?: SocialBattery | null;
   recent_post?: RecentPost;
   sent_pokes?: Partial<Record<'battery' | 'mood' | 'thought' | 'song', number>>;
+  /** Viewer-visible pinned archive entries for this friend. 0 when none. */
+  pinned_count?: number;
 }
 
 export type GetAllFriendsResponse = PaginationResponse<UpdatedProfile[]>;

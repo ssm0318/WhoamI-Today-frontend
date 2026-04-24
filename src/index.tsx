@@ -26,6 +26,7 @@ import reportWebVitals from './reportWebVitals';
 import ActivateEmail from './routes/ActivateEmail';
 import AllQuestions from './routes/AllQuestions';
 // Chats tab now uses ChatList directly
+import Archive from './routes/check-in/Archive';
 import CheckInEdit from './routes/check-in/CheckInEdit';
 import Discover from './routes/discover/Discover';
 import EmailVerificationComplete from './routes/EmailVerificationComplete';
@@ -35,6 +36,7 @@ import DefaultUserFriendsList from './routes/friends/DefaultUserFriendsList';
 import EditFriends from './routes/friends/EditFriends';
 import ExploreFriends from './routes/friends/ExploreFriends';
 import FriendNewPosts from './routes/friends/FriendNewPosts';
+import FriendPinnedFeed from './routes/friends/FriendPinnedFeed';
 import FriendsFeed from './routes/friends/FriendsFeed';
 import FriendsList from './routes/friends/FriendsList';
 import Intro from './routes/Intro';
@@ -165,6 +167,10 @@ const router = createBrowserRouter([
             element: <Chat />,
           },
           {
+            path: 'check-in/pinned',
+            element: <FriendPinnedFeed />,
+          },
+          {
             path: '',
             element: (
               <UserPageContextProvider>
@@ -195,7 +201,10 @@ const router = createBrowserRouter([
       },
       {
         path: 'check-in',
-        children: [{ path: 'edit', element: <CheckInEdit /> }],
+        children: [
+          { path: 'edit', element: <CheckInEdit /> },
+          { path: 'archive', element: <Archive /> },
+        ],
       },
       {
         path: 'comments/:commentId/likes',

@@ -100,9 +100,14 @@ function PokeButton({ receiverId, componentType, initialPokeId }: Props) {
   return (
     <>
       <PokeContainer $isPoked={isPoked} onClick={handlePoke}>
-        <Typo type="label-large" color={isPoked ? 'MEDIUM_GRAY' : 'PRIMARY'}>
-          {label.text}
-        </Typo>
+        {/* ~10% lighter than DARK_GRAY/MEDIUM_GRAY via wrapper opacity —
+            keeps the palette key intact but softens the label visually
+            so it reads as a gentle prompt rather than a filled CTA. */}
+        <span style={{ opacity: 0.88 }}>
+          <Typo type="label-large" color={isPoked ? 'MEDIUM_GRAY' : 'DARK_GRAY'}>
+            {label.text}
+          </Typo>
+        </span>
         <Emoji unified={getUnifiedEmoji(label.emoji)} size={14} lazyLoad />
       </PokeContainer>
       <CommonDialog
@@ -125,7 +130,10 @@ const PokeContainer = styled.div<{ $isPoked: boolean }>`
   gap: 4px;
   padding: 4px 8px;
   border-radius: 8px;
-  border: 1px solid ${({ $isPoked }) => ($isPoked ? '#E0E0E0' : '#D9D9D9')};
+  /* Dotted border matches the profile empty-state placeholders ("+ Bio",
+     "+ Your song"), so ping prompts read as "you can add/suggest this"
+     rather than as filled chips competing with the check-in content. */
+  border: 1px dashed ${({ $isPoked }) => ($isPoked ? '#E0E0E0' : '#D9D9D9')};
   background-color: ${({ $isPoked }) => ($isPoked ? '#F5F5F5' : '#FFFFFF')};
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;

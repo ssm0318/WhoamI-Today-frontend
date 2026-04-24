@@ -6,6 +6,7 @@ import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CheckInDetailBottomSheet from '@components/check-in/check-in-detail-bottom-sheet/CheckInDetailBottomSheet';
+import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
 import PokeButton from '@components/friends/poke-button/PokeButton';
 import PostPreviewCard from '@components/friends/post-preview-card/PostPreviewCard';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
@@ -94,6 +95,7 @@ function FriendItemWithUpdates({
   const hasThought = !!thought;
   const hasBattery = !!social_battery && Object.values(SocialBattery).includes(social_battery);
   const hasSong = !!track_id;
+  const pinnedCount = user.pinned_count ?? 0;
 
   const postsToShow = useMemo(() => {
     if (tabMode !== 'posts') return [];
@@ -274,18 +276,22 @@ function FriendItemWithUpdates({
             </Layout.FlexRow>
           )}
 
-          {/* Thought pill */}
+          {/* Thought pill — leading 💭 emoji reads as a quoted thought. */}
           {hasThought ? (
             <Layout.FlexRow
               bgColor="WHITE"
               pv={4}
               ph={8}
+              gap={4}
               outline="LIGHT_GRAY"
               alignItems="center"
               rounded={8}
               style={{ flexShrink: 0, cursor: 'pointer', alignSelf: 'flex-start' }}
               onClick={() => setCheckInDetailFocus('thought')}
             >
+              <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden>
+                💭
+              </span>
               <Typo type="label-large" numberOfLines={1}>
                 {thought}
               </Typo>
@@ -338,6 +344,14 @@ function FriendItemWithUpdates({
             </Layout.FlexRow>
           )}
         </>
+      )}
+
+      {/* Pinned Check-ins chip — hidden when count is 0 (per the spec: the
+          chip only surfaces friends who have pins visible to this viewer). */}
+      {pinnedCount > 0 && (
+        <Layout.FlexRow w="100%" alignSelf="flex-start">
+          <FriendPinnedChip pinnedCount={pinnedCount} to={`/users/${username}/check-in/pinned`} />
+        </Layout.FlexRow>
       )}
 
       {/* Check-in detail popup */}
