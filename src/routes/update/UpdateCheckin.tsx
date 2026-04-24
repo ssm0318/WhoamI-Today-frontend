@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
+import MoodGrid from '@components/check-in/mood-grid/MoodGrid';
 import BatteryEditor from '@components/check-in/update-quadrant/BatteryEditor';
 import MoodEditor from '@components/check-in/update-quadrant/MoodEditor';
 import SongEditor from '@components/check-in/update-quadrant/SongEditor';
@@ -337,13 +338,7 @@ export default function UpdateCheckin() {
           ) : null}
           {mood.length > 0 ? (
             <>
-              <Layout.FlexRow gap={4} alignItems="center">
-                {mood.map((emoji) => (
-                  <span key={emoji} style={{ fontSize: 32, lineHeight: 1 }}>
-                    {emoji}
-                  </span>
-                ))}
-              </Layout.FlexRow>
+              <MoodGrid mood={mood} size={32} gap={8} rowGap={4} />
               <QuadrantLabel>Mood</QuadrantLabel>
             </>
           ) : (
