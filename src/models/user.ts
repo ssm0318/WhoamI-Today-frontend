@@ -23,6 +23,14 @@ export interface User {
   persona_friends_only?: boolean;
   pronouns_friends_only?: boolean;
   bio_friends_only?: boolean;
+  // Per-category visibility flags (source of truth on server)
+  music_entertainment_friends_only?: boolean;
+  hobbies_activities_friends_only?: boolean;
+  on_my_mind_friends_only?: boolean;
+  as_a_friend_friends_only?: boolean;
+  online_persona_friends_only?: boolean;
+  favorite_platform_friends_only?: boolean;
+  least_favorite_platform_friends_only?: boolean;
   // Mutual counts (injected by discover feed API)
   mutual_friend_count?: number;
   mutual_interest_count?: number;

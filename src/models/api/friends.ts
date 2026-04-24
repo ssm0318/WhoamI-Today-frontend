@@ -1,5 +1,5 @@
 import { CheckInBase, SocialBattery } from '@models/checkIn';
-import { DayQuestion, RecentPost } from '@models/post';
+import { DayQuestion, Note, Response } from '@models/post';
 import { User } from '@models/user';
 import { PaginationResponse } from './common';
 import { GetMomentResponse } from './moment';
@@ -26,15 +26,8 @@ export interface UpdatedProfile extends User {
   mood?: string;
   unread_chat_count: number;
   unread_post_cnt?: number;
-  latest_unread_post?: {
-    id: number;
-    type: 'Note' | 'Response';
-    content?: string;
-    images?: string[];
-    created_at?: string;
-  } | null;
+  recent_posts?: (Note | Response)[];
   social_battery?: SocialBattery | null;
-  recent_post?: RecentPost;
   sent_pokes?: Partial<Record<'battery' | 'mood' | 'thought' | 'song', number>>;
   /** Viewer-visible pinned archive entries for this friend. 0 when none. */
   pinned_count?: number;
