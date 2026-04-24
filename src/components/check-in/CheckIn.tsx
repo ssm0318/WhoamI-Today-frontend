@@ -64,8 +64,16 @@ function CheckIn({ user }: CheckInProps) {
       <>
         {/* Top row: title (left) + archive/pinned entry point (right).
             Own profile → [All | Pinned (N)] segmented.
-            Friend profile → Pinned Check-ins (N) link (hidden when count=0). */}
-        <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
+            Friend profile → Pinned Check-ins (N) link (hidden when count=0).
+            flex-wrap + row-gap ensures the chips fall to the next line on
+            narrow phones (iPhone SE 1st gen = 320px) rather than overlap
+            or clip the title. */}
+        <Layout.FlexRow
+          w="100%"
+          justifyContent="space-between"
+          alignItems="center"
+          style={{ flexWrap: 'wrap', rowGap: 4, columnGap: 8 }}
+        >
           <Typo type="label-large" color="BLACK">
             {t('title')}
           </Typo>

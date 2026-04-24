@@ -25,11 +25,12 @@ function CheckInArchiveChip() {
   const { archivedCount, pinnedCount } = useArchiveCounts();
 
   return (
-    // 2px inter-segment gap so All Archived + Pinned read as a tight
-    // matched pair distinct from the "Most Recent Check-In" title to
-    // the left; the pair's far edge sits flush with the card's right
-    // padding thanks to the parent justify-content=space-between.
-    <Layout.FlexRow gap={2} alignItems="center">
+    // gap=1 so the All Archived + Pinned chips visibly read as one matched
+    // pair — combined with the reduced horizontal padding on each segment
+    // (see Segment), the text-to-text distance between the two chips is
+    // tighter than the title-to-first-chip whitespace, which was the whole
+    // point of the request.
+    <Layout.FlexRow gap={1} alignItems="center" style={{ flexShrink: 0 }}>
       <Segment onClick={() => navigate('/check-in/archive?tab=all')}>
         {t('all')} ({archivedCount})
       </Segment>
@@ -47,7 +48,9 @@ function Segment({ onClick, children }: { onClick: () => void; children: ReactNo
       onClick={onClick}
       style={{
         borderRadius: 999,
-        padding: '3px 10px',
+        // Reduced facing padding so the inter-chip visual gap (padding + flex
+        // gap) reads smaller than the whitespace to the title to the left.
+        padding: '3px 7px',
         lineHeight: 1.4,
         border: 'none',
         background: '#F5F5F5',
