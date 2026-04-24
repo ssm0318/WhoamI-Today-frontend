@@ -8,24 +8,26 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CheckInDetailBottomSheet from '@components/check-in/check-in-detail-bottom-sheet/CheckInDetailBottomSheet';
 import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
 import PokeButton from '@components/friends/poke-button/PokeButton';
-import PostPreviewCard from '@components/friends/post-preview-card/PostPreviewCard';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
+import NoteItem from '@components/note/note-item/NoteItem';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
+import ResponseItem from '@components/response/response-item/ResponseItem';
 import { FeatureFlagKey } from '@constants/featureFlag';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { useCheckInSubscription } from '@hooks/useCheckInSubscription';
 import { Connection, UpdatedProfile } from '@models/api/friends';
 import { SocialBattery } from '@models/checkIn';
+import { Note, POST_TYPE, Response } from '@models/post';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { Container, PostsScrollContainer } from './FriendItemWithUpdates.styled';
+import { Container, PostsScrollContainer, PostsScrollItem } from './FriendItemWithUpdates.styled';
 
 interface Props {
   user: UpdatedProfile;
   onConnectionChanged?: (userId: number, connection: Connection) => void;
-  tabMode?: 'check-in' | 'posts';
+  tabMode?: 'check-in' | 'posts' | 'unified';
   hasNewPost?: boolean;
 }
 
@@ -45,7 +47,7 @@ function FriendItemWithUpdates({
     social_battery,
     connection_status,
   } = user;
-  const thought = (user as any).thought ?? (user as any).description ?? '';
+  const thought = (user as any).thought ?? '';
 
   const navigate = useNavigate();
   const [t] = useTranslation('translation');
@@ -87,7 +89,10 @@ function FriendItemWithUpdates({
 
   const hasCheckInContent = !!(track_id || mood || social_battery || thought);
   const hasUpdate = !user.current_user_read && hasCheckInContent;
-  const showUpdateBadge = tabMode === 'check-in' && hasUpdate;
+  const showCheckInSection = tabMode === 'check-in' || tabMode === 'unified';
+  const showPostsSection = tabMode === 'posts' || tabMode === 'unified';
+  const showPings = tabMode === 'check-in';
+  const showUpdateBadge = showCheckInSection && hasUpdate;
   const showNewBadge = tabMode === 'posts' && hasNewPost;
 
   const moodArray: string[] = Array.isArray(mood) ? mood : mood ? [mood] : [];
@@ -97,31 +102,10 @@ function FriendItemWithUpdates({
   const hasSong = !!track_id;
   const pinnedCount = user.pinned_count ?? 0;
 
-  const postsToShow = useMemo(() => {
-    if (tabMode !== 'posts') return [];
-    const posts: Array<{
-      id: number;
-      type: string;
-      content?: string;
-      preview_content?: string;
-      images?: string[];
-      created_at?: string;
-      is_read?: boolean;
-    }> = [];
-
-    if (user.recent_post) {
-      posts.push(user.recent_post);
-    }
-
-    if (
-      user.latest_unread_post &&
-      (!user.recent_post || user.latest_unread_post.id !== user.recent_post.id)
-    ) {
-      posts.push({ ...user.latest_unread_post, is_read: false });
-    }
-
-    return posts;
-  }, [tabMode, user.recent_post, user.latest_unread_post]);
+  const postsToShow = useMemo(
+    () => (showPostsSection ? user.recent_posts ?? [] : []),
+    [showPostsSection, user.recent_posts],
+  );
 
   return (
     <Container mh={16} ph={16} pv={12} gap={8} rounded={12}>
@@ -204,7 +188,7 @@ function FriendItemWithUpdates({
           )}
         </Layout.FlexRow>
         <Layout.FlexRow style={{ position: 'relative' }} alignItems="center" gap={12}>
-          {checkInEnabled && (
+          {checkInEnabled && tabMode !== 'unified' && (
             <button
               type="button"
               onClick={handleToggleSubscription}
@@ -254,10 +238,10 @@ function FriendItemWithUpdates({
         </Layout.FlexRow>
       </Layout.FlexRow>
 
-      {tabMode === 'check-in' && (
+      {showCheckInSection && (
         <>
-          {/* Ping row for battery + mood if both empty */}
-          {(!hasBattery || !hasMood) && (
+          {/* Ping row for battery + mood if both empty — only in 'check-in' mode */}
+          {showPings && (!hasBattery || !hasMood) && (
             <Layout.FlexRow gap={4} style={{ flexWrap: 'wrap' }}>
               {!hasBattery && (
                 <PokeButton
@@ -276,7 +260,7 @@ function FriendItemWithUpdates({
             </Layout.FlexRow>
           )}
 
-          {/* Thought pill — leading 💭 emoji reads as a quoted thought. */}
+          {/* Thought pill — leading 💭 emoji; empty only shows poke in check-in tab (hidden in unified). */}
           {hasThought ? (
             <Layout.FlexRow
               bgColor="WHITE"
@@ -297,14 +281,16 @@ function FriendItemWithUpdates({
               </Typo>
             </Layout.FlexRow>
           ) : (
-            <PokeButton
-              receiverId={id}
-              componentType="thought"
-              initialPokeId={user.sent_pokes?.thought ?? null}
-            />
+            showPings && (
+              <PokeButton
+                receiverId={id}
+                componentType="thought"
+                initialPokeId={user.sent_pokes?.thought ?? null}
+              />
+            )
           )}
 
-          {/* Song */}
+          {/* Song — in 'unified' mode, hide when empty (no ping) */}
           {hasSong ? (
             <Layout.FlexRow w="100%" style={{ minWidth: 0, overflow: 'hidden' }}>
               <SpotifyMusic
@@ -312,37 +298,49 @@ function FriendItemWithUpdates({
                 sharer={user}
                 fontType="label-large"
                 useAlbumImg
-                useDetailBottomSheet
+                onClick={() => setCheckInDetailFocus('song')}
               />
             </Layout.FlexRow>
           ) : (
-            <PokeButton
-              receiverId={id}
-              componentType="song"
-              initialPokeId={user.sent_pokes?.song ?? null}
-            />
+            showPings && (
+              <PokeButton
+                receiverId={id}
+                componentType="song"
+                initialPokeId={user.sent_pokes?.song ?? null}
+              />
+            )
           )}
         </>
       )}
 
-      {tabMode === 'posts' && (
+      {showPostsSection && postsToShow.length > 0 && (
         <>
-          <Typo type="label-large" color="MEDIUM_GRAY" fontWeight={600}>
+          <Typo type="label-large" color="BLACK" fontWeight={600}>
             Recent Posts
           </Typo>
-          {postsToShow.length > 0 ? (
-            <PostsScrollContainer gap={8}>
-              {postsToShow.map((post) => (
-                <PostPreviewCard key={post.id} post={post} />
-              ))}
-            </PostsScrollContainer>
-          ) : (
-            <Layout.FlexRow w="100%" pv={12} justifyContent="center">
-              <Typo type="body-small" color="MEDIUM_GRAY">
-                No recent posts
-              </Typo>
-            </Layout.FlexRow>
-          )}
+          <PostsScrollContainer gap={8}>
+            {postsToShow.map((post) => (
+              <PostsScrollItem key={`${post.type}-${post.id}`}>
+                {post.type === POST_TYPE.NOTE ? (
+                  <NoteItem
+                    note={post as Note}
+                    isMyPage={false}
+                    displayType="FEED"
+                    profileImageSize={32}
+                    previewMode
+                  />
+                ) : (
+                  <ResponseItem
+                    response={post as Response}
+                    isMyPage={false}
+                    displayType="FEED"
+                    profileImageSize={32}
+                    previewMode
+                  />
+                )}
+              </PostsScrollItem>
+            ))}
+          </PostsScrollContainer>
         </>
       )}
 
@@ -365,6 +363,7 @@ function FriendItemWithUpdates({
         socialBattery={social_battery}
         mood={moodArray}
         description={thought}
+        trackId={track_id}
       />
 
       <EditConnectionsBottomSheet

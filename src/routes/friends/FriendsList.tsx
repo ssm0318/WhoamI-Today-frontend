@@ -72,20 +72,16 @@ function FriendsList() {
   const hasCheckInUpdates = filteredFriends.some(
     (user) =>
       !user.current_user_read &&
-      !!(user.track_id || user.mood || user.social_battery || user.description),
+      !!(
+        user.track_id ||
+        user.mood ||
+        user.social_battery ||
+        (user as unknown as { thought?: string }).thought
+      ),
   );
-  const isWithin24Hours = (dateString?: string) => {
-    if (!dateString) return false;
-    const postDate = new Date(dateString);
-    if (Number.isNaN(postDate.getTime())) return false;
-    return Date.now() - postDate.getTime() <= 24 * 60 * 60 * 1000;
-  };
   const hasUnreadPosts = (user: UpdatedProfile) => {
     if ((user.unread_post_cnt || 0) > 0) return true;
-    if (user.latest_unread_post) return true;
-    if (!user.recent_post || user.recent_post.is_read) return false;
-    if (!user.recent_post.created_at) return true;
-    return isWithin24Hours(user.recent_post.created_at);
+    return (user.recent_posts ?? []).some((p) => !p.current_user_read);
   };
   const hasNewPosts = filteredPostsFriends.some((user) => hasUnreadPosts(user));
 
@@ -232,7 +228,7 @@ function FriendsList() {
                 </Layout.FlexCol>
               ) : filteredPostsFriends.length > 0 ? (
                 <Layout.FlexCol w="100%" pv={8}>
-                  <Layout.FlexCol w="100%" gap={12}>
+                  <Layout.FlexCol w="100%" gap={20}>
                     {filteredPostsFriends.map((user) => (
                       <FriendItemWithUpdates
                         key={user.id}

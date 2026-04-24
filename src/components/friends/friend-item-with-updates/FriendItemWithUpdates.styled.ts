@@ -12,12 +12,20 @@ export const PostsScrollContainer = styled(Layout.FlexRow)`
   overflow-x: auto;
   flex-wrap: nowrap;
   width: 100%;
+  align-items: stretch;
   -webkit-overflow-scrolling: touch;
   &::-webkit-scrollbar {
     display: none;
   }
   scrollbar-width: none;
   -ms-overflow-style: none;
+`;
+
+export const PostsScrollItem = styled.div`
+  flex: 0 0 280px;
+  width: 280px;
+  height: 220px;
+  display: flex;
 `;
 
 export const StarIconContainer = styled(Layout.FlexRow).attrs({
