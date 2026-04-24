@@ -21,6 +21,10 @@ export enum FeatureFlagKey {
   DISCOVER = 'discover',
   /** Chat 탭 */
   CHAT_TAB = 'chatTab',
+  /** version_q 전용 Friends (/friends-q) 탭 노출 */
+  FRIEND_UPDATES_TAB = 'friendUpdatesTab',
+  /** 하단 Questions 탭 노출 (QUESTION_RESPONSE_FEATURE 와 별개 — 전자는 탭 가시성, 후자는 피처 전반) */
+  QUESTIONS_TAB = 'questionsTab',
 }
 
 export type FeatureFlagMap = { [feature in FeatureFlagKey]: boolean };
@@ -40,11 +44,21 @@ const DEFAULT_FLAGS = {
   [FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]: false,
   [FeatureFlagKey.DISCOVER]: false,
   [FeatureFlagKey.CHAT_TAB]: false,
+  [FeatureFlagKey.FRIEND_UPDATES_TAB]: false,
+  [FeatureFlagKey.QUESTIONS_TAB]: false,
 };
 
 export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
   // Ver. Q
-  [VersionType.VER_Q]: { ...DEFAULT_FLAGS },
+  [VersionType.VER_Q]: {
+    ...DEFAULT_FLAGS,
+    [FeatureFlagKey.FRIEND_FEED]: false,
+    [FeatureFlagKey.FRIEND_UPDATES_TAB]: true,
+    [FeatureFlagKey.QUESTIONS_TAB]: true,
+    [FeatureFlagKey.CHAT_TAB]: true,
+    [FeatureFlagKey.QUESTION_RESPONSE_FEATURE]: true,
+    [FeatureFlagKey.CHECK_IN]: true,
+  },
   // Ver. W
   [VersionType.VER_W]: {
     ...DEFAULT_FLAGS,
