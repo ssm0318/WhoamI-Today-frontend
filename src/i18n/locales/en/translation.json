@@ -807,6 +807,18 @@
         "title": "Page Not Found",
         "go_home": "Go to main page"
     },
+    "archive": {
+        "title": "Archive",
+        "segmented": {
+            "all": "All",
+            "pinned": "Pinned"
+        },
+        "empty": {
+            "all": "No archived check-ins yet. Check-ins move here after 12 hours or when you update them.",
+            "pinned": "Pin check-ins from All to surface them on your profile."
+        },
+        "end_of_feed": "That's everything."
+    },
     "check_in_edit": {
         "title": "Edit Check-In",
         "save": "Save",
