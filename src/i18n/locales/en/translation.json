@@ -847,6 +847,15 @@
             "save": "Save",
             "updated_toast": "Updated visibility",
             "error": "Couldn't update visibility. Please try again."
+        },
+        "friend_card": {
+            "pinned_count_one": "Pinned Check-ins ({{count}})",
+            "pinned_count_other": "Pinned Check-ins ({{count}})"
+        },
+        "friend_feed": {
+            "title": "Pinned Check-ins",
+            "title_with_username": "{{username}}'s Pinned Check-ins",
+            "empty": "No pinned check-ins visible to you yet."
         }
     },
     "check_in_edit": {

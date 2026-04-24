@@ -838,6 +838,15 @@
       "save": "저장",
       "updated_toast": "공개 범위를 수정했어요",
       "error": "수정에 실패했어요. 다시 시도해주세요."
+    },
+    "friend_card": {
+      "pinned_count_one": "고정된 체크인 ({{count}})",
+      "pinned_count_other": "고정된 체크인 ({{count}})"
+    },
+    "friend_feed": {
+      "title": "고정된 체크인",
+      "title_with_username": "{{username}}님의 고정된 체크인",
+      "empty": "볼 수 있는 고정된 체크인이 아직 없어요."
     }
   },
   "check_in_edit": {

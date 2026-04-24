@@ -2,6 +2,7 @@ import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
 import { Layout, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
 import UpdatedLabel from '../updated-label/UpdatedLabel';
@@ -14,6 +15,7 @@ interface Props {
 
 function UpdatedFriendItemDefault({ user, isMyPage }: Props) {
   const { id, profile_image, username, current_user_read, unread_chat_count, description } = user;
+  const pinnedCount = user.pinned_count ?? 0;
 
   const navigate = useNavigate();
   const handleClickProfile = () => {
@@ -47,6 +49,11 @@ function UpdatedFriendItemDefault({ user, isMyPage }: Props) {
                 <Typo type="label-medium" color="MEDIUM_GRAY" numberOfLines={1}>
                   {description}
                 </Typo>
+              )}
+              {pinnedCount > 0 && (
+                <Layout.FlexRow mt={4}>
+                  <FriendPinnedChip username={username} pinnedCount={pinnedCount} />
+                </Layout.FlexRow>
               )}
             </Layout.FlexCol>
           </Layout.FlexRow>

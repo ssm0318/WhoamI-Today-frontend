@@ -36,6 +36,7 @@ import DefaultUserFriendsList from './routes/friends/DefaultUserFriendsList';
 import EditFriends from './routes/friends/EditFriends';
 import ExploreFriends from './routes/friends/ExploreFriends';
 import FriendNewPosts from './routes/friends/FriendNewPosts';
+import FriendPinnedFeed from './routes/friends/FriendPinnedFeed';
 import FriendsFeed from './routes/friends/FriendsFeed';
 import FriendsList from './routes/friends/FriendsList';
 import Intro from './routes/Intro';
@@ -164,6 +165,10 @@ const router = createBrowserRouter([
           {
             path: 'chat',
             element: <Chat />,
+          },
+          {
+            path: 'check-in/pinned',
+            element: <FriendPinnedFeed />,
           },
           {
             path: '',
