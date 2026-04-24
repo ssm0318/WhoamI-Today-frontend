@@ -6,7 +6,6 @@ import NoContents from '@components/_common/no-contents/NoContents';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import MyCheckInCard from '@components/check-in/my-check-in-card/MyCheckInCard';
 import FriendItemWithUpdates from '@components/friends/friend-item-with-updates/FriendItemWithUpdates';
-import FriendPostsModal from '@components/friends/friend-posts-modal/FriendPostsModal';
 import NoCloseFriends from '@components/friends/no-close-friends/NoCloseFriends';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import { Colors, Layout, Typo } from '@design-system';
@@ -24,8 +23,6 @@ function FriendsList() {
   const [t] = useTranslation('translation');
   const [selectedTab, setSelectedTab] = useState<TabType>('check-in');
   const [closeFriendsOnly, setCloseFriendsOnly] = useState(false);
-  const [selectedFriendForPosts, setSelectedFriendForPosts] = useState<UpdatedProfile | null>(null);
-
   const friendType: FriendType = closeFriendsOnly ? 'close_friends' : 'all';
 
   const {
@@ -72,7 +69,11 @@ function FriendsList() {
   const isEmpty = filteredFriends.length === 0 && !isAllFriendsLoading;
   const isPostsEmpty = filteredPostsFriends.length === 0 && !postsFriendsHook.isAllFriendsLoading;
 
-  const hasCheckInUpdates = filteredFriends.some((user) => !user.current_user_read);
+  const hasCheckInUpdates = filteredFriends.some(
+    (user) =>
+      !user.current_user_read &&
+      !!(user.track_id || user.mood || user.social_battery || user.description),
+  );
   const isWithin24Hours = (dateString?: string) => {
     if (!dateString) return false;
     const postDate = new Date(dateString);
@@ -238,7 +239,6 @@ function FriendsList() {
                         user={user}
                         tabMode="posts"
                         hasNewPost={hasUnreadPosts(user)}
-                        onViewPosts={() => setSelectedFriendForPosts(user)}
                       />
                     ))}
                   </Layout.FlexCol>
@@ -254,11 +254,6 @@ function FriendsList() {
           )}
         </Layout.FlexCol>
       </PullToRefresh>
-      <FriendPostsModal
-        visible={!!selectedFriendForPosts}
-        username={selectedFriendForPosts?.username || ''}
-        onClose={() => setSelectedFriendForPosts(null)}
-      />
     </MainScrollContainer>
   );
 }

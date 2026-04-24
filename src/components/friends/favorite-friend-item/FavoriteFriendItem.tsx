@@ -20,6 +20,8 @@ function FavoriteFriendItem({ user }: Props) {
     description,
     connection_status,
     unread_chat_count,
+    mood,
+    social_battery,
   } = user;
 
   const [t] = useTranslation('translation', { keyPrefix: 'friend' });
@@ -41,7 +43,7 @@ function FavoriteFriendItem({ user }: Props) {
             imageUrl={profile_image}
             username={username}
             size={72}
-            updated={!current_user_read}
+            updated={!current_user_read && !!(track_id || mood || social_battery || description)}
             updatedLabelSize={11}
           />
           <Layout.Absolute

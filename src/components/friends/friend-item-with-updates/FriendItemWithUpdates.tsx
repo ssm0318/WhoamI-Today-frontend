@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -7,6 +7,7 @@ import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CheckInDetailBottomSheet from '@components/check-in/check-in-detail-bottom-sheet/CheckInDetailBottomSheet';
 import PokeButton from '@components/friends/poke-button/PokeButton';
+import PostPreviewCard from '@components/friends/post-preview-card/PostPreviewCard';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
@@ -18,13 +19,12 @@ import { SocialBattery } from '@models/checkIn';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { Container } from './FriendItemWithUpdates.styled';
+import { Container, PostsScrollContainer } from './FriendItemWithUpdates.styled';
 
 interface Props {
   user: UpdatedProfile;
   onConnectionChanged?: (userId: number, connection: Connection) => void;
   tabMode?: 'check-in' | 'posts';
-  onViewPosts?: () => void;
   hasNewPost?: boolean;
 }
 
@@ -32,7 +32,6 @@ function FriendItemWithUpdates({
   user,
   onConnectionChanged,
   tabMode = 'check-in',
-  onViewPosts,
   hasNewPost = false,
 }: Props) {
   const {
@@ -85,7 +84,8 @@ function FriendItemWithUpdates({
     }
   };
 
-  const hasUpdate = !user.current_user_read;
+  const hasCheckInContent = !!(track_id || mood || social_battery || thought);
+  const hasUpdate = !user.current_user_read && hasCheckInContent;
   const showUpdateBadge = tabMode === 'check-in' && hasUpdate;
   const showNewBadge = tabMode === 'posts' && hasNewPost;
 
@@ -94,6 +94,32 @@ function FriendItemWithUpdates({
   const hasThought = !!thought;
   const hasBattery = !!social_battery && Object.values(SocialBattery).includes(social_battery);
   const hasSong = !!track_id;
+
+  const postsToShow = useMemo(() => {
+    if (tabMode !== 'posts') return [];
+    const posts: Array<{
+      id: number;
+      type: string;
+      content?: string;
+      preview_content?: string;
+      images?: string[];
+      created_at?: string;
+      is_read?: boolean;
+    }> = [];
+
+    if (user.recent_post) {
+      posts.push(user.recent_post);
+    }
+
+    if (
+      user.latest_unread_post &&
+      (!user.recent_post || user.latest_unread_post.id !== user.recent_post.id)
+    ) {
+      posts.push({ ...user.latest_unread_post, is_read: false });
+    }
+
+    return posts;
+  }, [tabMode, user.recent_post, user.latest_unread_post]);
 
   return (
     <Container mh={16} ph={16} pv={12} gap={8} rounded={12}>
@@ -226,80 +252,92 @@ function FriendItemWithUpdates({
         </Layout.FlexRow>
       </Layout.FlexRow>
 
-      {/* Ping row for battery + mood if both empty */}
-      {(!hasBattery || !hasMood) && (
-        <Layout.FlexRow gap={4} style={{ flexWrap: 'wrap' }}>
-          {!hasBattery && (
+      {tabMode === 'check-in' && (
+        <>
+          {/* Ping row for battery + mood if both empty */}
+          {(!hasBattery || !hasMood) && (
+            <Layout.FlexRow gap={4} style={{ flexWrap: 'wrap' }}>
+              {!hasBattery && (
+                <PokeButton
+                  receiverId={id}
+                  componentType="battery"
+                  initialPokeId={user.sent_pokes?.battery ?? null}
+                />
+              )}
+              {!hasMood && (
+                <PokeButton
+                  receiverId={id}
+                  componentType="mood"
+                  initialPokeId={user.sent_pokes?.mood ?? null}
+                />
+              )}
+            </Layout.FlexRow>
+          )}
+
+          {/* Thought pill */}
+          {hasThought ? (
+            <Layout.FlexRow
+              bgColor="WHITE"
+              pv={4}
+              ph={8}
+              outline="LIGHT_GRAY"
+              alignItems="center"
+              rounded={8}
+              style={{ flexShrink: 0, cursor: 'pointer', alignSelf: 'flex-start' }}
+              onClick={() => setCheckInDetailFocus('thought')}
+            >
+              <Typo type="label-large" numberOfLines={1}>
+                {thought}
+              </Typo>
+            </Layout.FlexRow>
+          ) : (
             <PokeButton
               receiverId={id}
-              componentType="battery"
-              initialPokeId={user.sent_pokes?.battery ?? null}
+              componentType="thought"
+              initialPokeId={user.sent_pokes?.thought ?? null}
             />
           )}
-          {!hasMood && (
+
+          {/* Song */}
+          {hasSong ? (
+            <Layout.FlexRow w="100%" style={{ minWidth: 0, overflow: 'hidden' }}>
+              <SpotifyMusic
+                track={track_id}
+                sharer={user}
+                fontType="label-large"
+                useAlbumImg
+                useDetailBottomSheet
+              />
+            </Layout.FlexRow>
+          ) : (
             <PokeButton
               receiverId={id}
-              componentType="mood"
-              initialPokeId={user.sent_pokes?.mood ?? null}
+              componentType="song"
+              initialPokeId={user.sent_pokes?.song ?? null}
             />
           )}
-        </Layout.FlexRow>
+        </>
       )}
 
-      {/* Thought pill */}
-      {hasThought ? (
-        <Layout.FlexRow
-          bgColor="WHITE"
-          pv={4}
-          ph={8}
-          outline="LIGHT_GRAY"
-          alignItems="center"
-          rounded={8}
-          style={{ flexShrink: 0, cursor: 'pointer', alignSelf: 'flex-start' }}
-          onClick={() => setCheckInDetailFocus('thought')}
-        >
-          <Typo type="label-large" numberOfLines={1}>
-            {thought}
+      {tabMode === 'posts' && (
+        <>
+          <Typo type="label-large" color="MEDIUM_GRAY" fontWeight={600}>
+            Recent Posts
           </Typo>
-        </Layout.FlexRow>
-      ) : (
-        <PokeButton
-          receiverId={id}
-          componentType="thought"
-          initialPokeId={user.sent_pokes?.thought ?? null}
-        />
-      )}
-
-      {/* Song */}
-      {hasSong ? (
-        <Layout.FlexRow w="100%" style={{ minWidth: 0, overflow: 'hidden' }}>
-          <SpotifyMusic
-            track={track_id}
-            sharer={user}
-            fontType="label-large"
-            useAlbumImg
-            useDetailBottomSheet
-          />
-        </Layout.FlexRow>
-      ) : (
-        <PokeButton
-          receiverId={id}
-          componentType="song"
-          initialPokeId={user.sent_pokes?.song ?? null}
-        />
-      )}
-
-      {tabMode === 'posts' && onViewPosts && (
-        <Layout.FlexRow w="100%" justifyContent="flex-end">
-          <ViewPostsButton
-            onClick={(e) => {
-              e.stopPropagation();
-              onViewPosts();
-            }}
-          >
-            View Posts
-          </ViewPostsButton>
-        </Layout.FlexRow>
+          {postsToShow.length > 0 ? (
+            <PostsScrollContainer gap={8}>
+              {postsToShow.map((post) => (
+                <PostPreviewCard key={post.id} post={post} />
+              ))}
+            </PostsScrollContainer>
+          ) : (
+            <Layout.FlexRow w="100%" pv={12} justifyContent="center">
+              <Typo type="body-small" color="MEDIUM_GRAY">
+                No recent posts
+              </Typo>
+            </Layout.FlexRow>
+          )}
+        </>
       )}
 
       {/* Check-in detail popup */}
@@ -348,17 +386,6 @@ const Divider = styled.span`
   background-color: #d9d9d9;
   margin: 0 2px;
   flex-shrink: 0;
-`;
-
-const ViewPostsButton = styled.button`
-  border: none;
-  border-radius: 8px;
-  background: #f3ecfb;
-  color: #8700ff;
-  padding: 6px 10px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
 `;
 
 export default FriendItemWithUpdates;
