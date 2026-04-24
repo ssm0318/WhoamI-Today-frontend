@@ -40,7 +40,7 @@ function FriendPinnedChip({ username, pinnedCount }: Props) {
     <button type="button" onClick={handleClick} style={buttonStyle}>
       <SvgIcon name="pin_filled" size={14} color="PRIMARY" />
       <span style={{ textDecoration: 'underline', textUnderlineOffset: 2 }}>
-        <Typo type="label-medium" color="PRIMARY">
+        <Typo type="label-medium" color="PRIMARY" fontWeight={500}>
           {t('pinned_count', { count: pinnedCount })}
         </Typo>
       </span>

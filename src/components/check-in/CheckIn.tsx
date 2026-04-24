@@ -62,17 +62,20 @@ function CheckIn({ user }: CheckInProps) {
   return (
     <Layout.FlexCol w="100%" gap={8} p={8} bgColor="GRAY_14" rounded={8} justifyContent="center">
       <>
-        <Layout.FlexRow w="100%" justifyContent="space-between">
+        {/* Top row: title (left) + archive/pinned entry point (right).
+            Own profile → [All | Pinned (N)] segmented.
+            Friend profile → Pinned Check-ins (N) link (hidden when count=0). */}
+        <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
           <Typo type="label-large" color="BLACK">
             {t('title')}
           </Typo>
-          {isMyPage && (
-            <SvgIcon
-              name="edit_filled"
-              fill="DARK_GRAY"
-              size={24}
-              onClick={handleClickEditCheckIn}
-            />
+          {isMyPage ? (
+            <CheckInArchiveChip />
+          ) : (
+            friendUsername &&
+            friendPinnedCount > 0 && (
+              <FriendPinnedChip username={friendUsername} pinnedCount={friendPinnedCount} />
+            )
           )}
         </Layout.FlexRow>
         <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
@@ -166,26 +169,10 @@ function CheckIn({ user }: CheckInProps) {
               ))}
           </Layout.FlexRow>
         )}
-        {/* Bottom row: archive chip (own page) OR friend-pinned chip + check-in timestamp.
-            Own profile → [All | Pinned (N)] segmented on the left.
-            Friend profile → [Pinned Check-ins (N)] chip on the left when the
-            viewer has ≥1 visible pin; hidden entirely when friendPinnedCount is 0
-            (matches the spec: the entry point shows up only when there's
-            something to see). */}
-        {(isMyPage || checkIn?.created_at || (friendUsername && friendPinnedCount > 0)) && (
-          <Layout.FlexRow
-            w="100%"
-            justifyContent={
-              isMyPage || (friendUsername && friendPinnedCount > 0) ? 'space-between' : 'flex-end'
-            }
-            alignItems="center"
-            gap={4}
-          >
-            {isMyPage && <CheckInArchiveChip />}
-            {!isMyPage && friendUsername && friendPinnedCount > 0 && (
-              <FriendPinnedChip username={friendUsername} pinnedCount={friendPinnedCount} />
-            )}
-            {checkIn?.created_at && (
+        {/* Bottom row: timestamp (left) + edit pencil (right, own-profile only). */}
+        {(isMyPage || checkIn?.created_at) && (
+          <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" gap={4}>
+            {checkIn?.created_at ? (
               <Layout.FlexRow alignItems="center" gap={4}>
                 <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
                   {t('checked_in_time', {
@@ -197,6 +184,16 @@ function CheckIn({ user }: CheckInProps) {
                 </Typo>
                 {!current_user_read && !isMyPage && hasCheckIn && <UpdatedLabel />}
               </Layout.FlexRow>
+            ) : (
+              <span />
+            )}
+            {isMyPage && (
+              <SvgIcon
+                name="edit_filled"
+                fill="DARK_GRAY"
+                size={20}
+                onClick={handleClickEditCheckIn}
+              />
             )}
           </Layout.FlexRow>
         )}

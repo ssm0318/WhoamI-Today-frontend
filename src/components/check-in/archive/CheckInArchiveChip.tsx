@@ -43,15 +43,14 @@ function Segment({ onClick, children }: { onClick: () => void; children: ReactNo
       onClick={onClick}
       style={{
         borderRadius: 999,
-        padding: '4px 12px',
-        fontSize: 14,
+        padding: '3px 10px',
         lineHeight: 1.4,
         border: 'none',
         background: '#F5F5F5',
         cursor: 'pointer',
       }}
     >
-      <Typo type="label-large" color="PRIMARY" fontWeight={500}>
+      <Typo type="label-medium" color="PRIMARY" fontWeight={500}>
         {children}
       </Typo>
     </button>
