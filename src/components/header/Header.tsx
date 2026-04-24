@@ -14,6 +14,8 @@ function Header() {
       // TODO: ver R에서 어떤 헤더로 보여줘야하지?
       // return <CommonHeader title={t('nav_tab.friends')} />;
       return <FriendHeader />;
+    case '/friends-q':
+      return <FriendHeader />;
     case '/feed':
       return <CommonHeader title={t('nav_tab.feed')} />;
     case '/discover':

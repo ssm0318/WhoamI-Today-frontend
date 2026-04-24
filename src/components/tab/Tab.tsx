@@ -10,7 +10,7 @@ import { NavTabItem, StyledMessageCount, StyledTabItem, TabWrapper } from './Tab
 
 interface TabItemProps {
   to: string;
-  type: 'friends' | 'my' | 'share' | 'feed' | 'discover' | 'chats' | 'update';
+  type: 'friends' | 'my' | 'share' | 'feed' | 'discover' | 'chats' | 'update' | 'questions';
   size?: number;
   end?: boolean;
 }
@@ -81,9 +81,12 @@ export default function Tab() {
             <TabItem to="/share" type="share" size={28} />
             <TabItem to="/discover" type="discover" size={28} />
           </>
+        ) : featureFlags?.friendUpdatesTab ? (
+          <TabItem to="/friends-q" type="friends" size={28} />
         ) : featureFlags?.friendFeed ? (
           <TabItem to="/feed" type="friends" size={28} />
         ) : null}
+        {featureFlags?.questionsTab && <TabItem to="/questions" type="questions" size={28} />}
         {featureFlags?.chatTab && <TabItem to="/chats" type="chats" size={28} />}
       </Layout.FlexRow>
     </TabWrapper>
