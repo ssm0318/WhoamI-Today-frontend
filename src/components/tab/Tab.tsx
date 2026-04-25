@@ -36,7 +36,7 @@ function TabItem({ to, type, size = 48, end = false }: TabItemProps) {
       {({ isActive }) => {
         const resolvedActive = type === 'chats' ? isActive || isChatPage : isActive;
         return (
-          <StyledTabItem w="100%" alignItems="center" pt={10} onClick={scrollToTop(resolvedActive)}>
+          <StyledTabItem w="100%" alignItems="center" onClick={scrollToTop(resolvedActive)}>
             {type === 'my' && myProfile?.profile_image ? (
               <img
                 src={myProfile.profile_image}
@@ -73,7 +73,7 @@ export default function Tab() {
 
   return (
     <TabWrapper>
-      <Layout.FlexRow w="100%" justifyContent="space-evenly" alignItems="center" pt={4}>
+      <Layout.FlexRow w="100%" h="100%" justifyContent="space-evenly" alignItems="center">
         {featureFlags?.friendList ? (
           <>
             <TabItem to="/friends" type="friends" size={28} />

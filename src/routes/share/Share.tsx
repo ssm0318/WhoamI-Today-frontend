@@ -107,7 +107,6 @@ function Share() {
                     id={question.id}
                     content={question.content}
                     widthMode="full"
-                    authorDetail={question.author_detail}
                   />
                 ))}
               </Layout.FlexCol>

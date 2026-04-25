@@ -434,7 +434,7 @@ export default function UpdateCheckin() {
           ) : null}
           {thought ? (
             <Layout.FlexCol w="100%" alignItems="center" gap={4} ph={4}>
-              <Typo type="body-medium" numberOfLines={3} textAlign="center">
+              <Typo type="body-medium" textAlign="center">
                 {thought}
               </Typo>
               <QuadrantLabel>Thought Snippet</QuadrantLabel>

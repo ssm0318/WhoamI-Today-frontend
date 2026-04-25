@@ -256,7 +256,8 @@
                 },
                 "block": {
                     "title": "Block {{username}}?",
-                    "content": "You won't see any posts or comments from this account."
+                    "content": "You won't see any posts or comments from this account.",
+                    "success_title": "{{username}} blocked"
                 },
                 "report": {
                     "title": "Report {{username}}?",

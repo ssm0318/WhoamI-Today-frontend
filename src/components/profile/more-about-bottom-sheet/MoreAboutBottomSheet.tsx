@@ -53,10 +53,8 @@ function MoreAboutBottomSheet({
     <BottomModal visible={visible} onClose={onClose}>
       <Layout.FlexCol w="100%" ph={16} pv={16} gap={16}>
         {/* Header */}
-        <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
-          <Layout.FlexRow alignItems="center">
-            <Icon name="home_indicator" />
-          </Layout.FlexRow>
+        <Layout.FlexRow w="100%" justifyContent="center" alignItems="center">
+          <Icon name="home_indicator" />
         </Layout.FlexRow>
         <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
           <Typo type="title-large">{t('more_about', { username })}</Typo>

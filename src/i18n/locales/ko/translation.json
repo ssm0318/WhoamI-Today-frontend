@@ -253,7 +253,8 @@
         },
         "block": {
           "title": "{{username}}을(를) 차단하시겠습니까?",
-          "content": "이 유저의 게시글이나 댓글을 더 이상 볼 수 없게 됩니다."
+          "content": "이 유저의 게시글이나 댓글을 더 이상 볼 수 없게 됩니다.",
+          "success_title": "{{username}}님이 차단되었습니다."
         },
         "report": {
           "title": "{{username}}을(를) 신고하시겠습니까?",
