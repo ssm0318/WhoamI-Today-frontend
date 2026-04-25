@@ -495,10 +495,10 @@
                 "read_file_error": "Error uploading image. Please try again later."
             },
             "friends_only": {
-                "interests": "Show interests only to friends",
-                "persona": "Show persona only to friends",
-                "pronouns": "Show pronoun only to friends",
-                "bio": "Show bio only to friends"
+                "name": "Show <token>name</token> only to friends",
+                "pronouns": "Show <token>pronoun</token> only to friends",
+                "bio": "Show <token>bio</token> only to friends",
+                "category": "Show <token>{{label}}</token> only to friends"
             },
             "placeholders": {
                 "bio": "Bio",

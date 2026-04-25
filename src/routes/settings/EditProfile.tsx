@@ -1,5 +1,5 @@
 import { ChangeEvent, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -372,7 +372,13 @@ function EditProfile() {
                 limit={50}
               />
               <CheckBox
-                name="Show name only to friends"
+                name="name_friends_only"
+                label={
+                  <Trans
+                    i18nKey="settings.edit_profile.friends_only.name"
+                    components={{ token: <TokenTag /> }}
+                  />
+                }
                 checked={draft.name_friends_only}
                 onChange={() => handleToggleVisibility('name_friends_only')}
               />
@@ -389,7 +395,13 @@ function EditProfile() {
                 />
               </Layout.FlexCol>
               <CheckBox
-                name={String(t('friends_only.pronouns'))}
+                name="pronouns_friends_only"
+                label={
+                  <Trans
+                    i18nKey="settings.edit_profile.friends_only.pronouns"
+                    components={{ token: <TokenTag /> }}
+                  />
+                }
                 checked={draft.pronouns_friends_only}
                 onChange={() => handleToggleVisibility('pronouns_friends_only')}
               />
@@ -404,7 +416,13 @@ function EditProfile() {
                 limit={120}
               />
               <CheckBox
-                name={String(t('friends_only.bio'))}
+                name="bio_friends_only"
+                label={
+                  <Trans
+                    i18nKey="settings.edit_profile.friends_only.bio"
+                    components={{ token: <TokenTag /> }}
+                  />
+                }
                 checked={draft.bio_friends_only}
                 onChange={() => handleToggleVisibility('bio_friends_only')}
               />
@@ -423,7 +441,15 @@ function EditProfile() {
                   onRemoveCustomChip={handleRemoveCustomChip}
                 />
                 <CheckBox
-                  name={`Show ${categoryInfo.label} only to friends`}
+                  name={`${categoryInfo.key}_friends_only`}
+                  label={
+                    <Trans
+                      i18nKey="settings.edit_profile.friends_only.category"
+                      values={{ label: categoryInfo.label }}
+                      components={{ token: <TokenTag /> }}
+                      tOptions={{ interpolation: { escapeValue: false } }}
+                    />
+                  }
                   checked={!!draft.categoryFriendsOnly[categoryInfo.key]}
                   onChange={() => handleToggleCategoryVisibility(categoryInfo.key)}
                 />
@@ -464,4 +490,12 @@ const EditProfileTabButton = styled.button<{ $active: boolean }>`
   font-size: 15px;
   font-weight: ${({ $active }) => ($active ? 700 : 500)};
   transition: background 0.15s ease, color 0.15s ease;
+`;
+
+const TokenTag = styled.span`
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  background-color: ${Colors.INPUT_GRAY};
+  padding: 1px 5px;
+  border-radius: 3px;
 `;
