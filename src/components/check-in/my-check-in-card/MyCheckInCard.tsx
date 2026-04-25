@@ -173,11 +173,11 @@ function MyCheckInCard() {
  * Friends feed. Mirrors the friend card layout so the row matches visually.
  * Navigates to `/check-in/archive?tab=pinned` (own archive with pin
  * controls) rather than the read-only `/users/<u>/check-in/pinned` path
- * that FriendPinnedChip uses on friend cards.
+ * that FriendPinnedChip uses on friend cards. Always renders (including
+ * N=0) so the affordance stays at a predictable position on the card.
  */
 function MyPinnedLink() {
   const { pinnedCount } = useArchiveCounts();
-  if (pinnedCount <= 0) return null;
   return (
     <Layout.FlexRow alignSelf="flex-start">
       <FriendPinnedChip pinnedCount={pinnedCount} to="/check-in/archive?tab=pinned" />

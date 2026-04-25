@@ -50,14 +50,12 @@ function UpdatedFriendItemDefault({ user, isMyPage }: Props) {
                   {description}
                 </Typo>
               )}
-              {pinnedCount > 0 && (
-                <Layout.FlexRow mt={4}>
-                  <FriendPinnedChip
-                    pinnedCount={pinnedCount}
-                    to={`/users/${username}/check-in/pinned`}
-                  />
-                </Layout.FlexRow>
-              )}
+              <Layout.FlexRow mt={4}>
+                <FriendPinnedChip
+                  pinnedCount={pinnedCount}
+                  to={`/users/${username}/check-in/pinned`}
+                />
+              </Layout.FlexRow>
             </Layout.FlexCol>
           </Layout.FlexRow>
         </StyledProfileArea>
