@@ -98,6 +98,8 @@ interface Props {
 }
 
 const TYPING_DEBOUNCE_MS = 2000;
+const MAX_HEIGHT_DEFAULT = 120;
+const MAX_HEIGHT_ANNOUNCEMENT = 360;
 
 function ChatMessageInput({
   userId,
@@ -118,14 +120,16 @@ function ChatMessageInput({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const maxHeight = isAnnouncement ? MAX_HEIGHT_ANNOUNCEMENT : MAX_HEIGHT_DEFAULT;
+
   // Auto-expand textarea
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.style.height = 'auto';
-      textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
+      textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
     }
-  }, [inputValue]);
+  }, [inputValue, maxHeight]);
 
   const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
@@ -311,6 +315,7 @@ function ChatMessageInput({
             onChange={handleChangeInput}
             onKeyDown={handleKeyDownInput}
             rows={isAnnouncement ? 4 : 1}
+            style={{ maxHeight: `${maxHeight}px` }}
           />
           <Icon
             name="emoji"
