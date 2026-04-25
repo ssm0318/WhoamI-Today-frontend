@@ -48,9 +48,16 @@ jobs:
           echo "🛑 기존 컨테이너 종료"
           docker compose -f docker-compose.production.yml down
 
-          echo "🧹 Legacy 컨테이너 정리 (compose 바깥에서 떠 있던 것들)"
+          echo "🧹 Legacy 컨테이너 및 디스크 정리 (volume은 보존)"
           docker rm -f nginx-reverse-proxy 2>/dev/null || true
           docker rm -f whoami-frontend 2>/dev/null || true
+          docker builder prune -af || true
+          docker image prune -af --filter "until=72h" || true
+          docker container prune -f || true
+          df -h / | tail -1
+
+          echo "📥 이미지 Pull"
+          docker compose -f docker-compose.production.yml pull nginx-reverse-proxy
 
           echo "🔄 컨테이너 재배포 (Build & Run)"
           docker compose -f docker-compose.production.yml up --build -d
