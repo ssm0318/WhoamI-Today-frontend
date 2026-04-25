@@ -141,25 +141,26 @@ function ResponseItem({
                       </Typo>
                     </>
                   )}
-                  {(author_detail.mutual_interest_count ?? 0) +
-                    (author_detail.mutual_persona_count ?? 0) >
-                    0 && (
-                    <>
-                      <Typo type="label-medium" color="MEDIUM_GRAY">
-                        ·
-                      </Typo>
-                      <Typo type="label-medium" color="DARK_GRAY">
-                        {(author_detail.mutual_interest_count ?? 0) +
-                          (author_detail.mutual_persona_count ?? 0)}{' '}
-                        shared{' '}
-                        {(author_detail.mutual_interest_count ?? 0) +
-                          (author_detail.mutual_persona_count ?? 0) ===
-                        1
-                          ? 'trait'
-                          : 'traits'}
-                      </Typo>
-                    </>
-                  )}
+                  {!featureFlags?.postsVerQ &&
+                    (author_detail.mutual_interest_count ?? 0) +
+                      (author_detail.mutual_persona_count ?? 0) >
+                      0 && (
+                      <>
+                        <Typo type="label-medium" color="MEDIUM_GRAY">
+                          ·
+                        </Typo>
+                        <Typo type="label-medium" color="DARK_GRAY">
+                          {(author_detail.mutual_interest_count ?? 0) +
+                            (author_detail.mutual_persona_count ?? 0)}{' '}
+                          shared{' '}
+                          {(author_detail.mutual_interest_count ?? 0) +
+                            (author_detail.mutual_persona_count ?? 0) ===
+                          1
+                            ? 'trait'
+                            : 'traits'}
+                        </Typo>
+                      </>
+                    )}
                 </>
               )}
           </Layout.FlexRow>

@@ -7,6 +7,8 @@ import UserMoreModal from '@components/user-page/UserMoreModal';
 import { Layout, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
 import { UserProfile } from '@models/user';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { StyledProfileArea, StyledUpdatedFriendItem } from './UpdatedFriendItem.styled';
 
 interface Props {
@@ -24,6 +26,9 @@ function UpdatedFriendItemDefault({
 }: Props) {
   const { id, profile_image, username, unread_chat_count, description } = user;
   const pinnedCount = user.pinned_count ?? 0;
+
+  const { featureFlags } = useBoundStore(UserSelector);
+  const isVerQ = !!featureFlags?.postsVerQ;
 
   const [showMoreModal, setShowMoreModal] = useState(false);
 
@@ -64,12 +69,14 @@ function UpdatedFriendItemDefault({
                   {description}
                 </Typo>
               )}
-              <Layout.FlexRow mt={4}>
-                <FriendPinnedChip
-                  pinnedCount={pinnedCount}
-                  to={`/users/${username}/check-in/pinned`}
-                />
-              </Layout.FlexRow>
+              {!isVerQ && (
+                <Layout.FlexRow mt={4}>
+                  <FriendPinnedChip
+                    pinnedCount={pinnedCount}
+                    to={`/users/${username}/check-in/pinned`}
+                  />
+                </Layout.FlexRow>
+              )}
             </Layout.FlexCol>
           </Layout.FlexRow>
         </StyledProfileArea>
@@ -82,7 +89,11 @@ function UpdatedFriendItemDefault({
             gap={8}
           >
             <Layout.LayoutBase pb={2}>
-              <Icon name="chat_send" size={22} onClick={handleClickChat} />
+              <Icon
+                name={isVerQ ? 'friend_item_chat' : 'chat_send'}
+                size={22}
+                onClick={handleClickChat}
+              />
             </Layout.LayoutBase>
             {unread_chat_count > 0 && (
               <Layout.Absolute
