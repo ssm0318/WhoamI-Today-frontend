@@ -40,6 +40,7 @@ function Chat() {
   const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
   const justSentIdsRef = useRef<Set<number>>(new Set());
   const shouldPinToBottomRef = useRef<Set<number>>(new Set());
+  const markReadTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [username, setUsername] = useState<string>('');
@@ -97,6 +98,9 @@ function Chat() {
   useEffect(() => {
     if (!userId) return;
     fetchMessages(Number(userId));
+    return () => {
+      clearTimeout(markReadTimerRef.current);
+    };
   }, [fetchMessages, userId]);
 
   // Scroll to target message or bottom on first load
@@ -205,7 +209,10 @@ function Chat() {
           return [...prev, { ...msg, is_read: true }];
         });
         if (userId) {
-          markMessagesRead(Number(userId)).catch(() => {});
+          clearTimeout(markReadTimerRef.current);
+          markReadTimerRef.current = setTimeout(() => {
+            markMessagesRead(Number(userId)).catch(() => {});
+          }, 300);
         }
       }
     },

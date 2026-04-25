@@ -48,8 +48,8 @@ function Root() {
     getMyProfile().catch(() => {});
   }, []);
   const onChatListSocketUpdate = useCallback(
-    (data: { unread_count: number }) => {
-      if (data.unread_count > 0) {
+    (data: { unread_count?: number }) => {
+      if (typeof data.unread_count === 'number') {
         refreshUnreadCount();
       }
     },
