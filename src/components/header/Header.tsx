@@ -25,12 +25,7 @@ function Header() {
         <CommonHeader
           title={t('header.my')}
           extraActions={
-            <Icon
-              name="hide_false"
-              size={44}
-              onClick={() => navigate('/my/view-as')}
-              aria-label={t('view_as.entry_button_aria_label') ?? undefined}
-            />
+            <Icon name="hide_false" size={44} onClick={() => navigate('/my/view-as')} />
           }
         />
       );
