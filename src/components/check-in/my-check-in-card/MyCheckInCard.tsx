@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
@@ -39,27 +39,36 @@ function MyCheckInCard() {
   const batteryMoodRow = (
     <>
       {hasBattery ? (
-        <SocialBatteryChip
-          socialBattery={social_battery}
-          compact
-          borderless
-          onClick={goToCheckIn}
-        />
+        <SocialBatteryChip socialBattery={social_battery} compact onClick={goToCheckIn} />
       ) : (
         <SocialBatteryPlaceholder />
       )}
-      <InlineDivider />
       {hasMood ? (
-        <StackedEmojis onClick={goToCheckIn}>
+        <Layout.FlexRow
+          bgColor="WHITE"
+          pv={4}
+          ph={8}
+          outline="LIGHT_GRAY"
+          alignItems="center"
+          rounded={8}
+          style={{ flexShrink: 0, cursor: 'pointer' }}
+          onClick={goToCheckIn}
+        >
           {moodArray.map((emoji, idx) => {
             const dupeCount = moodArray.slice(0, idx).filter((e) => e === emoji).length;
             return (
-              <StackedEmoji key={`${emoji}${dupeCount}`} $offset={idx}>
-                {emoji}
-              </StackedEmoji>
+              <EmojiItem
+                key={`${emoji}${dupeCount}`}
+                emojiString={emoji}
+                size={16}
+                ml={idx > 0 ? -4 : undefined}
+                z={5 - idx}
+                bgColor="TRANSPARENT"
+                outline="TRANSPARENT"
+              />
             );
           })}
-        </StackedEmojis>
+        </Layout.FlexRow>
       ) : (
         <MoodPlaceholder />
       )}
@@ -94,24 +103,33 @@ function MyCheckInCard() {
           </div>
         </Layout.FlexRow>
         {bothBatteryAndMoodFilled && (
-          <Layout.FlexRow alignItems="center" gap={2} style={{ flexShrink: 0 }}>
-            <SocialBatteryChip
-              socialBattery={social_battery}
-              compact
-              borderless
+          <Layout.FlexRow alignItems="center" gap={4} style={{ flexShrink: 0 }}>
+            <SocialBatteryChip socialBattery={social_battery} compact onClick={goToCheckIn} />
+            <Layout.FlexRow
+              bgColor="WHITE"
+              pv={4}
+              ph={8}
+              outline="LIGHT_GRAY"
+              alignItems="center"
+              rounded={8}
+              style={{ flexShrink: 0, cursor: 'pointer' }}
               onClick={goToCheckIn}
-            />
-            <InlineDivider />
-            <StackedEmojis onClick={goToCheckIn}>
+            >
               {moodArray.map((emoji, idx) => {
                 const dupeCount = moodArray.slice(0, idx).filter((e) => e === emoji).length;
                 return (
-                  <StackedEmoji key={`${emoji}${dupeCount}`} $offset={idx}>
-                    {emoji}
-                  </StackedEmoji>
+                  <EmojiItem
+                    key={`${emoji}${dupeCount}`}
+                    emojiString={emoji}
+                    size={16}
+                    ml={idx > 0 ? -4 : undefined}
+                    z={5 - idx}
+                    bgColor="TRANSPARENT"
+                    outline="TRANSPARENT"
+                  />
                 );
               })}
-            </StackedEmojis>
+            </Layout.FlexRow>
           </Layout.FlexRow>
         )}
       </Layout.FlexRow>
@@ -121,7 +139,7 @@ function MyCheckInCard() {
         <Layout.FlexRow
           w="100%"
           alignItems="center"
-          gap={2}
+          gap={4}
           style={{ flexWrap: 'wrap', minWidth: 0 }}
         >
           {batteryMoodRow}
@@ -184,28 +202,5 @@ function MyPinnedLink() {
     </Layout.FlexRow>
   );
 }
-
-const StackedEmojis = styled.div`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 2px 0;
-`;
-
-const StackedEmoji = styled.span<{ $offset: number }>`
-  font-size: 16px;
-  line-height: 1;
-  margin-left: ${({ $offset }) => ($offset > 0 ? '-4px' : '0')};
-  z-index: ${({ $offset }) => 5 - $offset};
-  position: relative;
-`;
-
-const InlineDivider = styled.span`
-  width: 1px;
-  height: 14px;
-  background-color: #d9d9d9;
-  margin: 0 2px;
-  flex-shrink: 0;
-`;
 
 export default MyCheckInCard;
