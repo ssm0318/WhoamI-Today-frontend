@@ -4,7 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { SvgIcon, Typo } from '@design-system';
 
 interface Props {
-  /** Viewer-visible pinned count — hides the chip entirely when 0. */
+  /** Viewer-visible pinned count. The chip renders even when 0 so the
+   *  affordance stays at a predictable position on every card, matching
+   *  the owner's `[ All Archived (N) | Pinned (N) ]` segmented control
+   *  which also surfaces 0-counts. */
   pinnedCount: number;
   /** Navigation target on tap. Callers route to `/users/<u>/check-in/pinned`
    *  for a friend, and `/check-in/archive?tab=pinned` for the viewer's own
@@ -22,14 +25,13 @@ interface Props {
  * around it (battery, mood, thought, song, new-post badge, etc). The
  * pin icon prefix keeps it recognizable at a glance.
  *
- * Visible only when `pinnedCount > 0`. Click stops propagation so it
- * doesn't fire the outer card click handler.
+ * Always visible. Click stops propagation so it doesn't fire the outer
+ * card click handler; tapping when N=0 still opens the destination
+ * (empty feed) so users learn where pins would surface.
  */
 function FriendPinnedChip({ pinnedCount, to }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'archive.friend_card' });
   const navigate = useNavigate();
-
-  if (pinnedCount <= 0) return null;
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();

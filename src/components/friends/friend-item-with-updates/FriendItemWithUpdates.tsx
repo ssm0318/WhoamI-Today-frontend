@@ -344,13 +344,11 @@ function FriendItemWithUpdates({
         </>
       )}
 
-      {/* Pinned Check-ins chip — hidden when count is 0 (per the spec: the
-          chip only surfaces friends who have pins visible to this viewer). */}
-      {pinnedCount > 0 && (
-        <Layout.FlexRow w="100%" alignSelf="flex-start">
-          <FriendPinnedChip pinnedCount={pinnedCount} to={`/users/${username}/check-in/pinned`} />
-        </Layout.FlexRow>
-      )}
+      {/* Pinned Check-ins chip — always renders (including N=0) so the
+          affordance sits at a predictable position on every friend card. */}
+      <Layout.FlexRow w="100%" alignSelf="flex-start">
+        <FriendPinnedChip pinnedCount={pinnedCount} to={`/users/${username}/check-in/pinned`} />
+      </Layout.FlexRow>
 
       {/* Check-in detail popup */}
       <CheckInDetailBottomSheet

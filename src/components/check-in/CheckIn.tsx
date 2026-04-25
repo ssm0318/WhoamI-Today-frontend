@@ -80,8 +80,7 @@ function CheckIn({ user }: CheckInProps) {
           {isMyPage ? (
             <CheckInArchiveChip />
           ) : (
-            friendUsername &&
-            friendPinnedCount > 0 && (
+            friendUsername && (
               <FriendPinnedChip
                 pinnedCount={friendPinnedCount}
                 to={`/users/${friendUsername}/check-in/pinned`}
