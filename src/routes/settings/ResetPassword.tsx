@@ -34,8 +34,10 @@ function ResetPassword() {
 
         if (firstLogin) {
           navigate('/settings/edit-profile?from_reset_password=true');
+        } else if (id && token) {
+          navigate('/');
         } else {
-          navigate('/settings/reset-password');
+          navigate('/settings');
         }
       },
       onError: setPasswordError,
