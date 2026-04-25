@@ -8,12 +8,12 @@ export const TabsRow = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.LIGHT_GRAY};
 `;
 
-export const TabButton = styled.button<{ selected: boolean }>`
+export const TabButton = styled.button<{ $selected: boolean }>`
   border-radius: 8px;
   padding: 4px 8px;
   font-size: 14px;
-  border: 1px solid ${({ theme, selected }) => (selected ? '#8700FF' : theme.LIGHT_GRAY)};
-  background: ${({ selected }) => (selected ? '#F3E8FF' : 'white')};
-  color: ${({ theme, selected }) => (selected ? '#8700FF' : theme.DARK)};
+  border: 1px solid ${({ theme, $selected }) => ($selected ? '#8700FF' : theme.LIGHT_GRAY)};
+  background: ${({ $selected }) => ($selected ? '#F3E8FF' : 'white')};
+  color: ${({ theme, $selected }) => ($selected ? '#8700FF' : theme.DARK)};
   cursor: pointer;
 `;

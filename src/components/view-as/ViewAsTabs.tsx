@@ -18,7 +18,7 @@ function ViewAsTabs({ selected, onSelect }: ViewAsTabsProps) {
           type="button"
           role="tab"
           aria-selected={tier === selected}
-          selected={tier === selected}
+          $selected={tier === selected}
           onClick={() => onSelect(tier)}
         >
           {t(tier)}
