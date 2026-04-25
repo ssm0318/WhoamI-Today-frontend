@@ -16,7 +16,13 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
 import { ComponentVisibility, DEFAULT_VISIBILITY, SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getActiveSong, postCheckIn, postSong } from '@utils/apis/checkIn';
+import {
+  ArchivableCheckInComponent,
+  archiveLiveComponent,
+  getActiveSong,
+  postCheckIn,
+  postSong,
+} from '@utils/apis/checkIn';
 import { MainScrollContainer } from '../Root';
 import {
   ArchivedBadge,
@@ -284,6 +290,33 @@ export default function UpdateCheckin() {
     [doSave],
   );
 
+  /**
+   * Archive a currently-live component (without replacing it). Closes the
+   * editor, hits the new PATCH /check_in/components/<c>/archive/, refetches
+   * the active check-in to reset local state to "no value," and surfaces
+   * a toast. The archived row drops into the user's archive feed under
+   * "Today" and is eligible for pinning.
+   */
+  const handleArchive = useCallback(
+    async (component: ArchivableCheckInComponent) => {
+      setActiveEditor(null);
+      try {
+        await archiveLiveComponent(component);
+        const ci = await fetchCheckIn();
+        if (component === 'battery') setBattery(ci?.social_battery ?? null);
+        if (component === 'mood') {
+          setMood(Array.isArray(ci?.mood) ? ci?.mood ?? [] : ci?.mood ? [ci.mood] : []);
+        }
+        if (component === 'thought') setThought(ci?.thought ?? '');
+        if (component === 'song') setTrackId('');
+        openToast({ message: `Archived ${component}` });
+      } catch {
+        openToast({ message: `Couldn't archive ${component}. Please try again.` });
+      }
+    },
+    [fetchCheckIn, openToast],
+  );
+
   return (
     <MainScrollContainer>
       <GridContainer>
@@ -424,6 +457,7 @@ export default function UpdateCheckin() {
         isOpen={activeEditor === 'battery'}
         onClose={handleEditorDismiss}
         onShare={handleBatteryShare}
+        onArchive={battery ? () => handleArchive('battery') : undefined}
         value={battery}
         onChange={setBattery}
         visibility={effectiveBatteryVis}
@@ -433,6 +467,7 @@ export default function UpdateCheckin() {
         isOpen={activeEditor === 'mood'}
         onClose={handleEditorDismiss}
         onShare={handleMoodShare}
+        onArchive={mood.length > 0 ? () => handleArchive('mood') : undefined}
         value={mood}
         onChange={setMood}
         visibility={effectiveMoodVis}
@@ -442,6 +477,7 @@ export default function UpdateCheckin() {
         isOpen={activeEditor === 'song'}
         onClose={handleEditorDismiss}
         onShare={handleSongShare}
+        onArchive={trackId ? () => handleArchive('song') : undefined}
         trackId={trackId}
         onChange={setTrackId}
         visibility={effectiveSongVis}
@@ -451,6 +487,7 @@ export default function UpdateCheckin() {
         isOpen={activeEditor === 'thought'}
         onClose={handleEditorDismiss}
         onShare={handleThoughtShare}
+        onArchive={thought ? () => handleArchive('thought') : undefined}
         value={thought}
         onChange={setThought}
         visibility={effectiveThoughtVis}
