@@ -18,7 +18,7 @@ COPY . .
 RUN yarn build
 
 # Production stage (정적 파일 제공용)
-FROM nginx:alpine AS production
+FROM nginx:1.27-alpine AS production
 
 # ✅ 빌드된 파일만 복사
 COPY --from=builder /app/build/ /usr/share/nginx/html/
