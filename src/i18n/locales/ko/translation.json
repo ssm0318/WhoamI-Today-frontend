@@ -421,6 +421,8 @@
     "refresh": "새로고침",
     "list_title": "Chats",
     "no_rooms": "아직 대화가 없습니다.",
+    "send_blocked": "메시지를 보낼 수 없습니다.",
+    "send_failed": "메시지 전송에 실패했습니다. 다시 시도해주세요.",
     "request": {
       "send": "채팅 요청 보내기",
       "sent": "요청됨",

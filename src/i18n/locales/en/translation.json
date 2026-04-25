@@ -424,6 +424,8 @@
         "refresh": "Refresh",
         "list_title": "Chats",
         "no_rooms": "No conversations yet.",
+        "send_blocked": "This message could not be sent.",
+        "send_failed": "Failed to send message. Please try again.",
         "request": {
             "send": "Send chat request",
             "sent": "Requested",
