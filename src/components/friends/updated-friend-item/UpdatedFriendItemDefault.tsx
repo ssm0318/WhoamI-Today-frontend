@@ -1,20 +1,31 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
+import UserMoreModal from '@components/user-page/UserMoreModal';
 import { Layout, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
+import { UserProfile } from '@models/user';
 import { StyledProfileArea, StyledUpdatedFriendItem } from './UpdatedFriendItem.styled';
 
 interface Props {
   user: UpdatedProfile;
   isMyPage: boolean;
+  showMoreButton?: boolean;
+  onAfterUserMoreAction?: () => Promise<void>;
 }
 
-function UpdatedFriendItemDefault({ user, isMyPage }: Props) {
+function UpdatedFriendItemDefault({
+  user,
+  isMyPage,
+  showMoreButton,
+  onAfterUserMoreAction,
+}: Props) {
   const { id, profile_image, username, unread_chat_count, description } = user;
   const pinnedCount = user.pinned_count ?? 0;
+
+  const [showMoreModal, setShowMoreModal] = useState(false);
 
   const navigate = useNavigate();
   const handleClickProfile = () => {
@@ -24,6 +35,11 @@ function UpdatedFriendItemDefault({ user, isMyPage }: Props) {
   const handleClickChat = (e: MouseEvent) => {
     e.stopPropagation();
     navigate(`/users/${id}/chat`);
+  };
+
+  const handleClickMore = (e: MouseEvent) => {
+    e.stopPropagation();
+    setShowMoreModal(true);
   };
 
   return (
@@ -63,7 +79,7 @@ function UpdatedFriendItemDefault({ user, isMyPage }: Props) {
             style={{ position: 'relative' }}
             justifyContent="flex-end"
             alignItems="center"
-            gap={2}
+            gap={8}
           >
             <Layout.LayoutBase pb={2}>
               <Icon name="chat_send" size={22} onClick={handleClickChat} />
@@ -84,9 +100,18 @@ function UpdatedFriendItemDefault({ user, isMyPage }: Props) {
                 </Typo>
               </Layout.Absolute>
             )}
+            {showMoreButton && <Icon name="dots_menu" size={22} onClick={handleClickMore} />}
           </Layout.FlexRow>
         )}
       </StyledUpdatedFriendItem>
+      {showMoreButton && (
+        <UserMoreModal
+          isVisible={showMoreModal}
+          setIsVisible={setShowMoreModal}
+          user={user as unknown as UserProfile}
+          callback={onAfterUserMoreAction}
+        />
+      )}
     </Layout.FlexRow>
   );
 }

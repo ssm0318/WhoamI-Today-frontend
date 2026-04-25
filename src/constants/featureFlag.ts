@@ -25,6 +25,16 @@ export enum FeatureFlagKey {
   FRIEND_UPDATES_TAB = 'friendUpdatesTab',
   /** 하단 Questions 탭 노출 (QUESTION_RESPONSE_FEATURE 와 별개 — 전자는 탭 가시성, 후자는 피처 전반) */
   QUESTIONS_TAB = 'questionsTab',
+  /** version_q 게시글 단순화: 비밀댓글/이모지 리액션 숨김, visibility close-only 단일 체크박스, update_past_posts 항상 true */
+  POSTS_VER_Q = 'postsVerQ',
+  /** version_q 신규 image+text 체크인 + stories 가로 스크롤 */
+  CHECK_IN_POSTS = 'checkInPosts',
+  /** 하단 nav 에 My 탭 노출 (version_q 전용) */
+  MY_TAB_VISIBLE = 'myTabVisible',
+  /** 하단 nav 에 Share 탭 노출 + version_q 용 placeholder */
+  SHARE_TAB_VISIBLE = 'shareTabVisible',
+  /** 종 아이콘을 multi-checkbox 구독 popup 으로 (양 버전 공통) */
+  SUBSCRIPTION_POPUP = 'subscriptionPopup',
 }
 
 export type FeatureFlagMap = { [feature in FeatureFlagKey]: boolean };
@@ -46,6 +56,11 @@ const DEFAULT_FLAGS = {
   [FeatureFlagKey.CHAT_TAB]: false,
   [FeatureFlagKey.FRIEND_UPDATES_TAB]: false,
   [FeatureFlagKey.QUESTIONS_TAB]: false,
+  [FeatureFlagKey.POSTS_VER_Q]: false,
+  [FeatureFlagKey.CHECK_IN_POSTS]: false,
+  [FeatureFlagKey.MY_TAB_VISIBLE]: false,
+  [FeatureFlagKey.SHARE_TAB_VISIBLE]: false,
+  [FeatureFlagKey.SUBSCRIPTION_POPUP]: false,
 };
 
 export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
@@ -53,11 +68,15 @@ export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
   [VersionType.VER_Q]: {
     ...DEFAULT_FLAGS,
     [FeatureFlagKey.FRIEND_FEED]: false,
-    [FeatureFlagKey.FRIEND_UPDATES_TAB]: true,
-    [FeatureFlagKey.QUESTIONS_TAB]: true,
     [FeatureFlagKey.CHAT_TAB]: true,
     [FeatureFlagKey.QUESTION_RESPONSE_FEATURE]: true,
-    [FeatureFlagKey.CHECK_IN]: true,
+    [FeatureFlagKey.DISCOVER]: true,
+    [FeatureFlagKey.POSTS_VER_Q]: true,
+    [FeatureFlagKey.CHECK_IN_POSTS]: true,
+    [FeatureFlagKey.MY_TAB_VISIBLE]: true,
+    [FeatureFlagKey.SHARE_TAB_VISIBLE]: true,
+    [FeatureFlagKey.SUBSCRIPTION_POPUP]: true,
+    [FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]: true,
   },
   // Ver. W
   [VersionType.VER_W]: {
@@ -71,6 +90,8 @@ export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
     [FeatureFlagKey.PERSONA]: true,
     [FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]: true,
     [FeatureFlagKey.DISCOVER]: true,
+    [FeatureFlagKey.SHARE_TAB_VISIBLE]: true,
     [FeatureFlagKey.CHAT_TAB]: true,
+    [FeatureFlagKey.SUBSCRIPTION_POPUP]: true,
   },
 };

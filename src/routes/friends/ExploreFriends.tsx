@@ -33,7 +33,7 @@ function ExploreFriends() {
   const [query, setQuery] = useState('');
 
   const handleClickDone = () => {
-    navigate(featureFlags?.friendUpdatesTab ? '/friends-q' : '/friends');
+    navigate(featureFlags?.checkInPosts ? '/feed' : '/friends');
   };
 
   return (

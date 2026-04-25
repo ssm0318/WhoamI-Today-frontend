@@ -1,4 +1,27 @@
 {
+  "check_in_post": {
+    "new_title": "새 체크인",
+    "add_image": "사진 추가",
+    "stories_title": "최근 체크인",
+    "no_stories": "아직 체크인이 없어요",
+    "compose": "체크인 공유"
+  },
+  "subscription_popup": {
+    "title": "알림 받기",
+    "title_with_user": "{{username}}님의 업데이트 알림",
+    "description": "어떤 업데이트의 알림을 받을지 선택하세요.",
+    "type": {
+      "battery": "소셜 배터리",
+      "mood": "기분",
+      "thought": "오늘의 생각",
+      "song": "노래",
+      "mission_of_the_day": "오늘의 미션",
+      "question_of_the_day": "오늘의 질문",
+      "photo_of_the_day": "오늘의 사진",
+      "check_in": "체크인",
+      "post": "게시글"
+    }
+  },
   "check_in_subscription": {
     "toast": {
       "subscribed": "구독했어요",
@@ -333,6 +356,7 @@
     "confirm": "확인",
     "friend": "친구",
     "close_friend": "친한 친구",
+    "close_friends_only": "친한 친구에게만 공개",
     "photo_upload_bottom_sheet": {
       "title": "사진 업로드",
       "album": "앨범에서 선택",

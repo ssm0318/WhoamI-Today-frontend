@@ -20,7 +20,7 @@ export interface DateRequestParams {
 }
 
 export interface CommonTarget {
-  target_type: 'Moment' | 'Response' | 'Comment' | 'Note' | 'PrivateComment';
+  target_type: 'Moment' | 'Response' | 'Comment' | 'Note' | 'PrivateComment' | 'CheckInPost';
   target_id: number;
 }
 
