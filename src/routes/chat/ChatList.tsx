@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -11,6 +12,13 @@ import { ChatRoom } from '@models/chat';
 import { getChatRooms } from '@utils/apis/chat';
 import { MainScrollContainer } from '../Root';
 import { useChatListSocket } from './_hooks/useChatListSocket';
+
+// Override the shared ToggleSwitch's checked colour for the unread filter.
+const PurpleToggleWrapper = styled.div`
+  & input:checked + .slider {
+    background-color: #8700ff;
+  }
+`;
 
 function ChatList() {
   const navigate = useNavigate();
@@ -104,19 +112,21 @@ function ChatList() {
           gap={10}
           bgColor="WHITE"
           alignItems="center"
-          justifyContent="flex-end"
+          justifyContent="flex-start"
         >
+          <PurpleToggleWrapper>
+            <ToggleSwitch
+              type="small"
+              checked={unreadOnly}
+              onChange={() => setUnreadOnly((v) => !v)}
+            />
+          </PurpleToggleWrapper>
           <Typo type="body-medium" color="DARK_GRAY">
             {(() => {
               const unreadCount = rooms.filter((r) => (r.unread_count || 0) > 0).length;
               return `Unread Only${unreadCount ? ` (${unreadCount})` : ''}`;
             })()}
           </Typo>
-          <ToggleSwitch
-            type="small"
-            checked={unreadOnly}
-            onChange={() => setUnreadOnly((v) => !v)}
-          />
         </Layout.FlexRow>
       )}
       {loading && (
