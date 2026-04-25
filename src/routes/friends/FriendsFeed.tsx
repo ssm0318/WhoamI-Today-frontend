@@ -67,7 +67,7 @@ function FriendsFeed() {
           {isLoading ? (
             <NoteLoader />
           ) : feedItems?.[0] && feedItems[0].count > 0 ? (
-            <>
+            <Layout.FlexCol gap={20} ph={16} pt={20} w="100%" style={{ boxSizing: 'border-box' }}>
               {feedItems.map(({ results }) => results?.map((item) => renderFeedItem(item)))}
               <div ref={targetRef} />
               {isFeedItemsLoadingMore && (
@@ -75,7 +75,7 @@ function FriendsFeed() {
                   <Loader />
                 </Layout.FlexRow>
               )}
-            </>
+            </Layout.FlexCol>
           ) : (
             <Layout.FlexRow alignItems="center" w="100%" h="100%">
               <NoContents title={t('no_contents.notes')} />

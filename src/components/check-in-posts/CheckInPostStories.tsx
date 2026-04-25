@@ -49,9 +49,11 @@ function CheckInPostStories({ authorUserId, showCompose = false }: CheckInPostSt
         {showCompose && (
           <ComposeBubble onClick={() => navigate('/check-in-posts/new')}>
             <Plus>+</Plus>
-            <Typo type="label-small" color="DARK_GRAY">
-              {t('compose')}
-            </Typo>
+            <ComposeLabel>
+              <Typo type="label-large" color="DARK_GRAY">
+                {t('compose')}
+              </Typo>
+            </ComposeLabel>
           </ComposeBubble>
         )}
         {stories.map((story, idx) => (
@@ -107,7 +109,11 @@ const Bubble = styled.button`
 `;
 
 const ComposeBubble = styled(Bubble)`
-  width: 64px;
+  width: auto;
+`;
+
+const ComposeLabel = styled.span`
+  white-space: nowrap;
 `;
 
 const Plus = styled.span`

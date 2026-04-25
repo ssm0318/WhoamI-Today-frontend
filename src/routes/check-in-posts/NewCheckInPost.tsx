@@ -140,9 +140,6 @@ function NewCheckInPost() {
         ) : (
           <Layout.FlexRow w="100%" alignItems="center" justifyContent="flex-start" mt={20}>
             <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
-            <Typo type="label-medium" color="MEDIUM_GRAY" ml={8}>
-              {t('check_in_post.add_image') || 'Add a photo'}
-            </Typo>
           </Layout.FlexRow>
         )}
 
@@ -152,9 +149,6 @@ function NewCheckInPost() {
             checked={form.closeFriendsOnly}
             onChange={handleToggleCloseFriendsOnly}
           />
-          <Typo type="label-medium" color="DARK_GRAY">
-            {t('notes.close_friends_only')}
-          </Typo>
         </Layout.FlexRow>
 
         <input
