@@ -71,6 +71,20 @@ function TabItem({ to, type, size = 48, end = false }: TabItemProps) {
 export default function Tab() {
   const { featureFlags } = useBoundStore(UserSelector);
 
+  if (featureFlags?.checkInPosts) {
+    return (
+      <TabWrapper>
+        <Layout.FlexRow w="100%" justifyContent="space-evenly" alignItems="center" pt={4}>
+          <TabItem to="/feed" type="feed" size={28} />
+          <TabItem to="/share" type="share" size={28} />
+          <TabItem to="/discover" type="discover" size={28} />
+          <TabItem to="/chats" type="chats" size={28} />
+          <TabItem to="/my" type="my" size={28} />
+        </Layout.FlexRow>
+      </TabWrapper>
+    );
+  }
+
   return (
     <TabWrapper>
       <Layout.FlexRow w="100%" h="100%" justifyContent="space-evenly" alignItems="center">
@@ -81,8 +95,6 @@ export default function Tab() {
             <TabItem to="/share" type="share" size={28} />
             <TabItem to="/discover" type="discover" size={28} />
           </>
-        ) : featureFlags?.friendUpdatesTab ? (
-          <TabItem to="/friends-q" type="friends" size={28} />
         ) : featureFlags?.friendFeed ? (
           <TabItem to="/feed" type="friends" size={28} />
         ) : null}

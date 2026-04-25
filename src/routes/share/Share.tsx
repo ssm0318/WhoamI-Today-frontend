@@ -10,6 +10,8 @@ import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { DailyQuestion } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { getMe } from '@utils/apis/my';
 import { getTodayQuestions } from '@utils/apis/question';
 import { MainScrollContainer } from '../Root';
@@ -22,6 +24,7 @@ function Share() {
   const navigate = useNavigate();
   const { scrollRef } = useRestoreScrollPosition('sharePage');
   const photoInputRef = useRef<HTMLInputElement>(null);
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const { data: todayQuestions, mutate } = useSWR<DailyQuestion[]>(
     '/qna/questions/daily/',
@@ -31,6 +34,24 @@ function Share() {
   const handleRefresh = useCallback(async () => {
     await Promise.all([mutate(), getMe()]);
   }, [mutate]);
+
+  if (featureFlags?.shareTabVisible && featureFlags?.postsVerQ) {
+    return (
+      <MainScrollContainer>
+        <Layout.FlexCol
+          w="100%"
+          h="100%"
+          alignItems="center"
+          justifyContent="center"
+          ph={DEFAULT_MARGIN}
+        >
+          <Typo type="head-line" color="MEDIUM_GRAY">
+            Coming soon
+          </Typo>
+        </Layout.FlexCol>
+      </MainScrollContainer>
+    );
+  }
 
   const handleClickSharePhoto = () => {
     photoInputRef.current?.click();

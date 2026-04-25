@@ -48,7 +48,7 @@ function EditConnectionsBottomSheet({
   const handleClickEdit = () => {
     changeConnection(user.id, {
       choice: connection,
-      update_past_posts: isUpdatePastPosts,
+      update_past_posts: featureFlags?.postsVerQ ? true : isUpdatePastPosts,
     })
       .then(() => {
         closeBottomSheet();
@@ -96,8 +96,8 @@ function EditConnectionsBottomSheet({
                 checked={connection === Connection.CLOSE_FRIEND}
                 onChange={handleChangeConnection}
               />
-              {/* ver. Q 에서만 update_past_posts 체크박스 노출 */}
-              {featureFlags?.friendList && (
+              {/* update_past_posts 체크박스: VER_W (friendList) 일 때만 노출, VER_Q 는 항상 true 강제 */}
+              {featureFlags?.friendList && !featureFlags?.postsVerQ && (
                 <Layout.FlexRow ml={30}>
                   <CheckBox
                     name={t('edit_connections.check_box') || ''}

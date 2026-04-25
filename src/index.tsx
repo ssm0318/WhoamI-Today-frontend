@@ -30,6 +30,7 @@ import AllQuestions from './routes/AllQuestions';
 // Chats tab now uses ChatList directly
 import Archive from './routes/check-in/Archive';
 import CheckInEdit from './routes/check-in/CheckInEdit';
+import NewCheckInPost from './routes/check-in-posts/NewCheckInPost';
 import Discover from './routes/discover/Discover';
 import EmailVerificationComplete from './routes/EmailVerificationComplete';
 import ForgotPassword from './routes/ForgotPassword';
@@ -41,7 +42,6 @@ import FriendNewPosts from './routes/friends/FriendNewPosts';
 import FriendPinnedFeed from './routes/friends/FriendPinnedFeed';
 import FriendsFeed from './routes/friends/FriendsFeed';
 import FriendsList from './routes/friends/FriendsList';
-import FriendsUpdates from './routes/friends/FriendsUpdates';
 import Intro from './routes/Intro';
 import Likes from './routes/Likes';
 import My from './routes/My';
@@ -137,16 +137,12 @@ const router = createBrowserRouter([
       },
       {
         path: 'friends-q',
-        element: (
-          <VersionGuard allowedVersions={[VersionType.VER_Q]}>
-            <FriendsUpdates />
-          </VersionGuard>
-        ),
+        element: <Navigate to="/feed" replace />,
       },
       {
         path: 'discover',
         element: (
-          <VersionGuard allowedVersions={[VersionType.VER_W]}>
+          <VersionGuard allowedVersions={[VersionType.VER_W, VersionType.VER_Q]}>
             <Discover />
           </VersionGuard>
         ),
@@ -160,9 +156,17 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: 'check-in-posts/new',
+        element: (
+          <VersionGuard allowedVersions={[VersionType.VER_Q]}>
+            <NewCheckInPost />
+          </VersionGuard>
+        ),
+      },
+      {
         path: 'share',
         element: (
-          <VersionGuard allowedVersions={[VersionType.VER_W]}>
+          <VersionGuard allowedVersions={[VersionType.VER_W, VersionType.VER_Q]}>
             <Outlet />
           </VersionGuard>
         ),

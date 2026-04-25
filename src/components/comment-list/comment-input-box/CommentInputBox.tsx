@@ -123,7 +123,7 @@ function CommentInputBox({
       target_id: post.id,
       target_type: postType,
       content: content.trim(),
-      is_private: isPrivate,
+      is_private: featureFlags?.postsVerQ ? false : isPrivate,
     })
       .then(() => {
         setContent('');
@@ -174,7 +174,7 @@ function CommentInputBox({
       }}
     >
       {/* isPrivate */}
-      {featureFlags?.friendList && (
+      {featureFlags?.friendList && !featureFlags?.postsVerQ && (
         <Layout.FlexRow gap={4} alignItems="center">
           <CheckBox
             name={t('private_comment') || ''}

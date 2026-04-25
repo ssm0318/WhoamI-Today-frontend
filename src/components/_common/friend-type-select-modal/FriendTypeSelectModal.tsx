@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { CheckBox, Layout, RadioButton, Typo } from '@design-system';
 import { Connection } from '@models/api/friends';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import * as S from './FriendTypeSelectModal.styled';
 
 interface FriendTypeSelectModalProps {
@@ -29,6 +31,7 @@ function FriendTypeSelectModal({
   const [t] = useTranslation('translation', {
     keyPrefix: 'friends.explore_friends.friend_item.friend_type_select_dialog',
   });
+  const { featureFlags } = useBoundStore(UserSelector);
   // default 값은 friend
   const [friendType, setFriendType] = useState<Connection>(Connection.FRIEND);
   const [isUpdatePastPosts, setIsUpdatePastPosts] = useState(false);
@@ -46,7 +49,7 @@ function FriendTypeSelectModal({
   const handleClickConfirm = () => {
     onClickConfirm({
       friendType,
-      updatePastPosts: isUpdatePastPosts,
+      updatePastPosts: featureFlags?.postsVerQ ? true : isUpdatePastPosts,
       isDefault: false,
     });
     onClickClose();
@@ -97,14 +100,16 @@ function FriendTypeSelectModal({
               onChange={handleChangeConnection}
             />
           </Layout.FlexCol>
-          <Layout.FlexRow mt={10} ml={20}>
-            <CheckBox
-              name={t('update_past_posts') || ''}
-              onChange={handleChangeCheckBox}
-              checked={isUpdatePastPosts}
-              disabled={friendType === Connection.FRIEND}
-            />
-          </Layout.FlexRow>
+          {!featureFlags?.postsVerQ && (
+            <Layout.FlexRow mt={10} ml={20}>
+              <CheckBox
+                name={t('update_past_posts') || ''}
+                onChange={handleChangeCheckBox}
+                checked={isUpdatePastPosts}
+                disabled={friendType === Connection.FRIEND}
+              />
+            </Layout.FlexRow>
+          )}
         </Layout.FlexCol>
         <S.ButtonContainer w="100%" justifyContent="space-evenly">
           <S.Button onClick={onClickClose} pv={11}>

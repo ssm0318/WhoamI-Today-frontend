@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
+import CheckInPostStories from '@components/check-in-posts/CheckInPostStories';
 import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
@@ -11,6 +12,7 @@ import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Note, POST_TYPE, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { getMe } from '@utils/apis/my';
 import { MainScrollContainer } from 'src/routes/Root';
 
@@ -23,6 +25,7 @@ function FriendsFeed() {
     myProfile: state.myProfile,
     fetchCheckIn: state.fetchCheckIn,
   }));
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const {
     targetRef,
@@ -60,10 +63,11 @@ function FriendsFeed() {
     <MainScrollContainer scrollRef={scrollRef} showNotificationPermission>
       <PullToRefresh onRefresh={handleRefresh}>
         <Layout.FlexCol w="100%">
+          {featureFlags?.checkInPosts && <CheckInPostStories showCompose />}
           {isLoading ? (
             <NoteLoader />
           ) : feedItems?.[0] && feedItems[0].count > 0 ? (
-            <>
+            <Layout.FlexCol gap={20} ph={16} pt={20} w="100%" style={{ boxSizing: 'border-box' }}>
               {feedItems.map(({ results }) => results?.map((item) => renderFeedItem(item)))}
               <div ref={targetRef} />
               {isFeedItemsLoadingMore && (
@@ -71,7 +75,7 @@ function FriendsFeed() {
                   <Loader />
                 </Layout.FlexRow>
               )}
-            </>
+            </Layout.FlexCol>
           ) : (
             <Layout.FlexRow alignItems="center" w="100%" h="100%">
               <NoContents title={t('no_contents.notes')} />

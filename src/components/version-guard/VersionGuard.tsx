@@ -29,11 +29,7 @@ function VersionGuard({ allowedVersions, children }: Props) {
 
   if (!isAllowed) {
     const home =
-      currentVer === VersionType.VER_Q
-        ? '/friends-q'
-        : featureFlags?.friendList
-        ? '/friends'
-        : '/feed';
+      currentVer === VersionType.VER_Q ? '/feed' : featureFlags?.friendList ? '/friends' : '/feed';
     return <Navigate to={home} replace />;
   }
   return children;

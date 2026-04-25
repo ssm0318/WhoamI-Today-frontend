@@ -12,9 +12,8 @@ export const LEARN_MORE_ABOUT_WHOAMI_TODAY_NOTION_URL =
 export const FRIEND_DEFAULT_REDIRECTION_PATH = '/friends';
 
 // Ver.Q redirection path
-export const FRIENDS_Q_DEFAULT_REDIRECTION_PATH = '/friends-q';
+export const FRIENDS_Q_DEFAULT_REDIRECTION_PATH = '/feed';
 
-// @deprecated - legacy /feed route; use FRIENDS_Q_DEFAULT_REDIRECTION_PATH
 export const FEED_DEFAULT_REDIRECTION_PATH = '/feed';
 
 export const AFTER_SIGNUP_PATH = '/my';

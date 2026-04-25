@@ -3,12 +3,13 @@ import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { DEFAULT_MARGIN } from '@constants/layout';
-import { Layout, SvgIcon, Typo } from '@design-system';
+import { CheckBox, Layout, SvgIcon, Typo } from '@design-system';
 import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import { FileSelectedData } from '@models/app';
 import { ComponentVisibility } from '@models/checkIn';
 import { NewNoteForm, PostVisibility } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import { processImageFromApp } from '@utils/imageHelpers';
@@ -34,6 +35,7 @@ function NewNoteContent({
   const [t] = useTranslation('translation');
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [showPhotoUploadBottomSheet, setShowPhotoUploadBottomSheet] = useState(false);
@@ -208,13 +210,32 @@ function NewNoteContent({
           {/* Media button and visibility options */}
           <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" mt={20}>
             <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
-            <VisibilityToggle
-              value={
-                (noteInfo.visibility[0] as unknown as ComponentVisibility) ||
-                ComponentVisibility.FRIENDS
-              }
-              onChange={(v) => handleChangeVisibility([v as unknown as PostVisibility])}
-            />
+            {featureFlags?.postsVerQ ? (
+              <Layout.FlexRow gap={6} alignItems="center">
+                <CheckBox
+                  name={t('notes.close_friends_only') || 'Close friends only'}
+                  checked={noteInfo.visibility[0] === PostVisibility.CLOSE_FRIENDS}
+                  onChange={() =>
+                    handleChangeVisibility([
+                      noteInfo.visibility[0] === PostVisibility.CLOSE_FRIENDS
+                        ? PostVisibility.FRIENDS
+                        : PostVisibility.CLOSE_FRIENDS,
+                    ])
+                  }
+                />
+                <Typo type="label-medium" color="DARK_GRAY">
+                  {t('notes.close_friends_only')}
+                </Typo>
+              </Layout.FlexRow>
+            ) : (
+              <VisibilityToggle
+                value={
+                  (noteInfo.visibility[0] as unknown as ComponentVisibility) ||
+                  ComponentVisibility.FRIENDS
+                }
+                onChange={(v) => handleChangeVisibility([v as unknown as PostVisibility])}
+              />
+            )}
           </Layout.FlexRow>
 
           <input

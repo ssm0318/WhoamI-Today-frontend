@@ -7,6 +7,8 @@ import SubHeader from '@components/sub-header/SubHeader';
 import { Layout, Typo } from '@design-system';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { MainScrollContainer } from 'src/routes/Root';
 import { AllFriendItemLoader, AllFriendListLoader } from './FriendsLoader';
 
@@ -17,6 +19,8 @@ function DefaultMyFriendsList() {
     useInfiniteFetchFriends({ type: 'all' });
 
   const navigate = useNavigate();
+  const { featureFlags } = useBoundStore(UserSelector);
+  const showMoreButton = !!featureFlags?.postsVerQ;
 
   const handleRefresh = async () => {
     await refetchAllFriends();
@@ -41,7 +45,15 @@ function DefaultMyFriendsList() {
                     results?.map((user) => {
                       if (user.is_hidden) return null;
                       return (
-                        <UpdatedFriendItemDefault key={`friends_${user.id}`} isMyPage user={user} />
+                        <UpdatedFriendItemDefault
+                          key={`friends_${user.id}`}
+                          isMyPage
+                          user={user}
+                          showMoreButton={showMoreButton}
+                          onAfterUserMoreAction={async () => {
+                            await refetchAllFriends();
+                          }}
+                        />
                       );
                     }),
                   )}

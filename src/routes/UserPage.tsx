@@ -5,6 +5,7 @@ import CommonError from '@components/_common/common-error/CommonError';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import MainContainer from '@components/_common/main-container/MainContainer';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
+import CheckInPostStories from '@components/check-in-posts/CheckInPostStories';
 import UserHeader from '@components/header/user-header/UserHeader';
 import NoteSection from '@components/note/note-section/NoteSection';
 import AllPostSection from '@components/post/AllPostSection';
@@ -112,6 +113,9 @@ function UserPage() {
                   >
                     <Profile user={user.data} />
                   </Layout.FlexRow>
+                  {featureFlags?.checkInPosts && userId && (
+                    <CheckInPostStories authorUserId={userId} />
+                  )}
                   <Divider width={8} bgColor="LIGHT" />
                   <Layout.FlexCol pt={8} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>
                     {featureFlags?.questionResponseFeature ? (

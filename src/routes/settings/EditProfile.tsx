@@ -221,7 +221,7 @@ function EditProfile() {
     if (isFromResetPassword) {
       navigate('/my');
     } else if (isFromSignUp) {
-      navigate(featureFlags?.friendUpdatesTab ? '/friends-q' : '/friends');
+      navigate(featureFlags?.checkInPosts ? '/feed' : '/friends');
     } else {
       navigate(-1);
     }
@@ -333,24 +333,26 @@ function EditProfile() {
         </Layout.FlexCol>
       </Layout.FlexCol>
       <Layout.FlexCol pt={32} ph={24} pb={40} gap={16} w="100%">
-        <EditProfileTabRow w="100%">
-          <EditProfileTabButton
-            type="button"
-            $active={activeTab === 'pronouns_bio'}
-            onClick={() => setActiveTab('pronouns_bio')}
-          >
-            Pronouns/Bio
-          </EditProfileTabButton>
-          <EditProfileTabButton
-            type="button"
-            $active={activeTab === 'interests'}
-            onClick={() => setActiveTab('interests')}
-          >
-            Interests
-          </EditProfileTabButton>
-        </EditProfileTabRow>
+        {!featureFlags?.postsVerQ && (
+          <EditProfileTabRow w="100%">
+            <EditProfileTabButton
+              type="button"
+              $active={activeTab === 'pronouns_bio'}
+              onClick={() => setActiveTab('pronouns_bio')}
+            >
+              Pronouns/Bio
+            </EditProfileTabButton>
+            <EditProfileTabButton
+              type="button"
+              $active={activeTab === 'interests'}
+              onClick={() => setActiveTab('interests')}
+            >
+              Interests
+            </EditProfileTabButton>
+          </EditProfileTabRow>
+        )}
 
-        {activeTab === 'pronouns_bio' ? (
+        {activeTab === 'pronouns_bio' || featureFlags?.postsVerQ ? (
           <>
             <ValidatedInput
               label={t('username')}

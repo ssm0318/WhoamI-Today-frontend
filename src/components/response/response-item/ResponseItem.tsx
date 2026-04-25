@@ -6,6 +6,7 @@ import ContentTranslation from '@components/_common/content-translation/ContentT
 import Icon from '@components/_common/icon/Icon';
 import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import PostFooter from '@components/_common/post-footer/PostFooter';
+import PostFooterLikeOnly from '@components/_common/post-footer/PostFooterLikeOnly';
 import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
@@ -13,6 +14,7 @@ import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { POST_DP_TYPE, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
@@ -47,6 +49,7 @@ function ResponseItem({
     emojiPickerTarget: state.emojiPickerTarget,
     setEmojiPickerTarget: state.setEmojiPickerTarget,
   }));
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const navigate = useNavigate();
 
@@ -138,25 +141,26 @@ function ResponseItem({
                       </Typo>
                     </>
                   )}
-                  {(author_detail.mutual_interest_count ?? 0) +
-                    (author_detail.mutual_persona_count ?? 0) >
-                    0 && (
-                    <>
-                      <Typo type="label-medium" color="MEDIUM_GRAY">
-                        ·
-                      </Typo>
-                      <Typo type="label-medium" color="DARK_GRAY">
-                        {(author_detail.mutual_interest_count ?? 0) +
-                          (author_detail.mutual_persona_count ?? 0)}{' '}
-                        shared{' '}
-                        {(author_detail.mutual_interest_count ?? 0) +
-                          (author_detail.mutual_persona_count ?? 0) ===
-                        1
-                          ? 'trait'
-                          : 'traits'}
-                      </Typo>
-                    </>
-                  )}
+                  {!featureFlags?.postsVerQ &&
+                    (author_detail.mutual_interest_count ?? 0) +
+                      (author_detail.mutual_persona_count ?? 0) >
+                      0 && (
+                      <>
+                        <Typo type="label-medium" color="MEDIUM_GRAY">
+                          ·
+                        </Typo>
+                        <Typo type="label-medium" color="DARK_GRAY">
+                          {(author_detail.mutual_interest_count ?? 0) +
+                            (author_detail.mutual_persona_count ?? 0)}{' '}
+                          shared{' '}
+                          {(author_detail.mutual_interest_count ?? 0) +
+                            (author_detail.mutual_persona_count ?? 0) ===
+                          1
+                            ? 'trait'
+                            : 'traits'}
+                        </Typo>
+                      </>
+                    )}
                 </>
               )}
           </Layout.FlexRow>
@@ -229,7 +233,16 @@ function ResponseItem({
 
   const questionJsx = question ? <QuestionItem question={question} /> : null;
 
-  const footerJsx = (
+  const footerJsx = featureFlags?.postsVerQ ? (
+    <PostFooterLikeOnly
+      isMyPage={isMyPage}
+      post={response}
+      showComments={() => setBottomSheet(true)}
+      setInputFocus={() => setInputFocus(true)}
+      displayType={displayType}
+      refresh={refresh}
+    />
+  ) : (
     <PostFooter
       isMyPage={isMyPage}
       post={response}

@@ -11,6 +11,7 @@ import { CheckBox, Layout, Typo } from '@design-system';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
 import { Connection } from '@models/api/friends';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { changeConnection } from '@utils/apis/friends';
 import * as S from './SelectCloseFriendsBottomSheet.styled';
 
@@ -31,6 +32,7 @@ function SelectCloseFriendsBottomSheet({ visible, closeBottomSheet, onFriendAdde
   const [isUpdatePastPosts, setIsUpdatePastPosts] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
+  const { featureFlags } = useBoundStore(UserSelector);
 
   // Reset state when bottom sheet closes
   useEffect(() => {
@@ -69,7 +71,7 @@ function SelectCloseFriendsBottomSheet({ visible, closeBottomSheet, onFriendAdde
     setIsSubmitting(true);
     changeConnection(selectedFriendId, {
       choice: Connection.CLOSE_FRIEND,
-      update_past_posts: isUpdatePastPosts,
+      update_past_posts: featureFlags?.postsVerQ ? true : isUpdatePastPosts,
     })
       .then(() => {
         setShowConfirmDialog(false);
@@ -169,13 +171,15 @@ function SelectCloseFriendsBottomSheet({ visible, closeBottomSheet, onFriendAdde
               <Typo type="title-large" mb={5}>
                 {t('add_to_close_friends')}
               </Typo>
-              <Layout.FlexRow mt={10} ml={20}>
-                <CheckBox
-                  name={tDialog('update_past_posts') || ''}
-                  onChange={() => setIsUpdatePastPosts((prev) => !prev)}
-                  checked={isUpdatePastPosts}
-                />
-              </Layout.FlexRow>
+              {!featureFlags?.postsVerQ && (
+                <Layout.FlexRow mt={10} ml={20}>
+                  <CheckBox
+                    name={tDialog('update_past_posts') || ''}
+                    onChange={() => setIsUpdatePastPosts((prev) => !prev)}
+                    checked={isUpdatePastPosts}
+                  />
+                </Layout.FlexRow>
+              )}
             </Layout.FlexCol>
             <ModalS.ButtonContainer w="100%" justifyContent="space-evenly">
               <ModalS.Button onClick={handleCancelConfirm} pv={11}>

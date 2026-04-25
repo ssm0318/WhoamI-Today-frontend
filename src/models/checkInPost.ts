@@ -1,0 +1,31 @@
+import { User } from '@models/user';
+import { CroppedImg } from '@utils/getCroppedImg';
+
+export type CheckInPostVisibility = 'friends' | 'close_friends';
+
+export interface CheckInPost {
+  id: number;
+  type: 'CheckInPost';
+  author_detail: User;
+  image_url: string | null;
+  caption: string;
+  visibility: CheckInPostVisibility;
+  created_at: string;
+  like_count: number | null;
+  current_user_like_id: number | null;
+  current_user_read?: boolean;
+}
+
+export interface CheckInPostStory {
+  id: number;
+  author_detail: User;
+  image_url: string | null;
+  visibility: CheckInPostVisibility;
+  created_at: string;
+}
+
+export interface NewCheckInPostForm {
+  image: CroppedImg | null;
+  caption: string;
+  closeFriendsOnly: boolean;
+}

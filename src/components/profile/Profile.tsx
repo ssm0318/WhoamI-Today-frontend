@@ -4,15 +4,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import FriendStatus from '@components/_common/friend-status/FriendStatus';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import SubscriptionPopup from '@components/friends/subscription-popup/SubscriptionPopup';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import { UserPageContext } from '@components/user-page/UserPage.context';
 import { FeatureFlagKey } from '@constants/featureFlag';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { useCheckInSubscription } from '@hooks/useCheckInSubscription';
 import { useChipCategories } from '@hooks/useChipCategories';
 import { Connection } from '@models/api/friends';
-import { MyProfile, VersionType } from '@models/api/user';
+import { MyProfile } from '@models/api/user';
 import { normalizeChipText } from '@models/chips';
 import { areFriends, isMyProfile, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -39,25 +39,23 @@ function Profile({ user }: ProfileProps) {
   const { featureFlags, myProfile } = useBoundStore(useShallow(UserSelector));
   const isMyPage = user?.id === myProfile?.id;
   const [friendData, setFriendData] = useState<UserProfile | null>(null);
-  const checkInEnabled = !!featureFlags?.[FeatureFlagKey.CHECK_IN];
-  const subscriptionBellEnabled = checkInEnabled && myProfile?.current_ver !== VersionType.VER_Q;
+  const subscriptionBellEnabled = !!featureFlags?.[FeatureFlagKey.SUBSCRIPTION_POPUP];
   const isFriendUser = !!user && !isMyProfile(user) && areFriends(user);
+  const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
 
   const { updateUser } = useContext(UserPageContext);
-  const { isSubscribed, toggle: toggleCheckInSubscription } = useCheckInSubscription({
-    userId: isFriendUser ? user.id : undefined,
-    initialSubscribed: isFriendUser ? user.is_check_in_subscribed : undefined,
-    onChange: () => {
-      updateUser();
-    },
-  });
 
   const { username } = useParams();
   const navigate = useNavigate();
 
-  const handleToggleSubscription = (e: MouseEvent) => {
+  const handleOpenSubscriptionPopup = (e: MouseEvent) => {
     e.stopPropagation();
-    toggleCheckInSubscription();
+    setShowSubscriptionPopup(true);
+  };
+
+  const handleCloseSubscriptionPopup = () => {
+    setShowSubscriptionPopup(false);
+    updateUser?.();
   };
 
   const handleClickEditProfile = (e: MouseEvent) => {
@@ -124,12 +122,15 @@ function Profile({ user }: ProfileProps) {
                         {friendData.pronouns}
                       </Typo>
                     )}
-                    {showPronouns && friendData?.pronouns && friendData?.connection_degree && (
-                      <Typo type="label-medium" color="MEDIUM_GRAY">
-                        |
-                      </Typo>
-                    )}
-                    {friendData?.connection_degree && (
+                    {showPronouns &&
+                      friendData?.pronouns &&
+                      friendData?.connection_degree &&
+                      !featureFlags?.postsVerQ && (
+                        <Typo type="label-medium" color="MEDIUM_GRAY">
+                          |
+                        </Typo>
+                      )}
+                    {friendData?.connection_degree && !featureFlags?.postsVerQ && (
                       <Typo type="label-medium" color="DARK_GRAY">
                         {friendData.connection_degree === 2
                           ? '2nd degree connection'
@@ -153,18 +154,11 @@ function Profile({ user }: ProfileProps) {
                       onClick={handleClickChangeConnection}
                     />
                   )}
-                  {subscriptionBellEnabled && (
+                  {subscriptionBellEnabled && isFriendUser && (
                     <button
                       type="button"
-                      onClick={handleToggleSubscription}
-                      aria-label={
-                        t(
-                          isSubscribed
-                            ? 'check_in_subscription.aria.unsubscribe'
-                            : 'check_in_subscription.aria.subscribe',
-                          { defaultValue: '' },
-                        ) ?? ''
-                      }
+                      onClick={handleOpenSubscriptionPopup}
+                      aria-label={t('check_in_subscription.aria.subscribe') ?? ''}
                       style={{
                         background: 'none',
                         border: 'none',
@@ -174,8 +168,17 @@ function Profile({ user }: ProfileProps) {
                         cursor: 'pointer',
                       }}
                     >
-                      {isSubscribed ? '🔔' : '🔕'}
+                      🔔
                     </button>
+                  )}
+                  {subscriptionBellEnabled && isFriendUser && (
+                    <SubscriptionPopup
+                      isOpen={showSubscriptionPopup}
+                      onClose={handleCloseSubscriptionPopup}
+                      friendId={user.id}
+                      username={user.username}
+                      currentVersion={myProfile?.current_ver}
+                    />
                   )}
                   {showEditConnectionsModal && (
                     <EditConnectionsBottomSheet
@@ -241,10 +244,13 @@ function Profile({ user }: ProfileProps) {
           )}
 
           {/* interests placeholder (my page only, when user has no interests) */}
-          {isMyPage && (myProfile?.user_interests ?? []).length === 0 && <InterestPlaceholder />}
+          {!featureFlags?.postsVerQ &&
+            isMyPage &&
+            (myProfile?.user_interests ?? []).length === 0 && <InterestPlaceholder />}
 
           {/* See more details */}
-          {featureFlags?.persona &&
+          {!featureFlags?.postsVerQ &&
+            featureFlags?.persona &&
             (isMyPage || (user && areFriends(user))) &&
             hasInterestsOrPersonas && (
               <Layout.FlexRow onClick={() => setShowMoreAbout(true)} style={{ cursor: 'pointer' }}>
@@ -275,7 +281,8 @@ function Profile({ user }: ProfileProps) {
           )}
           <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />
           {/* Mutual traits for non-friend users (from discover context) */}
-          {!isMyProfile(user) &&
+          {!featureFlags?.postsVerQ &&
+            !isMyProfile(user) &&
             !areFriends(user) &&
             friendData &&
             ((friendData.mutual_interests && friendData.mutual_interests.length > 0) ||

@@ -28,6 +28,7 @@ import {
   DiscoverResultItem,
 } from '@models/discover';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { getDiscoverFeed } from '@utils/apis/discover';
 import { getMe } from '@utils/apis/my';
 import { getItemFromSessionStorage, setItemToSessionStorage } from '@utils/sessionStorage';
@@ -59,6 +60,8 @@ function Discover() {
   } = useSaveAndHide();
 
   const myProfile = useBoundStore((state) => state.myProfile);
+  const { featureFlags } = useBoundStore(UserSelector);
+  const isVerQ = !!featureFlags?.postsVerQ;
 
   const discoverFilterList = [DiscoverFilter.MUTUAL_FRIENDS, DiscoverFilter.MUTUAL_TRAITS];
   const { scrollRef } = useRestoreScrollPosition('discoverPage');
@@ -187,6 +190,10 @@ function Discover() {
 
   const renderDiscoverItem = useCallback(
     (item: DiscoverResultItem, index: number) => {
+      // VER_Q: only show Note/Response items, drop all injection cards
+      if (isVerQ && item.type !== 'Note' && item.type !== 'Response') {
+        return null;
+      }
       switch (item.type) {
         case 'Response':
           return (
@@ -251,6 +258,7 @@ function Discover() {
       showPersonaCard,
       handlePersonaSave,
       isPersonaAnimating,
+      isVerQ,
     ],
   );
 
@@ -275,24 +283,26 @@ function Discover() {
       >
         {/* Filter + shared playlist sit outside ptr__children so WebView can pan horizontal lists. */}
         <Layout.FlexCol w="100%" pb={FLOATING_BUTTON_SIZE + 20}>
-          <S.ScrollableFilterRow gap={8} ph={16} pv={12}>
-            {discoverFilterList.map((filter) => (
-              <FilterChip
-                key={filter}
-                label={DiscoverFilterLabel[filter]}
-                isSelected={selectedFilter.includes(filter)}
-                onClick={() => {
-                  if (selectedFilter.includes(filter)) {
-                    setSelectedFilter(selectedFilter.filter((f) => f !== filter));
-                  } else {
-                    setSelectedFilter([...selectedFilter, filter]);
-                  }
-                }}
-              />
-            ))}
-          </S.ScrollableFilterRow>
+          {!isVerQ && (
+            <S.ScrollableFilterRow gap={8} ph={16} pv={12}>
+              {discoverFilterList.map((filter) => (
+                <FilterChip
+                  key={filter}
+                  label={DiscoverFilterLabel[filter]}
+                  isSelected={selectedFilter.includes(filter)}
+                  onClick={() => {
+                    if (selectedFilter.includes(filter)) {
+                      setSelectedFilter(selectedFilter.filter((f) => f !== filter));
+                    } else {
+                      setSelectedFilter([...selectedFilter, filter]);
+                    }
+                  }}
+                />
+              ))}
+            </S.ScrollableFilterRow>
+          )}
 
-          {!isLoading && <SharedPlaylistSection tracks={musicTracks} />}
+          {!isVerQ && !isLoading && <SharedPlaylistSection tracks={musicTracks} />}
 
           <PullToRefresh onRefresh={handleRefresh}>
             <Layout.FlexCol

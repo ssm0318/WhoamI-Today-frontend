@@ -6,7 +6,7 @@ import { deleteLike, postLike } from '@utils/apis/likes';
 import * as S from './LikeButton.styled';
 
 interface LikeButtonProps {
-  postType: 'Moment' | 'Response' | 'Comment' | 'Note' | 'PrivateComment';
+  postType: 'Moment' | 'Response' | 'Comment' | 'Note' | 'PrivateComment' | 'CheckInPost';
   postId: number;
   currentUserLikeId: number | null;
   m?: number;

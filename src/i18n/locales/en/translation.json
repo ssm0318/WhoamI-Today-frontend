@@ -10,6 +10,29 @@
             "unsubscribe": "Unsubscribe from check-in updates"
         }
     },
+    "check_in_post": {
+        "new_title": "New check-in",
+        "add_image": "Add a photo",
+        "stories_title": "Recent check-ins",
+        "no_stories": "No check-ins yet",
+        "compose": "Share a check-in"
+    },
+    "subscription_popup": {
+        "title": "Notify me about",
+        "title_with_user": "Notify me about {{username}}'s",
+        "description": "Choose which updates you'd like to be notified about.",
+        "type": {
+            "battery": "Social battery",
+            "mood": "Mood",
+            "thought": "Random thought",
+            "song": "Song",
+            "mission_of_the_day": "Mission of the day",
+            "question_of_the_day": "Question of the day",
+            "photo_of_the_day": "Photo of the day",
+            "check_in": "Check-ins",
+            "post": "Posts"
+        }
+    },
     "friend": {
         "hide": "Hide",
         "unfriend": "Unfriend",
@@ -336,6 +359,7 @@
         "confirm": "Confirm",
         "friend": "Friends",
         "close_friend": "Close Friends Only",
+        "close_friends_only": "Close friends only",
         "photo_upload_bottom_sheet": {
             "title": "Photo Upload",
             "album": "Select from Album",
