@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import { ToggleSwitch } from '@components/_common/toggle-switch/ToggleSwitch';
 import SubHeader from '@components/sub-header/SubHeader';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -96,28 +97,26 @@ function ChatList() {
         }
       />
       {!loading && (
-        <Layout.FlexRow w="100%" ph={16} pv={8} gap={8} bgColor="WHITE">
-          {(() => {
-            const unreadCount = rooms.filter((r) => (r.unread_count || 0) > 0).length;
-            return (
-              <button
-                type="button"
-                onClick={() => setUnreadOnly((v) => !v)}
-                style={{
-                  padding: '4px 12px',
-                  borderRadius: 8,
-                  border: `1px solid ${unreadOnly ? '#8700FF' : '#D9D9D9'}`,
-                  background: unreadOnly ? '#F3E8FF' : 'white',
-                  color: unreadOnly ? '#8700FF' : '#333',
-                  fontSize: 14,
-                  fontWeight: unreadOnly ? 600 : 400,
-                  cursor: 'pointer',
-                }}
-              >
-                {`Unread Only${unreadCount ? ` (${unreadCount})` : ''}`}
-              </button>
-            );
-          })()}
+        <Layout.FlexRow
+          w="100%"
+          ph={16}
+          pv={8}
+          gap={10}
+          bgColor="WHITE"
+          alignItems="center"
+          justifyContent="flex-end"
+        >
+          <Typo type="body-medium" color="DARK_GRAY">
+            {(() => {
+              const unreadCount = rooms.filter((r) => (r.unread_count || 0) > 0).length;
+              return `Unread Only${unreadCount ? ` (${unreadCount})` : ''}`;
+            })()}
+          </Typo>
+          <ToggleSwitch
+            type="small"
+            checked={unreadOnly}
+            onChange={() => setUnreadOnly((v) => !v)}
+          />
         </Layout.FlexRow>
       )}
       {loading && (
