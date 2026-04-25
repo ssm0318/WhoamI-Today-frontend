@@ -12,7 +12,13 @@ import ChatMessageItem from '@components/chat/chat-message-item/ChatMessageItem'
 import { CHAT_MESSAGE_INPUT_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
-import { ChatMessage, ChatRoom, PostChatMessageRes, RefinedChatMessage } from '@models/chat';
+import {
+  ChatMessage,
+  ChatRoom,
+  ChatRoomMember,
+  PostChatMessageRes,
+  RefinedChatMessage,
+} from '@models/chat';
 import { useBoundStore } from '@stores/useBoundStore';
 import axios from '@utils/apis/axios';
 import {
@@ -84,9 +90,27 @@ function GroupChat() {
   }, [fetchMessages, roomId]);
 
   useEffect(() => {
-    if (!firstLoad && scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    if (firstLoad || !scrollRef.current) return undefined;
+    const el = scrollRef.current;
+    const pin = () => {
+      el.scrollTop = el.scrollHeight;
+    };
+    pin();
+    // Late-loading content (images, web fonts) extends scrollHeight after the
+    // first pin. Re-pin while still near the bottom for a short window so the
+    // user lands at the latest message instead of seeing content slide up.
+    const observer = new ResizeObserver(() => {
+      const distFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+      if (distFromBottom < 300) pin();
+    });
+    observer.observe(el);
+    const inner = el.firstElementChild;
+    if (inner) observer.observe(inner);
+    const stopId = setTimeout(() => observer.disconnect(), 800);
+    return () => {
+      observer.disconnect();
+      clearTimeout(stopId);
+    };
   }, [firstLoad]);
 
   // Mark messages as read on page entry
@@ -131,6 +155,31 @@ function GroupChat() {
         setMessages((prev) =>
           prev.map((m) => (m.id === data.message_id ? { ...m, reactions: data.reactions } : m)),
         );
+      } else if (data.event_type === 'member_added' || data.event_type === 'member_left') {
+        // System messages flow to every member (including the actor) so the
+        // header member count, member drawer, and message list stay in sync
+        // without a refetch.
+        const targets: ChatRoomMember[] = data.event_target_users ?? [];
+        setRoom((prev) => {
+          if (!prev) return prev;
+          const current = prev.members_detail ?? [];
+          if (data.event_type === 'member_added') {
+            const existing = new Set(current.map((m) => m.id));
+            return {
+              ...prev,
+              members_detail: [...current, ...targets.filter((u) => !existing.has(u.id))],
+            };
+          }
+          const removeIds = new Set(targets.map((u) => u.id));
+          return {
+            ...prev,
+            members_detail: current.filter((m) => !removeIds.has(m.id)),
+          };
+        });
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === data.id)) return prev;
+          return [...prev, { ...data, is_read: true }];
+        });
       } else if (currentUser && Number(data.sender?.id) !== Number(currentUser.id)) {
         setTypingUsers((prev) => {
           const next = { ...prev };
@@ -527,35 +576,45 @@ function GroupChat() {
               const isMine = currentUser
                 ? Number(message.sender.id) === Number(currentUser.id)
                 : false;
+              const isSystem =
+                message.event_type === 'member_added' || message.event_type === 'member_left';
               return (
                 <Layout.FlexCol key={message.id} w="100%">
-                  {!isMine && (
+                  {!isMine && !isSystem && (
                     <Layout.FlexRow pl={17} gap={6} alignItems="center" mb={2}>
                       <Typo type="label-small" color="MEDIUM_GRAY">
                         {message.sender.username}
                       </Typo>
                     </Layout.FlexRow>
                   )}
-                  <SwipeLayout
-                    leftContent={[
-                      <Layout.FlexRow
-                        key="reply"
-                        w={50}
-                        h="100%"
-                        alignItems="center"
-                        justifyContent="center"
-                        onClick={() => setReplyTarget(message)}
-                      >
-                        <Icon name="arrow_left" size={20} color="MEDIUM_GRAY" />
-                      </Layout.FlexRow>,
-                    ]}
-                  >
+                  {isSystem ? (
                     <ChatMessageItem
                       message={message}
                       isMine={isMine}
                       onImageLoad={handleImageLoaded}
                     />
-                  </SwipeLayout>
+                  ) : (
+                    <SwipeLayout
+                      leftContent={[
+                        <Layout.FlexRow
+                          key="reply"
+                          w={50}
+                          h="100%"
+                          alignItems="center"
+                          justifyContent="center"
+                          onClick={() => setReplyTarget(message)}
+                        >
+                          <Icon name="arrow_left" size={20} color="MEDIUM_GRAY" />
+                        </Layout.FlexRow>,
+                      ]}
+                    >
+                      <ChatMessageItem
+                        message={message}
+                        isMine={isMine}
+                        onImageLoad={handleImageLoaded}
+                      />
+                    </SwipeLayout>
+                  )}
                 </Layout.FlexCol>
               );
             })}

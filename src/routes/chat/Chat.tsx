@@ -105,7 +105,7 @@ function Chat() {
 
   // Scroll to target message or bottom on first load
   useEffect(() => {
-    if (firstLoad) return;
+    if (firstLoad) return undefined;
     if (scrollToMessageId) {
       const el = document.getElementById(`msg_${scrollToMessageId}`);
       if (el) {
@@ -114,12 +114,29 @@ function Chat() {
         setTimeout(() => {
           el.style.backgroundColor = '';
         }, 2000);
-        return;
+        return undefined;
       }
     }
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    const el = scrollRef.current;
+    if (!el) return undefined;
+    const pin = () => {
+      el.scrollTop = el.scrollHeight;
+    };
+    pin();
+    // Re-pin while still near the bottom for a short window so late-loading
+    // images/fonts don't drag content up past the latest message.
+    const observer = new ResizeObserver(() => {
+      const distFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+      if (distFromBottom < 300) pin();
+    });
+    observer.observe(el);
+    const inner = el.firstElementChild;
+    if (inner) observer.observe(inner);
+    const stopId = setTimeout(() => observer.disconnect(), 800);
+    return () => {
+      observer.disconnect();
+      clearTimeout(stopId);
+    };
   }, [firstLoad, scrollToMessageId]);
 
   const refinedMessages = useMemo((): RefinedChatMessage[] => {

@@ -60,3 +60,10 @@ export const ParentPreview = styled(Layout.FlexCol).attrs({
   background: white;
   max-width: 208px;
 `;
+
+export const SystemMessageRow = styled(Layout.FlexRow).attrs({
+  w: '100%',
+  justifyContent: 'center',
+  ph: 17,
+  pv: 4,
+})``;

@@ -458,6 +458,10 @@
             "decline": "Decline",
             "received_hint": "They sent you a chat request.",
             "not_friends_hint": "You need to send a chat request first since you aren't friends."
+        },
+        "system": {
+            "member_added": "{{members}} were added",
+            "member_left": "{{members}} left"
         }
     },
     "settings": {

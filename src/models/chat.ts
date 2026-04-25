@@ -57,6 +57,8 @@ export interface SharedContentPreview {
   image_url?: string;
 }
 
+export type ChatEventType = '' | 'member_added' | 'member_left';
+
 export interface ChatMessage extends Omit<InputChatMessage, 'parent'> {
   id: number;
   sender: Pick<User, 'id' | 'username' | 'url'>;
@@ -67,6 +69,8 @@ export interface ChatMessage extends Omit<InputChatMessage, 'parent'> {
   reactions: MessageReactionSummary[];
   parent_preview: MessageParentPreview | null;
   shared_content_preview: SharedContentPreview | null;
+  event_type?: ChatEventType;
+  event_target_users?: ChatRoomMember[];
 }
 
 export interface PostChatMessageRes extends ChatMessage {

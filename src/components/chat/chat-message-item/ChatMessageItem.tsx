@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import SharedContentCard from '@components/chat/shared-content-card/SharedContentCard';
 import { Layout, Typo } from '@design-system';
@@ -13,6 +14,7 @@ import {
   ReactionBadge,
   RightBubble,
   RightMessageWrapper,
+  SystemMessageRow,
 } from './ChatMessageItem.styled';
 
 const DOUBLE_TAP_DELAY = 300;
@@ -43,8 +45,10 @@ function ChatMessageItem({ message, isMine, onReactionUpdate, onImageLoad }: Pro
     reactions,
     parent_preview,
     shared_content_preview,
+    event_type,
+    event_target_users,
   } = message;
-
+  const [t] = useTranslation('translation', { keyPrefix: 'chat.system' });
   const date = new Date(created_at);
   const lastTapRef = useRef<number>(0);
   const longPressTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -101,6 +105,27 @@ function ChatMessageItem({ message, isMine, onReactionUpdate, onImageLoad }: Pro
       window.removeEventListener('scroll', onScroll);
     };
   }, [showEmojiPicker]);
+
+  if (event_type === 'member_added' || event_type === 'member_left') {
+    const members = (event_target_users ?? []).map((u) => u.username).join(', ');
+    const text = t(event_type, { members });
+    return (
+      <>
+        {show_date && (
+          <Layout.FlexRow w="100%" justifyContent="center">
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              {format(date, 'y.M.d (E)')}
+            </Typo>
+          </Layout.FlexRow>
+        )}
+        <SystemMessageRow id={`msg_${message.id}`}>
+          <Typo type="label-medium" color="MEDIUM_GRAY">
+            {text}
+          </Typo>
+        </SystemMessageRow>
+      </>
+    );
+  }
 
   // Double-tap (mobile)
   const handleTouchEnd = () => {
