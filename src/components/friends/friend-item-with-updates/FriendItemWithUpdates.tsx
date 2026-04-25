@@ -22,7 +22,12 @@ import { Note, POST_TYPE, Response } from '@models/post';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { Container, PostsScrollContainer, PostsScrollItem } from './FriendItemWithUpdates.styled';
+import {
+  Container,
+  EmptyPostsContainer,
+  PostsScrollContainer,
+  PostsScrollItem,
+} from './FriendItemWithUpdates.styled';
 
 interface Props {
   user: UpdatedProfile;
@@ -109,7 +114,7 @@ function FriendItemWithUpdates({
 
   return (
     <Container mh={16} ph={16} pv={12} gap={8} rounded={12}>
-      {/* Row 1: Profile + username + badge + battery | mood emojis + new post + chat */}
+      {/* Row 1: Header — profile + username + badge | subscribe + chat */}
       <Layout.FlexRow w="100%" gap={4} alignItems="center" justifyContent="space-between">
         <Layout.FlexRow alignItems="center" gap={6} style={{ flex: 1, minWidth: 0 }}>
           <Layout.FlexRow
@@ -130,62 +135,6 @@ function FriendItemWithUpdates({
               onClick={handleClickFriendBadge}
             />
           </Layout.FlexRow>
-
-          {/* Battery + Mood emojis inline */}
-          {(hasBattery || hasMood) && <Divider />}
-          <Layout.FlexRow alignItems="center" gap={2}>
-            {hasBattery && (
-              <SocialBatteryChip
-                socialBattery={social_battery}
-                compact
-                borderless
-                onClick={() => setCheckInDetailFocus('battery')}
-              />
-            )}
-            {hasBattery && hasMood && <Divider />}
-            {hasMood && (
-              <StackedEmojis onClick={() => setCheckInDetailFocus('mood')}>
-                {moodArray.map((emoji, idx) => {
-                  const dupeCount = moodArray.slice(0, idx).filter((e) => e === emoji).length;
-                  return (
-                    <StackedEmoji key={`${emoji}${dupeCount}`} $offset={idx}>
-                      <EmojiItem
-                        emojiString={emoji}
-                        size={16}
-                        bgColor="TRANSPARENT"
-                        outline="TRANSPARENT"
-                      />
-                    </StackedEmoji>
-                  );
-                })}
-              </StackedEmojis>
-            )}
-          </Layout.FlexRow>
-
-          {showUpdateBadge && (
-            <Layout.FlexRow
-              pv={4}
-              ph={8}
-              rounded={8}
-              style={{ backgroundColor: '#EEE6F4', flexShrink: 0 }}
-            >
-              <Typo type="label-large" color="PRIMARY" fontWeight={600}>
-                Update
-              </Typo>
-            </Layout.FlexRow>
-          )}
-          {showNewBadge && (
-            <Layout.FlexRow
-              pv={4}
-              ph={8}
-              rounded={8}
-              style={{ backgroundColor: '#EEE6F4', flexShrink: 0 }}
-            >
-              <Typo type="label-large" color="PRIMARY" fontWeight={600}>
-                New
-              </Typo>
-            </Layout.FlexRow>
-          )}
         </Layout.FlexRow>
         <Layout.FlexRow style={{ position: 'relative' }} alignItems="center" gap={12}>
           {checkInEnabled && tabMode !== 'unified' && (
@@ -238,24 +187,89 @@ function FriendItemWithUpdates({
         </Layout.FlexRow>
       </Layout.FlexRow>
 
+      {/* Row 2: Update + New badges */}
+      {(showUpdateBadge || showNewBadge) && (
+        <Layout.FlexRow gap={4} alignItems="center" style={{ flexWrap: 'wrap' }}>
+          {showUpdateBadge && (
+            <Layout.FlexRow
+              pv={4}
+              ph={8}
+              rounded={8}
+              style={{ backgroundColor: '#EEE6F4', flexShrink: 0 }}
+            >
+              <Typo type="label-large" color="PRIMARY" fontWeight={600}>
+                Update
+              </Typo>
+            </Layout.FlexRow>
+          )}
+          {showNewBadge && (
+            <Layout.FlexRow
+              pv={4}
+              ph={8}
+              rounded={8}
+              style={{ backgroundColor: '#EEE6F4', flexShrink: 0 }}
+            >
+              <Typo type="label-large" color="PRIMARY" fontWeight={600}>
+                New
+              </Typo>
+            </Layout.FlexRow>
+          )}
+        </Layout.FlexRow>
+      )}
+
       {showCheckInSection && (
         <>
-          {/* Ping row for battery + mood if both empty — only in 'check-in' mode */}
-          {showPings && (!hasBattery || !hasMood) && (
-            <Layout.FlexRow gap={4} style={{ flexWrap: 'wrap' }}>
-              {!hasBattery && (
-                <PokeButton
-                  receiverId={id}
-                  componentType="battery"
-                  initialPokeId={user.sent_pokes?.battery ?? null}
+          {/* Battery + Mood — always together on the same row (chip if filled, ping if empty) */}
+          {(showPings || hasBattery || hasMood) && (
+            <Layout.FlexRow gap={4} alignItems="center" style={{ flexWrap: 'wrap' }}>
+              {hasBattery ? (
+                <SocialBatteryChip
+                  socialBattery={social_battery}
+                  compact
+                  onClick={() => setCheckInDetailFocus('battery')}
                 />
+              ) : (
+                showPings && (
+                  <PokeButton
+                    receiverId={id}
+                    componentType="battery"
+                    initialPokeId={user.sent_pokes?.battery ?? null}
+                  />
+                )
               )}
-              {!hasMood && (
-                <PokeButton
-                  receiverId={id}
-                  componentType="mood"
-                  initialPokeId={user.sent_pokes?.mood ?? null}
-                />
+              {hasMood ? (
+                <Layout.FlexRow
+                  bgColor="WHITE"
+                  pv={4}
+                  ph={8}
+                  outline="LIGHT_GRAY"
+                  alignItems="center"
+                  rounded={8}
+                  style={{ flexShrink: 0, cursor: 'pointer' }}
+                  onClick={() => setCheckInDetailFocus('mood')}
+                >
+                  {moodArray.map((emoji, idx) => {
+                    const dupeCount = moodArray.slice(0, idx).filter((e) => e === emoji).length;
+                    return (
+                      <StackedEmoji key={`${emoji}${dupeCount}`} $offset={idx}>
+                        <EmojiItem
+                          emojiString={emoji}
+                          size={16}
+                          bgColor="TRANSPARENT"
+                          outline="TRANSPARENT"
+                        />
+                      </StackedEmoji>
+                    );
+                  })}
+                </Layout.FlexRow>
+              ) : (
+                showPings && (
+                  <PokeButton
+                    receiverId={id}
+                    componentType="mood"
+                    initialPokeId={user.sent_pokes?.mood ?? null}
+                  />
+                )
               )}
             </Layout.FlexRow>
           )}
@@ -313,42 +327,50 @@ function FriendItemWithUpdates({
         </>
       )}
 
-      {showPostsSection && postsToShow.length > 0 && (
+      {showPostsSection && (
         <>
-          <Typo type="label-large" color="BLACK" fontWeight={600}>
+          <Typo type="label-large" color="BLACK" fontWeight={600} mt={4}>
             Recent Posts
           </Typo>
-          <PostsScrollContainer gap={8}>
-            {postsToShow.map((post) => (
-              <PostsScrollItem key={`${post.type}-${post.id}`}>
-                {post.type === POST_TYPE.NOTE ? (
-                  <NoteItem
-                    note={post as Note}
-                    isMyPage={false}
-                    displayType="LIST"
-                    profileImageSize={32}
-                    previewMode
-                  />
-                ) : (
-                  <ResponseItem
-                    response={post as Response}
-                    isMyPage={false}
-                    displayType="LIST"
-                    profileImageSize={32}
-                    previewMode
-                  />
-                )}
-              </PostsScrollItem>
-            ))}
-          </PostsScrollContainer>
+          {postsToShow.length > 0 ? (
+            <PostsScrollContainer gap={8}>
+              {postsToShow.map((post) => (
+                <PostsScrollItem key={`${post.type}-${post.id}`}>
+                  {post.type === POST_TYPE.NOTE ? (
+                    <NoteItem
+                      note={post as Note}
+                      isMyPage={false}
+                      displayType="LIST"
+                      profileImageSize={32}
+                      previewMode
+                    />
+                  ) : (
+                    <ResponseItem
+                      response={post as Response}
+                      isMyPage={false}
+                      displayType="LIST"
+                      profileImageSize={32}
+                      previewMode
+                    />
+                  )}
+                </PostsScrollItem>
+              ))}
+            </PostsScrollContainer>
+          ) : (
+            <EmptyPostsContainer>
+              <Typo type="body-medium" color="MEDIUM_GRAY">
+                No Recent Posts
+              </Typo>
+            </EmptyPostsContainer>
+          )}
         </>
       )}
 
-      {/* Pinned Check-ins chip — always renders (including N=0) so the
-          affordance sits at a predictable position on every friend card. */}
-      <Layout.FlexRow w="100%" alignSelf="flex-start">
-        <FriendPinnedChip pinnedCount={pinnedCount} to={`/users/${username}/check-in/pinned`} />
-      </Layout.FlexRow>
+      {tabMode !== 'posts' && (
+        <Layout.FlexRow w="100%" alignSelf="flex-start">
+          <FriendPinnedChip pinnedCount={pinnedCount} to={`/users/${username}/check-in/pinned`} />
+        </Layout.FlexRow>
+      )}
 
       {/* Check-in detail popup */}
       <CheckInDetailBottomSheet
@@ -376,27 +398,12 @@ function FriendItemWithUpdates({
   );
 }
 
-const StackedEmojis = styled.div`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 2px 0;
-`;
-
 const StackedEmoji = styled.span<{ $offset: number }>`
   font-size: 16px;
   line-height: 1;
   margin-left: ${({ $offset }) => ($offset > 0 ? '-4px' : '0')};
   z-index: ${({ $offset }) => 5 - $offset};
   position: relative;
-`;
-
-const Divider = styled.span`
-  width: 1px;
-  height: 14px;
-  background-color: #d9d9d9;
-  margin: 0 2px;
-  flex-shrink: 0;
 `;
 
 export default FriendItemWithUpdates;
