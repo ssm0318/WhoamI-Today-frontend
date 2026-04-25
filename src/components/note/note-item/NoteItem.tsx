@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ContentTranslation from '@components/_common/content-translation/ContentTranslation';
 import Icon from '@components/_common/icon/Icon';
+import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import PostFooterDefault from '@components/_common/post-footer/PostFooterDefault';
 import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
@@ -194,7 +195,7 @@ function NoteItem({
           {images[0] && <PreviewImage src={images[0]} />}
           {content && (
             <Typo type="body-medium" color="BLACK" pre>
-              {content}
+              <LinkifiedText>{content}</LinkifiedText>
             </Typo>
           )}
         </>

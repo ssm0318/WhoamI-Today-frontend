@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import SharedContentCard from '@components/chat/shared-content-card/SharedContentCard';
 import { Layout, Typo } from '@design-system';
 import { ChatEmojiDict, ChatEmojiType, RefinedChatMessage } from '@models/chat';
@@ -194,7 +195,7 @@ function ChatMessageItem({ message, isMine, onReactionUpdate, onImageLoad }: Pro
         )}
         {content && (
           <Typo type="body-large" color="BLACK">
-            {content}
+            <LinkifiedText>{content}</LinkifiedText>
           </Typo>
         )}
       </Layout.FlexRow>

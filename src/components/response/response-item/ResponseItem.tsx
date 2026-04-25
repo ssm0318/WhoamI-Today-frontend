@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ContentTranslation from '@components/_common/content-translation/ContentTranslation';
 import Icon from '@components/_common/icon/Icon';
+import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -198,7 +199,7 @@ function ResponseItem({
     >
       {previewMode ? (
         <Typo type="body-medium" color="BLACK" pre>
-          {content || ''}
+          <LinkifiedText>{content || ''}</LinkifiedText>
         </Typo>
       ) : displayType === 'DETAIL' ? (
         <ContentTranslation content={content || ''} translateContent={!isMyPage} />
@@ -206,13 +207,13 @@ function ResponseItem({
         <Typo type="body-large" color="BLACK" pre>
           {overflowSummary ? (
             <>
-              {`${overflowSummary}...`}
+              <LinkifiedText>{`${overflowSummary}...`}</LinkifiedText>
               <Typo type="body-medium" color="BLACK" italic underline ml={3}>
                 {t('more').toLowerCase()}
               </Typo>
             </>
           ) : (
-            content || ''
+            <LinkifiedText>{content || ''}</LinkifiedText>
           )}
         </Typo>
       )}
