@@ -12,6 +12,7 @@ import AllPostSection from '@components/post/AllPostSection';
 import Profile from '@components/profile/Profile';
 import UserMoreModal from '@components/user-page/UserMoreModal';
 import { UserPageContext } from '@components/user-page/UserPage.context';
+import { useIsPreviewMode } from '@components/view-as/PreviewModeContext';
 import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
@@ -24,6 +25,7 @@ function UserPage() {
   const { username } = useParams();
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const isMyPage = username === myProfile?.username;
+  const previewMode = useIsPreviewMode();
   const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
   const { featureFlags } = useBoundStore(UserSelector);
@@ -42,10 +44,10 @@ function UserPage() {
   const outlet = useOutlet();
 
   useEffect(() => {
-    if (isMyPage) {
+    if (isMyPage && !previewMode) {
       navigate('/my');
     }
-  }, [isMyPage, navigate]);
+  }, [isMyPage, navigate, previewMode]);
 
   const handleClickMore = () => {
     setShowMore(true);
