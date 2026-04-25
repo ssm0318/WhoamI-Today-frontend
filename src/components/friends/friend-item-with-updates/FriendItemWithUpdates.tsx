@@ -88,7 +88,7 @@ function FriendItemWithUpdates({
   };
 
   const hasCheckInContent = !!(track_id || mood || social_battery || thought);
-  const hasUpdate = !user.current_user_read && hasCheckInContent;
+  const hasUpdate = !user.current_user_read_check_in && hasCheckInContent;
   const showCheckInSection = tabMode === 'check-in' || tabMode === 'unified';
   const showPostsSection = tabMode === 'posts' || tabMode === 'unified';
   const showPings = tabMode === 'check-in';
@@ -325,7 +325,7 @@ function FriendItemWithUpdates({
                   <NoteItem
                     note={post as Note}
                     isMyPage={false}
-                    displayType="FEED"
+                    displayType="LIST"
                     profileImageSize={32}
                     previewMode
                   />
@@ -333,7 +333,7 @@ function FriendItemWithUpdates({
                   <ResponseItem
                     response={post as Response}
                     isMyPage={false}
-                    displayType="FEED"
+                    displayType="LIST"
                     profileImageSize={32}
                     previewMode
                   />

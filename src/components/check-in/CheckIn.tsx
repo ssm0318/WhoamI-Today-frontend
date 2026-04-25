@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import CheckInArchiveChip from '@components/check-in/archive/CheckInArchiveChip';
 import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
-import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
 import MusicPlaceholder from '@components/profile/placeholders/MusicPlaceholder';
@@ -41,7 +40,7 @@ function CheckIn({ user }: CheckInProps) {
     isMyPage ? initialCheckIn : user.check_in,
   );
   // Per-component visibility is enforced on the API; render payload as returned.
-  const { social_battery, track_id, mood, thought, current_user_read } = checkIn || {};
+  const { social_battery, track_id, mood, thought } = checkIn || {};
   const hasCheckIn = checkIn && !!(mood?.length || thought || social_battery || track_id);
 
   const [currentDate] = useState(() => new Date());
@@ -195,7 +194,6 @@ function CheckIn({ user }: CheckInProps) {
                     }),
                   })}
                 </Typo>
-                {!current_user_read && !isMyPage && hasCheckIn && <UpdatedLabel />}
               </Layout.FlexRow>
             ) : (
               <span />

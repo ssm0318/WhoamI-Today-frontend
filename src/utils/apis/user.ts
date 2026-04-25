@@ -543,6 +543,14 @@ export const readUserAllResponses = async (username: string) => {
   await axios.patch('/user/mark-all-responses-as-read/', { username });
 };
 
+export const markAllFriendCheckInsAsRead = async () => {
+  await axios.patch('/user/friends/mark-all-checkins-as-read/');
+};
+
+export const markAllFriendPostsAsRead = async () => {
+  await axios.patch('/user/friends/mark-all-posts-as-read/');
+};
+
 /**
  *
  * @param username username

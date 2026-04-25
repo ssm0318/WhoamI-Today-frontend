@@ -12,7 +12,7 @@ export const PostsScrollContainer = styled(Layout.FlexRow)`
   overflow-x: auto;
   flex-wrap: nowrap;
   width: 100%;
-  align-items: stretch;
+  align-items: flex-start;
   -webkit-overflow-scrolling: touch;
   &::-webkit-scrollbar {
     display: none;
@@ -26,6 +26,7 @@ export const PostsScrollItem = styled.div`
   width: 280px;
   height: 220px;
   display: flex;
+  overflow: hidden;
 `;
 
 export const StarIconContainer = styled(Layout.FlexRow).attrs({
