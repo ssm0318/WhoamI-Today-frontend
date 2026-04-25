@@ -22,8 +22,9 @@ import PushNotiSetting from '../../components/settings/push-noti-setting/PushNot
 function Settings() {
   const [t, i18n] = useTranslation('translation', { keyPrefix: 'settings' });
   const postMessage = usePostAppMessage();
-  const { myProfile } = useBoundStore((state) => ({
+  const { myProfile, fcmToken } = useBoundStore((state) => ({
     myProfile: state.myProfile,
+    fcmToken: state.fcmToken,
   }));
 
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ function Settings() {
       await signOut(() => {
         handleOnClose();
         postMessage('LOGOUT', {});
-      });
+      }, fcmToken);
       navigate('/');
     } catch (error) {
       console.error(error);

@@ -97,8 +97,8 @@ export const sendResetPasswordEmail = async ({
     });
 };
 
-export const signOut = async (onSuccess: () => void) => {
-  axios.get('/user/logout/').then(() => {
+export const signOut = async (onSuccess: () => void, registrationId?: string) => {
+  axios.post('/user/logout/', { registration_id: registrationId ?? '' }).then(() => {
     onSuccess();
   });
 };
