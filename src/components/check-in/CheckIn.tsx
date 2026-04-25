@@ -41,7 +41,11 @@ function CheckIn({ user }: CheckInProps) {
   );
   // Per-component visibility is enforced on the API; render payload as returned.
   const { social_battery, track_id, mood, thought } = checkIn || {};
-  const hasCheckIn = checkIn && !!(mood?.length || thought || social_battery || track_id);
+  // Backend redacts mood to `[]` (truthy) when viewer lacks visibility — normalize to length-checked list.
+  const moodList = (Array.isArray(mood) ? mood : mood ? [mood] : []).filter(Boolean);
+  const hasMood = moodList.length > 0;
+  const hasThought = !!thought;
+  const hasCheckIn = checkIn && !!(hasMood || hasThought || social_battery || track_id);
 
   const [currentDate] = useState(() => new Date());
   const navigate = useNavigate();
@@ -118,10 +122,10 @@ function CheckIn({ user }: CheckInProps) {
             )}
           </Layout.FlexRow>
         </Layout.FlexRow>
-        {(isMyPage || mood || thought) && (
+        {(isMyPage || hasMood || hasThought) && (
           <Layout.FlexRow w="100%" alignItems="center" gap={8} style={{ flexWrap: 'wrap' }}>
-            {(isMyPage || mood) &&
-              (mood ? (
+            {(isMyPage || hasMood) &&
+              (hasMood ? (
                 <Layout.FlexRow
                   gap={4}
                   bgColor="WHITE"
@@ -136,7 +140,7 @@ function CheckIn({ user }: CheckInProps) {
                     handleClickEditCheckIn();
                   }}
                 >
-                  {(Array.isArray(mood) ? mood : [mood]).filter(Boolean).map((emoji) => (
+                  {moodList.map((emoji) => (
                     <span key={emoji} style={{ fontSize: 16, lineHeight: 1 }}>
                       {emoji}
                     </span>
@@ -149,8 +153,8 @@ function CheckIn({ user }: CheckInProps) {
                   </div>
                 )
               ))}
-            {(isMyPage || thought) &&
-              (thought ? (
+            {(isMyPage || hasThought) &&
+              (hasThought ? (
                 <Layout.FlexRow
                   gap={4}
                   bgColor="WHITE"
