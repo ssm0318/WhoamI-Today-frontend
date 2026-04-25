@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { isSameDay } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -51,6 +52,7 @@ function Chat() {
   const [receivedChatRequestId, setReceivedChatRequestId] = useState<number | null>(null);
 
   const currentUser = useBoundStore((state) => state.myProfile);
+  const openToast = useBoundStore((state) => state.openToast);
 
   const loadRelationship = useCallback(async (profileUsername: string) => {
     if (!profileUsername) return;
@@ -66,21 +68,30 @@ function Chat() {
 
   const fetchMessages = useCallback(
     async (_userId: number) => {
-      const { next, results, username: _username } = await getChatMessages(_userId);
-      const resolvedUsername = _username ?? '';
-      setUsername(resolvedUsername);
-      if (resolvedUsername) loadRelationship(resolvedUsername);
-      if (!results) {
+      try {
+        const { next, results, username: _username } = await getChatMessages(_userId);
+        const resolvedUsername = _username ?? '';
+        setUsername(resolvedUsername);
+        if (resolvedUsername) loadRelationship(resolvedUsername);
+        if (!results) {
+          setNextUrl(next);
+          setMessages([]);
+          setFirstLoad(false);
+          return;
+        }
+        setMessages([...results].reverse());
         setNextUrl(next);
-        setMessages([]);
         setFirstLoad(false);
-        return;
+      } catch (err) {
+        const axiosErr = err as AxiosError;
+        if (axiosErr?.response?.status === 403) {
+          openToast({ message: t('send_blocked') });
+          navigate(-1);
+        }
+        setFirstLoad(false);
       }
-      setMessages([...results].reverse());
-      setNextUrl(next);
-      setFirstLoad(false);
     },
-    [loadRelationship],
+    [loadRelationship, navigate, openToast, t],
   );
 
   useEffect(() => {
