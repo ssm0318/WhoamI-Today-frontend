@@ -312,6 +312,7 @@ function Chat() {
           onMessageSent={handleMessageSent}
           onTyping={sendTyping}
           typingText={isOpponentTyping ? `${username} is typing...` : null}
+          isAnnouncement={username === 'Announcements'}
         />
       )}
     </MainScrollContainer>

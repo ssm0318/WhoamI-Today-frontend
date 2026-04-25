@@ -2,6 +2,7 @@ import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
+import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import Icon from '@components/_common/icon/Icon';
 import { BOTTOM_TABBAR_HEIGHT, Z_INDEX } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
@@ -93,6 +94,7 @@ interface Props {
   onTyping?: () => void;
   isGroup?: boolean;
   typingText?: string | null;
+  isAnnouncement?: boolean;
 }
 
 const TYPING_DEBOUNCE_MS = 2000;
@@ -105,11 +107,13 @@ function ChatMessageInput({
   onTyping,
   isGroup,
   typingText,
+  isAnnouncement,
 }: Props) {
   const [inputValue, setInputValue] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [showAnnouncementConfirm, setShowAnnouncementConfirm] = useState(false);
   const lastTypingSent = useRef(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -137,7 +141,18 @@ function ChatMessageInput({
   const handleKeyDownInput = (e: KeyboardEvent) => {
     if (e.nativeEvent.isComposing || e.key !== 'Enter') return;
     if (e.shiftKey) return;
+    if (isAnnouncement) return; // Announcements require an explicit Post button — Enter inserts newline.
     e.preventDefault();
+    sendMessage();
+  };
+
+  const handleAnnouncementPostClick = () => {
+    if (!inputValue.trim() && !selectedImage) return;
+    setShowAnnouncementConfirm(true);
+  };
+
+  const handleAnnouncementConfirm = () => {
+    setShowAnnouncementConfirm(false);
     sendMessage();
   };
 
@@ -290,10 +305,12 @@ function ChatMessageInput({
           <StyledTextarea
             ref={textareaRef}
             value={inputValue}
-            placeholder="Send a message..."
+            placeholder={
+              isAnnouncement ? 'Compose announcement to all users...' : 'Send a message...'
+            }
             onChange={handleChangeInput}
             onKeyDown={handleKeyDownInput}
-            rows={1}
+            rows={isAnnouncement ? 4 : 1}
           />
           <Icon
             name="emoji"
@@ -301,11 +318,44 @@ function ChatMessageInput({
             fill="DARK_GRAY"
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
           />
-          {(inputValue.trim() || selectedImage) && (
+          {!isAnnouncement && (inputValue.trim() || selectedImage) && (
             <Icon name="question_send" size={24} onClick={() => sendMessage()} color="PRIMARY" />
           )}
         </Layout.FlexRow>
+        {isAnnouncement && (
+          <Layout.FlexRow w="100%" pt={10} justifyContent="flex-end">
+            <button
+              type="button"
+              onClick={handleAnnouncementPostClick}
+              disabled={!inputValue.trim() && !selectedImage}
+              style={{
+                padding: '8px 20px',
+                background: !inputValue.trim() && !selectedImage ? '#D9D9D9' : '#8700FF',
+                color: 'white',
+                border: 'none',
+                borderRadius: 8,
+                cursor: !inputValue.trim() && !selectedImage ? 'not-allowed' : 'pointer',
+                fontSize: 14,
+                fontWeight: 600,
+              }}
+            >
+              Post Announcement
+            </button>
+          </Layout.FlexRow>
+        )}
       </Layout.FlexCol>
+      {isAnnouncement && (
+        <CommonDialog
+          visible={showAnnouncementConfirm}
+          title="Send announcement?"
+          content="This will be delivered to every user as a message from WIT Admin and cannot be undone."
+          cancelText="Cancel"
+          confirmText="Send to all"
+          confirmTextColor="PRIMARY"
+          onClickConfirm={handleAnnouncementConfirm}
+          onClickClose={() => setShowAnnouncementConfirm(false)}
+        />
+      )}
     </Layout.Fixed>
   );
 }
