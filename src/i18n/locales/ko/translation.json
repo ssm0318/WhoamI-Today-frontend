@@ -253,7 +253,8 @@
         },
         "block": {
           "title": "{{username}}을(를) 차단하시겠습니까?",
-          "content": "이 유저의 게시글이나 댓글을 더 이상 볼 수 없게 됩니다."
+          "content": "이 유저의 게시글이나 댓글을 더 이상 볼 수 없게 됩니다.",
+          "success_title": "{{username}}님이 차단되었습니다."
         },
         "report": {
           "title": "{{username}}을(를) 신고하시겠습니까?",
@@ -420,6 +421,8 @@
     "refresh": "새로고침",
     "list_title": "Chats",
     "no_rooms": "아직 대화가 없습니다.",
+    "send_blocked": "메시지를 보낼 수 없습니다.",
+    "send_failed": "메시지 전송에 실패했습니다. 다시 시도해주세요.",
     "request": {
       "send": "채팅 요청 보내기",
       "sent": "요청됨",
@@ -490,10 +493,10 @@
         "read_file_error": "이미지를 불러오는 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
       },
       "friends_only": {
-        "interests": "관심사를 친구에게만 보이기",
-        "persona": "페르소나를 친구에게만 보이기",
-        "pronouns": "대명사를 친구에게만 보이기",
-        "bio": "소개를 친구에게만 보이기"
+        "name": "<token>이름</token>을 친구에게만 보이기",
+        "pronouns": "<token>대명사</token>를 친구에게만 보이기",
+        "bio": "<token>소개</token>를 친구에게만 보이기",
+        "category": "<token>{{label}}</token>을 친구에게만 보이기"
       },
       "placeholders": {
         "bio": "소개",

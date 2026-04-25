@@ -15,13 +15,10 @@ function FavoriteFriendItem({ user }: Props) {
     profile_image,
     id: userId,
     username,
-    current_user_read,
     track_id,
     description,
     connection_status,
     unread_chat_count,
-    mood,
-    social_battery,
   } = user;
 
   const [t] = useTranslation('translation', { keyPrefix: 'friend' });
@@ -39,13 +36,7 @@ function FavoriteFriendItem({ user }: Props) {
     <Layout.FlexCol alignItems="center" gap={6} style={{ width: 140 }}>
       <Layout.FlexRow style={{ position: 'relative' }}>
         <button type="button" onClick={handleClickProfile}>
-          <ProfileImage
-            imageUrl={profile_image}
-            username={username}
-            size={72}
-            updated={!current_user_read && !!(track_id || mood || social_battery || description)}
-            updatedLabelSize={11}
-          />
+          <ProfileImage imageUrl={profile_image} username={username} size={72} />
           <Layout.Absolute
             justifyContent="center"
             alignItems="center"

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyledTranslationButton } from '@components/_common/content-translation/ContentTranslation.styled';
+import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import { Typo } from '@design-system';
 import i18n from '@i18n/index';
 import { requestTranslateText } from '@utils/apis/translate';
@@ -37,7 +38,7 @@ export default function ContentTranslation({ content, translateContent = true }:
   return (
     <>
       <Typo type="body-large" color="BLACK" pre>
-        {showTranslatedText ? translatedContent : content}
+        <LinkifiedText>{showTranslatedText ? translatedContent : content}</LinkifiedText>
       </Typo>
       {!!translatedContent && showTranslationBtn && (
         <StyledTranslationButton

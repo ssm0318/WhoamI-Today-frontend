@@ -7,6 +7,7 @@ import CommonDialog, {
 import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAlert';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
+import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import PostReactionItem from '@components/_common/post-reaction-item/PostReactionItem';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledSwipeButton } from '@components/_common/swipe-layout/SwipeButton.styled';
@@ -174,7 +175,13 @@ function CommentItem({
                   type="body-medium"
                   italic={comment.is_private && !comment.content}
                   color={comment.is_private && !comment.content ? 'DARK_GRAY' : 'BLACK'}
-                >{`${comment.content ?? t('private_placeholder')}`}</Typo>
+                >
+                  {comment.content ? (
+                    <LinkifiedText>{comment.content}</LinkifiedText>
+                  ) : (
+                    t('private_placeholder')
+                  )}
+                </Typo>
                 {/* Reply & Message buttons */}
                 <Layout.FlexRow w="100%" gap={16} alignItems="center">
                   {replyAvailable &&

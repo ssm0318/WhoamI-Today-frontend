@@ -1,6 +1,8 @@
+import { AxiosError } from 'axios';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import Icon from '@components/_common/icon/Icon';
@@ -13,6 +15,7 @@ import {
   InputChatMessage,
   PostChatMessageRes,
 } from '@models/chat';
+import { useBoundStore } from '@stores/useBoundStore';
 import { postChatMessage, postGroupMessage } from '@utils/apis/chat';
 
 const StyledTextarea = styled.textarea`
@@ -116,9 +119,12 @@ function ChatMessageInput({
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [showAnnouncementConfirm, setShowAnnouncementConfirm] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const lastTypingSent = useRef(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
+  const [t] = useTranslation('translation', { keyPrefix: 'chat' });
 
   const maxHeight = isAnnouncement ? MAX_HEIGHT_ANNOUNCEMENT : MAX_HEIGHT_DEFAULT;
 
@@ -161,6 +167,7 @@ function ChatMessageInput({
   };
 
   const sendMessage = async () => {
+    if (isSending) return;
     if (!inputValue.trim() && !selectedImage) return;
 
     const msg: InputChatMessage = {
@@ -172,6 +179,7 @@ function ChatMessageInput({
       msg.parent = replyTarget.id;
     }
 
+    setIsSending(true);
     try {
       const { data } = isGroup
         ? await postGroupMessage(userId, msg, selectedImage || undefined)
@@ -183,7 +191,15 @@ function ChatMessageInput({
       onClearReply();
       setShowEmojiPicker(false);
     } catch (err) {
-      console.error('[ChatMessageInput] send failed:', err);
+      const axiosErr = err as AxiosError<{ detail?: string }>;
+      const status = axiosErr?.response?.status;
+      if (status === 403) {
+        openToast({ message: t('send_blocked') });
+      } else {
+        openToast({ message: t('send_failed') });
+      }
+    } finally {
+      setIsSending(false);
     }
   };
 

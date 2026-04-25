@@ -1,8 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import Divider from '@components/_common/divider/Divider';
-import NoContents from '@components/_common/no-contents/NoContents';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import MyCheckInCard from '@components/check-in/my-check-in-card/MyCheckInCard';
 import FriendItemWithUpdates from '@components/friends/friend-item-with-updates/FriendItemWithUpdates';
@@ -13,6 +12,7 @@ import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { Connection, FriendType, UpdatedProfile } from '@models/api/friends';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMe } from '@utils/apis/my';
+import { markAllFriendCheckInsAsRead, markAllFriendPostsAsRead } from '@utils/apis/user';
 import { MainScrollContainer } from 'src/routes/Root';
 import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
 import { AllFriendItemLoader, AllFriendListLoader } from './FriendsLoader';
@@ -50,6 +50,27 @@ function FriendsList() {
     }
   };
 
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        if (selectedTab === 'check-in') {
+          await markAllFriendCheckInsAsRead();
+          if (!cancelled) refetchAllFriends();
+        } else {
+          await markAllFriendPostsAsRead();
+          if (!cancelled) postsFriendsHook.refetchAllFriends();
+        }
+      } catch {
+        /* mark-as-read \uc2e4\ud328\ub294 \ub69c\uc9c0 \ud45c\uc2dc \uc678 UX \uc5d0 \uc601\ud5a5 \uc5c6\uc73c\ubbc0\ub85c \uc870\uc6a9\ud788 \ubb34\uc2dc */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTab]);
+
   const { scrollRef } = useRestoreScrollPosition('friendsPage');
 
   const { filteredFriends, filteredPostsFriends } = useMemo(() => {
@@ -71,7 +92,7 @@ function FriendsList() {
 
   const hasCheckInUpdates = filteredFriends.some(
     (user) =>
-      !user.current_user_read &&
+      !user.current_user_read_check_in &&
       !!(
         user.track_id ||
         user.mood ||
@@ -217,7 +238,13 @@ function FriendsList() {
                 </Layout.FlexCol>
               ) : closeFriendsOnly ? (
                 <NoCloseFriends onFriendAdded={() => refetchAllFriends()} />
-              ) : null}
+              ) : (
+                <Layout.FlexRow w="100%" justifyContent="center" pv={20}>
+                  <Typo type="title-small" color="MEDIUM_GRAY">
+                    {t('no_contents.friends')}
+                  </Typo>
+                </Layout.FlexRow>
+              )}
             </Layout.FlexCol>
           ) : (
             /* Posts tab */
@@ -241,9 +268,17 @@ function FriendsList() {
                   <div ref={postsFriendsHook.targetRef} />
                   {postsFriendsHook.isLoadingMoreAllFriends && <AllFriendItemLoader />}
                 </Layout.FlexCol>
+              ) : isPostsEmpty ? (
+                <Layout.FlexRow w="100%" justifyContent="center" pv={20}>
+                  <Typo type="title-small" color="MEDIUM_GRAY">
+                    {t('no_contents.friends')}
+                  </Typo>
+                </Layout.FlexRow>
               ) : (
                 <Layout.FlexRow alignItems="center" w="100%" h="100%">
-                  <NoContents title={isPostsEmpty ? 'No friends yet' : t('no_contents.notes')} />
+                  <Typo type="title-small" color="MEDIUM_GRAY">
+                    {t('no_contents.notes')}
+                  </Typo>
                 </Layout.FlexRow>
               )}
             </Layout.FlexCol>

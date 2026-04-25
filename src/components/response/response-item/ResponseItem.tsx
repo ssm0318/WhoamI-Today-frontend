@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ContentTranslation from '@components/_common/content-translation/ContentTranslation';
 import Icon from '@components/_common/icon/Icon';
+import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
-import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import { SCREEN_WIDTH } from '@constants/layout';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { POST_DP_TYPE, Response } from '@models/post';
@@ -63,8 +63,7 @@ function ResponseItem({
       setOverflowSummary(contentArrWithNewLine.slice(0, MAX_RESPONSE_NEW_LINE).join('\n'));
   }, [response.content, displayType]);
 
-  const { content, created_at, author_detail, question, is_edited, current_user_read, visibility } =
-    response;
+  const { content, created_at, author_detail, question, is_edited, visibility } = response;
 
   const { username, profile_image } = author_detail ?? {};
 
@@ -118,7 +117,6 @@ function ResponseItem({
               <SvgIcon name="close_friend" size={16} />
             )}
           </Layout.FlexRow>
-          {!current_user_read && !isMyPage && !previewMode && <UpdatedLabel />}
           <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
             <Typo type="label-medium" color="MEDIUM_GRAY">
               {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
@@ -201,7 +199,7 @@ function ResponseItem({
     >
       {previewMode ? (
         <Typo type="body-medium" color="BLACK" pre>
-          {content || ''}
+          <LinkifiedText>{content || ''}</LinkifiedText>
         </Typo>
       ) : displayType === 'DETAIL' ? (
         <ContentTranslation content={content || ''} translateContent={!isMyPage} />
@@ -209,13 +207,13 @@ function ResponseItem({
         <Typo type="body-large" color="BLACK" pre>
           {overflowSummary ? (
             <>
-              {`${overflowSummary}...`}
+              <LinkifiedText>{`${overflowSummary}...`}</LinkifiedText>
               <Typo type="body-medium" color="BLACK" italic underline ml={3}>
                 {t('more').toLowerCase()}
               </Typo>
             </>
           ) : (
-            content || ''
+            <LinkifiedText>{content || ''}</LinkifiedText>
           )}
         </Typo>
       )}
@@ -252,7 +250,7 @@ function ResponseItem({
         onClick={handleClickDetail}
         style={
           previewMode
-            ? { height: '100%', minHeight: 0 }
+            ? { height: '100%', minHeight: 0, overflow: 'hidden', position: 'relative' }
             : { overflow: displayType === 'DETAIL' ? 'visible' : undefined }
         }
       >
@@ -266,7 +264,11 @@ function ResponseItem({
         <Layout.FlexCol
           gap={8}
           w="100%"
-          style={previewMode ? { height: '100%', minHeight: 0 } : undefined}
+          style={
+            previewMode
+              ? { height: '100%', minHeight: 0, overflow: 'hidden', position: 'relative' }
+              : undefined
+          }
         >
           {previewMode ? (
             <>
@@ -274,9 +276,11 @@ function ResponseItem({
                 {headerJsx}
                 {contentJsx}
                 {questionJsx}
-                <PreviewFade />
               </PreviewBody>
-              <PreviewFooterWrap>{footerJsx}</PreviewFooterWrap>
+              <PreviewFooterWrap>
+                <PreviewFade />
+                {footerJsx}
+              </PreviewFooterWrap>
             </>
           ) : (
             <>
@@ -322,16 +326,21 @@ const PreviewBody = styled.div`
 `;
 
 const PreviewFooterWrap = styled.div`
-  flex-shrink: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  z-index: 2;
 `;
 
 const PreviewFade = styled.div`
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 100%;
   height: 32px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 95%);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
   pointer-events: none;
 `;
 

@@ -97,8 +97,8 @@ export const sendResetPasswordEmail = async ({
     });
 };
 
-export const signOut = async (onSuccess: () => void) => {
-  axios.get('/user/logout/').then(() => {
+export const signOut = async (onSuccess: () => void, registrationId?: string) => {
+  axios.post('/user/logout/', { registration_id: registrationId ?? '' }).then(() => {
     onSuccess();
   });
 };
@@ -541,6 +541,14 @@ export const getUserResponses = async (username: string, next?: string | null) =
 
 export const readUserAllResponses = async (username: string) => {
   await axios.patch('/user/mark-all-responses-as-read/', { username });
+};
+
+export const markAllFriendCheckInsAsRead = async () => {
+  await axios.patch('/user/friends/mark-all-checkins-as-read/');
+};
+
+export const markAllFriendPostsAsRead = async () => {
+  await axios.patch('/user/friends/mark-all-posts-as-read/');
 };
 
 /**

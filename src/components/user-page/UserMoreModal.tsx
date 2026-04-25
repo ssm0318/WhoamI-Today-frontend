@@ -82,7 +82,7 @@ function UserMoreModal({ isVisible, setIsVisible, user, callback }: UserMoreModa
         await reportUser({
           userId: user.id,
           onSuccess: () => {
-            openToast({ message: t('alert.report.success_title', { username }) });
+            openToast({ message: t('alert.block.success_title', { username }) });
           },
           onError: () => openToast({ message: t('alert.report.error_title') }),
         });

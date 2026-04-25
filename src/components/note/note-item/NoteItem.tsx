@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ContentTranslation from '@components/_common/content-translation/ContentTranslation';
 import Icon from '@components/_common/icon/Icon';
+import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import PostFooterDefault from '@components/_common/post-footer/PostFooterDefault';
 import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
-import UpdatedLabel from '@components/friends/updated-label/UpdatedLabel';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { Note, POST_DP_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -34,16 +34,7 @@ function NoteItem({
   profileImageSize = PROFILE_IMAGE_SIZE,
   previewMode = false,
 }: NoteItemProps) {
-  const {
-    content,
-    created_at,
-    id,
-    author_detail,
-    images,
-    is_edited,
-    current_user_read,
-    visibility,
-  } = note;
+  const { content, created_at, id, author_detail, images, is_edited, visibility } = note;
   const navigate = useNavigate();
   const { featureFlags } = useBoundStore(UserSelector);
 
@@ -120,7 +111,6 @@ function NoteItem({
             {(author_detail as any)?.connection_status === 'close_friend' && (
               <SvgIcon name="close_friend" size={16} />
             )}
-            {!current_user_read && !isMyPage && !previewMode && <UpdatedLabel />}
           </Layout.FlexRow>
           <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
             <Typo type="label-medium" color="MEDIUM_GRAY">
@@ -199,14 +189,16 @@ function NoteItem({
   );
 
   const contentJsx = (
-    <Layout.FlexCol>
+    <Layout.FlexCol gap={8}>
       {previewMode ? (
-        <Layout.FlexRow w="100%" alignItems="flex-start" gap={4}>
-          {images[0] && <Typo type="body-medium">📷</Typo>}
-          <Typo type="body-medium" color="BLACK" pre>
-            {content}
-          </Typo>
-        </Layout.FlexRow>
+        <>
+          {images[0] && <PreviewImage src={images[0]} />}
+          {content && (
+            <Typo type="body-medium" color="BLACK" pre>
+              <LinkifiedText>{content}</LinkifiedText>
+            </Typo>
+          )}
+        </>
       ) : (
         <>
           <ContentTranslation
@@ -259,7 +251,7 @@ function NoteItem({
         onClick={featureFlags?.friendList ? handleClickNote : handleClickNoteDefault}
         style={
           previewMode
-            ? { height: '100%', minHeight: 0 }
+            ? { height: '100%', minHeight: 0, overflow: 'hidden', position: 'relative' }
             : featureFlags?.friendList
             ? { overflow: displayType === 'DETAIL' ? 'visible' : undefined }
             : undefined
@@ -277,9 +269,11 @@ function NoteItem({
             <PreviewBody>
               {headerJsx}
               {contentJsx}
-              <PreviewFade />
             </PreviewBody>
-            <PreviewFooterWrap>{footerJsx}</PreviewFooterWrap>
+            <PreviewFooterWrap>
+              <PreviewFade />
+              {footerJsx}
+            </PreviewFooterWrap>
           </>
         ) : (
           <>
@@ -311,6 +305,13 @@ export default NoteItem;
 
 const PROFILE_IMAGE_SIZE = 44;
 
+const PreviewImage = styled.img`
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+`;
+
 const PreviewBody = styled.div`
   flex: 1;
   min-height: 0;
@@ -322,15 +323,20 @@ const PreviewBody = styled.div`
 `;
 
 const PreviewFooterWrap = styled.div`
-  flex-shrink: 0;
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  background-color: white;
+  z-index: 2;
 `;
 
 const PreviewFade = styled.div`
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 100%;
   height: 32px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 95%);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
   pointer-events: none;
 `;

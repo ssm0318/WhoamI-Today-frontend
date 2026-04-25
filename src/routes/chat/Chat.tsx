@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { isSameDay } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -39,6 +40,7 @@ function Chat() {
   const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
   const justSentIdsRef = useRef<Set<number>>(new Set());
   const shouldPinToBottomRef = useRef<Set<number>>(new Set());
+  const markReadTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [username, setUsername] = useState<string>('');
@@ -51,6 +53,7 @@ function Chat() {
   const [receivedChatRequestId, setReceivedChatRequestId] = useState<number | null>(null);
 
   const currentUser = useBoundStore((state) => state.myProfile);
+  const openToast = useBoundStore((state) => state.openToast);
 
   const loadRelationship = useCallback(async (profileUsername: string) => {
     if (!profileUsername) return;
@@ -66,26 +69,38 @@ function Chat() {
 
   const fetchMessages = useCallback(
     async (_userId: number) => {
-      const { next, results, username: _username } = await getChatMessages(_userId);
-      const resolvedUsername = _username ?? '';
-      setUsername(resolvedUsername);
-      if (resolvedUsername) loadRelationship(resolvedUsername);
-      if (!results) {
+      try {
+        const { next, results, username: _username } = await getChatMessages(_userId);
+        const resolvedUsername = _username ?? '';
+        setUsername(resolvedUsername);
+        if (resolvedUsername) loadRelationship(resolvedUsername);
+        if (!results) {
+          setNextUrl(next);
+          setMessages([]);
+          setFirstLoad(false);
+          return;
+        }
+        setMessages([...results].reverse());
         setNextUrl(next);
-        setMessages([]);
         setFirstLoad(false);
-        return;
+      } catch (err) {
+        const axiosErr = err as AxiosError;
+        if (axiosErr?.response?.status === 403) {
+          openToast({ message: t('send_blocked') });
+          navigate(-1);
+        }
+        setFirstLoad(false);
       }
-      setMessages([...results].reverse());
-      setNextUrl(next);
-      setFirstLoad(false);
     },
-    [loadRelationship],
+    [loadRelationship, navigate, openToast, t],
   );
 
   useEffect(() => {
     if (!userId) return;
     fetchMessages(Number(userId));
+    return () => {
+      clearTimeout(markReadTimerRef.current);
+    };
   }, [fetchMessages, userId]);
 
   // Scroll to target message or bottom on first load
@@ -194,7 +209,10 @@ function Chat() {
           return [...prev, { ...msg, is_read: true }];
         });
         if (userId) {
-          markMessagesRead(Number(userId)).catch(() => {});
+          clearTimeout(markReadTimerRef.current);
+          markReadTimerRef.current = setTimeout(() => {
+            markMessagesRead(Number(userId)).catch(() => {});
+          }, 300);
         }
       }
     },

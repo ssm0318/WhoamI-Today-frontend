@@ -19,6 +19,7 @@ export interface UpdatedProfile extends User {
   is_check_in_subscribed?: boolean;
   is_hidden: boolean;
   current_user_read: boolean;
+  current_user_read_check_in: boolean;
   unread_cnt: number;
   check_in_id?: number | null;
   track_id?: string;

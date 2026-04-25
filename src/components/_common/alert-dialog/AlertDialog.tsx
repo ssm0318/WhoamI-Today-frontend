@@ -27,7 +27,7 @@ function AlertDialog({
 
   if (!visible) return null;
   return createPortal(
-    <S.Container className={className}>
+    <S.Container className={className} onClick={(e: MouseEvent) => e.stopPropagation()}>
       <S.Background onClick={onClick} />
       <S.Body className="body" position={position} onClick={(e) => e.stopPropagation()}>
         {children}

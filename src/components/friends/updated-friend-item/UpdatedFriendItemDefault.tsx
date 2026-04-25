@@ -5,7 +5,6 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
 import { Layout, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
-import UpdatedLabel from '../updated-label/UpdatedLabel';
 import { StyledProfileArea, StyledUpdatedFriendItem } from './UpdatedFriendItem.styled';
 
 interface Props {
@@ -14,7 +13,7 @@ interface Props {
 }
 
 function UpdatedFriendItemDefault({ user, isMyPage }: Props) {
-  const { id, profile_image, username, current_user_read, unread_chat_count, description } = user;
+  const { id, profile_image, username, unread_chat_count, description } = user;
   const pinnedCount = user.pinned_count ?? 0;
 
   const navigate = useNavigate();
@@ -43,7 +42,6 @@ function UpdatedFriendItemDefault({ user, isMyPage }: Props) {
                 <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 100 }}>
                   {username}
                 </Typo>
-                {isMyPage && !current_user_read && <UpdatedLabel />}
               </Layout.FlexRow>
               {description && (
                 <Typo type="label-medium" color="MEDIUM_GRAY" numberOfLines={1}>

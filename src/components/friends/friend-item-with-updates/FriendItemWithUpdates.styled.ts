@@ -6,13 +6,18 @@ export const Container = styled(Layout.FlexCol)`
   width: calc(100% - 32px);
   min-width: 0;
   flex-shrink: 0;
+  overflow: visible;
 `;
 
 export const PostsScrollContainer = styled(Layout.FlexRow)`
   overflow-x: auto;
   flex-wrap: nowrap;
-  width: 100%;
-  align-items: stretch;
+  width: calc(100% + 64px);
+  margin-left: -32px;
+  margin-right: -32px;
+  padding-left: 32px;
+  padding-right: 32px;
+  align-items: flex-start;
   -webkit-overflow-scrolling: touch;
   &::-webkit-scrollbar {
     display: none;
@@ -26,6 +31,15 @@ export const PostsScrollItem = styled.div`
   width: 280px;
   height: 220px;
   display: flex;
+  overflow: hidden;
+`;
+
+export const EmptyPostsContainer = styled.div`
+  width: 100%;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const StarIconContainer = styled(Layout.FlexRow).attrs({

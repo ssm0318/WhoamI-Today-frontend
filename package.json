@@ -19,6 +19,8 @@
     "i18next": "^22.4.15",
     "i18next-browser-languagedetector": "^7.0.1",
     "immer": "^10.0.1",
+    "linkify-react": "^4.3.2",
+    "linkifyjs": "^4.3.2",
     "react": "^18.2.0",
     "react-content-loader": "^7.0.2",
     "react-dom": "^18.2.0",

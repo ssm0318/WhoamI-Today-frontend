@@ -27,7 +27,6 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
     profile_image,
     username,
     is_favorite,
-    current_user_read,
     unread_chat_count,
     track_id,
     description,
@@ -137,12 +136,7 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
         >
           <StyledProfileArea>
             <Layout.FlexRow alignItems="center" gap={7}>
-              <ProfileImage
-                imageUrl={profile_image}
-                username={username}
-                size={44}
-                updated={!current_user_read}
-              />
+              <ProfileImage imageUrl={profile_image} username={username} size={44} />
               <Layout.FlexCol>
                 <Layout.FlexRow gap={4} alignItems="center">
                   <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 100 }}>

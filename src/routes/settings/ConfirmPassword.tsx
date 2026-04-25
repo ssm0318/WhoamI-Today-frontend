@@ -36,7 +36,6 @@ function ConfirmPassword() {
           value={passwordInput}
           onChange={handleChange}
           error={passwordError}
-          guide={t('sign_up.password_constraints')}
         />
       </Layout.FlexCol>
       <Layout.Fixed l={0} b={20 + BOTTOM_TABBAR_HEIGHT} w="100%" alignItems="center" ph="default">
