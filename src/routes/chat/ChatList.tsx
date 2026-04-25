@@ -11,14 +11,12 @@ import { getChatRooms } from '@utils/apis/chat';
 import { MainScrollContainer } from '../Root';
 import { useChatListSocket } from './_hooks/useChatListSocket';
 
-type ChatFilter = 'all' | 'unread';
-
 function ChatList() {
   const navigate = useNavigate();
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
   const [loading, setLoading] = useState(true);
   const [typingUsers, setTypingUsers] = useState<Record<number, string>>({});
-  const [filter, setFilter] = useState<ChatFilter>('all');
+  const [unreadOnly, setUnreadOnly] = useState(false);
   const typingTimers = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
 
   useAsyncEffect(async () => {
@@ -99,36 +97,27 @@ function ChatList() {
       />
       {!loading && (
         <Layout.FlexRow w="100%" ph={16} pv={8} gap={8} bgColor="WHITE">
-          {(['all', 'unread'] as ChatFilter[]).map((f) => {
-            const active = filter === f;
-            const label =
-              f === 'all'
-                ? 'All'
-                : `Unread${
-                    rooms.filter((r) => (r.unread_count || 0) > 0).length
-                      ? ` (${rooms.filter((r) => (r.unread_count || 0) > 0).length})`
-                      : ''
-                  }`;
+          {(() => {
+            const unreadCount = rooms.filter((r) => (r.unread_count || 0) > 0).length;
             return (
               <button
-                key={f}
                 type="button"
-                onClick={() => setFilter(f)}
+                onClick={() => setUnreadOnly((v) => !v)}
                 style={{
                   padding: '4px 12px',
                   borderRadius: 8,
-                  border: `1px solid ${active ? '#8700FF' : '#D9D9D9'}`,
-                  background: active ? '#F3E8FF' : 'white',
-                  color: active ? '#8700FF' : '#333',
+                  border: `1px solid ${unreadOnly ? '#8700FF' : '#D9D9D9'}`,
+                  background: unreadOnly ? '#F3E8FF' : 'white',
+                  color: unreadOnly ? '#8700FF' : '#333',
                   fontSize: 14,
-                  fontWeight: active ? 600 : 400,
+                  fontWeight: unreadOnly ? 600 : 400,
                   cursor: 'pointer',
                 }}
               >
-                {label}
+                {`Unread Only${unreadCount ? ` (${unreadCount})` : ''}`}
               </button>
             );
-          })}
+          })()}
         </Layout.FlexRow>
       )}
       {loading && (
@@ -145,8 +134,7 @@ function ChatList() {
       )}
       {!loading &&
         rooms.length > 0 &&
-        rooms.filter((r) => (filter === 'unread' ? (r.unread_count || 0) > 0 : true)).length ===
-          0 && (
+        rooms.filter((r) => (unreadOnly ? (r.unread_count || 0) > 0 : true)).length === 0 && (
           <Layout.FlexCol w="100%" alignItems="center" mt={50}>
             <Typo type="body-medium" color="MEDIUM_GRAY">
               No unread chats.
@@ -155,7 +143,7 @@ function ChatList() {
         )}
       {!loading &&
         rooms
-          .filter((r) => (filter === 'unread' ? (r.unread_count || 0) > 0 : true))
+          .filter((r) => (unreadOnly ? (r.unread_count || 0) > 0 : true))
           .map((room) => {
             const opponentId = room.is_group ? null : room.opponent?.id;
             const isTyping = opponentId ? !!typingUsers[opponentId] : false;
