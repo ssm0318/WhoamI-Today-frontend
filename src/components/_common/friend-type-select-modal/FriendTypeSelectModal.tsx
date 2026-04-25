@@ -68,7 +68,7 @@ function FriendTypeSelectModal({
   if (!visible) return null;
 
   return createPortal(
-    <S.Container>
+    <S.Container onClick={(e: MouseEvent) => e.stopPropagation()}>
       <S.Background onClick={handleClickBackground} />
       <S.Body className="body" onClick={(e) => e.stopPropagation()}>
         <Layout.FlexCol w="100%" alignItems="center" p={16}>
