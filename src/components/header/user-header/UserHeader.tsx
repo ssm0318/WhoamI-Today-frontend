@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import SubHeader from '@components/sub-header/SubHeader';
 import { UserPageContext } from '@components/user-page/UserPage.context';
 import { Layout, Typo } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
-import axios from '@utils/apis/axios';
 
 interface UserHeaderProps {
   username?: string;
@@ -19,29 +18,11 @@ function UserHeader({ username, userId, unreadCount, onClickMore }: UserHeaderPr
   const { user } = useContext(UserPageContext);
   const currentUser = useBoundStore((state) => state.myProfile);
   const areFriends = user?.data?.are_friends === true;
-  const alreadyRequested = user?.data?.sent_chat_request_to === true;
   const isMyPage = currentUser && userId ? Number(currentUser.id) === Number(userId) : false;
-
-  const [requestSent, setRequestSent] = useState(false);
-
-  useEffect(() => {
-    if (alreadyRequested) setRequestSent(true);
-  }, [alreadyRequested]);
 
   const handleClickChat = () => {
     if (!userId) return;
     navigate(`/users/${userId}/chat`);
-  };
-
-  const handleRequestChat = async () => {
-    if (!userId || requestSent) return;
-    try {
-      await axios.post('/chat/requests/', { requestee_id: userId });
-      setRequestSent(true);
-    } catch {
-      // Request may already exist
-      setRequestSent(true);
-    }
   };
 
   const handleClickMore = () => {
@@ -76,24 +57,6 @@ function UserHeader({ username, userId, unreadCount, onClickMore }: UserHeaderPr
                 </Layout.Absolute>
               )}
             </Layout.FlexRow>
-          )}
-          {!isMyPage && !areFriends && (
-            <button
-              type="button"
-              onClick={requestSent ? undefined : handleRequestChat}
-              style={{
-                background: requestSent ? '#F0F0F0' : '#8700FF',
-                color: requestSent ? '#999' : 'white',
-                border: 'none',
-                borderRadius: 8,
-                padding: '4px 10px',
-                fontSize: 12,
-                fontWeight: 600,
-                cursor: requestSent ? 'default' : 'pointer',
-              }}
-            >
-              {requestSent ? 'Requested' : 'Chat'}
-            </button>
           )}
         </Layout.FlexRow>
       }

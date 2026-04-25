@@ -2,6 +2,7 @@ import { MouseEvent, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
+import ChatRequestButton from '@components/_common/chat-request-button/ChatRequestButton';
 import FriendStatus from '@components/_common/friend-status/FriendStatus';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SubscriptionPopup from '@components/friends/subscription-popup/SubscriptionPopup';
@@ -269,15 +270,18 @@ function Profile({ user }: ProfileProps) {
       {!isMyPage && user && (
         <>
           {!isMyProfile(user) && !areFriends(user) && (
-            <FriendStatus
-              type="user"
-              user={user}
-              onClickCancelRequest={reloadPage}
-              onClickRequest={reloadPage}
-              onClickConfirm={reloadPage}
-              onClickReject={reloadPage}
-              isUserPage
-            />
+            <>
+              <FriendStatus
+                type="user"
+                user={user}
+                onClickCancelRequest={reloadPage}
+                onClickRequest={reloadPage}
+                onClickConfirm={reloadPage}
+                onClickReject={reloadPage}
+                isUserPage
+              />
+              <ChatRequestButton user={user} />
+            </>
           )}
           <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />
           {/* Mutual traits for non-friend users (from discover context) */}

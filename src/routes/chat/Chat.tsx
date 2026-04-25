@@ -338,6 +338,7 @@ function Chat() {
             if (username) loadRelationship(username);
           }}
           onDeclined={() => navigate(-1)}
+          onCancelled={() => setSentChatRequest(false)}
         />
       ) : (
         <ChatMessageInput

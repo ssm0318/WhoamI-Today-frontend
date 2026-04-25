@@ -49,6 +49,10 @@ export const respondToChatRequest = async (requestId: number, accepted: boolean)
   return axios.patch(`/chat/requests/${requestId}/respond/`, { accepted });
 };
 
+export const cancelChatRequest = async (requesteeId: number) => {
+  return axios.delete(`/chat/requests/to/${requesteeId}/cancel/`);
+};
+
 export const markGroupMessagesRead = async (roomId: number) => {
   return axios.post(`/chat/groups/${roomId}/mark-read/`);
 };

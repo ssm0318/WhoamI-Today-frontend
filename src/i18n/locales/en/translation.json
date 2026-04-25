@@ -454,10 +454,23 @@
             "send": "Send chat request",
             "sent": "Requested",
             "sent_hint": "You'll be able to chat once they accept.",
+            "cancel": "Cancel Request",
+            "cancel_confirm": "Cancel chat request?",
             "accept": "Accept",
             "decline": "Decline",
             "received_hint": "They sent you a chat request.",
-            "not_friends_hint": "You need to send a chat request first since you aren't friends."
+            "not_friends_hint": "You need to send a chat request first since you aren't friends.",
+            "button": {
+                "request": "Chat Request",
+                "requested": "Chat Requested",
+                "cancel": "Cancel",
+                "cancel_dialog": {
+                    "title": "Cancel chat request",
+                    "content": "Cancel the chat request you sent to {{user}}?",
+                    "cancel": "Close",
+                    "confirm": "Cancel request"
+                }
+            }
         },
         "system": {
             "member_added": "{{members}} were added",
@@ -775,7 +788,7 @@
                 "reject": "Reject",
                 "unfriend": "Unfriend",
                 "delete": "Delete",
-                "request": "Request",
+                "request": "Friend Request",
                 "requested": "Requested",
                 "cancel": "Cancel",
                 "block_recommendation": "Delete",

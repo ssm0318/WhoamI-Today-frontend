@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
-import { respondToChatRequest, sendChatRequest } from '@utils/apis/chat';
+import { cancelChatRequest, respondToChatRequest, sendChatRequest } from '@utils/apis/chat';
 
 interface Props {
   userId: number;
@@ -11,6 +11,7 @@ interface Props {
   onRequestSent: () => void;
   onAccepted: () => void;
   onDeclined: () => void;
+  onCancelled: () => void;
 }
 
 function ChatRequestBar({
@@ -20,6 +21,7 @@ function ChatRequestBar({
   onRequestSent,
   onAccepted,
   onDeclined,
+  onCancelled,
 }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'chat.request' });
   const [busy, setBusy] = useState(false);
@@ -59,6 +61,20 @@ function ChatRequestBar({
     } finally {
       setBusy(false);
     }
+  };
+
+  const handleCancelRequest = async () => {
+    if (busy || !localSent) return;
+    if (!window.confirm(t('cancel_confirm') ?? '')) return;
+    setBusy(true);
+    try {
+      await cancelChatRequest(userId);
+    } catch {
+      // Already gone — fall through to local reset
+    }
+    setLocalSent(false);
+    onCancelled();
+    setBusy(false);
   };
 
   const renderContent = () => {
@@ -115,20 +131,21 @@ function ChatRequestBar({
         <Layout.FlexCol w="100%" gap={6} alignItems="center">
           <button
             type="button"
-            disabled
+            onClick={handleCancelRequest}
+            disabled={busy}
             style={{
               width: '100%',
               background: '#F0F0F0',
-              color: '#999',
+              color: '#333',
               border: 'none',
               borderRadius: 8,
               padding: '10px 16px',
               fontSize: 14,
               fontWeight: 600,
-              cursor: 'default',
+              cursor: busy ? 'default' : 'pointer',
             }}
           >
-            {t('sent')}
+            {t('cancel')}
           </button>
           <Typo type="body-small" color="MEDIUM_GRAY">
             {t('sent_hint')}
