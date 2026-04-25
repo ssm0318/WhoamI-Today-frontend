@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import Divider from '@components/_common/divider/Divider';
-import NoContents from '@components/_common/no-contents/NoContents';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import MyCheckInCard from '@components/check-in/my-check-in-card/MyCheckInCard';
 import FriendItemWithUpdates from '@components/friends/friend-item-with-updates/FriendItemWithUpdates';
@@ -239,7 +238,13 @@ function FriendsList() {
                 </Layout.FlexCol>
               ) : closeFriendsOnly ? (
                 <NoCloseFriends onFriendAdded={() => refetchAllFriends()} />
-              ) : null}
+              ) : (
+                <Layout.FlexRow w="100%" justifyContent="center" pv={20}>
+                  <Typo type="title-small" color="MEDIUM_GRAY">
+                    {t('no_contents.friends')}
+                  </Typo>
+                </Layout.FlexRow>
+              )}
             </Layout.FlexCol>
           ) : (
             /* Posts tab */
@@ -263,9 +268,17 @@ function FriendsList() {
                   <div ref={postsFriendsHook.targetRef} />
                   {postsFriendsHook.isLoadingMoreAllFriends && <AllFriendItemLoader />}
                 </Layout.FlexCol>
+              ) : isPostsEmpty ? (
+                <Layout.FlexRow w="100%" justifyContent="center" pv={20}>
+                  <Typo type="title-small" color="MEDIUM_GRAY">
+                    {t('no_contents.friends')}
+                  </Typo>
+                </Layout.FlexRow>
               ) : (
                 <Layout.FlexRow alignItems="center" w="100%" h="100%">
-                  <NoContents title={isPostsEmpty ? 'No friends yet' : t('no_contents.notes')} />
+                  <Typo type="title-small" color="MEDIUM_GRAY">
+                    {t('no_contents.notes')}
+                  </Typo>
                 </Layout.FlexRow>
               )}
             </Layout.FlexCol>
