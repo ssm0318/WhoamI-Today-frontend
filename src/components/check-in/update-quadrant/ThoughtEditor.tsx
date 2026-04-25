@@ -11,6 +11,7 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onShare: (value: string, visibility: ComponentVisibility) => void;
+  onArchive?: () => void;
   value: string;
   onChange: (value: string) => void;
   visibility: ComponentVisibility;
@@ -21,6 +22,7 @@ export default function ThoughtEditor({
   isOpen,
   onClose,
   onShare,
+  onArchive,
   value,
   onChange,
   visibility,
@@ -50,7 +52,13 @@ export default function ThoughtEditor({
   }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare]);
 
   return (
-    <EditorPopup isOpen={isOpen} onClose={onClose} onShare={handleShare} title="Thought Snippet">
+    <EditorPopup
+      isOpen={isOpen}
+      onClose={onClose}
+      onShare={handleShare}
+      onArchive={onArchive}
+      title="Thought Snippet"
+    >
       <Layout.FlexCol w="100%" gap={8} mb={16}>
         <StyledTextArea
           value={draftValue}

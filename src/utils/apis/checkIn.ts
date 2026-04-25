@@ -59,6 +59,21 @@ export const deactivateSong = async (songId: number) => {
   await axios.patch(`/check_in/song/${songId}/`);
 };
 
+export type ArchivableCheckInComponent = 'battery' | 'mood' | 'thought' | 'song';
+
+/**
+ * Archive a single currently-live check-in component without replacing it.
+ * Backend stamps superseded_at on the live entry, clears the matching
+ * CheckIn field (or deactivates the active Song), and the row drops into
+ * the archive feed under "Today" — eligible for pinning afterwards.
+ */
+export const archiveLiveComponent = async (component: ArchivableCheckInComponent) => {
+  const { data } = await axios.patch<{ archived: ArchivableCheckInComponent }>(
+    `/check_in/components/${component}/archive/`,
+  );
+  return data;
+};
+
 // GET reactions for a check-in
 type ReactionItem = { id: number; emoji: string; user: { id: number; username: string } };
 export const getCheckInReactions = async (checkInId: number): Promise<ReactionItem[]> => {
