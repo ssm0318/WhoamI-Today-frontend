@@ -11,11 +11,29 @@
         }
     },
     "check_in_post": {
-        "new_title": "New check-in",
+        "new_title": "New Daily Snippet",
         "add_image": "Add a photo",
-        "stories_title": "Recent check-ins",
-        "no_stories": "No check-ins yet",
-        "compose": "Share a check-in"
+        "section_title": "Daily Snippets",
+        "stories_title": "Recent Daily Snippets",
+        "no_stories": "No Daily Snippets yet",
+        "compose_line1": "Share a",
+        "compose_line2": "Daily Snippet",
+        "pin": "Add to highlights",
+        "unpin": "Remove from highlights",
+        "visibility_friends": "Friends",
+        "visibility_close_friends": "Close",
+        "visibility_close_friends_only": "Close friends only",
+        "highlights": "Highlights",
+        "today": "Recent Daily Snippets",
+        "pinned_link": "Pinned Daily Snippets ({{count}})",
+        "all_link": "All Daily Snippets ({{count}})",
+        "archive": {
+            "title": "Daily Snippets",
+            "tab_all": "All",
+            "tab_pinned": "Pinned",
+            "empty_all": "No Daily Snippets yet",
+            "empty_pinned": "No pinned Daily Snippets yet"
+        }
     },
     "subscription_popup": {
         "title": "Notify me about",

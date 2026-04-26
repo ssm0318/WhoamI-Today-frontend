@@ -1,11 +1,19 @@
 import { MouseEvent, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { useShallow } from 'zustand/react/shallow';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Z_INDEX } from '@constants/layout';
-import { Colors, Layout, Typo } from '@design-system';
-import { CheckInPost, CheckInPostStory } from '@models/checkInPost';
-import { getCheckInPost } from '@utils/apis/checkInPost';
+import { Colors, Layout, SvgIcon, Typo } from '@design-system';
+import { CheckInPost, CheckInPostStory, CheckInPostVisibility } from '@models/checkInPost';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
+import {
+  getCheckInPost,
+  togglePinCheckInPost,
+  updateCheckInPostPinVisibility,
+} from '@utils/apis/checkInPost';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 
 interface CheckInPostViewerProps {
@@ -13,10 +21,24 @@ interface CheckInPostViewerProps {
   onClose: () => void;
   onPrev?: () => void;
   onNext?: () => void;
+  /** Called after a successful pin toggle or pin_visibility change so the
+   * parent (e.g. stories strip) can re-fetch and resort highlights. */
+  onPinChange?: (post: CheckInPost) => void;
 }
 
-function CheckInPostViewer({ story, onClose, onPrev, onNext }: CheckInPostViewerProps) {
+function CheckInPostViewer({
+  story,
+  onClose,
+  onPrev,
+  onNext,
+  onPinChange,
+}: CheckInPostViewerProps) {
+  const [t] = useTranslation('translation', { keyPrefix: 'check_in_post' });
   const [post, setPost] = useState<CheckInPost | null>(null);
+  const [pinBusy, setPinBusy] = useState(false);
+
+  const { myProfile } = useBoundStore(useShallow(UserSelector));
+  const isOwn = myProfile?.id === story.author_detail.id;
 
   useEffect(() => {
     let cancelled = false;
@@ -47,6 +69,34 @@ function CheckInPostViewer({ story, onClose, onPrev, onNext }: CheckInPostViewer
     onNext?.();
   };
 
+  const handlePinToggle = async (e: MouseEvent) => {
+    e.stopPropagation();
+    if (!post || !isOwn || pinBusy) return;
+    setPinBusy(true);
+    try {
+      const updated = await togglePinCheckInPost(post.id);
+      setPost(updated);
+      onPinChange?.(updated);
+    } finally {
+      setPinBusy(false);
+    }
+  };
+
+  const handleCloseFriendsToggle = async (e: MouseEvent) => {
+    e.stopPropagation();
+    if (!post || !isOwn || pinBusy || !post.is_pinned) return;
+    const next: CheckInPostVisibility =
+      post.pin_visibility === 'close_friends' ? 'friends' : 'close_friends';
+    setPinBusy(true);
+    try {
+      const updated = await updateCheckInPostPinVisibility(post.id, next);
+      setPost(updated);
+      onPinChange?.(updated);
+    } finally {
+      setPinBusy(false);
+    }
+  };
+
   return (
     <Backdrop onClick={handleBackdropClick}>
       <Card onClick={(e) => e.stopPropagation()}>
@@ -64,12 +114,45 @@ function CheckInPostViewer({ story, onClose, onPrev, onNext }: CheckInPostViewer
               {convertTimeDiffByString({ day: new Date(story.created_at) })}
             </Typo>
           </Layout.FlexRow>
-          <CloseBtn type="button" onClick={onClose}>
-            ×
-          </CloseBtn>
+          <Layout.FlexRow alignItems="center" gap={8}>
+            {isOwn && post && (
+              <PinButton
+                type="button"
+                aria-label={(post.is_pinned ? t('unpin') : t('pin')) ?? ''}
+                onClick={handlePinToggle}
+                disabled={pinBusy}
+              >
+                <SvgIcon
+                  name={post.is_pinned ? 'pin_filled' : 'pin_empty'}
+                  size={20}
+                  color={post.is_pinned ? 'PRIMARY' : 'WHITE'}
+                />
+              </PinButton>
+            )}
+            <CloseBtn type="button" onClick={onClose}>
+              ×
+            </CloseBtn>
+          </Layout.FlexRow>
         </Header>
 
-        {story.image_url && <StoryImage src={story.image_url} alt="check-in" />}
+        {/* Close-friends-only toggle: only when own + pinned. */}
+        {isOwn && post?.is_pinned && (
+          <PinVisibilityRow>
+            <CloseFriendsToggle type="button" onClick={handleCloseFriendsToggle} disabled={pinBusy}>
+              <SvgIcon
+                name={
+                  post.pin_visibility === 'close_friends' ? 'checkbox_checked' : 'checkbox_default'
+                }
+                size={20}
+              />
+              <Typo type="label-small" color="WHITE">
+                {t('visibility_close_friends_only')}
+              </Typo>
+            </CloseFriendsToggle>
+          </PinVisibilityRow>
+        )}
+
+        {story.image_url && <StoryImage src={story.image_url} alt="daily snippet" />}
 
         {post?.caption && (
           <Caption>
@@ -115,6 +198,7 @@ const Card = styled.div`
   max-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   background: black;
 `;
 
@@ -131,6 +215,43 @@ const Header = styled.div`
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent);
 `;
 
+const PinButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const PinVisibilityRow = styled.div`
+  position: absolute;
+  top: 64px;
+  right: 16px;
+  display: flex;
+  gap: 6px;
+  z-index: 3;
+`;
+
+const CloseFriendsToggle = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
 const CloseBtn = styled.button`
   background: none;
   border: none;
@@ -143,17 +264,13 @@ const CloseBtn = styled.button`
 
 const StoryImage = styled.img`
   width: 100%;
-  height: 100%;
+  max-height: 60vh;
   object-fit: contain;
 `;
 
 const Caption = styled.div`
-  position: absolute;
-  bottom: 80px;
-  left: 16px;
-  right: 16px;
+  padding: 16px;
   text-align: center;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
 `;
 
 const Footer = styled.div`

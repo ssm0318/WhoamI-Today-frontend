@@ -1,10 +1,28 @@
 {
   "check_in_post": {
-    "new_title": "새 체크인",
+    "new_title": "New Daily Snippet",
     "add_image": "사진 추가",
-    "stories_title": "최근 체크인",
-    "no_stories": "아직 체크인이 없어요",
-    "compose": "체크인 공유"
+    "section_title": "Daily Snippets",
+    "stories_title": "Recent Daily Snippets",
+    "no_stories": "No Daily Snippets yet",
+    "compose_line1": "Share a",
+    "compose_line2": "Daily Snippet",
+    "pin": "하이라이트에 추가",
+    "unpin": "하이라이트에서 제거",
+    "visibility_friends": "친구",
+    "visibility_close_friends": "친한 친구",
+    "visibility_close_friends_only": "친한 친구에게만 공개",
+    "highlights": "하이라이트",
+    "today": "최근 Daily Snippets",
+    "pinned_link": "고정된 Daily Snippets ({{count}})",
+    "all_link": "모든 Daily Snippets ({{count}})",
+    "archive": {
+      "title": "Daily Snippets",
+      "tab_all": "All",
+      "tab_pinned": "Pinned",
+      "empty_all": "No Daily Snippets yet",
+      "empty_pinned": "No pinned Daily Snippets yet"
+    }
   },
   "subscription_popup": {
     "title": "알림 받기",

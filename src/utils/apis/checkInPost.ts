@@ -1,5 +1,10 @@
 import { PaginationResponse } from '@models/api/common';
-import { CheckInPost, CheckInPostStory, NewCheckInPostForm } from '@models/checkInPost';
+import {
+  CheckInPost,
+  CheckInPostStory,
+  CheckInPostVisibility,
+  NewCheckInPostForm,
+} from '@models/checkInPost';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 
 export const getCheckInPostFeed = async (page: string | null) => {
@@ -44,4 +49,19 @@ export const postCheckInPost = async (form: NewCheckInPostForm) => {
 
 export const deleteCheckInPost = async (postId: number) => {
   await axios.delete(`/check_in/posts/${postId}/`);
+};
+
+export const togglePinCheckInPost = async (postId: number) => {
+  const { data } = await axios.patch<CheckInPost>(`/check_in/posts/${postId}/pin/`);
+  return data;
+};
+
+export const updateCheckInPostPinVisibility = async (
+  postId: number,
+  pinVisibility: CheckInPostVisibility,
+) => {
+  const { data } = await axios.patch<CheckInPost>(`/check_in/posts/${postId}/pin_visibility/`, {
+    pin_visibility: pinVisibility,
+  });
+  return data;
 };

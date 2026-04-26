@@ -2,10 +2,11 @@ import { ChangeEvent, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
-import Icon from '@components/_common/icon/Icon';
-import PromptCard from '@components/_common/prompt/PromptCard';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
+import CheckInPostShareCta from '@components/share/CheckInPostShareCta';
 import MissionOfTheDay, { markMissionCompleted } from '@components/share/MissionOfTheDay';
+import NotePostInputTrigger from '@components/share/NotePostInputTrigger';
+import QuestionsOfTheDaySection from '@components/share/QuestionsOfTheDaySection';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
@@ -15,9 +16,7 @@ import { UserSelector } from '@stores/user';
 import { getMe } from '@utils/apis/my';
 import { getTodayQuestions } from '@utils/apis/question';
 import { MainScrollContainer } from '../Root';
-import { ColorCard, QuestionsCard, ShareActionButton } from './Share.styled';
-
-const MAX_VISIBLE_QUESTIONS = 3;
+import { ColorCard, ShareActionButton } from './Share.styled';
 
 function Share() {
   const [t] = useTranslation('translation');
@@ -26,10 +25,7 @@ function Share() {
   const photoInputRef = useRef<HTMLInputElement>(null);
   const { featureFlags } = useBoundStore(UserSelector);
 
-  const { data: todayQuestions, mutate } = useSWR<DailyQuestion[]>(
-    '/qna/questions/daily/',
-    getTodayQuestions,
-  );
+  const { mutate } = useSWR<DailyQuestion[]>('/qna/questions/daily/', getTodayQuestions);
 
   const handleRefresh = useCallback(async () => {
     await Promise.all([mutate(), getMe()]);
@@ -37,18 +33,14 @@ function Share() {
 
   if (featureFlags?.shareTabVisible && featureFlags?.postsVerQ) {
     return (
-      <MainScrollContainer>
-        <Layout.FlexCol
-          w="100%"
-          h="100%"
-          alignItems="center"
-          justifyContent="center"
-          ph={DEFAULT_MARGIN}
-        >
-          <Typo type="head-line" color="MEDIUM_GRAY">
-            Coming soon
-          </Typo>
-        </Layout.FlexCol>
+      <MainScrollContainer scrollRef={scrollRef}>
+        <PullToRefresh onRefresh={handleRefresh}>
+          <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} pv={16} gap={16} pb={100}>
+            <NotePostInputTrigger />
+            <CheckInPostShareCta />
+            <QuestionsOfTheDaySection />
+          </Layout.FlexCol>
+        </PullToRefresh>
       </MainScrollContainer>
     );
   }
@@ -78,8 +70,6 @@ function Share() {
       });
     }
   };
-
-  const visibleQuestions = todayQuestions?.slice(0, MAX_VISIBLE_QUESTIONS) ?? [];
 
   return (
     <MainScrollContainer scrollRef={scrollRef}>
@@ -116,43 +106,7 @@ function Share() {
           </ColorCard>
 
           {/* Section 3: Questions of the Day */}
-          <QuestionsCard>
-            <Typo type="head-line" bold mb={24}>
-              Questions of the Day
-            </Typo>
-            {visibleQuestions.length > 0 ? (
-              <Layout.FlexCol w="100%" gap={10}>
-                {visibleQuestions.map((question) => (
-                  <PromptCard
-                    key={question.id}
-                    id={question.id}
-                    content={question.content}
-                    widthMode="full"
-                  />
-                ))}
-              </Layout.FlexCol>
-            ) : (
-              <Typo type="body-medium" color="MEDIUM_GRAY">
-                {t('no_contents.question')}
-              </Typo>
-            )}
-            {todayQuestions && todayQuestions.length > 0 && (
-              <Layout.FlexRow
-                w="100%"
-                justifyContent="center"
-                alignItems="center"
-                gap={4}
-                mt={16}
-                style={{ cursor: 'pointer' }}
-                onClick={() => navigate('/questions')}
-              >
-                <Typo type="title-medium" fontWeight={600}>
-                  See all questions
-                </Typo>
-                <Icon name="chevron_right" size={14} color="BLACK" />
-              </Layout.FlexRow>
-            )}
-          </QuestionsCard>
+          <QuestionsOfTheDaySection />
         </Layout.FlexCol>
       </PullToRefresh>
     </MainScrollContainer>

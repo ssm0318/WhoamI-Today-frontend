@@ -92,7 +92,7 @@ function NewCheckInPost() {
   return (
     <MainScrollContainer>
       <SubHeader
-        title={t('check_in_post.new_title') || 'New check-in'}
+        title={t('check_in_post.new_title') || 'New Daily Snippet'}
         RightComponent={
           <button type="button" onClick={handleShare} disabled={!canSubmit}>
             <Typo type="title-large" color={canSubmit ? 'PRIMARY' : 'MEDIUM_GRAY'}>
@@ -131,7 +131,7 @@ function NewCheckInPost() {
         {form.image?.url ? (
           <Layout.FlexCol w="100%" alignItems="center" mt={16}>
             <NoteImageWrapper ph={DEFAULT_MARGIN} style={{ width: '100%' }}>
-              <NoteImage src={form.image.url} alt="check-in" />
+              <NoteImage src={form.image.url} alt="daily snippet" />
               <Layout.Absolute t={0} r={15}>
                 <SvgIcon name="delete_image" size={50} onClick={handleDeleteImage} />
               </Layout.Absolute>

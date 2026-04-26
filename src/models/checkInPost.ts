@@ -10,6 +10,8 @@ export interface CheckInPost {
   image_url: string | null;
   caption: string;
   visibility: CheckInPostVisibility;
+  is_pinned: boolean;
+  pin_visibility: CheckInPostVisibility | null;
   created_at: string;
   like_count: number | null;
   current_user_like_id: number | null;
@@ -20,7 +22,10 @@ export interface CheckInPostStory {
   id: number;
   author_detail: User;
   image_url: string | null;
+  caption: string;
   visibility: CheckInPostVisibility;
+  is_pinned: boolean;
+  pin_visibility: CheckInPostVisibility | null;
   created_at: string;
 }
 
