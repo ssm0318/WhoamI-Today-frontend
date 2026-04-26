@@ -1,22 +1,56 @@
-import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
-import MainHeader from '../MainHeader';
+import IconNudge from '@components/_common/icon-nudge/IconNudge';
+import { Layout } from '@design-system';
+import { resetScrollPosition } from '@hooks/useRestoreScrollPosition';
+import { useBoundStore } from '@stores/useBoundStore';
+import { getMe } from '@utils/apis/my';
+import { HeaderWrapper, Noti } from '../Header.styled';
+import SideMenu from '../side-menu/SideMenu';
 
 function ChatsHeader() {
-  const [t] = useTranslation('translation', { keyPrefix: 'nav_tab' });
-
+  const [showSideMenu, setShowSideMenu] = useState(false);
   const navigate = useNavigate();
+  const { myProfile } = useBoundStore((state) => ({
+    myProfile: state.myProfile,
+  }));
 
-  const handleClickEditList = () => {
-    navigate('/chats/edit');
+  const handleClickHamburger = () => {
+    setShowSideMenu(true);
   };
 
+  useEffect(() => {
+    getMe();
+  }, []);
+
   return (
-    <MainHeader
-      title={t('chats')}
-      rightButtons={<Icon name="edit_list" size={44} onClick={handleClickEditList} />}
-    />
+    <>
+      <HeaderWrapper>
+        <Layout.FlexRow justifyContent="space-between" w="100%" h="100%" alignItems="center">
+          <Layout.FlexRow gap={8} alignItems="center">
+            <Icon name="group_chat_new" size={44} onClick={() => navigate('/chats/new-group')} />
+            <Icon name="search_black" size={44} onClick={() => navigate('/chats/search')} />
+          </Layout.FlexRow>
+          <Layout.FlexRow gap={8} alignItems="center">
+            <Noti to="/notifications">
+              <Icon
+                name="notification"
+                size={44}
+                onClick={() => resetScrollPosition('notificationsPage')}
+              />
+              <Layout.Absolute t={4} r={4}>
+                {!!myProfile?.unread_noti_cnt && (
+                  <IconNudge size={18} count={myProfile?.unread_noti_cnt} />
+                )}
+              </Layout.Absolute>
+            </Noti>
+            <Icon name="hamburger" size={44} onClick={handleClickHamburger} />
+          </Layout.FlexRow>
+        </Layout.FlexRow>
+      </HeaderWrapper>
+      {showSideMenu && <SideMenu closeSideMenu={() => setShowSideMenu(false)} />}
+    </>
   );
 }
 
