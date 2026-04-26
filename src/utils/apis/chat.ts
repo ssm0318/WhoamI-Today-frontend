@@ -11,6 +11,7 @@ export const getChatRooms = async (next?: string | null) => {
 };
 
 export const getChatMessages = async (userId: number, page?: string | null) => {
+  console.trace(`[DEBUG] getChatMessages called for userId=${userId}`);
   const requestPage = page ? page.split('page=')[1] : 1;
   const { data } = await axios.get<PaginationResponse<ChatMessage[]>>(
     `/chat/user/${userId}/${!requestPage ? '' : `?page=${requestPage}`}`,
@@ -38,6 +39,7 @@ export const removeMessageReaction = async (reactionId: number) => {
 };
 
 export const markMessagesRead = async (userId: number) => {
+  console.trace(`[DEBUG] markMessagesRead called for userId=${userId}`);
   return axios.post(`/chat/user/${userId}/mark-read/`);
 };
 
