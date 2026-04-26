@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
+import { CheckInPost } from '@models/checkInPost';
 import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
@@ -26,8 +27,8 @@ interface CommentInputBoxProps {
   resetReplyTo?: () => void;
   resetCommentTo: () => void;
   resetCommentType: () => void;
-  postType: 'Response' | 'Comment' | 'Note';
-  post: Response | Comment | Note;
+  postType: 'Response' | 'Comment' | 'Note' | 'CheckInPost';
+  post: Response | Comment | Note | CheckInPost;
   inputFocusDuration?: number;
   inputFocus?: boolean;
   setInputFocus?: Dispatch<SetStateAction<boolean>>;

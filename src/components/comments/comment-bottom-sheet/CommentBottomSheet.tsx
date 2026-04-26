@@ -7,6 +7,7 @@ import CommentInputBox from '@components/comment-list/comment-input-box/CommentI
 import CommentItem from '@components/comment-list/comment-item/CommentItem';
 import { Layout, Typo } from '@design-system';
 import useCommentList from '@hooks/useCommentList';
+import { CheckInPost } from '@models/checkInPost';
 import { Comment, Note, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
@@ -18,8 +19,8 @@ import {
 } from './CommentBottomSheet.styled';
 
 interface Props {
-  postType: 'Response' | 'Note';
-  post: Response | Note;
+  postType: 'Response' | 'Note' | 'CheckInPost';
+  post: Response | Note | CheckInPost;
   visible: boolean;
   inputFocus: boolean;
   setInputFocus: Dispatch<SetStateAction<boolean>>;
@@ -44,8 +45,10 @@ function CommentBottomSheet({
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
 
-  const [commentTo, setCommentTo] = useState<Response | Note | Comment>(post);
-  const [commentToType, setCommentToType] = useState<'Response' | 'Note' | 'Comment'>(postType);
+  const [commentTo, setCommentTo] = useState<Response | Note | Comment | CheckInPost>(post);
+  const [commentToType, setCommentToType] = useState<
+    'Response' | 'Note' | 'Comment' | 'CheckInPost'
+  >(postType);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrollToBottom, setIsScrollToBottom] = useState<boolean>(false);

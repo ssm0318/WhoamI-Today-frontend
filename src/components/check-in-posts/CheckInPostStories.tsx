@@ -16,10 +16,18 @@ interface CheckInPostStoriesProps {
    *  or own profile). When omitted, the main feed strip uses `/stories/`,
    *  which returns one latest post per friend. */
   authorUserId?: number;
+  /** Own profile (My page): merge highlights and recent into a single
+   *  "My Daily Snippets" strip, hide redundant author username, and lift the
+   *  3-day cutoff so every snippet is reachable from the strip. */
+  isOwnProfile?: boolean;
   showCompose?: boolean;
 }
 
-function CheckInPostStories({ authorUserId, showCompose = false }: CheckInPostStoriesProps) {
+function CheckInPostStories({
+  authorUserId,
+  isOwnProfile = false,
+  showCompose = false,
+}: CheckInPostStoriesProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'check_in_post' });
   const navigate = useNavigate();
 
@@ -60,17 +68,21 @@ function CheckInPostStories({ authorUserId, showCompose = false }: CheckInPostSt
     fetchStories();
   }, [fetchStories]);
 
-  const { highlights, recent } = useMemo(() => {
+  const { highlights, recent, sortedAll } = useMemo(() => {
     const h = stories.filter((s) => s.is_pinned);
     // Recent strip shows only the last 3 days (highlights covers the rest).
     const cutoffMs = Date.now() - RECENT_WINDOW_DAYS * 24 * 60 * 60 * 1000;
     const r = stories.filter((s) => !s.is_pinned && new Date(s.created_at).getTime() >= cutoffMs);
-    return { highlights: h, recent: r };
+    const all = [...stories].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+    );
+    return { highlights: h, recent: r, sortedAll: all };
   }, [stories]);
 
   // Profile mode (authorUserId provided): split into Highlights + Today,
   // and always render the today section so the pin-archive entry-point
   // stays visible even when the viewer has nothing recent.
+  // Own-profile variant merges both into a single strip.
   // Feed mode: single strip, but pinned items still get the pin indicator.
   const isProfileMode = authorUserId !== undefined;
 
@@ -78,7 +90,59 @@ function CheckInPostStories({ authorUserId, showCompose = false }: CheckInPostSt
 
   return (
     <>
-      {isProfileMode ? (
+      {isProfileMode && isOwnProfile ? (
+        <Section>
+          <SectionTitleRow>
+            <Typo type="label-medium" color="DARK_GRAY">
+              {t('my_snippets')}
+            </Typo>
+            <Layout.FlexRow gap={12} alignItems="center">
+              <SnippetArchiveLink
+                prefix={<SvgIcon name="pin_filled" size={14} color="PRIMARY" />}
+                i18nKey="pinned_link"
+                count={highlights.length}
+                to="/check-in-posts/archive?tab=pinned"
+              />
+              <SnippetArchiveLink
+                i18nKey="all_link"
+                count={stories.length}
+                to="/check-in-posts/archive?tab=all"
+              />
+            </Layout.FlexRow>
+          </SectionTitleRow>
+          {sortedAll.length === 0 && !showCompose ? (
+            <EmptyRow>
+              <Typo type="label-small" color="MEDIUM_GRAY">
+                {t('no_stories')}
+              </Typo>
+            </EmptyRow>
+          ) : (
+            <Strip>
+              {showCompose && (
+                <ComposeBubble
+                  onClick={() => navigate('/check-in-posts/new')}
+                  aria-label={`${t('compose_line1')} ${t('compose_line2')}`}
+                >
+                  <Plus>
+                    <PlusIcon>+</PlusIcon>
+                    <Typo type="label-small" color="DARK_GRAY">
+                      {t('compose_line2')}
+                    </Typo>
+                  </Plus>
+                </ComposeBubble>
+              )}
+              {sortedAll.map((story) => (
+                <SnippetStoryCard
+                  key={story.id}
+                  story={story}
+                  onClick={handleClickStory(story)}
+                  hideUsername
+                />
+              ))}
+            </Strip>
+          )}
+        </Section>
+      ) : isProfileMode ? (
         <>
           {highlights.length > 0 && (
             <Section>
@@ -126,16 +190,16 @@ function CheckInPostStories({ authorUserId, showCompose = false }: CheckInPostSt
             ) : (
               <Strip>
                 {showCompose && (
-                  <ComposeBubble onClick={() => navigate('/check-in-posts/new')}>
-                    <Plus>+</Plus>
-                    <ComposeLabel>
-                      <Typo type="label-large" color="DARK_GRAY">
-                        {t('compose_line1')}
-                      </Typo>
-                      <Typo type="label-large" color="DARK_GRAY">
+                  <ComposeBubble
+                    onClick={() => navigate('/check-in-posts/new')}
+                    aria-label={`${t('compose_line1')} ${t('compose_line2')}`}
+                  >
+                    <Plus>
+                      <PlusIcon>+</PlusIcon>
+                      <Typo type="label-small" color="DARK_GRAY">
                         {t('compose_line2')}
                       </Typo>
-                    </ComposeLabel>
+                    </Plus>
                   </ComposeBubble>
                 )}
                 {recent.map((story) => (
@@ -152,16 +216,16 @@ function CheckInPostStories({ authorUserId, showCompose = false }: CheckInPostSt
       ) : (
         <Strip>
           {showCompose && (
-            <ComposeBubble onClick={() => navigate('/check-in-posts/new')}>
-              <Plus>+</Plus>
-              <ComposeLabel>
-                <Typo type="label-large" color="DARK_GRAY">
-                  {t('compose_line1')}
-                </Typo>
-                <Typo type="label-large" color="DARK_GRAY">
+            <ComposeBubble
+              onClick={() => navigate('/check-in-posts/new')}
+              aria-label={`${t('compose_line1')} ${t('compose_line2')}`}
+            >
+              <Plus>
+                <PlusIcon>+</PlusIcon>
+                <Typo type="label-small" color="DARK_GRAY">
                   {t('compose_line2')}
                 </Typo>
-              </ComposeLabel>
+              </Plus>
             </ComposeBubble>
           )}
           {stories.map((story) => (
@@ -170,6 +234,7 @@ function CheckInPostStories({ authorUserId, showCompose = false }: CheckInPostSt
               story={story}
               onClick={handleClickStory(story)}
               showAuthorBadge
+              hideUsername
             />
           ))}
         </Strip>
@@ -238,23 +303,26 @@ const ComposeBubble = styled.button`
   width: auto;
 `;
 
-const ComposeLabel = styled.span`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  line-height: 1.2;
-`;
-
 const Plus = styled.span`
   width: 80px;
   height: 80px;
   border-radius: 12px;
   border: 2px dashed ${Colors.MEDIUM_GRAY};
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  gap: 2px;
+  padding: 6px;
+  box-sizing: border-box;
+  text-align: center;
+  line-height: 1.15;
+  color: ${Colors.DARK_GRAY};
+`;
+
+const PlusIcon = styled.span`
+  font-size: 24px;
+  line-height: 1;
   color: ${Colors.DARK_GRAY};
 `;
 

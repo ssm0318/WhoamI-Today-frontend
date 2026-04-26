@@ -7,13 +7,14 @@
     "no_stories": "No Daily Snippets yet",
     "compose_line1": "Share a",
     "compose_line2": "Daily Snippet",
-    "pin": "하이라이트에 추가",
-    "unpin": "하이라이트에서 제거",
+    "pin": "고정",
+    "unpin": "고정 해제",
     "visibility_friends": "친구",
     "visibility_close_friends": "친한 친구",
     "visibility_close_friends_only": "친한 친구에게만 공개",
     "highlights": "하이라이트",
     "today": "최근 Daily Snippets",
+    "my_snippets": "내 Daily Snippets",
     "pinned_link": "고정된 Daily Snippets ({{count}})",
     "all_link": "모든 Daily Snippets ({{count}})",
     "archive": {
@@ -1044,6 +1045,23 @@
       "friends_section": "친구",
       "empty_friends": "아직 친구를 추가하지 않았어요.",
       "loading": "친구 목록을 불러오는 중..."
+    }
+  },
+  "widget_install_guide": {
+    "title": "마지막으로, 위젯을\n홈 화면에 추가해보세요",
+    "next": "다음",
+    "cta": "위젯을 추가했어요",
+    "ios": {
+      "step1": "홈 화면의 아무 앱이나\n길게 눌러주세요",
+      "step2": "왼쪽 위 Edit 버튼을\n눌러주세요",
+      "step3": "Add Widget을 눌러주세요",
+      "step4": "WhoAmI Today를 검색하고\n위젯을 추가해주세요"
+    },
+    "android": {
+      "step1": "홈 화면의 빈 공간을\n길게 눌러주세요",
+      "step2": "위젯 옵션을 눌러주세요",
+      "step3": "위젯 목록에서\nWhoAmI Today를 찾아주세요",
+      "step4": "위젯을 홈 화면으로\n드래그해주세요"
     }
   }
 }

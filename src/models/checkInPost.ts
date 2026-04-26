@@ -15,6 +15,7 @@ export interface CheckInPost {
   created_at: string;
   like_count: number | null;
   current_user_like_id: number | null;
+  comment_count: number;
   current_user_read?: boolean;
 }
 

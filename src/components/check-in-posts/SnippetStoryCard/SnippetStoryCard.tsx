@@ -8,9 +8,15 @@ interface SnippetStoryCardProps {
   story: CheckInPostStory;
   onClick: () => void;
   showAuthorBadge?: boolean;
+  hideUsername?: boolean;
 }
 
-function SnippetStoryCard({ story, onClick, showAuthorBadge = false }: SnippetStoryCardProps) {
+function SnippetStoryCard({
+  story,
+  onClick,
+  showAuthorBadge = false,
+  hideUsername = false,
+}: SnippetStoryCardProps) {
   const { image_url, caption, is_pinned, author_detail } = story;
 
   const handleClick = (e: MouseEvent) => {
@@ -20,21 +26,23 @@ function SnippetStoryCard({ story, onClick, showAuthorBadge = false }: SnippetSt
 
   return (
     <S.Card onClick={handleClick}>
-      <S.Thumb>
-        {image_url ? (
-          <S.ThumbImage src={image_url} alt="snippet" />
-        ) : (
-          <S.TextThumb>
-            <Typo type="label-small" color="DARK_GRAY" numberOfLines={3}>
-              {caption || '…'}
-            </Typo>
-          </S.TextThumb>
-        )}
-        {is_pinned && (
-          <S.PinBadge aria-label="pinned">
-            <SvgIcon name="pin_filled" size={10} color="WHITE" />
-          </S.PinBadge>
-        )}
+      <S.ThumbWrapper>
+        <S.Thumb>
+          {image_url ? (
+            <S.ThumbImage src={image_url} alt="snippet" />
+          ) : (
+            <S.TextThumb>
+              <Typo type="label-small" color="DARK_GRAY" numberOfLines={3}>
+                {caption || '…'}
+              </Typo>
+            </S.TextThumb>
+          )}
+          {is_pinned && (
+            <S.PinBadge aria-label="pinned">
+              <SvgIcon name="pin_filled" size={14} color="PRIMARY" />
+            </S.PinBadge>
+          )}
+        </S.Thumb>
         {showAuthorBadge && (
           <S.AuthorBadge>
             <ProfileImage
@@ -44,10 +52,12 @@ function SnippetStoryCard({ story, onClick, showAuthorBadge = false }: SnippetSt
             />
           </S.AuthorBadge>
         )}
-      </S.Thumb>
-      <Typo type="label-small" color="BLACK" numberOfLines={1}>
-        {author_detail.username}
-      </Typo>
+      </S.ThumbWrapper>
+      {!hideUsername && (
+        <Typo type="label-small" color="BLACK" numberOfLines={1}>
+          {author_detail.username}
+        </Typo>
+      )}
     </S.Card>
   );
 }

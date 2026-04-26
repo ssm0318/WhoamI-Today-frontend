@@ -5,6 +5,7 @@ import {
   CheckInPostVisibility,
   NewCheckInPostForm,
 } from '@models/checkInPost';
+import { Comment } from '@models/post';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 
 export const getCheckInPostFeed = async (page: string | null) => {
@@ -63,5 +64,13 @@ export const updateCheckInPostPinVisibility = async (
   const { data } = await axios.patch<CheckInPost>(`/check_in/posts/${postId}/pin_visibility/`, {
     pin_visibility: pinVisibility,
   });
+  return data;
+};
+
+export const getCheckInPostComments = async (postId: number, page: string | null) => {
+  const requestPage = page ? page.split('page=')[1] : null;
+  const { data } = await axios.get<PaginationResponse<Comment[]>>(
+    `/check_in/posts/${postId}/comments/${requestPage ? `?page=${requestPage}` : ''}`,
+  );
   return data;
 };

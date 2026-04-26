@@ -30,6 +30,7 @@ function CheckInPostItem({
   const caption = isFullPost(post) ? post.caption : '';
   const likeCount = isFullPost(post) ? post.like_count : null;
   const currentUserLikeId = isFullPost(post) ? post.current_user_like_id : null;
+  const commentCount = isFullPost(post) ? post.comment_count : 0;
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
@@ -92,6 +93,12 @@ function CheckInPostItem({
           {!!likeCount && (
             <Typo type="label-large" color="BLACK">
               {likeCount}
+            </Typo>
+          )}
+          <SvgIcon name="add_comment" size={23} color="BLACK" />
+          {!!commentCount && (
+            <Typo type="label-large" color="BLACK">
+              {commentCount}
             </Typo>
           )}
         </Layout.FlexRow>

@@ -14,10 +14,16 @@ export const Card = styled.button`
   padding: 0;
 `;
 
-export const Thumb = styled.div`
+export const ThumbWrapper = styled.div`
   position: relative;
   width: 80px;
   height: 80px;
+`;
+
+export const Thumb = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
   border-radius: 12px;
   overflow: hidden;
   background-color: ${Colors.LIGHT};
@@ -51,13 +57,12 @@ export const AuthorBadge = styled.div`
 
 export const PinBadge = styled.span`
   position: absolute;
-  bottom: 4px;
-  left: 4px;
-  width: 18px;
-  height: 18px;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: ${Colors.PRIMARY};
-  border: 2px solid ${Colors.WHITE};
+  background: ${Colors.WHITE};
   display: flex;
   align-items: center;
   justify-content: center;

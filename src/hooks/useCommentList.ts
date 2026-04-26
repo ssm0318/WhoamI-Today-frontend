@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { getCommentList } from '@components/comment-list/CommentList.helper';
+import { CheckInPost } from '@models/checkInPost';
 import { Comment, Note, Response } from '@models/post';
 import useAsyncEffect from './useAsyncEffect';
 
-const useCommentList = (post: Response | Note, setIsLoading?: (isLoading: boolean) => void) => {
+const useCommentList = (
+  post: Response | Note | CheckInPost,
+  setIsLoading?: (isLoading: boolean) => void,
+) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
 

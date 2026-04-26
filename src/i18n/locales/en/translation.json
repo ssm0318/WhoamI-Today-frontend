@@ -18,13 +18,14 @@
         "no_stories": "No Daily Snippets yet",
         "compose_line1": "Share a",
         "compose_line2": "Daily Snippet",
-        "pin": "Add to highlights",
-        "unpin": "Remove from highlights",
+        "pin": "Pin",
+        "unpin": "Unpin",
         "visibility_friends": "Friends",
         "visibility_close_friends": "Close",
         "visibility_close_friends_only": "Close friends only",
         "highlights": "Highlights",
         "today": "Recent Daily Snippets",
+        "my_snippets": "My Daily Snippets",
         "pinned_link": "Pinned Daily Snippets ({{count}})",
         "all_link": "All Daily Snippets ({{count}})",
         "archive": {
@@ -1053,6 +1054,23 @@
             "friends_section": "Friends",
             "empty_friends": "You haven't added any friends yet.",
             "loading": "Loading friends..."
+        }
+    },
+    "widget_install_guide": {
+        "title": "Finally, add the widget\nto your home screen",
+        "next": "Next",
+        "cta": "I've enabled the widget",
+        "ios": {
+            "step1": "Hold down on any app\nto edit your Home Screen",
+            "step2": "Tap the Edit button\nin the top left corner",
+            "step3": "Tap Add Widget",
+            "step4": "Search for WhoAmI Today\nand add the widget"
+        },
+        "android": {
+            "step1": "Long-press on an empty area\nof your Home Screen",
+            "step2": "Tap the Widgets option",
+            "step3": "Find WhoAmI Today\nin the widget list",
+            "step4": "Drag the widget\nto your Home Screen"
         }
     }
 }
