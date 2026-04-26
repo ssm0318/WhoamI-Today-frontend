@@ -1,5 +1,5 @@
 import React, { CSSProperties, ReactNode, RefObject, UIEvent, useCallback, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 import NotiPermissionBanner, {
   NOTI_PERMISSION_BANNER_HEIGHT,
@@ -13,10 +13,10 @@ import { usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import useFcm from '@hooks/useFcm';
 import { useBoundStore } from '@stores/useBoundStore';
-import { UserSelector } from '@stores/user';
 import { MainWrapper, RootContainer } from '@styles/wrappers';
 import { getMyProfile } from '@utils/apis/my';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
+import { shouldShowWidgetGuide } from '@utils/widgetInstallGuide';
 import { useChatListSocket } from './chat/_hooks/useChatListSocket';
 
 function Root() {
@@ -37,11 +37,27 @@ function Root() {
     });
   }, [postMessage]);
 
-  const { featureFlags } = useBoundStore(UserSelector);
+  const { featureFlags, myProfile } = useBoundStore((state) => ({
+    featureFlags: state.featureFlags,
+    myProfile: state.myProfile,
+  }));
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     console.debug('featureFlags', featureFlags);
   }, [featureFlags]);
+
+  useEffect(() => {
+    const onSkippedPath =
+      location.pathname.startsWith('/widget-install-guide') ||
+      location.pathname.startsWith('/settings/edit-profile') ||
+      location.pathname.startsWith('/settings/reset-password');
+    if (onSkippedPath) return;
+    if (shouldShowWidgetGuide(myProfile)) {
+      navigate('/widget-install-guide', { replace: true });
+    }
+  }, [location.pathname, myProfile, navigate]);
 
   // Refresh unread badge: WebSocket + poll + visibility change
   const refreshUnreadCount = useCallback(() => {

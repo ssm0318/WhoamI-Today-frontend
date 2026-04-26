@@ -27,6 +27,7 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { createCustomChip, deleteCustomChip } from '@utils/apis/chips';
 import { editProfile, updateChipsByCategory } from '@utils/apis/my';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
+import { shouldShowWidgetGuide } from '@utils/widgetInstallGuide';
 import { MainScrollContainer } from '../Root';
 
 function EditProfile() {
@@ -271,12 +272,17 @@ function EditProfile() {
       profile: profileData,
       onSuccess: (data: MyProfile) => {
         setIsSaving(false);
-        updateMyProfile({
+        const updatedProfile = {
           ...data,
           profile_image: data.profile_image ?? myProfile?.profile_image,
-        });
+        };
+        updateMyProfile(updatedProfile);
         openToast({ message: t('response.updated') });
-        navigate('/my');
+        if (isFromSignUp && shouldShowWidgetGuide(updatedProfile)) {
+          navigate('/widget-install-guide', { replace: true });
+        } else {
+          navigate('/my');
+        }
       },
       onError: (error) => {
         setIsSaving(false);

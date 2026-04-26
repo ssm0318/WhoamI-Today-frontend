@@ -76,12 +76,16 @@ import SuggestQuestions from './routes/SuggestQuestions';
 import UpdateCheckin from './routes/update/UpdateCheckin';
 import UserPage from './routes/UserPage';
 import ViewAsPage from './routes/ViewAsPage';
+import WidgetInstallGuide from './routes/widget-install-guide/WidgetInstallGuide';
+import WidgetInstallGuidePreview from './routes/widget-install-guide/WidgetInstallGuidePreview';
 
 const router = createBrowserRouter([
   // intro route
   { path: '', element: <Intro />, loader: checkIfSignIn },
   // research intro route (for research)
   { path: 'research-intro', element: <ResearchIntro /> },
+  // dev preview — no auth required
+  { path: 'test/widget-install-guide', element: <WidgetInstallGuidePreview /> },
   // question suggestion
   { path: 'suggest-questions', element: <SuggestQuestions /> },
   {
@@ -284,6 +288,10 @@ const router = createBrowserRouter([
           { path: 'daily-noti-setting', element: <DailyNotiSetting /> },
           { path: 'delete-account', element: <DeleteAccount /> },
         ],
+      },
+      {
+        path: 'widget-install-guide',
+        element: <WidgetInstallGuide />,
       },
       {
         path: '*',
