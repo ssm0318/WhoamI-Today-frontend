@@ -5,18 +5,25 @@ import { VisibilityTier } from '@models/viewAs';
 import * as S from './ViewAsBanner.styled';
 
 interface ViewAsBannerProps {
-  tier: VisibilityTier;
+  tier?: VisibilityTier | null;
+  viewAsUser?: string | null;
+  onChange: () => void;
 }
 
-function ViewAsBanner({ tier }: ViewAsBannerProps) {
+function ViewAsBanner({ tier, viewAsUser, onChange }: ViewAsBannerProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'view_as' });
   const navigate = useNavigate();
 
+  const subjectLabel = viewAsUser ? `@${viewAsUser}` : t(`tier.${tier ?? 'public'}`);
+
   return (
     <S.Banner>
-      <S.Label>
-        {t('banner_prefix')} <S.Strong>{t(`tier.${tier}`)}</S.Strong>
-      </S.Label>
+      <S.LabelRow type="button" onClick={onChange}>
+        <S.Label>
+          {t('banner_prefix')} <S.Strong>{subjectLabel}</S.Strong>
+        </S.Label>
+        <S.ChangeHint>{t('banner_change')}</S.ChangeHint>
+      </S.LabelRow>
       <Icon name="close" size={24} onClick={() => navigate('/my')} />
     </S.Banner>
   );

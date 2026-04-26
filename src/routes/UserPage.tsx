@@ -21,8 +21,13 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { readFriendCheckIn } from '@utils/apis/checkIn';
 
-function UserPage() {
-  const { username } = useParams();
+interface UserPageProps {
+  usernameOverride?: string;
+}
+
+function UserPage({ usernameOverride }: UserPageProps = {}) {
+  const params = useParams();
+  const username = usernameOverride ?? params.username;
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const isMyPage = username === myProfile?.username;
   const previewMode = useIsPreviewMode();
@@ -71,22 +76,26 @@ function UserPage() {
         key={username}
         style={{ height: '100vh', overflow: 'hidden', display: outlet ? 'none' : 'block' }}
       >
-        <UserHeader
-          username={username}
-          onClickMore={handleClickMore}
-          userId={userId}
-          unreadCount={unreadCount}
-        />
+        {!previewMode && (
+          <UserHeader
+            username={username}
+            onClickMore={handleClickMore}
+            userId={userId}
+            unreadCount={unreadCount}
+          />
+        )}
         <div
           id={MAIN_SCROLL_CONTAINER_ID}
           style={{
-            height: `calc(100vh - ${TITLE_HEADER_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px)`,
+            height: previewMode
+              ? `calc(100vh - ${BOTTOM_TABBAR_HEIGHT}px)`
+              : `calc(100vh - ${TITLE_HEADER_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px)`,
             overflowY: 'auto',
             WebkitOverflowScrolling: 'touch',
             msOverflowStyle: 'none',
             scrollbarWidth: 'none',
             width: '100%',
-            marginTop: `${TITLE_HEADER_HEIGHT}px`,
+            marginTop: previewMode ? 0 : `${TITLE_HEADER_HEIGHT}px`,
             paddingBottom: '24px', // 하단 여유 공간 추가
             position: 'relative',
           }}

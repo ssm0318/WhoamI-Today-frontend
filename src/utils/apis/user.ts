@@ -19,11 +19,13 @@ import {
 } from '@models/api/user';
 import { Note, Response } from '@models/post';
 import { User, UserProfile } from '@models/user';
+import { VisibilityTier } from '@models/viewAs';
 import { resetBoundStores } from '@stores/resetSlices';
 import { useBoundStore } from '@stores/useBoundStore';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 import { setItemToSessionStorage } from '@utils/sessionStorage';
 import { getMe, syncTimeZone } from './my';
+import { withViewAs } from './withViewAs';
 
 export const signIn = ({
   signInInfo,
@@ -294,8 +296,13 @@ export const getFriendList = async (next?: string | null) => {
   return data;
 };
 
-export const getUserProfile = async (username: string) => {
-  const { data } = await axios.get<UserProfile>(`/user/${encodeURIComponent(username)}/profile/`);
+export const getUserProfile = async (
+  username: string,
+  viewAs?: VisibilityTier | null,
+  viewAsUser?: string | null,
+) => {
+  const url = withViewAs(`/user/${encodeURIComponent(username)}/profile/`, { viewAs, viewAsUser });
+  const { data } = await axios.get<UserProfile>(url);
   // Map friendship_level string to numeric connection_degree
   if (data.friendship_level && !data.connection_degree) {
     if (data.friendship_level === '2nd') {

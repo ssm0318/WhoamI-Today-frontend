@@ -1,4 +1,4 @@
-import { MouseEvent, useContext, useState } from 'react';
+import { MouseEvent, ReactNode, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
@@ -8,6 +8,7 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SubscriptionPopup from '@components/friends/subscription-popup/SubscriptionPopup';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import { UserPageContext } from '@components/user-page/UserPage.context';
+import { useIsPreviewMode, useViewAs, useViewAsUser } from '@components/view-as/PreviewModeContext';
 import { FeatureFlagKey } from '@constants/featureFlag';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -35,10 +36,14 @@ interface ProfileProps {
 
 function Profile({ user }: ProfileProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
+  const [tViewAs] = useTranslation('translation', { keyPrefix: 'view_as' });
   const { categories } = useChipCategories();
 
   const { featureFlags, myProfile } = useBoundStore(useShallow(UserSelector));
-  const isMyPage = user?.id === myProfile?.id;
+  const previewMode = useIsPreviewMode();
+  const viewAs = useViewAs();
+  const viewAsUser = useViewAsUser();
+  const isMyPage = !previewMode && user?.id === myProfile?.id;
   const [friendData, setFriendData] = useState<UserProfile | null>(null);
   const subscriptionBellEnabled = !!featureFlags?.[FeatureFlagKey.SUBSCRIPTION_POPUP];
   const isFriendUser = !!user && !isMyProfile(user) && areFriends(user);
@@ -66,10 +71,10 @@ function Profile({ user }: ProfileProps) {
 
   useAsyncEffect(async () => {
     if (isMyPage || !username) return;
-    const friend = await getUserProfile(username);
+    const friend = await getUserProfile(username, viewAs, viewAsUser);
 
     setFriendData(friend);
-  }, [isMyPage, username]);
+  }, [isMyPage, username, viewAs, viewAsUser]);
 
   const reloadPage = () => window.location.reload();
 
@@ -194,21 +199,6 @@ function Profile({ user }: ProfileProps) {
                 </>
               )}
             </Layout.FlexRow>
-            {/* edit icon */}
-            {isMyPage && (
-              <Layout.FlexRow
-                w="100%"
-                alignItems="center"
-                gap={2}
-                justifyContent="flex-end"
-                onClick={handleClickEditProfile}
-              >
-                <SvgIcon name="edit_filled" fill="DARK_GRAY" size={16} />
-                <Typo type="label-medium" color="DARK_GRAY" underline>
-                  {t('edit_profile')}
-                </Typo>
-              </Layout.FlexRow>
-            )}
           </Layout.FlexRow>
           {/* pronouns + bio (my page only — friend page shows inline above) */}
           {isMyPage ? (
@@ -287,6 +277,7 @@ function Profile({ user }: ProfileProps) {
             </>
           )}
           <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />
+
           {/* Mutual traits for non-friend users (from discover context) */}
           {!featureFlags?.postsVerQ &&
             !isMyProfile(user) &&
@@ -322,6 +313,18 @@ function Profile({ user }: ProfileProps) {
             )}
         </>
       )}
+      {/* my-page actions: Edit Profile + View As (Privacy) — sit directly above the check-in card */}
+      {isMyPage && (
+        <Layout.FlexRow w="100%" gap={8}>
+          <PrimaryActionButton onClick={handleClickEditProfile}>
+            {t('edit_profile')}
+          </PrimaryActionButton>
+          <PrimaryActionButton onClick={() => navigate('/my/view-as')}>
+            {tViewAs('entry_label_long', { defaultValue: 'View As (Privacy)' })}
+          </PrimaryActionButton>
+        </Layout.FlexRow>
+      )}
+
       {/* 체크인 (status) */}
       {featureFlags?.checkIn && user && <CheckInSection user={user} />}
 
@@ -340,3 +343,32 @@ function Profile({ user }: ProfileProps) {
 }
 
 export default Profile;
+
+function PrimaryActionButton({
+  onClick,
+  children,
+}: {
+  onClick: (e: MouseEvent) => void;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        flex: 1,
+        padding: '5px 12px',
+        borderRadius: 8,
+        border: '2px solid #555555',
+        background: 'rgba(217, 217, 217, 0.4)',
+        color: '#555555',
+        fontSize: 13,
+        fontWeight: 700,
+        cursor: 'pointer',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {children}
+    </button>
+  );
+}

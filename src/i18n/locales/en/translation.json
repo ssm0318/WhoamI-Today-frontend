@@ -526,7 +526,6 @@
                 "max_persona_limit": "Maximum 10 personas can be selected",
                 "edit": "Edit"
             },
-            "persona": "Persona",
             "persona_placeholder": "For eg: #Lurker",
             "interests": "Interests",
             "interests_placeholder": "For eg: #Climbing",
@@ -669,8 +668,8 @@
         "not_found_post": "This post does not exist.",
         "forbidden_comment": "This comment is not accessible.",
         "not_found_comment": "This comment does not exist.",
-        "responses_not_friend": "Only friends can view this response.",
-        "notes_not_friend": "Only friends can view this notes."
+        "responses_not_friend": "No responses to show.",
+        "notes_not_friend": "No posts to show."
     },
     "chats": {
         "title": "Chats",
@@ -741,7 +740,7 @@
                 "add_to_close_friends": "Add to close friends",
                 "success": "Added as close friends",
                 "error": "An error occurred"
-            }, 
+            },
             "latest_updates": {
                 "title": "{{username}} this week"
             }
@@ -1024,6 +1023,18 @@
             "close_friends": "Close Friends"
         },
         "disabled_tooltip": "Disabled in preview",
-        "entry_button_aria_label": "View profile as another audience"
+        "entry_button_aria_label": "View profile as another audience",
+        "entry_label": "View As",
+        "entry_label_long": "View As (Privacy)",
+        "banner_change": "Change",
+        "picker": {
+            "title": "Preview as",
+            "public_section": "Public",
+            "public_label": "Anyone (Public)",
+            "close_friends_section": "Close Friends",
+            "friends_section": "Friends",
+            "empty_friends": "You haven't added any friends yet.",
+            "loading": "Loading friends..."
+        }
     }
 }
