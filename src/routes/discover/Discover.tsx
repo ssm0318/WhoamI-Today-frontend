@@ -308,6 +308,7 @@ function Discover() {
             <Layout.FlexCol
               gap={20}
               ph={DEFAULT_MARGIN}
+              pt={isVerQ ? 12 : 0}
               alignItems="center"
               w="100%"
               style={{ boxSizing: 'border-box' }}

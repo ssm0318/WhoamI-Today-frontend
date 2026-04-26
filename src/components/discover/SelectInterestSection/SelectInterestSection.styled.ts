@@ -4,34 +4,20 @@ import { Colors, Layout } from '@design-system';
 export const SelectInterestSectionWrapper = styled(Layout.FlexCol)`
   background-color: ${Colors.TERTIARY_BLUE};
   border-radius: 16px;
-  padding: 24px 0px;
+  padding: 24px 16px;
   gap: 20px;
   width: 100%;
   box-sizing: border-box;
   overflow: hidden;
 `;
 
-export const InterestGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+export const TextBlock = styled(Layout.FlexCol)`
+  width: 100%;
   gap: 8px;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0 16px;
-`;
-
-export const ExpandToggle = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 4px 0;
-  cursor: pointer;
 `;
 
 export const SaveButtonWrapper = styled.div`
   width: 100%;
-  padding: 0 16px;
   box-sizing: border-box;
 
   button {

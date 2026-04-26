@@ -1,4 +1,4 @@
-import { ColorKeys, Font, Layout, Typo } from '@design-system';
+import { ColorKeys, Layout, Typo } from '@design-system';
 
 interface Props {
   title?: string | null;
@@ -14,29 +14,29 @@ export default function NoContents({
   title,
   text,
   mv,
-  ph = 10,
-  pv = 10,
-  bgColor = 'LIGHT',
-  fontColor = 'MEDIUM_GRAY',
+  ph,
+  pv,
+  bgColor,
+  fontColor = 'BLACK',
 }: Props) {
+  const hasBackground = bgColor !== undefined;
   return (
     <Layout.FlexCol
       w="100%"
       alignItems="center"
       bgColor={bgColor}
-      rounded={12}
-      ph={ph}
-      pv={pv}
+      rounded={hasBackground ? 12 : undefined}
+      ph={ph ?? (hasBackground ? 10 : 0)}
+      pv={pv ?? (hasBackground ? 10 : 16)}
       mv={mv}
     >
-      {/** FIXME: 대응되는 Typo 타입이 없음. */}
       {title && (
-        <Font.Body type="14_semibold" color={fontColor}>
+        <Typo type="title-medium" color={fontColor}>
           {title}
-        </Font.Body>
+        </Typo>
       )}
       {text && (
-        <Typo type="body-medium" color={fontColor}>
+        <Typo type="body-large" color={fontColor}>
           {text}
         </Typo>
       )}
