@@ -661,8 +661,8 @@
     "not_found_post": "존재하지 않는 게시글입니다.",
     "forbidden_comment": "접근이 불가능한 댓글입니다.",
     "not_found_comment": "존재하지 않는 댓글입니다.",
-    "responses_not_friend": "친구에게만 공개된 답변입니다.",
-    "notes_not_friend": "친구에게만 공개된 게시글입니다."
+    "responses_not_friend": "표시할 응답이 없어요.",
+    "notes_not_friend": "표시할 게시물이 없어요."
   },
   "chats": {
     "title": "채팅",
@@ -1014,6 +1014,18 @@
       "close_friends": "친한 친구"
     },
     "disabled_tooltip": "미리보기에서는 사용할 수 없어요",
-    "entry_button_aria_label": "다른 사람이 보는 내 프로필 미리보기"
+    "entry_label": "다른 사람으로 보기",
+    "entry_label_long": "다른 사람으로 보기 (공개 설정 미리보기)",
+    "entry_button_aria_label": "다른 사람이 보는 내 프로필 미리보기",
+    "banner_change": "변경",
+    "picker": {
+      "title": "이렇게 보기",
+      "public_section": "전체공개",
+      "public_label": "모두에게 보이는 모습",
+      "close_friends_section": "친한 친구",
+      "friends_section": "친구",
+      "empty_friends": "아직 친구를 추가하지 않았어요.",
+      "loading": "친구 목록을 불러오는 중..."
+    }
   }
 }

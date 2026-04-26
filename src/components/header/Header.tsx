@@ -1,14 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
-import Icon from '@components/_common/icon/Icon';
+import { useLocation } from 'react-router-dom';
 import SubHeader from '@components/sub-header/SubHeader';
 import CommonHeader from './common-header/CommonHeader';
 import FriendHeader from './friends-header/FriendsHeader';
 
 function Header() {
   const location = useLocation();
-  const navigate = useNavigate();
   const [t] = useTranslation('translation');
 
   switch (location.pathname) {
@@ -21,14 +19,7 @@ function Header() {
     case '/discover':
       return <CommonHeader title={t('header.discover')} />;
     case '/my':
-      return (
-        <CommonHeader
-          title={t('header.my')}
-          extraActions={
-            <Icon name="hide_false" size={44} onClick={() => navigate('/my/view-as')} />
-          }
-        />
-      );
+      return <CommonHeader title={t('header.my')} />;
     case '/update':
       return <CommonHeader title="Check-In" />;
     case '/share':
