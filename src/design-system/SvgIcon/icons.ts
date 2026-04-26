@@ -27,6 +27,7 @@ const error = 'error';
 
 // Universal
 const notification = 'notification';
+const notification_inline = 'notification_inline';
 const notification_mute = 'notification_mute';
 const hamburger = 'hamburger';
 const close = 'close';
@@ -282,6 +283,7 @@ export {
   noti_icon_prompt,
   noti_icon_public_comment,
   notification,
+  notification_inline,
   notification_mute,
   pin_empty,
   pin_filled,

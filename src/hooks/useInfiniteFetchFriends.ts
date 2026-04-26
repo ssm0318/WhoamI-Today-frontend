@@ -6,7 +6,7 @@ interface BreakFriendsParams {
   item: UpdatedProfile;
 }
 interface UpdateFriendsStateParams {
-  type: 'is_favorite' | 'is_hidden';
+  type: 'is_favorite' | 'is_hidden' | 'is_subscribed';
   item: UpdatedProfile;
   value: boolean;
 }

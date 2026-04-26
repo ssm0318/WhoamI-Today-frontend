@@ -61,6 +61,7 @@ export interface UserProfile extends User, UserFollowStatus {
   mutual_personas?: MutualTrait[];
   is_favorite: boolean;
   is_check_in_subscribed?: boolean;
+  is_subscribed?: boolean;
   pinned_cnt?: number;
   friendship_level?: string;
   // LinkedIn-style connection degree: 1 = direct friend, 2 = friend of friend, 3+ = further

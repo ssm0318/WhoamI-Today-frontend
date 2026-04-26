@@ -16,6 +16,7 @@ interface SubscriptionPopupProps {
   friendId: number;
   username?: string;
   currentVersion?: VersionType | null;
+  onSubscriptionChange?: (hasSubscription: boolean) => void;
 }
 
 function SubscriptionPopup({
@@ -24,6 +25,7 @@ function SubscriptionPopup({
   friendId,
   username,
   currentVersion,
+  onSubscriptionChange,
 }: SubscriptionPopupProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'subscription_popup' });
 
@@ -44,6 +46,7 @@ function SubscriptionPopup({
   const handleShare = async () => {
     if (isSaving) return;
     await save(draft);
+    onSubscriptionChange?.(draft.length > 0);
     onClose();
   };
 

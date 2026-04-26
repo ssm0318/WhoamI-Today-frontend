@@ -166,6 +166,23 @@ function FriendsList() {
                       <FriendItemWithUpdates
                         user={user}
                         key={user.id}
+                        onSubscriptionChanged={(_userId, hasSubscription) => {
+                          updateFriendList({
+                            type: 'is_subscribed',
+                            item: user,
+                            value: hasSubscription,
+                          });
+                          postsFriendsHook.updateFriendList({
+                            type: 'is_subscribed',
+                            item: user,
+                            value: hasSubscription,
+                          });
+                          closeFriendsHook.updateFriendList({
+                            type: 'is_subscribed',
+                            item: user,
+                            value: hasSubscription,
+                          });
+                        }}
                         onConnectionChanged={(userId, connection) => {
                           if (closeFriendsOnly && connection === Connection.FRIEND) {
                             updateFriendList({
@@ -262,6 +279,23 @@ function FriendsList() {
                         user={user}
                         tabMode="posts"
                         hasNewPost={hasUnreadPosts(user)}
+                        onSubscriptionChanged={(_userId, hasSubscription) => {
+                          updateFriendList({
+                            type: 'is_subscribed',
+                            item: user,
+                            value: hasSubscription,
+                          });
+                          postsFriendsHook.updateFriendList({
+                            type: 'is_subscribed',
+                            item: user,
+                            value: hasSubscription,
+                          });
+                          closeFriendsHook.updateFriendList({
+                            type: 'is_subscribed',
+                            item: user,
+                            value: hasSubscription,
+                          });
+                        }}
                       />
                     ))}
                   </Layout.FlexCol>

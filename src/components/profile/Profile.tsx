@@ -164,12 +164,15 @@ function Profile({ user }: ProfileProps) {
                         background: 'none',
                         border: 'none',
                         padding: 0,
-                        fontSize: 16,
-                        lineHeight: 1,
                         cursor: 'pointer',
+                        display: 'inline-flex',
                       }}
                     >
-                      🔔
+                      <SvgIcon
+                        name="notification_inline"
+                        size={20}
+                        color={(user as UserProfile).is_subscribed ? 'PRIMARY' : 'BLACK'}
+                      />
                     </button>
                   )}
                   {subscriptionBellEnabled && isFriendUser && (

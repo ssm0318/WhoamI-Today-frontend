@@ -32,6 +32,7 @@ import {
 interface Props {
   user: UpdatedProfile;
   onConnectionChanged?: (userId: number, connection: Connection) => void;
+  onSubscriptionChanged?: (userId: number, hasSubscription: boolean) => void;
   tabMode?: 'check-in' | 'posts' | 'unified';
   hasNewPost?: boolean;
 }
@@ -39,6 +40,7 @@ interface Props {
 function FriendItemWithUpdates({
   user,
   onConnectionChanged,
+  onSubscriptionChanged,
   tabMode = 'check-in',
   hasNewPost = false,
 }: Props) {
@@ -144,12 +146,15 @@ function FriendItemWithUpdates({
                   background: 'none',
                   border: 'none',
                   padding: 2,
-                  fontSize: 18,
-                  lineHeight: 1,
                   cursor: 'pointer',
+                  display: 'inline-flex',
                 }}
               >
-                <EmojiItem emojiString="🔔" size={18} bgColor="TRANSPARENT" outline="TRANSPARENT" />
+                <SvgIcon
+                  name="notification_inline"
+                  size={20}
+                  color={user.is_subscribed ? 'PRIMARY' : 'BLACK'}
+                />
               </button>
               <SubscriptionPopup
                 isOpen={showSubscriptionPopup}
@@ -157,6 +162,9 @@ function FriendItemWithUpdates({
                 friendId={id}
                 username={username}
                 currentVersion={myProfile?.current_ver}
+                onSubscriptionChange={(hasSubscription) =>
+                  onSubscriptionChanged?.(id, hasSubscription)
+                }
               />
             </>
           )}

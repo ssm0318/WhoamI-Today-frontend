@@ -65,6 +65,13 @@ function FriendsUpdates() {
                         value: connection as Connection,
                       });
                     }}
+                    onSubscriptionChanged={(_userId, hasSubscription) => {
+                      updateFriendList({
+                        type: 'is_subscribed',
+                        item: user,
+                        value: hasSubscription,
+                      });
+                    }}
                   />
                 ))}
               </Layout.FlexCol>
