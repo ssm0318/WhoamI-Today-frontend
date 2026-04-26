@@ -1000,5 +1000,20 @@
     "title": "고정 게시글",
     "entry_title": "{{count}} 고정 게시글",
     "no_contents": "고정된 게시글이 없습니다."
+  },
+  "view_as": {
+    "banner_prefix": "내 프로필 미리보기 — 보는 사람:",
+    "tab": {
+      "public": "전체공개",
+      "friends": "친구",
+      "close_friends": "친한 친구"
+    },
+    "tier": {
+      "public": "전체공개",
+      "friends": "친구",
+      "close_friends": "친한 친구"
+    },
+    "disabled_tooltip": "미리보기에서는 사용할 수 없어요",
+    "entry_button_aria_label": "다른 사람이 보는 내 프로필 미리보기"
   }
 }

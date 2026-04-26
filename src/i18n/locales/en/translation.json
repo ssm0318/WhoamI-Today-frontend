@@ -1010,5 +1010,20 @@
         "entry_title_one": "{{count}} pinned post",
         "entry_title_other": "{{count}} pinned posts",
         "no_contents": "No pinned posts yet."
+    },
+    "view_as": {
+        "banner_prefix": "Previewing your profile as",
+        "tab": {
+            "public": "Public",
+            "friends": "Friends",
+            "close_friends": "Close Friends"
+        },
+        "tier": {
+            "public": "Public",
+            "friends": "Friends",
+            "close_friends": "Close Friends"
+        },
+        "disabled_tooltip": "Disabled in preview",
+        "entry_button_aria_label": "View profile as another audience"
     }
 }
