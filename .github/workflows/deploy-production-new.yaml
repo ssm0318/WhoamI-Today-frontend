@@ -52,7 +52,7 @@ jobs:
           docker rm -f nginx-reverse-proxy 2>/dev/null || true
           docker rm -f whoami-frontend 2>/dev/null || true
           docker builder prune -af || true
-          docker image prune -af --filter "until=72h" || true
+          docker image prune -f --filter "until=24h" || true
           docker container prune -f || true
           df -h / | tail -1
 
