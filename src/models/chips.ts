@@ -36,7 +36,7 @@ export interface CustomChip {
   category: ChipCategory;
 }
 
-export const MAX_CUSTOM_CHIPS_PER_CATEGORY = 5;
+export const MAX_CUSTOM_CHIPS_PER_CATEGORY = 15;
 export const MAX_CUSTOM_CHIP_LENGTH = 25;
 
 /** Per-category color scheme (WCAG AA compliant). */

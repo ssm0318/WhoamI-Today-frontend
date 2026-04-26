@@ -1,3 +1,4 @@
+import { isAxiosError } from 'axios';
 import { ChangeEvent, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
@@ -16,7 +17,12 @@ import { CheckBox, Colors, Layout, Typo } from '@design-system';
 import { useChipCategories } from '@hooks/useChipCategories';
 import { useDelayedVisible } from '@hooks/useDelayedVisible';
 import { MyProfile } from '@models/api/user';
-import { ChipCategory, CustomChip, normalizeChipText } from '@models/chips';
+import {
+  ChipCategory,
+  CustomChip,
+  MAX_CUSTOM_CHIPS_PER_CATEGORY,
+  normalizeChipText,
+} from '@models/chips';
 import { useBoundStore } from '@stores/useBoundStore';
 import { createCustomChip, deleteCustomChip } from '@utils/apis/chips';
 import { editProfile, updateChipsByCategory } from '@utils/apis/my';
@@ -144,8 +150,14 @@ function EditProfile() {
         ...prev,
         customChips: [...prev.customChips, { id: chip.id, text: chip.text, category }],
       }));
-    } catch {
-      openToast({ message: 'Failed to add custom chip' });
+    } catch (err) {
+      if (isAxiosError(err) && err.response?.status === 400) {
+        openToast({
+          message: `You can add up to ${MAX_CUSTOM_CHIPS_PER_CATEGORY} custom chips per category`,
+        });
+      } else {
+        openToast({ message: 'Failed to add custom chip' });
+      }
     }
   };
 
