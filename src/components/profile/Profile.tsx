@@ -237,6 +237,18 @@ function Profile({ user }: ProfileProps) {
             )
           )}
 
+          {/* friend count link (version_q my page only) */}
+          {featureFlags?.postsVerQ && isMyPage && (
+            <Layout.FlexRow
+              onClick={() => navigate('/my/friends/list')}
+              style={{ cursor: 'pointer' }}
+            >
+              <Typo type="title-small" color="BLACK" underline>
+                {`${myProfile?.friend_count ?? 0} ${t('friends')}`}
+              </Typo>
+            </Layout.FlexRow>
+          )}
+
           {/* interests placeholder (my page only, when user has no interests) */}
           {!featureFlags?.postsVerQ &&
             isMyPage &&
