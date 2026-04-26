@@ -9,8 +9,6 @@ import CheckInPostViewer from './CheckInPostViewer';
 import SnippetArchiveLink from './SnippetArchiveLink';
 import SnippetStoryCard from './SnippetStoryCard/SnippetStoryCard';
 
-const RECENT_WINDOW_DAYS = 3;
-
 interface CheckInPostStoriesProps {
   /** When provided, the strip lists only this user's posts (for friend's UserPage
    *  or own profile). When omitted, the main feed strip uses `/stories/`,
@@ -68,15 +66,12 @@ function CheckInPostStories({
     fetchStories();
   }, [fetchStories]);
 
-  const { highlights, recent, sortedAll } = useMemo(() => {
+  const { highlights, sortedAll } = useMemo(() => {
     const h = stories.filter((s) => s.is_pinned);
-    // Recent strip shows only the last 3 days (highlights covers the rest).
-    const cutoffMs = Date.now() - RECENT_WINDOW_DAYS * 24 * 60 * 60 * 1000;
-    const r = stories.filter((s) => !s.is_pinned && new Date(s.created_at).getTime() >= cutoffMs);
     const all = [...stories].sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
-    return { highlights: h, recent: r, sortedAll: all };
+    return { highlights: h, sortedAll: all };
   }, [stories]);
 
   // Profile mode (authorUserId provided): split into Highlights + Today,
@@ -143,76 +138,37 @@ function CheckInPostStories({
           )}
         </Section>
       ) : isProfileMode ? (
-        <>
-          {highlights.length > 0 && (
-            <Section>
-              <SectionTitle>
-                <Typo type="label-medium" color="DARK_GRAY">
-                  {t('highlights')}
-                </Typo>
-              </SectionTitle>
-              <Strip>
-                {highlights.map((story) => (
-                  <SnippetStoryCard
-                    key={story.id}
-                    story={story}
-                    onClick={handleClickStory(story)}
-                  />
-                ))}
-              </Strip>
-            </Section>
-          )}
-          <Section>
-            <SectionTitleRow>
-              <Typo type="label-medium" color="DARK_GRAY">
-                {t('today')}
+        <Section>
+          <SectionTitleRow>
+            <Typo type="label-medium" color="DARK_GRAY">
+              {t('today')}
+            </Typo>
+            <SnippetArchiveLink
+              prefix={<SvgIcon name="pin_filled" size={14} color="PRIMARY" />}
+              i18nKey="pinned_link"
+              count={highlights.length}
+              to="/check-in-posts/archive?tab=pinned"
+            />
+          </SectionTitleRow>
+          {sortedAll.length === 0 ? (
+            <EmptyRow>
+              <Typo type="label-small" color="MEDIUM_GRAY">
+                {t('no_stories')}
               </Typo>
-              <Layout.FlexRow gap={12} alignItems="center">
-                <SnippetArchiveLink
-                  prefix={<SvgIcon name="pin_filled" size={14} color="PRIMARY" />}
-                  i18nKey="pinned_link"
-                  count={highlights.length}
-                  to="/check-in-posts/archive?tab=pinned"
+            </EmptyRow>
+          ) : (
+            <Strip>
+              {sortedAll.map((story) => (
+                <SnippetStoryCard
+                  key={story.id}
+                  story={story}
+                  onClick={handleClickStory(story)}
+                  hideUsername
                 />
-                <SnippetArchiveLink
-                  i18nKey="all_link"
-                  count={stories.length}
-                  to="/check-in-posts/archive?tab=all"
-                />
-              </Layout.FlexRow>
-            </SectionTitleRow>
-            {recent.length === 0 && !showCompose ? (
-              <EmptyRow>
-                <Typo type="label-small" color="MEDIUM_GRAY">
-                  {t('no_stories')}
-                </Typo>
-              </EmptyRow>
-            ) : (
-              <Strip>
-                {showCompose && (
-                  <ComposeBubble
-                    onClick={() => navigate('/check-in-posts/new')}
-                    aria-label={`${t('compose_line1')} ${t('compose_line2')}`}
-                  >
-                    <Plus>
-                      <PlusIcon>+</PlusIcon>
-                      <Typo type="label-small" color="DARK_GRAY">
-                        {t('compose_line2')}
-                      </Typo>
-                    </Plus>
-                  </ComposeBubble>
-                )}
-                {recent.map((story) => (
-                  <SnippetStoryCard
-                    key={story.id}
-                    story={story}
-                    onClick={handleClickStory(story)}
-                  />
-                ))}
-              </Strip>
-            )}
-          </Section>
-        </>
+              ))}
+            </Strip>
+          )}
+        </Section>
       ) : (
         <Strip>
           {showCompose && (
@@ -259,10 +215,6 @@ const Section = styled.section`
   width: 100%;
   background-color: ${Colors.WHITE};
   border-bottom: 1px solid ${Colors.LIGHT};
-`;
-
-const SectionTitle = styled.div`
-  padding: 8px 16px 0;
 `;
 
 const SectionTitleRow = styled.div`
