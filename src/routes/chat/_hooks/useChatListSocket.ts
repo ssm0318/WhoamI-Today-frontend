@@ -58,6 +58,7 @@ export function useChatListSocket(onUpdate: (data: ChatListUpdate) => void) {
 
     socket.addEventListener('close', () => {
       if (!isMounted.current) return;
+      if (socketRef.current !== socket) return;
       if (reconnectAttempts.current >= MAX_RECONNECT_ATTEMPTS) return;
 
       const delay = BASE_RECONNECT_DELAY * 2 ** reconnectAttempts.current;
