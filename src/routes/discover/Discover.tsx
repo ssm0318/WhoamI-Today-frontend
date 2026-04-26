@@ -221,9 +221,7 @@ function Discover() {
             <S.AnimatedCardWrapper key={`interest-${index}`} $isAnimating={isInterestAnimating}>
               <SelectInterestSection
                 key={`interest-${index}`}
-                category={item.body.category}
                 categoryLabel={item.body.category_label}
-                interestList={item.body.list}
                 isSaved={isInterestSaved}
                 onSave={handleInterestSave}
               />
