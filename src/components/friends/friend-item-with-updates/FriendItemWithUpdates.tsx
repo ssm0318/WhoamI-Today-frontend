@@ -86,9 +86,7 @@ function FriendItemWithUpdates({
 
   const handleClickFriendBadge = (e: MouseEvent) => {
     e.stopPropagation();
-    if (featureFlags?.[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
-      setIsEditConnectionsBottomSheetVisible(true);
-    }
+    setIsEditConnectionsBottomSheetVisible(true);
   };
 
   const hasCheckInContent = !!(track_id || mood || social_battery || thought);

@@ -1,7 +1,6 @@
 import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
-import { FeatureFlagKey } from '@constants/featureFlag';
 import { Button, Layout } from '@design-system';
 import { Connection } from '@models/api/friends';
 import {
@@ -12,7 +11,6 @@ import {
   UserProfile,
 } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
-import { UserSelector } from '@stores/user';
 import {
   acceptFriendRequest,
   blockRecommendation,
@@ -53,7 +51,6 @@ function FriendStatus({
   onClickCancelRequest,
 }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.friend_item' });
-  const { featureFlags } = useBoundStore(UserSelector);
 
   const [isCancelFriendRequestDialogVisible, setIsCancelFriendRequestDialogVisible] =
     useState(false);
@@ -70,36 +67,23 @@ function FriendStatus({
   const handleConfirmAcceptFriendRequest = async ({
     friendType,
     updatePastPosts,
-    isDefault = false,
   }: {
     friendType: Connection;
     updatePastPosts?: boolean;
-    isDefault?: boolean;
   }) => {
     await acceptFriendRequest({
       userId: user.id,
       friendType,
       updatePastPosts,
-      isDefault,
       onSuccess: () => openToast({ message: t('friend_accept_success') }),
       onError: () => openToast({ message: t('temporary_error') }),
     });
     onClickConfirm?.();
   };
 
-  const handleClickConfirm = async (e: MouseEvent) => {
+  const handleClickConfirm = (e: MouseEvent) => {
     e.stopPropagation();
-    if (!featureFlags) return;
-    if (featureFlags[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
-      // NOTE ver. Q의 경우 옵션 선택 모달이 떠야함
-      setIsFriendTypeSelectModalVisible({ visible: true, type: 'accept' });
-    } else {
-      // NOTE ver. R의 경우 friend로 친구 신청 수락
-      await handleConfirmAcceptFriendRequest({
-        friendType: Connection.FRIEND,
-        isDefault: true,
-      });
-    }
+    setIsFriendTypeSelectModalVisible({ visible: true, type: 'accept' });
   };
 
   const handleClickRejectFriendRequest = (e: MouseEvent) => {
@@ -132,7 +116,6 @@ function FriendStatus({
   const handleConfirmRejectFriendRequestDialog = async () => {
     await rejectFriendRequest({
       userId: user.id,
-      isDefault: false,
       onSuccess: () => openToast({ message: t('friend_reject_success') }),
       onError: () => openToast({ message: t('temporary_error') }),
     });
@@ -149,11 +132,9 @@ function FriendStatus({
   const handleConfirmRequestFriend = async ({
     friendType,
     updatePastPosts,
-    isDefault = false,
   }: {
     friendType: Connection;
     updatePastPosts?: boolean;
-    isDefault?: boolean;
   }) => {
     await requestFriend({
       userId: user.id,
@@ -164,24 +145,12 @@ function FriendStatus({
         onClickRequest?.();
       },
       onError: (errorMsg: string) => openToast({ message: errorMsg }),
-      isDefault,
     });
   };
 
-  const handleClickRequest = async (e: MouseEvent) => {
+  const handleClickRequest = (e: MouseEvent) => {
     e.stopPropagation();
-    if (!featureFlags) return;
-    if (featureFlags[FeatureFlagKey.FRIEND_REQUEST_TYPE]) {
-      // NOTE ver. Q의 경우 옵션 선택 모달이 떠야함
-      setIsFriendTypeSelectModalVisible({ visible: true, type: 'request' });
-    } else {
-      // NOTE ver. R의 경우 friend로 친구 신청을 보냄
-      await handleConfirmRequestFriend({
-        friendType: Connection.FRIEND,
-        updatePastPosts: false,
-        isDefault: true,
-      });
-    }
+    setIsFriendTypeSelectModalVisible({ visible: true, type: 'request' });
   };
 
   const PrimaryButton = isUserPage ? Button.Highlight : Button.Primary;

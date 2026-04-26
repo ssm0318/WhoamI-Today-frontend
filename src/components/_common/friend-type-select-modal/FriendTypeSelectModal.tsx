@@ -12,11 +12,9 @@ interface FriendTypeSelectModalProps {
   onClickConfirm: ({
     friendType,
     updatePastPosts,
-    isDefault,
   }: {
     friendType: Connection;
     updatePastPosts?: boolean;
-    isDefault?: boolean;
   }) => void;
   onClickClose: () => void;
   type: 'accept' | 'request';
@@ -50,7 +48,6 @@ function FriendTypeSelectModal({
     onClickConfirm({
       friendType,
       updatePastPosts: featureFlags?.postsVerQ ? true : isUpdatePastPosts,
-      isDefault: false,
     });
     onClickClose();
   };

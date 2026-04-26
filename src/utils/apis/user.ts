@@ -331,62 +331,39 @@ export const requestFriend = async ({
   updatePastPosts,
   onSuccess,
   onError,
-  isDefault = false,
 }: {
   userId: number;
   friendRequestType: Connection;
   updatePastPosts?: boolean;
   onSuccess: () => void;
   onError: (errorMsg: string) => void;
-  isDefault?: boolean;
 }) => {
   const currentUser = useBoundStore.getState().myProfile;
   if (!currentUser) return;
 
-  if (isDefault) {
-    axios
-      .post('/user/friend-requests/default/', {
-        requester_id: currentUser.id,
-        requestee_id: userId,
-      })
-      .then(() => onSuccess())
-      .catch((e: any) => {
-        const { error } = e.response.data as { error: string[] };
-        if (error) {
-          if (error[0].includes('Cannot send friend requests to users using different versions')) {
-            onError(i18n.t('error.friend_request_error_different_group'));
-          } else {
-            onError(error[0]);
-          }
+  axios
+    .post('/user/friend-requests/', {
+      requester_id: currentUser.id,
+      requestee_id: userId,
+      requester_choice: friendRequestType,
+      ...(updatePastPosts !== undefined &&
+        friendRequestType === Connection.CLOSE_FRIEND && {
+          requester_update_past_posts: updatePastPosts,
+        }),
+    })
+    .then(() => onSuccess())
+    .catch((e: any) => {
+      const { error } = e.response.data as { error: string[] };
+      if (error) {
+        if (error[0].includes('Cannot send friend requests to users using different versions')) {
+          onError(i18n.t('error.friend_request_error_different_group'));
         } else {
-          onError(i18n.t('error.temporary_error'));
+          onError(error[0]);
         }
-      });
-  } else {
-    axios
-      .post('/user/friend-requests/', {
-        requester_id: currentUser.id,
-        requestee_id: userId,
-        requester_choice: friendRequestType,
-        ...(updatePastPosts !== undefined &&
-          friendRequestType === Connection.CLOSE_FRIEND && {
-            requester_update_past_posts: updatePastPosts,
-          }),
-      })
-      .then(() => onSuccess())
-      .catch((e: any) => {
-        const { error } = e.response.data as { error: string[] };
-        if (error) {
-          if (error[0].includes('Cannot send friend requests to users using different versions')) {
-            onError(i18n.t('error.friend_request_error_different_group'));
-          } else {
-            onError(error[0]);
-          }
-        } else {
-          onError(i18n.t('error.temporary_error'));
-        }
-      });
-  }
+      } else {
+        onError(i18n.t('error.temporary_error'));
+      }
+    });
 };
 
 export const cancelFriendRequest = async (userId: number) => {
@@ -397,63 +374,43 @@ export const acceptFriendRequest = async ({
   userId,
   friendType,
   updatePastPosts,
-  isDefault = false,
   onSuccess,
   onError,
 }: {
   userId: number;
   friendType: Connection;
   updatePastPosts?: boolean;
-  isDefault?: boolean;
   onSuccess: () => void;
   onError: () => void;
 }) => {
-  if (isDefault) {
-    await axios
-      .patch(`/user/friend-requests/${userId}/respond/default/`, {
-        accepted: true,
-      })
-      .then(() => onSuccess())
-      .catch(() => onError());
-  } else {
-    await axios
-      .patch(`/user/friend-requests/${userId}/respond/`, {
-        accepted: true,
-        requestee_choice: friendType,
-        ...(updatePastPosts !== undefined &&
-          friendType === Connection.CLOSE_FRIEND && {
-            requestee_update_past_posts: updatePastPosts,
-          }),
-      })
-      .then(() => onSuccess())
-      .catch(() => onError());
-  }
+  await axios
+    .patch(`/user/friend-requests/${userId}/respond/`, {
+      accepted: true,
+      requestee_choice: friendType,
+      ...(updatePastPosts !== undefined &&
+        friendType === Connection.CLOSE_FRIEND && {
+          requestee_update_past_posts: updatePastPosts,
+        }),
+    })
+    .then(() => onSuccess())
+    .catch(() => onError());
 };
 
 export const rejectFriendRequest = async ({
   userId,
-  isDefault = false,
   onSuccess,
   onError,
 }: {
   userId: number;
-  isDefault?: boolean;
   onSuccess: () => void;
   onError: () => void;
 }) => {
-  if (isDefault) {
-    await axios
-      .patch(`/user/friend-requests/${userId}/respond/default/`, { accepted: false })
-      .then(() => onSuccess())
-      .catch(() => onError());
-  } else {
-    await axios
-      .patch(`/user/friend-requests/${userId}/respond/`, {
-        accepted: false,
-      })
-      .then(() => onSuccess())
-      .catch(() => onError());
-  }
+  await axios
+    .patch(`/user/friend-requests/${userId}/respond/`, {
+      accepted: false,
+    })
+    .then(() => onSuccess())
+    .catch(() => onError());
 };
 
 export const reportUser = async ({
