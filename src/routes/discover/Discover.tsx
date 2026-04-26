@@ -15,9 +15,10 @@ import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/Floatin
 import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
-import { getDayOfYear, MISSION_POOL } from '@components/share/MissionOfTheDay';
+import { getDayOfYear } from '@components/share/MissionOfTheDay';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import { useMissions } from '@hooks/useMissions';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSaveAndHide } from '@hooks/useSaveAndHide';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
@@ -63,6 +64,7 @@ function Discover() {
   const { featureFlags } = useBoundStore(UserSelector);
   const isVerQ = !!featureFlags?.postsVerQ;
 
+  const { missions } = useMissions();
   const discoverFilterList = [DiscoverFilter.MUTUAL_FRIENDS, DiscoverFilter.MUTUAL_TRAITS];
   const { scrollRef } = useRestoreScrollPosition('discoverPage');
 
@@ -95,12 +97,12 @@ function Discover() {
 
   // Build synthetic cards to inject into the feed
   const missionPromptCard: DiscoverResultItem | null = useMemo(() => {
-    const todayMission = MISSION_POOL[getDayOfYear() % MISSION_POOL.length];
+    const todayMission = missions[getDayOfYear() % missions.length];
     return {
       type: 'MissionPrompt' as const,
       body: { prompt: todayMission.prompt, missionType: todayMission.type },
     };
-  }, []);
+  }, [missions]);
 
   const profileSuggestionCard: DiscoverResultItem | null = useMemo(() => {
     if (!myProfile) return null;
