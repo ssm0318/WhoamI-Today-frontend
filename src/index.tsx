@@ -74,6 +74,7 @@ import SignUp from './routes/SignUp';
 import SuggestQuestions from './routes/SuggestQuestions';
 import UpdateCheckin from './routes/update/UpdateCheckin';
 import UserPage from './routes/UserPage';
+import ViewAsPage from './routes/ViewAsPage';
 
 const router = createBrowserRouter([
   // intro route
@@ -113,10 +114,11 @@ const router = createBrowserRouter([
         path: 'my',
         children: [
           { path: '', element: <My /> },
-          { path: 'friends/list', element: <DefaultMyFriendsList /> },
-          { path: 'responses', element: <AllResponses from="my" /> },
-          { path: 'pinned-posts', element: <PinnedPosts /> },
           { path: 'chats', element: <ChatList /> },
+          { path: 'friends/list', element: <DefaultMyFriendsList /> },
+          { path: 'pinned-posts', element: <PinnedPosts /> },
+          { path: 'responses', element: <AllResponses from="my" /> },
+          { path: 'view-as', element: <ViewAsPage /> },
         ],
       },
       {

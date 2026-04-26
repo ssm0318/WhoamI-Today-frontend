@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import IconNudge from '@components/_common/icon-nudge/IconNudge';
@@ -12,9 +12,10 @@ import SideMenu from '../side-menu/SideMenu';
 
 interface CommonHeaderProps {
   title: string;
+  extraActions?: ReactNode;
 }
 
-function CommonHeader({ title }: CommonHeaderProps) {
+function CommonHeader({ title, extraActions }: CommonHeaderProps) {
   const [searchParams] = useSearchParams();
   // show_side_menu 파라미터가 true인 경우 사이드 메뉴 표시
   const initialShowSideMenu = searchParams.get('show_side_menu') === 'true' || false;
@@ -38,6 +39,7 @@ function CommonHeader({ title }: CommonHeaderProps) {
         title={title}
         rightButtons={
           <>
+            {extraActions}
             <Noti to="/notifications">
               <Icon
                 name="notification"
