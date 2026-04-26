@@ -1,11 +1,10 @@
 import { useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { ToggleSwitch } from '@components/_common/toggle-switch/ToggleSwitch';
-import SubHeader from '@components/sub-header/SubHeader';
+import ChatsHeader from '@components/header/chats-header/ChatsHeader';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { ChatRoom } from '@models/chat';
@@ -94,16 +93,7 @@ function ChatList() {
 
   return (
     <MainScrollContainer>
-      <SubHeader
-        title="Chats"
-        LeftComponent={<Layout.LayoutBase w={36} h={36} />}
-        RightComponent={
-          <Layout.FlexRow gap={4} alignItems="center">
-            <Icon name="search_black" size={38} onClick={() => navigate('/chats/search')} />
-            <Icon name="group_chat_new" size={38} onClick={() => navigate('/chats/new-group')} />
-          </Layout.FlexRow>
-        }
-      />
+      <ChatsHeader />
       {!loading && (
         <Layout.FlexRow
           w="100%"
