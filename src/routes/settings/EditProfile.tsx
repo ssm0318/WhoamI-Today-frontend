@@ -255,16 +255,18 @@ function EditProfile() {
       username: draft.username,
       name: draft.name,
       pronouns: draft.pronouns,
-      name_friends_only: draft.name_friends_only,
-      pronouns_friends_only: draft.pronouns_friends_only,
-      bio_friends_only: draft.bio_friends_only,
-      music_entertainment_friends_only: draft.categoryFriendsOnly.music_entertainment,
-      hobbies_activities_friends_only: draft.categoryFriendsOnly.hobbies_activities,
-      on_my_mind_friends_only: draft.categoryFriendsOnly.on_my_mind,
-      as_a_friend_friends_only: draft.categoryFriendsOnly.as_a_friend,
-      online_persona_friends_only: draft.categoryFriendsOnly.online_persona,
-      favorite_platform_friends_only: draft.categoryFriendsOnly.favorite_platform,
-      least_favorite_platform_friends_only: draft.categoryFriendsOnly.least_favorite_platform,
+      ...(!featureFlags?.postsVerQ && {
+        name_friends_only: draft.name_friends_only,
+        pronouns_friends_only: draft.pronouns_friends_only,
+        bio_friends_only: draft.bio_friends_only,
+        music_entertainment_friends_only: draft.categoryFriendsOnly.music_entertainment,
+        hobbies_activities_friends_only: draft.categoryFriendsOnly.hobbies_activities,
+        on_my_mind_friends_only: draft.categoryFriendsOnly.on_my_mind,
+        as_a_friend_friends_only: draft.categoryFriendsOnly.as_a_friend,
+        online_persona_friends_only: draft.categoryFriendsOnly.online_persona,
+        favorite_platform_friends_only: draft.categoryFriendsOnly.favorite_platform,
+        least_favorite_platform_friends_only: draft.categoryFriendsOnly.least_favorite_platform,
+      }),
       ...(croppedImg ? { profile_image: croppedImg.file } : {}),
     };
 
@@ -391,17 +393,19 @@ function EditProfile() {
                 onChange={handleChangeInput}
                 limit={50}
               />
-              <CheckBox
-                name="name_friends_only"
-                label={
-                  <Trans
-                    i18nKey="settings.edit_profile.friends_only.name"
-                    components={{ token: <TokenTag /> }}
-                  />
-                }
-                checked={draft.name_friends_only}
-                onChange={() => handleToggleVisibility('name_friends_only')}
-              />
+              {!featureFlags?.postsVerQ && (
+                <CheckBox
+                  name="name_friends_only"
+                  label={
+                    <Trans
+                      i18nKey="settings.edit_profile.friends_only.name"
+                      components={{ token: <TokenTag /> }}
+                    />
+                  }
+                  checked={draft.name_friends_only}
+                  onChange={() => handleToggleVisibility('name_friends_only')}
+                />
+              )}
             </Layout.FlexCol>
 
             <Layout.FlexCol gap={4} w="100%">
@@ -414,17 +418,19 @@ function EditProfile() {
                   onChange={handleChangeInput}
                 />
               </Layout.FlexCol>
-              <CheckBox
-                name="pronouns_friends_only"
-                label={
-                  <Trans
-                    i18nKey="settings.edit_profile.friends_only.pronouns"
-                    components={{ token: <TokenTag /> }}
-                  />
-                }
-                checked={draft.pronouns_friends_only}
-                onChange={() => handleToggleVisibility('pronouns_friends_only')}
-              />
+              {!featureFlags?.postsVerQ && (
+                <CheckBox
+                  name="pronouns_friends_only"
+                  label={
+                    <Trans
+                      i18nKey="settings.edit_profile.friends_only.pronouns"
+                      components={{ token: <TokenTag /> }}
+                    />
+                  }
+                  checked={draft.pronouns_friends_only}
+                  onChange={() => handleToggleVisibility('pronouns_friends_only')}
+                />
+              )}
             </Layout.FlexCol>
 
             <Layout.FlexCol gap={4} w="100%">
@@ -435,17 +441,19 @@ function EditProfile() {
                 onChange={handleChangeTextArea}
                 limit={120}
               />
-              <CheckBox
-                name="bio_friends_only"
-                label={
-                  <Trans
-                    i18nKey="settings.edit_profile.friends_only.bio"
-                    components={{ token: <TokenTag /> }}
-                  />
-                }
-                checked={draft.bio_friends_only}
-                onChange={() => handleToggleVisibility('bio_friends_only')}
-              />
+              {!featureFlags?.postsVerQ && (
+                <CheckBox
+                  name="bio_friends_only"
+                  label={
+                    <Trans
+                      i18nKey="settings.edit_profile.friends_only.bio"
+                      components={{ token: <TokenTag /> }}
+                    />
+                  }
+                  checked={draft.bio_friends_only}
+                  onChange={() => handleToggleVisibility('bio_friends_only')}
+                />
+              )}
             </Layout.FlexCol>
           </>
         ) : (

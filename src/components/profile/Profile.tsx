@@ -81,7 +81,7 @@ function Profile({ user }: ProfileProps) {
     const goingPrivate = myProfile.is_public;
     if (goingPrivate) {
       // eslint-disable-next-line no-alert
-      const confirmed = window.confirm(t('switch_to_private_warning'));
+      const confirmed = window.confirm(t('switch_to_private_warning') ?? '');
       if (!confirmed) return;
     }
 
@@ -115,10 +115,12 @@ function Profile({ user }: ProfileProps) {
   // Friends-only visibility: hide fields for non-friends if marked as friends-only
   const isFriend = user && !isMyProfile(user) && areFriends(user);
   const canSeeFriendsOnly = isMyPage || isFriend;
+  const isVerQ = !!featureFlags?.postsVerQ;
 
-  const showName = canSeeFriendsOnly || !(friendData as any)?.name_friends_only;
-  const showPronouns = canSeeFriendsOnly || !friendData?.pronouns_friends_only;
-  const showBio = canSeeFriendsOnly || !friendData?.bio_friends_only;
+  // Ver.Q uses account-level is_public (handled server-side), not per-item flags
+  const showName = isVerQ || canSeeFriendsOnly || !(friendData as any)?.name_friends_only;
+  const showPronouns = isVerQ || canSeeFriendsOnly || !friendData?.pronouns_friends_only;
+  const showBio = isVerQ || canSeeFriendsOnly || !friendData?.bio_friends_only;
 
   // Backend already filters user_interests / user_personas per-category for non-friends,
   // so presence of items is the source of truth for whether to render the sections.
