@@ -4,6 +4,7 @@ import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { CheckInPost, CheckInPostStory } from '@models/checkInPost';
+import { openExternalLink } from '@utils/openExternalLink';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import * as S from './CheckInPostItem.styled';
 
@@ -26,7 +27,8 @@ function CheckInPostItem({
   refresh,
   isMyPage = false,
 }: CheckInPostItemProps) {
-  const { id, author_detail, image_url, is_pinned, created_at } = post;
+  const { id, author_detail, image_url, video_url, video_thumbnail_url, is_pinned, created_at } =
+    post;
   const caption = isFullPost(post) ? post.caption : '';
   const likeCount = isFullPost(post) ? post.like_count : null;
   const currentUserLikeId = isFullPost(post) ? post.current_user_like_id : null;
@@ -72,6 +74,25 @@ function CheckInPostItem({
       </Layout.FlexRow>
 
       {image_url && <S.PostImage src={image_url} alt="snippet" />}
+      {!image_url && video_url && (
+        <S.VideoThumbnailWrapper
+          onClick={(e) => {
+            e.stopPropagation();
+            openExternalLink(video_url);
+          }}
+        >
+          {video_thumbnail_url ? (
+            <S.PostImage src={video_thumbnail_url} alt="video thumbnail" />
+          ) : (
+            <S.VideoPlaceholder />
+          )}
+          <S.PlayOverlay>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+              <polygon points="8,5 19,12 8,19" />
+            </svg>
+          </S.PlayOverlay>
+        </S.VideoThumbnailWrapper>
+      )}
 
       {caption && (
         <Typo type="body-medium" color="BLACK" pre>

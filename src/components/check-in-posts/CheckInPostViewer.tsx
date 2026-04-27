@@ -14,6 +14,7 @@ import {
   updateCheckInPostPinVisibility,
 } from '@utils/apis/checkInPost';
 import { deleteLike, postLike } from '@utils/apis/likes';
+import { openExternalLink } from '@utils/openExternalLink';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 
 interface CheckInPostViewerProps {
@@ -194,6 +195,25 @@ function CheckInPostViewer({
         )}
 
         {story.image_url && <StoryImage src={story.image_url} alt="daily snippet" />}
+        {!story.image_url && story.video_url && (
+          <VideoThumbnailWrapper
+            onClick={(e: MouseEvent) => {
+              e.stopPropagation();
+              openExternalLink(story.video_url!);
+            }}
+          >
+            {story.video_thumbnail_url ? (
+              <StoryImage src={story.video_thumbnail_url} alt="video thumbnail" />
+            ) : (
+              <VideoPlaceholder />
+            )}
+            <VideoPlayOverlay>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                <polygon points="8,5 19,12 8,19" />
+              </svg>
+            </VideoPlayOverlay>
+          </VideoThumbnailWrapper>
+        )}
 
         {post?.caption && (
           <Caption>
@@ -424,6 +444,32 @@ const NavZone = styled.div<{ $side: 'left' | 'right' }>`
   ${({ $side }) => ($side === 'left' ? 'left: 0;' : 'right: 0;')}
   cursor: pointer;
   z-index: 1;
+`;
+
+const VideoThumbnailWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+`;
+
+const VideoPlayOverlay = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const VideoPlaceholder = styled.div`
+  width: 100%;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.1);
 `;
 
 export default CheckInPostViewer;

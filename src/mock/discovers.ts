@@ -37,6 +37,7 @@ export const discoverPostList: (Note | Response | SelectInterest | SelectPersona
       'https://images.unsplash.com/photo-1522383225653-ed111181a951?w=800',
       'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=800',
     ],
+    video: null,
     comment_count: 3,
     like_user_sample: [
       {
@@ -83,6 +84,8 @@ export const discoverPostList: (Note | Response | SelectInterest | SelectPersona
     like_count: 8,
     current_user_like_id: 101,
     current_user_reaction_id_list: [{ id: 1, emoji: '❤️' }],
+    image: null,
+    video: null,
     question_id: 24,
     question: {
       id: 24,

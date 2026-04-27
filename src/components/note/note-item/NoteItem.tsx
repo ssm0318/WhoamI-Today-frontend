@@ -15,6 +15,7 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import { Note, POST_DP_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
+import { openExternalLink } from '@utils/openExternalLink';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import { NoteImage } from '../note-image/NoteImage.styled';
 
@@ -35,7 +36,7 @@ function NoteItem({
   profileImageSize = PROFILE_IMAGE_SIZE,
   previewMode = false,
 }: NoteItemProps) {
-  const { content, created_at, id, author_detail, images, is_edited, visibility } = note;
+  const { content, created_at, id, author_detail, images, video, is_edited, visibility } = note;
   const navigate = useNavigate();
   const { featureFlags } = useBoundStore(UserSelector);
 
@@ -213,6 +214,22 @@ function NoteItem({
               <NoteImage src={images[0]} />
             </Layout.FlexRow>
           )}
+          {/* Note video */}
+          {video && (
+            <VideoThumbnailWrapper
+              onClick={(e) => {
+                e.stopPropagation();
+                openExternalLink(video.url);
+              }}
+            >
+              {video.thumbnail_url ? <NoteImage src={video.thumbnail_url} /> : <VideoPlaceholder />}
+              <PlayIconOverlay>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                  <polygon points="8,5 19,12 8,19" />
+                </svg>
+              </PlayIconOverlay>
+            </VideoThumbnailWrapper>
+          )}
           {/* (Edited) */}
           {is_edited && (
             <Typo type="label-medium" color="MEDIUM_GRAY">
@@ -350,4 +367,34 @@ const PreviewFade = styled.div`
   height: 32px;
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
   pointer-events: none;
+`;
+
+const VideoThumbnailWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  margin: 10px 0;
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+`;
+
+const PlayIconOverlay = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const VideoPlaceholder = styled.div`
+  width: 100%;
+  height: 200px;
+  background: ${({ theme }) => theme.LIGHT_GRAY};
+  border-radius: 8px;
 `;
