@@ -3,10 +3,8 @@ import { isSameDay } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
-import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
-import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
+import { SwipeToReply } from '@components/_common/swipe-to-reply/SwipeToReply';
 import ChatMessageInput from '@components/chat/chat-message-input/ChatMessageInput';
 import ChatMessageItem from '@components/chat/chat-message-item/ChatMessageItem';
 import ChatRequestBar from '@components/chat/chat-request-bar/ChatRequestBar';
@@ -283,42 +281,26 @@ function Chat() {
           </Layout.FlexCol>
         )}
         {!firstLoad && refinedMessages.length > 0 && (
-          <SwipeLayoutList>
-            <Layout.FlexCol
-              w="100%"
-              gap={15}
-              p={10}
-              mb={showRequestBar ? 110 : CHAT_MESSAGE_INPUT_HEIGHT}
-            >
-              <div ref={targetRef} />
-              {isLoading && <Loader />}
-              {refinedMessages.map((message) => (
-                <SwipeLayout
-                  key={message.id}
-                  leftContent={[
-                    <Layout.FlexRow
-                      key="reply"
-                      w={50}
-                      h="100%"
-                      alignItems="center"
-                      justifyContent="center"
-                      onClick={() => setReplyTarget(message)}
-                    >
-                      <Icon name="arrow_left" size={20} color="MEDIUM_GRAY" />
-                    </Layout.FlexRow>,
-                  ]}
-                >
-                  <ChatMessageItem
-                    message={message}
-                    isMine={
-                      currentUser ? Number(message.sender.id) === Number(currentUser.id) : false
-                    }
-                    onImageLoad={handleImageLoaded}
-                  />
-                </SwipeLayout>
-              ))}
-            </Layout.FlexCol>
-          </SwipeLayoutList>
+          <Layout.FlexCol
+            w="100%"
+            gap={15}
+            p={10}
+            mb={showRequestBar ? 110 : CHAT_MESSAGE_INPUT_HEIGHT}
+          >
+            <div ref={targetRef} />
+            {isLoading && <Loader />}
+            {refinedMessages.map((message) => (
+              <SwipeToReply key={message.id} onReply={() => setReplyTarget(message)}>
+                <ChatMessageItem
+                  message={message}
+                  isMine={
+                    currentUser ? Number(message.sender.id) === Number(currentUser.id) : false
+                  }
+                  onImageLoad={handleImageLoaded}
+                />
+              </SwipeToReply>
+            ))}
+          </Layout.FlexCol>
         )}
         {!firstLoad && refinedMessages.length === 0 && (
           <Layout.FlexCol w="100%" h="100%" alignItems="center" mt={50}>

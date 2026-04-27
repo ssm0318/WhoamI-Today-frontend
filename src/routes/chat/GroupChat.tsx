@@ -5,8 +5,7 @@ import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
-import { SwipeLayoutList } from '@components/_common/swipe-layout/SwipeLayoutList';
+import { SwipeToReply } from '@components/_common/swipe-to-reply/SwipeToReply';
 import ChatMessageInput from '@components/chat/chat-message-input/ChatMessageInput';
 import ChatMessageItem from '@components/chat/chat-message-item/ChatMessageItem';
 import { CHAT_MESSAGE_INPUT_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
@@ -568,58 +567,43 @@ function GroupChat() {
         </Layout.FlexCol>
       )}
       {!firstLoad && refinedMessages.length > 0 && (
-        <SwipeLayoutList>
-          <Layout.FlexCol w="100%" gap={15} p={10} mb={CHAT_MESSAGE_INPUT_HEIGHT}>
-            <div ref={targetRef} />
-            {isLoading && <Loader />}
-            {refinedMessages.map((message) => {
-              const isMine = currentUser
-                ? Number(message.sender.id) === Number(currentUser.id)
-                : false;
-              const isSystem =
-                message.event_type === 'member_added' || message.event_type === 'member_left';
-              return (
-                <Layout.FlexCol key={message.id} w="100%">
-                  {!isMine && !isSystem && (
-                    <Layout.FlexRow pl={17} gap={6} alignItems="center" mb={2}>
-                      <Typo type="label-small" color="MEDIUM_GRAY">
-                        {message.sender.username}
-                      </Typo>
-                    </Layout.FlexRow>
-                  )}
-                  {isSystem ? (
+        <Layout.FlexCol w="100%" gap={15} p={10} mb={CHAT_MESSAGE_INPUT_HEIGHT}>
+          <div ref={targetRef} />
+          {isLoading && <Loader />}
+          {refinedMessages.map((message) => {
+            const isMine = currentUser
+              ? Number(message.sender.id) === Number(currentUser.id)
+              : false;
+            const isSystem =
+              message.event_type === 'member_added' || message.event_type === 'member_left';
+            return (
+              <Layout.FlexCol key={message.id} w="100%">
+                {!isMine && !isSystem && (
+                  <Layout.FlexRow pl={17} gap={6} alignItems="center" mb={2}>
+                    <Typo type="label-small" color="MEDIUM_GRAY">
+                      {message.sender.username}
+                    </Typo>
+                  </Layout.FlexRow>
+                )}
+                {isSystem ? (
+                  <ChatMessageItem
+                    message={message}
+                    isMine={isMine}
+                    onImageLoad={handleImageLoaded}
+                  />
+                ) : (
+                  <SwipeToReply onReply={() => setReplyTarget(message)}>
                     <ChatMessageItem
                       message={message}
                       isMine={isMine}
                       onImageLoad={handleImageLoaded}
                     />
-                  ) : (
-                    <SwipeLayout
-                      leftContent={[
-                        <Layout.FlexRow
-                          key="reply"
-                          w={50}
-                          h="100%"
-                          alignItems="center"
-                          justifyContent="center"
-                          onClick={() => setReplyTarget(message)}
-                        >
-                          <Icon name="arrow_left" size={20} color="MEDIUM_GRAY" />
-                        </Layout.FlexRow>,
-                      ]}
-                    >
-                      <ChatMessageItem
-                        message={message}
-                        isMine={isMine}
-                        onImageLoad={handleImageLoaded}
-                      />
-                    </SwipeLayout>
-                  )}
-                </Layout.FlexCol>
-              );
-            })}
-          </Layout.FlexCol>
-        </SwipeLayoutList>
+                  </SwipeToReply>
+                )}
+              </Layout.FlexCol>
+            );
+          })}
+        </Layout.FlexCol>
       )}
       {!firstLoad && refinedMessages.length === 0 && (
         <Layout.FlexCol w="100%" alignItems="center" mt={50}>

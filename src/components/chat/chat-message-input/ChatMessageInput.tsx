@@ -137,6 +137,13 @@ function ChatMessageInput({
     }
   }, [inputValue, maxHeight]);
 
+  // Auto-focus textarea when reply target is set
+  useEffect(() => {
+    if (replyTarget) {
+      textareaRef.current?.focus();
+    }
+  }, [replyTarget]);
+
   const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
     if (onTyping) {
