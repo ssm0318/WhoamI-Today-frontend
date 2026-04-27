@@ -4,6 +4,7 @@ import { SWRConfig } from 'swr';
 import NotiPermissionBanner, {
   NOTI_PERMISSION_BANNER_HEIGHT,
 } from '@components/_common/noti-permission-banner/NotiPermissionBanner';
+import CheckInFreshnessPrompt from '@components/check-in/check-in-freshness-prompt/CheckInFreshnessPrompt';
 import Header from '@components/header/Header';
 import Tab from '@components/tab/Tab';
 import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
@@ -11,6 +12,7 @@ import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { useCheckInFreshnessPrompt } from '@hooks/useCheckInFreshnessPrompt';
 import useFcm from '@hooks/useFcm';
 import { useBoundStore } from '@stores/useBoundStore';
 import { MainWrapper, RootContainer } from '@styles/wrappers';
@@ -44,6 +46,7 @@ function Root() {
     featureFlags: state.featureFlags,
     myProfile: state.myProfile,
   }));
+  const { shouldShow, dismiss, checkIn } = useCheckInFreshnessPrompt();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -104,6 +107,7 @@ function Root() {
           <Header />
           <Outlet />
           <Tab />
+          <CheckInFreshnessPrompt visible={shouldShow} onDismiss={dismiss} checkIn={checkIn} />
         </RootContainer>
       </Layout.FlexRow>
     </SWRConfig>

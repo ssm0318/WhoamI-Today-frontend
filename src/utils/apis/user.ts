@@ -325,23 +325,32 @@ export const getUserFriendList = async (username: string, next?: string | null) 
   return data;
 };
 
+export interface EvaluationParams {
+  evaluation_closeness?: number;
+  evaluation_relationship_type?: string;
+  evaluation_relationship_type_detail?: string;
+  evaluation_skipped?: boolean;
+}
+
 export const requestFriend = async ({
   userId,
   friendRequestType,
   updatePastPosts,
+  evaluation,
   onSuccess,
   onError,
 }: {
   userId: number;
   friendRequestType: Connection;
   updatePastPosts?: boolean;
+  evaluation?: EvaluationParams;
   onSuccess: () => void;
   onError: (errorMsg: string) => void;
 }) => {
   const currentUser = useBoundStore.getState().myProfile;
   if (!currentUser) return;
 
-  axios
+  await axios
     .post('/user/friend-requests/', {
       requester_id: currentUser.id,
       requestee_id: userId,
@@ -350,6 +359,7 @@ export const requestFriend = async ({
         friendRequestType === Connection.CLOSE_FRIEND && {
           requester_update_past_posts: updatePastPosts,
         }),
+      ...evaluation,
     })
     .then(() => onSuccess())
     .catch((e: any) => {
@@ -374,12 +384,14 @@ export const acceptFriendRequest = async ({
   userId,
   friendType,
   updatePastPosts,
+  evaluation,
   onSuccess,
   onError,
 }: {
   userId: number;
   friendType: Connection;
   updatePastPosts?: boolean;
+  evaluation?: EvaluationParams;
   onSuccess: () => void;
   onError: () => void;
 }) => {
@@ -391,6 +403,7 @@ export const acceptFriendRequest = async ({
         friendType === Connection.CLOSE_FRIEND && {
           requestee_update_past_posts: updatePastPosts,
         }),
+      ...evaluation,
     })
     .then(() => onSuccess())
     .catch(() => onError());

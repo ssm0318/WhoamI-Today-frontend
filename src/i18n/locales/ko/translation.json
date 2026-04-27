@@ -836,6 +836,34 @@
           "update_past_posts": "과거 게시물에도 변경사항 반영",
           "cancel": "취소",
           "confirm": "확인"
+        },
+        "friend_evaluation": {
+          "request_title": "친구 관계 평가",
+          "accept_title": "친구 관계 평가",
+          "description": "이 평가를 제출해야 {{username}}님과의 요청이 완료됩니다.",
+          "closeness_label": "친함 정도",
+          "closeness_min": "전혀 친하지 않음",
+          "closeness_max": "매우 친함",
+          "relationship_label": "관계",
+          "relationship_school_friend": "학교 친구",
+          "relationship_coworker": "직장 동료",
+          "relationship_family": "가족 (형제/자매 포함)",
+          "relationship_online_friend": "온라인 친구",
+          "relationship_club_community": "동아리/커뮤니티",
+          "relationship_other": "기타",
+          "other_placeholder": "관계를 입력해주세요",
+          "skip": "건너뛰기",
+          "submit": "제출",
+          "confirm_title": "답변을 확인해주세요",
+          "confirm": "확인",
+          "back": "뒤로가기",
+          "request_failed": "친구 요청이 실패했습니다.",
+          "accept_failed": "친구 수락이 실패했습니다."
+        },
+        "visit_profile_dialog": {
+          "title": "{{user}}님의 프로필로 이동할까요?",
+          "cancel": "아니요",
+          "confirm": "이동"
         }
       }
     },
@@ -962,6 +990,13 @@
     "moderately_social": "보통 상태",
     "fully_charged": "충전 완료",
     "super_social": "사회력 만땅 (연락 환영!)"
+  },
+  "check_in_freshness": {
+    "title": "아직 이 상태가 맞아?",
+    "confirm": "응, 맞아",
+    "update": "업데이트할래",
+    "clear": "지울래",
+    "cleared_toast": "체크인을 지웠어요"
   },
   "persona": {
     "Lurker": "눈팅족",

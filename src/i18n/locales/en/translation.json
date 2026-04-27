@@ -844,6 +844,34 @@
                     "update_past_posts": "Apply this setting to past posts",
                     "cancel": "Cancel",
                     "confirm": "Confirm"
+                },
+                "friend_evaluation": {
+                    "request_title": "Friend Evaluation",
+                    "accept_title": "Friend Evaluation",
+                    "description": "Please submit this evaluation to complete the request with {{username}}.",
+                    "closeness_label": "Closeness",
+                    "closeness_min": "Not close",
+                    "closeness_max": "Very close",
+                    "relationship_label": "Relationship",
+                    "relationship_school_friend": "School Friend",
+                    "relationship_coworker": "Coworker",
+                    "relationship_family": "Family (incl. Siblings)",
+                    "relationship_online_friend": "Online Friend",
+                    "relationship_club_community": "Club/Community",
+                    "relationship_other": "Other",
+                    "other_placeholder": "Please describe the relationship",
+                    "skip": "Skip",
+                    "submit": "Submit",
+                    "confirm_title": "Please confirm your answers",
+                    "confirm": "Confirm",
+                    "back": "Go back",
+                    "request_failed": "Friend request failed.",
+                    "accept_failed": "Friend acceptance failed."
+                },
+                "visit_profile_dialog": {
+                    "title": "Visit {{user}}'s profile?",
+                    "cancel": "No",
+                    "confirm": "Go"
                 }
             }
         },
@@ -970,6 +998,13 @@
         "moderately_social": "Moderately Social",
         "fully_charged": "Fully Charged",
         "super_social": "Super Social Mode (HMU!)"
+    },
+    "check_in_freshness": {
+        "title": "Still feeling this way?",
+        "confirm": "Yes, still accurate",
+        "update": "Update",
+        "clear": "Clear",
+        "cleared_toast": "Check-in cleared"
     },
     "persona": {
         "Lurker": "Lurker",

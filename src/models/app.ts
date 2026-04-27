@@ -72,6 +72,11 @@ export interface WidgetDataUpdatedData {
   };
 }
 
+export interface SetAppStateData {
+  key: 'SET_APP_STATE';
+  value: 'active' | 'inactive' | 'background';
+}
+
 // 앱, 웹 서로 약속한 키값에 따른 메시지 타입
 export type PostMessageDataType =
   | ScreenNavigateData
@@ -86,7 +91,8 @@ export type PostMessageDataType =
   | FileSelectedData
   | KeyboardHeightData
   | KeyboardOpenedData
-  | WidgetDataUpdatedData;
+  | WidgetDataUpdatedData
+  | SetAppStateData;
 
 // 앱, 웹 서로 약속한 키값
 export type PostMessageKeyType = PostMessageDataType['key'];
@@ -106,4 +112,5 @@ export type PostMessageKeyToData = {
   KEYBOARD_HEIGHT: KeyboardHeightData;
   KEYBOARD_OPENED: KeyboardOpenedData;
   WIDGET_DATA_UPDATED: WidgetDataUpdatedData;
+  SET_APP_STATE: SetAppStateData;
 };
