@@ -4,7 +4,7 @@ import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { CheckInPost, CheckInPostStory } from '@models/checkInPost';
-import { openExternalLink } from '@utils/openExternalLink';
+import { openVideoInApp } from '@utils/openVideoInApp';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import * as S from './CheckInPostItem.styled';
 
@@ -78,7 +78,7 @@ function CheckInPostItem({
         <S.VideoThumbnailWrapper
           onClick={(e) => {
             e.stopPropagation();
-            openExternalLink(video_url);
+            openVideoInApp(video_url);
           }}
         >
           {video_thumbnail_url ? (

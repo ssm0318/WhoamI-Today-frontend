@@ -15,7 +15,7 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import { Note, POST_DP_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { openExternalLink } from '@utils/openExternalLink';
+import { openVideoInApp } from '@utils/openVideoInApp';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import { NoteImage } from '../note-image/NoteImage.styled';
 
@@ -219,7 +219,7 @@ function NoteItem({
             <VideoThumbnailWrapper
               onClick={(e) => {
                 e.stopPropagation();
-                openExternalLink(video.url);
+                openVideoInApp(video.url);
               }}
             >
               {video.thumbnail_url ? <NoteImage src={video.thumbnail_url} /> : <VideoPlaceholder />}

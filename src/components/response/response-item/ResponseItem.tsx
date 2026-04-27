@@ -15,7 +15,7 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import { POST_DP_TYPE, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { openExternalLink } from '@utils/openExternalLink';
+import { openVideoInApp } from '@utils/openVideoInApp';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
@@ -234,7 +234,7 @@ function ResponseItem({
         <VideoThumbnailWrapper
           onClick={(e: MouseEvent) => {
             e.stopPropagation();
-            openExternalLink(video.url);
+            openVideoInApp(video.url);
           }}
         >
           {video.thumbnail_url ? (

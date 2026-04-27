@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import VideoPreview from '@components/_common/video-preview/VideoPreview';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { CheckBox, Layout, SvgIcon, Typo } from '@design-system';
@@ -315,40 +316,11 @@ function NewNoteContent({
           {/* 첨부한 동영상 */}
           {noteInfo?.video && videoPreviewUrl && (
             <Layout.FlexCol w="100%">
-              <div style={{ position: 'relative', display: 'inline-block' }}>
-                {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-                <video
-                  src={videoPreviewUrl}
-                  style={{
-                    maxWidth: 50,
-                    height: 'auto',
-                    display: 'block',
-                    borderRadius: 8,
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    background: 'rgba(0,0,0,0.5)',
-                    borderRadius: '50%',
-                    width: 36,
-                    height: 36,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                    <polygon points="8,5 19,12 8,19" />
-                  </svg>
-                </div>
+              <VideoPreview src={videoPreviewUrl} size={50} borderRadius={8}>
                 <Layout.Absolute t={-4} r={-4}>
                   <SvgIcon name="delete_image" size={32} onClick={handleDeleteVideo} />
                 </Layout.Absolute>
-              </div>
+              </VideoPreview>
             </Layout.FlexCol>
           )}
 

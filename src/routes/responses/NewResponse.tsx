@@ -6,6 +6,7 @@ import { Loader } from '@components/_common/loader/Loader.styled';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledNewResponsePrompt } from '@components/_common/prompt/PromptCard.styled';
+import VideoPreview from '@components/_common/video-preview/VideoPreview';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import NewNoteImageEdit from '@components/note/new-note-image-edit/NewNoteImageEdit';
 import { NoteImage } from '@components/note/note-image/NoteImage.styled';
@@ -279,21 +280,11 @@ function NewResponse() {
                 )}
                 {/* Video preview */}
                 {videoFile && videoPreviewUrl && (
-                  <VideoPreviewWrap>
-                    {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-                    <video
-                      src={videoPreviewUrl}
-                      style={{
-                        maxWidth: 80,
-                        height: 'auto',
-                        display: 'block',
-                        borderRadius: 6,
-                      }}
-                    />
+                  <VideoPreview src={videoPreviewUrl} size={80} borderRadius={6}>
                     <DeleteBtn onClick={handleDeleteVideo}>
                       <SvgIcon name="close" size={14} />
                     </DeleteBtn>
-                  </VideoPreviewWrap>
+                  </VideoPreview>
                 )}
               </ResponseMediaSection>
             )}

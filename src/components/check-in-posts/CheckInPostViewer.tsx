@@ -14,7 +14,7 @@ import {
   updateCheckInPostPinVisibility,
 } from '@utils/apis/checkInPost';
 import { deleteLike, postLike } from '@utils/apis/likes';
-import { openExternalLink } from '@utils/openExternalLink';
+import { openVideoInApp } from '@utils/openVideoInApp';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 
 interface CheckInPostViewerProps {
@@ -199,7 +199,7 @@ function CheckInPostViewer({
           <VideoThumbnailWrapper
             onClick={(e: MouseEvent) => {
               e.stopPropagation();
-              openExternalLink(story.video_url!);
+              openVideoInApp(story.video_url!);
             }}
           >
             {story.video_thumbnail_url ? (

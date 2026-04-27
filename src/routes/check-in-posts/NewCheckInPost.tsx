@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import UploadLoadingOverlay from '@components/_common/upload-loading-overlay/UploadLoadingOverlay';
+import VideoPreview from '@components/_common/video-preview/VideoPreview';
 import NewNoteImageEdit from '@components/note/new-note-image-edit/NewNoteImageEdit';
 import { NoteImage } from '@components/note/note-image/NoteImage.styled';
 import SubHeader from '@components/sub-header/SubHeader';
@@ -186,26 +187,11 @@ function NewCheckInPost() {
           </Layout.FlexCol>
         ) : form.video && videoPreviewUrl ? (
           <Layout.FlexCol w="100%" mt={16}>
-            <VideoPreviewWrap>
-              {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-              <video
-                src={videoPreviewUrl}
-                style={{
-                  maxWidth: 50,
-                  height: 'auto',
-                  display: 'block',
-                  borderRadius: 8,
-                }}
-              />
-              <PlayOverlay>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                  <polygon points="8,5 19,12 8,19" />
-                </svg>
-              </PlayOverlay>
+            <VideoPreview src={videoPreviewUrl} size={50} borderRadius={8}>
               <DeleteOverlay onClick={handleDeleteVideo}>
                 <SvgIcon name="delete_image" size={32} />
               </DeleteOverlay>
-            </VideoPreviewWrap>
+            </VideoPreview>
           </Layout.FlexCol>
         ) : null}
 
@@ -241,25 +227,6 @@ function NewCheckInPost() {
 }
 
 export default NewCheckInPost;
-
-const VideoPreviewWrap = styled.div`
-  position: relative;
-  display: inline-block;
-`;
-
-const PlayOverlay = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 const DeleteOverlay = styled.div`
   position: absolute;
