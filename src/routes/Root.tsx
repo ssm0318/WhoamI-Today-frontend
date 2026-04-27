@@ -54,6 +54,49 @@ function Root() {
     console.debug('featureFlags', featureFlags);
   }, [featureFlags]);
 
+  // Firebase Analytics: screen_view on route change
+  useEffect(() => {
+    const pageName = location.pathname.split('/').filter(Boolean)[0] || 'home';
+    postMessage('ANALYTICS_PAGE_VIEW', {
+      page_name: pageName,
+      page_path: location.pathname,
+    });
+  }, [location.pathname, postMessage]);
+
+  // Firebase Analytics: set user properties on profile load
+  useEffect(() => {
+    if (!myProfile) return;
+    const profile = myProfile as Record<string, any>;
+    const birthYear = profile.date_of_birth ? new Date(profile.date_of_birth).getFullYear() : null;
+    const currentYear = new Date().getFullYear();
+    let ageRange = 'unknown';
+    if (birthYear) {
+      const age = currentYear - birthYear;
+      if (age < 18) ageRange = 'under_18';
+      else if (age <= 24) ageRange = '18-24';
+      else if (age <= 34) ageRange = '25-34';
+      else ageRange = '35+';
+    }
+    const friendCount = profile.friend_count ?? profile.friends_count ?? 0;
+    let friendTier = '0';
+    if (friendCount >= 16) friendTier = '16+';
+    else if (friendCount >= 6) friendTier = '6-15';
+    else if (friendCount >= 1) friendTier = '1-5';
+
+    postMessage('ANALYTICS_SET_USER', {
+      user_id: profile.id,
+      user_type: profile.user_type || 'unknown',
+      user_group: profile.user_group || 'unknown',
+      current_ver: profile.current_ver || 'unknown',
+      ver_changed: profile.ver_changed_at ? 'true' : 'false',
+      gender: String(profile.gender ?? 'not_specified'),
+      age_range: ageRange,
+      signup_date: profile.date_joined?.split('T')[0] || 'unknown',
+      friend_count_tier: friendTier,
+      notification_enabled: profile.noti_time ? 'true' : 'false',
+    });
+  }, [myProfile, postMessage]);
+
   useEffect(() => {
     if (!myProfile) return;
     const onSkippedPath =

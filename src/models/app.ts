@@ -86,6 +86,26 @@ export interface SetAppStateData {
   value: 'active' | 'inactive' | 'background';
 }
 
+export interface AnalyticsPageViewData {
+  key: 'ANALYTICS_PAGE_VIEW';
+  page_name: string;
+  page_path: string;
+}
+
+export interface AnalyticsSetUserData {
+  key: 'ANALYTICS_SET_USER';
+  user_id: number;
+  user_type: string;
+  user_group: string;
+  current_ver: string;
+  ver_changed: string;
+  gender: string;
+  age_range: string;
+  signup_date: string;
+  friend_count_tier: string;
+  notification_enabled: string;
+}
+
 // 앱, 웹 서로 약속한 키값에 따른 메시지 타입
 export type PostMessageDataType =
   | ScreenNavigateData
@@ -103,7 +123,9 @@ export type PostMessageDataType =
   | KeyboardHeightData
   | KeyboardOpenedData
   | WidgetDataUpdatedData
-  | SetAppStateData;
+  | SetAppStateData
+  | AnalyticsPageViewData
+  | AnalyticsSetUserData;
 
 // 앱, 웹 서로 약속한 키값
 export type PostMessageKeyType = PostMessageDataType['key'];
@@ -126,4 +148,6 @@ export type PostMessageKeyToData = {
   KEYBOARD_OPENED: KeyboardOpenedData;
   WIDGET_DATA_UPDATED: WidgetDataUpdatedData;
   SET_APP_STATE: SetAppStateData;
+  ANALYTICS_PAGE_VIEW: AnalyticsPageViewData;
+  ANALYTICS_SET_USER: AnalyticsSetUserData;
 };
