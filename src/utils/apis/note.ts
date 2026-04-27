@@ -33,7 +33,10 @@ export const getNoteDetailDefault = async (noteId: number) => {
   return data;
 };
 
-export const postNote = async (noteData: NewNoteForm) => {
+export const postNote = async (
+  noteData: NewNoteForm,
+  onUploadProgress?: (progress: number) => void,
+) => {
   const formData = new FormData();
   if (noteData.content) {
     formData.append('content', noteData.content);
@@ -43,6 +46,9 @@ export const postNote = async (noteData: NewNoteForm) => {
       formData.append('images', img.file, `${index}`);
     });
   }
+  if (noteData.video) {
+    formData.append('video', noteData.video, noteData.video.name);
+  }
   if (noteData.visibility && noteData.visibility.length > 0) {
     formData.append('visibility', JSON.stringify(noteData.visibility));
   }
@@ -50,7 +56,14 @@ export const postNote = async (noteData: NewNoteForm) => {
     formData.append('share_type', noteData.share_type);
   }
 
-  const { data } = await axiosFormDataInstance.post<Note>(`notes/`, formData);
+  const { data } = await axiosFormDataInstance.post<Note>(`notes/`, formData, {
+    onUploadProgress: (progressEvent) => {
+      if (progressEvent.total && onUploadProgress) {
+        const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        onUploadProgress(progress);
+      }
+    },
+  });
   return data;
 };
 

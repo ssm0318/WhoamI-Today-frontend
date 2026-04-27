@@ -35,16 +35,31 @@ export const getCheckInPost = async (postId: number) => {
   return data;
 };
 
-export const postCheckInPost = async (form: NewCheckInPostForm) => {
-  if (!form.image) {
-    throw new Error('Image is required for check-in post.');
+export const postCheckInPost = async (
+  form: NewCheckInPostForm,
+  onUploadProgress?: (progress: number) => void,
+) => {
+  if (!form.image && !form.video) {
+    throw new Error('Image or video is required for check-in post.');
   }
   const formData = new FormData();
-  formData.append('image', form.image.file);
+  if (form.image) {
+    formData.append('image', form.image.file);
+  }
+  if (form.video) {
+    formData.append('video', form.video, form.video.name);
+  }
   if (form.caption) formData.append('caption', form.caption);
   formData.append('visibility', form.closeFriendsOnly ? 'close_friends' : 'friends');
 
-  const { data } = await axiosFormDataInstance.post<CheckInPost>('check_in/posts/', formData);
+  const { data } = await axiosFormDataInstance.post<CheckInPost>('check_in/posts/', formData, {
+    onUploadProgress: (progressEvent) => {
+      if (progressEvent.total && onUploadProgress) {
+        const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        onUploadProgress(progress);
+      }
+    },
+  });
   return data;
 };
 

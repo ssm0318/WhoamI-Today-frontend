@@ -48,6 +48,15 @@ export interface FileSelectedData {
   type: string;
   name: string;
   base64?: string;
+  isVideo?: boolean;
+}
+
+export interface OpenVideoGalleryData {
+  key: 'OPEN_VIDEO_GALLERY';
+}
+
+export interface OpenVideoCameraData {
+  key: 'OPEN_VIDEO_CAMERA';
 }
 export interface KeyboardHeightData {
   key: 'KEYBOARD_HEIGHT';
@@ -88,6 +97,8 @@ export type PostMessageDataType =
   | LogoutData
   | OpenGalleryData
   | OpenCameraData
+  | OpenVideoGalleryData
+  | OpenVideoCameraData
   | FileSelectedData
   | KeyboardHeightData
   | KeyboardOpenedData
@@ -108,6 +119,8 @@ export type PostMessageKeyToData = {
   LOGOUT: LogoutData;
   OPEN_GALLERY: OpenGalleryData;
   OPEN_CAMERA: OpenCameraData;
+  OPEN_VIDEO_GALLERY: OpenVideoGalleryData;
+  OPEN_VIDEO_CAMERA: OpenVideoCameraData;
   FILE_SELECTED: FileSelectedData;
   KEYBOARD_HEIGHT: KeyboardHeightData;
   KEYBOARD_OPENED: KeyboardOpenedData;

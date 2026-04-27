@@ -1,14 +1,17 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import styled from 'styled-components';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledNewResponsePrompt } from '@components/_common/prompt/PromptCard.styled';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
+import NewNoteImageEdit from '@components/note/new-note-image-edit/NewNoteImageEdit';
+import { NoteImage } from '@components/note/note-image/NoteImage.styled';
 import { markMissionCompleted } from '@components/share/MissionOfTheDay';
 import SubHeader from '@components/sub-header/SubHeader';
-import { CheckBox, Layout, TextArea, Typo } from '@design-system';
+import { CheckBox, Layout, SvgIcon, TextArea, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { ComponentVisibility } from '@models/checkIn';
@@ -17,6 +20,8 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { getQuestionDetail, patchResponse, postResponse } from '@utils/apis/question';
 import { getResponse } from '@utils/apis/responses';
+import { CroppedImg, readFile } from '@utils/getCroppedImg';
+import { isVideoFile, validateVideoFile } from '@utils/videoHelpers';
 import { FlexRow, LayoutBase } from 'src/design-system/layouts';
 import { MainScrollContainer } from '../Root';
 
@@ -36,6 +41,12 @@ function NewResponse() {
   const [question, setQuestion] = useState<FetchState<Question>>({ state: 'loading' });
 
   const [newResponse, setNewResponse] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<CroppedImg | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string>();
+  const [editImageUrl, setEditImageUrl] = useState<string>();
+  const [isEditVisible, setIsEditVisible] = useState(false);
+  const mediaInputRef = useRef<HTMLInputElement>(null);
 
   const defaultVisibility = currentUser?.is_public ? PostVisibility.PUBLIC : PostVisibility.FRIENDS;
   const [visibilityList, setVisibilityList] = useState<PostVisibility[]>([defaultVisibility]);
@@ -90,6 +101,57 @@ function NewResponse() {
     setNewResponse(e.target.value);
   };
 
+  const handleFileAdd = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const file = e.target.files[0];
+
+    if (isVideoFile(file)) {
+      const error = validateVideoFile(file);
+      if (error) {
+        openToast({ message: error });
+        return;
+      }
+      if (videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
+      setVideoPreviewUrl(URL.createObjectURL(file));
+      setVideoFile(file);
+      setImageFile(null);
+      return;
+    }
+
+    try {
+      const imageDataUrl = await readFile(file);
+      if (typeof imageDataUrl !== 'string') throw new Error('read file error');
+      if (videoPreviewUrl) {
+        URL.revokeObjectURL(videoPreviewUrl);
+        setVideoPreviewUrl(undefined);
+      }
+      setVideoFile(null);
+      setEditImageUrl(imageDataUrl);
+      setIsEditVisible(true);
+    } catch (error) {
+      openToast({ message: (error as Error).message });
+    }
+  };
+
+  const onCompleteImageCrop = (croppedImage: CroppedImg) => {
+    setImageFile(croppedImage);
+    setVideoFile(null);
+    if (videoPreviewUrl) {
+      URL.revokeObjectURL(videoPreviewUrl);
+      setVideoPreviewUrl(undefined);
+    }
+  };
+
+  const handleDeleteImage = () => {
+    setImageFile(null);
+  };
+
+  const handleDeleteVideo = () => {
+    if (videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
+    setVideoPreviewUrl(undefined);
+    setVideoFile(null);
+  };
+
   const handleChangeVisibility = (visibility: ComponentVisibility) => {
     setVisibilityList([visibility as unknown as PostVisibility]);
   };
@@ -119,6 +181,8 @@ function NewResponse() {
             question_id: Number(questionId),
             content: newResponse || '',
             visibility: visibilityList,
+            image: imageFile?.file || undefined,
+            video: videoFile || undefined,
           })
         : await patchResponse({
             post_id: Number(responseId),
@@ -176,15 +240,73 @@ function NewResponse() {
         {question.state === 'loading' && <Loader />}
         {question.state === 'hasValue' && (
           <>
-            <TextArea
-              placeholder={t('question.response.what_is_your_response') || ''}
-              value={newResponse || ''}
-              onChange={handleChangeResponse}
-              minRows={20}
-              style={{
-                marginBottom: 20,
-              }}
-            />
+            <ResponseInputSection>
+              <TextArea
+                placeholder={t('question.response.what_is_your_response') || ''}
+                value={newResponse || ''}
+                onChange={handleChangeResponse}
+                minRows={6}
+                maxRows={20}
+              />
+            </ResponseInputSection>
+            {!isEdit && (
+              <ResponseMediaSection>
+                <FlexRow mb={12}>
+                  <SvgIcon
+                    name="chat_media_image"
+                    size={24}
+                    fill="DARK_GRAY"
+                    onClick={() => mediaInputRef.current?.click()}
+                  />
+                </FlexRow>
+                {/* Image preview */}
+                {imageFile?.url && (
+                  <VideoPreviewWrap>
+                    <NoteImage
+                      src={imageFile.url}
+                      alt="response image"
+                      style={{
+                        maxWidth: 80,
+                        height: 'auto',
+                        display: 'block',
+                        borderRadius: 6,
+                      }}
+                    />
+                    <DeleteBtn onClick={handleDeleteImage}>
+                      <SvgIcon name="close" size={14} />
+                    </DeleteBtn>
+                  </VideoPreviewWrap>
+                )}
+                {/* Video preview */}
+                {videoFile && videoPreviewUrl && (
+                  <VideoPreviewWrap>
+                    {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                    <video
+                      src={videoPreviewUrl}
+                      style={{
+                        maxWidth: 80,
+                        height: 'auto',
+                        display: 'block',
+                        borderRadius: 6,
+                      }}
+                    />
+                    <DeleteBtn onClick={handleDeleteVideo}>
+                      <SvgIcon name="close" size={14} />
+                    </DeleteBtn>
+                  </VideoPreviewWrap>
+                )}
+              </ResponseMediaSection>
+            )}
+            {!isEdit && (
+              <input
+                ref={mediaInputRef}
+                type="file"
+                accept="image/jpeg, image/png, video/mp4, video/quicktime, video/webm"
+                onChange={handleFileAdd}
+                style={{ display: 'none' }}
+              />
+            )}
+
             <StyledNewResponsePrompt>
               <FlexRow gap={8} alignItems="center" mb={12}>
                 <ProfileImage imageUrl="/whoami-profile.svg" username="Whoami Today" size={28} />
@@ -227,8 +349,47 @@ function NewResponse() {
           </Typo>
         </FlexRow>
       </LayoutBase>
+
+      {isEditVisible && (
+        <NewNoteImageEdit
+          imageUrl={editImageUrl}
+          setIsVisible={setIsEditVisible}
+          onCompleteImageCrop={onCompleteImageCrop}
+        />
+      )}
     </MainScrollContainer>
   );
 }
 
 export default NewResponse;
+
+const VideoPreviewWrap = styled.div`
+  position: relative;
+  display: inline-block;
+  margin-bottom: 12px;
+`;
+
+const ResponseInputSection = styled.div`
+  width: 100%;
+  margin-bottom: 12px;
+`;
+
+const ResponseMediaSection = styled.div`
+  width: 100%;
+  margin-bottom: 12px;
+`;
+
+const DeleteBtn = styled.div`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+`;

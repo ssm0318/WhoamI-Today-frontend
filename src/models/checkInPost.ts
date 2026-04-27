@@ -8,6 +8,9 @@ export interface CheckInPost {
   type: 'CheckInPost';
   author_detail: User;
   image_url: string | null;
+  video_url: string | null;
+  video_thumbnail_url: string | null;
+  video_duration_seconds: number | null;
   caption: string;
   visibility: CheckInPostVisibility;
   is_pinned: boolean;
@@ -23,6 +26,8 @@ export interface CheckInPostStory {
   id: number;
   author_detail: User;
   image_url: string | null;
+  video_url: string | null;
+  video_thumbnail_url: string | null;
   caption: string;
   visibility: CheckInPostVisibility;
   is_pinned: boolean;
@@ -32,6 +37,7 @@ export interface CheckInPostStory {
 
 export interface NewCheckInPostForm {
   image: CroppedImg | null;
+  video: File | null;
   caption: string;
   closeFriendsOnly: boolean;
 }

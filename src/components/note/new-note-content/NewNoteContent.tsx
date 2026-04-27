@@ -13,10 +13,11 @@ import { UserSelector } from '@stores/user';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import { processImageFromApp } from '@utils/imageHelpers';
+import { isVideoFile, processVideoFromApp, validateVideoFile } from '@utils/videoHelpers';
 import { FlexRow } from 'src/design-system/layouts';
 import NewNoteImageEdit from '../new-note-image-edit/NewNoteImageEdit';
 import NewNotePhotoUploadBottomSheet from '../new-note-photo-upload-bottom-sheet/NewNotePhotoUploadBottomSheet';
-import { NoteImage, NoteImageWrapper } from '../note-image/NoteImage.styled';
+import { NoteImage } from '../note-image/NoteImage.styled';
 import { NoteInput } from './NoteInputBox.styled';
 
 interface NoteInformationProps {
@@ -41,6 +42,7 @@ function NewNoteContent({
   const [showPhotoUploadBottomSheet, setShowPhotoUploadBottomSheet] = useState(false);
 
   const [editImageUrl, setEditImageUrl] = useState<string>();
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string>();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const { isAndroid } = getMobileDeviceInfo();
@@ -58,13 +60,37 @@ function NewNoteContent({
 
   // 앱에서 파일 선택 완료 시 호출되는 콜백
   const handleFileSelected = async (data: FileSelectedData) => {
+    if (data.isVideo) {
+      const videoFile = processVideoFromApp(data);
+      if (videoFile) {
+        const error = validateVideoFile(videoFile);
+        if (error) {
+          openToast({ message: error });
+          return;
+        }
+        const previewUrl = URL.createObjectURL(videoFile);
+        setVideoPreviewUrl(previewUrl);
+        setNoteInfo((prevNoteInfo) => ({
+          ...prevNoteInfo,
+          video: videoFile,
+          images: [],
+        }));
+      }
+      return;
+    }
+
     const result = await processImageFromApp(data, (message) => openToast({ message }));
 
     if (result) {
       setNoteInfo((prevNoteInfo) => ({
         ...prevNoteInfo,
         images: [result],
+        video: undefined,
       }));
+      if (videoPreviewUrl) {
+        URL.revokeObjectURL(videoPreviewUrl);
+        setVideoPreviewUrl(undefined);
+      }
     }
   };
 
@@ -111,14 +137,35 @@ function NewNoteContent({
     setShowPhotoUploadBottomSheet(false);
   };
 
-  const onImageAdd = async (e: ChangeEvent<HTMLInputElement>) => {
+  const onFileAdd = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
-    const image = e.target.files[0];
+    const file = e.target.files[0];
+
+    if (isVideoFile(file)) {
+      const error = validateVideoFile(file);
+      if (error) {
+        openToast({ message: error });
+        return;
+      }
+      const previewUrl = URL.createObjectURL(file);
+      setVideoPreviewUrl(previewUrl);
+      setNoteInfo((prevNoteInfo) => ({
+        ...prevNoteInfo,
+        video: file,
+        images: [],
+      }));
+      return;
+    }
+
     try {
-      const imageDataUrl = await readFile(image);
+      const imageDataUrl = await readFile(file);
 
       if (typeof imageDataUrl !== 'string') {
         throw new Error('read file error');
+      }
+      if (videoPreviewUrl) {
+        URL.revokeObjectURL(videoPreviewUrl);
+        setVideoPreviewUrl(undefined);
       }
       setEditImageUrl(imageDataUrl);
       setIsEditVisible(true);
@@ -140,7 +187,12 @@ function NewNoteContent({
     setNoteInfo((prevNoteInfo) => ({
       ...prevNoteInfo,
       images: [croppedImage],
+      video: undefined,
     }));
+    if (videoPreviewUrl) {
+      URL.revokeObjectURL(videoPreviewUrl);
+      setVideoPreviewUrl(undefined);
+    }
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -156,6 +208,17 @@ function NewNoteContent({
     setNoteInfo((prevNoteInfo) => ({
       ...prevNoteInfo,
       images: [],
+    }));
+  };
+
+  const handleDeleteVideo = () => {
+    if (videoPreviewUrl) {
+      URL.revokeObjectURL(videoPreviewUrl);
+      setVideoPreviewUrl(undefined);
+    }
+    setNoteInfo((prevNoteInfo) => ({
+      ...prevNoteInfo,
+      video: undefined,
     }));
   };
 
@@ -193,20 +256,6 @@ function NewNoteContent({
             }}
           />
 
-          {/* 첨부한 노트 이미지 */}
-          {noteInfo?.images && noteInfo.images.length > 0 && (
-            <Layout.FlexCol w="100%" alignItems="center" mt={16}>
-              <NoteImageWrapper ph={DEFAULT_MARGIN} style={{ width: '100%' }}>
-                {noteInfo.images[0] && noteInfo.images[0].url && (
-                  <NoteImage src={noteInfo.images[0].url} alt="Note image" />
-                )}
-                <Layout.Absolute t={0} r={15}>
-                  <SvgIcon name="delete_image" size={50} onClick={handleDeleteImage} />
-                </Layout.Absolute>
-              </NoteImageWrapper>
-            </Layout.FlexCol>
-          )}
-
           {/* Media button and visibility options */}
           <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" mt={20}>
             <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
@@ -240,11 +289,74 @@ function NewNoteContent({
             )}
           </Layout.FlexRow>
 
+          {/* 첨부한 노트 이미지 */}
+          {noteInfo?.images && noteInfo.images.length > 0 && (
+            <Layout.FlexCol w="100%">
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                {noteInfo.images[0] && noteInfo.images[0].url && (
+                  <NoteImage
+                    src={noteInfo.images[0].url}
+                    alt="Note image"
+                    style={{
+                      maxWidth: 50,
+                      height: 'auto',
+                      display: 'block',
+                      borderRadius: 8,
+                    }}
+                  />
+                )}
+                <Layout.Absolute t={-4} r={-4}>
+                  <SvgIcon name="delete_image" size={32} onClick={handleDeleteImage} />
+                </Layout.Absolute>
+              </div>
+            </Layout.FlexCol>
+          )}
+
+          {/* 첨부한 동영상 */}
+          {noteInfo?.video && videoPreviewUrl && (
+            <Layout.FlexCol w="100%">
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                <video
+                  src={videoPreviewUrl}
+                  style={{
+                    maxWidth: 50,
+                    height: 'auto',
+                    display: 'block',
+                    borderRadius: 8,
+                  }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    background: 'rgba(0,0,0,0.5)',
+                    borderRadius: '50%',
+                    width: 36,
+                    height: 36,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                    <polygon points="8,5 19,12 8,19" />
+                  </svg>
+                </div>
+                <Layout.Absolute t={-4} r={-4}>
+                  <SvgIcon name="delete_image" size={32} onClick={handleDeleteVideo} />
+                </Layout.Absolute>
+              </div>
+            </Layout.FlexCol>
+          )}
+
           <input
             ref={inputRef}
             type="file"
-            accept="image/jpeg, image/png"
-            onChange={onImageAdd}
+            accept="image/jpeg, image/png, video/mp4, video/quicktime, video/webm"
+            onChange={onFileAdd}
             multiple={false}
             style={{ display: 'none' }}
           />

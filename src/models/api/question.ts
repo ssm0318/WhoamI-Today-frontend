@@ -5,6 +5,8 @@ export interface ResponseQuestionRequestParams {
   post_id?: number;
   content: string;
   visibility: PostVisibility[];
+  image?: File;
+  video?: File;
   share_friends?: unknown;
   share_groups?: unknown;
   share_everyone?: unknown;
