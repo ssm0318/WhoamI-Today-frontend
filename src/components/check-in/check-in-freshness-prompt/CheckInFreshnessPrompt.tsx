@@ -1,14 +1,15 @@
+import { Emoji } from 'emoji-picker-react';
 import { useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
-import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import { Button, Font, Layout } from '@design-system';
 import { MyCheckIn } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
 import { archiveLiveComponent } from '@utils/apis/checkIn';
+import { getUnifiedEmoji } from '@utils/emojiHelpers';
 
 interface CheckInFreshnessPromptProps {
   visible: boolean;
@@ -62,16 +63,20 @@ function CheckInFreshnessPrompt({ visible, onDismiss, checkIn }: CheckInFreshnes
           {hasBattery && checkIn?.social_battery && (
             <SocialBatteryChip socialBattery={checkIn.social_battery} />
           )}
-          {hasMood &&
-            checkIn?.mood.map((emoji) => (
-              <EmojiItem
-                key={emoji}
-                emojiString={emoji}
-                size={20}
-                bgColor="TRANSPARENT"
-                outline="TRANSPARENT"
-              />
-            ))}
+          {hasMood && (
+            <Layout.FlexRow
+              gap={2}
+              alignItems="center"
+              outline="LIGHT_GRAY"
+              rounded={8}
+              pv={4}
+              ph={8}
+            >
+              {checkIn?.mood.map((emoji) => (
+                <Emoji key={emoji} unified={getUnifiedEmoji(emoji)} size={18} lazyLoad />
+              ))}
+            </Layout.FlexRow>
+          )}
         </Layout.FlexRow>
         <Layout.FlexCol gap={8} w="100%">
           <Button.Primary
