@@ -126,11 +126,11 @@ function EditorPopup({
               }}
               onClick={(e) => {
                 e.stopPropagation();
-                console.log('[EditorPopup] Share clicked', { title });
+                console.log('[EditorPopup] Confirm clicked', { title });
                 triggerShare();
               }}
             >
-              Share
+              Confirm
             </CloseButton>
           </Layout.FlexRow>
         </Layout.FlexRow>
