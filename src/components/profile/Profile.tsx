@@ -19,6 +19,7 @@ import { normalizeChipText } from '@models/chips';
 import { areFriends, isMyProfile, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
+import { editProfile } from '@utils/apis/my';
 import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
 import CategoryChip from './chip/CategoryChip';
@@ -67,6 +68,29 @@ function Profile({ user }: ProfileProps) {
   const handleClickEditProfile = (e: MouseEvent) => {
     e.stopPropagation();
     return navigate('/settings/edit-profile');
+  };
+
+  const { updateMyProfile } = useBoundStore((state) => ({
+    updateMyProfile: state.updateMyProfile,
+  }));
+
+  const handleTogglePublicPrivate = (e: MouseEvent) => {
+    e.stopPropagation();
+    if (!myProfile) return;
+
+    const goingPrivate = myProfile.is_public;
+    if (goingPrivate) {
+      // eslint-disable-next-line no-alert
+      const confirmed = window.confirm(t('switch_to_private_warning'));
+      if (!confirmed) return;
+    }
+
+    editProfile({
+      profile: { is_public: !myProfile.is_public },
+      onSuccess: (data) => {
+        updateMyProfile({ is_public: data.is_public });
+      },
+    });
   };
 
   useAsyncEffect(async () => {
@@ -325,15 +349,21 @@ function Profile({ user }: ProfileProps) {
             )}
         </>
       )}
-      {/* my-page actions: Edit Profile + View As (Privacy) — sit directly above the check-in card */}
+      {/* my-page actions: Edit Profile + Public/Private toggle (Q) or View As (W) */}
       {isMyPage && (
         <Layout.FlexRow w="100%" gap={8}>
           <PrimaryActionButton onClick={handleClickEditProfile}>
             {t('edit_profile')}
           </PrimaryActionButton>
-          <PrimaryActionButton onClick={() => navigate('/my/view-as')}>
-            {tViewAs('entry_label_long', { defaultValue: 'View As (Privacy)' })}
-          </PrimaryActionButton>
+          {featureFlags?.postsVerQ ? (
+            <PrimaryActionButton onClick={handleTogglePublicPrivate}>
+              {myProfile?.is_public ? t('public_account') : t('private_account')}
+            </PrimaryActionButton>
+          ) : (
+            <PrimaryActionButton onClick={() => navigate('/my/view-as')}>
+              {tViewAs('entry_label_long', { defaultValue: 'View As (Privacy)' })}
+            </PrimaryActionButton>
+          )}
         </Layout.FlexRow>
       )}
 

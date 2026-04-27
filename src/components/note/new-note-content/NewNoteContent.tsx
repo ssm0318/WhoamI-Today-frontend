@@ -218,7 +218,9 @@ function NewNoteContent({
                   onChange={() =>
                     handleChangeVisibility([
                       noteInfo.visibility[0] === PostVisibility.CLOSE_FRIENDS
-                        ? PostVisibility.FRIENDS
+                        ? myProfile?.is_public
+                          ? PostVisibility.PUBLIC
+                          : PostVisibility.FRIENDS
                         : PostVisibility.CLOSE_FRIENDS,
                     ])
                   }

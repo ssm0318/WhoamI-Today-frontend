@@ -136,6 +136,7 @@ export interface MyProfile extends User {
   follower_count: number;
   following_count: number;
   friend_count: number;
+  is_public: boolean;
 }
 
 export interface FriendRequest {

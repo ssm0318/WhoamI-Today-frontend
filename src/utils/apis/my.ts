@@ -40,6 +40,7 @@ export const editProfile = ({
       | 'noti_period_days'
       | 'user_personas'
       | 'user_interests'
+      | 'is_public'
     >
   > & {
     profile_image?: File;
