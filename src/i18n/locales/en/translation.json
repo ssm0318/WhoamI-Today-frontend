@@ -43,12 +43,12 @@
         "type": {
             "battery": "Social battery",
             "mood": "Mood",
-            "thought": "Random thought",
+            "thought": "Thought snippet",
             "song": "Song",
             "mission_of_the_day": "Mission of the day",
             "question_of_the_day": "Question of the day",
             "photo_of_the_day": "Photo of the day",
-            "check_in": "Check-ins",
+            "check_in": "Daily snippet",
             "post": "Posts"
         }
     },

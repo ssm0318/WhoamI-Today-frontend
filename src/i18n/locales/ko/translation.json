@@ -32,12 +32,12 @@
     "type": {
       "battery": "소셜 배터리",
       "mood": "기분",
-      "thought": "오늘의 생각",
+      "thought": "생각 스니펫",
       "song": "노래",
       "mission_of_the_day": "오늘의 미션",
       "question_of_the_day": "오늘의 질문",
       "photo_of_the_day": "오늘의 사진",
-      "check_in": "체크인",
+      "check_in": "데일리 스니펫",
       "post": "게시글"
     }
   },
