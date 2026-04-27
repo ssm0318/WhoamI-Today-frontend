@@ -68,8 +68,8 @@ function Discover() {
   const discoverFilterList = [DiscoverFilter.MUTUAL_FRIENDS, DiscoverFilter.MUTUAL_TRAITS];
   const { scrollRef } = useRestoreScrollPosition('discoverPage');
 
-  // SWR key is stable — filtering is done client-side to avoid refetch issues
-  const swrKey = '/user/discover/';
+  // SWR key is version-aware — Q users hit /api/q/user/discover/
+  const swrKey = isVerQ ? '/q/user/discover/' : '/user/discover/';
 
   const {
     targetRef,
@@ -186,9 +186,10 @@ function Discover() {
   );
 
   const handleRefresh = useCallback(async () => {
-    await Promise.all([getDiscoverFeed(null), getMe()]);
+    const apiPrefix = isVerQ ? 'q/' : '';
+    await Promise.all([getDiscoverFeed(null, apiPrefix), getMe()]);
     mutate();
-  }, [mutate]);
+  }, [mutate, isVerQ]);
 
   const renderDiscoverItem = useCallback(
     (item: DiscoverResultItem, index: number) => {
