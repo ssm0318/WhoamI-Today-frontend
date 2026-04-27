@@ -343,6 +343,9 @@
       }
     },
     "edit_profile": "프로필 수정",
+    "public_account": "공개 계정",
+    "private_account": "비공개 계정",
+    "switch_to_private_warning": "모든 공개 게시글이 친구 공개로 전환됩니다. 이 작업은 되돌릴 수 없습니다. 계속하시겠습니까?",
     "interests": "관심사",
     "persona": "페르소나",
     "see_more_details": "자세히 보기",

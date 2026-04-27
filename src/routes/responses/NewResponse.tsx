@@ -8,12 +8,13 @@ import { StyledNewResponsePrompt } from '@components/_common/prompt/PromptCard.s
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { markMissionCompleted } from '@components/share/MissionOfTheDay';
 import SubHeader from '@components/sub-header/SubHeader';
-import { TextArea, Typo } from '@design-system';
+import { CheckBox, Layout, TextArea, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { ComponentVisibility } from '@models/checkIn';
 import { PostVisibility, Question } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { getQuestionDetail, patchResponse, postResponse } from '@utils/apis/question';
 import { getResponse } from '@utils/apis/responses';
 import { FlexRow, LayoutBase } from 'src/design-system/layouts';
@@ -29,15 +30,15 @@ function NewResponse() {
   const missionMode = location.state?.missionMode;
 
   const currentUser = useBoundStore.getState().myProfile;
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const [t] = useTranslation('translation');
   const [question, setQuestion] = useState<FetchState<Question>>({ state: 'loading' });
 
   const [newResponse, setNewResponse] = useState<string | null>(null);
 
-  // NOTE: QUESTION_RESPONSE_FEATURE 플래그가 true인 경우만 해당 NewResponse 페이지 노출
-  // 따라서 Note처럼 공개 범위 분기가 필요없음
-  const [visibilityList, setVisibilityList] = useState<PostVisibility[]>([]);
+  const defaultVisibility = currentUser?.is_public ? PostVisibility.PUBLIC : PostVisibility.FRIENDS;
+  const [visibilityList, setVisibilityList] = useState<PostVisibility[]>([defaultVisibility]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const title = !isEdit
@@ -197,7 +198,28 @@ function NewResponse() {
 
         {/** visibility options */}
         <FlexRow pt={15} w="100%" justifyContent="flex-end">
-          <VisibilityToggle value={currentVisibility} onChange={handleChangeVisibility} />
+          {featureFlags?.postsVerQ ? (
+            <Layout.FlexRow gap={6} alignItems="center">
+              <CheckBox
+                name={t('notes.close_friends_only') || 'Close friends only'}
+                checked={visibilityList[0] === PostVisibility.CLOSE_FRIENDS}
+                onChange={() =>
+                  setVisibilityList([
+                    visibilityList[0] === PostVisibility.CLOSE_FRIENDS
+                      ? currentUser?.is_public
+                        ? PostVisibility.PUBLIC
+                        : PostVisibility.FRIENDS
+                      : PostVisibility.CLOSE_FRIENDS,
+                  ])
+                }
+              />
+              <Typo type="label-medium" color="DARK_GRAY">
+                {t('notes.close_friends_only')}
+              </Typo>
+            </Layout.FlexRow>
+          ) : (
+            <VisibilityToggle value={currentVisibility} onChange={handleChangeVisibility} />
+          )}
         </FlexRow>
         <FlexRow w="100%" justifyContent="flex-end" pt={10}>
           <Typo type="label-medium" color="MEDIUM_GRAY" mt={8}>

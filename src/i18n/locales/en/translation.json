@@ -346,6 +346,9 @@
             }
         },
         "edit_profile": "Edit Profile",
+        "public_account": "Public Account",
+        "private_account": "Private Account",
+        "switch_to_private_warning": "All your public posts will become friends-only. This cannot be undone. Continue?",
         "interests": "Interests",
         "persona": "Persona",
         "see_more_details": "See more details",
