@@ -2,7 +2,7 @@ import { PaginationResponse } from '@models/api/common';
 import { DiscoverResultItem } from '@models/discover';
 import axios from './axios';
 
-export const getDiscoverFeed = async (page: string | null) => {
+export const getDiscoverFeed = async (page: string | null, apiPrefix = '') => {
   const requestPage = page ? page.split('page=')[1] : null;
   const params = new URLSearchParams();
 
@@ -12,7 +12,7 @@ export const getDiscoverFeed = async (page: string | null) => {
 
   const queryString = params.toString();
   const { data } = await axios.get<PaginationResponse<DiscoverResultItem[]>>(
-    `/user/discover/${queryString ? `?${queryString}` : ''}`,
+    `/${apiPrefix}user/discover/${queryString ? `?${queryString}` : ''}`,
   );
 
   return data;
