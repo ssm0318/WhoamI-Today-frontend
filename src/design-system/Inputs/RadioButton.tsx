@@ -1,4 +1,4 @@
-import { InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes, useId } from 'react';
 import { Typo } from '../Font';
 import { Margin } from '../layouts';
 import { StyledRadioButton } from './RadioButton.styled';
@@ -18,10 +18,11 @@ export function RadioButton({
   buttonSize = 'medium',
   ...props
 }: RadioButtonProps) {
+  const id = useId();
   return (
     <StyledRadioButton className={className} disabled={disabled} size={buttonSize}>
-      <label htmlFor={name}>
-        <input type="radio" id={name} disabled={disabled} name={name} {...props} />
+      <label htmlFor={id}>
+        <input type="radio" id={id} disabled={disabled} name={name} {...props} />
         <Typo type={labelType}>{label}</Typo>
       </label>
     </StyledRadioButton>

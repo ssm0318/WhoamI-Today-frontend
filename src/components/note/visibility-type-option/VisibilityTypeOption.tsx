@@ -47,14 +47,14 @@ function VisibilityTypeOption({
             <Layout.FlexCol justifyContent="flex-start" w="100%" gap={10}>
               <RadioButton
                 label={t('friend') || ''}
-                name="friends"
+                name="visibility_type"
                 value="friends"
                 checked={type === 'friends'}
                 onChange={handleChangeVisibility}
               />
               <RadioButton
                 label={t('close_friend') || ''}
-                name="close_friends"
+                name="visibility_type"
                 value="close_friends"
                 checked={type === 'close_friends'}
                 onChange={handleChangeVisibility}

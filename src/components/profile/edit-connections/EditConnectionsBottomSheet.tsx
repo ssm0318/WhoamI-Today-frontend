@@ -63,6 +63,13 @@ function EditConnectionsBottomSheet({
   };
 
   useEffect(() => {
+    if (visible) {
+      setConnection(user?.connection_status ?? Connection.FRIEND);
+      setIsUpdatePastPosts(false);
+    }
+  }, [visible, user?.connection_status]);
+
+  useEffect(() => {
     // FRIEND 관계일 때 이전 게시글 업데이트 체크박스 비활성화
     if (connection === Connection.FRIEND) {
       setIsUpdatePastPosts(false);
@@ -84,14 +91,14 @@ function EditConnectionsBottomSheet({
             <Layout.FlexCol justifyContent="flex-start" w="100%" gap={10}>
               <RadioButton
                 label={t('connection.friend') || ''}
-                name={Connection.FRIEND}
+                name="connection_type"
                 value={Connection.FRIEND}
                 checked={connection === Connection.FRIEND}
                 onChange={handleChangeConnection}
               />
               <RadioButton
                 label={t('connection.close_friend') || ''}
-                name={Connection.CLOSE_FRIEND}
+                name="connection_type"
                 value={Connection.CLOSE_FRIEND}
                 checked={connection === Connection.CLOSE_FRIEND}
                 onChange={handleChangeConnection}

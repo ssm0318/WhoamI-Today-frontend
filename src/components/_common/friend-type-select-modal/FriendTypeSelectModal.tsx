@@ -84,14 +84,14 @@ function FriendTypeSelectModal({
           <Layout.FlexCol w="100%" gap={10} mt={10}>
             <RadioButton
               label={t('friend') || ''}
-              name={Connection.FRIEND}
+              name="connection_type"
               value={Connection.FRIEND}
               checked={friendType === Connection.FRIEND}
               onChange={handleChangeConnection}
             />
             <RadioButton
               label={t('close_friend') || ''}
-              name={Connection.CLOSE_FRIEND}
+              name="connection_type"
               value={Connection.CLOSE_FRIEND}
               checked={friendType === Connection.CLOSE_FRIEND}
               onChange={handleChangeConnection}
