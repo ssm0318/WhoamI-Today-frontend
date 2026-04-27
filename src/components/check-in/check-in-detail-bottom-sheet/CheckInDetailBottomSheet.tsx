@@ -55,11 +55,11 @@ function CheckInDetailBottomSheet({
 
   // Fetch existing reactions when the popup opens — filter to current user's only
   useEffect(() => {
-    if (!visible || !checkInId) {
+    if (!visible || !checkInId || !focusComponent) {
       setSelectedReactions(new Set());
       return;
     }
-    getCheckInReactions(checkInId)
+    getCheckInReactions(checkInId, focusComponent)
       .then((reactions) => {
         const myEmojis = new Set<string>();
         reactions.forEach((r) => {
@@ -70,7 +70,7 @@ function CheckInDetailBottomSheet({
         setSelectedReactions(myEmojis);
       })
       .catch(() => setSelectedReactions(new Set()));
-  }, [visible, checkInId, myProfile?.id]);
+  }, [visible, checkInId, focusComponent, myProfile?.id]);
 
   useEffect(() => {
     if (!visible || !trackId) {
@@ -98,10 +98,10 @@ function CheckInDetailBottomSheet({
 
   const handleReaction = useCallback(
     async (emoji: string) => {
-      if (!checkInId || isToggling) return;
+      if (!checkInId || !focusComponent || isToggling) return;
       setIsToggling(true);
       try {
-        const result = await toggleCheckInReaction(checkInId, emoji);
+        const result = await toggleCheckInReaction(checkInId, emoji, focusComponent);
         setSelectedReactions((prev) => {
           const next = new Set(prev);
           if (result.toggled === 'on') {
@@ -120,7 +120,7 @@ function CheckInDetailBottomSheet({
         setIsToggling(false);
       }
     },
-    [checkInId, isToggling, openToast],
+    [checkInId, focusComponent, isToggling, openToast],
   );
 
   if (!visible || !focusComponent) return null;

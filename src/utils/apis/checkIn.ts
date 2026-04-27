@@ -31,11 +31,15 @@ export const readFriendCheckIn = async (checkInId: number) => {
   await axios.patch<CheckInBase>(`/check_in/read/${checkInId}/`);
 };
 
-// POST toggle reaction on a check-in (creates or removes)
-export const toggleCheckInReaction = async (checkInId: number, emoji: string) => {
+// POST toggle reaction on a check-in component (creates or removes)
+export const toggleCheckInReaction = async (
+  checkInId: number,
+  emoji: string,
+  component: ArchivableCheckInComponent,
+) => {
   const { data } = await axios.post<{ toggled: 'on' | 'off'; id?: number; emoji?: string }>(
     `/check_in/${checkInId}/react/`,
-    { emoji },
+    { emoji, component },
   );
   return data;
 };
@@ -74,10 +78,20 @@ export const archiveLiveComponent = async (component: ArchivableCheckInComponent
   return data;
 };
 
-// GET reactions for a check-in
-type ReactionItem = { id: number; emoji: string; user: { id: number; username: string } };
-export const getCheckInReactions = async (checkInId: number): Promise<ReactionItem[]> => {
-  const { data } = await axios.get(`/check_in/${checkInId}/reactions/`);
+// GET reactions for a check-in component
+type ReactionItem = {
+  id: number;
+  emoji: string;
+  component?: string;
+  user: { id: number; username: string };
+};
+export const getCheckInReactions = async (
+  checkInId: number,
+  component?: ArchivableCheckInComponent,
+): Promise<ReactionItem[]> => {
+  const { data } = await axios.get(`/check_in/${checkInId}/reactions/`, {
+    params: component ? { component } : undefined,
+  });
   // Handle both paginated ({ results: [...] }) and flat array responses
   if (Array.isArray(data)) return data;
   if (data.results && Array.isArray(data.results)) return data.results;
