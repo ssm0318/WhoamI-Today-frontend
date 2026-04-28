@@ -41,3 +41,13 @@ export const StyledMessageCount = styled(Layout.Absolute)`
   background-color: ${({ theme }) => theme.SECONDARY};
   border-radius: 8px;
 `;
+
+export const TabIconWrapper = styled.div`
+  display: grid;
+  & > * {
+    grid-area: 1 / 1;
+  }
+  & > .hidden {
+    visibility: hidden;
+  }
+`;

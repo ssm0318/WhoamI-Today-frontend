@@ -6,7 +6,13 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import { resetScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { NavTabItem, StyledMessageCount, StyledTabItem, TabWrapper } from './Tab.styled';
+import {
+  NavTabItem,
+  StyledMessageCount,
+  StyledTabItem,
+  TabIconWrapper,
+  TabWrapper,
+} from './Tab.styled';
 
 interface TabItemProps {
   to: string;
@@ -52,10 +58,18 @@ function TabItem({ to, type, size = 48, end = false }: TabItemProps) {
                     <Typo type="label-small">{unreadMsgCnt > 999 ? '999+' : unreadMsgCnt}</Typo>
                   </StyledMessageCount>
                 )}
-                <SvgIcon
-                  name={resolvedActive ? `${type}_active` : `${type}_inactive`}
-                  size={size}
-                />
+                <TabIconWrapper>
+                  <SvgIcon
+                    name={`${type}_inactive`}
+                    size={size}
+                    className={resolvedActive ? 'hidden' : ''}
+                  />
+                  <SvgIcon
+                    name={`${type}_active`}
+                    size={size}
+                    className={resolvedActive ? '' : 'hidden'}
+                  />
+                </TabIconWrapper>
               </StyledTabItem>
             )}
             <Typo type="label-large" color={resolvedActive ? 'PRIMARY' : 'LIGHT_GRAY'}>
