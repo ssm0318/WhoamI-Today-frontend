@@ -23,6 +23,16 @@ export const Thumbnail = styled.img<{ $size: number; $borderRadius: number }>`
   object-fit: cover;
 `;
 
+export const Placeholder = styled.div<{ $size: number; $borderRadius: number }>`
+  width: ${({ $size }) => $size}px;
+  height: ${({ $size }) => $size}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: ${({ $borderRadius }) => $borderRadius}px;
+  background: #2a2a2a;
+`;
+
 export const PlayOverlay = styled.div`
   position: absolute;
   top: 50%;
