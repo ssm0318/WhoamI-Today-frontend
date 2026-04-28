@@ -14,6 +14,15 @@ export const Video = styled.video<{ $size: number; $borderRadius: number }>`
   object-fit: cover;
 `;
 
+export const Thumbnail = styled.img<{ $size: number; $borderRadius: number }>`
+  width: ${({ $size }) => $size}px;
+  height: ${({ $size }) => $size}px;
+  display: block;
+  border-radius: ${({ $borderRadius }) => $borderRadius}px;
+  background: #000;
+  object-fit: cover;
+`;
+
 export const PlayOverlay = styled.div`
   position: absolute;
   top: 50%;
