@@ -78,11 +78,11 @@ function CheckInPostItem({
         <S.VideoThumbnailWrapper
           onClick={(e) => {
             e.stopPropagation();
-            openVideoInApp(video_url);
+            openVideoInApp(video_url, { postId: id, postType: 'check_in_post' });
           }}
         >
           {video_thumbnail_url ? (
-            <S.PostImage src={video_thumbnail_url} alt="video thumbnail" />
+            <S.VideoThumbnailImage src={video_thumbnail_url} alt="video thumbnail" />
           ) : (
             <S.VideoPlaceholder />
           )}

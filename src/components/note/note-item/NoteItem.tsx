@@ -219,7 +219,7 @@ function NoteItem({
             <VideoThumbnailWrapper
               onClick={(e) => {
                 e.stopPropagation();
-                openVideoInApp(video.url);
+                openVideoInApp(video.url, { postId: id, postType: 'note' });
               }}
             >
               {video.thumbnail_url ? <NoteImage src={video.thumbnail_url} /> : <VideoPlaceholder />}

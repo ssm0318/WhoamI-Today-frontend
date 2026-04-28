@@ -234,7 +234,7 @@ function ResponseItem({
         <VideoThumbnailWrapper
           onClick={(e: MouseEvent) => {
             e.stopPropagation();
-            openVideoInApp(video.url);
+            openVideoInApp(video.url, { postId: response.id, postType: 'response' });
           }}
         >
           {video.thumbnail_url ? (

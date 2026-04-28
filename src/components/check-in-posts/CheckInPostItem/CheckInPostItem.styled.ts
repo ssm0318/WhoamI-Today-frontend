@@ -22,9 +22,18 @@ export const PinBadge = styled.span`
 export const VideoThumbnailWrapper = styled.div`
   position: relative;
   width: 100%;
+  max-height: 200px;
   cursor: pointer;
   border-radius: 12px;
   overflow: hidden;
+`;
+
+export const VideoThumbnailImage = styled.img`
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  display: block;
+  background-color: ${Colors.LIGHT};
 `;
 
 export const PlayOverlay = styled.div`

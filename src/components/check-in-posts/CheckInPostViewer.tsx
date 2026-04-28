@@ -199,7 +199,10 @@ function CheckInPostViewer({
           <VideoThumbnailWrapper
             onClick={(e: MouseEvent) => {
               e.stopPropagation();
-              openVideoInApp(story.video_url!);
+              openVideoInApp(story.video_url!, {
+                postId: story.id,
+                postType: 'check_in_post_story',
+              });
             }}
           >
             {story.video_thumbnail_url ? (
