@@ -322,6 +322,7 @@ const Header = styled.div`
   left: 0;
   right: 0;
   padding: 16px;
+  padding-top: calc(16px + env(safe-area-inset-top));
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -345,7 +346,7 @@ const PinButton = styled.button`
 
 const PinVisibilityRow = styled.div`
   position: absolute;
-  top: 64px;
+  top: calc(64px + env(safe-area-inset-top));
   right: 16px;
   display: flex;
   gap: 6px;
@@ -393,6 +394,7 @@ const Footer = styled.div`
   left: 0;
   right: 0;
   padding: 16px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
   display: flex;
   justify-content: flex-start;
   z-index: 2;
