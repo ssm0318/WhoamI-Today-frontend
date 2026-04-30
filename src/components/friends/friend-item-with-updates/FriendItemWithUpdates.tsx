@@ -6,7 +6,6 @@ import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CheckInDetailBottomSheet from '@components/check-in/check-in-detail-bottom-sheet/CheckInDetailBottomSheet';
-import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
 import PokeButton from '@components/friends/poke-button/PokeButton';
 import SubscriptionPopup from '@components/friends/subscription-popup/SubscriptionPopup';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
@@ -102,7 +101,6 @@ function FriendItemWithUpdates({
   const hasThought = !!thought;
   const hasBattery = !!social_battery && Object.values(SocialBattery).includes(social_battery);
   const hasSong = !!track_id;
-  const pinnedCount = user.pinned_count ?? 0;
 
   const postsToShow = useMemo(
     () => (showPostsSection ? user.recent_posts ?? [] : []),
@@ -366,12 +364,6 @@ function FriendItemWithUpdates({
             </EmptyPostsContainer>
           )}
         </>
-      )}
-
-      {tabMode !== 'posts' && (
-        <Layout.FlexRow w="100%" alignSelf="flex-start">
-          <FriendPinnedChip pinnedCount={pinnedCount} to={`/users/${username}/check-in/pinned`} />
-        </Layout.FlexRow>
       )}
 
       {/* Check-in detail popup */}
