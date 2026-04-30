@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
+import SubHeader from '@components/sub-header/SubHeader';
+import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import i18n from '@i18n/index';
 import { PastSurvey } from '@models/survey';
@@ -11,6 +13,7 @@ import { getPastSurveys } from '@utils/apis/survey';
 const Page = styled(Layout.FlexCol)`
   width: 100%;
   padding: 16px;
+  padding-top: ${TITLE_HEADER_HEIGHT + 16}px;
   gap: 12px;
   background: ${Colors.LIGHT};
   min-height: 100vh;
@@ -57,29 +60,29 @@ function SurveysIndex() {
   if (!data) return null;
 
   return (
-    <Page>
-      <Typo type="title-large" color="BLACK">
-        {t('archive_title')}
-      </Typo>
-      {data.results.length === 0 && (
-        <Typo type="body-medium" color="DARK_GRAY">
-          {t('archive_empty')}
-        </Typo>
-      )}
-      {data.results.map((row) => (
-        <RowCard key={row.date} type="button" onClick={() => handleClick(row)}>
-          <Typo type="label-large" color="DARK_GRAY">
-            {row.date}
+    <>
+      <SubHeader title={t('archive_title')} />
+      <Page>
+        {data.results.length === 0 && (
+          <Typo type="body-medium" color="DARK_GRAY">
+            {t('archive_empty')}
           </Typo>
-          <Typo type="title-medium" color="BLACK">
-            {pickLocalized(row.survey.title_en, row.survey.title_ko)}
-          </Typo>
-          <StatusChip unanswered={!row.user_answered}>
-            {row.user_answered ? t('answered_view_results') : t('answer_to_view_results')}
-          </StatusChip>
-        </RowCard>
-      ))}
-    </Page>
+        )}
+        {data.results.map((row) => (
+          <RowCard key={row.date} type="button" onClick={() => handleClick(row)}>
+            <Typo type="label-large" color="DARK_GRAY">
+              {row.date}
+            </Typo>
+            <Typo type="title-medium" color="BLACK">
+              {pickLocalized(row.survey.title_en, row.survey.title_ko)}
+            </Typo>
+            <StatusChip unanswered={!row.user_answered}>
+              {row.user_answered ? t('answered_view_results') : t('answer_to_view_results')}
+            </StatusChip>
+          </RowCard>
+        ))}
+      </Page>
+    </>
   );
 }
 

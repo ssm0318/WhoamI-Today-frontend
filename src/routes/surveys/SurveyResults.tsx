@@ -3,7 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
+import SubHeader from '@components/sub-header/SubHeader';
 import { SurveyResultsBucket } from '@components/survey/SurveyResultsBucket';
+import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import i18n from '@i18n/index';
 import { Survey, SurveyResultsError } from '@models/survey';
@@ -12,6 +14,7 @@ import { getSurveyDetail, getSurveyResults } from '@utils/apis/survey';
 const Page = styled(Layout.FlexCol)`
   width: 100%;
   padding: 16px;
+  padding-top: ${TITLE_HEADER_HEIGHT + 16}px;
   gap: 16px;
   background: ${Colors.LIGHT};
   min-height: 100vh;
@@ -55,19 +58,19 @@ function SurveyResults() {
   if (axiosError?.response?.status === 403) {
     const body = axiosError.response.data;
     return (
-      <Page>
-        <Typo type="title-large" color="BLACK">
-          {t('locked_title')}
-        </Typo>
-        <Typo type="body-medium" color="DARK_GRAY">
-          {body.detail}
-        </Typo>
-        {body.needs_submission && (
-          <ActionButton type="button" onClick={() => navigate(`/surveys/${slug}/answer`)}>
-            {t('answer_to_view_results')}
-          </ActionButton>
-        )}
-      </Page>
+      <>
+        <SubHeader title={t('locked_title')} />
+        <Page>
+          <Typo type="body-medium" color="DARK_GRAY">
+            {body.detail}
+          </Typo>
+          {body.needs_submission && (
+            <ActionButton type="button" onClick={() => navigate(`/surveys/${slug}/answer`)}>
+              {t('answer_to_view_results')}
+            </ActionButton>
+          )}
+        </Page>
+      </>
     );
   }
 
@@ -76,30 +79,30 @@ function SurveyResults() {
   const interpretation = pickLocalized(survey.interpretation_en, survey.interpretation_ko);
 
   return (
-    <Page>
-      <Typo type="title-large" color="BLACK">
-        {pickLocalized(survey.title_en, survey.title_ko)}
-      </Typo>
-      <SurveyResultsBucket
-        title={t('buckets.population')}
-        available={data.population_available}
-        reason={data.population_suppressed_reason}
-        bucket={data.population}
-        interpretation={interpretation}
-      />
-      <SurveyResultsBucket
-        title={t('buckets.friends')}
-        available={data.friends_available}
-        reason={data.friends_suppressed_reason}
-        bucket={data.friends}
-      />
-      <SurveyResultsBucket
-        title={t('buckets.close_friends')}
-        available={data.close_friends_available}
-        reason={data.close_friends_suppressed_reason}
-        bucket={data.close_friends}
-      />
-    </Page>
+    <>
+      <SubHeader title={pickLocalized(survey.title_en, survey.title_ko)} />
+      <Page>
+        <SurveyResultsBucket
+          title={t('buckets.population')}
+          available={data.population_available}
+          reason={data.population_suppressed_reason}
+          bucket={data.population}
+          interpretation={interpretation}
+        />
+        <SurveyResultsBucket
+          title={t('buckets.friends')}
+          available={data.friends_available}
+          reason={data.friends_suppressed_reason}
+          bucket={data.friends}
+        />
+        <SurveyResultsBucket
+          title={t('buckets.close_friends')}
+          available={data.close_friends_available}
+          reason={data.close_friends_suppressed_reason}
+          bucket={data.close_friends}
+        />
+      </Page>
+    </>
   );
 }
 

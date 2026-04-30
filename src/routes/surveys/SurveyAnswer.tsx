@@ -3,7 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import useSWR, { mutate } from 'swr';
 
+import SubHeader from '@components/sub-header/SubHeader';
 import { SurveyAnswerForm } from '@components/survey/SurveyAnswerForm';
+import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import { SURVEY_OF_THE_DAY_KEY } from '@hooks/useSurveyOfTheDay';
 import i18n from '@i18n/index';
@@ -13,6 +15,7 @@ import { getSurveyDetail } from '@utils/apis/survey';
 const Page = styled(Layout.FlexCol)`
   width: 100%;
   padding: 16px;
+  padding-top: ${TITLE_HEADER_HEIGHT + 16}px;
   gap: 12px;
   background: ${Colors.LIGHT};
   min-height: 100vh;
@@ -42,27 +45,27 @@ function SurveyAnswer() {
   if (!survey) return null;
 
   return (
-    <Page>
-      <Card>
-        <Typo type="title-large" color="BLACK">
-          {pickLocalized(survey.title_en, survey.title_ko)}
-        </Typo>
-        {survey.description_en && (
-          <Typo type="body-medium" color="DARK_GRAY">
-            {pickLocalized(survey.description_en, survey.description_ko)}
-          </Typo>
-        )}
-        <SurveyAnswerForm
-          survey={survey}
-          onSubmitted={() => {
-            mutate(SURVEY_OF_THE_DAY_KEY);
-            openToast({ message: t('toast.submitted') });
-            navigate(`/surveys/${survey.slug}/results`);
-          }}
-          onError={(message) => openToast({ message })}
-        />
-      </Card>
-    </Page>
+    <>
+      <SubHeader title={pickLocalized(survey.title_en, survey.title_ko)} />
+      <Page>
+        <Card>
+          {survey.description_en && (
+            <Typo type="body-medium" color="DARK_GRAY">
+              {pickLocalized(survey.description_en, survey.description_ko)}
+            </Typo>
+          )}
+          <SurveyAnswerForm
+            survey={survey}
+            onSubmitted={() => {
+              mutate(SURVEY_OF_THE_DAY_KEY);
+              openToast({ message: t('toast.submitted') });
+              navigate(`/surveys/${survey.slug}/results`);
+            }}
+            onError={(message) => openToast({ message })}
+          />
+        </Card>
+      </Page>
+    </>
   );
 }
 
