@@ -1,5 +1,5 @@
 import React, { CSSProperties, ReactNode, RefObject, UIEvent, useCallback, useEffect } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 import NotiPermissionBanner, {
   NOTI_PERMISSION_BANNER_HEIGHT,
@@ -18,7 +18,6 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { MainWrapper, RootContainer } from '@styles/wrappers';
 import { getMyProfile } from '@utils/apis/my';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
-import { recordCurrentVersion, shouldShowWidgetGuide } from '@utils/widgetInstallGuide';
 import { useChatListSocket } from './chat/_hooks/useChatListSocket';
 
 function Root() {
@@ -44,7 +43,6 @@ function Root() {
     myProfile: state.myProfile,
   }));
   const { shouldShow, dismiss, checkIn } = useCheckInFreshnessPrompt();
-  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -93,20 +91,6 @@ function Root() {
       notification_enabled: profile.noti_time ? 'true' : 'false',
     });
   }, [myProfile, postMessage]);
-
-  useEffect(() => {
-    if (!myProfile) return;
-    const onSkippedPath =
-      location.pathname.startsWith('/widget-install-guide') ||
-      location.pathname.startsWith('/settings/edit-profile') ||
-      location.pathname.startsWith('/settings/reset-password');
-    if (onSkippedPath) return;
-    if (shouldShowWidgetGuide(myProfile)) {
-      navigate('/widget-install-guide', { replace: true });
-      return;
-    }
-    recordCurrentVersion(myProfile);
-  }, [location.pathname, myProfile, navigate]);
 
   // Refresh unread badge: WebSocket + poll + visibility change
   const refreshUnreadCount = useCallback(() => {
