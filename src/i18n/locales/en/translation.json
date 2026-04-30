@@ -281,6 +281,14 @@
         "this_user_do_not_exist": "User Not Found :(",
         "request_a_friend": "Add Friend",
         "are_you_sure_you_want_to_delete_this_friend": "Remove this friend?",
+        "mutual_friends_count_one": "{{count}} mutual friend",
+        "mutual_friends_count_other": "{{count}} mutual friends",
+        "shared_traits_count_one": "{{count}} shared trait",
+        "shared_traits_count_other": "{{count}} shared traits",
+        "mutual_friends_title": "Mutual Friends",
+        "shared_traits_title": "Shared Traits",
+        "empty_mutuals": "No mutual friends",
+        "empty_traits": "No shared traits",
         "more_modal": {
             "menu": {
                 "add_to_close_friends": "Add to Close Friends",

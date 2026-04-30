@@ -278,6 +278,14 @@
     "this_user_do_not_exist": "존재하지 않는 사용자입니다 :(",
     "request_a_friend": "친구 요청",
     "are_you_sure_you_want_to_delete_this_friend": "정말로 이 친구를 삭제하시겠습니까?",
+    "mutual_friends_count_one": "공통 친구 {{count}}명",
+    "mutual_friends_count_other": "공통 친구 {{count}}명",
+    "shared_traits_count_one": "공통 trait {{count}}개",
+    "shared_traits_count_other": "공통 trait {{count}}개",
+    "mutual_friends_title": "공통 친구",
+    "shared_traits_title": "공통 Trait",
+    "empty_mutuals": "공통 친구가 없습니다",
+    "empty_traits": "공통 trait가 없습니다",
     "more_modal": {
       "menu": {
         "add_to_close_friends": "친한 친구 추가",

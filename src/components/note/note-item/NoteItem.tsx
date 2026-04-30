@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import ContentTranslation from '@components/_common/content-translation/ContentTranslation';
 import Icon from '@components/_common/icon/Icon';
 import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
+import MutualMetaText from '@components/_common/mutual-meta-text/MutualMetaText';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import PostFooterDefault from '@components/_common/post-footer/PostFooterDefault';
 import PostFooterLikeOnly from '@components/_common/post-footer/PostFooterLikeOnly';
@@ -117,45 +118,15 @@ function NoteItem({
             <Typo type="label-medium" color="MEDIUM_GRAY">
               {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
             </Typo>
-            {!isMyPage &&
-              author_detail &&
-              ((author_detail.mutual_friend_count ?? 0) > 0 ||
-                (author_detail.mutual_interest_count ?? 0) > 0 ||
-                (author_detail.mutual_persona_count ?? 0) > 0) && (
-                <>
-                  {(author_detail.mutual_friend_count ?? 0) > 0 && (
-                    <>
-                      <Typo type="label-medium" color="MEDIUM_GRAY">
-                        ·
-                      </Typo>
-                      <Typo type="label-medium" color="DARK_GRAY">
-                        {author_detail.mutual_friend_count} mutual{' '}
-                        {author_detail.mutual_friend_count === 1 ? 'friend' : 'friends'}
-                      </Typo>
-                    </>
-                  )}
-                  {!featureFlags?.postsVerQ &&
-                    (author_detail.mutual_interest_count ?? 0) +
-                      (author_detail.mutual_persona_count ?? 0) >
-                      0 && (
-                      <>
-                        <Typo type="label-medium" color="MEDIUM_GRAY">
-                          ·
-                        </Typo>
-                        <Typo type="label-medium" color="DARK_GRAY">
-                          {(author_detail.mutual_interest_count ?? 0) +
-                            (author_detail.mutual_persona_count ?? 0)}{' '}
-                          shared{' '}
-                          {(author_detail.mutual_interest_count ?? 0) +
-                            (author_detail.mutual_persona_count ?? 0) ===
-                          1
-                            ? 'trait'
-                            : 'traits'}
-                        </Typo>
-                      </>
-                    )}
-                </>
-              )}
+            {!isMyPage && author_detail && username && (
+              <MutualMetaText
+                username={username}
+                mutualFriendCount={author_detail.mutual_friend_count ?? 0}
+                mutualInterestCount={author_detail.mutual_interest_count ?? 0}
+                mutualPersonaCount={author_detail.mutual_persona_count ?? 0}
+                hideTraits={featureFlags?.postsVerQ}
+              />
+            )}
           </Layout.FlexRow>
           {/* Visibility scope - only shown on own page */}
           {isMyPage && visibility && (
