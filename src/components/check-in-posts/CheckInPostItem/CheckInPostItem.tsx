@@ -65,9 +65,9 @@ function CheckInPostItem({
           </Layout.FlexCol>
         </Layout.FlexRow>
         {is_pinned && (
-          <S.PinBadge aria-label="pinned">
-            <SvgIcon name="pin_filled" size={14} color="WHITE" />
-          </S.PinBadge>
+          <span aria-label="pinned" style={{ display: 'inline-flex' }}>
+            <SvgIcon name="pin_filled" size={24} color="PRIMARY" />
+          </span>
         )}
       </Layout.FlexRow>
 

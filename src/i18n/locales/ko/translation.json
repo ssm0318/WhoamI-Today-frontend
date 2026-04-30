@@ -20,7 +20,7 @@
     "archive": {
       "title": "Daily Snippets",
       "tab_all": "All",
-      "tab_pinned": "Pinned",
+      "tab_pinned": "Pinned only",
       "empty_all": "No Daily Snippets yet",
       "empty_pinned": "No pinned Daily Snippets yet"
     }

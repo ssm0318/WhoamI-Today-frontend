@@ -85,12 +85,8 @@ function MySnippetsArchive() {
             onClick={() => setTab(tab === 'pinned' ? 'all' : 'pinned')}
           >
             <CheckboxIcon checked={tab === 'pinned'} />
-            <SvgIcon
-              name="pin_filled"
-              size={14}
-              color={tab === 'pinned' ? 'PRIMARY' : 'MEDIUM_GRAY'}
-            />
-            <Typo type="label-medium" color={tab === 'pinned' ? 'BLACK' : 'MEDIUM_GRAY'}>
+            <SvgIcon name="pin_filled" size={18} color={tab === 'pinned' ? 'PRIMARY' : 'BLACK'} />
+            <Typo type="label-medium" color="BLACK">
               {t('tab_pinned')}
             </Typo>
           </Layout.FlexRow>
