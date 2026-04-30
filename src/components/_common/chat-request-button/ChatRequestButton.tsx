@@ -1,6 +1,7 @@
 import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
+import { useIsPreviewMode } from '@components/view-as/PreviewModeContext';
 import { Button, Layout } from '@design-system';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -14,6 +15,7 @@ interface Props {
 function ChatRequestButton({ user, onChange }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'chat.request.button' });
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
+  const previewMode = useIsPreviewMode();
 
   const [sent, setSent] = useState(user.sent_chat_request_to);
   const [busy, setBusy] = useState(false);
@@ -25,6 +27,7 @@ function ChatRequestButton({ user, onChange }: Props) {
 
   const handleClickRequest = async (e: MouseEvent) => {
     e.stopPropagation();
+    if (previewMode) return;
     if (busy || sent) return;
     setBusy(true);
     try {
@@ -41,6 +44,7 @@ function ChatRequestButton({ user, onChange }: Props) {
 
   const handleClickCancel = (e: MouseEvent) => {
     e.stopPropagation();
+    if (previewMode) return;
     setIsCancelDialogVisible(true);
   };
 

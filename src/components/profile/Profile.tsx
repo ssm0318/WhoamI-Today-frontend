@@ -223,6 +223,7 @@ function Profile({ user }: ProfileProps) {
                         name="notification_inline"
                         size={20}
                         color={(user as UserProfile).is_subscribed ? 'PRIMARY' : 'BLACK'}
+                        fill={(user as UserProfile).is_subscribed ? 'PRIMARY' : undefined}
                       />
                     </button>
                   )}

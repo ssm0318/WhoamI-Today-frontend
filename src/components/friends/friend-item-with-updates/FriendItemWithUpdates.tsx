@@ -152,6 +152,7 @@ function FriendItemWithUpdates({
                   name="notification_inline"
                   size={20}
                   color={user.is_subscribed ? 'PRIMARY' : 'BLACK'}
+                  fill={user.is_subscribed ? 'PRIMARY' : undefined}
                 />
               </button>
               <SubscriptionPopup

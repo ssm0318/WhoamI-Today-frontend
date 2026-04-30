@@ -5,6 +5,7 @@ import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonD
 import FriendEvaluationModal, {
   EvaluationData,
 } from '@components/_common/friend-evaluation-modal/FriendEvaluationModal';
+import { useIsPreviewMode } from '@components/view-as/PreviewModeContext';
 import { Button, Layout } from '@design-system';
 import { Connection } from '@models/api/friends';
 import {
@@ -57,6 +58,7 @@ function FriendStatus({
 }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.friend_item' });
   const navigate = useNavigate();
+  const previewMode = useIsPreviewMode();
 
   const [isCancelFriendRequestDialogVisible, setIsCancelFriendRequestDialogVisible] =
     useState(false);
@@ -187,26 +189,31 @@ function FriendStatus({
 
   const handleClickConfirm = (e: MouseEvent) => {
     e.stopPropagation();
+    if (previewMode) return;
     setIsFriendTypeSelectModalVisible({ visible: true, type: 'accept' });
   };
 
   const handleClickRejectFriendRequest = (e: MouseEvent) => {
     e.stopPropagation();
+    if (previewMode) return;
     setIsRejectFriendRequestDialogVisible(true);
   };
 
   const handleClickUnfriend = (e: MouseEvent) => {
     e.stopPropagation();
+    if (previewMode) return;
     setIsUnfriendDialogVisible(true);
   };
 
   const handleClickCancelRequest = (e: MouseEvent) => {
     e.stopPropagation();
+    if (previewMode) return;
     setIsCancelFriendRequestDialogVisible(true);
   };
 
   const handleClickDeleteRecommendation = async (e: MouseEvent) => {
     e.stopPropagation();
+    if (previewMode) return;
     await blockRecommendation(user.id);
     onClickDeleteRecommendation?.();
   };
@@ -235,6 +242,7 @@ function FriendStatus({
 
   const handleClickRequest = (e: MouseEvent) => {
     e.stopPropagation();
+    if (previewMode) return;
     setIsFriendTypeSelectModalVisible({ visible: true, type: 'request' });
   };
 
