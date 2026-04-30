@@ -280,7 +280,7 @@ function EditProfile() {
         };
         updateMyProfile(updatedProfile);
         openToast({ message: t('response.updated') });
-        if (isFromSignUp && shouldShowWidgetGuide(updatedProfile)) {
+        if (shouldShowWidgetGuide(updatedProfile)) {
           navigate('/widget-install-guide', { replace: true });
         } else {
           navigate('/my');

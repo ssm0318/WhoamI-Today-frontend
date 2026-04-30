@@ -18,10 +18,7 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { MainWrapper, RootContainer } from '@styles/wrappers';
 import { getMyProfile } from '@utils/apis/my';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
-import {
-  recordCurrentVersion,
-  shouldShowWidgetGuideOnVersionChange,
-} from '@utils/widgetInstallGuide';
+import { recordCurrentVersion, shouldShowWidgetGuide } from '@utils/widgetInstallGuide';
 import { useChatListSocket } from './chat/_hooks/useChatListSocket';
 
 function Root() {
@@ -104,7 +101,7 @@ function Root() {
       location.pathname.startsWith('/settings/edit-profile') ||
       location.pathname.startsWith('/settings/reset-password');
     if (onSkippedPath) return;
-    if (shouldShowWidgetGuideOnVersionChange(myProfile)) {
+    if (shouldShowWidgetGuide(myProfile)) {
       navigate('/widget-install-guide', { replace: true });
       return;
     }
