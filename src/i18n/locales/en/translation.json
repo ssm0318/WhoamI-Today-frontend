@@ -923,8 +923,8 @@
         "today": "Today",
         "yesterday": "Yesterday",
         "segmented": {
-            "all": "All Archived",
-            "pinned": "Pinned"
+            "all": "Archived",
+            "pinned": "Pinned Check-In"
         },
         "empty": {
             "all": "No archived check-ins yet. Check-ins move here after 12 hours or when you update them.",
