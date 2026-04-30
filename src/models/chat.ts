@@ -7,6 +7,7 @@ export interface ChatRoomOpponent {
   url: string;
   username: string;
   unread_count: number;
+  is_close_friend?: boolean;
 }
 
 export interface ChatRoomMember {
@@ -14,6 +15,7 @@ export interface ChatRoomMember {
   username: string;
   url: string;
   profile_image?: string | null;
+  is_close_friend?: boolean;
 }
 
 export interface ChatRoom {
