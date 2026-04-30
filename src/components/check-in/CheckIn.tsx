@@ -67,27 +67,10 @@ function CheckIn({ user }: CheckInProps) {
   return (
     <Layout.FlexCol w="100%" gap={8} p={8} bgColor="GRAY_14" rounded={8} justifyContent="center">
       <>
-        {/* Top row: title (left) + archive/pinned entry point (right).
-            Own profile → [All | Pinned (N)] segmented.
-            Friend profile → Pinned Check-ins (N) link (hidden when count=0).
-            flex-wrap + row-gap ensures the chips fall to the next line on
-            narrow phones (iPhone SE 1st gen = 320px) rather than overlap
-            or clip the title. */}
-        <Layout.FlexRow
-          w="100%"
-          justifyContent="space-between"
-          alignItems="center"
-          style={{ flexWrap: 'wrap', rowGap: 4, columnGap: 8 }}
-        >
+        <Layout.FlexRow w="100%" alignItems="center">
           <Typo type="label-large" color="BLACK">
             {t('title')}
           </Typo>
-          {!isMyPage && friendUsername && (
-            <FriendPinnedChip
-              pinnedCount={friendPinnedCount}
-              to={`/users/${friendUsername}/check-in/pinned`}
-            />
-          )}
         </Layout.FlexRow>
         <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
           <Layout.FlexRow gap={8} alignItems="center">
@@ -200,7 +183,16 @@ function CheckIn({ user }: CheckInProps) {
             ) : (
               <span />
             )}
-            {isMyPage && <CheckInArchiveChip />}
+            {isMyPage ? (
+              <CheckInArchiveChip />
+            ) : (
+              friendUsername && (
+                <FriendPinnedChip
+                  pinnedCount={friendPinnedCount}
+                  to={`/users/${friendUsername}/check-in/pinned`}
+                />
+              )
+            )}
           </Layout.FlexRow>
         )}
       </>
