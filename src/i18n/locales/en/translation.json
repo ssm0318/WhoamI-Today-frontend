@@ -43,7 +43,7 @@
         "type": {
             "battery": "Social battery",
             "mood": "Mood",
-            "thought": "Thought snippet",
+            "thought": "Blurb",
             "song": "Song",
             "mission_of_the_day": "Mission of the day",
             "question_of_the_day": "Question of the day",
@@ -594,7 +594,7 @@
                 "social_battery": "My Social Battery Level",
                 "music": "My song",
                 "mood": "#mood",
-                "thought": "My thought snippet"
+                "thought": "My blurb"
             }
         },
         "daily_noti_setting": {

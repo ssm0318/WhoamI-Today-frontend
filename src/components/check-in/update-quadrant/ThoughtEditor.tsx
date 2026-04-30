@@ -57,7 +57,7 @@ export default function ThoughtEditor({
       onClose={onClose}
       onShare={handleShare}
       onArchive={onArchive}
-      title="Thought Snippet"
+      title="Blurb"
     >
       <Layout.FlexCol w="100%" gap={8} mb={16}>
         <StyledTextArea

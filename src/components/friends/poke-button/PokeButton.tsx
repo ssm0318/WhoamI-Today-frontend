@@ -17,14 +17,14 @@ interface Props {
 const POKE_LABELS: Record<PokeComponentType, { text: string; emoji: string }> = {
   battery: { text: 'Ping for social battery', emoji: '🔋' },
   mood: { text: 'Ping for mood', emoji: '😊' },
-  thought: { text: 'Ping for random thoughts', emoji: '💭' },
+  thought: { text: 'Ping for a blurb', emoji: '💭' },
   song: { text: 'Ping for a song', emoji: '🎵' },
 };
 
 const POKED_LABELS: Record<PokeComponentType, { text: string; emoji: string }> = {
   battery: { text: 'Pinged: battery', emoji: '✔️' },
   mood: { text: 'Pinged: mood', emoji: '✔️' },
-  thought: { text: 'Pinged: thoughts', emoji: '✔️' },
+  thought: { text: 'Pinged: blurb', emoji: '✔️' },
   song: { text: 'Pinged: song', emoji: '✔️' },
 };
 

@@ -32,7 +32,7 @@
     "type": {
       "battery": "소셜 배터리",
       "mood": "기분",
-      "thought": "생각 스니펫",
+      "thought": "한마디",
       "song": "노래",
       "mission_of_the_day": "오늘의 미션",
       "question_of_the_day": "오늘의 질문",
@@ -591,7 +591,7 @@
         "social_battery": "나의 소셜 배터리 수준",
         "music": "내 노래",
         "mood": "#현재 무드",
-        "thought": "나의 생각"
+        "thought": "나의 한마디"
       }
     },
     "daily_noti_setting": {
