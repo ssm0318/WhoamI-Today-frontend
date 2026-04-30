@@ -7,6 +7,7 @@ import { CheckInPostStory } from '@models/checkInPost';
 import { getCheckInPostStories, getUserCheckInPosts } from '@utils/apis/checkInPost';
 import CheckInPostViewer from './CheckInPostViewer';
 import SnippetArchiveLink from './SnippetArchiveLink';
+import SnippetAvatarBubble from './SnippetStoryCard/SnippetAvatarBubble';
 import SnippetStoryCard from './SnippetStoryCard/SnippetStoryCard';
 
 interface CheckInPostStoriesProps {
@@ -185,13 +186,7 @@ function CheckInPostStories({
             </ComposeBubble>
           )}
           {stories.map((story) => (
-            <SnippetStoryCard
-              key={story.id}
-              story={story}
-              onClick={handleClickStory(story)}
-              showAuthorBadge
-              hideUsername
-            />
+            <SnippetAvatarBubble key={story.id} story={story} onClick={handleClickStory(story)} />
           ))}
         </Strip>
       )}

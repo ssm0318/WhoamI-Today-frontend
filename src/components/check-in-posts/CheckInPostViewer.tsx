@@ -1,4 +1,5 @@
 import { MouseEvent, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useShallow } from 'zustand/react/shallow';
@@ -14,7 +15,6 @@ import {
   updateCheckInPostPinVisibility,
 } from '@utils/apis/checkInPost';
 import { deleteLike, postLike } from '@utils/apis/likes';
-import { openVideoInApp } from '@utils/openVideoInApp';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 
 interface CheckInPostViewerProps {
@@ -46,6 +46,13 @@ function CheckInPostViewer({
     useShallow((state) => ({ myProfile: state.myProfile, openToast: state.openToast })),
   );
   const isOwn = myProfile?.id === story.author_detail.id;
+
+  // Drive the chrome (caption, pin state, visibility) from `story` immediately
+  // so the layout doesn't flicker while the detail fetch resolves on each
+  // navigation between snippets. `post` overrides once loaded.
+  const isPinned = post?.is_pinned ?? story.is_pinned;
+  const pinVisibility = post?.pin_visibility ?? story.pin_visibility;
+  const caption = post?.caption ?? story.caption;
 
   const refreshPost = () => {
     getCheckInPost(story.id)
@@ -139,7 +146,7 @@ function CheckInPostViewer({
     }
   };
 
-  return (
+  return createPortal(
     <Backdrop onClick={handleBackdropClick}>
       <Card onClick={(e) => e.stopPropagation()}>
         <Header>
@@ -157,21 +164,19 @@ function CheckInPostViewer({
             </Typo>
           </Layout.FlexRow>
           <Layout.FlexRow alignItems="center" gap={8}>
-            {isOwn && post && (
-              <HeaderIconPill>
-                <PinButton
-                  type="button"
-                  aria-label={(post.is_pinned ? t('unpin') : t('pin')) ?? ''}
-                  onClick={handlePinToggle}
-                  disabled={pinBusy}
-                >
-                  <SvgIcon
-                    name={post.is_pinned ? 'pin_filled' : 'pin_empty'}
-                    size={24}
-                    color={post.is_pinned ? 'PRIMARY' : 'WHITE'}
-                  />
-                </PinButton>
-              </HeaderIconPill>
+            {isOwn && (
+              <PinButton
+                type="button"
+                aria-label={(isPinned ? t('unpin') : t('pin')) ?? ''}
+                onClick={handlePinToggle}
+                disabled={pinBusy || !post}
+              >
+                <SvgIcon
+                  name={isPinned ? 'pin_filled' : 'pin_empty'}
+                  size={24}
+                  color={isPinned ? 'PRIMARY' : 'WHITE'}
+                />
+              </PinButton>
             )}
             <CloseBtn type="button" onClick={onClose}>
               ×
@@ -179,13 +184,17 @@ function CheckInPostViewer({
           </Layout.FlexRow>
         </Header>
 
-        {isOwn && post && (
+        {isOwn && (
           <PinVisibilityRow>
-            <VisibilityToggle type="button" onClick={handleCloseFriendsToggle} disabled={pinBusy}>
+            <VisibilityToggle
+              type="button"
+              onClick={handleCloseFriendsToggle}
+              disabled={pinBusy || !post}
+            >
               <SvgIcon name="eye" size={16} color="LIGHT_GRAY" />
               <Typo type="label-medium" color="LIGHT_GRAY" underline>
                 {t(
-                  post.pin_visibility === 'close_friends'
+                  pinVisibility === 'close_friends'
                     ? 'visibility_close_friends'
                     : 'visibility_friends',
                 )}
@@ -194,89 +203,74 @@ function CheckInPostViewer({
           </PinVisibilityRow>
         )}
 
-        {story.image_url && <StoryImage src={story.image_url} alt="daily snippet" />}
-        {!story.image_url && story.video_url && (
-          <VideoThumbnailWrapper
-            onClick={(e: MouseEvent) => {
-              e.stopPropagation();
-              openVideoInApp(story.video_url!, {
-                postId: story.id,
-                postType: 'check_in_post_story',
-              });
-            }}
-          >
-            {story.video_thumbnail_url ? (
-              <StoryImage src={story.video_thumbnail_url} alt="video thumbnail" />
-            ) : (
-              <VideoPlaceholder />
-            )}
-            <VideoPlayOverlay>
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
-                <polygon points="8,5 19,12 8,19" />
-              </svg>
-            </VideoPlayOverlay>
-          </VideoThumbnailWrapper>
+        {story.image_url && (
+          <ImageStage>
+            <StoryImage src={story.image_url} alt="daily snippet" />
+          </ImageStage>
         )}
 
-        {post?.caption && (
+        {caption && (
           <Caption>
             <Typo type="body-medium" color="WHITE">
-              {post.caption}
+              {caption}
             </Typo>
           </Caption>
         )}
 
         <Footer>
-          {post && (
-            <ActionPill onClick={(e) => e.stopPropagation()}>
-              {!isOwn && (
-                <PillIconButton
-                  type="button"
-                  onClick={handleLikeToggle}
-                  disabled={likeBusy}
-                  aria-label="like"
-                >
-                  {likeId ? (
-                    <svg width="22" height="22" viewBox="0 0 22.5 22" fill={Colors.PRIMARY}>
-                      <path d="M16.2297 2.30029C14.086 2.30029 12.2543 3.82825 11.248 4.88166C10.2416 3.82825 8.41398 2.30029 6.27136 2.30029C2.5783 2.30029 0 4.8745 0 8.55939C0 12.6196 3.20216 15.2439 6.3 17.7824C7.7625 18.982 9.27614 20.2216 10.4369 21.5961C10.6323 21.8262 10.9186 21.9592 11.2193 21.9592H11.2786C11.5803 21.9592 11.8657 21.8252 12.06 21.5961C13.2228 20.2216 14.7355 18.981 16.199 17.7824C19.2958 15.245 22.5 12.6206 22.5 8.55939C22.5 4.8745 19.9217 2.30029 16.2297 2.30029Z" />
-                    </svg>
-                  ) : (
-                    <svg width="22" height="22" viewBox="0 0 23 20" fill="none">
-                      <path
-                        d="M16.2295 1C17.837 1 19.1423 1.55605 20.043 2.45508C20.9434 3.354 21.4999 4.65601 21.5 6.25879C21.5 7.99804 20.8221 9.45583 19.7305 10.8164C18.6198 12.2007 17.1314 13.4249 15.5654 14.708C14.1175 15.8939 12.5304 17.1927 11.2979 18.6494C11.2913 18.6571 11.2828 18.6592 11.2783 18.6592H11.2197C11.2142 18.6592 11.2056 18.6559 11.1992 18.6484C9.96865 17.1918 8.37974 15.8944 6.93457 14.709H6.93359C5.36693 13.4252 3.87898 12.1999 2.76855 10.8154C1.67733 9.45489 1 7.99764 1 6.25879C1.00007 4.65601 1.55646 3.35398 2.45703 2.45508C3.35778 1.55605 4.66338 1 6.27148 1C7.97247 1.00006 9.54511 2.24739 10.5244 3.27246L11.248 4.0293L11.9707 3.27246C12.9492 2.24821 14.5269 1.00008 16.2295 1Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                    </svg>
-                  )}
-                </PillIconButton>
-              )}
-              {!!post.like_count && (
-                <Typo type="label-large" color="WHITE">
-                  {post.like_count}
-                </Typo>
-              )}
-              <PillIconButton type="button" onClick={openComments} aria-label={t('comment') ?? ''}>
-                <svg width="22" height="22" viewBox="0 0 23 23" fill="none">
-                  <path
-                    d="M3.1 2H19.9C20.5075 2 21 2.49249 21 3.1V20.1L16.4004 16.8H3.1C2.49249 16.8 2 16.3075 2 15.7V3.1C2 2.49249 2.49249 2 3.1 2Z"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    fill="none"
-                  />
-                  <path
-                    d="M12.4585 13.4167H10.5418V10.5417H7.66683V8.625H10.5418V5.75H12.4585V8.625H15.3335V10.5417H12.4585V13.4167Z"
-                    fill="currentColor"
-                  />
-                </svg>
+          <ActionPill onClick={(e) => e.stopPropagation()}>
+            {!isOwn && (
+              <PillIconButton
+                type="button"
+                onClick={handleLikeToggle}
+                disabled={likeBusy || !post}
+                aria-label="like"
+              >
+                {likeId ? (
+                  <svg width="22" height="22" viewBox="0 0 22.5 22" fill={Colors.PRIMARY}>
+                    <path d="M16.2297 2.30029C14.086 2.30029 12.2543 3.82825 11.248 4.88166C10.2416 3.82825 8.41398 2.30029 6.27136 2.30029C2.5783 2.30029 0 4.8745 0 8.55939C0 12.6196 3.20216 15.2439 6.3 17.7824C7.7625 18.982 9.27614 20.2216 10.4369 21.5961C10.6323 21.8262 10.9186 21.9592 11.2193 21.9592H11.2786C11.5803 21.9592 11.8657 21.8252 12.06 21.5961C13.2228 20.2216 14.7355 18.981 16.199 17.7824C19.2958 15.245 22.5 12.6206 22.5 8.55939C22.5 4.8745 19.9217 2.30029 16.2297 2.30029Z" />
+                  </svg>
+                ) : (
+                  <svg width="22" height="22" viewBox="0 0 23 20" fill="none">
+                    <path
+                      d="M16.2295 1C17.837 1 19.1423 1.55605 20.043 2.45508C20.9434 3.354 21.4999 4.65601 21.5 6.25879C21.5 7.99804 20.8221 9.45583 19.7305 10.8164C18.6198 12.2007 17.1314 13.4249 15.5654 14.708C14.1175 15.8939 12.5304 17.1927 11.2979 18.6494C11.2913 18.6571 11.2828 18.6592 11.2783 18.6592H11.2197C11.2142 18.6592 11.2056 18.6559 11.1992 18.6484C9.96865 17.1918 8.37974 15.8944 6.93457 14.709H6.93359C5.36693 13.4252 3.87898 12.1999 2.76855 10.8154C1.67733 9.45489 1 7.99764 1 6.25879C1.00007 4.65601 1.55646 3.35398 2.45703 2.45508C3.35778 1.55605 4.66338 1 6.27148 1C7.97247 1.00006 9.54511 2.24739 10.5244 3.27246L11.248 4.0293L11.9707 3.27246C12.9492 2.24821 14.5269 1.00008 16.2295 1Z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                  </svg>
+                )}
               </PillIconButton>
-              {!!post.comment_count && (
-                <Typo type="label-large" color="WHITE">
-                  {post.comment_count}
-                </Typo>
-              )}
-            </ActionPill>
-          )}
+            )}
+            {!!post?.like_count && (
+              <Typo type="label-large" color="WHITE">
+                {post.like_count}
+              </Typo>
+            )}
+            <PillIconButton
+              type="button"
+              onClick={openComments}
+              aria-label={t('comment') ?? ''}
+              disabled={!post}
+            >
+              <svg width="22" height="22" viewBox="0 0 23 23" fill="none">
+                <path
+                  d="M3.1 2H19.9C20.5075 2 21 2.49249 21 3.1V20.1L16.4004 16.8H3.1C2.49249 16.8 2 16.3075 2 15.7V3.1C2 2.49249 2.49249 2 3.1 2Z"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  fill="none"
+                />
+                <path
+                  d="M12.4585 13.4167H10.5418V10.5417H7.66683V8.625H10.5418V5.75H12.4585V8.625H15.3335V10.5417H12.4585V13.4167Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </PillIconButton>
+            {!!post?.comment_count && (
+              <Typo type="label-large" color="WHITE">
+                {post.comment_count}
+              </Typo>
+            )}
+          </ActionPill>
         </Footer>
 
         {onPrev && <NavZone $side="left" onClick={handleLeft} />}
@@ -293,7 +287,8 @@ function CheckInPostViewer({
           closeBottomSheet={() => setShowComments(false)}
         />
       )}
-    </Backdrop>
+    </Backdrop>,
+    document.body,
   );
 }
 
@@ -313,6 +308,7 @@ const Card = styled.div`
   max-width: 480px;
   height: 100%;
   max-height: 100vh;
+  max-height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -380,9 +376,19 @@ const CloseBtn = styled.button`
   padding: 0 8px;
 `;
 
-const StoryImage = styled.img`
+const ImageStage = styled.div`
   width: 100%;
-  max-height: 60vh;
+  height: 60vh;
+  height: 60dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+`;
+
+const StoryImage = styled.img`
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
 `;
 
@@ -430,17 +436,6 @@ const PillIconButton = styled.button`
   }
 `;
 
-const HeaderIconPill = styled.div`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 9999px;
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  padding: 4px;
-`;
-
 const NavZone = styled.div<{ $side: 'left' | 'right' }>`
   position: absolute;
   top: 0;
@@ -449,32 +444,6 @@ const NavZone = styled.div<{ $side: 'left' | 'right' }>`
   ${({ $side }) => ($side === 'left' ? 'left: 0;' : 'right: 0;')}
   cursor: pointer;
   z-index: 1;
-`;
-
-const VideoThumbnailWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  cursor: pointer;
-`;
-
-const VideoPlayOverlay = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const VideoPlaceholder = styled.div`
-  width: 100%;
-  height: 300px;
-  background: rgba(255, 255, 255, 0.1);
 `;
 
 export default CheckInPostViewer;
