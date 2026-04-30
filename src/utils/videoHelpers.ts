@@ -1,6 +1,5 @@
-import { VIDEO_FILE_SIZE_LIMIT } from '@constants/size';
-
 const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/quicktime', 'video/webm'];
+const VIDEO_FILE_SIZE_LIMIT = 10 * 1024 * 1024; // 10MB
 
 export const isVideoFile = (file: File): boolean => {
   return ALLOWED_VIDEO_TYPES.includes(file.type);

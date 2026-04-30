@@ -61,17 +61,15 @@ export const postResponse = async ({
   content,
   visibility,
   image,
-  video,
   share_friends = [],
   share_groups = [],
 }: ResponseQuestionRequestParams) => {
-  if (video || image) {
+  if (image) {
     const formData = new FormData();
     if (question_id) formData.append('question_id', String(question_id));
     formData.append('content', content);
     visibility.forEach((v) => formData.append('visibility', v));
-    if (video) formData.append('video', video, video.name);
-    if (image) formData.append('image', image, image.name);
+    formData.append('image', image, image.name);
     const { data } = await axiosFormDataInstance.post<Response>(`qna/responses/`, formData);
     return data;
   }

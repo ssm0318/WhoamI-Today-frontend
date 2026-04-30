@@ -6,7 +6,6 @@ import { Loader } from '@components/_common/loader/Loader.styled';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledNewResponsePrompt } from '@components/_common/prompt/PromptCard.styled';
-import VideoPreview from '@components/_common/video-preview/VideoPreview';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import NewNoteImageEdit from '@components/note/new-note-image-edit/NewNoteImageEdit';
 import { NoteImage } from '@components/note/note-image/NoteImage.styled';
@@ -22,7 +21,6 @@ import { UserSelector } from '@stores/user';
 import { getQuestionDetail, patchResponse, postResponse } from '@utils/apis/question';
 import { getResponse } from '@utils/apis/responses';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
-import { isVideoFile, validateVideoFile } from '@utils/videoHelpers';
 import { FlexRow, LayoutBase } from 'src/design-system/layouts';
 import { MainScrollContainer } from '../Root';
 
@@ -43,8 +41,6 @@ function NewResponse() {
 
   const [newResponse, setNewResponse] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<CroppedImg | null>(null);
-  const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string>();
   const [editImageUrl, setEditImageUrl] = useState<string>();
   const [isEditVisible, setIsEditVisible] = useState(false);
   const mediaInputRef = useRef<HTMLInputElement>(null);
@@ -106,27 +102,9 @@ function NewResponse() {
     if (!e.target.files) return;
     const file = e.target.files[0];
 
-    if (isVideoFile(file)) {
-      const error = validateVideoFile(file);
-      if (error) {
-        openToast({ message: error });
-        return;
-      }
-      if (videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
-      setVideoPreviewUrl(URL.createObjectURL(file));
-      setVideoFile(file);
-      setImageFile(null);
-      return;
-    }
-
     try {
       const imageDataUrl = await readFile(file);
       if (typeof imageDataUrl !== 'string') throw new Error('read file error');
-      if (videoPreviewUrl) {
-        URL.revokeObjectURL(videoPreviewUrl);
-        setVideoPreviewUrl(undefined);
-      }
-      setVideoFile(null);
       setEditImageUrl(imageDataUrl);
       setIsEditVisible(true);
     } catch (error) {
@@ -136,21 +114,10 @@ function NewResponse() {
 
   const onCompleteImageCrop = (croppedImage: CroppedImg) => {
     setImageFile(croppedImage);
-    setVideoFile(null);
-    if (videoPreviewUrl) {
-      URL.revokeObjectURL(videoPreviewUrl);
-      setVideoPreviewUrl(undefined);
-    }
   };
 
   const handleDeleteImage = () => {
     setImageFile(null);
-  };
-
-  const handleDeleteVideo = () => {
-    if (videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
-    setVideoPreviewUrl(undefined);
-    setVideoFile(null);
   };
 
   const handleChangeVisibility = (visibility: ComponentVisibility) => {
@@ -183,7 +150,6 @@ function NewResponse() {
             content: newResponse || '',
             visibility: visibilityList,
             image: imageFile?.file || undefined,
-            video: videoFile || undefined,
           })
         : await patchResponse({
             post_id: Number(responseId),
@@ -262,7 +228,7 @@ function NewResponse() {
                 </FlexRow>
                 {/* Image preview */}
                 {imageFile?.url && (
-                  <VideoPreviewWrap>
+                  <ImagePreviewWrap>
                     <NoteImage
                       src={imageFile.url}
                       alt="response image"
@@ -276,15 +242,7 @@ function NewResponse() {
                     <DeleteBtn onClick={handleDeleteImage}>
                       <SvgIcon name="close" size={14} />
                     </DeleteBtn>
-                  </VideoPreviewWrap>
-                )}
-                {/* Video preview */}
-                {videoFile && videoPreviewUrl && (
-                  <VideoPreview src={videoPreviewUrl} size={80} borderRadius={6}>
-                    <DeleteBtn onClick={handleDeleteVideo}>
-                      <SvgIcon name="close" size={14} />
-                    </DeleteBtn>
-                  </VideoPreview>
+                  </ImagePreviewWrap>
                 )}
               </ResponseMediaSection>
             )}
@@ -292,7 +250,7 @@ function NewResponse() {
               <input
                 ref={mediaInputRef}
                 type="file"
-                accept="image/jpeg, image/png, video/mp4, video/quicktime, video/webm"
+                accept="image/jpeg, image/png"
                 onChange={handleFileAdd}
                 style={{ display: 'none' }}
               />
@@ -354,7 +312,7 @@ function NewResponse() {
 
 export default NewResponse;
 
-const VideoPreviewWrap = styled.div`
+const ImagePreviewWrap = styled.div`
   position: relative;
   display: inline-block;
   margin-bottom: 12px;

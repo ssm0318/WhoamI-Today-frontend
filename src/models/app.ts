@@ -48,7 +48,6 @@ export interface FileSelectedData {
   type: string;
   name: string;
   base64?: string;
-  isVideo?: boolean;
 }
 
 export interface OpenVideoGalleryData {

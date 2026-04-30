@@ -19,10 +19,4 @@ export const NOTE_IMAGE_DISPLAY_HEIGHT_EDIT_MODE =
 /** 이미지 파일 사이즈 제한 (노트, 프로필) */
 export const IMAGE_FILE_SIZE_LIMIT = 10 * 1024 * 1024; // 10MB
 
-/** 동영상 파일 사이즈 제한 */
-export const VIDEO_FILE_SIZE_LIMIT = 50 * 1024 * 1024; // 50MB
-
-/** 동영상 최대 길이 (초) */
-export const VIDEO_MAX_DURATION_SECONDS = 30;
-
 export const NOTE_IMAGE_CROP_MIN_SIZE = 100;

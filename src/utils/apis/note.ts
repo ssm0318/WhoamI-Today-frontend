@@ -46,9 +46,6 @@ export const postNote = async (
       formData.append('images', img.file, `${index}`);
     });
   }
-  if (noteData.video) {
-    formData.append('video', noteData.video, noteData.video.name);
-  }
   if (noteData.visibility && noteData.visibility.length > 0) {
     formData.append('visibility', JSON.stringify(noteData.visibility));
   }

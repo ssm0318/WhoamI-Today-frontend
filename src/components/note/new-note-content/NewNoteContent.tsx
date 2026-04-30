@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import VideoPreview from '@components/_common/video-preview/VideoPreview';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { CheckBox, Layout, SvgIcon, Typo } from '@design-system';
@@ -14,7 +13,6 @@ import { UserSelector } from '@stores/user';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import { processImageFromApp } from '@utils/imageHelpers';
-import { isVideoFile, processVideoFromApp, validateVideoFile } from '@utils/videoHelpers';
 import { FlexRow } from 'src/design-system/layouts';
 import NewNoteImageEdit from '../new-note-image-edit/NewNoteImageEdit';
 import NewNotePhotoUploadBottomSheet from '../new-note-photo-upload-bottom-sheet/NewNotePhotoUploadBottomSheet';
@@ -43,7 +41,6 @@ function NewNoteContent({
   const [showPhotoUploadBottomSheet, setShowPhotoUploadBottomSheet] = useState(false);
 
   const [editImageUrl, setEditImageUrl] = useState<string>();
-  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string>();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const { isAndroid } = getMobileDeviceInfo();
@@ -61,37 +58,13 @@ function NewNoteContent({
 
   // 앱에서 파일 선택 완료 시 호출되는 콜백
   const handleFileSelected = async (data: FileSelectedData) => {
-    if (data.isVideo) {
-      const videoFile = processVideoFromApp(data);
-      if (videoFile) {
-        const error = validateVideoFile(videoFile);
-        if (error) {
-          openToast({ message: error });
-          return;
-        }
-        const previewUrl = URL.createObjectURL(videoFile);
-        setVideoPreviewUrl(previewUrl);
-        setNoteInfo((prevNoteInfo) => ({
-          ...prevNoteInfo,
-          video: videoFile,
-          images: [],
-        }));
-      }
-      return;
-    }
-
     const result = await processImageFromApp(data, (message) => openToast({ message }));
 
     if (result) {
       setNoteInfo((prevNoteInfo) => ({
         ...prevNoteInfo,
         images: [result],
-        video: undefined,
       }));
-      if (videoPreviewUrl) {
-        URL.revokeObjectURL(videoPreviewUrl);
-        setVideoPreviewUrl(undefined);
-      }
     }
   };
 
@@ -142,31 +115,11 @@ function NewNoteContent({
     if (!e.target.files) return;
     const file = e.target.files[0];
 
-    if (isVideoFile(file)) {
-      const error = validateVideoFile(file);
-      if (error) {
-        openToast({ message: error });
-        return;
-      }
-      const previewUrl = URL.createObjectURL(file);
-      setVideoPreviewUrl(previewUrl);
-      setNoteInfo((prevNoteInfo) => ({
-        ...prevNoteInfo,
-        video: file,
-        images: [],
-      }));
-      return;
-    }
-
     try {
       const imageDataUrl = await readFile(file);
 
       if (typeof imageDataUrl !== 'string') {
         throw new Error('read file error');
-      }
-      if (videoPreviewUrl) {
-        URL.revokeObjectURL(videoPreviewUrl);
-        setVideoPreviewUrl(undefined);
       }
       setEditImageUrl(imageDataUrl);
       setIsEditVisible(true);
@@ -188,12 +141,7 @@ function NewNoteContent({
     setNoteInfo((prevNoteInfo) => ({
       ...prevNoteInfo,
       images: [croppedImage],
-      video: undefined,
     }));
-    if (videoPreviewUrl) {
-      URL.revokeObjectURL(videoPreviewUrl);
-      setVideoPreviewUrl(undefined);
-    }
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -209,17 +157,6 @@ function NewNoteContent({
     setNoteInfo((prevNoteInfo) => ({
       ...prevNoteInfo,
       images: [],
-    }));
-  };
-
-  const handleDeleteVideo = () => {
-    if (videoPreviewUrl) {
-      URL.revokeObjectURL(videoPreviewUrl);
-      setVideoPreviewUrl(undefined);
-    }
-    setNoteInfo((prevNoteInfo) => ({
-      ...prevNoteInfo,
-      video: undefined,
     }));
   };
 
@@ -313,21 +250,10 @@ function NewNoteContent({
             </Layout.FlexCol>
           )}
 
-          {/* 첨부한 동영상 */}
-          {noteInfo?.video && videoPreviewUrl && (
-            <Layout.FlexCol w="100%">
-              <VideoPreview src={videoPreviewUrl} size={50} borderRadius={8}>
-                <Layout.Absolute t={-4} r={-4}>
-                  <SvgIcon name="delete_image" size={32} onClick={handleDeleteVideo} />
-                </Layout.Absolute>
-              </VideoPreview>
-            </Layout.FlexCol>
-          )}
-
           <input
             ref={inputRef}
             type="file"
-            accept="image/jpeg, image/png, video/mp4, video/quicktime, video/webm"
+            accept="image/jpeg, image/png"
             onChange={onFileAdd}
             multiple={false}
             style={{ display: 'none' }}

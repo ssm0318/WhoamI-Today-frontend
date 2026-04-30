@@ -2,12 +2,6 @@ import { CroppedImg } from '@utils/getCroppedImg';
 import { GetMomentResponse } from './api/moment';
 import { User } from './user';
 
-export interface PostVideo {
-  url: string;
-  thumbnail_url: string | null;
-  duration_seconds: number | null;
-}
-
 export enum POST_TYPE {
   RESPONSE = 'Response',
   QUESTION = 'Question',
@@ -104,7 +98,6 @@ export interface Response extends ContentsCommon {
   question: DailyQuestion;
   question_id: number;
   image: string | null;
-  video: PostVideo | null;
   comment_count: number | null;
   like_user_sample: User[];
   like_reaction_user_sample: ReactionUserSample[];
@@ -116,7 +109,6 @@ export interface Response extends ContentsCommon {
 export interface Note extends ContentsCommon {
   type: POST_TYPE.NOTE;
   images: string[];
-  video: PostVideo | null;
   comment_count: number | null;
   like_user_sample: User[];
   like_reaction_user_sample: ReactionUserSample[];
@@ -130,7 +122,6 @@ export interface Note extends ContentsCommon {
 export interface NewNoteForm {
   content: string;
   images?: CroppedImg[];
-  video?: File;
   visibility: PostVisibility[];
   share_type?: ShareType;
 }

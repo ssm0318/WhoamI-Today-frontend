@@ -2,10 +2,8 @@ import { AxiosError } from 'axios';
 import { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import UploadLoadingOverlay from '@components/_common/upload-loading-overlay/UploadLoadingOverlay';
-import VideoPreview from '@components/_common/video-preview/VideoPreview';
 import NewNoteImageEdit from '@components/note/new-note-image-edit/NewNoteImageEdit';
 import { NoteImage } from '@components/note/note-image/NoteImage.styled';
 import SubHeader from '@components/sub-header/SubHeader';
@@ -16,7 +14,6 @@ import { NewCheckInPostForm } from '@models/checkInPost';
 import { useBoundStore } from '@stores/useBoundStore';
 import { postCheckInPost } from '@utils/apis/checkInPost';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
-import { isVideoFile, validateVideoFile } from '@utils/videoHelpers';
 import { MainScrollContainer } from '../Root';
 
 function NewCheckInPost() {
@@ -33,12 +30,10 @@ function NewCheckInPost() {
 
   const [form, setForm] = useState<NewCheckInPostForm>({
     image: null,
-    video: null,
     caption: '',
     closeFriendsOnly: false,
   });
 
-  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const showUploadOverlay = useDelayedVisible(isSubmitting);
 
@@ -48,26 +43,9 @@ function NewCheckInPost() {
     if (!e.target.files) return;
     const file = e.target.files[0];
 
-    if (isVideoFile(file)) {
-      const error = validateVideoFile(file);
-      if (error) {
-        openToast({ message: error });
-        return;
-      }
-      const previewUrl = URL.createObjectURL(file);
-      if (videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
-      setVideoPreviewUrl(previewUrl);
-      setForm((prev) => ({ ...prev, video: file, image: null }));
-      return;
-    }
-
     try {
       const imageDataUrl = await readFile(file);
       if (typeof imageDataUrl !== 'string') throw new Error('read file error');
-      if (videoPreviewUrl) {
-        URL.revokeObjectURL(videoPreviewUrl);
-        setVideoPreviewUrl(undefined);
-      }
       setEditImageUrl(imageDataUrl);
       setIsEditVisible(true);
     } catch (error) {
@@ -76,23 +54,11 @@ function NewCheckInPost() {
   };
 
   const onCompleteImageCrop = (croppedImage: CroppedImg) => {
-    setForm((prev) => ({ ...prev, image: croppedImage, video: null }));
-    if (videoPreviewUrl) {
-      URL.revokeObjectURL(videoPreviewUrl);
-      setVideoPreviewUrl(undefined);
-    }
+    setForm((prev) => ({ ...prev, image: croppedImage }));
   };
 
   const handleDeleteImage = () => {
     setForm((prev) => ({ ...prev, image: null }));
-  };
-
-  const handleDeleteVideo = () => {
-    if (videoPreviewUrl) {
-      URL.revokeObjectURL(videoPreviewUrl);
-      setVideoPreviewUrl(undefined);
-    }
-    setForm((prev) => ({ ...prev, video: null }));
   };
 
   const handleChangeCaption = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -106,7 +72,7 @@ function NewCheckInPost() {
   const handleCancel = () => navigate(-1);
 
   const handleShare = async () => {
-    if (isSubmitting || (!form.image && !form.video)) return;
+    if (isSubmitting || !form.image) return;
     setIsSubmitting(true);
     try {
       await postCheckInPost(form);
@@ -122,7 +88,7 @@ function NewCheckInPost() {
     }
   };
 
-  const canSubmit = (!!form.image || !!form.video) && !isSubmitting;
+  const canSubmit = !!form.image && !isSubmitting;
 
   return (
     <MainScrollContainer>
@@ -167,7 +133,7 @@ function NewCheckInPost() {
           <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
         </Layout.FlexRow>
 
-        {form.image?.url ? (
+        {form.image?.url && (
           <Layout.FlexCol w="100%" mt={16}>
             <div style={{ position: 'relative', display: 'inline-block' }}>
               <NoteImage
@@ -185,15 +151,7 @@ function NewCheckInPost() {
               </Layout.Absolute>
             </div>
           </Layout.FlexCol>
-        ) : form.video && videoPreviewUrl ? (
-          <Layout.FlexCol w="100%" mt={16}>
-            <VideoPreview src={videoPreviewUrl} size={50} borderRadius={8}>
-              <DeleteOverlay onClick={handleDeleteVideo}>
-                <SvgIcon name="delete_image" size={32} />
-              </DeleteOverlay>
-            </VideoPreview>
-          </Layout.FlexCol>
-        ) : null}
+        )}
 
         <Layout.FlexRow w="100%" justifyContent="flex-end" alignItems="center" mt={20} gap={6}>
           <CheckBox
@@ -206,7 +164,7 @@ function NewCheckInPost() {
         <input
           ref={inputRef}
           type="file"
-          accept="image/jpeg, image/png, video/mp4, video/quicktime, video/webm"
+          accept="image/jpeg, image/png"
           onChange={onFileAdd}
           multiple={false}
           style={{ display: 'none' }}
@@ -227,10 +185,3 @@ function NewCheckInPost() {
 }
 
 export default NewCheckInPost;
-
-const DeleteOverlay = styled.div`
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  cursor: pointer;
-`;

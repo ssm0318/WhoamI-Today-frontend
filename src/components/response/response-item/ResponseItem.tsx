@@ -15,7 +15,6 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import { POST_DP_TYPE, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { openVideoInApp } from '@utils/openVideoInApp';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
@@ -67,8 +66,7 @@ function ResponseItem({
       setOverflowSummary(contentArrWithNewLine.slice(0, MAX_RESPONSE_NEW_LINE).join('\n'));
   }, [response.content, displayType]);
 
-  const { content, created_at, author_detail, question, image, video, is_edited, visibility } =
-    response;
+  const { content, created_at, author_detail, question, image, is_edited, visibility } = response;
 
   const { username, profile_image } = author_detail ?? {};
 
@@ -229,30 +227,6 @@ function ResponseItem({
           <img src={image} alt="response" style={{ width: '100%', borderRadius: 8 }} />
         </RespImageWrapper>
       )}
-      {/* Response video */}
-      {video && (
-        <VideoThumbnailWrapper
-          onClick={(e: MouseEvent) => {
-            e.stopPropagation();
-            openVideoInApp(video.url, { postId: response.id, postType: 'response' });
-          }}
-        >
-          {video.thumbnail_url ? (
-            <img
-              src={video.thumbnail_url}
-              alt="video thumbnail"
-              style={{ width: '100%', borderRadius: 8 }}
-            />
-          ) : (
-            <RespVideoPlaceholder />
-          )}
-          <RespPlayOverlay>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
-              <polygon points="8,5 19,12 8,19" />
-            </svg>
-          </RespPlayOverlay>
-        </VideoThumbnailWrapper>
-      )}
       {/* (Edited) */}
       {!previewMode && is_edited && (
         <Typo type="label-medium" color="MEDIUM_GRAY">
@@ -402,34 +376,4 @@ const RespImageWrapper = styled.div`
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 8px;
-`;
-
-const VideoThumbnailWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  cursor: pointer;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 8px;
-`;
-
-const RespPlayOverlay = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const RespVideoPlaceholder = styled.div`
-  width: 100%;
-  height: 200px;
-  background: #f0f0f0;
-  border-radius: 8px;
 `;
