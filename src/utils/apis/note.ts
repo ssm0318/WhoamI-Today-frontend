@@ -23,7 +23,7 @@ export const getNoteDetail = async (noteId: number) => {
 };
 
 export const getNoteDetailDefault = async (noteId: number) => {
-  const { data } = await axios.get<Note>(`/notes/${noteId}/default/`);
+  const { data } = await axios.get<Note>(`/notes/${noteId}/`);
   const { id, current_user_read } = data;
 
   if (!current_user_read) {
