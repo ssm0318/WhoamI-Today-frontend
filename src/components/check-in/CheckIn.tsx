@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import CheckInArchiveChip from '@components/check-in/archive/CheckInArchiveChip';
 import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
@@ -9,7 +10,6 @@ import SocialBatteryPlaceholder from '@components/profile/placeholders/SocialBat
 import ThoughtPlaceholder from '@components/profile/placeholders/ThoughtPlaceholder';
 import { useIsPreviewMode } from '@components/view-as/PreviewModeContext';
 import { Layout, Typo } from '@design-system';
-import { useArchiveCounts } from '@hooks/useArchiveCounts';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { useFriendPinnedCount } from '@hooks/useFriendPinnedCount';
 import { MyProfile } from '@models/api/user';
@@ -38,7 +38,6 @@ function CheckIn({ user }: CheckInProps) {
   const isMyPage = !previewMode && user?.id === myProfile?.id;
   const friendUsername = !isMyPage && 'username' in user ? (user as UserProfile).username : null;
   const { pinnedCount: friendPinnedCount } = useFriendPinnedCount(friendUsername);
-  const { archivedCount } = useArchiveCounts();
   const [checkIn, setCheckIn] = useState<CheckInBase | null | undefined>(
     isMyPage ? initialCheckIn : user.check_in,
   );
@@ -68,26 +67,19 @@ function CheckIn({ user }: CheckInProps) {
   return (
     <Layout.FlexCol w="100%" gap={8} p={8} bgColor="GRAY_14" rounded={8} justifyContent="center">
       <>
-        {/* Top row: title (left) + archive/pinned entry point (right).
-            Own profile → [All | Pinned (N)] segmented.
-            Friend profile → Pinned Check-ins (N) link (hidden when count=0).
-            flex-wrap + row-gap ensures the chips fall to the next line on
-            narrow phones (iPhone SE 1st gen = 320px) rather than overlap
-            or clip the title. */}
-        <Layout.FlexRow
-          w="100%"
-          justifyContent="space-between"
-          alignItems="center"
-          style={{ flexWrap: 'wrap', rowGap: 4, columnGap: 8 }}
-        >
+        <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" gap={4}>
           <Typo type="label-large" color="BLACK">
             {t('title')}
           </Typo>
-          {!isMyPage && friendUsername && (
-            <FriendPinnedChip
-              pinnedCount={friendPinnedCount}
-              to={`/users/${friendUsername}/check-in/pinned`}
-            />
+          {checkIn?.created_at && (
+            <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
+              {t('checked_in_time', {
+                time: convertTimeDiffByString({
+                  now: currentDate,
+                  day: new Date(checkIn?.created_at),
+                }),
+              })}
+            </Typo>
           )}
         </Layout.FlexRow>
         <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
@@ -184,53 +176,18 @@ function CheckIn({ user }: CheckInProps) {
               ))}
           </Layout.FlexRow>
         )}
-        {/* Bottom row: timestamp (left) + edit pencil (right, own-profile only). */}
-        {(isMyPage || checkIn?.created_at) && (
-          <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" gap={4}>
-            {checkIn?.created_at ? (
-              <Layout.FlexRow alignItems="center" gap={4}>
-                <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
-                  {t('checked_in_time', {
-                    time: convertTimeDiffByString({
-                      now: currentDate,
-                      day: new Date(checkIn?.created_at),
-                    }),
-                  })}
-                </Typo>
-              </Layout.FlexRow>
-            ) : (
-              <span />
-            )}
-            {isMyPage && (
-              <Layout.FlexRow
-                alignItems="center"
-                gap={4}
-                onClick={() => navigate('/check-in/archive?tab=all')}
-                style={{ cursor: 'pointer' }}
-              >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                  style={{ color: '#8C8C8C' }}
-                >
-                  <rect x="3" y="3" width="18" height="5" rx="1" />
-                  <path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8" />
-                  <path d="M10 12h4" />
-                </svg>
-                <Typo type="label-medium" color="DARK_GRAY" underline>
-                  Archive ({archivedCount})
-                </Typo>
-              </Layout.FlexRow>
-            )}
-          </Layout.FlexRow>
-        )}
+        <Layout.FlexRow w="100%" justifyContent="flex-end" alignItems="center">
+          {isMyPage ? (
+            <CheckInArchiveChip />
+          ) : (
+            friendUsername && (
+              <FriendPinnedChip
+                pinnedCount={friendPinnedCount}
+                to={`/users/${friendUsername}/check-in/pinned`}
+              />
+            )
+          )}
+        </Layout.FlexRow>
       </>
     </Layout.FlexCol>
   );

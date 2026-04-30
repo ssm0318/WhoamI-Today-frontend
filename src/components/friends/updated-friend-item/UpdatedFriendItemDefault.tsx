@@ -2,7 +2,6 @@ import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
 import UserMoreModal from '@components/user-page/UserMoreModal';
 import { Layout, Typo } from '@design-system';
 import { UpdatedProfile } from '@models/api/friends';
@@ -25,7 +24,6 @@ function UpdatedFriendItemDefault({
   onAfterUserMoreAction,
 }: Props) {
   const { id, profile_image, username, unread_chat_count, description } = user;
-  const pinnedCount = user.pinned_count ?? 0;
 
   const { featureFlags } = useBoundStore(UserSelector);
   const isVerQ = !!featureFlags?.postsVerQ;
@@ -68,14 +66,6 @@ function UpdatedFriendItemDefault({
                 <Typo type="label-medium" color="MEDIUM_GRAY" numberOfLines={1}>
                   {description}
                 </Typo>
-              )}
-              {!isVerQ && (
-                <Layout.FlexRow mt={4}>
-                  <FriendPinnedChip
-                    pinnedCount={pinnedCount}
-                    to={`/users/${username}/check-in/pinned`}
-                  />
-                </Layout.FlexRow>
               )}
             </Layout.FlexCol>
           </Layout.FlexRow>
