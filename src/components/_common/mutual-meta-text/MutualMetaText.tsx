@@ -70,7 +70,7 @@ function MutualMetaText({
           <button type="button" onClick={openTraits} style={linkButtonStyle}>
             <span style={{ textDecoration: 'underline', textUnderlineOffset: 2 }}>
               <Typo type="label-medium" color="PRIMARY" fontWeight={500}>
-                {t('shared_traits_count', { count: traitCount })}
+                {t('mutual_traits_count', { count: traitCount })}
               </Typo>
             </span>
           </button>
@@ -91,12 +91,12 @@ function MutualMetaText({
       <InfoPopup
         isOpen={traitsOpen}
         onClose={() => setTraitsOpen(false)}
-        title={t('shared_traits_title')}
+        title={t('mutual_traits_title')}
       >
         <MutualTraitsList
           traits={[...mutualInterests, ...mutualPersonas]}
           isLoading={isLoading}
-          emptyText={t('empty_traits')}
+          emptyText={t('empty_mutual_traits')}
         />
       </InfoPopup>
     </>

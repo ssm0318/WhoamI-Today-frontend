@@ -283,12 +283,12 @@
         "are_you_sure_you_want_to_delete_this_friend": "Remove this friend?",
         "mutual_friends_count_one": "{{count}} mutual friend",
         "mutual_friends_count_other": "{{count}} mutual friends",
-        "shared_traits_count_one": "{{count}} shared trait",
-        "shared_traits_count_other": "{{count}} shared traits",
+        "mutual_traits_count_one": "{{count}} mutual trait",
+        "mutual_traits_count_other": "{{count}} mutual traits",
         "mutual_friends_title": "Mutual Friends",
-        "shared_traits_title": "Shared Traits",
+        "mutual_traits_title": "Mutual Traits",
         "empty_mutuals": "No mutual friends",
-        "empty_traits": "No shared traits",
+        "empty_mutual_traits": "No mutual traits",
         "more_modal": {
             "menu": {
                 "add_to_close_friends": "Add to Close Friends",
