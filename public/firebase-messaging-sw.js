@@ -28,7 +28,7 @@ self.addEventListener('notificationclick', (e) => {
   e.stopImmediatePropagation();
 
   // data-only: tag와 url이 notification.data에 직접 있음
-  // FCM auto-display (레거시): FCM_MSG wrapper 안에 있음
+  // FCM auto-display: FCM_MSG wrapper 안에 있음
   const hasFcmMsg = !!e.notification.data?.FCM_MSG;
   const notificationTag = hasFcmMsg ? e.notification.data.FCM_MSG.data.tag : e.notification.tag;
   const notificationUrl = hasFcmMsg
@@ -54,29 +54,36 @@ self.addEventListener('notificationclick', (e) => {
   e.notification.close();
 });
 
-// Retrieve an instance of Firebase Messaging so that it can handle background messages.
-// Retrieve firebase messaging
-const messaging = firebase.messaging();
+// push 이벤트를 직접 가로채서 tag 포함한 notification을 표시
+// FCM SDK의 자동 표시(tag 없음)를 방지
+self.addEventListener('push', (e) => {
+  let payload;
+  try {
+    payload = e.data?.json();
+  } catch (err) {
+    return; // 파싱 실패하면 기본 동작에 맡김
+  }
 
-messaging.onBackgroundMessage((payload) => {
-  const { data } = payload;
-  if (!data) return;
+  // FCM 메시지 구조: { data: { ... }, notification: { ... } }
+  const data = payload?.data;
+  if (!data || !data.tag) return; // 우리 메시지가 아니면 기본 동작
+
+  // 기본 FCM 자동 표시 방지: waitUntil로 우리가 직접 표시
+  e.stopImmediatePropagation();
 
   const { message_ko, message_en, url, tag, type } = data;
 
-  // cancel 타입: 기존 notification 닫기
   if (type === 'cancel') {
-    self.registration.getNotifications({ tag }).then((notifications) => {
-      notifications.forEach((n) => n.close());
-    });
+    e.waitUntil(
+      self.registration.getNotifications({ tag }).then((notifications) => {
+        notifications.forEach((n) => n.close());
+      }),
+    );
     return;
   }
 
-  // data-only 메시지를 직접 표시 (tag로 이전 notification 대체)
-  const isKorean =
-    (self.navigator && self.navigator.language && self.navigator.language.startsWith('ko')) ||
-    (self.registration && self.registration.scope && self.registration.scope.includes('ko'));
-  const title = 'WhoAmI Today';
+  const isKorean = self.navigator?.language?.startsWith('ko');
+  const title = payload?.notification?.title || 'WhoAmI Today';
   const options = {
     body: isKorean ? message_ko || message_en : message_en || message_ko,
     tag,
@@ -85,5 +92,12 @@ messaging.onBackgroundMessage((payload) => {
     data: { url },
   };
 
-  return self.registration.showNotification(title, options);
+  e.waitUntil(self.registration.showNotification(title, options));
 });
+
+// Retrieve an instance of Firebase Messaging so that it can handle background messages.
+// Retrieve firebase messaging
+const messaging = firebase.messaging();
+
+// onBackgroundMessage는 push 이벤트에서 이미 처리하므로 빈 콜백
+messaging.onBackgroundMessage(() => {});
