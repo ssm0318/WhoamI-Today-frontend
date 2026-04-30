@@ -10,6 +10,7 @@ import { usePostAppMessage } from '@hooks/useAppMessage';
 
 const SIDE_MENU_LIST = [
   { key: 'my_profile', path: '/my' },
+  { key: 'survey_results', path: '/surveys' },
   { key: 'settings', path: '/settings' },
 ];
 

@@ -73,6 +73,9 @@ import Password from './routes/sign-up/Password';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
 import SuggestQuestions from './routes/SuggestQuestions';
+import SurveyAnswer from './routes/surveys/SurveyAnswer';
+import SurveyResults from './routes/surveys/SurveyResults';
+import SurveysIndex from './routes/surveys/SurveysIndex';
 import UpdateCheckin from './routes/update/UpdateCheckin';
 import UserPage from './routes/UserPage';
 import ViewAsPage from './routes/ViewAsPage';
@@ -188,6 +191,19 @@ const router = createBrowserRouter([
         children: [
           { path: '', element: <Share /> },
           { path: 'photo', element: <PhotoOfTheDayFlow /> },
+        ],
+      },
+      {
+        path: 'surveys',
+        element: (
+          <VersionGuard allowedVersions={[VersionType.VER_W, VersionType.VER_Q]}>
+            <Outlet />
+          </VersionGuard>
+        ),
+        children: [
+          { path: '', element: <SurveysIndex /> },
+          { path: ':slug/results', element: <SurveyResults /> },
+          { path: ':slug/answer', element: <SurveyAnswer /> },
         ],
       },
       {
