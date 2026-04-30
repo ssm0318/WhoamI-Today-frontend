@@ -292,10 +292,12 @@ export default function UpdateCheckin() {
 
   /**
    * Archive a currently-live component (without replacing it). Closes the
-   * editor, hits the new PATCH /check_in/components/<c>/archive/, refetches
-   * the active check-in to reset local state to "no value," and surfaces
-   * a toast. The archived row drops into the user's archive feed under
-   * "Today" and is eligible for pinning.
+   * editor, hits PATCH /check_in/components/<c>/archive/, then refetches.
+   * The backend ages the live entry's timestamps past the 12h cutoff but
+   * keeps the data, so refetched values still carry the archived content
+   * with `*_updated_at` >12h — `*Archived` memo paints the "Only Me
+   * (Archived)" badge while the value stays visible. Eligible for pinning
+   * via the archive feed.
    */
   const handleArchive = useCallback(
     async (component: ArchivableCheckInComponent) => {
@@ -308,7 +310,7 @@ export default function UpdateCheckin() {
           setMood(Array.isArray(ci?.mood) ? ci?.mood ?? [] : ci?.mood ? [ci.mood] : []);
         }
         if (component === 'thought') setThought(ci?.thought ?? '');
-        if (component === 'song') setTrackId('');
+        if (component === 'song') setTrackId(ci?.track_id ?? '');
         openToast({ message: `Archived ${component}` });
       } catch {
         openToast({ message: `Couldn't archive ${component}. Please try again.` });

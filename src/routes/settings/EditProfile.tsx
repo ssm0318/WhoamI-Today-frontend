@@ -502,22 +502,26 @@ function EditProfile() {
 export default EditProfile;
 
 const EditProfileTabRow = styled(Layout.FlexRow)`
-  gap: 8px;
+  width: 100%;
+  border-bottom: 1px solid ${Colors.LIGHT_GRAY};
+  margin-bottom: 8px;
 `;
 
 const EditProfileTabButton = styled.button<{ $active: boolean }>`
-  background: ${({ $active }) => ($active ? Colors.PRIMARY : Colors.LIGHT)};
-  color: ${({ $active }) => ($active ? Colors.WHITE : Colors.DARK_GRAY)};
+  flex: 1;
+  background: none;
   border: none;
-  border-radius: 999px;
-  padding: 8px 18px;
+  border-bottom: 2px solid ${({ $active }) => ($active ? Colors.PRIMARY : 'transparent')};
+  color: ${({ $active }) => ($active ? Colors.BLACK : Colors.MEDIUM_GRAY)};
+  padding: 12px 0;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: ${({ $active }) => ($active ? 700 : 500)};
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  margin-bottom: -1px;
 `;
 
 const TokenTag = styled.span`
