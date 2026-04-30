@@ -75,14 +75,17 @@ function ChatList() {
         return;
       }
 
-      // Handle new message events — match by opponent_id (1-on-1) or room_id (group)
+      // Handle new message events — match by opponent_id (1-on-1) or room_id (group).
+      // The backend returns rooms ordered by (pin_rank asc, last_message_time desc):
+      // wit_bot pinned first, wit_admin second, then everything else by recency.
+      // We keep that order; do NOT re-sort client-side, otherwise the system pins drift.
       setRooms((prev) => {
         const matchFn = data.is_group
           ? (r: ChatRoom) => r.is_group && r.id === data.room_id
           : (r: ChatRoom) => r.opponent?.id === data.opponent_id;
         const existing = prev.find(matchFn);
         if (existing) {
-          const updated = prev.map((r) =>
+          return prev.map((r) =>
             matchFn(r)
               ? {
                   ...r,
@@ -92,11 +95,6 @@ function ChatList() {
                 }
               : r,
           );
-          updated.sort(
-            (a, b) =>
-              new Date(b.last_message_time).getTime() - new Date(a.last_message_time).getTime(),
-          );
-          return updated;
         }
         getChatRooms().then(({ results }) => setRooms(results || []));
         return prev;
@@ -173,12 +171,26 @@ function ChatList() {
       )}
       {!loading &&
         filteredRooms.map((room) => {
+          // After wit_admin leaves an escalated wit_bot chat, the room stays
+          // is_group=True with members shrunk to {user, wit_bot}. Render that
+          // demoted shape as a plain wit_bot 1-on-1 (single avatar, no count).
+          const witBotMember =
+            room.is_group && room.members_detail?.length === 2
+              ? room.members_detail.find((m) => m.username === 'wit_bot')
+              : undefined;
+          const renderAsWitBotDM = !!witBotMember;
+
           const opponentId = room.is_group ? null : room.opponent?.id;
           const isTyping = opponentId ? !!typingUsers[opponentId] : false;
-          const roomName = room.is_group
+          const roomName = witBotMember
+            ? witBotMember.username
+            : room.is_group
             ? room.name || 'Group Chat'
             : room.opponent?.username || 'Chat';
-          const chatUrl = room.is_group ? `/chats/group/${room.id}` : `/users/${opponentId}/chat`;
+          const chatUrl =
+            renderAsWitBotDM || room.is_group
+              ? `/chats/group/${room.id}`
+              : `/users/${opponentId}/chat`;
           return (
             <Layout.FlexRow
               key={room.id}
@@ -191,7 +203,9 @@ function ChatList() {
               onClick={() => navigate(chatUrl)}
               style={{ borderBottom: '1px solid #F0F0F0' }}
             >
-              {room.is_group ? (
+              {witBotMember ? (
+                <ProfileImage imageUrl={witBotMember.profile_image} size={44} />
+              ) : room.is_group ? (
                 <div
                   style={{
                     width: 44,
@@ -246,7 +260,7 @@ function ChatList() {
                   <Typo type="title-medium" color="BLACK">
                     {roomName}
                   </Typo>
-                  {room.is_group && room.members_detail && (
+                  {room.is_group && !renderAsWitBotDM && room.members_detail && (
                     <Typo type="label-small" color="MEDIUM_GRAY">
                       ({room.members_detail.length})
                     </Typo>
