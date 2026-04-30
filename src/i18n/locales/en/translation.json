@@ -1128,6 +1128,7 @@
         }
     },
     "surveys": {
+        "section_title": "Survey of the Day",
         "thanks_results_tomorrow": "Thanks! Results available tomorrow.",
         "submit": "Submit",
         "next": "Next",

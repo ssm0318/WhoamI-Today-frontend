@@ -2,42 +2,38 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { Colors, Layout, Typo } from '@design-system';
+import { Layout, Typo } from '@design-system';
 import { useSurveyOfTheDay } from '@hooks/useSurveyOfTheDay';
 import i18n from '@i18n/index';
 import { useBoundStore } from '@stores/useBoundStore';
 
-const Card = styled(Layout.FlexCol)`
-  border: 1px solid ${Colors.LIGHT_GRAY};
-  border-radius: 12px;
-  background: ${Colors.WHITE};
-  padding: 16px;
-  gap: 12px;
+const SURVEY_GRADIENT = 'linear-gradient(135deg, #0072EC 0%, #003E99 100%)';
+
+const ColorCard = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  border-radius: 16px;
+  background: ${SURVEY_GRADIENT};
+  text-align: left;
 `;
 
-const PrimaryButton = styled.button`
-  align-self: flex-start;
-  border: 1px solid ${Colors.PRIMARY};
+const ActionButton = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
   border-radius: 12px;
-  padding: 8px 16px;
-  background: ${Colors.PRIMARY};
-  color: ${Colors.WHITE};
-  font-size: 14px;
+  background-color: rgba(255, 255, 255, 0.95);
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-`;
-
-const ResultsLink = styled.button`
   align-self: flex-start;
-  border: 1px solid ${Colors.LIGHT_GRAY};
-  border-radius: 8px;
-  padding: 4px 8px;
-  font-size: 14px;
-  background: ${Colors.WHITE};
-  color: ${Colors.PRIMARY};
-  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    opacity: 0.8;
+  }
 `;
 
 const DRAFT_KEY_PREFIX = 'whoami_survey_draft_';
@@ -66,19 +62,31 @@ function SurveyOfTheDay() {
   const survey = data?.survey;
   if (!survey) return null;
 
+  const sectionTitle = (
+    <Typo type="head-line" color="WHITE" bold>
+      {t('section_title')}
+    </Typo>
+  );
+  const surveyTitle = (
+    <Typo type="title-medium" color="WHITE">
+      {pickLocalized(survey.title_en, survey.title_ko)}
+    </Typo>
+  );
+
   if (survey.user_has_responded) {
     return (
-      <Card>
-        <Typo type="title-medium" color="BLACK">
-          {pickLocalized(survey.title_en, survey.title_ko)}
-        </Typo>
-        <Typo type="body-medium" color="DARK_GRAY">
+      <ColorCard>
+        {sectionTitle}
+        {surveyTitle}
+        <Typo type="title-medium" color="WHITE">
           {t('thanks_results_tomorrow')}
         </Typo>
-        <ResultsLink type="button" onClick={() => navigate(`/surveys/${survey.slug}/results`)}>
-          {t('view_results')}
-        </ResultsLink>
-      </Card>
+        <ActionButton onClick={() => navigate(`/surveys/${survey.slug}/results`)}>
+          <Typo type="label-large" fontWeight={600}>
+            {t('view_results')}
+          </Typo>
+        </ActionButton>
+      </ColorCard>
     );
   }
 
@@ -86,22 +94,25 @@ function SurveyOfTheDay() {
   const ctaLabel = hasDraft ? t('continue_survey') : t('start_survey');
 
   return (
-    <Card>
-      <Typo type="title-medium" color="BLACK">
-        {pickLocalized(survey.title_en, survey.title_ko)}
-      </Typo>
+    <ColorCard>
+      {sectionTitle}
+      {surveyTitle}
       {survey.description_en && (
-        <Typo type="body-medium" color="DARK_GRAY">
+        <Typo type="title-medium" color="WHITE">
           {pickLocalized(survey.description_en, survey.description_ko)}
         </Typo>
       )}
-      <Typo type="label-medium" color="DARK_GRAY">
-        {t('question_total', { total: survey.questions.length })}
-      </Typo>
-      <PrimaryButton type="button" onClick={() => navigate(`/surveys/${survey.slug}/answer`)}>
-        {ctaLabel}
-      </PrimaryButton>
-    </Card>
+      <Layout.FlexRow alignItems="center" gap={8}>
+        <Typo type="label-medium" color="WHITE">
+          {t('question_total', { total: survey.questions.length })}
+        </Typo>
+      </Layout.FlexRow>
+      <ActionButton onClick={() => navigate(`/surveys/${survey.slug}/answer`)}>
+        <Typo type="label-large" fontWeight={600}>
+          {ctaLabel}
+        </Typo>
+      </ActionButton>
+    </ColorCard>
   );
 }
 
