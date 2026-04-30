@@ -26,14 +26,17 @@ const firebaseApp = firebase.initializeApp({
 // NOTE: Most importantly, in your service worker add a 'notificationclick' event listener before calling firebase.messaging()
 self.addEventListener('notificationclick', (e) => {
   e.stopImmediatePropagation();
-  const notificationId = e.notification.data?.FCM_MSG
-    ? e.notification.data?.FCM_MSG.data.tag
-    : Number(e.notification.tag);
 
-  if (e.notification.data?.FCM_MSG) {
-    e.waitUntil(clients.openWindow(`${self.origin}${e.notification.data.FCM_MSG.data.url}`));
-  } else {
-    e.waitUntil(clients.openWindow(`${self.origin}${e.notification.data.url}`));
+  // data-only: tag와 url이 notification.data에 직접 있음
+  // FCM auto-display (레거시): FCM_MSG wrapper 안에 있음
+  const hasFcmMsg = !!e.notification.data?.FCM_MSG;
+  const notificationTag = hasFcmMsg ? e.notification.data.FCM_MSG.data.tag : e.notification.tag;
+  const notificationUrl = hasFcmMsg
+    ? e.notification.data.FCM_MSG.data.url
+    : e.notification.data?.url;
+
+  if (notificationUrl) {
+    e.waitUntil(clients.openWindow(`${self.origin}${notificationUrl}`));
   }
 
   // 알림 읽음 처리
@@ -42,7 +45,7 @@ self.addEventListener('notificationclick', (e) => {
       clientList.map((client) => {
         return client.postMessage({
           type: 'READ_NOTIFICATION',
-          notificationId,
+          notificationId: notificationTag,
         });
       });
     }),
@@ -55,4 +58,32 @@ self.addEventListener('notificationclick', (e) => {
 // Retrieve firebase messaging
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage();
+messaging.onBackgroundMessage((payload) => {
+  const { data } = payload;
+  if (!data) return;
+
+  const { message_ko, message_en, url, tag, type } = data;
+
+  // cancel 타입: 기존 notification 닫기
+  if (type === 'cancel') {
+    self.registration.getNotifications({ tag }).then((notifications) => {
+      notifications.forEach((n) => n.close());
+    });
+    return;
+  }
+
+  // data-only 메시지를 직접 표시 (tag로 이전 notification 대체)
+  const isKorean =
+    (self.navigator && self.navigator.language && self.navigator.language.startsWith('ko')) ||
+    (self.registration && self.registration.scope && self.registration.scope.includes('ko'));
+  const title = 'WhoAmI Today';
+  const options = {
+    body: isKorean ? message_ko || message_en : message_en || message_ko,
+    tag,
+    renotify: true,
+    icon: '/whoami192.png',
+    data: { url },
+  };
+
+  return self.registration.showNotification(title, options);
+});
