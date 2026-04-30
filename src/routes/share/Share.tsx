@@ -7,6 +7,7 @@ import CheckInPostShareCta from '@components/share/CheckInPostShareCta';
 import MissionOfTheDay, { markMissionCompleted } from '@components/share/MissionOfTheDay';
 import NotePostInputTrigger from '@components/share/NotePostInputTrigger';
 import QuestionsOfTheDaySection from '@components/share/QuestionsOfTheDaySection';
+import SurveyOfTheDay from '@components/share/SurveyOfTheDay';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
@@ -38,6 +39,7 @@ function Share() {
           <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} pv={16} gap={16} pb={100}>
             <NotePostInputTrigger />
             <CheckInPostShareCta />
+            <SurveyOfTheDay />
             <QuestionsOfTheDaySection />
           </Layout.FlexCol>
         </PullToRefresh>
@@ -105,7 +107,10 @@ function Share() {
             <MissionOfTheDay onDoMission={handleDoMission} />
           </ColorCard>
 
-          {/* Section 3: Questions of the Day */}
+          {/* Section 3: Survey of the Day */}
+          <SurveyOfTheDay />
+
+          {/* Section 4: Questions of the Day */}
           <QuestionsOfTheDaySection />
         </Layout.FlexCol>
       </PullToRefresh>
