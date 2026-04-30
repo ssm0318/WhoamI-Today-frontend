@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
-import { Layout, Typo } from '@design-system';
+import { Colors, Layout, Typo } from '@design-system';
 import { useArchiveCounts } from '@hooks/useArchiveCounts';
 
 function CheckInArchiveChip() {
@@ -25,14 +25,14 @@ function CheckInArchiveChip() {
           strokeLinecap="round"
           strokeLinejoin="round"
           aria-hidden
-          style={{ color: '#8C8C8C' }}
+          style={{ color: Colors.PRIMARY }}
         >
           <rect x="3" y="3" width="18" height="5" rx="1" />
           <path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8" />
           <path d="M10 12h4" />
         </svg>
-        <Typo type="label-medium" color="DARK_GRAY" underline>
-          Archive ({archivedCount})
+        <Typo type="label-medium" color="PRIMARY" fontWeight={500} underline>
+          Archived ({archivedCount})
         </Typo>
       </Layout.FlexRow>
       <FriendPinnedChip pinnedCount={pinnedCount} to="/check-in/archive?tab=pinned" />

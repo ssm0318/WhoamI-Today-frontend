@@ -67,10 +67,20 @@ function CheckIn({ user }: CheckInProps) {
   return (
     <Layout.FlexCol w="100%" gap={8} p={8} bgColor="GRAY_14" rounded={8} justifyContent="center">
       <>
-        <Layout.FlexRow w="100%" alignItems="center">
+        <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" gap={4}>
           <Typo type="label-large" color="BLACK">
             {t('title')}
           </Typo>
+          {checkIn?.created_at && (
+            <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
+              {t('checked_in_time', {
+                time: convertTimeDiffByString({
+                  now: currentDate,
+                  day: new Date(checkIn?.created_at),
+                }),
+              })}
+            </Typo>
+          )}
         </Layout.FlexRow>
         <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
           <Layout.FlexRow gap={8} alignItems="center">
@@ -166,35 +176,18 @@ function CheckIn({ user }: CheckInProps) {
               ))}
           </Layout.FlexRow>
         )}
-        {/* Bottom row: timestamp (left) + edit pencil (right, own-profile only). */}
-        {(isMyPage || checkIn?.created_at) && (
-          <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" gap={4}>
-            {checkIn?.created_at ? (
-              <Layout.FlexRow alignItems="center" gap={4}>
-                <Typo type="label-medium" numberOfLines={2} color="MEDIUM_GRAY">
-                  {t('checked_in_time', {
-                    time: convertTimeDiffByString({
-                      now: currentDate,
-                      day: new Date(checkIn?.created_at),
-                    }),
-                  })}
-                </Typo>
-              </Layout.FlexRow>
-            ) : (
-              <span />
-            )}
-            {isMyPage ? (
-              <CheckInArchiveChip />
-            ) : (
-              friendUsername && (
-                <FriendPinnedChip
-                  pinnedCount={friendPinnedCount}
-                  to={`/users/${friendUsername}/check-in/pinned`}
-                />
-              )
-            )}
-          </Layout.FlexRow>
-        )}
+        <Layout.FlexRow w="100%" justifyContent="flex-end" alignItems="center">
+          {isMyPage ? (
+            <CheckInArchiveChip />
+          ) : (
+            friendUsername && (
+              <FriendPinnedChip
+                pinnedCount={friendPinnedCount}
+                to={`/users/${friendUsername}/check-in/pinned`}
+              />
+            )
+          )}
+        </Layout.FlexRow>
       </>
     </Layout.FlexCol>
   );
