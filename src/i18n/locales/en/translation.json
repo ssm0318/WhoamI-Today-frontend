@@ -346,9 +346,16 @@
             }
         },
         "edit_profile": "Edit Profile",
-        "public_account": "Public Account",
-        "private_account": "Private Account",
-        "switch_to_private_warning": "All your public posts will become friends-only. This cannot be undone. Continue?",
+        "switch_to_public": "Switch to Public",
+        "switch_to_private": "Switch to Private",
+        "account_status_public": "Public",
+        "account_status_private": "Private",
+        "switch_to_private_dialog": {
+            "title": "Switch to private?",
+            "content": "All your public posts will become friends-only. Posts won't automatically revert to public if you switch back. (You can flip the account back to public anytime.)",
+            "cancel": "Cancel",
+            "confirm": "Switch to Private"
+        },
         "interests": "Interests",
         "persona": "Persona",
         "see_more_details": "See more details",

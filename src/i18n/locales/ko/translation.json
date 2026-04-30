@@ -343,9 +343,16 @@
       }
     },
     "edit_profile": "프로필 수정",
-    "public_account": "공개 계정",
-    "private_account": "비공개 계정",
-    "switch_to_private_warning": "모든 공개 게시글이 친구 공개로 전환됩니다. 이 작업은 되돌릴 수 없습니다. 계속하시겠습니까?",
+    "switch_to_public": "공개로 전환",
+    "switch_to_private": "비공개로 전환",
+    "account_status_public": "공개",
+    "account_status_private": "비공개",
+    "switch_to_private_dialog": {
+      "title": "비공개로 전환할까요?",
+      "content": "공개 게시글이 모두 친구 공개로 전환됩니다. 친구 공개로 바뀐 게시글은 자동으로 다시 공개로 돌아가지 않아요. (계정은 언제든 다시 공개로 전환할 수 있어요.)",
+      "cancel": "취소",
+      "confirm": "비공개로 전환"
+    },
     "interests": "관심사",
     "persona": "페르소나",
     "see_more_details": "자세히 보기",

@@ -2,6 +2,7 @@ import { MouseEvent, ReactNode, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
+import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import ChatRequestButton from '@components/_common/chat-request-button/ChatRequestButton';
 import FriendStatus from '@components/_common/friend-status/FriendStatus';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -74,23 +75,33 @@ function Profile({ user }: ProfileProps) {
     updateMyProfile: state.updateMyProfile,
   }));
 
-  const handleTogglePublicPrivate = (e: MouseEvent) => {
-    e.stopPropagation();
+  const [showSwitchToPrivateDialog, setShowSwitchToPrivateDialog] = useState(false);
+
+  const performTogglePublicPrivate = () => {
     if (!myProfile) return;
-
-    const goingPrivate = myProfile.is_public;
-    if (goingPrivate) {
-      // eslint-disable-next-line no-alert
-      const confirmed = window.confirm(t('switch_to_private_warning') ?? '');
-      if (!confirmed) return;
-    }
-
     editProfile({
       profile: { is_public: !myProfile.is_public },
       onSuccess: (data) => {
         updateMyProfile({ is_public: data.is_public });
       },
     });
+  };
+
+  const handleTogglePublicPrivate = (e: MouseEvent) => {
+    e.stopPropagation();
+    if (!myProfile) return;
+
+    const goingPrivate = myProfile.is_public;
+    if (goingPrivate) {
+      setShowSwitchToPrivateDialog(true);
+      return;
+    }
+    performTogglePublicPrivate();
+  };
+
+  const handleConfirmSwitchToPrivate = () => {
+    setShowSwitchToPrivateDialog(false);
+    performTogglePublicPrivate();
   };
 
   useAsyncEffect(async () => {
@@ -139,13 +150,22 @@ function Profile({ user }: ProfileProps) {
             <Layout.FlexRow w="100%" gap={8} alignItems="center">
               <Layout.FlexCol gap={2}>
                 {/* Name or masked */}
-                <Typo type="title-large" numberOfLines={1}>
-                  {isMyPage
-                    ? (myProfile as any)?.name || myProfile?.username || ''
-                    : showName
-                    ? (friendData as any)?.name || username || ''
-                    : '****'}
-                </Typo>
+                <Layout.FlexRow gap={6} alignItems="center">
+                  <Typo type="title-large" numberOfLines={1}>
+                    {isMyPage
+                      ? (myProfile as any)?.name || myProfile?.username || ''
+                      : showName
+                      ? (friendData as any)?.name || username || ''
+                      : '****'}
+                  </Typo>
+                  {isMyPage && isVerQ && (
+                    <AccountStatusBadge>
+                      {myProfile?.is_public
+                        ? t('account_status_public')
+                        : t('account_status_private')}
+                    </AccountStatusBadge>
+                  )}
+                </Layout.FlexRow>
                 {/* Pronouns | Degree inline */}
                 {!isMyPage && (
                   <Layout.FlexRow gap={4} alignItems="center">
@@ -359,7 +379,7 @@ function Profile({ user }: ProfileProps) {
           </PrimaryActionButton>
           {featureFlags?.postsVerQ ? (
             <PrimaryActionButton onClick={handleTogglePublicPrivate}>
-              {myProfile?.is_public ? t('public_account') : t('private_account')}
+              {myProfile?.is_public ? t('switch_to_private') : t('switch_to_public')}
             </PrimaryActionButton>
           ) : (
             <PrimaryActionButton onClick={() => navigate('/my/view-as')}>
@@ -380,6 +400,19 @@ function Profile({ user }: ProfileProps) {
           user={user}
           username={isMyPage ? myProfile?.username || '' : username || ''}
           isMyPage={isMyPage}
+        />
+      )}
+
+      {isMyPage && isVerQ && (
+        <CommonDialog
+          visible={showSwitchToPrivateDialog}
+          title={t('switch_to_private_dialog.title')}
+          content={t('switch_to_private_dialog.content')}
+          cancelText={t('switch_to_private_dialog.cancel')}
+          confirmText={t('switch_to_private_dialog.confirm')}
+          confirmTextColor="WARNING"
+          onClickConfirm={handleConfirmSwitchToPrivate}
+          onClickClose={() => setShowSwitchToPrivateDialog(false)}
         />
       )}
     </Layout.FlexCol>
@@ -414,5 +447,26 @@ function PrimaryActionButton({
     >
       {children}
     </button>
+  );
+}
+
+function AccountStatusBadge({ children }: { children: ReactNode }) {
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        padding: '1px 8px',
+        borderRadius: 999,
+        border: '1px solid #555555',
+        color: '#555555',
+        fontSize: 11,
+        fontWeight: 600,
+        lineHeight: 1.4,
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {children}
+    </span>
   );
 }
