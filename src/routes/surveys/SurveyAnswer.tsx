@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 
 import { SurveyAnswerForm } from '@components/survey/SurveyAnswerForm';
 import { Colors, Layout, Typo } from '@design-system';
+import { SURVEY_OF_THE_DAY_KEY } from '@hooks/useSurveyOfTheDay';
 import i18n from '@i18n/index';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getSurveyDetail } from '@utils/apis/survey';
@@ -54,6 +55,7 @@ function SurveyAnswer() {
         <SurveyAnswerForm
           survey={survey}
           onSubmitted={() => {
+            mutate(SURVEY_OF_THE_DAY_KEY);
             openToast({ message: t('toast.submitted') });
             navigate(`/surveys/${survey.slug}/results`);
           }}

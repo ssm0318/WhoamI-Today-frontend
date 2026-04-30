@@ -1121,6 +1121,12 @@
   "surveys": {
     "thanks_results_tomorrow": "감사합니다! 결과는 내일 공개돼요.",
     "submit": "제출",
+    "next": "다음",
+    "back": "이전",
+    "start_survey": "시작하기",
+    "continue_survey": "이어서 답하기",
+    "question_progress": "{{current}} / {{total}}",
+    "question_total": "총 {{total}}문항",
     "view_results": "결과 보기",
     "answered_view_results": "응답 완료 — 결과 보기",
     "answer_to_view_results": "답변하면 결과를 볼 수 있어요",

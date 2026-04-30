@@ -1,11 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { mutate } from 'swr';
 
-import { SurveyAnswerForm } from '@components/survey/SurveyAnswerForm';
 import { Colors, Layout, Typo } from '@design-system';
-import { SURVEY_OF_THE_DAY_KEY, useSurveyOfTheDay } from '@hooks/useSurveyOfTheDay';
+import { useSurveyOfTheDay } from '@hooks/useSurveyOfTheDay';
 import i18n from '@i18n/index';
 import { useBoundStore } from '@stores/useBoundStore';
 
@@ -16,6 +14,18 @@ const Card = styled(Layout.FlexCol)`
   padding: 16px;
   gap: 12px;
   width: 100%;
+`;
+
+const PrimaryButton = styled.button`
+  align-self: flex-start;
+  border: 1px solid ${Colors.PRIMARY};
+  border-radius: 12px;
+  padding: 8px 16px;
+  background: ${Colors.PRIMARY};
+  color: ${Colors.WHITE};
+  font-size: 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 `;
 
 const ResultsLink = styled.button`
@@ -30,13 +40,27 @@ const ResultsLink = styled.button`
   -webkit-tap-highlight-color: transparent;
 `;
 
+const DRAFT_KEY_PREFIX = 'whoami_survey_draft_';
+
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
+
+const hasExistingDraft = (userId: number | null, slug: string): boolean => {
+  try {
+    const key = `${DRAFT_KEY_PREFIX}${userId ?? 'anon'}_${slug}`;
+    const raw = localStorage.getItem(key);
+    if (!raw) return false;
+    const parsed = JSON.parse(raw);
+    return parsed && parsed.answers && Object.keys(parsed.answers).length > 0;
+  } catch {
+    return false;
+  }
+};
 
 function SurveyOfTheDay() {
   const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
   const { data, isLoading } = useSurveyOfTheDay();
   const navigate = useNavigate();
-  const openToast = useBoundStore((s) => s.openToast);
+  const userId = useBoundStore((s) => s.myProfile?.id ?? null);
 
   if (isLoading) return null;
   const survey = data?.survey;
@@ -58,6 +82,9 @@ function SurveyOfTheDay() {
     );
   }
 
+  const hasDraft = hasExistingDraft(userId, survey.slug);
+  const ctaLabel = hasDraft ? t('continue_survey') : t('start_survey');
+
   return (
     <Card>
       <Typo type="title-medium" color="BLACK">
@@ -68,14 +95,12 @@ function SurveyOfTheDay() {
           {pickLocalized(survey.description_en, survey.description_ko)}
         </Typo>
       )}
-      <SurveyAnswerForm
-        survey={survey}
-        onSubmitted={() => {
-          mutate(SURVEY_OF_THE_DAY_KEY);
-          openToast({ message: t('toast.submitted') });
-        }}
-        onError={(message) => openToast({ message })}
-      />
+      <Typo type="label-medium" color="DARK_GRAY">
+        {t('question_total', { total: survey.questions.length })}
+      </Typo>
+      <PrimaryButton type="button" onClick={() => navigate(`/surveys/${survey.slug}/answer`)}>
+        {ctaLabel}
+      </PrimaryButton>
     </Card>
   );
 }
