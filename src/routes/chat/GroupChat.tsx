@@ -299,7 +299,7 @@ function GroupChat() {
   const typingNames = Object.values(typingUsers);
 
   return (
-    <MainScrollContainer scrollRef={scrollRef} style={{ paddingTop: 0 }}>
+    <MainScrollContainer scrollRef={scrollRef} style={{ marginTop: 0 }}>
       {/* Custom header: back | centered title + pencil | members icon */}
       <Layout.FlexRow
         w="100%"

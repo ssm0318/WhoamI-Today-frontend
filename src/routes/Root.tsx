@@ -7,7 +7,6 @@ import NotiPermissionBanner, {
 import CheckInFreshnessPrompt from '@components/check-in/check-in-freshness-prompt/CheckInFreshnessPrompt';
 import Header from '@components/header/Header';
 import Tab from '@components/tab/Tab';
-import { BOTTOM_TABBAR_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
@@ -160,8 +159,7 @@ export function MainScrollContainer({
   const { isMobile } = getMobileDeviceInfo();
   const showBanner = showNotificationPermission && !isMobile;
 
-  const bottomPadding =
-    pb !== undefined ? pb : BOTTOM_TABBAR_HEIGHT + (showBanner ? NOTI_PERMISSION_BANNER_HEIGHT : 0);
+  const bottomPadding = pb !== undefined ? pb : showBanner ? NOTI_PERMISSION_BANNER_HEIGHT : 0;
 
   // iOS: input 포커스 시 스크롤이 막히는 현상. input/textarea·추천 드롭다운 밖을 터치하면 blur하여 스크롤이 먹히도록 함.
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -180,7 +178,6 @@ export function MainScrollContainer({
       id={MAIN_SCROLL_CONTAINER_ID}
       ref={scrollRef}
       alignItems="center"
-      pt={TOP_NAVIGATION_HEIGHT}
       pb={bottomPadding}
       onScroll={onScroll}
       onTouchStart={handleTouchStart}

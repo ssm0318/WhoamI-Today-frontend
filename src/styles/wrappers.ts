@@ -1,5 +1,10 @@
 import styled from 'styled-components';
-import { MAX_WINDOW_WIDTH, Z_INDEX } from '@constants/layout';
+import {
+  BOTTOM_TABBAR_HEIGHT,
+  MAX_WINDOW_WIDTH,
+  TOP_NAVIGATION_HEIGHT,
+  Z_INDEX,
+} from '@constants/layout';
 import { Layout } from '@design-system';
 
 export const RootContainer = styled(Layout.FlexCol)`
@@ -13,7 +18,9 @@ export const RootContainer = styled(Layout.FlexCol)`
 `;
 
 export const MainWrapper = styled(Layout.FlexCol)`
-  height: 100%;
+  height: calc(100% - ${TOP_NAVIGATION_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px);
+  margin-top: ${TOP_NAVIGATION_HEIGHT}px;
+  margin-bottom: ${BOTTOM_TABBAR_HEIGHT}px;
   width: 100%;
   overflow-y: auto;
   overflow-x: visible;
