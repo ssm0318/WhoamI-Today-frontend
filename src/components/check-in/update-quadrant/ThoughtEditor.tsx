@@ -57,7 +57,7 @@ export default function ThoughtEditor({
       onClose={onClose}
       onShare={handleShare}
       onArchive={onArchive}
-      title="Blurb"
+      title="Be Random"
     >
       <Layout.FlexCol w="100%" gap={8} mb={16}>
         <StyledTextArea

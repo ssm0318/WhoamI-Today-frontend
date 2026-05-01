@@ -442,12 +442,12 @@ export default function UpdateCheckin() {
               <Typo type="body-medium" textAlign="center">
                 {thought}
               </Typo>
-              <QuadrantLabel>Blurb</QuadrantLabel>
+              <QuadrantLabel>Be Random</QuadrantLabel>
             </Layout.FlexCol>
           ) : (
             <>
               <SvgIcon name="edit" size={32} />
-              <QuadrantLabel>Blurb</QuadrantLabel>
+              <QuadrantLabel>Be Random</QuadrantLabel>
             </>
           )}
         </QuadrantCard>
