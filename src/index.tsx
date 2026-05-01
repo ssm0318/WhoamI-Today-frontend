@@ -76,6 +76,7 @@ import Password from './routes/sign-up/Password';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
 import SuggestQuestions from './routes/SuggestQuestions';
+import DailyArchive from './routes/surveys/DailyArchive';
 import SurveyAnswer from './routes/surveys/SurveyAnswer';
 import SurveyResults from './routes/surveys/SurveyResults';
 import SurveysIndex from './routes/surveys/SurveysIndex';
@@ -213,6 +214,7 @@ const router = createBrowserRouter([
         ),
         children: [
           { path: '', element: <SurveysIndex /> },
+          { path: 'daily-archive', element: <DailyArchive /> },
           { path: ':slug/results', element: <SurveyResults /> },
           { path: ':slug/answer', element: <SurveyAnswer /> },
         ],

@@ -2,6 +2,7 @@ import {
   PastSurvey,
   Survey,
   SurveyAnswerInput,
+  SurveyIndexResponse,
   SurveyOfTheDayResponse,
   SurveyResults,
 } from '@models/survey';
@@ -10,6 +11,11 @@ import axios from './axios';
 
 export const getSurveyOfTheDay = async (): Promise<SurveyOfTheDayResponse> => {
   const { data } = await axios.get<SurveyOfTheDayResponse>('/surveys/today/');
+  return data;
+};
+
+export const getSurveyIndex = async (): Promise<SurveyIndexResponse> => {
+  const { data } = await axios.get<SurveyIndexResponse>('/surveys/index/');
   return data;
 };
 

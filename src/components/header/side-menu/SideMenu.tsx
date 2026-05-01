@@ -26,7 +26,7 @@ const SIDE_MENU_LIST: SideMenuItem[] = [
     kind: 'browse_mode',
     flag: FeatureFlagKey.BROWSE_MODE,
   },
-  { key: 'survey_results', emoji: '📊', kind: 'route', path: '/surveys' },
+  { key: 'surveys', emoji: '📊', kind: 'route', path: '/surveys' },
   { key: 'settings', emoji: '⚙️', kind: 'route', path: '/settings' },
 ];
 
