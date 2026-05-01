@@ -194,14 +194,18 @@ function BrowseModeSessionPrompt({
       if (myProfile?.id) saveLastPickedMode(myProfile.id, mode);
 
       let batteryApplied: SocialBattery | null = null;
-      if (syncBattery && suggestedBattery) {
+      // Only patch an EXISTING check-in's battery — don't create one from
+      // scratch just because the user picked a browse mode. The backend
+      // requires `visibility` (and other per-component visibilities) on
+      // create; we don't know the user's preferred values, and silently
+      // creating a new check-in with defaults isn't what they asked for.
+      // Users without a check-in yet just don't get the battery sync —
+      // they can run a real check-in later and adjust then.
+      if (syncBattery && suggestedBattery && checkIn) {
         try {
           await postCheckIn({
-            ...(checkIn ?? {}),
+            ...checkIn,
             social_battery: suggestedBattery,
-            mood: checkIn?.mood ?? [],
-            thought: checkIn?.thought ?? '',
-            track_id: checkIn?.track_id ?? '',
           });
           await fetchCheckIn();
           batteryApplied = suggestedBattery;
