@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import FriendItem from '@components/friends/explore-friends/friend-item/FriendItem';
-import { Layout, Typo } from '@design-system';
+import { Button, Layout, Typo } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { UserProfile } from '@models/user';
 import { searchUser } from '@utils/apis/user';
@@ -14,6 +15,7 @@ interface Props {
 
 export default function FriendSearchList({ query }: Props) {
   const [t] = useTranslation('translation');
+  const navigate = useNavigate();
 
   const [searchList, setSearchList] = useState<UserProfile[]>();
   const [nextUrl, setNextUrl] = useState<string | null>(null);
@@ -137,7 +139,20 @@ export default function FriendSearchList({ query }: Props) {
           {isLoading && <Loader />}
         </>
       ) : (
-        <NoContents text={t('no_contents.friends_search')} />
+        <Layout.FlexCol w="100%" alignItems="center" gap={20} pt={16}>
+          <NoContents text={t('no_contents.friends_search')} />
+          <Layout.FlexCol w="100%" alignItems="center" gap={10} ph={16}>
+            <Typo type="body-medium" color="DARK_GRAY" textAlign="center">
+              {t('friends.explore_friends.search.different_version_cta')}
+            </Typo>
+            <Button.Primary
+              status="normal"
+              text={t('friends.explore_friends.search.request_version_swap')}
+              sizing="stretch"
+              onClick={() => navigate('/settings/version-swap-request')}
+            />
+          </Layout.FlexCol>
+        </Layout.FlexCol>
       )}
     </Layout.FlexCol>
   );

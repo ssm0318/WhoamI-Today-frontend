@@ -65,6 +65,7 @@ import DeleteAccount from './routes/settings/DeleteAccount';
 import EditProfile from './routes/settings/EditProfile';
 import ResetPassword from './routes/settings/ResetPassword';
 import Settings from './routes/settings/Settings';
+import VersionSwapRequest from './routes/settings/VersionSwapRequest';
 import Share from './routes/share/Share';
 import Email from './routes/sign-up/Email';
 import Info from './routes/sign-up/Info';
@@ -303,6 +304,7 @@ const router = createBrowserRouter([
           { path: 'reset-password', element: <ResetPassword /> },
           { path: 'daily-noti-setting', element: <DailyNotiSetting /> },
           { path: 'delete-account', element: <DeleteAccount /> },
+          { path: 'version-swap-request', element: <VersionSwapRequest /> },
         ],
       },
       {

@@ -1,18 +1,28 @@
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import useSWR from 'swr';
 
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import { Z_INDEX } from '@constants/layout';
 import { ONBOARDING_VIDEO_URL } from '@constants/url';
-import { Layout, SvgIcon, Typo } from '@design-system';
+import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
+import { VersionType } from '@models/api/user';
+import { useBoundStore } from '@stores/useBoundStore';
+import { getMyPendingVersionSwapRequest } from '@utils/apis/user';
 
 const SIDE_MENU_LIST = [
   { key: 'my_profile', path: '/my' },
   { key: 'survey_results', path: '/surveys' },
   { key: 'settings', path: '/settings' },
 ];
+
+const VERSION_LABEL: Record<VersionType, string> = {
+  [VersionType.VER_W]: 'Ver.W',
+  [VersionType.VER_Q]: 'Ver.Q',
+};
 
 interface Props {
   closeSideMenu: () => void;
@@ -24,12 +34,25 @@ function SideMenu({ closeSideMenu }: Props) {
   const navigate = useNavigate();
   const postMessage = usePostAppMessage();
 
+  const myProfile = useBoundStore((state) => state.myProfile);
+  const { data: pendingResp } = useSWR(
+    '/user/version-swap-request/me/',
+    getMyPendingVersionSwapRequest,
+  );
+  const isPending = !!pendingResp?.pending;
+
   const handleClickMenu = (path: string) => () => {
     navigate(path);
     closeSideMenu();
   };
 
   const handleClickDimmed = () => {
+    closeSideMenu();
+  };
+
+  const handleClickVersionSwap = () => {
+    if (isPending) return;
+    navigate('/settings/version-swap-request');
     closeSideMenu();
   };
 
@@ -78,6 +101,22 @@ function SideMenu({ closeSideMenu }: Props) {
                 </Layout.FlexRow>
               </a>
             </Layout.FlexCol>
+            {myProfile && (
+              <Layout.FlexCol mt={60} gap={10}>
+                <Layout.FlexRow gap={4} alignItems="center" style={{ flexWrap: 'wrap' }}>
+                  <Typo type="body-medium" color="DARK_GRAY">
+                    {t('current_version')}
+                  </Typo>
+                  <VersionCode>{VERSION_LABEL[myProfile.current_ver]}</VersionCode>
+                </Layout.FlexRow>
+                <Button.Secondary
+                  status={isPending ? 'disabled' : 'normal'}
+                  text={isPending ? t('request_pending') : t('request_version_swap')}
+                  sizing="fit-content"
+                  onClick={handleClickVersionSwap}
+                />
+              </Layout.FlexCol>
+            )}
           </Layout.FlexCol>
         </Layout.FlexCol>
       </Layout.Absolute>
@@ -85,5 +124,14 @@ function SideMenu({ closeSideMenu }: Props) {
     document.getElementById('root-container') || document.body,
   );
 }
+
+const VersionCode = styled.code`
+  font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
+  background: ${({ theme }) => theme.LIGHT};
+  color: ${({ theme }) => theme.BLACK};
+  padding: 2px 6px;
+  border-radius: 4px;
+`;
 
 export default SideMenu;

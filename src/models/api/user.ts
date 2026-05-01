@@ -158,3 +158,16 @@ export interface SentFriendRequest {
   requester_id: number;
   requestee_detail: User;
 }
+
+export interface VersionSwapRequest {
+  id: number;
+  reason: string | null;
+  from_version: VersionType;
+  to_version: VersionType;
+  status: 'pending' | 'approved' | 'rejected';
+  created_at: string;
+}
+
+export interface VersionSwapRequestPendingResponse {
+  pending: VersionSwapRequest | null;
+}

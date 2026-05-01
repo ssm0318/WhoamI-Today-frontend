@@ -17,6 +17,8 @@ import {
   SignInResponse,
   SignUpParams,
   UsernameError,
+  VersionSwapRequest,
+  VersionSwapRequestPendingResponse,
 } from '@models/api/user';
 import { Note, Response } from '@models/post';
 import { User, UserProfile } from '@models/user';
@@ -561,6 +563,20 @@ export const markAllFriendPostsAsRead = async () => {
 export const getUserAllPosts = async (username: string) => {
   const { data } = await axios.get<PaginationResponse<Response | Note[]>>(
     `/user/${encodeURIComponent(username)}/all-posts/`,
+  );
+  return data;
+};
+
+export const requestVersionSwap = async (reason?: string) => {
+  const { data } = await axios.post<VersionSwapRequest>('/user/version-swap-request/', {
+    reason: reason ?? '',
+  });
+  return data;
+};
+
+export const getMyPendingVersionSwapRequest = async () => {
+  const { data } = await axios.get<VersionSwapRequestPendingResponse>(
+    '/user/version-swap-request/me/',
   );
   return data;
 };
