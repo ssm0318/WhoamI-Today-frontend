@@ -56,7 +56,7 @@ function My() {
             <Profile user={myProfile} />
           </Layout.FlexRow>
           {featureFlags?.checkInPosts && myProfile?.id && (
-            <CheckInPostStories authorUserId={myProfile.id} isOwnProfile />
+            <CheckInPostStories authorUserId={myProfile.id} isOwnProfile showCompose />
           )}
           <Divider width={8} bgColor="LIGHT" />
           <Layout.FlexCol pl={12} pb="default" w="100%" bgColor="WHITE" rounded="0px 0px 8px 8px">
