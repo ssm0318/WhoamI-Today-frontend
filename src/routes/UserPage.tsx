@@ -125,7 +125,7 @@ function UserPage({ usernameOverride }: UserPageProps = {}) {
                     <Profile user={user.data} />
                   </Layout.FlexRow>
                   {featureFlags?.checkInPosts && userId && (
-                    <CheckInPostStories authorUserId={userId} />
+                    <CheckInPostStories authorUserId={userId} authorUsername={username} />
                   )}
                   <Divider width={8} bgColor="LIGHT" />
                   <Layout.FlexCol pt={8} pl={12} pb="default" w="100%" bgColor="WHITE" rounded={8}>

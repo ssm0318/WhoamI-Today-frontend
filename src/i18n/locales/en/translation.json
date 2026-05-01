@@ -45,6 +45,7 @@
         "delete_content": "This cannot be undone.",
         "delete_cancel": "Cancel",
         "delete_confirm": "Delete",
+        "expiry_hint": "Your snippet will be visible for 24 hours.\nAfter posting, you can pin it to keep it on your profile.",
         "friend_pinned_title": "{{username}}'s Pinned Snippets",
         "archive": {
             "title": "Daily Snippets",

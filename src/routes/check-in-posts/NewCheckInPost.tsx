@@ -168,6 +168,12 @@ function NewCheckInPost() {
           />
         </Layout.FlexRow>
 
+        <Layout.FlexRow w="100%" justifyContent="center" mt={24}>
+          <Typo type="body-small" color="MEDIUM_GRAY" textAlign="center">
+            {t('expiry_hint')}
+          </Typo>
+        </Layout.FlexRow>
+
         <input
           ref={galleryInputRef}
           type="file"

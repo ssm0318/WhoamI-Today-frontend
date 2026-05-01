@@ -17,6 +17,7 @@ interface CheckInPostStoriesProps {
    *  or own profile). When omitted, the main feed strip uses `/stories/`,
    *  which returns one latest post per friend. */
   authorUserId?: number;
+  authorUsername?: string;
   /** Own profile (My page): merge highlights and recent into a single
    *  "My Daily Snippets" strip, hide redundant author username, and lift the
    *  3-day cutoff so every snippet is reachable from the strip. */
@@ -26,6 +27,7 @@ interface CheckInPostStoriesProps {
 
 function CheckInPostStories({
   authorUserId,
+  authorUsername,
   isOwnProfile = false,
   showCompose = false,
 }: CheckInPostStoriesProps) {
@@ -150,7 +152,7 @@ function CheckInPostStories({
                 prefix={<SvgIcon name="pin_filled" size={16} color="PRIMARY" />}
                 i18nKey="pinned_link"
                 count={highlights.length}
-                to={`/users/${stories[0]?.author_detail.username}/snippets/pinned`}
+                to={`/users/${authorUsername}/snippets/pinned`}
               />
             </SectionTitleRow>
             {sortedAll.length > 0 ? (
