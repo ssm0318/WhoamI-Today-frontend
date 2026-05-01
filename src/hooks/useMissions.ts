@@ -4,7 +4,11 @@ import { getMissions } from '@utils/apis/mission';
 
 const FALLBACK_MISSIONS: Mission[] = [
   { prompt: 'Share a song that matches your mood right now', type: 'song' },
-  { prompt: 'Ask the community a question', type: 'question' },
+  {
+    prompt:
+      'Say hi to the WIT user community! Share a public post with something that represents you—a drawing, a favorite item, your pet, etc.',
+    type: 'text',
+  },
   { prompt: 'Compliment someone today', type: 'compliment' },
   { prompt: 'Post a place you have been this week', type: 'text' },
   { prompt: 'Share something you learned recently', type: 'text' },
