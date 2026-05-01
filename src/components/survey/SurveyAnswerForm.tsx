@@ -11,6 +11,7 @@ import { submitSurveyResponse } from '@utils/apis/survey';
 import { ChoiceChips } from './ChoiceChips';
 import { FreeTextInput } from './FreeTextInput';
 import { LikertChips } from './LikertChips';
+import { SliderInput } from './SliderInput';
 
 const ProgressBarTrack = styled.div`
   width: 100%;
@@ -169,6 +170,21 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
             placeholder={t('free_text_placeholder') ?? undefined}
           />
         )}
+        {currentQuestion.type === 'slider' &&
+          currentQuestion.slider_min_value !== null &&
+          currentQuestion.slider_max_value !== null && (
+            <SliderInput
+              min={currentQuestion.slider_min_value}
+              max={currentQuestion.slider_max_value}
+              value={currentValue as number | undefined}
+              onChange={(v) => setAnswer(currentQuestion.id, v)}
+              lowLabel={pickLocalized(currentQuestion.low_label_en, currentQuestion.low_label_ko)}
+              highLabel={pickLocalized(
+                currentQuestion.high_label_en,
+                currentQuestion.high_label_ko,
+              )}
+            />
+          )}
       </Layout.FlexCol>
 
       <NavRow>
