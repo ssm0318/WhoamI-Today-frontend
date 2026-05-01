@@ -219,7 +219,6 @@ function ResponseItem({
 
   const footerJsx = featureFlags?.postsVerQ ? (
     <PostFooterLikeOnly
-      isMyPage={isMyPage}
       post={response}
       showComments={() => setBottomSheet(true)}
       setInputFocus={() => setInputFocus(true)}
@@ -228,7 +227,6 @@ function ResponseItem({
     />
   ) : (
     <PostFooter
-      isMyPage={isMyPage}
       post={response}
       showComments={() => setBottomSheet(true)}
       setInputFocus={() => setInputFocus(true)}

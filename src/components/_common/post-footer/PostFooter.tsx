@@ -14,7 +14,6 @@ import Icon from '../icon/Icon';
 import PostReactionList from '../post-reaction-list/PostReactionList';
 
 type PostFooterProps = {
-  isMyPage: boolean;
   post: Response | Note;
   displayType?: POST_DP_TYPE;
   showComments: () => void;
@@ -23,7 +22,6 @@ type PostFooterProps = {
 };
 
 function PostFooter({
-  isMyPage,
   post,
   displayType = 'LIST',
   showComments,
@@ -158,18 +156,9 @@ function PostFooter({
       alignItems="center"
     >
       <Layout.FlexRow alignItems="center">
-        {!isMyPage && (
-          <Layout.FlexRow ref={toggleButtonRef} alignItems="center">
-            {(myEmojiList || []).length === 0 ? (
-              <EmojiButton onClick={handleClickEmojiButton} />
-            ) : (
-              <>
-                {/* <PostMyEmojiList emojiList={myEmojiList} /> */}
-                <EmojiButton onClick={handleClickEmojiButton} />
-              </>
-            )}
-          </Layout.FlexRow>
-        )}
+        <Layout.FlexRow ref={toggleButtonRef} alignItems="center">
+          <EmojiButton onClick={handleClickEmojiButton} />
+        </Layout.FlexRow>
         {displayType === 'LIST' && (
           <Layout.FlexRow w={48} h={48} alignItems="center" justifyContent="center">
             <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />

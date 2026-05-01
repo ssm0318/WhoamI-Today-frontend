@@ -139,7 +139,7 @@ function CheckInPostItem({
           </div>
         )}
 
-        {isMyPage && (!!likeCount || !!commentCount) && (
+        {isMyPage && !showLikeFooter && (!!likeCount || !!commentCount) && (
           <Layout.FlexRow gap={12} alignItems="center" style={statsRowStyle}>
             {!!likeCount && (
               <button
@@ -196,15 +196,13 @@ function CheckInPostItem({
 
         {showLikeFooter && isFullPost(post) && (
           <Layout.FlexRow gap={8} w="100%" alignItems="center">
-            {!isMyPage && (
-              <LikeButton
-                postType="CheckInPost"
-                postId={id}
-                currentUserLikeId={currentUserLikeId}
-                iconSize={23}
-                refresh={refresh}
-              />
-            )}
+            <LikeButton
+              postType="CheckInPost"
+              postId={id}
+              currentUserLikeId={currentUserLikeId}
+              iconSize={23}
+              refresh={refresh}
+            />
             {!!likeCount && (
               <Typo type="label-large" color="BLACK">
                 {likeCount}
