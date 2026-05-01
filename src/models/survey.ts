@@ -132,3 +132,29 @@ export interface PastSurvey {
   user_answered: boolean;
   results_unlocked: boolean;
 }
+
+// 4-week study schedule. Mirror of surveys/models.py CADENCE_CHOICES.
+export type Cadence = 'daily' | 'weekly' | 'biweekly' | 'anytime' | 'endpoint';
+
+// Three buckets returned by GET /api/surveys/index/. Mirror of
+// surveys/scheduling.py get_survey_index().
+export type Bucket = 'available_now' | 'late_but_accepted' | 'completed';
+
+export interface SurveyIndexEntry {
+  id: number;
+  cadence: Cadence;
+  sequence_index: number;
+  window_start: string; // ISO date
+  window_end: string | null; // null = open-ended (anytime, endpoint)
+  survey: { slug: string; title_en: string; title_ko: string };
+  bucket: Bucket;
+  user_answered: boolean;
+  submitted_at: string | null;
+  redirect_url: string;
+}
+
+export interface SurveyIndexResponse {
+  available_now: SurveyIndexEntry[];
+  late_but_accepted: SurveyIndexEntry[];
+  completed: SurveyIndexEntry[];
+}
