@@ -85,6 +85,14 @@ export interface MusicHighlightCardBody {
   sharedByUsername: string;
 }
 
+// SurveyResults Card Body (frontend-only injection)
+export interface SurveyResultsCardBody {
+  slug: string;
+  titleEn: string;
+  titleKo: string;
+  date: string;
+}
+
 // Discover Result Item (discriminated union)
 export type DiscoverResultItem =
   | {
@@ -121,4 +129,8 @@ export type DiscoverResultItem =
   | {
       type: 'MusicHighlight';
       body: MusicHighlightCardBody;
+    }
+  | {
+      type: 'SurveyResults';
+      body: SurveyResultsCardBody;
     };

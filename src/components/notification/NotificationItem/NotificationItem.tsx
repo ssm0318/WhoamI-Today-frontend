@@ -23,9 +23,6 @@ function NotificationItem({ item }: NotificationItemProps) {
     if (notification_type === 'QuestionSuggest') {
       // Navigate to question suggestion page
       navigate('/suggest-questions');
-    } else if (notification_type === 'DailySurvey') {
-      // Open side menu
-      navigate('/my?show_side_menu=true');
     } else {
       navigate(redirect_url);
     }

@@ -196,6 +196,7 @@
                 "explore_friends": "Add Friends",
                 "questions": "Questions",
                 "my_profile": "My Profile",
+                "survey_results": "Survey Results",
                 "settings": "Settings",
                 "edit_profile": "Edit Profile",
                 "inquiry": "Contact & Inquiries",
@@ -1124,6 +1125,55 @@
             "step2": "Tap the Widgets option",
             "step3": "Find WhoAmI Today\nin the widget list",
             "step4": "Drag the widget\nto your Home Screen"
+        }
+    },
+    "surveys": {
+        "section_title": "Survey of the Day",
+        "section_results_released": "Survey results",
+        "thanks_results_tomorrow": "Thanks! Results available tomorrow.",
+        "submit": "Submit",
+        "next": "Next",
+        "back": "Back",
+        "start_survey": "Start",
+        "continue_survey": "Continue",
+        "question_progress": "Question {{current}} of {{total}}",
+        "question_total": "{{total}} questions",
+        "responder_count_today": "{{count}} people took this on WIT today",
+        "responder_count_today_zero": "Be the first to take this on WIT today",
+        "view_results": "View results",
+        "answered_view_results": "Answered — view results",
+        "answer_to_view_results": "Answer to view results",
+        "locked_title": "Results not yet available",
+        "archive_title": "Survey Results",
+        "archive_empty": "No surveys have been scheduled yet.",
+        "n_responders": "n = {{n}}",
+        "your_percentile": "You scored higher than {{p}}% of responders.",
+        "toast": {
+            "submitted": "Survey submitted!",
+            "submit_failed": "Could not submit — please try again."
+        },
+        "buckets": {
+            "population": "Everyone",
+            "friends": "Your friends",
+            "close_friends": "Your close friends"
+        },
+        "reasons": {
+            "too_few_friends": "Available once you have 5 friends.",
+            "too_few_responders": "Available once 5 of your friends have responded.",
+            "too_few_close_friends": "Available once you have 5 close friends.",
+            "delta_too_small": "Available once you have at least 5 more friends than close friends.",
+            "view_friend_disabled": "Friend-level breakdown is disabled for this view to protect individual responses."
+        },
+        "panel_kinds": {
+            "aggregated_likert": "Score distribution",
+            "option_counts": "Choices",
+            "wordcloud": "Reflections"
+        },
+        "panel_questions_count": "{{count}} questions aggregated",
+        "free_text_placeholder": "Type your response…",
+        "wordcloud": {
+            "empty": "No words shared yet — the population is too small to display.",
+            "suppressed": "{{count}} words said by fewer than {{min}} people are hidden to protect privacy."
         }
     }
 }
