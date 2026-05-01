@@ -91,6 +91,18 @@ export const readCheckInPosts = async (ids: number[]) => {
   await axios.patch('/check_in/posts/read/', { ids });
 };
 
+export interface CheckInPostLike {
+  id: number;
+  user_detail: { id: number; username: string; profile_image: string | null };
+}
+
+export const getCheckInPostLikes = async (postId: number) => {
+  const { data } = await axios.get<PaginationResponse<CheckInPostLike[]>>(
+    `/check_in/posts/${postId}/likes/`,
+  );
+  return data;
+};
+
 export const getCheckInPostComments = async (postId: number, page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Comment[]>>(

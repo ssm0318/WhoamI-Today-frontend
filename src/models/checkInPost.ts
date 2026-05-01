@@ -30,6 +30,8 @@ export interface CheckInPostStory {
   created_at: string;
   current_user_read?: boolean;
   has_unread?: boolean;
+  like_count?: number | null;
+  comment_count?: number | null;
 }
 
 export interface NewCheckInPostForm {

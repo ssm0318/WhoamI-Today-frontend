@@ -86,89 +86,93 @@ function CheckInPostStories({
     <>
       {isProfileMode && isOwnProfile ? (
         <Section>
-          <SectionTitleRow>
-            <Typo type="label-large" color="BLACK">
-              {t('my_snippets')}
-            </Typo>
-            <Layout.FlexRow gap={12} alignItems="center">
+          <SectionInner>
+            <SectionTitleRow>
+              <Typo type="label-large" color="BLACK">
+                {t('my_snippets')}
+              </Typo>
+              <Layout.FlexRow gap={12} alignItems="center">
+                <SnippetArchiveLink
+                  prefix={<SvgIcon name="pin_filled" size={16} color="PRIMARY" />}
+                  i18nKey="pinned_link"
+                  count={highlights.length}
+                  to="/check-in-posts/archive?tab=pinned"
+                />
+                <SnippetArchiveLink
+                  prefix={<ArchiveIcon />}
+                  i18nKey="all_link"
+                  count={stories.length}
+                  to="/check-in-posts/archive?tab=all"
+                />
+              </Layout.FlexRow>
+            </SectionTitleRow>
+            {sortedAll.length === 0 && !showCompose ? (
+              <EmptyRow>
+                <Typo type="label-small" color="MEDIUM_GRAY">
+                  {t('no_stories')}
+                </Typo>
+              </EmptyRow>
+            ) : (
+              <Strip>
+                {showCompose && (
+                  <ComposeBubble
+                    onClick={() => navigate('/check-in-posts/new')}
+                    aria-label={`${t('compose_line1')} ${t('compose_line2')}`}
+                  >
+                    <Plus>
+                      <PlusIcon>+</PlusIcon>
+                      <Typo type="label-small" color="DARK_GRAY">
+                        {t('compose_line2')}
+                      </Typo>
+                    </Plus>
+                  </ComposeBubble>
+                )}
+                {sortedAll.map((story) => (
+                  <SnippetStoryCard
+                    key={story.id}
+                    story={story}
+                    onClick={handleClickStory(story)}
+                    hideUsername
+                  />
+                ))}
+              </Strip>
+            )}
+          </SectionInner>
+        </Section>
+      ) : isProfileMode ? (
+        <Section>
+          <SectionInner>
+            <SectionTitleRow>
+              <Typo type="label-large" color="BLACK">
+                {t('my_snippets')}
+              </Typo>
               <SnippetArchiveLink
                 prefix={<SvgIcon name="pin_filled" size={16} color="PRIMARY" />}
                 i18nKey="pinned_link"
                 count={highlights.length}
-                to="/check-in-posts/archive?tab=pinned"
+                to={`/users/${stories[0]?.author_detail.username}/snippets/pinned`}
               />
-              <SnippetArchiveLink
-                prefix={<ArchiveIcon />}
-                i18nKey="all_link"
-                count={stories.length}
-                to="/check-in-posts/archive?tab=all"
-              />
-            </Layout.FlexRow>
-          </SectionTitleRow>
-          {sortedAll.length === 0 && !showCompose ? (
-            <EmptyRow>
-              <Typo type="label-small" color="MEDIUM_GRAY">
-                {t('no_stories')}
-              </Typo>
-            </EmptyRow>
-          ) : (
-            <Strip>
-              {showCompose && (
-                <ComposeBubble
-                  onClick={() => navigate('/check-in-posts/new')}
-                  aria-label={`${t('compose_line1')} ${t('compose_line2')}`}
-                >
-                  <Plus>
-                    <PlusIcon>+</PlusIcon>
-                    <Typo type="label-small" color="DARK_GRAY">
-                      {t('compose_line2')}
-                    </Typo>
-                  </Plus>
-                </ComposeBubble>
-              )}
-              {sortedAll.map((story) => (
-                <SnippetStoryCard
-                  key={story.id}
-                  story={story}
-                  onClick={handleClickStory(story)}
-                  hideUsername
-                />
-              ))}
-            </Strip>
-          )}
-        </Section>
-      ) : isProfileMode ? (
-        <Section>
-          <SectionTitleRow>
-            <Typo type="label-large" color="BLACK">
-              {t('my_snippets')}
-            </Typo>
-            <SnippetArchiveLink
-              prefix={<SvgIcon name="pin_filled" size={16} color="PRIMARY" />}
-              i18nKey="pinned_link"
-              count={highlights.length}
-              to={`/users/${stories[0]?.author_detail.username}/snippets/pinned`}
-            />
-          </SectionTitleRow>
-          {sortedAll.length > 0 ? (
-            <Strip>
-              {sortedAll.map((story) => (
-                <SnippetStoryCard
-                  key={story.id}
-                  story={story}
-                  onClick={handleClickStory(story)}
-                  hideUsername
-                  hidePinBadge
-                />
-              ))}
-            </Strip>
-          ) : (
-            <EmptyRow>
-              <Typo type="label-small" color="MEDIUM_GRAY">
-                {t('no_stories')}
-              </Typo>
-            </EmptyRow>
-          )}
+            </SectionTitleRow>
+            {sortedAll.length > 0 ? (
+              <Strip>
+                {sortedAll.map((story) => (
+                  <SnippetStoryCard
+                    key={story.id}
+                    story={story}
+                    onClick={handleClickStory(story)}
+                    hideUsername
+                    hidePinBadge
+                  />
+                ))}
+              </Strip>
+            ) : (
+              <EmptyRow>
+                <Typo type="label-small" color="MEDIUM_GRAY">
+                  {t('no_stories')}
+                </Typo>
+              </EmptyRow>
+            )}
+          </SectionInner>
         </Section>
       ) : (
         <Strip>
@@ -209,10 +213,14 @@ function CheckInPostStories({
 
 const Section = styled.section`
   width: 100%;
+  background-color: ${Colors.WHITE};
+  padding: 0 8px 12px;
+`;
+
+const SectionInner = styled.div`
   background-color: ${Colors.GRAY_14};
   border-radius: 8px;
-  margin: 0 8px 12px;
-  width: calc(100% - 16px);
+  overflow: hidden;
 `;
 
 const SectionTitleRow = styled.div`
