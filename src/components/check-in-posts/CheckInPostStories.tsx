@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import useSWR from 'swr';
 import { Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { CheckInPostStory } from '@models/checkInPost';
 import { getCheckInPostStories, getUserCheckInPosts } from '@utils/apis/checkInPost';
@@ -30,29 +31,17 @@ function CheckInPostStories({
   const [t] = useTranslation('translation', { keyPrefix: 'check_in_post' });
   const navigate = useNavigate();
 
-  const [stories, setStories] = useState<CheckInPostStory[]>([]);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  const fetchStories = useCallback(() => {
-    let cancelled = false;
-    const fetcher = authorUserId ? getUserCheckInPosts(authorUserId) : getCheckInPostStories();
-    fetcher
-      .then((data) => {
-        if (cancelled) return;
-        setStories(data.results ?? []);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setStories([]);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [authorUserId]);
+  const swrKey = authorUserId
+    ? `/check_in/posts/by-user/${authorUserId}/`
+    : '/check_in/posts/stories/';
 
-  useEffect(() => {
-    return fetchStories();
-  }, [fetchStories]);
+  const { data, mutate } = useSWR(swrKey, () =>
+    authorUserId ? getUserCheckInPosts(authorUserId) : getCheckInPostStories(),
+  );
+
+  const stories: CheckInPostStory[] = useMemo(() => data?.results ?? [], [data]);
 
   const handleClickStory = (story: CheckInPostStory) => () => {
     const idx = stories.findIndex((s) => s.id === story.id);
@@ -60,12 +49,12 @@ function CheckInPostStories({
   };
   const handleClose = () => setActiveIndex(null);
 
-  // After a pin toggle in the viewer, re-fetch so highlights/today re-bucket
+  // After a pin toggle in the viewer, revalidate so highlights/today re-bucket
   // and the viewer's neighbors stay correct. Cheaper than maintaining two
   // sources of truth.
   const handlePinChange = useCallback(() => {
-    fetchStories();
-  }, [fetchStories]);
+    mutate();
+  }, [mutate]);
 
   const { highlights, sortedAll } = useMemo(() => {
     const h = stories.filter((s) => s.is_pinned);
