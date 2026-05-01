@@ -1,8 +1,10 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
+import { MAX_WINDOW_WIDTH } from '@constants/layout';
 import {
   FRIEND_DEFAULT_REDIRECTION_PATH,
   FRIENDS_Q_DEFAULT_REDIRECTION_PATH,
@@ -59,7 +61,7 @@ function SignIn() {
   };
 
   return (
-    <>
+    <FixedViewport>
       <Layout.FlexCol w="100%" alignItems="center" mt={100}>
         <img width="75px" src="/whoami-logo.svg" alt="who_am_i" />
       </Layout.FlexCol>
@@ -101,8 +103,23 @@ function SignIn() {
           </a>
         </Layout.FlexRow>
       </Layout.FlexCol>
-    </>
+    </FixedViewport>
   );
 }
+
+const FixedViewport = styled.div`
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: ${MAX_WINDOW_WIDTH}px;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: ${({ theme }) => theme.WHITE};
+`;
 
 export default SignIn;
