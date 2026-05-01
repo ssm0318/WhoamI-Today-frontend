@@ -26,12 +26,8 @@ function Email() {
     validateEmail({
       email: emailInput,
       onSuccess: () => {
-        setSignUpInfo({
-          email: emailInput,
-          // NOTE: username은 email로 설정
-          username: emailInput,
-        });
-        navigate('/signup/info');
+        setSignUpInfo({ email: emailInput });
+        navigate('/signup/username');
       },
       onError: (e) => setEmailError(e),
     });

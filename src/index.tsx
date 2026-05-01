@@ -73,6 +73,7 @@ import Email from './routes/sign-up/Email';
 import Info from './routes/sign-up/Info';
 import NotiSettings from './routes/sign-up/NotiSettings';
 import Password from './routes/sign-up/Password';
+import Username from './routes/sign-up/Username';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
 import SuggestQuestions from './routes/SuggestQuestions';
@@ -351,6 +352,7 @@ const router = createBrowserRouter([
         element: <SignUp />,
         children: [
           { path: 'email', element: <Email /> },
+          { path: 'username', element: <Username /> },
           { path: 'password', element: <Password /> },
           { path: 'info', element: <Info /> },
           { path: 'noti-settings', element: <NotiSettings /> },
