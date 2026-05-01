@@ -17,7 +17,7 @@ import { useChipCategories } from '@hooks/useChipCategories';
 import { Connection } from '@models/api/friends';
 import { MyProfile } from '@models/api/user';
 import { normalizeChipText } from '@models/chips';
-import { areFriends, isMyProfile, UserProfile } from '@models/user';
+import { areFriends, isMyProfile, receivedFriendRequest, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { editProfile } from '@utils/apis/my';
@@ -133,7 +133,6 @@ function Profile({ user }: ProfileProps) {
   const isVerQ = !!featureFlags?.postsVerQ;
 
   // Backend already masks per-field visibility; null/empty means hidden.
-  const showName = !!user?.name;
   const showPronouns = !!user?.pronouns;
   const showBio = !!user?.bio;
 
@@ -156,11 +155,7 @@ function Profile({ user }: ProfileProps) {
                 {/* Name or masked */}
                 <Layout.FlexRow gap={6} alignItems="center">
                   <Typo type="title-large" numberOfLines={1}>
-                    {isMyPage
-                      ? (myProfile as any)?.name || myProfile?.username || ''
-                      : showName
-                      ? (friendData as any)?.name || username || ''
-                      : '****'}
+                    {isMyPage ? myProfile?.username || '' : username || ''}
                   </Typo>
                   {isMyPage && isVerQ && (
                     <AccountStatusBadge>
@@ -325,8 +320,8 @@ function Profile({ user }: ProfileProps) {
 
       {!isMyPage && user && (
         <>
-          {!isMyProfile(user) && !areFriends(user) && (
-            <>
+          {!isMyProfile(user) && !areFriends(user) && !receivedFriendRequest(user) && (
+            <Layout.FlexRow w="100%" gap={8}>
               <FriendStatus
                 type="user"
                 user={user}
@@ -337,7 +332,7 @@ function Profile({ user }: ProfileProps) {
                 isUserPage
               />
               <ChatRequestButton user={user} />
-            </>
+            </Layout.FlexRow>
           )}
           <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />
 

@@ -6,7 +6,6 @@ import Icon from '../icon/Icon';
 import LikeButton from '../like-button/LikeButton';
 
 type PostFooterLikeOnlyProps = {
-  isMyPage: boolean;
   post: Response | Note;
   displayType?: POST_DP_TYPE;
   showComments: () => void;
@@ -15,7 +14,6 @@ type PostFooterLikeOnlyProps = {
 };
 
 function PostFooterLikeOnly({
-  isMyPage,
   post,
   displayType = 'LIST',
   showComments,
@@ -49,15 +47,13 @@ function PostFooterLikeOnly({
       }}
       alignItems="center"
     >
-      {!isMyPage && (
-        <LikeButton
-          postType={post.type === POST_TYPE.RESPONSE ? 'Response' : 'Note'}
-          postId={post.id}
-          currentUserLikeId={current_user_like_id}
-          iconSize={23}
-          refresh={refresh}
-        />
-      )}
+      <LikeButton
+        postType={post.type === POST_TYPE.RESPONSE ? 'Response' : 'Note'}
+        postId={post.id}
+        currentUserLikeId={current_user_like_id}
+        iconSize={23}
+        refresh={refresh}
+      />
       {displayType === 'LIST' && (
         <Layout.FlexRow w={48} h={48} alignItems="center" justifyContent="center">
           <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />

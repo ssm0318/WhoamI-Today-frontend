@@ -200,7 +200,6 @@ function NoteItem({
 
   const footerJsx = featureFlags?.postsVerQ ? (
     <PostFooterLikeOnly
-      isMyPage={isMyPage}
       post={note}
       showComments={() => setBottomSheet(true)}
       setInputFocus={() => setInputFocus(true)}
@@ -209,7 +208,6 @@ function NoteItem({
     />
   ) : featureFlags?.friendList ? (
     <PostFooter
-      isMyPage={isMyPage}
       post={note}
       showComments={() => setBottomSheet(true)}
       setInputFocus={() => setInputFocus(true)}
