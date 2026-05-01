@@ -34,6 +34,7 @@ export interface Survey {
   interpretation_ko: string;
   questions: SurveyQuestion[];
   user_has_responded: boolean;
+  responder_count: number;
 }
 
 export interface SurveyOfTheDayResponse {

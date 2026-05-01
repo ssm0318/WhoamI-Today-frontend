@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { Layout, Typo } from '@design-system';
+import { Typo } from '@design-system';
 import { useSurveyOfTheDay } from '@hooks/useSurveyOfTheDay';
 import i18n from '@i18n/index';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -97,16 +97,11 @@ function SurveyOfTheDay() {
     <ColorCard>
       {sectionTitle}
       {surveyTitle}
-      {survey.description_en && (
-        <Typo type="title-medium" color="WHITE">
-          {pickLocalized(survey.description_en, survey.description_ko)}
-        </Typo>
-      )}
-      <Layout.FlexRow alignItems="center" gap={8}>
-        <Typo type="label-medium" color="WHITE">
-          {t('question_total', { total: survey.questions.length })}
-        </Typo>
-      </Layout.FlexRow>
+      <Typo type="label-medium" color="WHITE">
+        {survey.responder_count > 0
+          ? t('responder_count_today', { count: survey.responder_count })
+          : t('responder_count_today_zero')}
+      </Typo>
       <ActionButton onClick={() => navigate(`/surveys/${survey.slug}/answer`)}>
         <Typo type="label-large" fontWeight={600}>
           {ctaLabel}

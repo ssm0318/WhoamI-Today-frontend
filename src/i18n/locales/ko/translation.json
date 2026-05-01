@@ -1129,6 +1129,8 @@
     "continue_survey": "이어서 답하기",
     "question_progress": "{{current}} / {{total}}",
     "question_total": "총 {{total}}문항",
+    "responder_count_today": "오늘 WIT에서 {{count}}명이 응답했어요",
+    "responder_count_today_zero": "WIT에서 첫 번째로 응답해보세요",
     "view_results": "결과 보기",
     "answered_view_results": "응답 완료 — 결과 보기",
     "answer_to_view_results": "답변하면 결과를 볼 수 있어요",
