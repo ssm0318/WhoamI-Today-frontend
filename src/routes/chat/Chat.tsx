@@ -13,13 +13,14 @@ import { CHAT_MESSAGE_INPUT_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import {
+  BotButton,
   ChatMessage,
   MessageReactionSummary,
   PostChatMessageRes,
   RefinedChatMessage,
 } from '@models/chat';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getChatMessages, markMessagesRead } from '@utils/apis/chat';
+import { getChatMessages, markMessagesRead, postChatMessage } from '@utils/apis/chat';
 import { getMyProfile } from '@utils/apis/my';
 import { getUserProfile } from '@utils/apis/user';
 import { MainScrollContainer } from '../Root';
@@ -195,6 +196,32 @@ function Chat() {
     });
   };
 
+  const handleBotButtonClick = useCallback(
+    async (button: BotButton) => {
+      if (button.action === 'navigate' && button.url) {
+        navigate(button.url);
+        return;
+      }
+      if (button.action === 'external' && button.url) {
+        window.open(button.url, '_blank', 'noopener,noreferrer');
+        return;
+      }
+      if (button.action === 'reply' && userId) {
+        try {
+          const { data } = await postChatMessage(Number(userId), {
+            emoji: '',
+            content: button.label,
+            bot_payload: { kind: 'choice', payload: button.payload },
+          });
+          handleMessageSent(data);
+        } catch {
+          // Silent — matches existing chat send-error pattern.
+        }
+      }
+    },
+    [navigate, userId],
+  );
+
   const handleImageLoaded = (messageId: number) => {
     const shouldScroll =
       justSentIdsRef.current.has(messageId) || shouldPinToBottomRef.current.has(messageId);
@@ -312,6 +339,7 @@ function Chat() {
                   }
                   isFirstInCluster={message.is_first_in_cluster}
                   onImageLoad={handleImageLoaded}
+                  onBotButtonClick={handleBotButtonClick}
                 />
               </SwipeToReply>
             ))}

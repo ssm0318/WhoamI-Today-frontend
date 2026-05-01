@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import { BotCard } from '@components/chat/bot-card';
 import SharedContentCard from '@components/chat/shared-content-card/SharedContentCard';
 import { Layout, Typo } from '@design-system';
-import { ChatEmojiDict, ChatEmojiType, RefinedChatMessage } from '@models/chat';
+import { BotButton, ChatEmojiDict, ChatEmojiType, RefinedChatMessage } from '@models/chat';
 import { addMessageReaction, removeMessageReaction } from '@utils/apis/chat';
 import {
   LeftBubble,
@@ -39,6 +40,7 @@ interface Props {
   showSenderName?: boolean;
   onReactionUpdate?: () => void;
   onImageLoad?: (messageId: number) => void;
+  onBotButtonClick?: (button: BotButton) => void;
 }
 
 function ChatMessageItem({
@@ -48,6 +50,7 @@ function ChatMessageItem({
   showSenderName = false,
   onReactionUpdate,
   onImageLoad,
+  onBotButtonClick,
 }: Props) {
   const navigate = useNavigate();
   const {
@@ -379,6 +382,9 @@ function ChatMessageItem({
         </Layout.FlexRow>
       ) : (
         textBubble
+      )}
+      {message.bot_payload?.kind === 'card' && (
+        <BotCard payload={message.bot_payload} onButtonClick={onBotButtonClick} />
       )}
       {reactions.length > 0 && (
         <Layout.FlexRow gap={4} mt={2} justifyContent={isMine ? 'flex-end' : 'flex-start'}>

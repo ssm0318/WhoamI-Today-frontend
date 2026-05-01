@@ -24,6 +24,7 @@ export const postChatMessage = async (userId: number, msg: InputChatMessage, ima
     formData.append('image', image);
     if (msg.content) formData.append('content', msg.content);
     if (msg.parent) formData.append('parent', String(msg.parent));
+    if (msg.bot_payload) formData.append('bot_payload', JSON.stringify(msg.bot_payload));
     return axiosFormDataInstance.post<PostChatMessageRes>(`/chat/user/${userId}/`, formData);
   }
   return axios.post<PostChatMessageRes>(`/chat/user/${userId}/`, msg);
@@ -79,8 +80,13 @@ export const updateGroupChat = async (
   return data;
 };
 
+export interface LeaveGroupChatRes {
+  status: 'left' | 'admin_evicted';
+  redirect_user_id?: number;
+}
+
 export const leaveGroupChat = async (roomId: number) => {
-  return axios.post(`/chat/groups/${roomId}/leave/`);
+  return axios.post<LeaveGroupChatRes>(`/chat/groups/${roomId}/leave/`);
 };
 
 export const getGroupMessages = async (roomId: number, page?: string | null) => {
