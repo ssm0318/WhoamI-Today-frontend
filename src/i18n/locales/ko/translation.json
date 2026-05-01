@@ -83,7 +83,16 @@
     "are_you_sure_you_want_to_delete_this_friend": "이 친구를 삭제하시겠습니까?",
     "temporary_error": "일시적으로 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
     "view_all_updates_this_week": "이번주 모든 업데이트 보기",
-    "ping_daily_limit": "오늘의 핑 횟수를 모두 사용했어요! 내일 다시 시도해주세요."
+    "ping_daily_limit": "오늘의 핑 횟수를 모두 사용했어요! 내일 다시 시도해주세요.",
+    "hide_aria": "친구 숨기기",
+    "hide_confirm_title": "이 친구를 친구 피드에서 숨기겠습니까?",
+    "hide_confirm_action": "숨기기",
+    "toast_hidden": "친구를 숨겼어요",
+    "toast_unhidden": "숨김을 해제했어요",
+    "hidden_friends_link": "숨긴 친구 {{count}}명",
+    "hidden_friends_title": "숨긴 친구",
+    "hidden_friends_empty": "숨긴 친구가 없어요",
+    "unhide": "숨김 해제"
   },
   "common": {
     "done": "완료",

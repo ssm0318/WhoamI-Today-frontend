@@ -2,6 +2,7 @@ import { MouseEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -21,6 +22,7 @@ import { Note, POST_TYPE, Response } from '@models/post';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
+import { hideFriend } from '@utils/apis/friends';
 import {
   Container,
   EmptyPostsContainer,
@@ -32,6 +34,7 @@ interface Props {
   user: UpdatedProfile;
   onConnectionChanged?: (userId: number, connection: Connection) => void;
   onSubscriptionChanged?: (userId: number, hasSubscription: boolean) => void;
+  onHidden?: (userId: number) => void;
   tabMode?: 'check-in' | 'posts' | 'unified';
   hasNewPost?: boolean;
 }
@@ -40,6 +43,7 @@ function FriendItemWithUpdates({
   user,
   onConnectionChanged,
   onSubscriptionChanged,
+  onHidden,
   tabMode = 'check-in',
   hasNewPost = false,
 }: Props) {
@@ -66,6 +70,22 @@ function FriendItemWithUpdates({
     setShowSubscriptionPopup(true);
   };
   const handleCloseSubscriptionPopup = () => setShowSubscriptionPopup(false);
+
+  const [showHideConfirm, setShowHideConfirm] = useState(false);
+  const handleOpenHideConfirm = (e: MouseEvent) => {
+    e.stopPropagation();
+    setShowHideConfirm(true);
+  };
+  const handleCloseHideConfirm = () => setShowHideConfirm(false);
+  const handleConfirmHide = async () => {
+    setShowHideConfirm(false);
+    try {
+      await hideFriend(id);
+      onHidden?.(id);
+    } catch {
+      /* parent handler may show toast / refetch on failure */
+    }
+  };
 
   const [isEditConnectionsBottomSheetVisible, setIsEditConnectionsBottomSheetVisible] =
     useState(false);
@@ -183,6 +203,23 @@ function FriendItemWithUpdates({
               </Layout.Absolute>
             )}
           </Layout.LayoutBase>
+          {tabMode !== 'unified' && (
+            <button
+              type="button"
+              onClick={handleOpenHideConfirm}
+              aria-label={t('friend.hide_aria') ?? ''}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                marginLeft: -4,
+                cursor: 'pointer',
+                display: 'inline-flex',
+              }}
+            >
+              <SvgIcon name="view" size={28} color="BLACK" />
+            </button>
+          )}
         </Layout.FlexRow>
       </Layout.FlexRow>
 
@@ -386,6 +423,15 @@ function FriendItemWithUpdates({
         onConnectionChanged={(connection) => {
           onConnectionChanged?.(user.id, connection);
         }}
+      />
+
+      <CommonDialog
+        visible={showHideConfirm}
+        title={t('friend.hide_confirm_title')}
+        cancelText={t('common.cancel')}
+        confirmText={t('friend.hide_confirm_action')}
+        onClickConfirm={handleConfirmHide}
+        onClickClose={handleCloseHideConfirm}
       />
     </Container>
   );

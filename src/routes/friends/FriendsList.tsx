@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Divider from '@components/_common/divider/Divider';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
@@ -7,7 +8,7 @@ import MyCheckInCard from '@components/check-in/my-check-in-card/MyCheckInCard';
 import FriendItemWithUpdates from '@components/friends/friend-item-with-updates/FriendItemWithUpdates';
 import NoCloseFriends from '@components/friends/no-close-friends/NoCloseFriends';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
-import { Colors, Layout, Typo } from '@design-system';
+import { Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { Connection, FriendType, UpdatedProfile } from '@models/api/friends';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -21,6 +22,7 @@ type TabType = 'check-in' | 'posts';
 
 function FriendsList() {
   const [t] = useTranslation('translation');
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<TabType>('check-in');
   const [closeFriendsOnly, setCloseFriendsOnly] = useState(false);
   const friendType: FriendType = closeFriendsOnly ? 'close_friends' : 'all';
@@ -37,9 +39,11 @@ function FriendsList() {
   // Keep hooks for cross-tab updates
   const postsFriendsHook = useInfiniteFetchFriends({ type: friendType });
   const closeFriendsHook = useInfiniteFetchFriends({ type: 'close_friends' });
+  const hiddenFriendsHook = useInfiniteFetchFriends({ type: 'hidden' });
 
-  const { fetchCheckIn } = useBoundStore((state) => ({
+  const { fetchCheckIn, openToast } = useBoundStore((state) => ({
     fetchCheckIn: state.fetchCheckIn,
+    openToast: state.openToast,
   }));
 
   const handleRefresh = async () => {
@@ -86,6 +90,19 @@ function FriendsList() {
       filteredPostsFriends: postsFriendsList,
     };
   }, [allFriends, postsFriendsHook.allFriends]);
+
+  const hiddenFriendsCount = useMemo(
+    () => (hiddenFriendsHook.allFriends || []).flatMap(({ results }) => results || []).length,
+    [hiddenFriendsHook.allFriends],
+  );
+
+  const handleHidden = (user: UpdatedProfile) => {
+    updateFriendList({ type: 'is_hidden', item: user, value: true });
+    postsFriendsHook.updateFriendList({ type: 'is_hidden', item: user, value: true });
+    closeFriendsHook.updateFriendList({ type: 'is_hidden', item: user, value: true });
+    hiddenFriendsHook.refetchAllFriends();
+    openToast({ message: t('friend.toast_hidden') });
+  };
 
   const isEmpty = filteredFriends.length === 0 && !isAllFriendsLoading;
   const isPostsEmpty = filteredPostsFriends.length === 0 && !postsFriendsHook.isAllFriendsLoading;
@@ -152,6 +169,18 @@ function FriendsList() {
             </Layout.FlexRow>
           </Layout.FlexRow>
 
+          {/* Hidden friends link */}
+          {hiddenFriendsCount > 0 && (
+            <Layout.FlexRow w="100%" justifyContent="flex-end" ph={16} pt={8}>
+              <HiddenFriendsLinkButton type="button" onClick={() => navigate('/friends/hidden')}>
+                <SvgIcon name="view_alt" size={14} color="BLACK" />
+                <Typo type="label-medium" color="BLACK">
+                  {t('friend.hidden_friends_link', { count: hiddenFriendsCount })}
+                </Typo>
+              </HiddenFriendsLinkButton>
+            </Layout.FlexRow>
+          )}
+
           {/* Tab content */}
           {selectedTab === 'check-in' ? (
             <Layout.FlexCol w="100%" flex={isEmpty ? 1 : undefined}>
@@ -166,6 +195,7 @@ function FriendsList() {
                       <FriendItemWithUpdates
                         user={user}
                         key={user.id}
+                        onHidden={() => handleHidden(user)}
                         onSubscriptionChanged={(_userId, hasSubscription) => {
                           updateFriendList({
                             type: 'is_subscribed',
@@ -279,6 +309,7 @@ function FriendsList() {
                         user={user}
                         tabMode="posts"
                         hasNewPost={hasUnreadPosts(user)}
+                        onHidden={() => handleHidden(user)}
                         onSubscriptionChanged={(_userId, hasSubscription) => {
                           updateFriendList({
                             type: 'is_subscribed',
@@ -335,6 +366,18 @@ const TabButton = styled.button<{ $active: boolean }>`
   font-weight: ${({ $active }) => ($active ? 700 : 400)};
   color: ${({ $active }) => ($active ? Colors.BLACK : Colors.MEDIUM_GRAY)};
   border-bottom: 2px solid ${({ $active }) => ($active ? '#8700FF' : 'transparent')};
+`;
+
+const HiddenFriendsLinkButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 `;
 
 const TabBadge = styled.span`

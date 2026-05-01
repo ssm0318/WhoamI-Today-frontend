@@ -22,7 +22,7 @@ export type UpdateFriendListParams =
   | UpdateConnectionStatusParams;
 
 interface UseInfiniteFetchFriendsParams {
-  type?: 'all' | 'close_friends';
+  type?: 'all' | 'close_friends' | 'hidden';
 }
 
 const useInfiniteFetchFriends = ({ type: friendType }: UseInfiniteFetchFriendsParams) => {

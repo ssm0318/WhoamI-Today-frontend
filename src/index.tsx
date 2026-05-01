@@ -44,6 +44,7 @@ import FriendNewPosts from './routes/friends/FriendNewPosts';
 import FriendPinnedFeed from './routes/friends/FriendPinnedFeed';
 import FriendsFeed from './routes/friends/FriendsFeed';
 import FriendsList from './routes/friends/FriendsList';
+import HiddenFriends from './routes/friends/HiddenFriends';
 import Intro from './routes/Intro';
 import Likes from './routes/Likes';
 import My from './routes/My';
@@ -144,6 +145,14 @@ const router = createBrowserRouter([
           },
           { path: 'explore', element: <ExploreFriends /> },
           { path: 'edit', element: <EditFriends /> },
+          {
+            path: 'hidden',
+            element: (
+              <VersionGuard allowedVersions={[VersionType.VER_W]}>
+                <HiddenFriends />
+              </VersionGuard>
+            ),
+          },
           { path: ':username/new-posts', element: <FriendNewPosts /> },
         ],
       },
