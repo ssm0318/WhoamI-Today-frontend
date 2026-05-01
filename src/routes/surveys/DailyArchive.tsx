@@ -10,13 +10,15 @@ import i18n from '@i18n/index';
 import { PastSurvey } from '@models/survey';
 import { getPastSurveys } from '@utils/apis/survey';
 
+import { MainScrollContainer } from '../Root';
+
 const Page = styled(Layout.FlexCol)`
   width: 100%;
   padding: 16px;
   padding-top: ${TITLE_HEADER_HEIGHT + 16}px;
   gap: 12px;
   background: ${Colors.LIGHT};
-  min-height: 100vh;
+  min-height: 100%;
 `;
 
 const RowCard = styled.button`
@@ -60,7 +62,7 @@ function DailyArchive() {
   if (!data) return null;
 
   return (
-    <>
+    <MainScrollContainer>
       <SubHeader title={t('archive_title')} />
       <Page>
         {data.results.length === 0 && (
@@ -82,7 +84,7 @@ function DailyArchive() {
           </RowCard>
         ))}
       </Page>
-    </>
+    </MainScrollContainer>
   );
 }
 

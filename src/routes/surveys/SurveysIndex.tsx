@@ -10,13 +10,15 @@ import i18n from '@i18n/index';
 import { Bucket, SurveyIndexEntry } from '@models/survey';
 import { getSurveyIndex } from '@utils/apis/survey';
 
+import { MainScrollContainer } from '../Root';
+
 const Page = styled(Layout.FlexCol)`
   width: 100%;
   padding: 16px;
   padding-top: ${TITLE_HEADER_HEIGHT + 16}px;
   gap: 16px;
   background: ${Colors.LIGHT};
-  min-height: 100vh;
+  min-height: 100%;
 `;
 
 const Section = styled(Layout.FlexCol)`
@@ -113,7 +115,7 @@ function SurveysIndex() {
   const hasCompleted = dailyCompletedCount > 0 || nonDailyCompleted.length > 0;
 
   return (
-    <>
+    <MainScrollContainer>
       <SubHeader title={t('index_title')} />
       <Page>
         {!hasAvailable && !hasLate && !hasCompleted && (
@@ -166,7 +168,7 @@ function SurveysIndex() {
           </Section>
         )}
       </Page>
-    </>
+    </MainScrollContainer>
   );
 }
 
