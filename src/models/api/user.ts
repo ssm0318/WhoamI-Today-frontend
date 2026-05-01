@@ -88,6 +88,13 @@ export interface UsernameError {
   detail: UsernameValidateErrorType;
 }
 
+export interface InviterUsernameLookupResponse {
+  username: string;
+  inviter_id: number;
+  user_group: UserGroup;
+  current_ver: VersionType;
+}
+
 export const UsernameValidateError = {
   ALREADY_EXIST_KO: '이미 존재하는 닉네임입니다.',
   ALREADY_EXIST_EN: 'Username already exists.',

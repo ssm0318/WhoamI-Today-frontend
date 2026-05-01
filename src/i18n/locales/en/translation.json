@@ -148,6 +148,9 @@
         "friend_email": "Friend's Email",
         "friend_email_guide": "WIT is currently only available to participants in our study or to people who’ve been invited by existing users. To join, please enter the email of your friend who’s already a WIT user.",
         "friend_email_error": "Invalid email address",
+        "friend_username": "Friend's Username (optional)",
+        "friend_username_guide": "If a friend invited you, enter their username so we can match your experience to theirs.",
+        "friend_username_error": "No user found with this username.",
         "date_of_birth": "Date of Birth",
         "date_of_birth_guide": "This allows us to accurately calculate your age now and after for research participation.",
         "date_of_birth_error": "Invalid date of birth",
@@ -795,9 +798,9 @@
             "invite": {
                 "text": "Invite Friends",
                 "copy": "Invitation link copied to clipboard.",
-                "desktop_message": "Join me in beta testing WhoAmI Today (WIT) — a social media platform for youth designed by researchers at the University of Washington.\n\nUse my email when signing up.\n\nInvitation link: {{invitation_link}}\n\nMy email: {{email}}",
+                "desktop_message": "Join me in beta testing WhoAmI Today (WIT) — a social media platform for youth designed by researchers at the University of Washington.\n\nUse my username when signing up.\n\nInvitation link: {{invitation_link}}\n\nMy username: {{username}}",
                 "mobile_message_title": "Join me on WhoAmI Today (WIT).",
-                "mobile_message": "Use my email when signing up.\n\nInvitation link: {{invitation_link}}\n\nMy email: {{email}}"
+                "mobile_message": "Use my username when signing up.\n\nInvitation link: {{invitation_link}}\n\nMy username: {{username}}"
             },
             "tab": {
                 "requests": "Requests",

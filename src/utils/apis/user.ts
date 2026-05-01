@@ -8,6 +8,7 @@ import { Connection } from '@models/api/friends';
 import {
   EmailError,
   FriendRequest,
+  InviterUsernameLookupResponse,
   PasswordConfirmError,
   PasswordError,
   SentFriendRequest,
@@ -207,6 +208,29 @@ export const validateUsername = ({
     });
 };
 
+export const validateInviterUsername = ({
+  username,
+  onSuccess,
+  onError,
+}: {
+  username: string;
+  onSuccess: (res: InviterUsernameLookupResponse) => void;
+  onError: (errorMsg: string) => void;
+}) => {
+  axiosFormDataInstance
+    .post<InviterUsernameLookupResponse>('/user/signup/inviter-username/', { username })
+    .then((res) => {
+      onSuccess(res.data);
+    })
+    .catch((e) => {
+      if (e.response?.data?.detail) {
+        onError(e.response.data.detail);
+      } else {
+        onError(i18n.t('error.temporary_error'));
+      }
+    });
+};
+
 export const signUp = ({
   signUpInfo,
   onSuccess,
@@ -218,13 +242,14 @@ export const signUp = ({
 }) => {
   const formData = new FormData();
 
-  const { email, password, username, noti_time } = signUpInfo;
+  const { email, password, username, noti_time, inviter_id } = signUpInfo;
 
   formData.append('email', email);
   formData.append('username', username);
   formData.append('password', password);
 
   if (noti_time) formData.append('noti_time', noti_time);
+  if (inviter_id) formData.append('inviter_id', String(inviter_id));
 
   axiosFormDataInstance
     .post('/user/signup/', formData)

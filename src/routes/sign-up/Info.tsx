@@ -11,18 +11,21 @@ import {
 import { Button, CheckBox, Layout, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import { useBoundStore } from '@stores/useBoundStore';
-import { validateBirthdate } from '@utils/apis/user';
+import { validateBirthdate, validateInviterUsername } from '@utils/apis/user';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 function Info() {
   const [t, i18n] = useTranslation('translation', { keyPrefix: 'sign_up' });
   const [dateOfBirthInput, setDateOfBirthInput] = useState('');
   const [dateOfBirthError, setDateOfBirthError] = useState<string | null>(null);
+  const [friendUsernameInput, setFriendUsernameInput] = useState('');
+  const [friendUsernameError, setFriendUsernameError] = useState<string | null>(null);
   const [privacyPolicyChecked, setPrivacyPolicyChecked] = useState(false);
   const [showAgeConfirmDialog, setShowAgeConfirmDialog] = useState(false);
   const [calculatedAge, setCalculatedAge] = useState(0);
-  const { openToast } = useBoundStore((state) => ({
+  const { openToast, setSignUpInfo } = useBoundStore((state) => ({
     openToast: state.openToast,
+    setSignUpInfo: state.setSignUpInfo,
   }));
   const navigate = useNavigate();
   const postMessage = usePostAppMessage();
@@ -42,6 +45,11 @@ function Info() {
     if (dateOfBirthError) setDateOfBirthError(null);
   };
 
+  const handleChangeFriendUsername = (e: ChangeEvent<HTMLInputElement>) => {
+    setFriendUsernameInput(e.target.value);
+    if (friendUsernameError) setFriendUsernameError(null);
+  };
+
   const calculateAge = (birthDate: string) => {
     const birthDateObj = new Date(birthDate);
     const today = new Date();
@@ -56,17 +64,36 @@ function Info() {
   };
 
   const onClickNext = () => {
-    let hasErrors = false;
-
     if (!isValideDateOfBirth(dateOfBirthInput)) {
       setDateOfBirthError(t('date_of_birth_error'));
-      hasErrors = true;
+      return;
     }
 
-    if (!hasErrors) {
+    const proceedToAgeConfirm = () => {
       const age = calculateAge(dateOfBirthInput);
       setCalculatedAge(age);
       setShowAgeConfirmDialog(true);
+    };
+
+    const trimmed = friendUsernameInput.trim();
+    if (trimmed) {
+      validateInviterUsername({
+        username: trimmed,
+        onSuccess: (res) => {
+          setSignUpInfo({
+            inviter_id: res.inviter_id,
+            current_ver: res.current_ver,
+            user_group: res.user_group,
+          });
+          proceedToAgeConfirm();
+        },
+        onError: () => {
+          setFriendUsernameError(t('friend_username_error'));
+        },
+      });
+    } else {
+      setSignUpInfo({ inviter_id: 0 });
+      proceedToAgeConfirm();
     }
   };
 
@@ -102,16 +129,15 @@ function Info() {
   return (
     <>
       <Layout.FlexCol gap={20} w="100%">
-        {/* <ValidatedInput
-          label={t('friend_email')}
-          name="friend_email"
-          type="email"
-          inputMode="email"
-          value={friendEmailInput}
-          onChange={handleChangeFriendEmail}
-          error={friendEmailError}
-          guide={t('friend_email_guide')}
-        /> */}
+        <ValidatedInput
+          label={t('friend_username')}
+          name="friend_username"
+          type="text"
+          value={friendUsernameInput}
+          onChange={handleChangeFriendUsername}
+          error={friendUsernameError}
+          guide={t('friend_username_guide')}
+        />
         <ValidatedInput
           label={t('date_of_birth')}
           name="date_of_birth"
@@ -159,9 +185,9 @@ function Info() {
         <Button.Large
           type="gray_fill"
           status={
-            // !friendEmailInput ||
-            // friendEmailError ||
-            !dateOfBirthInput || dateOfBirthError || !privacyPolicyChecked ? 'disabled' : 'normal'
+            !dateOfBirthInput || dateOfBirthError || !privacyPolicyChecked || friendUsernameError
+              ? 'disabled'
+              : 'normal'
           }
           width={AUTH_BUTTON_WIDTH}
           text={t('next')}
