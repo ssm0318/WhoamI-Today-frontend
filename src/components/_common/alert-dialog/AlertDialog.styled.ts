@@ -8,7 +8,7 @@ export const Container = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: ${Z_INDEX.MODAL_CONTAINER};
+  z-index: ${Z_INDEX.ALERT_DIALOG};
   overflow-y: hidden;
   overscroll-behavior-y: none;
 `;
