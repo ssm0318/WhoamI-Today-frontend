@@ -2,9 +2,10 @@ import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import UserMoreModal from '@components/user-page/UserMoreModal';
-import { Layout, Typo } from '@design-system';
-import { UpdatedProfile } from '@models/api/friends';
+import { Layout, SvgIcon, Typo } from '@design-system';
+import { Connection, UpdatedProfile } from '@models/api/friends';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
@@ -23,12 +24,15 @@ function UpdatedFriendItemDefault({
   showMoreButton,
   onAfterUserMoreAction,
 }: Props) {
-  const { id, profile_image, username, unread_chat_count, description } = user;
+  const { id, profile_image, username, unread_chat_count, description, connection_status } = user;
 
   const { featureFlags } = useBoundStore(UserSelector);
   const isVerQ = !!featureFlags?.postsVerQ;
+  const showConnectionToggle = isMyPage && isVerQ;
 
   const [showMoreModal, setShowMoreModal] = useState(false);
+  const [isEditConnectionsBottomSheetVisible, setIsEditConnectionsBottomSheetVisible] =
+    useState(false);
 
   const navigate = useNavigate();
   const handleClickProfile = () => {
@@ -45,6 +49,11 @@ function UpdatedFriendItemDefault({
     setShowMoreModal(true);
   };
 
+  const handleClickConnectionBadge = (e: MouseEvent) => {
+    e.stopPropagation();
+    setIsEditConnectionsBottomSheetVisible(true);
+  };
+
   return (
     <Layout.FlexRow w="100%" ph={16} gap={16}>
       <StyledUpdatedFriendItem
@@ -57,10 +66,21 @@ function UpdatedFriendItemDefault({
           <Layout.FlexRow alignItems="center" gap={7}>
             <ProfileImage imageUrl={profile_image} username={username} size={44} />
             <Layout.FlexCol>
-              <Layout.FlexRow gap={4} alignItems="center">
+              <Layout.FlexRow gap={8} alignItems="center">
                 <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 100 }}>
                   {username}
                 </Typo>
+                {showConnectionToggle && connection_status && (
+                  <SvgIcon
+                    name={
+                      connection_status === Connection.CLOSE_FRIEND
+                        ? 'close_friend'
+                        : 'default_friend'
+                    }
+                    size={20}
+                    onClick={handleClickConnectionBadge}
+                  />
+                )}
               </Layout.FlexRow>
               {description && (
                 <Typo type="label-medium" color="MEDIUM_GRAY" numberOfLines={1}>
@@ -104,6 +124,16 @@ function UpdatedFriendItemDefault({
           setIsVisible={setShowMoreModal}
           user={user as unknown as UserProfile}
           callback={onAfterUserMoreAction}
+        />
+      )}
+      {showConnectionToggle && (
+        <EditConnectionsBottomSheet
+          user={user as unknown as UserProfile}
+          visible={isEditConnectionsBottomSheetVisible}
+          closeBottomSheet={() => setIsEditConnectionsBottomSheetVisible(false)}
+          onConnectionChanged={() => {
+            onAfterUserMoreAction?.();
+          }}
         />
       )}
     </Layout.FlexRow>
