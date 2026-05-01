@@ -26,9 +26,9 @@ function FriendItem(props: FriendItemProps) {
       onClick={handleClickItem}
     >
       <Layout.FlexRow alignItems="center" gap={7}>
-        <ProfileImage imageUrl={user.profile_image} username={user.username} size={44} />
+        <ProfileImage imageUrl={user.profile_image} username={user.username} size={36} />
         <Layout.FlexCol>
-          <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 160 }}>
+          <Typo type="label-large" ellipsis={{ enabled: true, maxWidth: 100 }}>
             {user.username}
           </Typo>
           {showEmail && (

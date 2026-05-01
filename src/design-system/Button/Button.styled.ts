@@ -101,12 +101,12 @@ export const Container = styled.div<{ sizing?: 'fit-content' | 'stretch'; disabl
 export const RowButtonContainer = styled(FlexRow)<{ pl?: number }>`
   width: 100%;
 
-  div {
+  & > div {
     flex-grow: 1;
     width: 100%;
   }
 
-  div + div {
+  & > div + div {
     padding-left: ${({ pl }) => pl ?? DEFAULT_MARGIN}px;
   }
 `;

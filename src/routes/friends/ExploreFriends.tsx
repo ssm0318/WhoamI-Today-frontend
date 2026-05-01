@@ -37,7 +37,7 @@ function ExploreFriends() {
   };
 
   return (
-    <MainScrollContainer>
+    <MainScrollContainer pb={60}>
       <SubHeader
         title={t('title')}
         RightComponent={

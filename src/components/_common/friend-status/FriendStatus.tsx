@@ -1,6 +1,7 @@
 import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import FriendEvaluationModal, {
   EvaluationData,
@@ -26,6 +27,14 @@ import {
   requestFriend,
 } from '@utils/apis/user';
 import FriendTypeSelectModal from '../friend-type-select-modal/FriendTypeSelectModal';
+
+const CompactButtonRow = styled(Layout.FlexRow)`
+  .button_component {
+    padding: 6px 12px;
+    min-height: 28px;
+    white-space: nowrap;
+  }
+`;
 
 export interface Props {
   type: 'sent_requests' | 'requests' | 'recommended' | 'search' | 'user';
@@ -250,12 +259,12 @@ function FriendStatus({
 
   return (
     <>
-      <Layout.FlexRow gap={8} w="100%">
+      <CompactButtonRow gap={8}>
         {areFriends(user) ? (
           <Button.Secondary
             status="normal"
             text={t('unfriend')}
-            sizing="stretch"
+            fontType="label-small"
             onClick={handleClickUnfriend}
           />
         ) : type === 'requests' || receivedFriendRequest(user) ? (
@@ -263,13 +272,13 @@ function FriendStatus({
             <PrimaryButton
               status="normal"
               text={t('confirm')}
-              sizing="stretch"
+              fontType="label-small"
               onClick={handleClickConfirm}
             />
             <Button.Secondary
               status="normal"
               text={t('reject')}
-              sizing="stretch"
+              fontType="label-small"
               onClick={handleClickRejectFriendRequest}
             />
           </>
@@ -277,11 +286,11 @@ function FriendStatus({
           <>
             {type === 'sent_requests' || sentFriendRequest(user) ? (
               <>
-                <PrimaryButton status="completed" text={t('requested')} sizing="stretch" />
+                <PrimaryButton status="completed" text={t('requested')} fontType="label-small" />
                 <Button.Secondary
                   status="normal"
                   text={t('cancel')}
-                  sizing="stretch"
+                  fontType="label-small"
                   onClick={handleClickCancelRequest}
                 />
               </>
@@ -289,7 +298,7 @@ function FriendStatus({
               <PrimaryButton
                 status="normal"
                 text={t('request')}
-                sizing="stretch"
+                fontType="label-small"
                 onClick={handleClickRequest}
               />
             )}
@@ -297,13 +306,13 @@ function FriendStatus({
               <Button.Secondary
                 status="normal"
                 text={t('block_recommendation')}
-                sizing="stretch"
+                fontType="label-small"
                 onClick={handleClickDeleteRecommendation}
               />
             )}
           </>
         )}
-      </Layout.FlexRow>
+      </CompactButtonRow>
       {isCancelFriendRequestDialogVisible && (
         <CommonDialog
           visible={isCancelFriendRequestDialogVisible}
