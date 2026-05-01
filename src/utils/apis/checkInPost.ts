@@ -77,6 +77,10 @@ export const updateCheckInPostPinVisibility = async (
   return data;
 };
 
+export const readCheckInPosts = async (ids: number[]) => {
+  await axios.patch('/check_in/posts/read/', { ids });
+};
+
 export const getCheckInPostComments = async (postId: number, page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<Comment[]>>(

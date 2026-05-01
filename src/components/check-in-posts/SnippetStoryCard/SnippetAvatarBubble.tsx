@@ -10,7 +10,8 @@ interface SnippetAvatarBubbleProps {
 }
 
 function SnippetAvatarBubble({ story, onClick }: SnippetAvatarBubbleProps) {
-  const { author_detail } = story;
+  const { author_detail, has_unread } = story;
+  const allRead = has_unread === false;
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
@@ -19,7 +20,7 @@ function SnippetAvatarBubble({ story, onClick }: SnippetAvatarBubbleProps) {
 
   return (
     <S.Bubble onClick={handleClick}>
-      <S.Ring>
+      <S.Ring $read={allRead}>
         <ProfileImage
           imageUrl={author_detail.profile_image}
           username={author_detail.username}

@@ -14,11 +14,11 @@ export const Bubble = styled.button`
   padding: 0;
 `;
 
-export const Ring = styled.div`
+export const Ring = styled.div<{ $read?: boolean }>`
   width: 68px;
   height: 68px;
   border-radius: 50%;
-  border: 2px solid ${Colors.PRIMARY};
+  border: 2px solid ${({ $read }) => ($read ? Colors.LIGHT_GRAY : Colors.PRIMARY)};
   padding: 2px;
   box-sizing: border-box;
   display: flex;

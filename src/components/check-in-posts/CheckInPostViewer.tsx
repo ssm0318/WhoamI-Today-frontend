@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -11,14 +11,20 @@ import { CheckInPost, CheckInPostStory, CheckInPostVisibility } from '@models/ch
 import { useBoundStore } from '@stores/useBoundStore';
 import {
   getCheckInPost,
+  getUserCheckInPosts,
+  readCheckInPosts,
   togglePinCheckInPost,
   updateCheckInPostPinVisibility,
 } from '@utils/apis/checkInPost';
 import { deleteLike, postLike } from '@utils/apis/likes';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 
+const STORY_DURATION_MS = 5000;
+
 interface CheckInPostViewerProps {
   story: CheckInPostStory;
+  /** When true, fetches all posts from the author and shows a progress bar. */
+  enableMultiStory?: boolean;
   onClose: () => void;
   onPrev?: () => void;
   onNext?: () => void;
@@ -29,6 +35,7 @@ interface CheckInPostViewerProps {
 
 function CheckInPostViewer({
   story,
+  enableMultiStory,
   onClose,
   onPrev,
   onNext,
@@ -42,20 +49,73 @@ function CheckInPostViewer({
   const [likeId, setLikeId] = useState<number | null>(null);
   const [likeBusy, setLikeBusy] = useState(false);
 
+  // Multi-story: fetch all posts from the author and navigate internally
+  const [userPosts, setUserPosts] = useState<CheckInPostStory[]>([]);
+  const [storyIndex, setStoryIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const startTimeRef = useRef(0);
+  const remainingRef = useRef(STORY_DURATION_MS);
+  const pressStartRef = useRef(0);
+
   const { myProfile, openToast } = useBoundStore(
     useShallow((state) => ({ myProfile: state.myProfile, openToast: state.openToast })),
   );
-  const isOwn = myProfile?.id === story.author_detail.id;
 
-  // Drive the chrome (caption, pin state, visibility) from `story` immediately
-  // so the layout doesn't flicker while the detail fetch resolves on each
-  // navigation between snippets. `post` overrides once loaded.
-  const isPinned = post?.is_pinned ?? story.is_pinned;
-  const pinVisibility = post?.pin_visibility ?? story.pin_visibility;
-  const caption = post?.caption ?? story.caption;
+  useEffect(() => {
+    if (!enableMultiStory) {
+      setUserPosts([]);
+      setStoryIndex(0);
+      return;
+    }
+    let cancelled = false;
+    setUserPosts([]);
+    setStoryIndex(0);
+    getUserCheckInPosts(story.author_detail.id)
+      .then((data) => {
+        if (cancelled) return;
+        const sorted = [...(data.results ?? [])].sort(
+          (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+        );
+        setUserPosts(sorted);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [enableMultiStory, story.author_detail.id]);
+
+  const multiStoryLoading = !!enableMultiStory && userPosts.length === 0;
+
+  const currentStory =
+    enableMultiStory && userPosts.length > 0 && storyIndex < userPosts.length
+      ? userPosts[storyIndex]
+      : story;
+
+  const isOwn = myProfile?.id === currentStory.author_detail.id;
+
+  const isPinned = post?.is_pinned ?? currentStory.is_pinned;
+  const pinVisibility = post?.pin_visibility ?? currentStory.pin_visibility;
+  const caption = post?.caption ?? currentStory.caption;
+
+  // Reset timer when story changes
+  useEffect(() => {
+    remainingRef.current = STORY_DURATION_MS;
+  }, [storyIndex, story.author_detail.id]);
+
+  const handleHoldStart = useCallback(() => {
+    if (!enableMultiStory || multiStoryLoading) return;
+    pressStartRef.current = Date.now();
+    const elapsed = Date.now() - startTimeRef.current;
+    remainingRef.current = Math.max(0, remainingRef.current - elapsed);
+    setPaused(true);
+  }, [enableMultiStory, multiStoryLoading]);
+
+  const handleHoldEnd = useCallback(() => {
+    setPaused(false);
+  }, []);
 
   const refreshPost = () => {
-    getCheckInPost(story.id)
+    getCheckInPost(currentStory.id)
       .then((data) => setPost(data))
       .catch(() => {});
   };
@@ -88,7 +148,7 @@ function CheckInPostViewer({
   useEffect(() => {
     let cancelled = false;
     setPost(null);
-    getCheckInPost(story.id)
+    getCheckInPost(currentStory.id)
       .then((data) => {
         if (!cancelled) setPost(data);
       })
@@ -98,11 +158,38 @@ function CheckInPostViewer({
     return () => {
       cancelled = true;
     };
-  }, [story.id]);
+  }, [currentStory.id]);
 
   useEffect(() => {
     setLikeId(post?.current_user_like_id ?? null);
   }, [post?.current_user_like_id]);
+
+  // Mark current story as read
+  useEffect(() => {
+    if (!currentStory.id || multiStoryLoading) return;
+    readCheckInPosts([currentStory.id]).catch(() => {});
+  }, [currentStory.id, multiStoryLoading]);
+
+  // Auto-advance timer for multi-story mode
+  useEffect(() => {
+    if (!enableMultiStory || multiStoryLoading || showComments || paused) return;
+
+    startTimeRef.current = Date.now();
+
+    const timer = setTimeout(() => {
+      remainingRef.current = STORY_DURATION_MS;
+      if (storyIndex < userPosts.length - 1) {
+        setStoryIndex((prev) => prev + 1);
+      } else if (onNext) {
+        onNext();
+      } else {
+        onClose();
+      }
+    }, remainingRef.current);
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enableMultiStory, multiStoryLoading, storyIndex, userPosts.length, showComments, paused]);
 
   const handleBackdropClick = (e: MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) onClose();
@@ -110,12 +197,24 @@ function CheckInPostViewer({
 
   const handleLeft = (e: MouseEvent) => {
     e.stopPropagation();
-    onPrev?.();
+    if (enableMultiStory && Date.now() - pressStartRef.current > 200) return;
+    if (enableMultiStory && storyIndex > 0) {
+      remainingRef.current = STORY_DURATION_MS;
+      setStoryIndex(storyIndex - 1);
+    } else {
+      onPrev?.();
+    }
   };
 
   const handleRight = (e: MouseEvent) => {
     e.stopPropagation();
-    onNext?.();
+    if (enableMultiStory && Date.now() - pressStartRef.current > 200) return;
+    if (enableMultiStory && storyIndex < userPosts.length - 1) {
+      remainingRef.current = STORY_DURATION_MS;
+      setStoryIndex(storyIndex + 1);
+    } else {
+      onNext?.();
+    }
   };
 
   const handlePinToggle = async (e: MouseEvent) => {
@@ -148,19 +247,35 @@ function CheckInPostViewer({
 
   return createPortal(
     <Backdrop onClick={handleBackdropClick}>
-      <Card onClick={(e) => e.stopPropagation()}>
+      <Card
+        onClick={(e) => e.stopPropagation()}
+        onPointerDown={handleHoldStart}
+        onPointerUp={handleHoldEnd}
+        onPointerCancel={handleHoldEnd}
+      >
+        {enableMultiStory && userPosts.length > 0 && (
+          <ProgressBar>
+            {userPosts.map((p, idx) => (
+              <ProgressSegment
+                key={`${p.id}-${idx < storyIndex ? 'v' : idx === storyIndex ? 'a' : 'u'}`}
+                $state={idx < storyIndex ? 'viewed' : idx === storyIndex ? 'active' : 'unseen'}
+                $paused={paused}
+              />
+            ))}
+          </ProgressBar>
+        )}
         <Header>
           <Layout.FlexRow alignItems="center" gap={8}>
             <ProfileImage
-              imageUrl={story.author_detail.profile_image}
-              username={story.author_detail.username}
+              imageUrl={currentStory.author_detail.profile_image}
+              username={currentStory.author_detail.username}
               size={32}
             />
             <Typo type="label-large" color="WHITE" bold>
-              {story.author_detail.username}
+              {currentStory.author_detail.username}
             </Typo>
             <Typo type="label-small" color="LIGHT_GRAY">
-              {convertTimeDiffByString({ day: new Date(story.created_at) })}
+              {convertTimeDiffByString({ day: new Date(currentStory.created_at) })}
             </Typo>
           </Layout.FlexRow>
           <Layout.FlexRow alignItems="center" gap={8}>
@@ -203,13 +318,13 @@ function CheckInPostViewer({
           </PinVisibilityRow>
         )}
 
-        {story.image_url && (
+        {!multiStoryLoading && currentStory.image_url && (
           <ImageStage>
-            <StoryImage src={story.image_url} alt="daily snippet" />
+            <StoryImage src={currentStory.image_url} alt="daily snippet" />
           </ImageStage>
         )}
 
-        {caption && (
+        {!multiStoryLoading && caption && (
           <Caption>
             <Typo type="body-medium" color="WHITE">
               {caption}
@@ -273,8 +388,12 @@ function CheckInPostViewer({
           </ActionPill>
         </Footer>
 
-        {onPrev && <NavZone $side="left" onClick={handleLeft} />}
-        {onNext && <NavZone $side="right" onClick={handleRight} />}
+        {(enableMultiStory ? storyIndex > 0 || !!onPrev : !!onPrev) && (
+          <NavZone $side="left" onClick={handleLeft} />
+        )}
+        {(enableMultiStory ? storyIndex < userPosts.length - 1 || !!onNext : !!onNext) && (
+          <NavZone $side="right" onClick={handleRight} />
+        )}
       </Card>
 
       {post && (
@@ -311,8 +430,10 @@ const Card = styled.div`
   max-height: 100dvh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   background: #1c1c1e;
+  padding-top: calc(72px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
 `;
 
 const Header = styled.div`
@@ -378,12 +499,11 @@ const CloseBtn = styled.button`
 
 const ImageStage = styled.div`
   width: 100%;
-  height: 60vh;
-  height: 60dvh;
+  flex: 1;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
 `;
 
 const StoryImage = styled.img`
@@ -444,6 +564,54 @@ const NavZone = styled.div<{ $side: 'left' | 'right' }>`
   ${({ $side }) => ($side === 'left' ? 'left: 0;' : 'right: 0;')}
   cursor: pointer;
   z-index: 1;
+`;
+
+const ProgressBar = styled.div`
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + 6px);
+  left: 8px;
+  right: 8px;
+  display: flex;
+  gap: 3px;
+  z-index: 4;
+`;
+
+const ProgressSegment = styled.div<{
+  $state: 'viewed' | 'active' | 'unseen';
+  $paused: boolean;
+}>`
+  flex: 1;
+  height: 2px;
+  border-radius: 1px;
+  background-color: rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 1px;
+    background-color: rgba(255, 255, 255, 0.9);
+    transform-origin: left;
+    ${({ $state, $paused }) => {
+      if ($state === 'viewed') return 'transform: scaleX(1);';
+      if ($state === 'unseen') return 'transform: scaleX(0);';
+      return `
+        animation: fillSegment ${STORY_DURATION_MS}ms linear forwards;
+        animation-play-state: ${$paused ? 'paused' : 'running'};
+      `;
+    }}
+  }
+
+  @keyframes fillSegment {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
 `;
 
 export default CheckInPostViewer;

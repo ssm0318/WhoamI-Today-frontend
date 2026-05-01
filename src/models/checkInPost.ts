@@ -28,6 +28,8 @@ export interface CheckInPostStory {
   is_pinned: boolean;
   pin_visibility: CheckInPostVisibility | null;
   created_at: string;
+  current_user_read?: boolean;
+  has_unread?: boolean;
 }
 
 export interface NewCheckInPostForm {

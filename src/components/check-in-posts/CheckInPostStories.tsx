@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import useSWR from 'swr';
 import { Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { CheckInPostStory } from '@models/checkInPost';
+import { useBoundStore } from '@stores/useBoundStore';
 import { getCheckInPostStories, getUserCheckInPosts } from '@utils/apis/checkInPost';
 import CheckInPostViewer from './CheckInPostViewer';
 import SnippetArchiveLink from './SnippetArchiveLink';
@@ -30,6 +31,7 @@ function CheckInPostStories({
 }: CheckInPostStoriesProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'check_in_post' });
   const navigate = useNavigate();
+  const myProfile = useBoundStore((state) => state.myProfile);
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
@@ -41,13 +43,20 @@ function CheckInPostStories({
     authorUserId ? getUserCheckInPosts(authorUserId) : getCheckInPostStories(),
   );
 
-  const stories: CheckInPostStory[] = useMemo(() => data?.results ?? [], [data]);
+  const stories: CheckInPostStory[] = useMemo(() => {
+    const results = data?.results ?? [];
+    if (authorUserId !== undefined) return results;
+    return results.filter((s) => s.author_detail.id !== myProfile?.id);
+  }, [data, authorUserId, myProfile?.id]);
 
   const handleClickStory = (story: CheckInPostStory) => () => {
     const idx = stories.findIndex((s) => s.id === story.id);
     if (idx >= 0) setActiveIndex(idx);
   };
-  const handleClose = () => setActiveIndex(null);
+  const handleClose = () => {
+    setActiveIndex(null);
+    mutate();
+  };
 
   // After a pin toggle in the viewer, revalidate so highlights/today re-bucket
   // and the viewer's neighbors stay correct. Cheaper than maintaining two
@@ -183,6 +192,7 @@ function CheckInPostStories({
       {activeIndex !== null && stories[activeIndex] && (
         <CheckInPostViewer
           story={stories[activeIndex]}
+          enableMultiStory={!isProfileMode}
           onClose={handleClose}
           onPinChange={handlePinChange}
           onPrev={activeIndex > 0 ? () => setActiveIndex(activeIndex - 1) : undefined}
