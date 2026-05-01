@@ -98,16 +98,13 @@ export function useBrowseModeSessionPrompt() {
     return () => document.removeEventListener('visibilitychange', onVisibilityChange);
   }, [handleBecomeActive, handleBecomeInactive]);
 
-  // Cold start: if we have a stored "last session" from before, decide whether to prompt.
+  // Cold start: prompt on first-ever visit AND on returns after 30+ min away.
   // Also load saved presets so they're ready when the prompt opens.
   useEffect(() => {
     if (!userId || !browseModeEnabled) return;
 
     const lastTs = getLastSessionTimestamp(userId);
-    if (lastTs === null) {
-      // First time we've ever seen this user on this device — record now and skip prompting.
-      saveLastSessionTimestamp(userId);
-    } else if (Date.now() - lastTs >= AWAY_THRESHOLD_MS) {
+    if (lastTs === null || Date.now() - lastTs >= AWAY_THRESHOLD_MS) {
       tryTrigger();
     }
     fetchPresets();
