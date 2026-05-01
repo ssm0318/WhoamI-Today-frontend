@@ -33,15 +33,15 @@ import { shouldShowWidgetGuide } from '@utils/widgetInstallGuide';
 import { MainScrollContainer } from '../Root';
 
 const CATEGORY_KEYS = [
-  'music_entertainment',
+  'basic_identities',
+  'favorite_platform',
+  'least_favorite_platform',
   'hobbies_activities',
+  'music_entertainment',
+  'values_allyship',
   'on_my_mind',
   'as_a_friend',
   'online_persona',
-  'favorite_platform',
-  'least_favorite_platform',
-  'basic_identities',
-  'values_allyship',
 ] as const;
 
 type CategoryKey = (typeof CATEGORY_KEYS)[number];
@@ -475,8 +475,7 @@ function EditProfile() {
                   onAddCustomChip={handleAddCustomChip}
                   onRemoveCustomChip={handleRemoveCustomChip}
                 />
-                {renderVisibilityRow(
-                  tVis('category', { label: categoryInfo.label }),
+                {!featureFlags?.postsVerQ && (
                   <VisibilityToggle
                     value={
                       draft.categoryVisibility[categoryInfo.key as CategoryKey] ??
@@ -485,7 +484,7 @@ function EditProfile() {
                     onChange={(v) =>
                       handleSetCategoryVisibility(categoryInfo.key as CategoryKey, v)
                     }
-                  />,
+                  />
                 )}
               </Layout.FlexCol>
             ))}
