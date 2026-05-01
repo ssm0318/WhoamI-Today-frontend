@@ -15,7 +15,7 @@ import {
   BuiltInBrowseModeId,
   CustomBrowseModePreset,
 } from '@models/browseMode';
-import { SocialBattery } from '@models/checkIn';
+import { ComponentVisibility, DEFAULT_VISIBILITY, SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
 import { postCheckIn } from '@utils/apis/checkIn';
 import { HiddenModeKey, readHiddenModes, writeHiddenModes } from '@utils/browseModeHiddenModes';
@@ -194,19 +194,32 @@ function BrowseModeSessionPrompt({
       if (myProfile?.id) saveLastPickedMode(myProfile.id, mode);
 
       let batteryApplied: SocialBattery | null = null;
-      // Only patch an EXISTING check-in's battery — don't create one from
-      // scratch just because the user picked a browse mode. The backend
-      // requires `visibility` (and other per-component visibilities) on
-      // create; we don't know the user's preferred values, and silently
-      // creating a new check-in with defaults isn't what they asked for.
-      // Users without a check-in yet just don't get the battery sync —
-      // they can run a real check-in later and adjust then.
-      if (syncBattery && suggestedBattery && checkIn) {
+      if (syncBattery && suggestedBattery) {
         try {
-          await postCheckIn({
-            ...checkIn,
-            social_battery: suggestedBattery,
-          });
+          // Existing check-in → spread it whole and override social_battery
+          // (preserves the user's actual visibility, mood, thought, etc.).
+          // No check-in yet → create a fresh one with empty content fields
+          // and DEFAULT_VISIBILITY values; only the battery carries
+          // meaningful content. Backend requires `visibility` on create,
+          // so we always pass it.
+          if (checkIn) {
+            await postCheckIn({
+              ...checkIn,
+              social_battery: suggestedBattery,
+            });
+          } else {
+            await postCheckIn({
+              social_battery: suggestedBattery,
+              mood: [],
+              thought: '',
+              track_id: '',
+              visibility: [ComponentVisibility.FRIENDS],
+              battery_visibility: DEFAULT_VISIBILITY.battery,
+              mood_visibility: DEFAULT_VISIBILITY.mood,
+              song_visibility: DEFAULT_VISIBILITY.song,
+              thought_visibility: DEFAULT_VISIBILITY.thought,
+            });
+          }
           await fetchCheckIn();
           batteryApplied = suggestedBattery;
         } catch {
