@@ -1,4 +1,10 @@
 {
+  "visibility": {
+    "public": "공개",
+    "friends": "친구",
+    "close_friends": "친한 친구",
+    "only_me": "나만"
+  },
   "check_in_post": {
     "new_title": "New Daily Snippet",
     "add_image": "사진 추가",
@@ -551,6 +557,7 @@
       "button": {
         "request": "채팅 요청",
         "requested": "요청됨",
+        "requested_chat": "채팅 요청됨",
         "cancel": "취소",
         "cancel_dialog": {
           "title": "채팅 요청 취소",
@@ -625,11 +632,11 @@
       "error": {
         "read_file_error": "이미지를 불러오는 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
       },
-      "friends_only": {
-        "name": "<token>이름</token>을 친구에게만 보이기",
-        "pronouns": "<token>대명사</token>를 친구에게만 보이기",
-        "bio": "<token>소개</token>를 친구에게만 보이기",
-        "category": "<token>{{label}}</token>을 친구에게만 보이기"
+      "visibility": {
+        "name": "이름 공개 범위",
+        "pronouns": "대명사 공개 범위",
+        "bio": "소개 공개 범위",
+        "category": "{{label}} 공개 범위"
       },
       "placeholders": {
         "bio": "소개",
@@ -875,6 +882,7 @@
         "delete": "삭제",
         "request": "친구 요청",
         "requested": "요청됨",
+        "requested_friend": "친구 요청됨",
         "cancel": "취소",
         "block_recommendation": "추천 삭제",
         "delete_request_dialog": {

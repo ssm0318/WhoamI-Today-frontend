@@ -1,5 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Typo } from '@design-system';
+import i18n from '@i18n/index';
 import { ComponentVisibility } from '@models/checkIn';
 
 interface Props {
@@ -7,18 +9,20 @@ interface Props {
   onChange: (visibility: ComponentVisibility) => void;
 }
 
-export const VISIBILITY_OPTIONS: { value: ComponentVisibility; label: string }[] = [
-  { value: ComponentVisibility.PUBLIC, label: 'Public' },
-  { value: ComponentVisibility.FRIENDS, label: 'Friends' },
-  { value: ComponentVisibility.CLOSE_FRIENDS, label: 'Close Friends' },
-  { value: ComponentVisibility.ONLY_ME, label: 'Only Me' },
+export const VISIBILITY_OPTIONS: { value: ComponentVisibility; i18nKey: string }[] = [
+  { value: ComponentVisibility.PUBLIC, i18nKey: 'visibility.public' },
+  { value: ComponentVisibility.FRIENDS, i18nKey: 'visibility.friends' },
+  { value: ComponentVisibility.CLOSE_FRIENDS, i18nKey: 'visibility.close_friends' },
+  { value: ComponentVisibility.ONLY_ME, i18nKey: 'visibility.only_me' },
 ];
 
 export function getVisibilityLabel(value: ComponentVisibility): string {
-  return VISIBILITY_OPTIONS.find((opt) => opt.value === value)?.label ?? '';
+  const opt = VISIBILITY_OPTIONS.find((o) => o.value === value);
+  return opt ? i18n.t(opt.i18nKey) : '';
 }
 
 function VisibilityToggle({ value, onChange }: Props) {
+  const [t] = useTranslation('translation');
   return (
     <ToggleContainer>
       {VISIBILITY_OPTIONS.map((opt) => (
@@ -32,7 +36,7 @@ function VisibilityToggle({ value, onChange }: Props) {
             color={value === opt.value ? 'PRIMARY' : 'MEDIUM_GRAY'}
             fontWeight={value === opt.value ? 600 : 400}
           >
-            {opt.label}
+            {t(opt.i18nKey)}
           </Typo>
         </ToggleOption>
       ))}

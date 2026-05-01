@@ -1,6 +1,6 @@
 import { Connection } from '@models/api/friends';
 import { MyProfile } from './api/user';
-import { CheckInBase } from './checkIn';
+import { CheckInBase, ComponentVisibility } from './checkIn';
 
 export interface User {
   id: number;
@@ -9,6 +9,7 @@ export interface User {
   url: string;
   username: string;
   email?: string;
+  name?: string | null;
   bio: string;
   pronouns: string;
   has_changed_pw?: boolean;
@@ -18,19 +19,17 @@ export interface User {
   connection_status: Connection | null;
   user_interests: string[]; // ['#hiking', '#dogs']과 같은 형식
   user_personas: string[]; // ['#lurker', '#openbook']과 같은 형식
-  // Friends-only visibility flags
-  interests_friends_only?: boolean;
-  persona_friends_only?: boolean;
-  pronouns_friends_only?: boolean;
-  bio_friends_only?: boolean;
-  // Per-category visibility flags (source of truth on server)
-  music_entertainment_friends_only?: boolean;
-  hobbies_activities_friends_only?: boolean;
-  on_my_mind_friends_only?: boolean;
-  as_a_friend_friends_only?: boolean;
-  online_persona_friends_only?: boolean;
-  favorite_platform_friends_only?: boolean;
-  least_favorite_platform_friends_only?: boolean;
+  // 4-way visibility (only present on MyProfile responses; absent on others)
+  name_visibility?: ComponentVisibility;
+  pronouns_visibility?: ComponentVisibility;
+  bio_visibility?: ComponentVisibility;
+  music_entertainment_visibility?: ComponentVisibility;
+  hobbies_activities_visibility?: ComponentVisibility;
+  on_my_mind_visibility?: ComponentVisibility;
+  as_a_friend_visibility?: ComponentVisibility;
+  online_persona_visibility?: ComponentVisibility;
+  favorite_platform_visibility?: ComponentVisibility;
+  least_favorite_platform_visibility?: ComponentVisibility;
   // Mutual counts (injected by discover feed API)
   mutual_friend_count?: number;
   mutual_interest_count?: number;
