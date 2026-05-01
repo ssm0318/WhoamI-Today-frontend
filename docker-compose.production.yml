@@ -14,7 +14,7 @@ services:
 
   nginx-reverse-proxy:
     container_name: nginx-reverse-proxy
-    image: nginx:stable-alpine
+    image: nginx:alpine
     depends_on:
       frontend-builder:
         condition: service_completed_successfully
