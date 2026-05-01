@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { DEFAULT_MARGIN, SCREEN_WIDTH } from '@constants/layout';
 import { Layout, SvgIcon, Typo } from '@design-system';
@@ -38,7 +39,16 @@ function SubHeader({
     }
     navigate(-1);
   };
-  return (
+  // iOS WebView에서 -webkit-overflow-scrolling: touch 가 켜진 MainScrollContainer
+  // 안쪽의 position: fixed 가 viewport 가 아니라 컨테이너 기준으로 잡혀서
+  // 노치 영역으로 헤더가 숨는 webkit 이슈가 있어, MainScrollContainer 밖
+  // (#root-container) 으로 portal 해서 항상 viewport 기준으로 고정시킴.
+  const portalTarget =
+    typeof document !== 'undefined'
+      ? document.getElementById('root-container') ?? document.body
+      : null;
+
+  const headerNode = (
     <SubHeaderWrapper>
       <Layout.FlexRow
         justifyContent="space-between"
@@ -84,6 +94,8 @@ function SubHeader({
       </Layout.FlexRow>
     </SubHeaderWrapper>
   );
+
+  return portalTarget ? createPortal(headerNode, portalTarget) : headerNode;
 }
 
 export default SubHeader;
