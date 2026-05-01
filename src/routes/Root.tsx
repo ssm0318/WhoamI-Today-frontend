@@ -21,6 +21,7 @@ import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
 import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { useBrowseModeActivePersistence } from '@hooks/useBrowseModeActivePersistence';
 import { useBrowseModeSessionPrompt } from '@hooks/useBrowseModeSessionPrompt';
 import { useBrowseModeTabDurations } from '@hooks/useBrowseModeTabDurations';
 import { useCheckInFreshnessPrompt } from '@hooks/useCheckInFreshnessPrompt';
@@ -64,6 +65,10 @@ function Root() {
   // Mounted here so it spans the entire app session, not just while the
   // picker is open.
   useBrowseModeTabDurations();
+  // Persist activeBrowseMode in sessionStorage so a page refresh keeps the
+  // user's pick within the same tab. Cleared on tab close (next visit
+  // starts fresh and the auto-prompt logic decides whether to ask again).
+  useBrowseModeActivePersistence();
   const isBrowseModePickerOpen = useBoundStore((state) => state.isBrowseModePickerOpen);
   const closeBrowseModePicker = useBoundStore((state) => state.closeBrowseModePicker);
   const location = useLocation();
