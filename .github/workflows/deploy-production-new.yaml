@@ -1,9 +1,6 @@
 name: Deploy to New Production Server
 
 on:
-  push:
-    branches:
-      - release/final-research
   workflow_dispatch:
 
 concurrency:
