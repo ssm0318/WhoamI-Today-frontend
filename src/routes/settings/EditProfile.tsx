@@ -286,10 +286,13 @@ function EditProfile() {
           navigate('/my');
         }
       },
-      onError: (error) => {
+      onError: (error, status) => {
         setIsSaving(false);
         if (error?.username) {
           return setUsernameError(t('username_valiation_error') || '');
+        }
+        if (status === 406 && error?.detail) {
+          return setUsernameError(t('username_exists_error') || error.detail);
         }
 
         if (error.detail) openToast({ message: error.detail });

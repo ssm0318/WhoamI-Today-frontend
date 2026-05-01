@@ -47,7 +47,7 @@ export const editProfile = ({
   };
   interestCategory?: string;
   onSuccess: (data: MyProfile) => void;
-  onError?: (error: any) => void;
+  onError?: (error: any, status?: number) => void;
 }) => {
   const formData = new FormData();
 
@@ -93,7 +93,7 @@ export const editProfile = ({
     .patch<MyProfile>('/user/me/', formData)
     .then((res) => onSuccess(res.data))
     .catch((e) => {
-      onError?.(e.response.data);
+      onError?.(e.response.data, e.response.status);
     });
 };
 
