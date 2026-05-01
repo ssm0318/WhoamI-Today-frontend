@@ -53,6 +53,8 @@ const Plus = styled.span`
   align-items: center;
   justify-content: center;
   font-size: 28px;
+  line-height: 1;
+  padding-bottom: 2px;
   color: ${Colors.WHITE};
 `;
 

@@ -131,7 +131,7 @@ function CheckInPostStories({
                   >
                     <Plus>
                       <PlusIcon>+</PlusIcon>
-                      <Typo type="label-small" color="PRIMARY">
+                      <Typo type="label-small" color="PRIMARY" textAlign="center">
                         {t('compose_line2')}
                       </Typo>
                     </Plus>
@@ -286,17 +286,17 @@ const Plus = styled.span`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  padding: 6px;
+  gap: 0;
+  padding: 4px 6px;
   box-sizing: border-box;
   text-align: center;
-  line-height: 1.15;
+  overflow: hidden;
   color: ${Colors.PRIMARY};
 `;
 
 const PlusIcon = styled.span`
-  font-size: 24px;
-  line-height: 1;
+  font-size: 22px;
+  line-height: 24px;
   color: ${Colors.PRIMARY};
 `;
 
