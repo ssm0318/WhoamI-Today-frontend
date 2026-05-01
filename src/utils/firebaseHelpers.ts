@@ -64,9 +64,7 @@ export const addForegroundMessageEventListener = (messaging: Messaging) => {
       },
     };
 
-    navigator.serviceWorker.getRegistrations().then((registrations) => {
-      const registration = registrations.filter((item) => item.scope.includes('firebase'))[0];
-
+    navigator.serviceWorker.ready.then((registration) => {
       if (type === 'new') {
         registration.showNotification(title, options);
         return;

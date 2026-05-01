@@ -27,8 +27,8 @@ const firebaseApp = firebase.initializeApp({
 self.addEventListener('notificationclick', (e) => {
   e.stopImmediatePropagation();
 
-  // data-only: tag와 url이 notification.data에 직접 있음
   // FCM auto-display: FCM_MSG wrapper 안에 있음
+  // 우리 직접 표시: notification.data에 직접 있음
   const hasFcmMsg = !!e.notification.data?.FCM_MSG;
   const notificationTag = hasFcmMsg ? e.notification.data.FCM_MSG.data.tag : e.notification.tag;
   const notificationUrl = hasFcmMsg
@@ -54,50 +54,46 @@ self.addEventListener('notificationclick', (e) => {
   e.notification.close();
 });
 
-// push 이벤트를 직접 가로채서 tag 포함한 notification을 표시
-// FCM SDK의 자동 표시(tag 없음)를 방지
-self.addEventListener('push', (e) => {
-  let payload;
-  try {
-    payload = e.data?.json();
-  } catch (err) {
-    return; // 파싱 실패하면 기본 동작에 맡김
-  }
+// Retrieve an instance of Firebase Messaging so that it can handle background messages.
+const messaging = firebase.messaging();
 
-  // FCM 메시지 구조: { data: { ... }, notification: { ... } }
+// FCM SDK가 background에서 notification 필드로 자동 표시한 뒤 이 콜백이 호출됨.
+// FCM 자동 표시 알림은 tag가 없어서 쌓이므로, 여기서:
+// 1. FCM이 표시한 tag-없는 알림을 모두 닫고
+// 2. 우리 tag 포함 알림으로 교체
+messaging.onBackgroundMessage((payload) => {
   const data = payload?.data;
-  if (!data || !data.tag) return; // 우리 메시지가 아니면 기본 동작
-
-  // 기본 FCM 자동 표시 방지: waitUntil로 우리가 직접 표시
-  e.stopImmediatePropagation();
+  if (!data) return;
 
   const { message_ko, message_en, url, tag, type } = data;
 
   if (type === 'cancel') {
-    e.waitUntil(
-      self.registration.getNotifications({ tag }).then((notifications) => {
-        notifications.forEach((n) => n.close());
-      }),
-    );
+    self.registration.getNotifications({ tag }).then((notifications) => {
+      notifications.forEach((n) => n.close());
+    });
     return;
   }
 
-  const isKorean = self.navigator?.language?.startsWith('ko');
-  const title = payload?.notification?.title || 'WhoAmI Today';
-  const options = {
-    body: isKorean ? message_ko || message_en : message_en || message_ko,
-    tag,
-    renotify: true,
-    icon: '/whoami192.png',
-    data: { url },
-  };
+  // FCM이 자동 표시한 tag-없는 알림 닫기
+  self.registration.getNotifications().then((notifications) => {
+    notifications.forEach((n) => {
+      // FCM 자동 표시 알림: tag가 없거나 빈 문자열
+      if (!n.tag) {
+        n.close();
+      }
+    });
 
-  e.waitUntil(self.registration.showNotification(title, options));
+    // tag 포함 알림으로 표시 (같은 tag면 이전 것 대체)
+    const isKorean = self.navigator?.language?.startsWith('ko');
+    const title = 'WhoAmI Today';
+    const options = {
+      body: isKorean ? message_ko || message_en : message_en || message_ko,
+      tag,
+      renotify: true,
+      icon: '/whoami192.png',
+      data: { url },
+    };
+
+    self.registration.showNotification(title, options);
+  });
 });
-
-// Retrieve an instance of Firebase Messaging so that it can handle background messages.
-// Retrieve firebase messaging
-const messaging = firebase.messaging();
-
-// onBackgroundMessage는 push 이벤트에서 이미 처리하므로 빈 콜백
-messaging.onBackgroundMessage(() => {});
