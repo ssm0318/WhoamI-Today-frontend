@@ -166,7 +166,7 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
           <FreeTextInput
             value={(currentValue as string | undefined) ?? ''}
             onChange={(v) => setAnswer(currentQuestion.id, v)}
-            placeholder={t('free_text_placeholder')}
+            placeholder={t('free_text_placeholder') ?? undefined}
           />
         )}
       </Layout.FlexCol>

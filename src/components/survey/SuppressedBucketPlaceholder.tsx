@@ -16,6 +16,7 @@ const REASON_TO_KEY: Record<NonNullable<SuppressedReason>, string> = {
   too_few_responders: 'reasons.too_few_responders',
   too_few_close_friends: 'reasons.too_few_close_friends',
   delta_too_small: 'reasons.delta_too_small',
+  view_friend_disabled: 'reasons.view_friend_disabled',
 };
 
 interface Props {
