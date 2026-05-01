@@ -43,6 +43,7 @@ function NoteItem({
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [showMore, setShowMore] = useState(false);
   const [inputFocus, setInputFocus] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
 
   const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
     emojiPickerTarget: state.emojiPickerTarget,
@@ -89,6 +90,8 @@ function NoteItem({
 
     navigate(`/users/${username}`);
   };
+
+  if (isHidden) return null;
 
   const headerJsx = (
     <Layout.FlexRow
@@ -244,7 +247,10 @@ function NoteItem({
           setIsVisible={setShowMore}
           post={note}
           isMyPage={isMyPage}
-          onConfirmReport={refresh}
+          onConfirmReport={() => {
+            setIsHidden(true);
+            refresh?.();
+          }}
         />
         {previewMode ? (
           <>

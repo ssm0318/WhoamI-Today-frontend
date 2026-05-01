@@ -60,12 +60,12 @@ function PostMoreModal({
           postId: post.id,
           postType: post.type,
           onSuccess: () => {
+            onConfirmReport?.();
+            handleOnConfirmAlert();
             openToast({ message: t('report.success_title') });
           },
           onError: () => openToast({ message: t('report.error_title') }),
         });
-        onConfirmReport?.();
-        handleOnConfirmAlert();
       },
     });
     closeMoreModal();

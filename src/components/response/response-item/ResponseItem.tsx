@@ -47,6 +47,7 @@ function ResponseItem({
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [inputFocus, setInputFocus] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
 
   const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
     emojiPickerTarget: state.emojiPickerTarget,
@@ -98,6 +99,8 @@ function ResponseItem({
     e.stopPropagation();
     navigate(`/users/${username}`);
   };
+
+  if (isHidden) return null;
 
   const headerJsx = (
     <Layout.FlexRow
@@ -253,7 +256,10 @@ function ResponseItem({
           setIsVisible={setShowMore}
           post={response}
           isMyPage={isMyPage}
-          onConfirmReport={refresh}
+          onConfirmReport={() => {
+            setIsHidden(true);
+            refresh?.();
+          }}
         />
         <Layout.FlexCol
           gap={8}
