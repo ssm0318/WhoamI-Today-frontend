@@ -25,7 +25,7 @@ function My() {
 
   const { featureFlags } = useBoundStore(useShallow(UserSelector));
 
-  // Load pinned_cnt on mount
+  // Refresh profile on mount
   useEffect(() => {
     getMyProfile();
   }, []);
