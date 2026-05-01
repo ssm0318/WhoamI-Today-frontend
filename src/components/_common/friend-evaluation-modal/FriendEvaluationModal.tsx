@@ -27,6 +27,7 @@ const RELATIONSHIP_TYPES = [
   'family',
   'online_friend',
   'club_community',
+  'not_yet',
   'other',
 ] as const;
 
@@ -78,12 +79,6 @@ function FriendEvaluationModal({
     setShowConfirmation(true);
   };
 
-  const handleSkip = () => {
-    const data: EvaluationData = { skipped: true };
-    setPendingData(data);
-    setShowConfirmation(true);
-  };
-
   const handleConfirm = () => {
     if (pendingData) {
       onSubmit(pendingData);
@@ -116,35 +111,38 @@ function FriendEvaluationModal({
         {showConfirmation ? (
           // Confirmation view
           <Layout.FlexCol w="100%" alignItems="center" p={16}>
-            <Typo type="title-large" mb={8}>
+            <Typo type="title-large" mb={12}>
               {t('confirm_title')}
             </Typo>
             <S.ConfirmSummary>
-              {pendingData?.skipped ? (
-                <Typo type="body-medium">{t('skip')}</Typo>
-              ) : (
-                <>
-                  <Typo type="body-medium">
-                    {t('closeness_label')}: {pendingData?.closeness}
-                  </Typo>
-                  <Typo type="body-medium">
-                    {t('relationship_label')}:{' '}
-                    {pendingData?.relationshipType === 'other'
-                      ? pendingData?.relationshipTypeDetail
-                      : getRelationshipLabel(pendingData?.relationshipType || '')}
-                  </Typo>
-                </>
-              )}
+              <S.ConfirmItem>
+                <Typo type="label-medium" color="DARK_GRAY">
+                  {t('closeness_label')}
+                </Typo>
+                <Typo type="body-medium">
+                  {t(`closeness_${pendingData?.closeness}`)} ({pendingData?.closeness}/5)
+                </Typo>
+              </S.ConfirmItem>
+              <S.ConfirmDivider />
+              <S.ConfirmItem>
+                <Typo type="label-medium" color="DARK_GRAY">
+                  {t('relationship_label')}
+                </Typo>
+                <Typo type="body-medium">
+                  {pendingData?.relationshipType === 'other'
+                    ? pendingData?.relationshipTypeDetail
+                    : getRelationshipLabel(pendingData?.relationshipType || '')}
+                </Typo>
+              </S.ConfirmItem>
             </S.ConfirmSummary>
           </Layout.FlexCol>
         ) : (
           // Evaluation form view
           <Layout.FlexCol w="100%" alignItems="center" p={16}>
-            <Typo type="title-large" mb={5}>
-              {type === 'accept' ? t('accept_title') : t('request_title')}
-            </Typo>
-            <Typo type="body-medium" textAlign="center">
-              {t('description', { username })}
+            <Typo type="title-large" mb={16} textAlign="center">
+              {type === 'accept'
+                ? t('accept_title', { username })
+                : t('request_title', { username })}
             </Typo>
 
             {/* Closeness section */}
@@ -153,24 +151,20 @@ function FriendEvaluationModal({
             </S.SectionTitle>
             <S.ClosenessRow>
               {CLOSENESS_OPTIONS.map((value) => (
-                <S.ClosenessButton
-                  key={value}
-                  type="button"
-                  selected={closeness === value}
-                  onClick={() => setCloseness(value)}
-                >
-                  {value}
-                </S.ClosenessButton>
+                <S.ClosenessOption key={value}>
+                  <S.ClosenessButton
+                    type="button"
+                    selected={closeness === value}
+                    onClick={() => setCloseness(value)}
+                  >
+                    {value}
+                  </S.ClosenessButton>
+                  <Typo type="label-small" color="DARK_GRAY" textAlign="center">
+                    {t(`closeness_${value}`)}
+                  </Typo>
+                </S.ClosenessOption>
               ))}
             </S.ClosenessRow>
-            <S.ClosenessLabelRow>
-              <Typo type="label-medium" color="DARK_GRAY">
-                {t('closeness_min')}
-              </Typo>
-              <Typo type="label-medium" color="DARK_GRAY">
-                {t('closeness_max')}
-              </Typo>
-            </S.ClosenessLabelRow>
 
             {/* Relationship type section */}
             <S.SectionTitle>
@@ -200,6 +194,14 @@ function FriendEvaluationModal({
           </Layout.FlexCol>
         )}
 
+        {!showConfirmation && (
+          <S.RequiredNotice>
+            <Typo type="body-small" color="DARK_GRAY">
+              {type === 'accept' ? t('accept_required') : t('request_required')}
+            </Typo>
+          </S.RequiredNotice>
+        )}
+
         <S.ButtonContainer w="100%" justifyContent="space-evenly">
           {showConfirmation ? (
             <>
@@ -213,21 +215,16 @@ function FriendEvaluationModal({
               </S.Button>
             </>
           ) : (
-            <>
-              <S.Button onClick={handleSkip} pv={11}>
-                <Typo type="button-medium">{t('skip')}</Typo>
-              </S.Button>
-              <S.Button
-                onClick={isSubmitDisabled ? undefined : handleSubmit}
-                pv={11}
-                hasBorderRight={false}
-                style={{ opacity: isSubmitDisabled ? 0.4 : 1 }}
-              >
-                <Typo type="button-medium" color="PRIMARY">
-                  {t('submit')}
-                </Typo>
-              </S.Button>
-            </>
+            <S.Button
+              onClick={isSubmitDisabled ? undefined : handleSubmit}
+              pv={11}
+              hasBorderRight={false}
+              style={{ opacity: isSubmitDisabled ? 0.4 : 1 }}
+            >
+              <Typo type="button-medium" color="PRIMARY">
+                {t('submit')}
+              </Typo>
+            </S.Button>
           )}
         </S.ButtonContainer>
       </S.Body>

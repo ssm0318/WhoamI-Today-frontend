@@ -350,7 +350,7 @@ function CheckInPostViewer({
 
         {!multiStoryLoading && currentStory.image_url && (
           <ImageStage>
-            <StoryImage src={currentStory.image_url} alt="daily snippet" />
+            <StoryImage key={currentStory.id} src={currentStory.image_url} alt="daily snippet" />
           </ImageStage>
         )}
 

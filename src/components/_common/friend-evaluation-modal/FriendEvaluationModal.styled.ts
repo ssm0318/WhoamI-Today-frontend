@@ -93,17 +93,35 @@ export const ClosenessButton = styled.button<{ selected?: boolean }>`
   justify-content: center;
 `;
 
-export const ClosenessLabelRow = styled(Layout.FlexRow)`
+export const ClosenessOption = styled(Layout.FlexCol)`
+  align-items: center;
+  flex: 1;
+  gap: 4px;
+  min-width: 0;
+`;
+
+export const RequiredNotice = styled(Layout.FlexRow)`
   width: 100%;
-  justify-content: space-between;
-  margin-top: 4px;
+  padding: 0 16px 12px;
+  justify-content: center;
 `;
 
 export const ConfirmSummary = styled(Layout.FlexCol)`
   width: 100%;
-  padding: 12px;
-  margin-top: 8px;
+  padding: 16px;
+  margin-top: 12px;
   background-color: ${({ theme }) => theme.LIGHT_GRAY};
-  border-radius: 8px;
-  gap: 6px;
+  border-radius: 12px;
+  gap: 12px;
+`;
+
+export const ConfirmItem = styled(Layout.FlexCol)`
+  gap: 4px;
+`;
+
+export const ConfirmDivider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${({ theme }) => theme.MEDIUM_GRAY};
+  opacity: 0.5;
 `;
