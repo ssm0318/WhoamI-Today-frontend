@@ -30,6 +30,7 @@ import AllQuestions from './routes/AllQuestions';
 // Chats tab now uses ChatList directly
 import Archive from './routes/check-in/Archive';
 import CheckInEdit from './routes/check-in/CheckInEdit';
+import FriendPinnedSnippets from './routes/check-in-posts/FriendPinnedSnippets';
 import MySnippetsArchive from './routes/check-in-posts/MySnippetsArchive';
 import NewCheckInPost from './routes/check-in-posts/NewCheckInPost';
 import Discover from './routes/discover/Discover';
@@ -235,6 +236,10 @@ const router = createBrowserRouter([
           {
             path: 'check-in/pinned',
             element: <FriendPinnedFeed />,
+          },
+          {
+            path: 'snippets/pinned',
+            element: <FriendPinnedSnippets />,
           },
           {
             path: '',

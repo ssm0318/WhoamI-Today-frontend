@@ -9,6 +9,7 @@ interface SnippetStoryCardProps {
   onClick: () => void;
   showAuthorBadge?: boolean;
   hideUsername?: boolean;
+  hidePinBadge?: boolean;
 }
 
 function SnippetStoryCard({
@@ -16,6 +17,7 @@ function SnippetStoryCard({
   onClick,
   showAuthorBadge = false,
   hideUsername = false,
+  hidePinBadge = false,
 }: SnippetStoryCardProps) {
   const { image_url, caption, is_pinned, author_detail } = story;
 
@@ -37,7 +39,7 @@ function SnippetStoryCard({
               </Typo>
             </S.TextThumb>
           )}
-          {is_pinned && (
+          {is_pinned && !hidePinBadge && (
             <S.PinBadge aria-label="pinned">
               <SvgIcon name="pin_filled" size={14} color="PRIMARY" />
             </S.PinBadge>

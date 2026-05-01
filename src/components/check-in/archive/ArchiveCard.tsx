@@ -1,4 +1,5 @@
 import { MouseEvent, ReactNode } from 'react';
+import { getVisibilityLabel } from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { CheckInComponentEntry, ComponentType } from '@models/checkInEntry';
 import { formatEntryTimestamp } from '@utils/archiveHelpers';
@@ -78,6 +79,13 @@ function ArchiveCard({ entry, onPinClick, onMoreClick, onBodyClick }: ArchiveCar
         )}
       </S.CardHeader>
       <S.CardBodyWrapper>{body}</S.CardBodyWrapper>
+      {entry.is_pinned && entry.pin_visibility && (
+        <S.VisibilityBadge>
+          <Typo type="label-small" color="DARK_GRAY" fontWeight={600}>
+            {getVisibilityLabel(entry.pin_visibility)}
+          </Typo>
+        </S.VisibilityBadge>
+      )}
     </S.CardShell>
   );
 }

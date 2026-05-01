@@ -67,6 +67,16 @@ export const togglePinCheckInPost = async (postId: number) => {
   return data;
 };
 
+export const updateCheckInPostVisibility = async (
+  postId: number,
+  visibility: CheckInPostVisibility,
+) => {
+  const { data } = await axios.patch<CheckInPost>(`/check_in/posts/${postId}/visibility/`, {
+    visibility,
+  });
+  return data;
+};
+
 export const updateCheckInPostPinVisibility = async (
   postId: number,
   pinVisibility: CheckInPostVisibility,

@@ -1,6 +1,7 @@
 import { MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useShallow } from 'zustand/react/shallow';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -14,7 +15,7 @@ import {
   getUserCheckInPosts,
   readCheckInPosts,
   togglePinCheckInPost,
-  updateCheckInPostPinVisibility,
+  updateCheckInPostVisibility,
 } from '@utils/apis/checkInPost';
 import { deleteLike, postLike } from '@utils/apis/likes';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
@@ -42,6 +43,7 @@ function CheckInPostViewer({
   onPinChange,
 }: CheckInPostViewerProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'check_in_post' });
+  const navigate = useNavigate();
   const [post, setPost] = useState<CheckInPost | null>(null);
   const [pinBusy, setPinBusy] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -76,6 +78,8 @@ function CheckInPostViewer({
         const sorted = [...(data.results ?? [])].sort(
           (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
         );
+        const firstUnread = sorted.findIndex((s) => !s.current_user_read);
+        setStoryIndex(firstUnread >= 0 ? firstUnread : 0);
         setUserPosts(sorted);
       })
       .catch(() => {});
@@ -94,8 +98,12 @@ function CheckInPostViewer({
   const isOwn = myProfile?.id === currentStory.author_detail.id;
 
   const isPinned = post?.is_pinned ?? currentStory.is_pinned;
-  const pinVisibility = post?.pin_visibility ?? currentStory.pin_visibility;
+  const postVisibility = post?.visibility ?? currentStory.visibility;
+  const isLive = Date.now() - new Date(currentStory.created_at).getTime() < 86400000;
   const caption = post?.caption ?? currentStory.caption;
+
+  const [showVisibilityPopup, setShowVisibilityPopup] = useState(false);
+  const [selectedVisibility, setSelectedVisibility] = useState<CheckInPostVisibility>('friends');
 
   // Reset timer when story changes
   useEffect(() => {
@@ -230,18 +238,27 @@ function CheckInPostViewer({
     }
   };
 
-  const handleCloseFriendsToggle = async (e: MouseEvent) => {
+  const openVisibilityPopup = (e: MouseEvent) => {
     e.stopPropagation();
-    if (!post || !isOwn || pinBusy || !post.is_pinned) return;
-    const next: CheckInPostVisibility =
-      post.pin_visibility === 'close_friends' ? 'friends' : 'close_friends';
+    if (!post || !isOwn) return;
+    setSelectedVisibility(post.visibility);
+    setShowVisibilityPopup(true);
+  };
+
+  const handleVisibilityConfirm = async () => {
+    if (!post || !isOwn || pinBusy) return;
+    if (selectedVisibility === post.visibility) {
+      setShowVisibilityPopup(false);
+      return;
+    }
     setPinBusy(true);
     try {
-      const updated = await updateCheckInPostPinVisibility(post.id, next);
+      const updated = await updateCheckInPostVisibility(post.id, selectedVisibility);
       setPost(updated);
       onPinChange?.(updated);
     } finally {
       setPinBusy(false);
+      setShowVisibilityPopup(false);
     }
   };
 
@@ -265,7 +282,16 @@ function CheckInPostViewer({
           </ProgressBar>
         )}
         <Header>
-          <Layout.FlexRow alignItems="center" gap={8}>
+          <AuthorLink
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!isOwn) {
+                onClose();
+                navigate(`/users/${currentStory.author_detail.username}`);
+              }
+            }}
+            style={{ cursor: isOwn ? 'default' : 'pointer' }}
+          >
             <ProfileImage
               imageUrl={currentStory.author_detail.profile_image}
               username={currentStory.author_detail.username}
@@ -277,7 +303,7 @@ function CheckInPostViewer({
             <Typo type="label-small" color="LIGHT_GRAY">
               {convertTimeDiffByString({ day: new Date(currentStory.created_at) })}
             </Typo>
-          </Layout.FlexRow>
+          </AuthorLink>
           <Layout.FlexRow alignItems="center" gap={8}>
             {isOwn && (
               <PinButton
@@ -299,17 +325,17 @@ function CheckInPostViewer({
           </Layout.FlexRow>
         </Header>
 
-        {isOwn && (
+        {isOwn && (isPinned || isLive) && (
           <PinVisibilityRow>
             <VisibilityToggle
               type="button"
-              onClick={handleCloseFriendsToggle}
+              onClick={openVisibilityPopup}
               disabled={pinBusy || !post}
             >
               <SvgIcon name="eye" size={16} color="LIGHT_GRAY" />
               <Typo type="label-medium" color="LIGHT_GRAY" underline>
                 {t(
-                  pinVisibility === 'close_friends'
+                  postVisibility === 'close_friends'
                     ? 'visibility_close_friends'
                     : 'visibility_friends',
                 )}
@@ -395,6 +421,45 @@ function CheckInPostViewer({
           <NavZone $side="right" onClick={handleRight} />
         )}
       </Card>
+
+      {showVisibilityPopup && (
+        <PopupOverlay onClick={() => setShowVisibilityPopup(false)}>
+          <PopupCard onClick={(e) => e.stopPropagation()}>
+            <Typo type="title-medium" color="BLACK" mb={16}>
+              {t('visibility_title')}
+            </Typo>
+            <PopupOption
+              type="button"
+              $selected={selectedVisibility === 'friends'}
+              onClick={() => setSelectedVisibility('friends')}
+            >
+              <Typo
+                type="body-medium"
+                color={selectedVisibility === 'friends' ? 'PRIMARY' : 'DARK_GRAY'}
+              >
+                {t('visibility_friends')}
+              </Typo>
+            </PopupOption>
+            <PopupOption
+              type="button"
+              $selected={selectedVisibility === 'close_friends'}
+              onClick={() => setSelectedVisibility('close_friends')}
+            >
+              <Typo
+                type="body-medium"
+                color={selectedVisibility === 'close_friends' ? 'PRIMARY' : 'DARK_GRAY'}
+              >
+                {t('visibility_close_friends')}
+              </Typo>
+            </PopupOption>
+            <PopupConfirmBtn type="button" onClick={handleVisibilityConfirm} disabled={pinBusy}>
+              <Typo type="title-medium" color="WHITE">
+                {t('confirm') ?? 'Confirm'}
+              </Typo>
+            </PopupConfirmBtn>
+          </PopupCard>
+        </PopupOverlay>
+      )}
 
       {post && (
         <CommentBottomSheet
@@ -611,6 +676,60 @@ const ProgressSegment = styled.div<{
     to {
       transform: scaleX(1);
     }
+  }
+`;
+
+const AuthorLink = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 0;
+`;
+
+const PopupOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: ${Z_INDEX.MODAL_CONTAINER};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const PopupCard = styled.div`
+  background: ${Colors.WHITE};
+  border-radius: 16px;
+  padding: 24px;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const PopupOption = styled.button<{ $selected: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1.5px solid ${({ $selected }) => ($selected ? Colors.PRIMARY : Colors.LIGHT_GRAY)};
+  background-color: ${({ $selected }) => ($selected ? '#F3E8FF' : Colors.WHITE)};
+  cursor: pointer;
+`;
+
+const PopupConfirmBtn = styled.button`
+  margin-top: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background-color: ${Colors.PRIMARY};
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 `;
 

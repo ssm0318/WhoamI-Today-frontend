@@ -1,40 +1,54 @@
-import { useEffect, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useShallow } from 'zustand/react/shallow';
 import CheckInPostItem from '@components/check-in-posts/CheckInPostItem/CheckInPostItem';
 import CheckInPostViewer from '@components/check-in-posts/CheckInPostViewer';
+import SnippetMoreModal from '@components/check-in-posts/SnippetMoreModal';
 import SubHeader from '@components/sub-header/SubHeader';
-import { Layout, SvgIcon, Typo } from '@design-system';
-import { CheckInPostStory } from '@models/checkInPost';
+import { Colors, Layout, SvgIcon, Typo } from '@design-system';
+import { CheckInPostStory, CheckInPostVisibility } from '@models/checkInPost';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { getUserCheckInPosts } from '@utils/apis/checkInPost';
+import {
+  deleteCheckInPost,
+  getUserCheckInPosts,
+  updateCheckInPostVisibility,
+} from '@utils/apis/checkInPost';
 import { MainScrollContainer } from '../Root';
 
-type Tab = 'all' | 'pinned';
+function ArchiveIcon({ active }: { active: boolean }) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      style={{ color: active ? Colors.WHITE : Colors.PRIMARY }}
+    >
+      <rect x="3" y="3" width="18" height="5" rx="1" />
+      <path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8" />
+      <path d="M10 12h4" />
+    </svg>
+  );
+}
 
-/**
- * Viewer's own Daily Snippet archive — `/check-in-posts/archive?tab=all|pinned`.
- *
- * Backend `UserCheckInPosts` returns every snippet the viewer has authored
- * (regardless of 24h expiry) when target == viewer, so the All tab needs no
- * extra filtering and Pinned is a client-side `is_pinned` filter.
- *
- * Vertical post-card list (CheckInPostItem). Tapping a card opens
- * `CheckInPostViewer` so pin toggling works in-place.
- */
 function MySnippetsArchive() {
   const [t] = useTranslation('translation', { keyPrefix: 'check_in_post.archive' });
   const [searchParams, setSearchParams] = useSearchParams();
-  const tabParam = (searchParams.get('tab') as Tab) ?? 'all';
-  const tab: Tab = tabParam === 'pinned' ? 'pinned' : 'all';
+  const tab = searchParams.get('tab') === 'pinned' ? 'pinned' : 'all';
 
   const { myProfile } = useBoundStore(useShallow(UserSelector));
 
   const [snippets, setSnippets] = useState<CheckInPostStory[]>([]);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [moreSnippet, setMoreSnippet] = useState<CheckInPostStory | null>(null);
 
   useEffect(() => {
     if (!myProfile?.id) return;
@@ -51,46 +65,57 @@ function MySnippetsArchive() {
     };
   }, [myProfile?.id]);
 
-  const visible = useMemo(
-    () => (tab === 'pinned' ? snippets.filter((s) => s.is_pinned) : snippets),
-    [snippets, tab],
-  );
+  const pinned = useMemo(() => snippets.filter((s) => s.is_pinned), [snippets]);
+  const visible = tab === 'pinned' ? pinned : snippets;
+
+  const setTab = (next: 'all' | 'pinned') => {
+    setSearchParams({ tab: next }, { replace: true });
+  };
 
   const handleClickCell = (story: CheckInPostStory) => () => {
     const idx = visible.findIndex((s) => s.id === story.id);
     if (idx >= 0) setActiveIndex(idx);
   };
 
-  const handlePinChange = () => {
-    // Re-fetch so pin toggles inside the viewer re-bucket the grid.
+  const refetch = () => {
     if (!myProfile?.id) return;
     getUserCheckInPosts(myProfile.id)
       .then((data) => setSnippets(data.results ?? []))
       .catch(() => undefined);
   };
 
-  const setTab = (next: Tab) => {
-    setSearchParams({ tab: next }, { replace: true });
+  const handleDelete = async (snippet: CheckInPostStory) => {
+    await deleteCheckInPost(snippet.id);
+    refetch();
+  };
+
+  const handleChangeVisibility = async (snippet: CheckInPostStory, v: CheckInPostVisibility) => {
+    await updateCheckInPostVisibility(snippet.id, v);
+    refetch();
   };
 
   return (
     <MainScrollContainer>
       <SubHeader title={t('title') || 'Daily Snippets'} />
-      <Layout.FlexCol w="100%" pv={12} ph={16} gap={12}>
-        <Layout.FlexRow w="100%" justifyContent="flex-end">
-          <Layout.FlexRow
-            gap={6}
-            alignItems="center"
-            style={{ cursor: 'pointer' }}
-            onClick={() => setTab(tab === 'pinned' ? 'all' : 'pinned')}
-          >
-            <CheckboxIcon checked={tab === 'pinned'} />
-            <SvgIcon name="pin_filled" size={18} color={tab === 'pinned' ? 'PRIMARY' : 'BLACK'} />
-            <Typo type="label-medium" color="BLACK">
-              {t('tab_pinned')}
+      <Layout.FlexCol w="100%" pv={12} ph={16} gap={0}>
+        <Layout.FlexRow w="100%" mb={14} gap={6}>
+          <SegmentButton active={tab === 'pinned'} onClick={() => setTab('pinned')}>
+            <SvgIcon name="pin_filled" size={14} color={tab === 'pinned' ? 'WHITE' : 'PRIMARY'} />
+            {t('tab_pinned_label')} ({pinned.length})
+          </SegmentButton>
+          <SegmentButton active={tab === 'all'} onClick={() => setTab('all')}>
+            <ArchiveIcon active={tab === 'all'} />
+            {t('tab_all')} ({snippets.length})
+          </SegmentButton>
+        </Layout.FlexRow>
+
+        {tab === 'all' && (
+          <Layout.FlexRow w="100%" mb={12}>
+            <Typo type="body-small" color="DARK_GRAY">
+              {t('archived_hint')}
             </Typo>
           </Layout.FlexRow>
-        </Layout.FlexRow>
+        )}
 
         {visible.length === 0 ? (
           <EmptyState>
@@ -106,6 +131,8 @@ function MySnippetsArchive() {
                 post={story}
                 onClick={handleClickCell(story)}
                 isMyPage
+                refresh={refetch}
+                onMoreClick={() => setMoreSnippet(story)}
               />
             ))}
           </Layout.FlexCol>
@@ -116,13 +143,19 @@ function MySnippetsArchive() {
         <CheckInPostViewer
           story={visible[activeIndex]}
           onClose={() => setActiveIndex(null)}
-          onPinChange={handlePinChange}
+          onPinChange={refetch}
           onPrev={activeIndex > 0 ? () => setActiveIndex(activeIndex - 1) : undefined}
           onNext={
             activeIndex < visible.length - 1 ? () => setActiveIndex(activeIndex + 1) : undefined
           }
         />
       )}
+      <SnippetMoreModal
+        snippet={moreSnippet}
+        onClose={() => setMoreSnippet(null)}
+        onDelete={handleDelete}
+        onChangeVisibility={handleChangeVisibility}
+      />
     </MainScrollContainer>
   );
 }
@@ -135,29 +168,34 @@ const EmptyState = styled.div`
   justify-content: center;
 `;
 
-function CheckboxIcon({ checked }: { checked: boolean }) {
+interface SegmentButtonProps {
+  active: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}
+
+function SegmentButton({ active, onClick, children }: SegmentButtonProps) {
   return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <rect
-        x="1"
-        y="1"
-        width="16"
-        height="16"
-        rx="3"
-        stroke={checked ? '#8700FF' : '#D9D9D9'}
-        strokeWidth="1.5"
-        fill={checked ? '#8700FF' : 'none'}
-      />
-      {checked && (
-        <path
-          d="M5 9L8 12L13 6"
-          stroke="white"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      )}
-    </svg>
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 4,
+        borderRadius: 999,
+        padding: '4px 12px',
+        fontSize: 14,
+        lineHeight: 1.4,
+        fontWeight: active ? 600 : 500,
+        border: 'none',
+        background: active ? Colors.DARK : '#F5F5F5',
+        color: active ? Colors.WHITE : Colors.PRIMARY,
+        cursor: 'pointer',
+      }}
+    >
+      {children}
+    </button>
   );
 }
 

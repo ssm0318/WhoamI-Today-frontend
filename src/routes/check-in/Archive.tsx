@@ -3,15 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { mutate as globalMutate } from 'swr';
 import Loader from '@components/_common/loader/Loader';
-import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ArchiveDateSection from '@components/check-in/archive/ArchiveDateSection';
 import ArchiveEntryMoreModal from '@components/check-in/archive/ArchiveEntryMoreModal';
 import ModifyVisibilityModal from '@components/check-in/archive/ModifyVisibilityModal';
 import ThoughtFullTextModal from '@components/check-in/archive/ThoughtFullTextModal';
 import SubHeader from '@components/sub-header/SubHeader';
-import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Colors, Layout, Typo } from '@design-system';
+import { DEFAULT_MARGIN } from '@constants/layout';
+import { Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { useSWRInfiniteCursor } from '@hooks/useSWRInfiniteCursor';
 import { ComponentVisibility } from '@models/checkIn';
 import { ArchiveTab, CheckInComponentEntry, ComponentType } from '@models/checkInEntry';
@@ -24,6 +23,7 @@ import {
   updatePinVisibility,
 } from '@utils/apis/archive';
 import { groupEntriesByDate } from '@utils/archiveHelpers';
+import { MainScrollContainer } from '../Root';
 
 /**
  * Owner archive feed — two-column grid of square cards grouped by date,
@@ -188,21 +188,31 @@ function Archive() {
   };
 
   return (
-    <MainContainer>
+    <MainScrollContainer>
       <SubHeader title={t('title')} />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" ph={DEFAULT_MARGIN}>
+      <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN}>
         {/* Segmented control — filled pill buttons that read as navigation
             distinct from the surrounding check-in content cards. All and
             Pinned share the same visual treatment; only the active state
             (purple fill) marks which tab is currently selected. */}
         <Layout.FlexRow w="100%" mt={12} mb={14} gap={6}>
-          <SegmentButton active={tab === 'all'} onClick={() => setTab('all')}>
-            {t('segmented.all')} ({archivedCount})
-          </SegmentButton>
           <SegmentButton active={tab === 'pinned'} onClick={() => setTab('pinned')}>
+            <SvgIcon name="pin_filled" size={14} color={tab === 'pinned' ? 'WHITE' : 'PRIMARY'} />
             {t('segmented.pinned')} ({pinnedCount})
           </SegmentButton>
+          <SegmentButton active={tab === 'all'} onClick={() => setTab('all')}>
+            <ArchiveIcon active={tab === 'all'} />
+            {t('segmented.all')} ({archivedCount})
+          </SegmentButton>
         </Layout.FlexRow>
+
+        {tab === 'all' && (
+          <Layout.FlexRow w="100%" mb={12}>
+            <Typo type="body-small" color="DARK_GRAY">
+              {t('archived_hint')}
+            </Typo>
+          </Layout.FlexRow>
+        )}
 
         <Layout.FlexCol w="100%" mb={80}>
           {sections.map((section) => (
@@ -248,7 +258,7 @@ function Archive() {
         onClose={() => setVisibilityEntry(null)}
         onConfirm={handleConfirmVisibility}
       />
-    </MainContainer>
+    </MainScrollContainer>
   );
 }
 
@@ -292,6 +302,9 @@ function SegmentButton({ active, onClick, children }: SegmentButtonProps) {
       type="button"
       onClick={onClick}
       style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 4,
         borderRadius: 999,
         padding: '4px 12px',
         fontSize: 14,
@@ -305,5 +318,26 @@ function SegmentButton({ active, onClick, children }: SegmentButtonProps) {
     >
       {children}
     </button>
+  );
+}
+
+function ArchiveIcon({ active }: { active: boolean }) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      style={{ color: active ? Colors.WHITE : Colors.PRIMARY }}
+    >
+      <rect x="3" y="3" width="18" height="5" rx="1" />
+      <path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8" />
+      <path d="M10 12h4" />
+    </svg>
   );
 }

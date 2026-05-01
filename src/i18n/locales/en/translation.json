@@ -21,23 +21,39 @@
         "pin": "Pin",
         "unpin": "Unpin",
         "visibility_friends": "Friends",
-        "visibility_close_friends": "Close",
+        "visibility_close_friends": "Close Friends",
         "visibility_close_friends_only": "Close friends only",
         "highlights": "Highlights",
         "today": "Recent Daily Snippets",
-        "my_snippets": "My Daily Snippets",
-        "pinned_link": "Pinned Daily Snippets ({{count}})",
-        "all_link": "All Daily Snippets ({{count}})",
+        "my_snippets": "Today's Snippets",
+        "pinned_link": "Pinned ({{count}})",
+        "all_link": "Archived ({{count}})",
         "add_photo_prompt": "Add a photo to share",
         "choose_photo": "Choose Photo",
         "take_photo": "Take a Photo",
         "add_caption_placeholder": "Add a caption...",
         "change_photo": "Change",
         "retake": "Retake",
+        "visibility_title": "Visibility",
+        "visibility_modal_title": "Who can see this snippet?",
+        "visibility_label": "Visibility",
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "modify_visibility": "Modify visibility",
+        "delete": "Delete",
+        "delete_title": "Delete this snippet?",
+        "delete_content": "This cannot be undone.",
+        "delete_cancel": "Cancel",
+        "delete_confirm": "Delete",
+        "friend_pinned_title": "{{username}}'s Pinned Snippets",
         "archive": {
             "title": "Daily Snippets",
-            "tab_all": "All",
+            "title_all": "All Daily Snippets",
+            "title_pinned": "Pinned Daily Snippets",
+            "tab_all": "Archived",
+            "tab_pinned_label": "Pinned",
             "tab_pinned": "Pinned only",
+            "archived_hint": "Pin a snippet to keep it visible on your profile.",
             "empty_all": "No Daily Snippets yet",
             "empty_pinned": "No pinned Daily Snippets yet"
         }
@@ -936,17 +952,18 @@
         "go_home": "Go to main page"
     },
     "archive": {
-        "title": "Archive",
+        "title": "Check-ins",
         "today": "Today",
         "yesterday": "Yesterday",
         "segmented": {
             "all": "Archived",
-            "pinned": "Pinned Check-In"
+            "pinned": "Pinned"
         },
         "empty": {
             "all": "No archived check-ins yet. Check-ins move here after 12 hours or when you update them.",
             "pinned": "Pin check-ins from All to surface them on your profile."
         },
+        "archived_hint": "Pin a check-in to keep it visible on your profile.",
         "end_of_feed": "That's everything.",
         "thought_modal": {
             "close": "Close"
@@ -977,8 +994,8 @@
             "error": "Couldn't update visibility. Please try again."
         },
         "friend_card": {
-            "pinned_count_one": "Pinned Check-ins ({{count}})",
-            "pinned_count_other": "Pinned Check-ins ({{count}})"
+            "pinned_count_one": "Pinned ({{count}})",
+            "pinned_count_other": "Pinned ({{count}})"
         },
         "friend_feed": {
             "title": "Pinned Check-ins",

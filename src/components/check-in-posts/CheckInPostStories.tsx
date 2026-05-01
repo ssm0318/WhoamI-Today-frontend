@@ -87,17 +87,18 @@ function CheckInPostStories({
       {isProfileMode && isOwnProfile ? (
         <Section>
           <SectionTitleRow>
-            <Typo type="label-medium" color="DARK_GRAY">
+            <Typo type="label-large" color="BLACK">
               {t('my_snippets')}
             </Typo>
             <Layout.FlexRow gap={12} alignItems="center">
               <SnippetArchiveLink
-                prefix={<SvgIcon name="pin_filled" size={14} color="PRIMARY" />}
+                prefix={<SvgIcon name="pin_filled" size={16} color="PRIMARY" />}
                 i18nKey="pinned_link"
                 count={highlights.length}
                 to="/check-in-posts/archive?tab=pinned"
               />
               <SnippetArchiveLink
+                prefix={<ArchiveIcon />}
                 i18nKey="all_link"
                 count={stories.length}
                 to="/check-in-posts/archive?tab=all"
@@ -139,23 +140,17 @@ function CheckInPostStories({
       ) : isProfileMode ? (
         <Section>
           <SectionTitleRow>
-            <Typo type="label-medium" color="DARK_GRAY">
-              {t('today')}
+            <Typo type="label-large" color="BLACK">
+              {t('my_snippets')}
             </Typo>
             <SnippetArchiveLink
-              prefix={<SvgIcon name="pin_filled" size={14} color="PRIMARY" />}
+              prefix={<SvgIcon name="pin_filled" size={16} color="PRIMARY" />}
               i18nKey="pinned_link"
               count={highlights.length}
-              to="/check-in-posts/archive?tab=pinned"
+              to={`/users/${stories[0]?.author_detail.username}/snippets/pinned`}
             />
           </SectionTitleRow>
-          {sortedAll.length === 0 ? (
-            <EmptyRow>
-              <Typo type="label-small" color="MEDIUM_GRAY">
-                {t('no_stories')}
-              </Typo>
-            </EmptyRow>
-          ) : (
+          {sortedAll.length > 0 ? (
             <Strip>
               {sortedAll.map((story) => (
                 <SnippetStoryCard
@@ -163,9 +158,16 @@ function CheckInPostStories({
                   story={story}
                   onClick={handleClickStory(story)}
                   hideUsername
+                  hidePinBadge
                 />
               ))}
             </Strip>
+          ) : (
+            <EmptyRow>
+              <Typo type="label-small" color="MEDIUM_GRAY">
+                {t('no_stories')}
+              </Typo>
+            </EmptyRow>
           )}
         </Section>
       ) : (
@@ -207,8 +209,10 @@ function CheckInPostStories({
 
 const Section = styled.section`
   width: 100%;
-  background-color: ${Colors.WHITE};
-  border-bottom: 1px solid ${Colors.LIGHT};
+  background-color: ${Colors.GRAY_14};
+  border-radius: 8px;
+  margin: 0 8px 12px;
+  width: calc(100% - 16px);
 `;
 
 const SectionTitleRow = styled.div`
@@ -229,8 +233,6 @@ const Strip = styled(Layout.FlexRow)`
   gap: 12px;
   padding: 12px 16px;
   overflow-x: auto;
-  background-color: ${Colors.WHITE};
-  border-bottom: 1px solid ${Colors.LIGHT};
   &::-webkit-scrollbar {
     display: none;
   }
@@ -271,5 +273,26 @@ const PlusIcon = styled.span`
   line-height: 1;
   color: ${Colors.DARK_GRAY};
 `;
+
+function ArchiveIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      style={{ color: Colors.PRIMARY }}
+    >
+      <rect x="3" y="3" width="18" height="5" rx="1" />
+      <path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8" />
+      <path d="M10 12h4" />
+    </svg>
+  );
+}
 
 export default CheckInPostStories;

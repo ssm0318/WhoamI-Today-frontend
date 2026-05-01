@@ -57,6 +57,15 @@ export const Grid = styled.div`
   row-gap: 8px;
 `;
 
+export const VisibilityBadge = styled.div`
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  background-color: #efefef;
+  border-radius: 6px;
+  padding: 2px 6px;
+`;
+
 /** Multi-line clamp for thought/song text that would otherwise overflow the square body. */
 export const ClampText = styled.div<{ lines?: number }>`
   width: 100%;

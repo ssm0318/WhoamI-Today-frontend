@@ -37,7 +37,7 @@ function SnippetArchiveLink({ prefix, i18nKey, count, to }: Props) {
   return (
     <button type="button" onClick={handleClick} style={buttonStyle}>
       {prefix}
-      <span style={{ textDecoration: 'underline', textUnderlineOffset: 2 }}>
+      <span style={{ textDecoration: 'underline', textUnderlineOffset: 2, color: '#8700FF' }}>
         <Typo type="label-medium" color="PRIMARY" fontWeight={500}>
           {t(i18nKey, { count })}
         </Typo>

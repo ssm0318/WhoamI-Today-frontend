@@ -9,6 +9,7 @@ function CheckInArchiveChip() {
 
   return (
     <Layout.FlexRow gap={12} alignItems="center" style={{ flexShrink: 0 }}>
+      <FriendPinnedChip pinnedCount={pinnedCount} to="/check-in/archive?tab=pinned" />
       <Layout.FlexRow
         alignItems="center"
         gap={4}
@@ -35,7 +36,6 @@ function CheckInArchiveChip() {
           Archived ({archivedCount})
         </Typo>
       </Layout.FlexRow>
-      <FriendPinnedChip pinnedCount={pinnedCount} to="/check-in/archive?tab=pinned" />
     </Layout.FlexRow>
   );
 }

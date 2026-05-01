@@ -56,11 +56,13 @@ function ArchiveEntryMoreModal({ entry, onClose, onModifyVisibility, onDelete }:
   return (
     <>
       <BottomMenuDialog visible={entry !== null && !confirmDelete} onClickClose={onClose}>
-        <MenuRow onClick={handleClickModify}>
-          <Typo type="button-large" color="DARK">
-            {t('modify_visibility')}
-          </Typo>
-        </MenuRow>
+        {entry?.is_pinned && (
+          <MenuRow onClick={handleClickModify}>
+            <Typo type="button-large" color="DARK">
+              {t('modify_visibility')}
+            </Typo>
+          </MenuRow>
+        )}
         <MenuRow onClick={handleClickDelete}>
           <Typo type="button-large" color="WARNING">
             {t('delete')}
