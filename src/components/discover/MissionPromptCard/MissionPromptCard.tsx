@@ -26,11 +26,11 @@ function MissionPromptCard({ mission }: MissionPromptCardProps) {
   return (
     <S.MissionPromptWrapper>
       <Layout.FlexCol gap={8} w="100%">
-        <Layout.LayoutBase style={{ opacity: 0.8 }}>
-          <Typo type="label-medium" color="WHITE">
+        <Layout.FlexRow bgColor="TERTIARY_GREEN" ph={8} pv={2} rounded={100}>
+          <Typo bold type="label-medium" color="WHITE">
             Mission of the Day
           </Typo>
-        </Layout.LayoutBase>
+        </Layout.FlexRow>
         <Typo type="title-medium" color="WHITE">
           {mission.prompt}
         </Typo>

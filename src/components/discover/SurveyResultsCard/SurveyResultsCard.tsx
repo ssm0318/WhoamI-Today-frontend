@@ -24,11 +24,11 @@ function SurveyResultsCard({ card }: SurveyResultsCardProps) {
   return (
     <S.SurveyResultsWrapper>
       <Layout.FlexCol gap={8} w="100%">
-        <Layout.LayoutBase style={{ opacity: 0.8 }}>
-          <Typo type="label-medium" color="WHITE">
+        <Layout.FlexRow bgColor="SECONDARY" ph={8} pv={2} rounded={100}>
+          <Typo bold type="label-medium" color="WHITE">
             {t('section_results_released')}
           </Typo>
-        </Layout.LayoutBase>
+        </Layout.FlexRow>
         <Typo type="title-medium" color="WHITE">
           {pickLocalized(card.titleEn, card.titleKo)}
         </Typo>
