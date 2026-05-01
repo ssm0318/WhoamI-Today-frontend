@@ -212,9 +212,6 @@ function NewNoteContent({
                     ])
                   }
                 />
-                <Typo type="label-medium" color="DARK_GRAY">
-                  {t('notes.close_friends_only')}
-                </Typo>
               </Layout.FlexRow>
             ) : (
               <VisibilityToggle
