@@ -35,12 +35,23 @@ export const editProfile = ({
       MyProfile,
       | 'bio'
       | 'username'
+      | 'name'
       | 'pronouns'
       | 'noti_time'
       | 'noti_period_days'
       | 'user_personas'
       | 'user_interests'
       | 'is_public'
+      | 'name_visibility'
+      | 'pronouns_visibility'
+      | 'bio_visibility'
+      | 'music_entertainment_visibility'
+      | 'hobbies_activities_visibility'
+      | 'on_my_mind_visibility'
+      | 'as_a_friend_visibility'
+      | 'online_persona_visibility'
+      | 'favorite_platform_visibility'
+      | 'least_favorite_platform_visibility'
     >
   > & {
     profile_image?: File;

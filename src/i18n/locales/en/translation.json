@@ -1,4 +1,10 @@
 {
+    "visibility": {
+        "public": "Public",
+        "friends": "Friends",
+        "close_friends": "Close Friends",
+        "only_me": "Only Me"
+    },
     "check_in_subscription": {
         "toast": {
             "subscribed": "Subscribed",
@@ -628,11 +634,11 @@
             "error": {
                 "read_file_error": "Error uploading image. Please try again later."
             },
-            "friends_only": {
-                "name": "Show <token>name</token> only to friends",
-                "pronouns": "Show <token>pronoun</token> only to friends",
-                "bio": "Show <token>bio</token> only to friends",
-                "category": "Show <token>{{label}}</token> only to friends"
+            "visibility": {
+                "name": "Name visibility",
+                "pronouns": "Pronouns visibility",
+                "bio": "Bio visibility",
+                "category": "{{label}} visibility"
             },
             "placeholders": {
                 "bio": "Bio",
@@ -883,6 +889,7 @@
                 "delete": "Delete",
                 "request": "Friend Request",
                 "requested": "Requested",
+                "requested_friend": "Friend Requested",
                 "cancel": "Cancel",
                 "block_recommendation": "Delete",
                 "delete_request_dialog": {

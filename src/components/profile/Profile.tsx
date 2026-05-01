@@ -130,15 +130,12 @@ function Profile({ user }: ProfileProps) {
 
   const [showMoreAbout, setShowMoreAbout] = useState(false);
 
-  // Friends-only visibility: hide fields for non-friends if marked as friends-only
-  const isFriend = user && !isMyProfile(user) && areFriends(user);
-  const canSeeFriendsOnly = isMyPage || isFriend;
   const isVerQ = !!featureFlags?.postsVerQ;
 
-  // Ver.Q uses account-level is_public (handled server-side), not per-item flags
-  const showName = isVerQ || canSeeFriendsOnly || !(friendData as any)?.name_friends_only;
-  const showPronouns = isVerQ || canSeeFriendsOnly || !friendData?.pronouns_friends_only;
-  const showBio = isVerQ || canSeeFriendsOnly || !friendData?.bio_friends_only;
+  // Backend already masks per-field visibility; null/empty means hidden.
+  const showName = !!user?.name;
+  const showPronouns = !!user?.pronouns;
+  const showBio = !!user?.bio;
 
   // Backend already filters user_interests / user_personas per-category for non-friends,
   // so presence of items is the source of truth for whether to render the sections.

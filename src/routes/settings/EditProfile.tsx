@@ -1,6 +1,6 @@
 import { isAxiosError } from 'axios';
-import { ChangeEvent, useRef, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { ChangeEvent, ReactNode, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -9,14 +9,16 @@ import ProfileImageEditButton from '@components/_common/profile-image-edit-butto
 import UploadLoadingOverlay from '@components/_common/upload-loading-overlay/UploadLoadingOverlay';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import ValidatedTextArea from '@components/_common/validated-textarea/ValidatedTextArea';
+import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import ChipCategorySection from '@components/profile/chip/ChipCategorySection';
 import { StyledEditProfileButton } from '@components/settings/SettingsButtons.styled';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { CheckBox, Colors, Layout, Typo } from '@design-system';
+import { Colors, Layout, Typo } from '@design-system';
 import { useChipCategories } from '@hooks/useChipCategories';
 import { useDelayedVisible } from '@hooks/useDelayedVisible';
 import { MyProfile } from '@models/api/user';
+import { ComponentVisibility } from '@models/checkIn';
 import {
   ChipCategory,
   CustomChip,
@@ -30,6 +32,18 @@ import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { shouldShowWidgetGuide } from '@utils/widgetInstallGuide';
 import { MainScrollContainer } from '../Root';
 
+const CATEGORY_KEYS = [
+  'music_entertainment',
+  'hobbies_activities',
+  'on_my_mind',
+  'as_a_friend',
+  'online_persona',
+  'favorite_platform',
+  'least_favorite_platform',
+] as const;
+
+type CategoryKey = (typeof CATEGORY_KEYS)[number];
+
 function EditProfile() {
   type EditProfileTab = 'pronouns_bio' | 'interests';
   const location = useLocation();
@@ -39,6 +53,7 @@ function EditProfile() {
   const tabParam = searchParams.get('tab');
   const initialTab: EditProfileTab = tabParam === 'interests' ? 'interests' : 'pronouns_bio';
   const [t] = useTranslation('translation', { keyPrefix: 'settings.edit_profile' });
+  const [tVis] = useTranslation('translation', { keyPrefix: 'settings.edit_profile.visibility' });
   const { myProfile, updateMyProfile, openToast, featureFlags } = useBoundStore((state) => ({
     myProfile: state.myProfile,
     updateMyProfile: state.updateMyProfile,
@@ -47,10 +62,6 @@ function EditProfile() {
   }));
 
   const { categories } = useChipCategories();
-  const profileWithOptionalName = myProfile as MyProfile & {
-    name?: string;
-    name_friends_only?: boolean;
-  };
 
   // Parse existing user chips into per-category selections
   const parseExistingChips = () => {
@@ -74,6 +85,13 @@ function EditProfile() {
 
   const parsed = parseExistingChips();
 
+  const initialCategoryVisibility = CATEGORY_KEYS.reduce((acc, key) => {
+    acc[key] =
+      (myProfile?.[`${key}_visibility` as keyof MyProfile] as ComponentVisibility | undefined) ??
+      ComponentVisibility.PUBLIC;
+    return acc;
+  }, {} as Record<CategoryKey, ComponentVisibility>);
+
   const [draft, setDraft] = useState<{
     bio: string;
     username: string;
@@ -81,29 +99,21 @@ function EditProfile() {
     pronouns: string;
     chipSelections: Record<string, string[]>;
     customChips: CustomChip[];
-    name_friends_only: boolean;
-    pronouns_friends_only: boolean;
-    bio_friends_only: boolean;
-    categoryFriendsOnly: Record<string, boolean>;
+    name_visibility: ComponentVisibility;
+    pronouns_visibility: ComponentVisibility;
+    bio_visibility: ComponentVisibility;
+    categoryVisibility: Record<CategoryKey, ComponentVisibility>;
   }>({
     bio: myProfile?.bio ?? '',
     username: myProfile?.username ?? '',
-    name: profileWithOptionalName?.name ?? '',
+    name: myProfile?.name ?? '',
     pronouns: myProfile?.pronouns ?? '',
     chipSelections: parsed.selections,
     customChips: parsed.customs,
-    name_friends_only: profileWithOptionalName?.name_friends_only ?? true,
-    pronouns_friends_only: myProfile?.pronouns_friends_only ?? false,
-    bio_friends_only: myProfile?.bio_friends_only ?? false,
-    categoryFriendsOnly: {
-      music_entertainment: myProfile?.music_entertainment_friends_only ?? false,
-      hobbies_activities: myProfile?.hobbies_activities_friends_only ?? false,
-      on_my_mind: myProfile?.on_my_mind_friends_only ?? false,
-      as_a_friend: myProfile?.as_a_friend_friends_only ?? false,
-      online_persona: myProfile?.online_persona_friends_only ?? false,
-      favorite_platform: myProfile?.favorite_platform_friends_only ?? false,
-      least_favorite_platform: myProfile?.least_favorite_platform_friends_only ?? false,
-    },
+    name_visibility: myProfile?.name_visibility ?? ComponentVisibility.PUBLIC,
+    pronouns_visibility: myProfile?.pronouns_visibility ?? ComponentVisibility.PUBLIC,
+    bio_visibility: myProfile?.bio_visibility ?? ComponentVisibility.PUBLIC,
+    categoryVisibility: initialCategoryVisibility,
   });
 
   const [usernameError, setUsernameError] = useState<string>();
@@ -181,17 +191,17 @@ function EditProfile() {
     }));
   };
 
-  const handleToggleVisibility = (field: string) => {
-    setDraft((prev) => ({ ...prev, [field]: !prev[field as keyof typeof prev] }));
+  const handleSetVisibility = (
+    field: 'name_visibility' | 'pronouns_visibility' | 'bio_visibility',
+    value: ComponentVisibility,
+  ) => {
+    setDraft((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleToggleCategoryVisibility = (categoryKey: string) => {
+  const handleSetCategoryVisibility = (categoryKey: CategoryKey, value: ComponentVisibility) => {
     setDraft((prev) => ({
       ...prev,
-      categoryFriendsOnly: {
-        ...prev.categoryFriendsOnly,
-        [categoryKey]: !prev.categoryFriendsOnly[categoryKey],
-      },
+      categoryVisibility: { ...prev.categoryVisibility, [categoryKey]: value },
     }));
   };
 
@@ -256,16 +266,16 @@ function EditProfile() {
       name: draft.name,
       pronouns: draft.pronouns,
       ...(!featureFlags?.postsVerQ && {
-        name_friends_only: draft.name_friends_only,
-        pronouns_friends_only: draft.pronouns_friends_only,
-        bio_friends_only: draft.bio_friends_only,
-        music_entertainment_friends_only: draft.categoryFriendsOnly.music_entertainment,
-        hobbies_activities_friends_only: draft.categoryFriendsOnly.hobbies_activities,
-        on_my_mind_friends_only: draft.categoryFriendsOnly.on_my_mind,
-        as_a_friend_friends_only: draft.categoryFriendsOnly.as_a_friend,
-        online_persona_friends_only: draft.categoryFriendsOnly.online_persona,
-        favorite_platform_friends_only: draft.categoryFriendsOnly.favorite_platform,
-        least_favorite_platform_friends_only: draft.categoryFriendsOnly.least_favorite_platform,
+        name_visibility: draft.name_visibility,
+        pronouns_visibility: draft.pronouns_visibility,
+        bio_visibility: draft.bio_visibility,
+        music_entertainment_visibility: draft.categoryVisibility.music_entertainment,
+        hobbies_activities_visibility: draft.categoryVisibility.hobbies_activities,
+        on_my_mind_visibility: draft.categoryVisibility.on_my_mind,
+        as_a_friend_visibility: draft.categoryVisibility.as_a_friend,
+        online_persona_visibility: draft.categoryVisibility.online_persona,
+        favorite_platform_visibility: draft.categoryVisibility.favorite_platform,
+        least_favorite_platform_visibility: draft.categoryVisibility.least_favorite_platform,
       }),
       ...(croppedImg ? { profile_image: croppedImg.file } : {}),
     };
@@ -314,6 +324,16 @@ function EditProfile() {
   };
 
   if (!myProfile) return null;
+
+  const renderVisibilityRow = (label: string, control: ReactNode) =>
+    !featureFlags?.postsVerQ && (
+      <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" gap={8}>
+        <Typo type="label-medium" color="MEDIUM_GRAY">
+          {label}
+        </Typo>
+        {control}
+      </Layout.FlexRow>
+    );
 
   return (
     <MainScrollContainer>
@@ -387,7 +407,7 @@ function EditProfile() {
               error={usernameError}
             />
 
-            <Layout.FlexCol gap={4} w="100%">
+            <Layout.FlexCol gap={6} w="100%">
               <ValidatedInput
                 label="Name"
                 name="name"
@@ -396,47 +416,33 @@ function EditProfile() {
                 onChange={handleChangeInput}
                 limit={50}
               />
-              {!featureFlags?.postsVerQ && (
-                <CheckBox
-                  name="name_friends_only"
-                  label={
-                    <Trans
-                      i18nKey="settings.edit_profile.friends_only.name"
-                      components={{ token: <TokenTag /> }}
-                    />
-                  }
-                  checked={draft.name_friends_only}
-                  onChange={() => handleToggleVisibility('name_friends_only')}
-                />
+              {renderVisibilityRow(
+                tVis('name'),
+                <VisibilityToggle
+                  value={draft.name_visibility}
+                  onChange={(v) => handleSetVisibility('name_visibility', v)}
+                />,
               )}
             </Layout.FlexCol>
 
-            <Layout.FlexCol gap={4} w="100%">
-              <Layout.FlexCol w="100%" mb={4}>
-                <ValidatedInput
-                  label={t('pronouns')}
-                  name="pronouns"
-                  type="text"
-                  value={draft.pronouns}
-                  onChange={handleChangeInput}
-                />
-              </Layout.FlexCol>
-              {!featureFlags?.postsVerQ && (
-                <CheckBox
-                  name="pronouns_friends_only"
-                  label={
-                    <Trans
-                      i18nKey="settings.edit_profile.friends_only.pronouns"
-                      components={{ token: <TokenTag /> }}
-                    />
-                  }
-                  checked={draft.pronouns_friends_only}
-                  onChange={() => handleToggleVisibility('pronouns_friends_only')}
-                />
+            <Layout.FlexCol gap={6} w="100%">
+              <ValidatedInput
+                label={t('pronouns')}
+                name="pronouns"
+                type="text"
+                value={draft.pronouns}
+                onChange={handleChangeInput}
+              />
+              {renderVisibilityRow(
+                tVis('pronouns'),
+                <VisibilityToggle
+                  value={draft.pronouns_visibility}
+                  onChange={(v) => handleSetVisibility('pronouns_visibility', v)}
+                />,
               )}
             </Layout.FlexCol>
 
-            <Layout.FlexCol gap={4} w="100%">
+            <Layout.FlexCol gap={6} w="100%">
               <ValidatedTextArea
                 label={t('bio')}
                 name="bio"
@@ -444,25 +450,19 @@ function EditProfile() {
                 onChange={handleChangeTextArea}
                 limit={120}
               />
-              {!featureFlags?.postsVerQ && (
-                <CheckBox
-                  name="bio_friends_only"
-                  label={
-                    <Trans
-                      i18nKey="settings.edit_profile.friends_only.bio"
-                      components={{ token: <TokenTag /> }}
-                    />
-                  }
-                  checked={draft.bio_friends_only}
-                  onChange={() => handleToggleVisibility('bio_friends_only')}
-                />
+              {renderVisibilityRow(
+                tVis('bio'),
+                <VisibilityToggle
+                  value={draft.bio_visibility}
+                  onChange={(v) => handleSetVisibility('bio_visibility', v)}
+                />,
               )}
             </Layout.FlexCol>
           </>
         ) : (
           <>
             {categories.map((categoryInfo) => (
-              <Layout.FlexCol key={categoryInfo.key} gap={4} w="100%">
+              <Layout.FlexCol key={categoryInfo.key} gap={6} w="100%">
                 <ChipCategorySection
                   categoryInfo={categoryInfo}
                   selectedChips={draft.chipSelections[categoryInfo.key] || []}
@@ -471,19 +471,18 @@ function EditProfile() {
                   onAddCustomChip={handleAddCustomChip}
                   onRemoveCustomChip={handleRemoveCustomChip}
                 />
-                <CheckBox
-                  name={`${categoryInfo.key}_friends_only`}
-                  label={
-                    <Trans
-                      i18nKey="settings.edit_profile.friends_only.category"
-                      values={{ label: categoryInfo.label }}
-                      components={{ token: <TokenTag /> }}
-                      tOptions={{ interpolation: { escapeValue: false } }}
-                    />
-                  }
-                  checked={!!draft.categoryFriendsOnly[categoryInfo.key]}
-                  onChange={() => handleToggleCategoryVisibility(categoryInfo.key)}
-                />
+                {renderVisibilityRow(
+                  tVis('category', { label: categoryInfo.label }),
+                  <VisibilityToggle
+                    value={
+                      draft.categoryVisibility[categoryInfo.key as CategoryKey] ??
+                      ComponentVisibility.PUBLIC
+                    }
+                    onChange={(v) =>
+                      handleSetCategoryVisibility(categoryInfo.key as CategoryKey, v)
+                    }
+                  />,
+                )}
               </Layout.FlexCol>
             ))}
           </>
@@ -525,12 +524,4 @@ const EditProfileTabButton = styled.button<{ $active: boolean }>`
   font-weight: ${({ $active }) => ($active ? 700 : 500)};
   transition: color 0.15s ease, border-color 0.15s ease;
   margin-bottom: -1px;
-`;
-
-const TokenTag = styled.span`
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 13px;
-  background-color: ${Colors.INPUT_GRAY};
-  padding: 1px 5px;
-  border-radius: 3px;
 `;
