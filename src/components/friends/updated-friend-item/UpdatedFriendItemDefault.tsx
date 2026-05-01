@@ -71,36 +71,29 @@ function UpdatedFriendItemDefault({
           </Layout.FlexRow>
         </StyledProfileArea>
         {isMyPage && (
-          <Layout.FlexRow
-            w="100%"
-            style={{ position: 'relative' }}
-            justifyContent="flex-end"
-            alignItems="center"
-            gap={8}
-          >
-            <Layout.LayoutBase pb={2}>
+          <Layout.FlexRow w="100%" justifyContent="flex-end" alignItems="center" gap={8}>
+            <Layout.LayoutBase pb={2} style={{ position: 'relative' }}>
               <Icon
                 name={isVerQ ? 'friend_item_chat' : 'chat_send'}
                 size={22}
                 onClick={handleClickChat}
               />
+              {unread_chat_count > 0 && (
+                <Layout.Absolute
+                  bgColor="SECONDARY"
+                  alignItems="center"
+                  rounded={10}
+                  t={-3}
+                  r={-6}
+                  ph={3}
+                  pv={1}
+                >
+                  <Typo type="label-small" color="BLACK" fontSize={7} fontWeight={700}>
+                    {unread_chat_count > 99 ? '99+' : unread_chat_count}
+                  </Typo>
+                </Layout.Absolute>
+              )}
             </Layout.LayoutBase>
-            {unread_chat_count > 0 && (
-              <Layout.Absolute
-                bgColor="BLACK"
-                alignItems="center"
-                rounded={10}
-                t={-3}
-                r={9}
-                ph={3}
-                pv={1}
-                tl={['100%', 0]}
-              >
-                <Typo type="label-small" color="WHITE" fontSize={7} fontWeight={700}>
-                  {unread_chat_count > 99 ? '99+' : unread_chat_count}
-                </Typo>
-              </Layout.Absolute>
-            )}
             {showMoreButton && <Icon name="dots_menu" size={22} onClick={handleClickMore} />}
           </Layout.FlexRow>
         )}

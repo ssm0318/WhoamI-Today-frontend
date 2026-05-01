@@ -131,7 +131,7 @@ function FriendItemWithUpdates({
             />
           </Layout.FlexRow>
         </Layout.FlexRow>
-        <Layout.FlexRow style={{ position: 'relative' }} alignItems="center" gap={12}>
+        <Layout.FlexRow alignItems="center" gap={12}>
           {subscriptionPopupEnabled && tabMode !== 'unified' && (
             <>
               <button
@@ -165,25 +165,24 @@ function FriendItemWithUpdates({
               />
             </>
           )}
-          <Layout.LayoutBase pb={2}>
+          <Layout.LayoutBase pb={2} style={{ position: 'relative' }}>
             <Icon name="friend_item_chat" color="BLACK" size={20} onClick={handleClickChat} />
+            {unread_chat_count > 0 && (
+              <Layout.Absolute
+                bgColor="SECONDARY"
+                alignItems="center"
+                rounded={10}
+                t={-3}
+                r={-6}
+                ph={3}
+                pv={1}
+              >
+                <Typo type="label-small" color="BLACK" fontSize={7} fontWeight={700}>
+                  {unread_chat_count > 99 ? '99+' : unread_chat_count}
+                </Typo>
+              </Layout.Absolute>
+            )}
           </Layout.LayoutBase>
-          {unread_chat_count > 0 && (
-            <Layout.Absolute
-              bgColor="BLACK"
-              alignItems="center"
-              rounded={10}
-              t={-3}
-              r={6}
-              ph={3}
-              pv={1}
-              tl={['100%', 0]}
-            >
-              <Typo type="label-small" color="WHITE" fontSize={7} fontWeight={700}>
-                {unread_chat_count > 99 ? '99+' : unread_chat_count}
-              </Typo>
-            </Layout.Absolute>
-          )}
         </Layout.FlexRow>
       </Layout.FlexRow>
 
