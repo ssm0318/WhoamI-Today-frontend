@@ -22,20 +22,6 @@ const Page = styled(Layout.FlexCol)`
   min-height: 100%;
 `;
 
-const DoneButton = styled.button`
-  align-self: stretch;
-  border: 1px solid ${Colors.PRIMARY};
-  border-radius: 12px;
-  padding: 12px 16px;
-  background: ${Colors.PRIMARY};
-  color: ${Colors.WHITE};
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 8px;
-  -webkit-tap-highlight-color: transparent;
-`;
-
 const PanelGroup = styled(Layout.FlexCol)`
   width: 100%;
   gap: 12px;
@@ -125,14 +111,23 @@ function SurveyResults() {
     getSurveyDetail(slug as string),
   );
 
+  const headerTitle = survey ? pickLocalized(survey.title_en, survey.title_ko) : '';
+  const headerRight = (
+    <button type="button" onClick={() => navigate('/share')}>
+      <Typo type="title-large" color="PRIMARY">
+        {t('done')}
+      </Typo>
+    </button>
+  );
+
   const axiosError = error as AxiosError | undefined;
   if (axiosError?.response?.status === 403) {
     const body = axiosError.response.data;
     return (
       <MainScrollContainer>
-        <SubHeader title={t('locked_title')} />
+        <SubHeader title={headerTitle} RightComponent={headerRight} />
         <Page>
-          <Typo type="body-medium" color="DARK_GRAY">
+          <Typo type="title-large" color="BLACK">
             {body.detail}
           </Typo>
           {body.needs_submission && (
@@ -140,9 +135,6 @@ function SurveyResults() {
               {t('answer_to_view_results')}
             </ActionButton>
           )}
-          <DoneButton type="button" onClick={() => navigate('/share')}>
-            {t('done')}
-          </DoneButton>
         </Page>
       </MainScrollContainer>
     );
@@ -154,7 +146,7 @@ function SurveyResults() {
 
   return (
     <MainScrollContainer>
-      <SubHeader title={pickLocalized(survey.title_en, survey.title_ko)} />
+      <SubHeader title={headerTitle} RightComponent={headerRight} />
       <Page>
         {data.panels.map((panel, idx) => (
           <PanelView
@@ -164,9 +156,6 @@ function SurveyResults() {
             interpretation={idx === 0 ? interpretation : undefined}
           />
         ))}
-        <DoneButton type="button" onClick={() => navigate('/share')}>
-          {t('done')}
-        </DoneButton>
       </Page>
     </MainScrollContainer>
   );
