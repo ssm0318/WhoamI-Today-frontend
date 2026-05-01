@@ -303,7 +303,11 @@ function GroupChat() {
 
   const handleLeave = async () => {
     if (!roomId) return;
-    await leaveGroupChat(Number(roomId));
+    const { data } = await leaveGroupChat(Number(roomId));
+    if (data?.status === 'admin_evicted' && data?.redirect_user_id) {
+      navigate(`/users/${data.redirect_user_id}/chat`, { replace: true });
+      return;
+    }
     navigate('/chats');
   };
 

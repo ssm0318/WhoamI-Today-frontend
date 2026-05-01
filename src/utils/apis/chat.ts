@@ -80,8 +80,13 @@ export const updateGroupChat = async (
   return data;
 };
 
+export interface LeaveGroupChatRes {
+  status: 'left' | 'admin_evicted';
+  redirect_user_id?: number;
+}
+
 export const leaveGroupChat = async (roomId: number) => {
-  return axios.post(`/chat/groups/${roomId}/leave/`);
+  return axios.post<LeaveGroupChatRes>(`/chat/groups/${roomId}/leave/`);
 };
 
 export const getGroupMessages = async (roomId: number, page?: string | null) => {
