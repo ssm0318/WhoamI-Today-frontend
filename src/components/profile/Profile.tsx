@@ -1,6 +1,7 @@
 import { MouseEvent, ReactNode, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
+import styled from 'styled-components';
 import { useShallow } from 'zustand/react/shallow';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import ChatRequestButton from '@components/_common/chat-request-button/ChatRequestButton';
@@ -376,27 +377,27 @@ function Profile({ user }: ProfileProps) {
       {/* my-page actions: Edit Profile + Public/Private toggle (Q) or View As (W) */}
       {isMyPage && (
         <Layout.FlexRow w="100%" gap={8}>
-          <Button.Secondary
+          <ProfileActionButton
             status="normal"
             text={t('edit_profile')}
             sizing="stretch"
-            fontType="body-small"
+            fontType="button-medium"
             onClick={handleClickEditProfile}
           />
           {featureFlags?.postsVerQ ? (
-            <Button.Secondary
+            <ProfileActionButton
               status="normal"
               text={t('switch_visibility')}
               sizing="stretch"
-              fontType="body-small"
+              fontType="button-medium"
               onClick={handleTogglePublicPrivate}
             />
           ) : (
-            <Button.Secondary
+            <ViewAsButton
               status="normal"
               text={tViewAs('entry_label_long', { defaultValue: 'View As (Privacy)' })}
               sizing="stretch"
-              fontType="body-small"
+              fontType="button-medium"
               onClick={() => navigate('/my/view-as')}
             />
           )}
@@ -446,6 +447,22 @@ function Profile({ user }: ProfileProps) {
 }
 
 export default Profile;
+
+const ProfileActionButton = styled(Button.Secondary)`
+  && > button > .button_component {
+    border-width: 2px;
+  }
+`;
+
+const ViewAsButton = styled(Button.Secondary)`
+  && > button > .button_component {
+    border-width: 2px;
+    border-color: ${({ theme }) => theme.PRIMARY};
+  }
+  && > button > .button_component span {
+    color: ${({ theme }) => theme.PRIMARY};
+  }
+`;
 
 function AccountStatusBadge({ children }: { children: ReactNode }) {
   return (

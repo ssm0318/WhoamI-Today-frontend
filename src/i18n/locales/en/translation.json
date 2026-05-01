@@ -564,6 +564,7 @@
             "button": {
                 "request": "Chat Request",
                 "requested": "Chat Requested",
+                "requested_chat": "Chat Requested",
                 "cancel": "Cancel",
                 "cancel_dialog": {
                     "title": "Cancel chat request",
@@ -571,6 +572,12 @@
                     "cancel": "Close",
                     "confirm": "Cancel request"
                 }
+            },
+            "notification_action": {
+                "accept": "Accept",
+                "ignore": "Ignore",
+                "accepted_toast": "Accepted chat request",
+                "ignored_toast": "Ignored chat request"
             }
         },
         "system": {
