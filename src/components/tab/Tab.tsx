@@ -4,6 +4,7 @@ import { useMatch } from 'react-router-dom';
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { resetScrollPosition } from '@hooks/useRestoreScrollPosition';
+import { BrowseModeTabKey } from '@models/browseMode';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import {
@@ -84,36 +85,52 @@ function TabItem({ to, type, size = 48, end = false }: TabItemProps) {
 
 export default function Tab() {
   const { featureFlags } = useBoundStore(UserSelector);
+  const activeBrowseMode = useBoundStore((state) => state.activeBrowseMode);
+
+  // When a browse mode is active, only render tabs whose key is in the mode's allowlist.
+  // `my` and `questions` are intentionally exempt — profile lives in the hamburger menu
+  // and questions is feature-flag-gated, so users always want them when those flags allow.
+  const allowedTabs = activeBrowseMode?.config.tabs;
+  const ALWAYS_SHOWN: BrowseModeTabKey[] = ['my', 'questions'];
+  const isTabAllowed = (key: BrowseModeTabKey) => {
+    if (ALWAYS_SHOWN.includes(key)) return true;
+    return !allowedTabs || allowedTabs.includes(key);
+  };
 
   if (featureFlags?.checkInPosts) {
     return (
-      <TabWrapper>
+      <TabWrapper data-preview-exempt>
         <Layout.FlexRow w="100%" justifyContent="space-evenly" alignItems="center" pt={4}>
-          <TabItem to="/feed" type="feed" size={28} />
-          <TabItem to="/share" type="share" size={28} />
-          <TabItem to="/discover" type="discover" size={28} />
-          <TabItem to="/chats" type="chats" size={28} />
-          <TabItem to="/my" type="my" size={28} />
+          {/* Ver. Q has a "feed" tab that maps to the friends slot conceptually; treat it as 'friends'. */}
+          {isTabAllowed('friends') && <TabItem to="/feed" type="feed" size={28} />}
+          {isTabAllowed('share') && <TabItem to="/share" type="share" size={28} />}
+          {isTabAllowed('discover') && <TabItem to="/discover" type="discover" size={28} />}
+          {isTabAllowed('chats') && <TabItem to="/chats" type="chats" size={28} />}
+          {isTabAllowed('my') && <TabItem to="/my" type="my" size={28} />}
         </Layout.FlexRow>
       </TabWrapper>
     );
   }
 
   return (
-    <TabWrapper>
+    <TabWrapper data-preview-exempt>
       <Layout.FlexRow w="100%" h="100%" justifyContent="space-evenly" alignItems="center">
         {featureFlags?.friendList ? (
           <>
-            <TabItem to="/friends" type="friends" size={28} />
-            <TabItem to="/update" type="update" size={28} />
-            <TabItem to="/share" type="share" size={28} />
-            <TabItem to="/discover" type="discover" size={28} />
+            {isTabAllowed('friends') && <TabItem to="/friends" type="friends" size={28} />}
+            {isTabAllowed('update') && <TabItem to="/update" type="update" size={28} />}
+            {isTabAllowed('share') && <TabItem to="/share" type="share" size={28} />}
+            {isTabAllowed('discover') && <TabItem to="/discover" type="discover" size={28} />}
           </>
         ) : featureFlags?.friendFeed ? (
-          <TabItem to="/feed" type="friends" size={28} />
+          isTabAllowed('friends') && <TabItem to="/feed" type="friends" size={28} />
         ) : null}
-        {featureFlags?.questionsTab && <TabItem to="/questions" type="questions" size={28} />}
-        {featureFlags?.chatTab && <TabItem to="/chats" type="chats" size={28} />}
+        {featureFlags?.questionsTab && isTabAllowed('questions') && (
+          <TabItem to="/questions" type="questions" size={28} />
+        )}
+        {featureFlags?.chatTab && isTabAllowed('chats') && (
+          <TabItem to="/chats" type="chats" size={28} />
+        )}
       </Layout.FlexRow>
     </TabWrapper>
   );

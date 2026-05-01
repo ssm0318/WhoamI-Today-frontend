@@ -12,6 +12,8 @@ import { SWRConfig } from 'swr';
 import NotiPermissionBanner, {
   NOTI_PERMISSION_BANNER_HEIGHT,
 } from '@components/_common/noti-permission-banner/NotiPermissionBanner';
+import BrowseModePreviewBar from '@components/browse-mode/BrowseModePreviewBar';
+import BrowseModeSessionPrompt from '@components/browse-mode/BrowseModeSessionPrompt';
 import CheckInFreshnessPrompt from '@components/check-in/check-in-freshness-prompt/CheckInFreshnessPrompt';
 import Header from '@components/header/Header';
 import Tab from '@components/tab/Tab';
@@ -19,6 +21,8 @@ import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
 import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { useBrowseModeSessionPrompt } from '@hooks/useBrowseModeSessionPrompt';
+import { useBrowseModeTabDurations } from '@hooks/useBrowseModeTabDurations';
 import { useCheckInFreshnessPrompt } from '@hooks/useCheckInFreshnessPrompt';
 import useFcm from '@hooks/useFcm';
 import { SetAppStateData } from '@models/app';
@@ -55,6 +59,13 @@ function Root() {
     myProfile: state.myProfile,
   }));
   const { shouldShow, dismiss, checkIn } = useCheckInFreshnessPrompt();
+  const browseModePrompt = useBrowseModeSessionPrompt();
+  // Honour per-tab fade-out timers on the active mode (Digital detox-style).
+  // Mounted here so it spans the entire app session, not just while the
+  // picker is open.
+  useBrowseModeTabDurations();
+  const isBrowseModePickerOpen = useBoundStore((state) => state.isBrowseModePickerOpen);
+  const closeBrowseModePicker = useBoundStore((state) => state.closeBrowseModePicker);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -197,9 +208,28 @@ function Root() {
     <SWRConfig value={{ provider: () => new Map() }}>
       <Layout.FlexRow justifyContent="center" bgColor="BLACK" w="100%">
         <RootContainer w="100%" bgColor="WHITE" id="root-container">
+          {/* Sticky bar: only renders during a transient "Apply without saving"
+              preview. Sits above the header so it's clear the current view is
+              hypothetical and one tap exits back to the picker. */}
+          <BrowseModePreviewBar />
           <Header />
           <Outlet />
           <CheckInFreshnessPrompt visible={shouldShow} onDismiss={dismiss} checkIn={checkIn} />
+          {/* Single picker instance — auto-prompt OR manual open, never both.
+              Mounting two instances caused the customize/wishlist sheets to
+              double up: clicking a link in one instance could open the OTHER
+              instance's sheet, which then refused to close from this one's
+              orchestrator. Consolidating fixes that.
+              Auto-prompt wins when both could fire (it's the one that knows
+              the user is in a fresh session and hasn't picked yet). */}
+          <BrowseModeSessionPrompt
+            visible={browseModePrompt.shouldShow || isBrowseModePickerOpen}
+            fullScreen={browseModePrompt.shouldShow}
+            onDismiss={
+              browseModePrompt.shouldShow ? browseModePrompt.dismiss : closeBrowseModePicker
+            }
+            onFinish={browseModePrompt.shouldShow ? browseModePrompt.finish : closeBrowseModePicker}
+          />
         </RootContainer>
         <Tab />
       </Layout.FlexRow>

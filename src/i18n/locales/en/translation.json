@@ -234,6 +234,7 @@
                 "explore_friends": "Add Friends",
                 "questions": "Questions",
                 "my_profile": "My Profile",
+                "browsing_mode": "Browsing Mode",
                 "survey_results": "Survey Results",
                 "settings": "Settings",
                 "edit_profile": "Edit Profile",
@@ -1249,5 +1250,142 @@
         "ok": "OK",
         "already_pending": "You already have a pending version swap request.",
         "submit_failed": "Could not submit your request. Please try again."
+    },
+    "browse_mode": {
+        "full_screen": {
+            "skip": "Skip"
+        },
+        "preview_bar": {
+            "label": "✨ Previewing a custom mode",
+            "exit_aria": "Exit preview and return to browsing modes",
+            "blocked_toast": "Action not allowed in preview mode"
+        },
+        "toasts": {
+            "battery_set": "Battery set to {{emoji}} {{label}}",
+            "browsing_in": "Browsing in {{name}} mode",
+            "browsing_in_with_battery": "Browsing in {{name}} mode · {{emoji}} {{label}}",
+            "adjust": "Adjust",
+            "delete_failed": "Couldn't delete that mode — try again?"
+        },
+        "steps": {
+            "mode": {
+                "title": "What are you in the mood for?",
+                "saved_label": "Your saved modes",
+                "customize": "✨ Add a new browsing mode",
+                "wishlist_link": "💭 Not seeing what you're looking for?",
+                "last_used_badge": "Last used",
+                "current_badge": "Current",
+                "battery_hint": "Battery → {{emoji}} {{label}}",
+                "sync_toggle": "Also set my battery",
+                "sync_subtitle": "We'll match it to the mode you pick — you can adjust afterwards",
+                "edit_preset_aria": "Edit {{name}}",
+                "delete_preset_aria": "Delete {{name}}",
+                "hide_preset_aria": "Hide {{name}} from this list",
+                "clone_builtin_aria": "Make my own version of {{name}}",
+                "hide_builtin_aria": "Hide {{name}} from this list",
+                "clone_name_suffix": "{{name}} (mine)",
+                "edit_list": "Edit list",
+                "edit_done": "Done",
+                "hidden_label": "Hidden",
+                "show_again": "Show again",
+                "delete_forever": "Delete forever",
+                "delete_confirm_title": "Delete this mode?",
+                "delete_confirm_content": "\"{{name}}\" will be removed from your saved modes.",
+                "delete_confirm_cancel": "Cancel",
+                "delete_confirm_confirm": "Delete"
+            },
+            "customize": {
+                "title": "Create Custom Mode",
+                "title_edit": "Edit Mode",
+                "subtitle": "",
+                "subtitle_edit": "Tweak the bits you want to change — Save updates your saved version",
+                "templates_section": "Quick start",
+                "templates_subtitle": "Tap one to fill in the form — tweak before saving",
+                "tabs_section": "Show these tabs",
+                "tabs_subtitle": "Pick a time limit per tab — they'll fade out after that. \"Always\" stays.",
+                "duration_aria": "Time limit for {{tab}}",
+                "duration_options": {
+                    "always": "Always",
+                    "minutes_5": "5 min",
+                    "minutes_15": "15 min",
+                    "minutes_30": "30 min",
+                    "minutes_60": "1 hour"
+                },
+                "filters_section": "Apply these filters",
+                "battery_section": "Default battery",
+                "battery_subtitle": "When 'Also set my battery' is on, this is what we'll set when you pick this mode. Optional.",
+                "battery_none": "Skip",
+                "save_as": "Save as a mode",
+                "name_label": "Mode name",
+                "name_placeholder": "e.g. Hangout, Late chill",
+                "description_label": "Description (optional)",
+                "description_placeholder": "e.g. exam week, limited chatting",
+                "save": "Save",
+                "apply_without_saving": "Apply without saving",
+                "errors": {
+                    "name_required": "Give your mode a name",
+                    "save_failed": "Couldn't save. Try again?",
+                    "tabs_required": "Pick at least one tab"
+                }
+            }
+        },
+        "wishlist": {
+            "title": "Not seeing what you're looking for?",
+            "subtitle": "What other options would you like to be able to customize for your browsing mode?",
+            "placeholder": "e.g. auto-switch to Soft mode at night, hide check-ins from specific people, save my filters per tab…",
+            "send": "Send",
+            "sent_toast": "Sent to WIT admins. Thank you for your input!",
+            "error": "Couldn't send — try again?"
+        },
+        "modes": {
+            "very_social": {
+                "name": "Full social",
+                "description": "Show me everything — I'm here for it"
+            },
+            "selectively_social": {
+                "name": "Just my people",
+                "description": "Close friends only, no random discovery"
+            },
+            "quiet": {
+                "name": "Soft mode",
+                "description": "Just here to share — keep it quiet"
+            }
+        },
+        "tabs": {
+            "friends": "Friends",
+            "update": "Update",
+            "share": "Share",
+            "discover": "Discover",
+            "chats": "Chats",
+            "my": "My",
+            "questions": "Questions"
+        },
+        "filters": {
+            "friends_close_only": "Show close friends only on Friends",
+            "chats_close_only": "Show close friends only on Chats"
+        },
+        "sections": {
+            "hide_synthetic_discover_cards": "Hide discovery suggestions",
+            "hide_ping_buttons": "Hide ping buttons",
+            "hide_new_post_badge": "Hide \"New post\" badges"
+        },
+        "templates": {
+            "no_discover": {
+                "name": "All friends, no discover",
+                "description": "Stay with people you know — no new friends today"
+            },
+            "just_chat": {
+                "name": "Just chat",
+                "description": "Replying to messages, nothing else"
+            },
+            "just_discover": {
+                "name": "Just discover",
+                "description": "Find new connections and content only"
+            },
+            "digital_detox": {
+                "name": "Digital detox",
+                "description": "Step away from the scroll — keep replies open"
+            }
+        }
     }
 }

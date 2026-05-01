@@ -35,6 +35,8 @@ export enum FeatureFlagKey {
   SUBSCRIPTION_POPUP = 'subscriptionPopup',
   /** 채팅 목록에서 Close Friends Only 필터 토글 노출 */
   CHAT_CLOSE_FRIENDS_FILTER = 'chatCloseFriendsFilter',
+  /** 세션 시작 시 social battery + browse mode 프롬프트 (Ver. W 전용) */
+  BROWSE_MODE = 'browseMode',
 }
 
 export type FeatureFlagMap = { [feature in FeatureFlagKey]: boolean };
@@ -61,6 +63,7 @@ const DEFAULT_FLAGS = {
   [FeatureFlagKey.SHARE_TAB_VISIBLE]: false,
   [FeatureFlagKey.SUBSCRIPTION_POPUP]: false,
   [FeatureFlagKey.CHAT_CLOSE_FRIENDS_FILTER]: false,
+  [FeatureFlagKey.BROWSE_MODE]: false,
 };
 
 export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
@@ -94,5 +97,6 @@ export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
     [FeatureFlagKey.CHAT_TAB]: true,
     [FeatureFlagKey.SUBSCRIPTION_POPUP]: true,
     [FeatureFlagKey.CHAT_CLOSE_FRIENDS_FILTER]: true,
+    [FeatureFlagKey.BROWSE_MODE]: true,
   },
 };

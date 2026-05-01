@@ -34,7 +34,9 @@ function CheckInFreshnessPrompt({ visible, onDismiss, checkIn }: CheckInFreshnes
 
   const handleUpdate = useCallback(() => {
     onDismiss();
-    navigate('/check-in/edit');
+    // Send users to the Check-In tab (`/update`) — the standalone
+    // `/check-in/edit` page is deprecated and shouldn't be linked.
+    navigate('/update');
   }, [onDismiss, navigate]);
 
   const handleClear = useCallback(async () => {

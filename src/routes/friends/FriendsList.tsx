@@ -24,7 +24,15 @@ function FriendsList() {
   const [t] = useTranslation('translation');
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<TabType>('check-in');
-  const [closeFriendsOnly, setCloseFriendsOnly] = useState(false);
+  // Browse mode can prefill the close-friends-only filter when "Just my people" is active.
+  const browseModeForcesCloseFriends = useBoundStore(
+    (state) => !!state.activeBrowseMode?.config.filters.friends_close_only,
+  );
+  const [closeFriendsOnly, setCloseFriendsOnly] = useState(browseModeForcesCloseFriends);
+  // Reflect mode flips after the screen mounts (e.g., user opens picker from header).
+  useEffect(() => {
+    if (browseModeForcesCloseFriends) setCloseFriendsOnly(true);
+  }, [browseModeForcesCloseFriends]);
   const friendType: FriendType = closeFriendsOnly ? 'close_friends' : 'all';
 
   const {
@@ -155,11 +163,14 @@ function FriendsList() {
               </TabButton>
             </Layout.FlexRow>
 
-            {/* Close friends filter */}
+            {/* Close friends filter — preview-exempt: the user IS allowed to
+                tweak the filter while previewing a custom mode, since it's
+                a viewing affordance (not a write). */}
             <Layout.FlexRow
               gap={6}
               alignItems="center"
               style={{ cursor: 'pointer' }}
+              data-preview-exempt
               onClick={() => setCloseFriendsOnly((prev) => !prev)}
             >
               <CheckboxIcon checked={closeFriendsOnly} />

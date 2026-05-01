@@ -1,3 +1,10 @@
+/**
+ * @deprecated The standalone "/check-in/edit" page is no longer used. The
+ * Check-In bottom tab (`/update` → `UpdateCheckin`) is the supported entry
+ * point for editing the user's check-in. This component is kept only to
+ * satisfy the existing route registration; do NOT link, navigate, or
+ * import this anywhere else. See plan: "the-previous-version-of-frolicking-sutton".
+ */
 import { Track } from '@spotify/web-api-ts-sdk';
 import { EmojiClickData } from 'emoji-picker-react';
 import { RefObject, useEffect, useRef, useState } from 'react';

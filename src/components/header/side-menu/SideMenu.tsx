@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import useSWR from 'swr';
 
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
+import { FeatureFlagKey } from '@constants/featureFlag';
 import { Z_INDEX } from '@constants/layout';
 import { ONBOARDING_VIDEO_URL } from '@constants/url';
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
@@ -13,10 +14,20 @@ import { VersionType } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMyPendingVersionSwapRequest } from '@utils/apis/user';
 
-const SIDE_MENU_LIST = [
-  { key: 'my_profile', path: '/my' },
-  { key: 'survey_results', path: '/surveys' },
-  { key: 'settings', path: '/settings' },
+type SideMenuItem =
+  | { key: string; emoji: string; kind: 'route'; path: string; flag?: FeatureFlagKey }
+  | { key: string; emoji: string; kind: 'browse_mode'; flag: FeatureFlagKey };
+
+const SIDE_MENU_LIST: SideMenuItem[] = [
+  { key: 'my_profile', emoji: '👤', kind: 'route', path: '/my' },
+  {
+    key: 'browsing_mode',
+    emoji: '✨',
+    kind: 'browse_mode',
+    flag: FeatureFlagKey.BROWSE_MODE,
+  },
+  { key: 'survey_results', emoji: '📊', kind: 'route', path: '/surveys' },
+  { key: 'settings', emoji: '⚙️', kind: 'route', path: '/settings' },
 ];
 
 const VERSION_LABEL: Record<VersionType, string> = {
@@ -33,6 +44,8 @@ function SideMenu({ closeSideMenu }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'home.header.side_menu' });
   const navigate = useNavigate();
   const postMessage = usePostAppMessage();
+  const featureFlags = useBoundStore((state) => state.featureFlags);
+  const openBrowseModePicker = useBoundStore((state) => state.openBrowseModePicker);
 
   const myProfile = useBoundStore((state) => state.myProfile);
   const { data: pendingResp } = useSWR(
@@ -41,8 +54,14 @@ function SideMenu({ closeSideMenu }: Props) {
   );
   const isPending = !!pendingResp?.pending;
 
-  const handleClickMenu = (path: string) => () => {
-    navigate(path);
+  const visibleItems = SIDE_MENU_LIST.filter((menu) => !menu.flag || featureFlags?.[menu.flag]);
+
+  const handleClickMenu = (menu: SideMenuItem) => () => {
+    if (menu.kind === 'route') {
+      navigate(menu.path);
+    } else if (menu.kind === 'browse_mode') {
+      openBrowseModePicker();
+    }
     closeSideMenu();
   };
 
@@ -73,9 +92,17 @@ function SideMenu({ closeSideMenu }: Props) {
         <Layout.FlexCol pt={20} pl={24}>
           <SvgIcon name="close" color="BLACK" size={24} onClick={handleClickDimmed} />
           <Layout.FlexCol gap={12} pt={30}>
-            {SIDE_MENU_LIST.map((menu) => (
-              <button type="button" key={menu.key} onClick={handleClickMenu(menu.path)}>
-                <Typo type="head-line">{t(menu.key)}</Typo>
+            {visibleItems.map((menu) => (
+              <button type="button" key={menu.key} onClick={handleClickMenu(menu)}>
+                <Layout.FlexRow gap={6} alignItems="center">
+                  <EmojiItem
+                    emojiString={menu.emoji}
+                    size={20}
+                    bgColor="TRANSPARENT"
+                    outline="TRANSPARENT"
+                  />
+                  <Typo type="head-line">{t(menu.key)}</Typo>
+                </Layout.FlexRow>
               </button>
             ))}
             <Layout.FlexCol mt={52}>
@@ -88,7 +115,7 @@ function SideMenu({ closeSideMenu }: Props) {
                   handleClickOnboardingVideo();
                 }}
               >
-                <Layout.FlexRow gap={4} alignItems="center">
+                <Layout.FlexRow gap={6} alignItems="center">
                   <EmojiItem
                     emojiString="📺"
                     size={20}

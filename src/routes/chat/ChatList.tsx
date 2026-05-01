@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Loader } from '@components/_common/loader/Loader.styled';
@@ -28,7 +28,17 @@ function ChatList() {
   const [loading, setLoading] = useState(true);
   const [typingUsers, setTypingUsers] = useState<Record<number, string>>({});
   const [unreadOnly, setUnreadOnly] = useState(false);
-  const [closeFriendsOnly, setCloseFriendsOnly] = useState(false);
+  // Browse mode can prefill the close-friends-only chat filter when a custom
+  // mode (or "Just my people") sets `chats_close_only`. Mirrors how
+  // FriendsList does this — derive the initial state from the active mode and
+  // bump it on if the active mode changes mid-session.
+  const browseModeForcesCloseFriends = useBoundStore(
+    (state) => !!state.activeBrowseMode?.config.filters.chats_close_only,
+  );
+  const [closeFriendsOnly, setCloseFriendsOnly] = useState(browseModeForcesCloseFriends);
+  useEffect(() => {
+    if (browseModeForcesCloseFriends) setCloseFriendsOnly(true);
+  }, [browseModeForcesCloseFriends]);
   const typingTimers = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
 
   const passesCloseFriend = (r: ChatRoom) => {
@@ -134,7 +144,9 @@ function ChatList() {
             </Typo>
           </Layout.FlexRow>
           {featureFlags?.chatCloseFriendsFilter && (
-            <Layout.FlexRow gap={10} alignItems="center">
+            // Close-friends toggle is a viewing affordance — preview-exempt
+            // so the user can flip it while previewing a custom mode.
+            <Layout.FlexRow gap={10} alignItems="center" data-preview-exempt>
               <PurpleToggleWrapper>
                 <ToggleSwitch
                   type="small"

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Navigate } from 'react-router-dom';
 import useSWR from 'swr';
 import FilterChip from '@components/_common/filter-chip/FilterChip';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
@@ -66,6 +67,16 @@ function Discover() {
   const myProfile = useBoundStore((state) => state.myProfile);
   const { featureFlags } = useBoundStore(UserSelector);
   const isVerQ = !!featureFlags?.postsVerQ;
+
+  // If a browse mode is active and it hides Discover, redirect to the first allowed tab.
+  // Prevents the user landing here via direct URL while their session preferences hide it.
+  // Computed early so we can decide before rendering, but we must still call every hook
+  // below unconditionally to satisfy the Rules of Hooks — the `Navigate` is returned at
+  // the end of this component's body, after all hooks have run.
+  const activeBrowseMode = useBoundStore((state) => state.activeBrowseMode);
+  const allowedTabs = activeBrowseMode?.config.tabs;
+  const discoverHidden = !!allowedTabs && !allowedTabs.includes('discover');
+  const fallbackPath = allowedTabs && allowedTabs.length > 0 ? `/${allowedTabs[0]}` : '/friends';
 
   const { missions } = useMissions();
   const discoverFilterList = [DiscoverFilter.MUTUAL_FRIENDS, DiscoverFilter.MUTUAL_TRAITS];
@@ -192,24 +203,27 @@ function Discover() {
     surveyResultsCard,
   ]);
 
+  // If the active browse mode says to hide synthetic discover cards, drop them here.
+  const hideSyntheticCards = !!activeBrowseMode?.config.sections.hide_synthetic_discover_cards;
+
   // Client-side filtering by category
   const filterItem = useCallback(
     (item: DiscoverResultItem): boolean => {
-      // Always show injected synthetic cards
+      // Synthetic cards: shown by default, hidden when the active browse mode says so.
       if (
         item.type === 'MissionPrompt' ||
         item.type === 'ProfileSuggestion' ||
         item.type === 'MusicHighlight' ||
         item.type === 'SurveyResults'
       ) {
-        return true;
+        return !hideSyntheticCards;
       }
       if (selectedFilter.length === 0) return true;
       // When a filter is active, only show Response/Note items matching the category
       if (item.type !== 'Response' && item.type !== 'Note') return false;
       return selectedFilter.includes(item.category as DiscoverFilter);
     },
-    [selectedFilter],
+    [selectedFilter, hideSyntheticCards],
   );
 
   const handleRefresh = useCallback(async () => {
@@ -299,6 +313,10 @@ function Discover() {
       (item) => filterItem(item) && renderDiscoverItem(item, 0) !== null,
     );
   }, [feedWithInjections, filterItem, renderDiscoverItem]);
+
+  if (discoverHidden) {
+    return <Navigate to={fallbackPath} replace />;
+  }
 
   return (
     <>
