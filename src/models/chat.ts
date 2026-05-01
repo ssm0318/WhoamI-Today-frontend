@@ -29,12 +29,30 @@ export interface ChatRoom {
   unread_count: number;
 }
 
+export type BotButtonAction = 'reply' | 'navigate' | 'upload' | 'external';
+
+export interface BotButton {
+  label: string;
+  action: BotButtonAction;
+  payload?: string; // for action: 'reply'
+  url?: string; // for action: 'navigate' | 'external'
+  context?: string; // for action: 'upload'
+}
+
+export interface BotPayload {
+  kind: 'card' | 'choice' | 'upload';
+  buttons?: BotButton[]; // when kind === 'card'
+  payload?: string; // when kind === 'choice'
+  context?: string; // when kind === 'upload'
+}
+
 export interface InputChatMessage {
   emoji: ChatEmojiType | '' | null;
   content: string;
   parent?: number;
   shared_content_type?: string;
   shared_object_id?: number;
+  bot_payload?: BotPayload | null;
 }
 
 export interface MessageReactionSummary {
@@ -73,6 +91,7 @@ export interface ChatMessage extends Omit<InputChatMessage, 'parent'> {
   shared_content_preview: SharedContentPreview | null;
   event_type?: ChatEventType;
   event_target_users?: ChatRoomMember[];
+  bot_payload?: BotPayload | null;
 }
 
 export interface PostChatMessageRes extends ChatMessage {

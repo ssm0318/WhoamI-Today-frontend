@@ -24,6 +24,7 @@ export const postChatMessage = async (userId: number, msg: InputChatMessage, ima
     formData.append('image', image);
     if (msg.content) formData.append('content', msg.content);
     if (msg.parent) formData.append('parent', String(msg.parent));
+    if (msg.bot_payload) formData.append('bot_payload', JSON.stringify(msg.bot_payload));
     return axiosFormDataInstance.post<PostChatMessageRes>(`/chat/user/${userId}/`, formData);
   }
   return axios.post<PostChatMessageRes>(`/chat/user/${userId}/`, msg);
