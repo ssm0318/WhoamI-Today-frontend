@@ -83,13 +83,14 @@ function SnippetMoreModal({
         visible={snippet !== null && !confirmDelete && !showVisibility}
         onClickClose={onClose}
       >
-        {snippet?.is_pinned && (
-          <MenuRow onClick={handleModify}>
-            <Typo type="button-large" color="DARK">
-              {t('modify_visibility')}
-            </Typo>
-          </MenuRow>
-        )}
+        {snippet &&
+          (snippet.is_pinned || Date.now() - new Date(snippet.created_at).getTime() < 86400000) && (
+            <MenuRow onClick={handleModify}>
+              <Typo type="button-large" color="DARK">
+                {t('modify_visibility')}
+              </Typo>
+            </MenuRow>
+          )}
         <MenuRow onClick={handleDelete}>
           <Typo type="button-large" color="WARNING">
             {t('delete')}
@@ -173,11 +174,11 @@ function MenuRow({ onClick, children }: { onClick: () => void; children: ReactNo
       w="100%"
       pv={14}
       ph={16}
+      alignItems="center"
       style={{
         border: 'none',
         borderBottom: `1px solid ${Colors.LIGHT_GRAY}`,
         background: 'transparent',
-        textAlign: 'center',
         cursor: 'pointer',
       }}
     >

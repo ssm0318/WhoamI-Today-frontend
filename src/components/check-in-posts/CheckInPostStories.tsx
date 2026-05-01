@@ -9,6 +9,7 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { getCheckInPostStories, getUserCheckInPosts } from '@utils/apis/checkInPost';
 import CheckInPostViewer from './CheckInPostViewer';
 import SnippetArchiveLink from './SnippetArchiveLink';
+import OwnSnippetBubble from './SnippetStoryCard/OwnSnippetBubble';
 import SnippetAvatarBubble from './SnippetStoryCard/SnippetAvatarBubble';
 import SnippetStoryCard from './SnippetStoryCard/SnippetStoryCard';
 
@@ -45,14 +46,21 @@ function CheckInPostStories({
     authorUserId ? getUserCheckInPosts(authorUserId) : getCheckInPostStories(),
   );
 
-  const stories: CheckInPostStory[] = useMemo(() => {
+  const { myStory, friendStories } = useMemo(() => {
     const results = data?.results ?? [];
-    if (authorUserId !== undefined) return results;
-    return results.filter((s) => s.author_detail.id !== myProfile?.id);
+    if (authorUserId !== undefined) return { myStory: null, friendStories: results };
+    const own = results.find((s) => s.author_detail.id === myProfile?.id) ?? null;
+    const friends = results.filter((s) => s.author_detail.id !== myProfile?.id);
+    return { myStory: own, friendStories: friends };
   }, [data, authorUserId, myProfile?.id]);
 
+  const allStories: CheckInPostStory[] = useMemo(() => {
+    if (!myStory) return friendStories;
+    return [myStory, ...friendStories];
+  }, [myStory, friendStories]);
+
   const handleClickStory = (story: CheckInPostStory) => () => {
-    const idx = stories.findIndex((s) => s.id === story.id);
+    const idx = allStories.findIndex((s) => s.id === story.id);
     if (idx >= 0) setActiveIndex(idx);
   };
   const handleClose = () => {
@@ -68,12 +76,12 @@ function CheckInPostStories({
   }, [mutate]);
 
   const { highlights, sortedAll } = useMemo(() => {
-    const h = stories.filter((s) => s.is_pinned);
-    const all = [...stories].sort(
+    const h = friendStories.filter((s) => s.is_pinned);
+    const all = [...friendStories].sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
     return { highlights: h, sortedAll: all };
-  }, [stories]);
+  }, [friendStories]);
 
   // Profile mode (authorUserId provided): split into Highlights + Today,
   // and always render the today section so the pin-archive entry-point
@@ -82,7 +90,7 @@ function CheckInPostStories({
   // Feed mode: single strip, but pinned items still get the pin indicator.
   const isProfileMode = authorUserId !== undefined;
 
-  if (!isProfileMode && !showCompose && stories.length === 0) return null;
+  if (!isProfileMode && !showCompose && friendStories.length === 0 && !myStory) return null;
 
   return (
     <>
@@ -103,7 +111,7 @@ function CheckInPostStories({
                 <SnippetArchiveLink
                   prefix={<ArchiveIcon />}
                   i18nKey="all_link"
-                  count={stories.length}
+                  count={friendStories.length}
                   to="/check-in-posts/archive?tab=all"
                 />
               </Layout.FlexRow>
@@ -178,34 +186,42 @@ function CheckInPostStories({
         </Section>
       ) : (
         <Strip>
-          {showCompose && (
-            <ComposeBubble
-              onClick={() => navigate('/check-in-posts/new')}
-              aria-label={`${t('compose_line1')} ${t('compose_line2')}`}
-            >
-              <Plus>
-                <PlusIcon>+</PlusIcon>
-                <Typo type="label-small" color="DARK_GRAY">
-                  {t('compose_line2')}
-                </Typo>
-              </Plus>
-            </ComposeBubble>
+          {myStory ? (
+            <OwnSnippetBubble
+              story={myStory}
+              onClick={handleClickStory(myStory)}
+              onAddClick={() => navigate('/check-in-posts/new')}
+            />
+          ) : (
+            showCompose && (
+              <ComposeBubble
+                onClick={() => navigate('/check-in-posts/new')}
+                aria-label={`${t('compose_line1')} ${t('compose_line2')}`}
+              >
+                <Plus>
+                  <PlusIcon>+</PlusIcon>
+                  <Typo type="label-small" color="DARK_GRAY">
+                    {t('compose_line2')}
+                  </Typo>
+                </Plus>
+              </ComposeBubble>
+            )
           )}
-          {stories.map((story) => (
+          {friendStories.map((story) => (
             <SnippetAvatarBubble key={story.id} story={story} onClick={handleClickStory(story)} />
           ))}
         </Strip>
       )}
 
-      {activeIndex !== null && stories[activeIndex] && (
+      {activeIndex !== null && allStories[activeIndex] && (
         <CheckInPostViewer
-          story={stories[activeIndex]}
+          story={allStories[activeIndex]}
           enableMultiStory={!isProfileMode}
           onClose={handleClose}
           onPinChange={handlePinChange}
           onPrev={activeIndex > 0 ? () => setActiveIndex(activeIndex - 1) : undefined}
           onNext={
-            activeIndex < stories.length - 1 ? () => setActiveIndex(activeIndex + 1) : undefined
+            activeIndex < allStories.length - 1 ? () => setActiveIndex(activeIndex + 1) : undefined
           }
         />
       )}

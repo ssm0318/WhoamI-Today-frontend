@@ -6,12 +6,14 @@ import styled from 'styled-components';
 import { useShallow } from 'zustand/react/shallow';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import LikesListModal from '@components/check-in-posts/LikesListModal';
+import SnippetMoreModal from '@components/check-in-posts/SnippetMoreModal';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import { Z_INDEX } from '@constants/layout';
 import { Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { CheckInPost, CheckInPostStory, CheckInPostVisibility } from '@models/checkInPost';
 import { useBoundStore } from '@stores/useBoundStore';
 import {
+  deleteCheckInPost,
   getCheckInPost,
   getUserCheckInPosts,
   readCheckInPosts,
@@ -51,6 +53,7 @@ function CheckInPostViewer({
   const [inputFocus, setInputFocus] = useState(false);
   const [likeId, setLikeId] = useState<number | null>(null);
   const [likeBusy, setLikeBusy] = useState(false);
+  const [moreSnippet, setMoreSnippet] = useState<CheckInPostStory | null>(null);
 
   // Multi-story: fetch all posts from the author and navigate internally
   const [userPosts, setUserPosts] = useState<CheckInPostStory[]>([]);
@@ -103,8 +106,6 @@ function CheckInPostViewer({
   const isLive = Date.now() - new Date(currentStory.created_at).getTime() < 86400000;
   const caption = post?.caption ?? currentStory.caption;
 
-  const [showVisibilityPopup, setShowVisibilityPopup] = useState(false);
-  const [selectedVisibility, setSelectedVisibility] = useState<CheckInPostVisibility>('friends');
   const [showLikes, setShowLikes] = useState(false);
 
   // Reset timer when story changes
@@ -180,9 +181,19 @@ function CheckInPostViewer({
     readCheckInPosts([currentStory.id]).catch(() => {});
   }, [currentStory.id, multiStoryLoading]);
 
+  const overlayOpen = showComments || !!moreSnippet || showLikes;
+
+  // Snapshot remaining time when an overlay opens
+  useEffect(() => {
+    if (overlayOpen && enableMultiStory) {
+      const elapsed = Date.now() - startTimeRef.current;
+      remainingRef.current = Math.max(0, remainingRef.current - elapsed);
+    }
+  }, [overlayOpen, enableMultiStory]);
+
   // Auto-advance timer for multi-story mode
   useEffect(() => {
-    if (!enableMultiStory || multiStoryLoading || showComments || paused) return;
+    if (!enableMultiStory || multiStoryLoading || overlayOpen || paused) return;
 
     startTimeRef.current = Date.now();
 
@@ -199,7 +210,7 @@ function CheckInPostViewer({
 
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enableMultiStory, multiStoryLoading, storyIndex, userPosts.length, showComments, paused]);
+  }, [enableMultiStory, multiStoryLoading, storyIndex, userPosts.length, overlayOpen, paused]);
 
   const handleBackdropClick = (e: MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) onClose();
@@ -240,28 +251,15 @@ function CheckInPostViewer({
     }
   };
 
-  const openVisibilityPopup = (e: MouseEvent) => {
-    e.stopPropagation();
-    if (!post || !isOwn) return;
-    setSelectedVisibility(post.visibility);
-    setShowVisibilityPopup(true);
+  const handleMoreDelete = async (snippet: CheckInPostStory) => {
+    await deleteCheckInPost(snippet.id);
+    onClose();
   };
 
-  const handleVisibilityConfirm = async () => {
-    if (!post || !isOwn || pinBusy) return;
-    if (selectedVisibility === post.visibility) {
-      setShowVisibilityPopup(false);
-      return;
-    }
-    setPinBusy(true);
-    try {
-      const updated = await updateCheckInPostVisibility(post.id, selectedVisibility);
-      setPost(updated);
-      onPinChange?.(updated);
-    } finally {
-      setPinBusy(false);
-      setShowVisibilityPopup(false);
-    }
+  const handleMoreVisibility = async (snippet: CheckInPostStory, v: CheckInPostVisibility) => {
+    const updated = await updateCheckInPostVisibility(snippet.id, v);
+    setPost(updated);
+    onPinChange?.(updated);
   };
 
   return createPortal(
@@ -278,7 +276,7 @@ function CheckInPostViewer({
               <ProgressSegment
                 key={`${p.id}-${idx < storyIndex ? 'v' : idx === storyIndex ? 'a' : 'u'}`}
                 $state={idx < storyIndex ? 'viewed' : idx === storyIndex ? 'active' : 'unseen'}
-                $paused={paused}
+                $paused={paused || overlayOpen}
               />
             ))}
           </ProgressBar>
@@ -302,7 +300,7 @@ function CheckInPostViewer({
             <Typo type="label-large" color="WHITE" bold>
               {currentStory.author_detail.username}
             </Typo>
-            <Typo type="label-small" color="LIGHT_GRAY">
+            <Typo type="label-large" color="LIGHT_GRAY">
               {convertTimeDiffByString({ day: new Date(currentStory.created_at) })}
             </Typo>
           </AuthorLink>
@@ -321,6 +319,18 @@ function CheckInPostViewer({
                 />
               </PinButton>
             )}
+            {isOwn && (
+              <PinButton
+                type="button"
+                aria-label="more"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMoreSnippet(currentStory);
+                }}
+              >
+                <SvgIcon name="dots_menu" size={24} color="WHITE" />
+              </PinButton>
+            )}
             <CloseBtn type="button" onClick={onClose}>
               ×
             </CloseBtn>
@@ -329,16 +339,12 @@ function CheckInPostViewer({
 
         {isOwn && (isPinned || isLive) && postVisibility === 'close_friends' && (
           <PinVisibilityRow>
-            <VisibilityToggle
-              type="button"
-              onClick={openVisibilityPopup}
-              disabled={pinBusy || !post}
-            >
+            <VisibilityLabel>
               <SvgIcon name="eye" size={16} color="LIGHT_GRAY" />
-              <Typo type="label-medium" color="LIGHT_GRAY" underline>
+              <Typo type="label-medium" color="LIGHT_GRAY">
                 {t('visibility_close_friends')}
               </Typo>
-            </VisibilityToggle>
+            </VisibilityLabel>
           </PinVisibilityRow>
         )}
 
@@ -446,49 +452,6 @@ function CheckInPostViewer({
         )}
       </Card>
 
-      {showVisibilityPopup && (
-        <PopupOverlay onClick={() => setShowVisibilityPopup(false)}>
-          <PopupCard onClick={(e) => e.stopPropagation()}>
-            <Typo type="title-medium" color="BLACK" mb={16}>
-              {t('visibility_title')}
-            </Typo>
-            <PopupOption
-              type="button"
-              $selected={selectedVisibility === (myProfile?.is_public ? 'public' : 'friends')}
-              onClick={() => setSelectedVisibility(myProfile?.is_public ? 'public' : 'friends')}
-            >
-              <Typo
-                type="body-medium"
-                color={
-                  selectedVisibility === (myProfile?.is_public ? 'public' : 'friends')
-                    ? 'PRIMARY'
-                    : 'DARK_GRAY'
-                }
-              >
-                {myProfile?.is_public ? t('visibility_public') : t('visibility_friends')}
-              </Typo>
-            </PopupOption>
-            <PopupOption
-              type="button"
-              $selected={selectedVisibility === 'close_friends'}
-              onClick={() => setSelectedVisibility('close_friends')}
-            >
-              <Typo
-                type="body-medium"
-                color={selectedVisibility === 'close_friends' ? 'PRIMARY' : 'DARK_GRAY'}
-              >
-                {t('visibility_close_friends')}
-              </Typo>
-            </PopupOption>
-            <PopupConfirmBtn type="button" onClick={handleVisibilityConfirm} disabled={pinBusy}>
-              <Typo type="title-medium" color="WHITE">
-                {t('confirm') ?? 'Confirm'}
-              </Typo>
-            </PopupConfirmBtn>
-          </PopupCard>
-        </PopupOverlay>
-      )}
-
       {post && (
         <CommentBottomSheet
           postType="CheckInPost"
@@ -503,6 +466,13 @@ function CheckInPostViewer({
       <LikesListModal
         postId={showLikes && post ? post.id : null}
         onClose={() => setShowLikes(false)}
+      />
+
+      <SnippetMoreModal
+        snippet={moreSnippet}
+        onClose={() => setMoreSnippet(null)}
+        onDelete={handleMoreDelete}
+        onChangeVisibility={handleMoreVisibility}
       />
     </Backdrop>,
     document.body,
@@ -571,19 +541,18 @@ const PinVisibilityRow = styled.div`
   z-index: 3;
 `;
 
-const VisibilityToggle = styled.button`
+const VisibilityLabel = styled.div`
   display: flex;
   align-items: center;
   gap: 4px;
-  background: none;
-  border: none;
-  padding: 4px;
-  cursor: pointer;
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 9999px;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
 `;
+
+// VisibilityToggle removed — visibility changes now go through the three-dot menu
 
 const CloseBtn = styled.button`
   background: none;
@@ -720,51 +689,6 @@ const AuthorLink = styled.button`
   background: none;
   border: none;
   padding: 0;
-`;
-
-const PopupOverlay = styled.div`
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: ${Z_INDEX.MODAL_CONTAINER};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const PopupCard = styled.div`
-  background: ${Colors.WHITE};
-  border-radius: 16px;
-  padding: 24px;
-  width: 280px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const PopupOption = styled.button<{ $selected: boolean }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1.5px solid ${({ $selected }) => ($selected ? Colors.PRIMARY : Colors.LIGHT_GRAY)};
-  background-color: ${({ $selected }) => ($selected ? '#F3E8FF' : Colors.WHITE)};
-  cursor: pointer;
-`;
-
-const PopupConfirmBtn = styled.button`
-  margin-top: 8px;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  background-color: ${Colors.PRIMARY};
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
 `;
 
 export default CheckInPostViewer;
