@@ -91,23 +91,33 @@ function GroupChat() {
   useEffect(() => {
     if (firstLoad || !scrollRef.current) return undefined;
     const el = scrollRef.current;
+
+    // Stay pinned to the bottom while late-loading images/fonts shift layout.
+    // Re-pin on every resize unconditionally; bail out only if the user scrolls up.
+    let pinning = true;
     const pin = () => {
+      if (!pinning) return;
       el.scrollTop = el.scrollHeight;
     };
     pin();
-    // Late-loading content (images, web fonts) extends scrollHeight after the
-    // first pin. Re-pin while still near the bottom for a short window so the
-    // user lands at the latest message instead of seeing content slide up.
-    const observer = new ResizeObserver(() => {
+    const onUserScroll = () => {
       const distFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-      if (distFromBottom < 300) pin();
-    });
+      if (distFromBottom > 50) pinning = false;
+    };
+    el.addEventListener('scroll', onUserScroll, { passive: true });
+    const observer = new ResizeObserver(pin);
     observer.observe(el);
     const inner = el.firstElementChild;
     if (inner) observer.observe(inner);
-    const stopId = setTimeout(() => observer.disconnect(), 800);
-    return () => {
+    const stopId = setTimeout(() => {
+      pinning = false;
       observer.disconnect();
+      el.removeEventListener('scroll', onUserScroll);
+    }, 3000);
+    return () => {
+      pinning = false;
+      observer.disconnect();
+      el.removeEventListener('scroll', onUserScroll);
       clearTimeout(stopId);
     };
   }, [firstLoad]);
@@ -217,11 +227,14 @@ function GroupChat() {
   const refinedMessages = useMemo((): RefinedChatMessage[] => {
     return messages.reduce<RefinedChatMessage[]>((acc, curr) => {
       const last = acc[acc.length - 1];
-      if (!last || !isSameDay(new Date(last.created_at), new Date(curr.created_at))) {
-        acc.push({ ...curr, show_date: true });
-      } else {
-        acc.push(curr);
-      }
+      const showDate = !last || !isSameDay(new Date(last.created_at), new Date(curr.created_at));
+      const isFirstInCluster =
+        !last ||
+        !!last.event_type ||
+        !!curr.event_type ||
+        Number(last.sender.id) !== Number(curr.sender.id) ||
+        showDate;
+      acc.push({ ...curr, show_date: showDate, is_first_in_cluster: isFirstInCluster });
       return acc;
     }, []);
   }, [messages]);
@@ -578,17 +591,12 @@ function GroupChat() {
               message.event_type === 'member_added' || message.event_type === 'member_left';
             return (
               <Layout.FlexCol key={message.id} w="100%">
-                {!isMine && !isSystem && (
-                  <Layout.FlexRow pl={17} gap={6} alignItems="center" mb={2}>
-                    <Typo type="label-small" color="MEDIUM_GRAY">
-                      {message.sender.username}
-                    </Typo>
-                  </Layout.FlexRow>
-                )}
                 {isSystem ? (
                   <ChatMessageItem
                     message={message}
                     isMine={isMine}
+                    isFirstInCluster={message.is_first_in_cluster}
+                    showSenderName
                     onImageLoad={handleImageLoaded}
                   />
                 ) : (
@@ -596,6 +604,8 @@ function GroupChat() {
                     <ChatMessageItem
                       message={message}
                       isMine={isMine}
+                      isFirstInCluster={message.is_first_in_cluster}
+                      showSenderName
                       onImageLoad={handleImageLoaded}
                     />
                   </SwipeToReply>

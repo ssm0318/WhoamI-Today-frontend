@@ -2,7 +2,9 @@ import { format } from 'date-fns';
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
+import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SharedContentCard from '@components/chat/shared-content-card/SharedContentCard';
 import { Layout, Typo } from '@design-system';
 import { ChatEmojiDict, ChatEmojiType, RefinedChatMessage } from '@models/chat';
@@ -14,6 +16,7 @@ import {
   ReactionBadge,
   RightBubble,
   RightMessageWrapper,
+  SenderAvatarSlot,
   SystemMessageRow,
 } from './ChatMessageItem.styled';
 
@@ -32,11 +35,21 @@ const REACTION_EMOJIS: ChatEmojiType[] = [
 interface Props {
   message: RefinedChatMessage;
   isMine: boolean;
+  isFirstInCluster?: boolean;
+  showSenderName?: boolean;
   onReactionUpdate?: () => void;
   onImageLoad?: (messageId: number) => void;
 }
 
-function ChatMessageItem({ message, isMine, onReactionUpdate, onImageLoad }: Props) {
+function ChatMessageItem({
+  message,
+  isMine,
+  isFirstInCluster = true,
+  showSenderName = false,
+  onReactionUpdate,
+  onImageLoad,
+}: Props) {
+  const navigate = useNavigate();
   const {
     content,
     emoji,
@@ -400,8 +413,30 @@ function ChatMessageItem({ message, isMine, onReactionUpdate, onImageLoad }: Pro
         </RightMessageWrapper>
       ) : (
         <LeftMessageWrapper id={`msg_${message.id}`}>
-          {bubbleContent}
-          {!hasImageAndText && timestamp}
+          <SenderAvatarSlot>
+            {isFirstInCluster && (
+              <ProfileImage
+                size={32}
+                imageUrl={message.sender.profile_image}
+                username={message.sender.username}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/users/${message.sender.username}`);
+                }}
+              />
+            )}
+          </SenderAvatarSlot>
+          <Layout.FlexCol gap={2} style={{ minWidth: 0 }}>
+            {showSenderName && isFirstInCluster && (
+              <Typo type="label-small" color="MEDIUM_GRAY">
+                {message.sender.username}
+              </Typo>
+            )}
+            <Layout.FlexRow gap={6} alignItems="flex-end">
+              {bubbleContent}
+              {!hasImageAndText && timestamp}
+            </Layout.FlexRow>
+          </Layout.FlexCol>
         </LeftMessageWrapper>
       )}
     </>

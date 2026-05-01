@@ -63,7 +63,7 @@ export type ChatEventType = '' | 'member_added' | 'member_left';
 
 export interface ChatMessage extends Omit<InputChatMessage, 'parent'> {
   id: number;
-  sender: Pick<User, 'id' | 'username' | 'url'>;
+  sender: Pick<User, 'id' | 'username' | 'url' | 'profile_pic' | 'profile_image'>;
   image: string | null;
   is_read: boolean;
   created_at: string;
@@ -81,6 +81,7 @@ export interface PostChatMessageRes extends ChatMessage {
 
 export interface RefinedChatMessage extends ChatMessage {
   show_date?: boolean;
+  is_first_in_cluster?: boolean;
 }
 
 export enum ChatEmojiType {

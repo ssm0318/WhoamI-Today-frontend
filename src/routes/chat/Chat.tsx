@@ -101,7 +101,7 @@ function Chat() {
     };
   }, [fetchMessages, userId]);
 
-  // Scroll to target message or bottom on first load
+  // Scroll to target message or pin to bottom on first load
   useEffect(() => {
     if (firstLoad) return undefined;
     if (scrollToMessageId) {
@@ -117,22 +117,33 @@ function Chat() {
     }
     const el = scrollRef.current;
     if (!el) return undefined;
+
+    // Stay pinned to the bottom while late-loading images/fonts shift layout.
+    // Re-pin on every resize unconditionally; bail out only if the user scrolls up.
+    let pinning = true;
     const pin = () => {
+      if (!pinning) return;
       el.scrollTop = el.scrollHeight;
     };
     pin();
-    // Re-pin while still near the bottom for a short window so late-loading
-    // images/fonts don't drag content up past the latest message.
-    const observer = new ResizeObserver(() => {
+    const onUserScroll = () => {
       const distFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-      if (distFromBottom < 300) pin();
-    });
+      if (distFromBottom > 50) pinning = false;
+    };
+    el.addEventListener('scroll', onUserScroll, { passive: true });
+    const observer = new ResizeObserver(pin);
     observer.observe(el);
     const inner = el.firstElementChild;
     if (inner) observer.observe(inner);
-    const stopId = setTimeout(() => observer.disconnect(), 800);
-    return () => {
+    const stopId = setTimeout(() => {
+      pinning = false;
       observer.disconnect();
+      el.removeEventListener('scroll', onUserScroll);
+    }, 3000);
+    return () => {
+      pinning = false;
+      observer.disconnect();
+      el.removeEventListener('scroll', onUserScroll);
       clearTimeout(stopId);
     };
   }, [firstLoad, scrollToMessageId]);
@@ -140,11 +151,14 @@ function Chat() {
   const refinedMessages = useMemo((): RefinedChatMessage[] => {
     return messages.reduce<RefinedChatMessage[]>((acc, curr) => {
       const last = acc[acc.length - 1];
-      if (!last || !isSameDay(new Date(last.created_at), new Date(curr.created_at))) {
-        acc.push({ ...curr, show_date: true });
-      } else {
-        acc.push(curr);
-      }
+      const showDate = !last || !isSameDay(new Date(last.created_at), new Date(curr.created_at));
+      const isFirstInCluster =
+        !last ||
+        !!last.event_type ||
+        !!curr.event_type ||
+        Number(last.sender.id) !== Number(curr.sender.id) ||
+        showDate;
+      acc.push({ ...curr, show_date: showDate, is_first_in_cluster: isFirstInCluster });
       return acc;
     }, []);
   }, [messages]);
@@ -296,6 +310,7 @@ function Chat() {
                   isMine={
                     currentUser ? Number(message.sender.id) === Number(currentUser.id) : false
                   }
+                  isFirstInCluster={message.is_first_in_cluster}
                   onImageLoad={handleImageLoaded}
                 />
               </SwipeToReply>

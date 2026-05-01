@@ -9,13 +9,22 @@ const CommonMessageWrapper = styled(Layout.FlexRow).attrs({
 
 export const LeftMessageWrapper = styled(CommonMessageWrapper).attrs({
   justifyContent: 'flex-start',
-  pl: 17,
+  pl: 4,
 })``;
 
 export const RightMessageWrapper = styled(CommonMessageWrapper).attrs({
   justifyContent: 'flex-end',
   pr: 10,
 })``;
+
+export const SenderAvatarSlot = styled.div`
+  width: 32px;
+  flex-shrink: 0;
+  align-self: flex-end;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+`;
 
 const CommonBubble = styled(Layout.FlexCol).attrs({
   pv: 8,
