@@ -37,9 +37,12 @@ export const deactivateDevice = (token: string | null) => {
 export const getFCMRegistrationToken = async (messaging: Messaging) => {
   // Get registration token. Initially this makes a network call, once retrieved
   // subsequent calls to getToken will return from cache.
+  const swRegistration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+  await navigator.serviceWorker.ready;
   const registrationToken = await getToken(messaging, {
     vapidKey:
       'BGHLabCcTvSeMQOZNIGajRdfyPrMSjQppmI-yTpgOnB5apebk-2-MhCNwlcryC9byFLfgGrCjnT4KCSso9TkorI',
+    serviceWorkerRegistration: swRegistration,
   });
 
   activateDevice(registrationToken);
