@@ -13,12 +13,18 @@ export const StyledNoteImageEditContainer = styled(Layout.FixedFullScreen)`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
+  /* SubHeader 는 disablePortal 로 인라인 렌더되지만 position: fixed 라
+     viewport 기준으로 잡혀 노치 뒤에 숨음. iOS WebView safe-area 만큼 내려줌. */
+  & > header {
+    top: env(safe-area-inset-top, 0px);
+  }
 `;
 
 export const StyledNewNoteImageWrapper = styled.div`
   position: absolute;
-  top: ${HEADER_HEIGHT}px;
-  bottom: ${ASPECT_BAR_HEIGHT}px;
+  top: calc(${HEADER_HEIGHT}px + env(safe-area-inset-top, 0px));
+  bottom: calc(${ASPECT_BAR_HEIGHT}px + env(safe-area-inset-bottom, 0px));
   left: 0;
   right: 0;
   display: flex;
@@ -32,20 +38,26 @@ export const StyledNewNoteImageWrapper = styled.div`
      ReactCrop so it inherits down to child-wrapper and then to img
      via the library's own "max-height: inherit" rules. */
   .ReactCrop {
-    max-height: calc(100vh - ${HEADER_HEIGHT + ASPECT_BAR_HEIGHT + PADDING * 2}px) !important;
+    max-height: calc(
+      100vh - ${HEADER_HEIGHT + ASPECT_BAR_HEIGHT + PADDING * 2}px - env(safe-area-inset-top, 0px) -
+        env(safe-area-inset-bottom, 0px)
+    ) !important;
   }
 `;
 
 export const StyledNewNoteImage = styled.img`
   display: block;
   max-width: 100%;
-  max-height: calc(100vh - ${HEADER_HEIGHT + ASPECT_BAR_HEIGHT + PADDING * 2}px);
+  max-height: calc(
+    100vh - ${HEADER_HEIGHT + ASPECT_BAR_HEIGHT + PADDING * 2}px - env(safe-area-inset-top, 0px) -
+      env(safe-area-inset-bottom, 0px)
+  );
   object-fit: contain;
 `;
 
 export const AspectRatioBar = styled.div`
   position: absolute;
-  bottom: 0;
+  bottom: env(safe-area-inset-bottom, 0px);
   left: 0;
   right: 0;
   height: ${ASPECT_BAR_HEIGHT}px;
