@@ -35,7 +35,7 @@ function UserPage({ usernameOverride }: UserPageProps = {}) {
   const navigate = useNavigate();
   const { featureFlags } = useBoundStore(UserSelector);
 
-  const { user, updateUser } = useContext(UserPageContext);
+  const { user, refreshAfterFriendshipChange } = useContext(UserPageContext);
   const userId = user.data?.id;
   const unreadCount = user.data?.unread_chat_count;
 
@@ -108,7 +108,7 @@ function UserPage({ usernameOverride }: UserPageProps = {}) {
                   isVisible={showMore}
                   setIsVisible={setShowMore}
                   user={user.data}
-                  callback={updateUser}
+                  callback={refreshAfterFriendshipChange}
                 />
               )}
               {(user.state === 'loading' || user.state === 'hasValue') && (

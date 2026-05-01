@@ -51,7 +51,7 @@ function Profile({ user }: ProfileProps) {
   const isFriendUser = !!user && !isMyProfile(user) && areFriends(user);
   const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
 
-  const { updateUser } = useContext(UserPageContext);
+  const { updateUser, refreshAfterFriendshipChange } = useContext(UserPageContext);
 
   const { username } = useParams();
   const navigate = useNavigate();
@@ -110,8 +110,6 @@ function Profile({ user }: ProfileProps) {
 
     setFriendData(friend);
   }, [isMyPage, username, viewAs, viewAsUser]);
-
-  const reloadPage = () => window.location.reload();
 
   const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
   const closeEditConnectionsModal = () => setShowEditConnectionsModal(false);
@@ -326,10 +324,10 @@ function Profile({ user }: ProfileProps) {
               <FriendStatus
                 type="user"
                 user={user}
-                onClickCancelRequest={reloadPage}
-                onClickRequest={reloadPage}
-                onClickConfirm={reloadPage}
-                onClickReject={reloadPage}
+                onClickCancelRequest={updateUser}
+                onClickRequest={updateUser}
+                onClickConfirm={refreshAfterFriendshipChange}
+                onClickReject={updateUser}
                 isUserPage
               />
               <ChatRequestButton user={user} />
