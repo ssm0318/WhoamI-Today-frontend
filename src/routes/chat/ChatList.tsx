@@ -23,6 +23,7 @@ const PurpleToggleWrapper = styled.div`
 function ChatList() {
   const navigate = useNavigate();
   const currentUser = useBoundStore((state) => state.myProfile);
+  const featureFlags = useBoundStore((state) => state.featureFlags);
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
   const [loading, setLoading] = useState(true);
   const [typingUsers, setTypingUsers] = useState<Record<number, string>>({});
@@ -132,18 +133,20 @@ function ChatList() {
               })()}
             </Typo>
           </Layout.FlexRow>
-          <Layout.FlexRow gap={10} alignItems="center">
-            <PurpleToggleWrapper>
-              <ToggleSwitch
-                type="small"
-                checked={closeFriendsOnly}
-                onChange={() => setCloseFriendsOnly((v) => !v)}
-              />
-            </PurpleToggleWrapper>
-            <Typo type="body-medium" color="DARK_GRAY">
-              Close Friends Only
-            </Typo>
-          </Layout.FlexRow>
+          {featureFlags?.chatCloseFriendsFilter && (
+            <Layout.FlexRow gap={10} alignItems="center">
+              <PurpleToggleWrapper>
+                <ToggleSwitch
+                  type="small"
+                  checked={closeFriendsOnly}
+                  onChange={() => setCloseFriendsOnly((v) => !v)}
+                />
+              </PurpleToggleWrapper>
+              <Typo type="body-medium" color="DARK_GRAY">
+                Close Friends Only
+              </Typo>
+            </Layout.FlexRow>
+          )}
         </Layout.FlexRow>
       )}
       {loading && (

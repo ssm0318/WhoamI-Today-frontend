@@ -33,6 +33,8 @@ export enum FeatureFlagKey {
   SHARE_TAB_VISIBLE = 'shareTabVisible',
   /** 종 아이콘을 multi-checkbox 구독 popup 으로 (양 버전 공통) */
   SUBSCRIPTION_POPUP = 'subscriptionPopup',
+  /** 채팅 목록에서 Close Friends Only 필터 토글 노출 */
+  CHAT_CLOSE_FRIENDS_FILTER = 'chatCloseFriendsFilter',
 }
 
 export type FeatureFlagMap = { [feature in FeatureFlagKey]: boolean };
@@ -58,6 +60,7 @@ const DEFAULT_FLAGS = {
   [FeatureFlagKey.MY_TAB_VISIBLE]: false,
   [FeatureFlagKey.SHARE_TAB_VISIBLE]: false,
   [FeatureFlagKey.SUBSCRIPTION_POPUP]: false,
+  [FeatureFlagKey.CHAT_CLOSE_FRIENDS_FILTER]: false,
 };
 
 export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
@@ -74,6 +77,7 @@ export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
     [FeatureFlagKey.SHARE_TAB_VISIBLE]: true,
     [FeatureFlagKey.SUBSCRIPTION_POPUP]: true,
     [FeatureFlagKey.POST_VISIBILITY_DEFAULT_CLOSE_FRIEND]: true,
+    [FeatureFlagKey.CHAT_CLOSE_FRIENDS_FILTER]: false,
   },
   // Ver. W
   [VersionType.VER_W]: {
@@ -89,5 +93,6 @@ export const FEATURE_FLAG_MAP_COLLECTION: FeatureFlagMapCollection = {
     [FeatureFlagKey.SHARE_TAB_VISIBLE]: true,
     [FeatureFlagKey.CHAT_TAB]: true,
     [FeatureFlagKey.SUBSCRIPTION_POPUP]: true,
+    [FeatureFlagKey.CHAT_CLOSE_FRIENDS_FILTER]: true,
   },
 };
