@@ -17,6 +17,7 @@ import { SurveyDistribution } from '@models/survey';
 
 import { AggregatedLikertRenderer } from './AggregatedLikertRenderer';
 import { OptionCountsRenderer } from './OptionCountsRenderer';
+import { SliderHistogramRenderer } from './SliderHistogramRenderer';
 import { WordcloudRenderer } from './WordcloudRenderer';
 
 type RendererProps<K extends SurveyDistribution['kind']> = {
@@ -29,6 +30,7 @@ export const RENDERER_REGISTRY: Record<SurveyDistribution['kind'], RendererCompo
   aggregated_likert: AggregatedLikertRenderer as RendererComponent,
   option_counts: OptionCountsRenderer as RendererComponent,
   wordcloud: WordcloudRenderer as RendererComponent,
+  slider_histogram: SliderHistogramRenderer as RendererComponent,
 };
 
 export type AnyRendererProps = RendererProps<SurveyDistribution['kind']>;
