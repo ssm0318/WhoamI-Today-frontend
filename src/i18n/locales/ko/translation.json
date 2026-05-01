@@ -155,8 +155,10 @@
     "friend_email_guide": "WIT은 현재 연구 참가자 또는 기존 사용자로부터 초대를 받은 사람들만 이용할 수 있습니다. 가입하려면 이미 WIT을 사용 중인 친구의 이메일을 입력해주세요.",
     "friend_email_error": "올바르지 않은 이메일 주소입니다.",
     "friend_username": "친구 username (선택)",
-    "friend_username_guide": "친구가 초대해주었다면 친구의 username을 입력해주세요. 친구와 같은 환경으로 가입됩니다.",
+    "friend_username_guide": "친구가 초대해주었다면 친구의 username을 검색하고 프로필을 눌러서 확인해줘. 친구와 같은 환경으로 가입돼.",
     "friend_username_error": "해당 username을 가진 유저를 찾을 수 없습니다.",
+    "no_search_results": "일치하는 사용자가 없어.",
+    "must_click_profile": "검색 결과에서 프로필을 눌러서 확인하거나, 칸을 비워줘.",
     "date_of_birth": "생년월일",
     "date_of_birth_guide": "이 정보는 연구 참여 시 정확한 나이를 계산하기 위해 사용됩니다.",
     "date_of_birth_error": "올바르지 않은 생년월일입니다.",
@@ -216,7 +218,10 @@
         "user_manual": "사용자 매뉴얼",
         "onboarding_video": "온보딩 영상",
         "feedback_to_researcher": "연구팀에게 피드백",
-        "question_suggest": "질문 제안하기"
+        "question_suggest": "질문 제안하기",
+        "current_version": "현재 사용 중인 버전:",
+        "request_version_swap": "버전 변경 신청",
+        "request_pending": "신청 처리 중"
       },
       "bottom_sheet": {
         "title": "작성하기",
@@ -791,7 +796,9 @@
         "placeholder": "친구를 추가하거나 검색하세요.",
         "cancel": "취소",
         "your_friends": "친구",
-        "more_results": "더 많은 검색 결과"
+        "more_results": "더 많은 검색 결과",
+        "different_version_cta": "친구가 안 보여? 버전이 달라서 그럴 수도 있어. 버전 변경 신청할래?",
+        "request_version_swap": "버전 변경 신청"
       },
       "invite": {
         "text": "친구 초대",
@@ -1175,5 +1182,23 @@
       "empty": "아직 충분한 응답이 모이지 않았어요.",
       "suppressed": "{{min}}명 미만이 답한 단어 {{count}}개는 개인정보 보호를 위해 숨겼어요."
     }
+  },
+  "version_swap": {
+    "title": "버전 변경 신청",
+    "confirm_question": "변경하고자 하는 게 확실해?",
+    "confirm_explanation": "친구랑 확인했어? 그들은 사이드바를 통해 자신의 버전을 확인할 수 있어.",
+    "your_version_is": "너의 버전은",
+    "reason_label": "버전을 변경하려는 이유 (선택)",
+    "reason_placeholder": "왜 버전을 바꾸고 싶은지 간단히 적어줘.",
+    "understand_irreversible": "신청 취소는 불가능해. 복구도 불가능해. 복구하려면 새 계정을 만들어야 돼. 이해했어.",
+    "submit": "신청하기",
+    "cancel": "취소",
+    "confirm_modal_title": "버전 변경 신청할까?",
+    "confirm_modal_body": "신청 후에는 취소가 불가능하고, 변경 후에는 되돌릴 수 없어. 계속할까?",
+    "submitted_title": "신청 완료",
+    "submitted_popup": "어드민이 확인 후 변경해 줄 거야.",
+    "ok": "확인",
+    "already_pending": "이미 진행 중인 버전 변경 신청이 있어.",
+    "submit_failed": "신청에 실패했어. 다시 시도해줘."
   }
 }

@@ -155,8 +155,10 @@
         "friend_email_guide": "WIT is currently only available to participants in our study or to people who’ve been invited by existing users. To join, please enter the email of your friend who’s already a WIT user.",
         "friend_email_error": "Invalid email address",
         "friend_username": "Friend's Username (optional)",
-        "friend_username_guide": "If a friend invited you, enter their username so we can match your experience to theirs.",
+        "friend_username_guide": "If a friend invited you, search and tap their profile so we can match your experience to theirs.",
         "friend_username_error": "No user found with this username.",
+        "no_search_results": "No matching users.",
+        "must_click_profile": "Tap a profile from the dropdown to confirm, or clear the field.",
         "date_of_birth": "Date of Birth",
         "date_of_birth_guide": "This allows us to accurately calculate your age now and after for research participation.",
         "date_of_birth_error": "Invalid date of birth",
@@ -216,7 +218,10 @@
                 "user_manual": "User Manual",
                 "onboarding_video": "Onboarding Video",
                 "feedback_to_researcher": "Feedback to Researchers",
-                "question_suggest": "Suggest Questions"
+                "question_suggest": "Suggest Questions",
+                "current_version": "You are currently using",
+                "request_version_swap": "Request Version Swap",
+                "request_pending": "Request Pending"
             },
             "bottom_sheet": {
                 "title": "Create",
@@ -799,7 +804,9 @@
                 "placeholder": "Search or add friends.",
                 "cancel": "Cancel",
                 "your_friends": "YOUR FRIENDS",
-                "more_results": "MORE RESULTS"
+                "more_results": "MORE RESULTS",
+                "different_version_cta": "Don't see your friend? They might be on a different version. Want to request a version swap?",
+                "request_version_swap": "Request Version Swap"
             },
             "invite": {
                 "text": "Invite Friends",
@@ -1184,5 +1191,23 @@
             "empty": "No words shared yet — the population is too small to display.",
             "suppressed": "{{count}} words said by fewer than {{min}} people are hidden to protect privacy."
         }
+    },
+    "version_swap": {
+        "title": "Request Version Swap",
+        "confirm_question": "Are you sure you want to swap?",
+        "confirm_explanation": "Have you confirmed with your friend? They can check their version in the side menu.",
+        "your_version_is": "Your version is",
+        "reason_label": "Why do you want to swap? (optional)",
+        "reason_placeholder": "Tell us briefly why you'd like to swap versions.",
+        "understand_irreversible": "I understand this request cannot be cancelled. The swap cannot be reversed — to go back, I'd need to create a new account.",
+        "submit": "Submit Request",
+        "cancel": "Cancel",
+        "confirm_modal_title": "Submit version swap request?",
+        "confirm_modal_body": "This request cannot be cancelled and the swap cannot be reversed. Do you want to continue?",
+        "submitted_title": "Request Submitted",
+        "submitted_popup": "An admin will review your request and apply the swap.",
+        "ok": "OK",
+        "already_pending": "You already have a pending version swap request.",
+        "submit_failed": "Could not submit your request. Please try again."
     }
 }
