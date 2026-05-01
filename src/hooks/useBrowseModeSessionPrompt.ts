@@ -4,7 +4,7 @@ import { useGetAppMessage } from '@hooks/useAppMessage';
 import { SetAppStateData } from '@models/app';
 import { useBoundStore } from '@stores/useBoundStore';
 
-const AWAY_THRESHOLD_MS = 30 * 60 * 1000; // 30 min — anything shorter is "same session"
+const AWAY_THRESHOLD_MS = 15 * 60 * 1000; // 15 min — anything shorter is "same session"
 const COOLDOWN_MS = 60 * 60 * 1000; // 1 hour cooldown after the user dismisses the prompt
 
 function getStorageKey(userId: number, suffix: string) {
