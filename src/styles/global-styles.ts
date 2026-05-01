@@ -44,6 +44,12 @@ const GlobalStyle = createGlobalStyle`
         box-sizing: border-box;         /* Opera/IE 8+ */
     }
 
+    html, body, #root {
+        height: 100%;
+        overflow: hidden;
+        overscroll-behavior: none;
+    }
+
     body {
         background-color: #FFFFFF;
         scrollbar-gutter: stable;
