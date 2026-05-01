@@ -153,7 +153,7 @@ function CommentBottomSheet({
         />
       </CommentBottomFooterWrapper>
     </BottomModal>,
-    document.getElementById('root-container') || document.body,
+    document.getElementById('modal-container') || document.body,
   );
 }
 
