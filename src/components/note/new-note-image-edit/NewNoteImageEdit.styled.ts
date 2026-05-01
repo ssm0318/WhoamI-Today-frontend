@@ -6,25 +6,24 @@ const HEADER_HEIGHT = TOP_NAVIGATION_HEIGHT; // 44px
 const ASPECT_BAR_HEIGHT = 50;
 const PADDING = 16;
 
+/* FixedFullScreen 의 transform: translate(-50%) 가 position:fixed 자손의
+   containing block 을 컨테이너로 바꿔주기 때문에, 컨테이너 자체에 safe-area
+   inset 을 주면 안쪽 SubHeader(position:fixed, top:0) 가 자동으로 노치
+   아래로 내려감. height: 100% 가 base 에 있어 bottom 이 무시되니 auto 로 풀어줌. */
 export const StyledNoteImageEditContainer = styled(Layout.FixedFullScreen)`
   z-index: 9999;
-  top: 0;
-  bottom: 0;
+  top: env(safe-area-inset-top, 0px);
+  bottom: env(safe-area-inset-bottom, 0px);
+  height: auto;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-
-  /* SubHeader 는 disablePortal 로 인라인 렌더되지만 position: fixed 라
-     viewport 기준으로 잡혀 노치 뒤에 숨음. iOS WebView safe-area 만큼 내려줌. */
-  & > header {
-    top: env(safe-area-inset-top, 0px);
-  }
 `;
 
 export const StyledNewNoteImageWrapper = styled.div`
   position: absolute;
-  top: calc(${HEADER_HEIGHT}px + env(safe-area-inset-top, 0px));
-  bottom: calc(${ASPECT_BAR_HEIGHT}px + env(safe-area-inset-bottom, 0px));
+  top: ${HEADER_HEIGHT}px;
+  bottom: ${ASPECT_BAR_HEIGHT}px;
   left: 0;
   right: 0;
   display: flex;
@@ -36,7 +35,8 @@ export const StyledNewNoteImageWrapper = styled.div`
 
   /* ReactCrop sizes itself from the image. We must set max-height on
      ReactCrop so it inherits down to child-wrapper and then to img
-     via the library's own "max-height: inherit" rules. */
+     via the library's own "max-height: inherit" rules.
+     100vh 는 viewport 전체라 safe-area 만큼 빼줘야 컨테이너 안에 맞음. */
   .ReactCrop {
     max-height: calc(
       100vh - ${HEADER_HEIGHT + ASPECT_BAR_HEIGHT + PADDING * 2}px - env(safe-area-inset-top, 0px) -
@@ -57,7 +57,7 @@ export const StyledNewNoteImage = styled.img`
 
 export const AspectRatioBar = styled.div`
   position: absolute;
-  bottom: env(safe-area-inset-bottom, 0px);
+  bottom: 0;
   left: 0;
   right: 0;
   height: ${ASPECT_BAR_HEIGHT}px;
