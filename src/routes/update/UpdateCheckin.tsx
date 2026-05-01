@@ -55,6 +55,7 @@ export default function UpdateCheckin() {
 
   const [activeEditor, setActiveEditor] = useState<EditorTarget>(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [initialTrackId, setInitialTrackId] = useState('');
 
   // Auto-open editor popup from deep link query param (e.g. /update?editor=mood).
   // Gated on isDataLoaded so that editor captures current values, not initial empty defaults.
@@ -113,6 +114,7 @@ export default function UpdateCheckin() {
     }
     if (activeSong) {
       setTrackId(activeSong.track_id || '');
+      setInitialTrackId(activeSong.track_id || '');
     }
     setIsDataLoaded(true);
   }, []);
@@ -183,7 +185,8 @@ export default function UpdateCheckin() {
         song_visibility: s.songVis,
         thought_visibility: s.thoughtVis,
       });
-      const songPromise = s.trackId ? postSong(s.trackId) : Promise.resolve();
+      const songPromise =
+        s.trackId && s.trackId !== initialTrackId ? postSong(s.trackId) : Promise.resolve();
       await Promise.all([checkInPromise, songPromise]);
 
       if (window.ReactNativeWebView) {
@@ -206,7 +209,7 @@ export default function UpdateCheckin() {
       console.log('[UpdateCheckin] doSave failed');
       openToast({ message: 'Failed to save' });
     }
-  }, [fetchCheckIn, sendMessage, openToast]);
+  }, [fetchCheckIn, sendMessage, openToast, initialTrackId]);
 
   const handleEditorDismiss = useCallback(() => {
     console.log('[UpdateCheckin] handleEditorDismiss');

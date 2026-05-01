@@ -44,6 +44,7 @@ function CheckInEdit() {
   const { isAndroid } = getMobileDeviceInfo();
 
   const [trackData, setTrackData] = useState<Track | null>(null);
+  const [initialTrackId, setInitialTrackId] = useState<string>('');
 
   // Per-component visibility state
   const [songVisibility, setSongVisibility] = useState<ComponentVisibility>(
@@ -87,9 +88,8 @@ function CheckInEdit() {
     });
 
     // Song is a separate backend model — must be saved via its own endpoint.
-    // The check-in serializer ignores `track_id`, so without this call the
-    // selected song is never persisted.
-    if (checkInForm.track_id) {
+    // Only call when the song actually changed.
+    if (checkInForm.track_id && checkInForm.track_id !== initialTrackId) {
       await postSong(checkInForm.track_id);
     }
 
@@ -119,6 +119,7 @@ function CheckInEdit() {
     const myCheckIn = await fetchCheckIn();
     if (!myCheckIn) return;
     setCheckInForm(myCheckIn);
+    setInitialTrackId(myCheckIn.track_id || '');
     if (myCheckIn.song_visibility) setSongVisibility(myCheckIn.song_visibility);
     if (myCheckIn.mood_visibility) setStatusVisibility(myCheckIn.mood_visibility);
     if (myCheckIn.battery_visibility) setBatteryVisibility(myCheckIn.battery_visibility);
