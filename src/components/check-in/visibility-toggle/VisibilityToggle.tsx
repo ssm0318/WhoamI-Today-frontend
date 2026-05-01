@@ -8,21 +8,33 @@ interface Props {
   onChange: (visibility: ComponentVisibility) => void;
 }
 
-export const VISIBILITY_OPTIONS: { value: ComponentVisibility; i18nKey: string }[] = [
-  { value: ComponentVisibility.PUBLIC, i18nKey: 'visibility.public' },
-  { value: ComponentVisibility.FRIENDS, i18nKey: 'visibility.friends' },
-  { value: ComponentVisibility.CLOSE_FRIENDS, i18nKey: 'visibility.close_friends' },
-  { value: ComponentVisibility.ONLY_ME, i18nKey: 'visibility.only_me' },
+interface VisibilityOption {
+  value: ComponentVisibility;
+  i18nKey: string;
+  fontSize: number;
+  allowWrap?: boolean;
+}
+
+// Per-option font sizing tuned for 320px viewport with equal-width chips.
+// "Public" and "Friends" fit at the original 14px. "Only Me" needs 12px to fit
+// on one line. "Close Friends" wraps to two lines at 11px so the row stays
+// compact instead of overflowing or growing chip height too much.
+export const VISIBILITY_OPTIONS: VisibilityOption[] = [
+  { value: ComponentVisibility.PUBLIC, i18nKey: 'visibility.public', fontSize: 14 },
+  { value: ComponentVisibility.FRIENDS, i18nKey: 'visibility.friends', fontSize: 14 },
+  {
+    value: ComponentVisibility.CLOSE_FRIENDS,
+    i18nKey: 'visibility.close_friends',
+    fontSize: 11,
+    allowWrap: true,
+  },
+  { value: ComponentVisibility.ONLY_ME, i18nKey: 'visibility.only_me', fontSize: 12 },
 ];
 
 export function getVisibilityLabel(value: ComponentVisibility): string {
   const opt = VISIBILITY_OPTIONS.find((o) => o.value === value);
   return opt ? i18n.t(opt.i18nKey) : '';
 }
-
-// Tuned for "Close Friends" (longest label) to fit on a single row at 320px viewport
-// while keeping all four chips equal-width.
-const TOGGLE_FONT_SIZE = 10;
 
 function VisibilityToggle({ value, onChange }: Props) {
   const [t] = useTranslation('translation');
@@ -34,7 +46,13 @@ function VisibilityToggle({ value, onChange }: Props) {
           $isSelected={value === opt.value}
           onClick={() => onChange(opt.value)}
         >
-          <Label $isSelected={value === opt.value}>{t(opt.i18nKey)}</Label>
+          <Label
+            $isSelected={value === opt.value}
+            $fontSize={opt.fontSize}
+            $allowWrap={opt.allowWrap ?? false}
+          >
+            {t(opt.i18nKey)}
+          </Label>
         </ToggleOption>
       ))}
     </ToggleContainer>
@@ -48,6 +66,7 @@ const ToggleContainer = styled.div`
   border-radius: 8px;
   padding: 2px;
   width: 100%;
+  align-items: stretch;
 `;
 
 const ToggleOption = styled.div<{ $isSelected: boolean }>`
@@ -66,11 +85,12 @@ const ToggleOption = styled.div<{ $isSelected: boolean }>`
   user-select: none;
 `;
 
-const Label = styled.span<{ $isSelected: boolean }>`
-  font-size: ${TOGGLE_FONT_SIZE}px;
+const Label = styled.span<{ $isSelected: boolean; $fontSize: number; $allowWrap: boolean }>`
+  font-size: ${({ $fontSize }) => $fontSize}px;
   font-weight: ${({ $isSelected }) => ($isSelected ? 600 : 400)};
   color: ${({ $isSelected, theme }) => ($isSelected ? theme.PRIMARY : theme.MEDIUM_GRAY)};
-  white-space: nowrap;
+  white-space: ${({ $allowWrap }) => ($allowWrap ? 'normal' : 'nowrap')};
+  text-align: center;
   line-height: 1.2;
 `;
 
