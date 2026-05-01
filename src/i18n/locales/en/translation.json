@@ -17,13 +17,14 @@
         }
     },
     "check_in_post": {
-        "new_title": "New Daily Snippet",
+        "new_title": "New Daily Snapshot",
         "add_image": "Add a photo",
-        "section_title": "Daily Snippets",
-        "stories_title": "Recent Daily Snippets",
-        "no_stories": "No Daily Snippets yet",
+        "section_title": "Daily Snapshots",
+        "stories_title": "Recent Daily Snapshots",
+        "no_stories": "No Daily Snapshots yet",
         "compose_line1": "Share a",
-        "compose_line2": "Daily Snippet",
+        "compose_line2": "Daily Snapshot",
+        "compose_description": "Take a photo of what you're up to and share it just for today",
         "pin": "Pin",
         "unpin": "Unpin",
         "visibility_public": "Public",
@@ -31,8 +32,8 @@
         "visibility_close_friends": "Close Friends",
         "visibility_close_friends_only": "Close friends only",
         "highlights": "Highlights",
-        "today": "Recent Daily Snippets",
-        "my_snippets": "Today's Snippets",
+        "today": "Recent Daily Snapshots",
+        "my_snippets": "Today's Snapshots",
         "pinned_link": "Pinned ({{count}})",
         "all_link": "Archived ({{count}})",
         "add_photo_prompt": "Add a photo to share",
@@ -42,28 +43,28 @@
         "change_photo": "Change",
         "retake": "Retake",
         "visibility_title": "Visibility",
-        "visibility_modal_title": "Who can see this snippet?",
+        "visibility_modal_title": "Who can see this snapshot?",
         "visibility_label": "Visibility",
         "confirm": "Confirm",
         "cancel": "Cancel",
         "modify_visibility": "Modify visibility",
         "delete": "Delete",
-        "delete_title": "Delete this snippet?",
+        "delete_title": "Delete this snapshot?",
         "delete_content": "This cannot be undone.",
         "delete_cancel": "Cancel",
         "delete_confirm": "Delete",
-        "expiry_hint": "Your snippet will be visible for 24 hours.\nAfter posting, you can pin it to keep it on your profile.",
-        "friend_pinned_title": "{{username}}'s Pinned Snippets",
+        "expiry_hint": "Your snapshot will be visible for 24 hours.\nAfter posting, you can pin it to keep it on your profile.",
+        "friend_pinned_title": "{{username}}'s Pinned Snapshots",
         "archive": {
-            "title": "Daily Snippets",
-            "title_all": "All Daily Snippets",
-            "title_pinned": "Pinned Daily Snippets",
+            "title": "Daily Snapshots",
+            "title_all": "All Daily Snapshots",
+            "title_pinned": "Pinned Daily Snapshots",
             "tab_all": "Archived",
             "tab_pinned_label": "Pinned",
             "tab_pinned": "Pinned only",
-            "archived_hint": "Pin a snippet to keep it visible on your profile.",
-            "empty_all": "No Daily Snippets yet",
-            "empty_pinned": "No pinned Daily Snippets yet"
+            "archived_hint": "Pin a snapshot to keep it visible on your profile.",
+            "empty_all": "No Daily Snapshots yet",
+            "empty_pinned": "No pinned Daily Snapshots yet"
         }
     },
     "subscription_popup": {
@@ -78,7 +79,7 @@
             "mission_of_the_day": "Mission of the day",
             "question_of_the_day": "Question of the day",
             "photo_of_the_day": "Photo of the day",
-            "check_in": "Daily snippet",
+            "check_in": "Daily snapshot",
             "post": "Posts"
         }
     },
@@ -410,13 +411,13 @@
         "account_status_private": "Private",
         "switch_to_private_dialog": {
             "title": "Switch to private account?",
-            "content": "All posts and daily snippets that were publicly visible will become visible to friends only.\nPosts will automatically revert to public if you switch back.\n(You can switch back to public anytime.)",
+            "content": "All posts and daily snapshots that were publicly visible will become visible to friends only.\nPosts will automatically revert to public if you switch back.\n(You can switch back to public anytime.)",
             "cancel": "Cancel",
             "confirm": "Switch to Private"
         },
         "switch_to_public_dialog": {
             "title": "Switch to public account?",
-            "content": "All posts and daily snippets (except close-friends-only) will become publicly visible.\nPosts will automatically revert to friends-only if you switch back.\n(You can switch back to private anytime.)",
+            "content": "All posts and daily snapshots (except close-friends-only) will become publicly visible.\nPosts will automatically revert to friends-only if you switch back.\n(You can switch back to private anytime.)",
             "cancel": "Cancel",
             "confirm": "Switch to Public"
         },
@@ -613,6 +614,7 @@
             "username": "Username",
             "username_valiation_error": "Letters, numbers, Korean, and _ only (max 20 characters).",
             "username_exists_error": "This username is already taken.",
+            "name_hint": "Optional — add a name so your friends can easily recognize you! User search still works by username only.",
             "email": "Email",
             "bio": "Bio",
             "pronouns": "Pronouns",
@@ -746,7 +748,11 @@
         "photo_of_the_day": "Photo of the day",
         "photo_description": "Post your favourite photo for the day and let everyone know what you are up to",
         "share_photo": "Share photo",
-        "questions_of_the_day": "Question of the day"
+        "questions_of_the_day": "Question of the day",
+        "about_me": "A Snippet of Me",
+        "about_me_description": "Drop a photo and share whatever represents you!",
+        "create_post": "Share a post",
+        "qna_title": "Q&A"
     },
     "no_contents": {
         "discover": "No posts yet.",

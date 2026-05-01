@@ -16,6 +16,7 @@ function NewNote() {
   const status = location.state?.status;
   const shareType: ShareType | undefined = location.state?.shareType;
   const tmiPlaceholder: string | undefined = location.state?.tmiPlaceholder;
+  const missionMode: boolean = location.state?.missionMode ?? false;
   const isEditing = location.state?.post != null;
   // location.state가 없으면 새 노트, 있으면 수정 노트
   const title = !isEditing ? t('new_note') : t('edit_note');
@@ -48,6 +49,7 @@ function NewNote() {
         setNoteInfo={setNoteInfo}
         autoOpenImagePicker={shareType === ShareType.PHOTO_OF_THE_DAY}
         placeholder={tmiPlaceholder}
+        missionMode={missionMode}
       />
     </MainScrollContainer>
   );

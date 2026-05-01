@@ -50,7 +50,7 @@ function VersionSwitchRequest() {
     try {
       await requestVersionSwitch(reason.trim() || undefined);
       setConfirmVisible(false);
-      mutate('/user/version-swap-request/me/');
+      mutate('/user/version-switch-request/me/');
       setSuccessVisible(true);
     } catch (e) {
       setConfirmVisible(false);

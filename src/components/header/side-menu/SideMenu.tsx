@@ -49,7 +49,7 @@ function SideMenu({ closeSideMenu }: Props) {
 
   const myProfile = useBoundStore((state) => state.myProfile);
   const { data: pendingResp } = useSWR(
-    '/user/version-swap-request/me/',
+    '/user/version-switch-request/me/',
     getMyPendingVersionSwitchRequest,
   );
   const isPending = !!pendingResp?.pending;

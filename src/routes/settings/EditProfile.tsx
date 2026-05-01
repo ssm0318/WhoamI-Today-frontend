@@ -420,6 +420,9 @@ function EditProfile() {
                 onChange={handleChangeInput}
                 limit={50}
               />
+              <Typo type="label-medium" color="MEDIUM_GRAY">
+                {t('name_hint')}
+              </Typo>
               {renderVisibilityRow(
                 tVis('name'),
                 <VisibilityToggle

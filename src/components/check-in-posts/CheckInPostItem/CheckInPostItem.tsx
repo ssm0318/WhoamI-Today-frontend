@@ -150,14 +150,14 @@ function CheckInPostItem({
                 }}
                 style={statBtnStyle}
               >
-                <svg width="16" height="16" viewBox="0 0 23 20" fill="none">
+                <svg width="22" height="22" viewBox="0 0 23 20" fill="none">
                   <path
                     d="M16.2295 1C17.837 1 19.1423 1.55605 20.043 2.45508C20.9434 3.354 21.4999 4.65601 21.5 6.25879C21.5 7.99804 20.8221 9.45583 19.7305 10.8164C18.6198 12.2007 17.1314 13.4249 15.5654 14.708C14.1175 15.8939 12.5304 17.1927 11.2979 18.6494C11.2913 18.6571 11.2828 18.6592 11.2783 18.6592H11.2197C11.2142 18.6592 11.2056 18.6559 11.1992 18.6484C9.96865 17.1918 8.37974 15.8944 6.93457 14.709H6.93359C5.36693 13.4252 3.87898 12.1999 2.76855 10.8154C1.67733 9.45489 1 7.99764 1 6.25879C1.00007 4.65601 1.55646 3.35398 2.45703 2.45508C3.35778 1.55605 4.66338 1 6.27148 1C7.97247 1.00006 9.54511 2.24739 10.5244 3.27246L11.248 4.0293L11.9707 3.27246C12.9492 2.24821 14.5269 1.00008 16.2295 1Z"
-                    stroke="black"
+                    stroke="#8700FF"
                     strokeWidth="2"
                   />
                 </svg>
-                <Typo type="label-large" color="DARK_GRAY">
+                <Typo type="label-large" color="BLACK">
                   {likeCount}
                 </Typo>
               </button>
@@ -174,19 +174,8 @@ function CheckInPostItem({
                 }}
                 style={statBtnStyle}
               >
-                <svg width="16" height="16" viewBox="0 0 23 23" fill="none">
-                  <path
-                    d="M3.1 2H19.9C20.5075 2 21 2.49249 21 3.1V20.1L16.4004 16.8H3.1C2.49249 16.8 2 16.3075 2 15.7V3.1C2 2.49249 2.49249 2 3.1 2Z"
-                    stroke="black"
-                    strokeWidth="1.6"
-                    fill="none"
-                  />
-                  <path
-                    d="M12.4585 13.4167H10.5418V10.5417H7.66683V8.625H10.5418V5.75H12.4585V8.625H15.3335V10.5417H12.4585V13.4167Z"
-                    fill="black"
-                  />
-                </svg>
-                <Typo type="label-large" color="DARK_GRAY">
+                <SvgIcon name="add_comment" size={23} />
+                <Typo type="label-large" color="BLACK">
                   {commentCount}
                 </Typo>
               </button>
@@ -208,7 +197,7 @@ function CheckInPostItem({
                 {likeCount}
               </Typo>
             )}
-            <SvgIcon name="add_comment" size={23} color="BLACK" />
+            <SvgIcon name="add_comment" size={23} />
             {!!commentCount && (
               <Typo type="label-large" color="BLACK">
                 {commentCount}

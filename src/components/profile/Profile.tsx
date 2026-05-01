@@ -155,7 +155,9 @@ function Profile({ user }: ProfileProps) {
                 {/* Name or masked */}
                 <Layout.FlexRow gap={6} alignItems="center">
                   <Typo type="title-large" numberOfLines={1}>
-                    {isMyPage ? myProfile?.username || '' : username || ''}
+                    {isMyPage
+                      ? (myProfile as any)?.name || myProfile?.username || ''
+                      : (friendData as any)?.name || username || ''}
                   </Typo>
                   {isMyPage && isVerQ && (
                     <AccountStatusBadge>

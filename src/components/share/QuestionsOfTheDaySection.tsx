@@ -6,6 +6,8 @@ import Icon from '@components/_common/icon/Icon';
 import PromptCard from '@components/_common/prompt/PromptCard';
 import { Layout, Typo } from '@design-system';
 import { DailyQuestion } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { getTodayQuestions } from '@utils/apis/question';
 
 const MAX_VISIBLE_QUESTIONS = 1;
@@ -13,6 +15,7 @@ const MAX_VISIBLE_QUESTIONS = 1;
 function QuestionsOfTheDaySection() {
   const [t] = useTranslation('translation');
   const navigate = useNavigate();
+  const { featureFlags } = useBoundStore(UserSelector);
 
   const { data: todayQuestions } = useSWR<DailyQuestion[]>(
     '/qna/questions/daily/',
@@ -21,10 +24,14 @@ function QuestionsOfTheDaySection() {
 
   const visibleQuestions = todayQuestions?.slice(0, MAX_VISIBLE_QUESTIONS) ?? [];
 
+  const title = featureFlags?.postsVerQ
+    ? t('share_page.qna_title')
+    : t('share_page.questions_of_the_day');
+
   return (
     <Card>
       <Typo type="head-line" bold mb={24}>
-        Question of the Day
+        {title}
       </Typo>
       {visibleQuestions.length > 0 ? (
         <Layout.FlexCol w="100%" gap={10}>

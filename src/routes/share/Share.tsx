@@ -5,7 +5,6 @@ import useSWR from 'swr';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import CheckInPostShareCta from '@components/share/CheckInPostShareCta';
 import MissionOfTheDay, { markMissionCompleted } from '@components/share/MissionOfTheDay';
-import NotePostInputTrigger from '@components/share/NotePostInputTrigger';
 import QuestionsOfTheDaySection from '@components/share/QuestionsOfTheDaySection';
 import SurveyOfTheDay from '@components/share/SurveyOfTheDay';
 import { DEFAULT_MARGIN } from '@constants/layout';
@@ -37,9 +36,30 @@ function Share() {
       <MainScrollContainer scrollRef={scrollRef}>
         <PullToRefresh onRefresh={handleRefresh}>
           <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} pv={16} gap={16} pb={100}>
-            <NotePostInputTrigger />
+            {/* 1. Daily Snippet — ephemeral, 24h */}
             <CheckInPostShareCta />
+
+            {/* 2. About Me — persistent post, photo-first */}
+            <ColorCard $bg="linear-gradient(135deg, #FF00A8 0%, #C2007E 100%)">
+              <Typo type="head-line" color="WHITE" bold>
+                {t('share_page.about_me')}
+              </Typo>
+              <Typo type="title-medium" color="WHITE">
+                {t('share_page.about_me_description')}
+              </Typo>
+              <ShareActionButton
+                onClick={() => navigate('/notes/new', { state: { fromShare: true } })}
+              >
+                <Typo type="label-large" fontWeight={600}>
+                  {t('share_page.create_post')}
+                </Typo>
+              </ShareActionButton>
+            </ColorCard>
+
+            {/* 3. Survey of the Day */}
             <SurveyOfTheDay />
+
+            {/* 4. Questions of the Day */}
             <QuestionsOfTheDaySection />
           </Layout.FlexCol>
         </PullToRefresh>

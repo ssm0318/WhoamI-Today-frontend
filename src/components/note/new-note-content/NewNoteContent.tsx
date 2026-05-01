@@ -1,9 +1,10 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { DEFAULT_MARGIN } from '@constants/layout';
-import { CheckBox, Layout, SvgIcon, Typo } from '@design-system';
+import { CheckBox, Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import { FileSelectedData } from '@models/app';
 import { ComponentVisibility } from '@models/checkIn';
@@ -24,6 +25,7 @@ interface NoteInformationProps {
   setNoteInfo: React.Dispatch<React.SetStateAction<NewNoteForm>>;
   autoOpenImagePicker?: boolean;
   placeholder?: string;
+  missionMode?: boolean;
 }
 
 function NewNoteContent({
@@ -31,6 +33,7 @@ function NewNoteContent({
   setNoteInfo,
   autoOpenImagePicker,
   placeholder,
+  missionMode,
 }: NoteInformationProps) {
   const [t] = useTranslation('translation');
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
@@ -160,6 +163,146 @@ function NewNoteContent({
     }));
   };
 
+  const isPhotoFirst = featureFlags?.postsVerQ && !missionMode;
+
+  const handleClickGallery = () => {
+    if (noteInfo.images && noteInfo.images.length >= 10) {
+      openToast({
+        message: t('notes.max_images_error') || '최대 10장까지만 첨부할 수 있습니다',
+      });
+      return;
+    }
+    inputRef.current?.click();
+  };
+
+  const visibilityToggle = featureFlags?.postsVerQ ? (
+    <Layout.FlexRow gap={6} alignItems="center">
+      <CheckBox
+        name={t('notes.close_friends_only') || 'Close friends only'}
+        checked={noteInfo.visibility[0] === PostVisibility.CLOSE_FRIENDS}
+        onChange={() =>
+          handleChangeVisibility([
+            noteInfo.visibility[0] === PostVisibility.CLOSE_FRIENDS
+              ? myProfile?.is_public
+                ? PostVisibility.PUBLIC
+                : PostVisibility.FRIENDS
+              : PostVisibility.CLOSE_FRIENDS,
+          ])
+        }
+      />
+    </Layout.FlexRow>
+  ) : (
+    <VisibilityToggle
+      value={
+        (noteInfo.visibility[0] as unknown as ComponentVisibility) || ComponentVisibility.FRIENDS
+      }
+      onChange={(v) => handleChangeVisibility([v as unknown as PostVisibility])}
+    />
+  );
+
+  if (isPhotoFirst) {
+    return (
+      <>
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'auto',
+          }}
+        >
+          <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} pv={12} gap={16} pb={100}>
+            {/* Profile row */}
+            <Layout.FlexRow w="100%" alignItems="center" gap={8} pv={8}>
+              <ProfileImage
+                imageUrl={myProfile?.profile_image}
+                username={myProfile?.username}
+                size={40}
+              />
+              <Typo type="title-medium">{myProfile?.username}</Typo>
+            </Layout.FlexRow>
+
+            {/* Photo selection area — below profile */}
+            {noteInfo?.images && noteInfo.images.length > 0 && noteInfo.images[0]?.url ? (
+              <PhotoFirstPreviewContainer>
+                <PhotoFirstPreviewImage src={noteInfo.images[0].url} alt="Note image" />
+                <Layout.Absolute t={8} r={8}>
+                  <SvgIcon name="delete_image" size={32} onClick={handleDeleteImage} />
+                </Layout.Absolute>
+                <Layout.FlexRow
+                  gap={8}
+                  mt={12}
+                  style={{ position: 'absolute', bottom: 12, left: 12 }}
+                >
+                  <PhotoFirstActionPill type="button" onClick={handleClickGallery}>
+                    <SvgIcon name="chat_media_image" size={18} fill="WHITE" />
+                    <Typo type="label-medium" color="WHITE">
+                      {t('check_in_post.change_photo')}
+                    </Typo>
+                  </PhotoFirstActionPill>
+                </Layout.FlexRow>
+              </PhotoFirstPreviewContainer>
+            ) : (
+              <PhotoFirstPlaceholder>
+                <SvgIcon name="camera" size={40} fill="MEDIUM_GRAY" />
+                <Typo type="body-medium" color="MEDIUM_GRAY" mt={12}>
+                  {t('check_in_post.add_photo_prompt')}
+                </Typo>
+                <Layout.FlexRow gap={12} mt={20}>
+                  <PhotoFirstOptionButton type="button" onClick={handleClickGallery}>
+                    <SvgIcon name="chat_media_image" size={20} fill="DARK_GRAY" />
+                    <Typo type="label-large" color="DARK_GRAY">
+                      {t('check_in_post.choose_photo')}
+                    </Typo>
+                  </PhotoFirstOptionButton>
+                </Layout.FlexRow>
+              </PhotoFirstPlaceholder>
+            )}
+
+            {/* Text input */}
+            <NoteInput
+              value={noteInfo.content}
+              placeholder={placeholder || t('notes.whats_on_your_mind') || ''}
+              onChange={handleChangeInput}
+              minRows={3}
+              maxRows={8}
+              style={{ overflow: 'auto' }}
+            />
+
+            {/* Visibility toggle */}
+            <Layout.FlexRow w="100%" justifyContent="flex-end" alignItems="center" mt={8}>
+              {visibilityToggle}
+            </Layout.FlexRow>
+
+            <input
+              ref={inputRef}
+              type="file"
+              accept="image/jpeg, image/png"
+              onChange={onFileAdd}
+              multiple={false}
+              style={{ display: 'none' }}
+            />
+
+            <FlexRow w="100%" justifyContent="flex-end" alignItems="center" mt={12}>
+              <Typo type="label-medium" color="MEDIUM_GRAY">
+                {t('notes.content_restriction')}
+              </Typo>
+            </FlexRow>
+          </Layout.FlexCol>
+        </div>
+
+        {isEditVisible && (
+          <NewNoteImageEdit
+            imageUrl={editImageUrl}
+            setIsVisible={setIsEditVisible}
+            onCompleteImageCrop={onCompleteImageCrop}
+          />
+        )}
+      </>
+    );
+  }
+
   return (
     <>
       <div
@@ -197,31 +340,7 @@ function NewNoteContent({
           {/* Media button and visibility options */}
           <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" mt={20}>
             <SvgIcon name="chat_media_image" size={24} onClick={onClickAdd} fill="DARK_GRAY" />
-            {featureFlags?.postsVerQ ? (
-              <Layout.FlexRow gap={6} alignItems="center">
-                <CheckBox
-                  name={t('notes.close_friends_only') || 'Close friends only'}
-                  checked={noteInfo.visibility[0] === PostVisibility.CLOSE_FRIENDS}
-                  onChange={() =>
-                    handleChangeVisibility([
-                      noteInfo.visibility[0] === PostVisibility.CLOSE_FRIENDS
-                        ? myProfile?.is_public
-                          ? PostVisibility.PUBLIC
-                          : PostVisibility.FRIENDS
-                        : PostVisibility.CLOSE_FRIENDS,
-                    ])
-                  }
-                />
-              </Layout.FlexRow>
-            ) : (
-              <VisibilityToggle
-                value={
-                  (noteInfo.visibility[0] as unknown as ComponentVisibility) ||
-                  ComponentVisibility.FRIENDS
-                }
-                onChange={(v) => handleChangeVisibility([v as unknown as PostVisibility])}
-              />
-            )}
+            {visibilityToggle}
           </Layout.FlexRow>
 
           {/* 첨부한 노트 이미지 */}
@@ -281,5 +400,67 @@ function NewNoteContent({
     </>
   );
 }
+
+const PhotoFirstPlaceholder = styled.div`
+  width: 100%;
+  min-height: 280px;
+  border: 2px dashed ${Colors.LIGHT_GRAY};
+  border-radius: 16px;
+  background-color: ${Colors.INPUT_GRAY};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+`;
+
+const PhotoFirstOptionButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 22px;
+  border: 1.5px solid ${Colors.LIGHT_GRAY};
+  background-color: ${Colors.WHITE};
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    background-color: ${Colors.LIGHT};
+  }
+`;
+
+const PhotoFirstPreviewContainer = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+const PhotoFirstPreviewImage = styled.img`
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  border-radius: 12px;
+  background-color: ${Colors.LIGHT};
+  display: block;
+`;
+
+const PhotoFirstActionPill = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 18px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+`;
 
 export default NewNoteContent;

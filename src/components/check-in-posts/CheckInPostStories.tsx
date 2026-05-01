@@ -131,7 +131,7 @@ function CheckInPostStories({
                   >
                     <Plus>
                       <PlusIcon>+</PlusIcon>
-                      <Typo type="label-small" color="DARK_GRAY">
+                      <Typo type="label-small" color="PRIMARY">
                         {t('compose_line2')}
                       </Typo>
                     </Plus>
@@ -200,7 +200,7 @@ function CheckInPostStories({
               >
                 <Plus>
                   <PlusIcon>+</PlusIcon>
-                  <Typo type="label-small" color="DARK_GRAY">
+                  <Typo type="label-small" color="PRIMARY">
                     {t('compose_line2')}
                   </Typo>
                 </Plus>
@@ -281,7 +281,7 @@ const Plus = styled.span`
   width: 80px;
   height: 80px;
   border-radius: 12px;
-  border: 2px dashed ${Colors.MEDIUM_GRAY};
+  border: 2px dashed ${Colors.PRIMARY};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -291,13 +291,13 @@ const Plus = styled.span`
   box-sizing: border-box;
   text-align: center;
   line-height: 1.15;
-  color: ${Colors.DARK_GRAY};
+  color: ${Colors.PRIMARY};
 `;
 
 const PlusIcon = styled.span`
   font-size: 24px;
   line-height: 1;
-  color: ${Colors.DARK_GRAY};
+  color: ${Colors.PRIMARY};
 `;
 
 function ArchiveIcon() {
