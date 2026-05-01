@@ -6,7 +6,10 @@ export interface CommonTextAreaProps {
   underline?: boolean;
 }
 
-export const CommonTextArea = styled(TextareaAutosize)`
+export const CommonTextArea = styled(TextareaAutosize).withConfig({
+  shouldForwardProp: ((prop: string | number) =>
+    String(prop) !== 'underline' && String(prop) !== 'width') as any,
+})`
   ${(props: CommonTextAreaProps) => `width: ${props.width ? `${props.width}px` : '100%'};`}
   padding: 14px 0;
   font-size: 18px;

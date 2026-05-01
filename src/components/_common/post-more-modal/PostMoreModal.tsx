@@ -121,7 +121,9 @@ function PostMoreModal({
               <Typo type="button-large">{t('menu.edit')}</Typo>
             </button>
             <button type="button" onClick={handleClickDeletePost}>
-              <Typo type="button-large">{t('menu.delete')}</Typo>
+              <Typo type="button-large" color="WARNING">
+                {t('menu.delete')}
+              </Typo>
             </button>
           </>
         ) : (

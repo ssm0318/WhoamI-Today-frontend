@@ -50,7 +50,7 @@ function VersionSwitchRequest() {
     try {
       await requestVersionSwitch(reason.trim() || undefined);
       setConfirmVisible(false);
-      mutate('/user/version-switch-request/me/');
+      mutate('/user/version-swap-request/me/');
       setSuccessVisible(true);
     } catch (e) {
       setConfirmVisible(false);
@@ -101,16 +101,30 @@ function VersionSwitchRequest() {
         </Layout.FlexCol>
 
         <WarningBox>
-          <CheckBox
-            name="version-switch-understood"
-            checked={understood}
-            onChange={(e) => setUnderstood(e.target.checked)}
-            label={
-              <Typo type="body-medium" color="BLACK">
-                {t('understand_irreversible')}
-              </Typo>
-            }
-          />
+          <Layout.FlexCol gap={10}>
+            <Typo type="title-medium" color="BLACK">
+              {t('data_deletion_warning')}
+            </Typo>
+            <DeletionList>
+              <li>{t('data_deletion_list_friends')}</li>
+              <li>{t('data_deletion_list_subscriptions')}</li>
+              <li>{t('data_deletion_list_chats')}</li>
+              <li>{t('data_deletion_list_notifications')}</li>
+            </DeletionList>
+            <Typo type="body-medium" color="DARK_GRAY">
+              {t('data_deletion_new_account')}
+            </Typo>
+            <CheckBox
+              name="version-switch-understood"
+              checked={understood}
+              onChange={(e) => setUnderstood(e.target.checked)}
+              label={
+                <Typo type="body-medium" color="BLACK">
+                  {t('understand_irreversible')}
+                </Typo>
+              }
+            />
+          </Layout.FlexCol>
         </WarningBox>
 
         <Layout.FlexRow w="100%" mt={8} mb={32}>
@@ -160,6 +174,14 @@ const VersionCode = styled.code`
   color: ${({ theme }) => theme.BLACK};
   padding: 2px 6px;
   border-radius: 4px;
+`;
+
+const DeletionList = styled.ul`
+  margin: 0;
+  padding-left: 20px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.BLACK};
+  line-height: 1.6;
 `;
 
 const WarningBox = styled.div`
