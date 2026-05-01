@@ -40,6 +40,8 @@ const CATEGORY_KEYS = [
   'online_persona',
   'favorite_platform',
   'least_favorite_platform',
+  'basic_identities',
+  'values_allyship',
 ] as const;
 
 type CategoryKey = (typeof CATEGORY_KEYS)[number];
@@ -276,6 +278,8 @@ function EditProfile() {
         online_persona_visibility: draft.categoryVisibility.online_persona,
         favorite_platform_visibility: draft.categoryVisibility.favorite_platform,
         least_favorite_platform_visibility: draft.categoryVisibility.least_favorite_platform,
+        basic_identities_visibility: draft.categoryVisibility.basic_identities,
+        values_allyship_visibility: draft.categoryVisibility.values_allyship,
       }),
       ...(croppedImg ? { profile_image: croppedImg.file } : {}),
     };

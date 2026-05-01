@@ -52,6 +52,8 @@ export const editProfile = ({
       | 'online_persona_visibility'
       | 'favorite_platform_visibility'
       | 'least_favorite_platform_visibility'
+      | 'basic_identities_visibility'
+      | 'values_allyship_visibility'
     >
   > & {
     profile_image?: File;

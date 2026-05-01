@@ -11,6 +11,8 @@ export enum ChipCategory {
   ONLINE_PERSONA = 'online_persona',
   FAVORITE_PLATFORM = 'favorite_platform',
   LEAST_FAVORITE_PLATFORM = 'least_favorite_platform',
+  BASIC_IDENTITIES = 'basic_identities',
+  VALUES_ALLYSHIP = 'values_allyship',
 }
 
 /** Shape returned by GET /user/chip-categories/ */
@@ -48,6 +50,8 @@ export const CHIP_CATEGORY_COLORS: Record<string, { bg: string; text: string; bo
   [ChipCategory.ONLINE_PERSONA]: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
   [ChipCategory.FAVORITE_PLATFORM]: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
   [ChipCategory.LEAST_FAVORITE_PLATFORM]: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
+  [ChipCategory.BASIC_IDENTITIES]: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
+  [ChipCategory.VALUES_ALLYSHIP]: { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' },
 };
 
 const DEFAULT_COLORS = { bg: '#F3E8FF', text: '#8700FF', border: '#8700FF' };

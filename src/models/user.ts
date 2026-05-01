@@ -30,6 +30,8 @@ export interface User {
   online_persona_visibility?: ComponentVisibility;
   favorite_platform_visibility?: ComponentVisibility;
   least_favorite_platform_visibility?: ComponentVisibility;
+  basic_identities_visibility?: ComponentVisibility;
+  values_allyship_visibility?: ComponentVisibility;
   // Mutual counts (injected by discover feed API)
   mutual_friend_count?: number;
   mutual_interest_count?: number;
