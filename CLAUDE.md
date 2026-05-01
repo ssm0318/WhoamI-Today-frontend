@@ -108,3 +108,86 @@ src/
 ### i18n 사용
 - `const [t] = useTranslation('translation', { keyPrefix: 'section_name' })`
 - 모듈 레벨: `import i18n from '@i18n/index'`
+
+---
+
+## Visual / UI rules
+
+### Chips / pills (one canonical style)
+- `border-radius: 8px`, `padding: 4px 8px`, `font-size: 14px` (label-large), `border: 1px solid/dashed #D9D9D9`, `background: white`.
+- Selected: `#F3E8FF` bg with `#8700FF` text/border. **Note:** `#F3E8FF` is hardcoded in `src/models/chips.ts`, not in the design-system color palette — centralize before adding more usages.
+- **No `rounded={999}` anywhere.** All chips use `rounded={8}`.
+- Spotify music pills: same 8px standard, with green Spotify border (`SPOTIFY_GREEN = #4AD159`).
+
+### Color palette
+- Primary purple `#8700FF`; `SECONDARY` `#87DFFF` (light cyan); `TERTIARY_PINK` `#FF00A8`; `TERTIARY_BLUE` `#0047FF`.
+- Grayscale: `BLACK`, `DARK`, `DARK_GRAY`, `MEDIUM_GRAY`, `LIGHT_GRAY`, `LIGHT`, `WHITE`.
+- "New post" badge: purple bg `#EEE6F4`.
+- Degree of connection text: `DARK_GRAY` (regular, NOT pink/colored).
+
+### Placeholders (empty states)
+Empty states on the friends tab MUST match the profile page placeholders exactly. Reuse the `*Placeholder` components in `src/components/profile/placeholders/`:
+`MusicPlaceholder`, `SocialBatteryPlaceholder`, `MoodPlaceholder`, `ThoughtPlaceholder`, `InterestPlaceholder`, `BioPlaceholder`, `PronounsBioPlaceholder`, `PersonaPlaceholder`. Reuse, don't reimplement.
+
+### Friend card
+- **Social battery:** compact mode (borderless, bare emoji) on friend cards; bordered chip with translated label only on profile / edit pages.
+- **Mood emojis:** stacked inline with battery (negative margin overlap), separated by `|` divider. Divider also between close friend badge and battery/mood section.
+- **Thought snippet:** separate pill below the username row. Display pills are prefixed with 💭 so they read as quoted thoughts.
+- **Click zones** are separated: profile pic + username → profile page; social battery → battery popup; status → status popup; "New post" → posts page; ping icon → ping.
+
+### Visibility toggles
+Text-only labels (Public | Friends | Close Friends | Only Me), `label-large` font, `6px` / `10px` padding. **No emoji icons, no colored icons.**
+
+### Other UI components
+- **Nudge buttons:** show per-component independently (not all-or-nothing). 4 types: battery, mood, thought, song.
+- **Ping/poke buttons:** dashed border + dark-gray text — NOT solid border + purple. Same 8px radius / 4px 8px padding.
+- **Bottom nav order:** Friends → Check-In → Share → Discover → Chats.
+- **Check-In tab:** 2x2 grid, popup editors with "Share" button that auto-saves immediately (no global Save button).
+- **Share page:** single vertical scroll with Photo (TERTIARY_PINK gradient), Mission (purple gradient), Questions (SECONDARY bg). No tabs.
+- **Headers:** all should have notification bell + hamburger menu (including Chats, renamed from "Ping"). "Post" button text says "Share".
+
+### Layout safety
+- **`FixedFullScreen`** uses `left: 50%; transform: translate(-50%)` with `SCREEN_WIDTH`. **Never override `left`** without understanding this centering math.
+- **Responsive at 320px:** layouts must not break at 320px (iPhone SE 1st gen). Use `flex-wrap` (or equivalent) so rows reflow rather than clip / overflow.
+
+## Feature / UX rules
+
+- **Each check-in component** (battery, mood, thought, song) is independent — separate visibility settings, separate popups when tapped.
+- **Visibility is 4-way everywhere:** Public, Friends, Close Friends, Only Me. Frontend `ComponentVisibility` enum in `src/models/checkIn.ts` matches backend `VISIBILITY_CHOICES`.
+- **Check-in detail popup** shows only the tapped component, not all together.
+- **Social battery in popup** renders like mood: big emoji + translated label (not a pill chip).
+- **Reactions** toggle directly with toast ("Reacted 🔥" / "Removed 🔥") — no confirmation dialog.
+- **Check-in reactions:** filter by current user ID when loading, show as selected on popup reopen. API returns paginated (`{ results: [...] }`) — handle that.
+- **Nudge / poke un-do** uses the app's `CommonDialog` component for confirmation.
+- **"New post" badge** disappears after viewing the friend's posts (SWR cache invalidation).
+- **Nudge poked state** shows which component was nudged: "Nudged: song ✓", "Nudged: vibe ✓", "Nudged: battery ✓".
+- **Profile visibility per-field:** flags on the User model — `pronouns_friends_only`, `bio_friends_only`, plus music/hobbies/online-persona/favorite-platform/least-favorite-platform `*_friends_only` flags. **No `name_friends_only` field exists** as of 2026-04-30 — verify the User model before claiming a name-redaction behavior.
+- **Profile accessed** by tapping own username/image on Friends tab (no separate "My" tab in nav).
+- **Photo of the Day:** photo-first flow — file picker opens directly from Share tab → crop editor → caption + visibility → post. Component: `src/components/share/PhotoOfTheDayFlow.tsx`.
+- **Mission of the Day:** routes to `/notes/new` with `{ state: { missionMode: true } }`. Mission prompt as placeholder. 5 daily attempts, marks complete only after actual post, "Try again (X left)" wording.
+- **Thought Snippets:** show "👥 Visible to friends only" note at the bottom. Display pills are prefixed with 💭.
+
+### Prohibited patterns
+*(Convention only; not all eslint-enforced — check `.eslintrc.json` before claiming a rule is lint-enforced.)*
+- No `for...of` loops — use `.forEach()` or `.map()`.
+- No `window.confirm` — use the app's `CommonDialog` component.
+- No array index in React keys — use unique identifiers or computed keys like `${emoji}${dupeCount}`.
+
+## Verification workflow
+
+After any frontend change that's previewable:
+
+1. `source ~/.nvm/nvm.sh && nvm use 18` before any node command. The system node is broken.
+2. `npx craco build` — must exit clean (no TS / ESLint errors). **NOT sufficient on its own.**
+3. Start the dev server. Verify it compiles with no error overlay. The dev server's webpack watch can hold stale module resolution after rebases / conflict resolutions, so this check catches things `craco build` misses.
+4. **Mandatory** for visual changes: take a screenshot at 320px AND 393px viewports (and 375px when iOS-relevant). The app is mobile-first and frequently runs at 320px (iPhone SE 1st gen).
+5. Check `preview_console_logs` — no JS errors.
+6. For spacing / alignment changes: use `preview_eval` to measure pixel gaps; don't trust visual approximation.
+7. For state-change flows: hit the change, then reload, then verify state persisted (frontend cache + backend round-trip).
+
+**Backend persistence verification.** After any save operation, query the backend (Django shell or API) to confirm the data persisted. UI showing the right thing is not enough — the round-trip is.
+
+### Prettier
+- Always run on changed files before committing — the husky pre-commit hook enforces via lint-staged.
+- Use the local binary `node_modules/.bin/prettier`, NOT a fresh `npx prettier`. `npx` can resolve to a different version than the project pins, causing churn.
+- If a line is too long, prettier wants it split across lines with trailing commas — check before committing.
