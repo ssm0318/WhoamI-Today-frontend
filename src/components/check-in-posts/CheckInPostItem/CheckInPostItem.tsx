@@ -92,10 +92,10 @@ function CheckInPostItem({
           </Layout.FlexRow>
           {isMyPage && (
             <Layout.FlexRow alignItems="center" gap={6}>
-              {pinned && (
+              {pinned && post.visibility === 'close_friends' && (
                 <span style={visibilityBadgeStyle}>
                   <Typo type="label-small" color="DARK_GRAY" fontWeight={600}>
-                    {post.visibility === 'close_friends' ? 'Close Friends' : 'Friends'}
+                    Close Friends
                   </Typo>
                 </span>
               )}

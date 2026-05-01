@@ -12,6 +12,7 @@ export interface Notification {
   question_content: string;
   notification_type: NotificationType;
   recent_actors: ActorDetail[];
+  thumbnail_url: string | null;
 }
 
 export type NotificationType =

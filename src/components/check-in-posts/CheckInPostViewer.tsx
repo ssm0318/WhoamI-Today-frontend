@@ -327,7 +327,7 @@ function CheckInPostViewer({
           </Layout.FlexRow>
         </Header>
 
-        {isOwn && (isPinned || isLive) && (
+        {isOwn && (isPinned || isLive) && postVisibility === 'close_friends' && (
           <PinVisibilityRow>
             <VisibilityToggle
               type="button"
@@ -336,11 +336,7 @@ function CheckInPostViewer({
             >
               <SvgIcon name="eye" size={16} color="LIGHT_GRAY" />
               <Typo type="label-medium" color="LIGHT_GRAY" underline>
-                {t(
-                  postVisibility === 'close_friends'
-                    ? 'visibility_close_friends'
-                    : 'visibility_friends',
-                )}
+                {t('visibility_close_friends')}
               </Typo>
             </VisibilityToggle>
           </PinVisibilityRow>
@@ -433,9 +429,11 @@ function CheckInPostViewer({
               </svg>
             </PillIconButton>
             {!!post?.comment_count && (
-              <Typo type="label-large" color="WHITE">
-                {post.comment_count}
-              </Typo>
+              <PillIconButton type="button" onClick={openComments} disabled={!post}>
+                <Typo type="label-large" color="WHITE">
+                  {post.comment_count}
+                </Typo>
+              </PillIconButton>
             )}
           </ActionPill>
         </Footer>
@@ -456,14 +454,18 @@ function CheckInPostViewer({
             </Typo>
             <PopupOption
               type="button"
-              $selected={selectedVisibility === 'friends'}
-              onClick={() => setSelectedVisibility('friends')}
+              $selected={selectedVisibility === (myProfile?.is_public ? 'public' : 'friends')}
+              onClick={() => setSelectedVisibility(myProfile?.is_public ? 'public' : 'friends')}
             >
               <Typo
                 type="body-medium"
-                color={selectedVisibility === 'friends' ? 'PRIMARY' : 'DARK_GRAY'}
+                color={
+                  selectedVisibility === (myProfile?.is_public ? 'public' : 'friends')
+                    ? 'PRIMARY'
+                    : 'DARK_GRAY'
+                }
               >
-                {t('visibility_friends')}
+                {myProfile?.is_public ? t('visibility_public') : t('visibility_friends')}
               </Typo>
             </PopupOption>
             <PopupOption

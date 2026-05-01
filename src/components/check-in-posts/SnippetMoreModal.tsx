@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode, useEffect, useState } from 'react';
+import { CSSProperties, ReactNode, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { BottomMenuDialog } from '@components/_common/alert-dialog/bottom-menu-dialog/BottomMenuDialog';
@@ -7,6 +7,7 @@ import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import { CheckInPostStory, CheckInPostVisibility } from '@models/checkInPost';
+import { useBoundStore } from '@stores/useBoundStore';
 
 interface SnippetMoreModalProps {
   snippet: CheckInPostStory | null;
@@ -15,11 +16,6 @@ interface SnippetMoreModalProps {
   onChangeVisibility: (snippet: CheckInPostStory, v: CheckInPostVisibility) => Promise<void> | void;
 }
 
-const VISIBILITY_OPTIONS: { value: CheckInPostVisibility; label: string }[] = [
-  { value: 'friends', label: 'Friends' },
-  { value: 'close_friends', label: 'Close Friends' },
-];
-
 function SnippetMoreModal({
   snippet,
   onClose,
@@ -27,6 +23,21 @@ function SnippetMoreModal({
   onChangeVisibility,
 }: SnippetMoreModalProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'check_in_post' });
+  const myProfile = useBoundStore((state) => state.myProfile);
+
+  const visibilityOptions: { value: CheckInPostVisibility; label: string }[] = useMemo(
+    () =>
+      myProfile?.is_public
+        ? [
+            { value: 'public', label: t('visibility_public') || 'Public' },
+            { value: 'close_friends', label: t('visibility_close_friends') || 'Close Friends' },
+          ]
+        : [
+            { value: 'friends', label: t('visibility_friends') || 'Friends' },
+            { value: 'close_friends', label: t('visibility_close_friends') || 'Close Friends' },
+          ],
+    [myProfile?.is_public, t],
+  );
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [showVisibility, setShowVisibility] = useState(false);
   const [selected, setSelected] = useState<CheckInPostVisibility>('friends');
@@ -107,7 +118,7 @@ function SnippetMoreModal({
               {t('visibility_label')}
             </Typo>
             <ToggleRow>
-              {VISIBILITY_OPTIONS.map((opt) => (
+              {visibilityOptions.map((opt) => (
                 <ToggleChip
                   key={opt.value}
                   type="button"

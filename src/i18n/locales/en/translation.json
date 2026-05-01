@@ -20,6 +20,7 @@
         "compose_line2": "Daily Snippet",
         "pin": "Pin",
         "unpin": "Unpin",
+        "visibility_public": "Public",
         "visibility_friends": "Friends",
         "visibility_close_friends": "Close Friends",
         "visibility_close_friends_only": "Close friends only",
@@ -397,14 +398,23 @@
         "edit_profile": "Edit Profile",
         "switch_to_public": "Switch to Public",
         "switch_to_private": "Switch to Private",
+        "switch_visibility": "Switch Account Visibility",
         "account_status_public": "Public",
         "account_status_private": "Private",
         "switch_to_private_dialog": {
-            "title": "Switch to private?",
-            "content": "All your public posts will become friends-only. Posts won't automatically revert to public if you switch back. (You can flip the account back to public anytime.)",
+            "title": "Switch to private account?",
+            "content": "All posts and daily snippets that were publicly visible will become visible to friends only.\nPosts will automatically revert to public if you switch back.\n(You can switch back to public anytime.)",
             "cancel": "Cancel",
             "confirm": "Switch to Private"
         },
+        "switch_to_public_dialog": {
+            "title": "Switch to public account?",
+            "content": "All posts and daily snippets (except close-friends-only) will become publicly visible.\nPosts will automatically revert to friends-only if you switch back.\n(You can switch back to private anytime.)",
+            "cancel": "Cancel",
+            "confirm": "Switch to Public"
+        },
+        "switch_to_public_toast": "Your account is now public.",
+        "switch_to_private_toast": "Your account is now private.",
         "interests": "Interests",
         "persona": "Persona",
         "see_more_details": "See more details",

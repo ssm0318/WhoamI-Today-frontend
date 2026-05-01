@@ -38,6 +38,7 @@ export const getCheckInPost = async (postId: number) => {
 export const postCheckInPost = async (
   form: NewCheckInPostForm,
   onUploadProgress?: (progress: number) => void,
+  isPublic?: boolean,
 ) => {
   if (!form.image) {
     throw new Error('Image is required for check-in post.');
@@ -45,7 +46,8 @@ export const postCheckInPost = async (
   const formData = new FormData();
   formData.append('image', form.image.file);
   if (form.caption) formData.append('caption', form.caption);
-  formData.append('visibility', form.closeFriendsOnly ? 'close_friends' : 'friends');
+  const defaultVisibility = isPublic ? 'public' : 'friends';
+  formData.append('visibility', form.closeFriendsOnly ? 'close_friends' : defaultVisibility);
 
   const { data } = await axiosFormDataInstance.post<CheckInPost>('check_in/posts/', formData, {
     onUploadProgress: (progressEvent) => {

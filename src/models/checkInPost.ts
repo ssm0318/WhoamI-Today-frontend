@@ -1,7 +1,7 @@
 import { User } from '@models/user';
 import { CroppedImg } from '@utils/getCroppedImg';
 
-export type CheckInPostVisibility = 'friends' | 'close_friends';
+export type CheckInPostVisibility = 'public' | 'friends' | 'close_friends';
 
 export interface CheckInPost {
   id: number;

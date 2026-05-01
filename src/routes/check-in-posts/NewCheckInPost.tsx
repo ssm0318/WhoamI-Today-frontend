@@ -19,8 +19,9 @@ function NewCheckInPost() {
   const [t] = useTranslation('translation', { keyPrefix: 'check_in_post' });
   const [tNotes] = useTranslation('translation', { keyPrefix: 'notes' });
   const navigate = useNavigate();
-  const { openToast } = useBoundStore((state) => ({
+  const { openToast, myProfile } = useBoundStore((state) => ({
     openToast: state.openToast,
+    myProfile: state.myProfile,
   }));
 
   const galleryInputRef = useRef<HTMLInputElement>(null);
@@ -78,7 +79,7 @@ function NewCheckInPost() {
     if (isSubmitting || !form.image) return;
     setIsSubmitting(true);
     try {
-      await postCheckInPost(form);
+      await postCheckInPost(form, undefined, myProfile?.is_public);
       openToast({ message: tNotes('posted') ?? '' });
       navigate('/feed');
     } catch (e) {

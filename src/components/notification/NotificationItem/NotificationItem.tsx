@@ -12,7 +12,15 @@ interface NotificationItemProps {
 }
 
 function NotificationItem({ item }: NotificationItemProps) {
-  const { message, created_at, recent_actors, redirect_url, notification_type, is_read } = item;
+  const {
+    message,
+    created_at,
+    recent_actors,
+    redirect_url,
+    notification_type,
+    is_read,
+    thumbnail_url,
+  } = item;
 
   const navigate = useNavigate();
 
@@ -71,6 +79,7 @@ function NotificationItem({ item }: NotificationItemProps) {
         <Layout.FlexRow flex={1} ml={4}>
           <Typo type="body-medium">{message}</Typo>
         </Layout.FlexRow>
+        {thumbnail_url && <S.NotificationThumbnail src={thumbnail_url} alt="" />}
         <Layout.FlexRow ml={4}>
           <Typo type="label-small" color="MEDIUM_GRAY">
             {convertTimeDiffByString({ now: currentDate, day: createdAt, isShortFormat: true })}

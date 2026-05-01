@@ -218,11 +218,14 @@ function CommentInputBox({
           />
         </Layout.FlexCol>
 
-        <Button.Primary
-          text={t('post')}
-          status={content && !isSubmitting ? 'normal' : 'disabled'}
-          onClick={handleSubmitComment}
-        />
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+        <div onPointerDown={(e) => e.preventDefault()} onPointerUp={handleSubmitComment}>
+          <Button.Primary
+            text={t('post')}
+            status={content && !isSubmitting ? 'normal' : 'disabled'}
+            onClick={handleSubmitComment}
+          />
+        </div>
       </Layout.FlexRow>
     </S.CommentInputWrapper>
   );

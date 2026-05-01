@@ -11,7 +11,7 @@ import EditConnectionsBottomSheet from '@components/profile/edit-connections/Edi
 import { UserPageContext } from '@components/user-page/UserPage.context';
 import { useIsPreviewMode, useViewAs, useViewAsUser } from '@components/view-as/PreviewModeContext';
 import { FeatureFlagKey } from '@constants/featureFlag';
-import { Layout, SvgIcon, Typo } from '@design-system';
+import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { useChipCategories } from '@hooks/useChipCategories';
 import { Connection } from '@models/api/friends';
@@ -71,18 +71,23 @@ function Profile({ user }: ProfileProps) {
     return navigate('/settings/edit-profile');
   };
 
-  const { updateMyProfile } = useBoundStore((state) => ({
+  const { updateMyProfile, openToast } = useBoundStore((state) => ({
     updateMyProfile: state.updateMyProfile,
+    openToast: state.openToast,
   }));
 
   const [showSwitchToPrivateDialog, setShowSwitchToPrivateDialog] = useState(false);
+  const [showSwitchToPublicDialog, setShowSwitchToPublicDialog] = useState(false);
 
   const performTogglePublicPrivate = () => {
     if (!myProfile) return;
+    const switchingToPublic = !myProfile.is_public;
     editProfile({
-      profile: { is_public: !myProfile.is_public },
+      profile: { is_public: switchingToPublic },
       onSuccess: (data) => {
         updateMyProfile({ is_public: data.is_public });
+        const msg = switchingToPublic ? t('switch_to_public_toast') : t('switch_to_private_toast');
+        openToast({ message: msg ?? '' });
       },
     });
   };
@@ -91,16 +96,20 @@ function Profile({ user }: ProfileProps) {
     e.stopPropagation();
     if (!myProfile) return;
 
-    const goingPrivate = myProfile.is_public;
-    if (goingPrivate) {
+    if (myProfile.is_public) {
       setShowSwitchToPrivateDialog(true);
-      return;
+    } else {
+      setShowSwitchToPublicDialog(true);
     }
-    performTogglePublicPrivate();
   };
 
   const handleConfirmSwitchToPrivate = () => {
     setShowSwitchToPrivateDialog(false);
+    performTogglePublicPrivate();
+  };
+
+  const handleConfirmSwitchToPublic = () => {
+    setShowSwitchToPublicDialog(false);
     performTogglePublicPrivate();
   };
 
@@ -373,17 +382,29 @@ function Profile({ user }: ProfileProps) {
       {/* my-page actions: Edit Profile + Public/Private toggle (Q) or View As (W) */}
       {isMyPage && (
         <Layout.FlexRow w="100%" gap={8}>
-          <PrimaryActionButton onClick={handleClickEditProfile}>
-            {t('edit_profile')}
-          </PrimaryActionButton>
+          <Button.Secondary
+            status="normal"
+            text={t('edit_profile')}
+            sizing="stretch"
+            fontType="body-small"
+            onClick={handleClickEditProfile}
+          />
           {featureFlags?.postsVerQ ? (
-            <PrimaryActionButton onClick={handleTogglePublicPrivate}>
-              {myProfile?.is_public ? t('switch_to_private') : t('switch_to_public')}
-            </PrimaryActionButton>
+            <Button.Secondary
+              status="normal"
+              text={t('switch_visibility')}
+              sizing="stretch"
+              fontType="body-small"
+              onClick={handleTogglePublicPrivate}
+            />
           ) : (
-            <PrimaryActionButton onClick={() => navigate('/my/view-as')}>
-              {tViewAs('entry_label_long', { defaultValue: 'View As (Privacy)' })}
-            </PrimaryActionButton>
+            <Button.Secondary
+              status="normal"
+              text={tViewAs('entry_label_long', { defaultValue: 'View As (Privacy)' })}
+              sizing="stretch"
+              fontType="body-small"
+              onClick={() => navigate('/my/view-as')}
+            />
           )}
         </Layout.FlexRow>
       )}
@@ -403,51 +424,34 @@ function Profile({ user }: ProfileProps) {
       )}
 
       {isMyPage && isVerQ && (
-        <CommonDialog
-          visible={showSwitchToPrivateDialog}
-          title={t('switch_to_private_dialog.title')}
-          content={t('switch_to_private_dialog.content')}
-          cancelText={t('switch_to_private_dialog.cancel')}
-          confirmText={t('switch_to_private_dialog.confirm')}
-          confirmTextColor="WARNING"
-          onClickConfirm={handleConfirmSwitchToPrivate}
-          onClickClose={() => setShowSwitchToPrivateDialog(false)}
-        />
+        <>
+          <CommonDialog
+            visible={showSwitchToPrivateDialog}
+            title={t('switch_to_private_dialog.title')}
+            content={t('switch_to_private_dialog.content')}
+            cancelText={t('switch_to_private_dialog.cancel')}
+            confirmText={t('switch_to_private_dialog.confirm')}
+            confirmTextColor="WARNING"
+            onClickConfirm={handleConfirmSwitchToPrivate}
+            onClickClose={() => setShowSwitchToPrivateDialog(false)}
+          />
+          <CommonDialog
+            visible={showSwitchToPublicDialog}
+            title={t('switch_to_public_dialog.title')}
+            content={t('switch_to_public_dialog.content')}
+            cancelText={t('switch_to_public_dialog.cancel')}
+            confirmText={t('switch_to_public_dialog.confirm')}
+            confirmTextColor="WARNING"
+            onClickConfirm={handleConfirmSwitchToPublic}
+            onClickClose={() => setShowSwitchToPublicDialog(false)}
+          />
+        </>
       )}
     </Layout.FlexCol>
   );
 }
 
 export default Profile;
-
-function PrimaryActionButton({
-  onClick,
-  children,
-}: {
-  onClick: (e: MouseEvent) => void;
-  children: ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      style={{
-        flex: 1,
-        padding: '5px 12px',
-        borderRadius: 8,
-        border: '2px solid #555555',
-        background: 'rgba(217, 217, 217, 0.4)',
-        color: '#555555',
-        fontSize: 13,
-        fontWeight: 700,
-        cursor: 'pointer',
-        whiteSpace: 'nowrap',
-      }}
-    >
-      {children}
-    </button>
-  );
-}
 
 function AccountStatusBadge({ children }: { children: ReactNode }) {
   return (

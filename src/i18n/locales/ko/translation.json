@@ -9,6 +9,7 @@
     "compose_line2": "Daily Snippet",
     "pin": "고정",
     "unpin": "고정 해제",
+    "visibility_public": "전체 공개",
     "visibility_friends": "친구",
     "visibility_close_friends": "친한 친구",
     "visibility_close_friends_only": "친한 친구에게만 공개",
@@ -394,14 +395,23 @@
     "edit_profile": "프로필 수정",
     "switch_to_public": "공개로 전환",
     "switch_to_private": "비공개로 전환",
+    "switch_visibility": "계정 공개 설정",
     "account_status_public": "공개",
     "account_status_private": "비공개",
     "switch_to_private_dialog": {
-      "title": "비공개로 전환할까요?",
-      "content": "공개 게시글이 모두 친구 공개로 전환됩니다. 친구 공개로 바뀐 게시글은 자동으로 다시 공개로 돌아가지 않아요. (계정은 언제든 다시 공개로 전환할 수 있어요.)",
+      "title": "비공개 계정으로 전환할까요?",
+      "content": "공개였던 모든 게시글과 데일리 스니펫이 친구에게만 공개로 전환됩니다.\n다시 공개로 전환하면 게시글도 자동으로 공개로 돌아갑니다.\n(언제든 다시 공개로 전환할 수 있어요.)",
       "cancel": "취소",
       "confirm": "비공개로 전환"
     },
+    "switch_to_public_dialog": {
+      "title": "공개 계정으로 전환할까요?",
+      "content": "친한 친구 공개가 아닌 모든 게시글과 데일리 스니펫이 전체 공개됩니다.\n다시 비공개로 전환하면 게시글도 자동으로 친구 공개로 돌아갑니다.\n(언제든 비공개로 다시 전환할 수 있어요.)",
+      "cancel": "취소",
+      "confirm": "공개로 전환"
+    },
+    "switch_to_public_toast": "공개 계정으로 전환되었습니다.",
+    "switch_to_private_toast": "비공개 계정으로 전환되었습니다.",
     "interests": "관심사",
     "persona": "페르소나",
     "see_more_details": "자세히 보기",

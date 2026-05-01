@@ -30,7 +30,7 @@ function CommonDialog({
             {title}
           </Typo>
           {content && (
-            <Typo type="body-medium" textAlign="center">
+            <Typo type="body-medium" textAlign="center" pre>
               {content}
             </Typo>
           )}

@@ -30,8 +30,8 @@ import FriendTypeSelectModal from '../friend-type-select-modal/FriendTypeSelectM
 
 const CompactButtonRow = styled(Layout.FlexRow)`
   .button_component {
-    padding: 6px 12px;
-    min-height: 28px;
+    padding: 8px 16px;
+    min-height: 36px;
     white-space: nowrap;
   }
 `;
@@ -261,7 +261,7 @@ function FriendStatus({
   const buttonRowProps = isUserPage ? { gap: 8, w: '100%' as const } : { gap: 8 };
   const sizingProp = isUserPage
     ? { sizing: 'stretch' as const }
-    : { fontType: 'label-small' as const };
+    : { fontType: 'label-large' as const };
 
   return (
     <>
