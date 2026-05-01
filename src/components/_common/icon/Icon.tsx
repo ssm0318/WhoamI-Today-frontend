@@ -6,6 +6,7 @@ import { StyledIcon } from './Icon.styled';
 
 interface IconProps extends Omit<SvgIconProps, 'size'> {
   onClick?: (e: MouseEvent) => void;
+  onMouseDown?: (e: MouseEvent) => void;
   size?: number;
   background?: ColorKeys;
   disabled?: boolean;
@@ -14,6 +15,7 @@ interface IconProps extends Omit<SvgIconProps, 'size'> {
 
 function Icon({
   onClick,
+  onMouseDown,
   size = TOP_NAVIGATION_HEIGHT,
   background,
   disabled = false,
@@ -24,6 +26,7 @@ function Icon({
     <StyledIcon
       type="button"
       onClick={onClick}
+      onMouseDown={onMouseDown}
       size={padding ? size + 2 * padding : size}
       backgroundColor={background}
       disabled={disabled}

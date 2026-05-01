@@ -347,7 +347,13 @@ function ChatMessageInput({
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
           />
           {!isAnnouncement && (inputValue.trim() || selectedImage) && (
-            <Icon name="question_send" size={24} onClick={() => sendMessage()} color="PRIMARY" />
+            <Icon
+              name="question_send"
+              size={24}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => sendMessage()}
+              color="PRIMARY"
+            />
           )}
         </Layout.FlexRow>
         {isAnnouncement && (

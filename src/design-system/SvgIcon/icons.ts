@@ -176,6 +176,8 @@ const pin_empty = 'pin_empty';
 const pin_filled = 'pin_filled';
 const chevron_right = 'chevron_right';
 const eye = 'eye';
+const view = 'view';
+const view_alt = 'view_alt';
 
 export {
   add_battery,
@@ -317,4 +319,6 @@ export {
   trash_can,
   update_active,
   update_inactive,
+  view,
+  view_alt,
 };
