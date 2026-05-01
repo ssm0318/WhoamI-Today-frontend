@@ -465,7 +465,9 @@
   "likes": {
     "title": "좋아요",
     "forbidden_post_or_comment": "이 게시물/댓글에 접근할 수 없습니다.",
-    "not_found_post_or_comment": "존재하지 않는 게시물/댓글입니다."
+    "not_found_post_or_comment": "존재하지 않는 게시물/댓글입니다.",
+    "toast_liked": "좋아요 완료!",
+    "toast_unliked": "좋아요 취소"
   },
   "reactions": {
     "title": "게시글 반응"
@@ -580,6 +582,7 @@
       "change_picture": "사진 변경하기",
       "username": "닉네임",
       "username_valiation_error": "영문, 한글, 숫자, _ 만 사용 가능 (최대 20자)",
+      "username_exists_error": "이미 사용 중인 닉네임이에요.",
       "email": "이메일",
       "bio": "소개",
       "pronouns": "대명사",

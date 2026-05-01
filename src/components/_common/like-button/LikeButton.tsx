@@ -50,6 +50,7 @@ function LikeButton({
         },
       );
       setLikeId(like_id);
+      openToast({ message: t('likes.toast_liked') });
       refresh?.();
     } catch (error) {
       // Error already handled by onError callback
@@ -69,6 +70,7 @@ function LikeButton({
         });
       });
       setLikeId(null);
+      openToast({ message: t('likes.toast_unliked') });
       refresh?.();
     } catch (error) {
       // Error already handled by onError callback

@@ -468,7 +468,9 @@
     "likes": {
         "title": "Likes",
         "forbidden_post_or_comment": "This post or comment is not accessible.",
-        "not_found_post_or_comment": "This post or comment does not exist."
+        "not_found_post_or_comment": "This post or comment does not exist.",
+        "toast_liked": "Liked!",
+        "toast_unliked": "Like removed"
     },
     "reactions": {
         "title": "Reactions"
@@ -583,6 +585,7 @@
             "change_picture": "Change Picture",
             "username": "Username",
             "username_valiation_error": "Letters, numbers, Korean, and _ only (max 20 characters).",
+            "username_exists_error": "This username is already taken.",
             "email": "Email",
             "bio": "Bio",
             "pronouns": "Pronouns",
