@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import useSWR from 'swr';
 import FilterChip from '@components/_common/filter-chip/FilterChip';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import HighlightQuestionSection from '@components/discover/HighlightQuestionSection/HighlightQuestionSection';
@@ -8,6 +9,7 @@ import MusicHighlightCard from '@components/discover/MusicHighlightCard/MusicHig
 import ProfileSuggestionCard from '@components/discover/ProfileSuggestionCard/ProfileSuggestionCard';
 import SelectInterestSection from '@components/discover/SelectInterestSection/SelectInterestSection';
 import SelectPersonaSection from '@components/discover/SelectPersonaSection/SelectPersonaSection';
+import SurveyResultsCard from '@components/discover/SurveyResultsCard/SurveyResultsCard';
 import SharedPlaylistSection, {
   SharedTrack,
 } from '@components/friends/shared-playlist/SharedPlaylistSection';
@@ -32,6 +34,7 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { getDiscoverFeed } from '@utils/apis/discover';
 import { getMe } from '@utils/apis/my';
+import { getPastSurveys } from '@utils/apis/survey';
 import { getItemFromSessionStorage, setItemToSessionStorage } from '@utils/sessionStorage';
 import { MainScrollContainer } from 'src/routes/Root';
 import * as S from './Discover.styled';
@@ -131,6 +134,23 @@ function Discover() {
     };
   }, [musicTracks]);
 
+  const { data: pastSurveysData } = useSWR('/surveys/past/', getPastSurveys, {
+    revalidateOnFocus: false,
+  });
+  const surveyResultsCard: DiscoverResultItem | null = useMemo(() => {
+    const unlocked = pastSurveysData?.results?.find((row) => row.results_unlocked);
+    if (!unlocked) return null;
+    return {
+      type: 'SurveyResults' as const,
+      body: {
+        slug: unlocked.survey.slug,
+        titleEn: unlocked.survey.title_en,
+        titleKo: unlocked.survey.title_ko,
+        date: unlocked.date,
+      },
+    };
+  }, [pastSurveysData]);
+
   // Inject synthetic cards at specific positions in the flattened feed
   const feedWithInjections = useMemo(() => {
     if (!discoverData) return [];
@@ -142,7 +162,7 @@ function Discover() {
 
     // Pick at most 2 injected cards per day (rotate daily)
     const allCards = (
-      [missionPromptCard, profileSuggestionCard, musicHighlightCard] as const
+      [surveyResultsCard, missionPromptCard, profileSuggestionCard, musicHighlightCard] as const
     ).filter((c) => c !== null) as DiscoverResultItem[];
     const dayOfYear = getDayOfYear();
     const selectedCards =
@@ -164,7 +184,13 @@ function Discover() {
       });
 
     return result;
-  }, [discoverData, missionPromptCard, profileSuggestionCard, musicHighlightCard]);
+  }, [
+    discoverData,
+    missionPromptCard,
+    profileSuggestionCard,
+    musicHighlightCard,
+    surveyResultsCard,
+  ]);
 
   // Client-side filtering by category
   const filterItem = useCallback(
@@ -173,7 +199,8 @@ function Discover() {
       if (
         item.type === 'MissionPrompt' ||
         item.type === 'ProfileSuggestion' ||
-        item.type === 'MusicHighlight'
+        item.type === 'MusicHighlight' ||
+        item.type === 'SurveyResults'
       ) {
         return true;
       }
@@ -246,6 +273,8 @@ function Discover() {
           );
         case 'MusicHighlight':
           return <MusicHighlightCard key={`music-highlight-${index}`} highlight={item.body} />;
+        case 'SurveyResults':
+          return <SurveyResultsCard key={`survey-results-${index}`} card={item.body} />;
         default:
           return null;
       }

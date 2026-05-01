@@ -1120,6 +1120,7 @@
   },
   "surveys": {
     "section_title": "오늘의 설문",
+    "section_results_released": "설문 결과",
     "thanks_results_tomorrow": "감사합니다! 결과는 내일 공개돼요.",
     "submit": "제출",
     "next": "다음",
