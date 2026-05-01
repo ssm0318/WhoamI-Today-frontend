@@ -1,17 +1,19 @@
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfileImageList from '@components/_common/profile-image-list/ProfileImageList';
 import { IconNames, Layout, SvgIcon, Typo } from '@design-system';
 import { Notification } from '@models/notification';
 import { readNotification } from '@utils/apis/notification';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
+import NotificationActions from './NotificationActions';
 import * as S from './NotificationItem.styled';
 
 interface NotificationItemProps {
   item: Notification;
+  onActioned?: (id: number) => void;
 }
 
-function NotificationItem({ item }: NotificationItemProps) {
+function NotificationItem({ item, onActioned }: NotificationItemProps) {
   const {
     message,
     created_at,
@@ -59,34 +61,55 @@ function NotificationItem({ item }: NotificationItemProps) {
     }
   };
 
+  const [actioned, setActioned] = useState(false);
+  const showInlineActions = !actioned && (item.is_friend_request || item.is_chat_request);
+
+  const handleActioned = async () => {
+    setActioned(true);
+    await readNotification([item.id]);
+    onActioned?.(item.id);
+  };
+
   return (
-    <Layout.FlexRow
-      w="100%"
-      onClick={handleClickNotification}
-      ph={16}
-      alignItems="center"
-      bgColor={is_read ? 'WHITE' : 'LIGHT'}
-    >
-      <S.NotificationContent alignItems="center" pb={9} w="100%" border={!is_read}>
-        <S.NotificationProfileContainer alignItems="center" justifyContent="center" h={50}>
-          <ProfileImageList images={recent_actors.map((a) => a.profile_image)} size={40} />
-          {!!getNotiIconName() && (
-            <Layout.Absolute r={0} b={-5} z={2}>
-              <SvgIcon name={getNotiIconName() as IconNames} size={20} />
-            </Layout.Absolute>
-          )}
-        </S.NotificationProfileContainer>
-        <Layout.FlexRow flex={1} ml={4}>
-          <Typo type="body-medium">{message}</Typo>
+    <Layout.FlexCol w="100%" ph={16} bgColor={is_read ? 'WHITE' : 'LIGHT'}>
+      <Layout.FlexRow w="100%" onClick={handleClickNotification} alignItems="center">
+        <S.NotificationContent
+          alignItems="center"
+          pb={showInlineActions ? 0 : 9}
+          w="100%"
+          border={!is_read && !showInlineActions}
+        >
+          <S.NotificationProfileContainer alignItems="center" justifyContent="center" h={50}>
+            <ProfileImageList images={recent_actors.map((a) => a.profile_image)} size={40} />
+            {!!getNotiIconName() && (
+              <Layout.Absolute r={0} b={-5} z={2}>
+                <SvgIcon name={getNotiIconName() as IconNames} size={20} />
+              </Layout.Absolute>
+            )}
+          </S.NotificationProfileContainer>
+          <Layout.FlexRow flex={1} ml={4}>
+            <Typo type="body-medium">{message}</Typo>
+          </Layout.FlexRow>
+          {thumbnail_url && <S.NotificationThumbnail src={thumbnail_url} alt="" />}
+          <Layout.FlexRow ml={4}>
+            <Typo type="label-small" color="MEDIUM_GRAY">
+              {convertTimeDiffByString({ now: currentDate, day: createdAt, isShortFormat: true })}
+            </Typo>
+          </Layout.FlexRow>
+        </S.NotificationContent>
+      </Layout.FlexRow>
+      {showInlineActions && (
+        <Layout.FlexRow
+          w="100%"
+          pl={44}
+          pb={9}
+          mt={-4}
+          onClick={(e: MouseEvent) => e.stopPropagation()}
+        >
+          <NotificationActions item={item} onActioned={handleActioned} />
         </Layout.FlexRow>
-        {thumbnail_url && <S.NotificationThumbnail src={thumbnail_url} alt="" />}
-        <Layout.FlexRow ml={4}>
-          <Typo type="label-small" color="MEDIUM_GRAY">
-            {convertTimeDiffByString({ now: currentDate, day: createdAt, isShortFormat: true })}
-          </Typo>
-        </Layout.FlexRow>
-      </S.NotificationContent>
-    </Layout.FlexRow>
+      )}
+    </Layout.FlexCol>
   );
 }
 

@@ -1,11 +1,18 @@
 import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import { useIsPreviewMode } from '@components/view-as/PreviewModeContext';
-import { Button, Layout } from '@design-system';
+import { Button } from '@design-system';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { cancelChatRequest, sendChatRequest } from '@utils/apis/chat';
+
+const RequestedButton = styled(Button.Highlight)`
+  && > button > .button_component {
+    background-color: ${({ theme }) => theme.MEDIUM_GRAY};
+  }
+`;
 
 interface Props {
   user: UserProfile;
@@ -63,31 +70,21 @@ function ChatRequestButton({ user, onChange }: Props) {
 
   return (
     <>
-      <Layout.FlexRow gap={8} w="100%">
-        {sent ? (
-          <>
-            <Button.Highlight
-              status="completed"
-              text={t('requested')}
-              sizing="stretch"
-              onClick={undefined}
-            />
-            <Button.Secondary
-              status="normal"
-              text={t('cancel')}
-              sizing="stretch"
-              onClick={handleClickCancel}
-            />
-          </>
-        ) : (
-          <Button.Highlight
-            status="normal"
-            text={t('request')}
-            sizing="stretch"
-            onClick={handleClickRequest}
-          />
-        )}
-      </Layout.FlexRow>
+      {sent ? (
+        <RequestedButton
+          status="normal"
+          text={t('requested_chat')}
+          sizing="stretch"
+          onClick={handleClickCancel}
+        />
+      ) : (
+        <Button.Highlight
+          status="normal"
+          text={t('request')}
+          sizing="stretch"
+          onClick={handleClickRequest}
+        />
+      )}
       {isCancelDialogVisible && (
         <CommonDialog
           visible={isCancelDialogVisible}

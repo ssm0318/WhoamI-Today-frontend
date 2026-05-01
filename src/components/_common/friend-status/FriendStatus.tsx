@@ -36,6 +36,12 @@ const CompactButtonRow = styled(Layout.FlexRow)`
   }
 `;
 
+const RequestedButton = styled(Button.Highlight)`
+  && > button > .button_component {
+    background-color: ${({ theme }) => theme.MEDIUM_GRAY};
+  }
+`;
+
 export interface Props {
   type: 'sent_requests' | 'requests' | 'recommended' | 'search' | 'user';
   user: User | UserProfile;
@@ -291,15 +297,24 @@ function FriendStatus({
         ) : (
           <>
             {type === 'sent_requests' || sentFriendRequest(user) ? (
-              <>
-                <PrimaryButton status="completed" text={t('requested')} {...sizingProp} />
-                <Button.Secondary
+              isUserPage ? (
+                <RequestedButton
                   status="normal"
-                  text={t('cancel')}
+                  text={t('requested_friend')}
                   {...sizingProp}
                   onClick={handleClickCancelRequest}
                 />
-              </>
+              ) : (
+                <>
+                  <PrimaryButton status="completed" text={t('requested')} {...sizingProp} />
+                  <Button.Secondary
+                    status="normal"
+                    text={t('cancel')}
+                    {...sizingProp}
+                    onClick={handleClickCancelRequest}
+                  />
+                </>
+              )
             ) : (
               <PrimaryButton
                 status="normal"

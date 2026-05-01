@@ -569,6 +569,12 @@
           "cancel": "닫기",
           "confirm": "취소"
         }
+      },
+      "notification_action": {
+        "accept": "수락",
+        "ignore": "거절",
+        "accepted_toast": "채팅 요청을 수락했어요",
+        "ignored_toast": "채팅 요청을 거절했어요"
       }
     },
     "system": {

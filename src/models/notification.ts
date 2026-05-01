@@ -8,15 +8,18 @@ export interface Notification {
   message: string;
   is_response_request: boolean;
   is_friend_request: boolean;
+  is_chat_request: boolean;
   is_recent: boolean;
   question_content: string;
   notification_type: NotificationType;
   recent_actors: ActorDetail[];
   thumbnail_url: string | null;
+  target_id: number | null;
 }
 
 export type NotificationType =
   | 'FriendRequest'
+  | 'ChatRequest'
   | 'ResponseRequest'
   | 'Like'
   | 'Comment'

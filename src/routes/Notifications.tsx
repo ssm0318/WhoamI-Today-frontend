@@ -76,6 +76,16 @@ function Notifications() {
     }
   };
 
+  const handleNotificationActioned = (id: number) => {
+    mutateNotifications(
+      allNotifications?.map((prev) => ({
+        ...prev,
+        results: prev.results?.map((n) => (n.id === id ? { ...n, is_read: true } : n)) ?? [],
+      })) ?? [],
+      { revalidate: false },
+    );
+  };
+
   const handleReadAll = async () => {
     try {
       await readAllNotifications();
@@ -146,7 +156,11 @@ function Notifications() {
                     <Typo type="title-medium">{t('last_7_days')}</Typo>
                   </Layout.FlexRow>
                   {recentNotifications.map((noti) => (
-                    <NotificationItem item={noti} key={noti.id} />
+                    <NotificationItem
+                      item={noti}
+                      key={noti.id}
+                      onActioned={handleNotificationActioned}
+                    />
                   ))}
                 </>
               )}
@@ -157,7 +171,11 @@ function Notifications() {
                     <Typo type="title-medium">{t('earlier')}</Typo>
                   </Layout.FlexRow>
                   {restNotifications.map((noti) => (
-                    <NotificationItem item={noti} key={noti.id} />
+                    <NotificationItem
+                      item={noti}
+                      key={noti.id}
+                      onActioned={handleNotificationActioned}
+                    />
                   ))}
                 </>
               )}
