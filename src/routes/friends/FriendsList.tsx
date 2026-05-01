@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+// TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
+// import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Divider from '@components/_common/divider/Divider';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
@@ -8,7 +9,7 @@ import MyCheckInCard from '@components/check-in/my-check-in-card/MyCheckInCard';
 import FriendItemWithUpdates from '@components/friends/friend-item-with-updates/FriendItemWithUpdates';
 import NoCloseFriends from '@components/friends/no-close-friends/NoCloseFriends';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
-import { Colors, Layout, SvgIcon, Typo } from '@design-system';
+import { Colors, Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { Connection, FriendType, UpdatedProfile } from '@models/api/friends';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -22,7 +23,8 @@ type TabType = 'check-in' | 'posts';
 
 function FriendsList() {
   const [t] = useTranslation('translation');
-  const navigate = useNavigate();
+  // TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
+  // const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<TabType>('check-in');
   // Browse mode can prefill the close-friends-only filter when "Just my people" is active.
   const browseModeForcesCloseFriends = useBoundStore(
@@ -99,10 +101,13 @@ function FriendsList() {
     };
   }, [allFriends, postsFriendsHook.allFriends]);
 
+  // TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
+  /*
   const hiddenFriendsCount = useMemo(
     () => (hiddenFriendsHook.allFriends || []).flatMap(({ results }) => results || []).length,
     [hiddenFriendsHook.allFriends],
   );
+  */
 
   const handleHidden = (user: UpdatedProfile) => {
     updateFriendList({ type: 'is_hidden', item: user, value: true });
@@ -180,7 +185,8 @@ function FriendsList() {
             </Layout.FlexRow>
           </Layout.FlexRow>
 
-          {/* Hidden friends link */}
+          {/* TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제. */}
+          {/*
           {hiddenFriendsCount > 0 && (
             <Layout.FlexRow w="100%" justifyContent="flex-end" ph={16} pt={8}>
               <HiddenFriendsLinkButton type="button" onClick={() => navigate('/friends/hidden')}>
@@ -191,6 +197,7 @@ function FriendsList() {
               </HiddenFriendsLinkButton>
             </Layout.FlexRow>
           )}
+          */}
 
           {/* Tab content */}
           {selectedTab === 'check-in' ? (
@@ -379,6 +386,8 @@ const TabButton = styled.button<{ $active: boolean }>`
   border-bottom: 2px solid ${({ $active }) => ($active ? '#8700FF' : 'transparent')};
 `;
 
+// TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
+/*
 const HiddenFriendsLinkButton = styled.button`
   display: inline-flex;
   align-items: center;
@@ -390,6 +399,7 @@ const HiddenFriendsLinkButton = styled.button`
   text-decoration: underline;
   text-underline-offset: 2px;
 `;
+*/
 
 const TabBadge = styled.span`
   display: inline-flex;

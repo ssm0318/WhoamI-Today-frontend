@@ -2,7 +2,8 @@ import { MouseEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
+// TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
+// import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -22,7 +23,8 @@ import { Note, POST_TYPE, Response } from '@models/post';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { hideFriend } from '@utils/apis/friends';
+// TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
+// import { hideFriend } from '@utils/apis/friends';
 import {
   Container,
   EmptyPostsContainer,
@@ -34,6 +36,8 @@ interface Props {
   user: UpdatedProfile;
   onConnectionChanged?: (userId: number, connection: Connection) => void;
   onSubscriptionChanged?: (userId: number, hasSubscription: boolean) => void;
+  // TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 사용 재개.
+  // eslint-disable-next-line react/no-unused-prop-types
   onHidden?: (userId: number) => void;
   tabMode?: 'check-in' | 'posts' | 'unified';
   hasNewPost?: boolean;
@@ -43,7 +47,8 @@ function FriendItemWithUpdates({
   user,
   onConnectionChanged,
   onSubscriptionChanged,
-  onHidden,
+  // TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
+  // onHidden,
   tabMode = 'check-in',
   hasNewPost = false,
 }: Props) {
@@ -71,6 +76,8 @@ function FriendItemWithUpdates({
   };
   const handleCloseSubscriptionPopup = () => setShowSubscriptionPopup(false);
 
+  // TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
+  /*
   const [showHideConfirm, setShowHideConfirm] = useState(false);
   const handleOpenHideConfirm = (e: MouseEvent) => {
     e.stopPropagation();
@@ -83,9 +90,10 @@ function FriendItemWithUpdates({
       await hideFriend(id);
       onHidden?.(id);
     } catch {
-      /* parent handler may show toast / refetch on failure */
+      // parent handler may show toast / refetch on failure
     }
   };
+  */
 
   const [isEditConnectionsBottomSheetVisible, setIsEditConnectionsBottomSheetVisible] =
     useState(false);
@@ -203,6 +211,8 @@ function FriendItemWithUpdates({
               </Layout.Absolute>
             )}
           </Layout.LayoutBase>
+          {/* TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제. */}
+          {/*
           {tabMode !== 'unified' && (
             <button
               type="button"
@@ -220,6 +230,7 @@ function FriendItemWithUpdates({
               <SvgIcon name="view" size={28} color="BLACK" />
             </button>
           )}
+          */}
         </Layout.FlexRow>
       </Layout.FlexRow>
 
@@ -425,6 +436,8 @@ function FriendItemWithUpdates({
         }}
       />
 
+      {/* TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제. */}
+      {/*
       <CommonDialog
         visible={showHideConfirm}
         title={t('friend.hide_confirm_title')}
@@ -433,6 +446,7 @@ function FriendItemWithUpdates({
         onClickConfirm={handleConfirmHide}
         onClickClose={handleCloseHideConfirm}
       />
+      */}
     </Container>
   );
 }

@@ -11,7 +11,8 @@ import UserRelatedAlert, { Alert } from '@components/user-page/UserRelatedAlert'
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { UpdateFriendListParams } from '@hooks/useInfiniteFetchFriends';
 import { Connection, UpdatedProfile } from '@models/api/friends';
-import { addFriendToFavorite, deleteFavorite, hideFriend } from '@utils/apis/friends';
+// TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 hideFriend import 복원.
+import { addFriendToFavorite, deleteFavorite } from '@utils/apis/friends';
 import { breakFriend } from '@utils/apis/user';
 import { StyledProfileArea, StyledUpdatedFriendItem } from './UpdatedFriendItem.styled';
 
@@ -54,12 +55,15 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
     });
   };
 
+  // TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
+  /*
   const handleHide = () => {
     hideFriend(id).then(() => {
       updateFavoriteFriendList();
       updateFriendList({ type: 'is_hidden', item: user, value: true });
     });
   };
+  */
 
   const [showBreakFriendsAlert, setShowBreakFriendsAlert] = useState<Alert>();
   const [showTemporalErrorAlert, setShowTemporalErrorAlert] = useState(false);
@@ -94,11 +98,14 @@ function UpdatedFriendItem({ user, updateFriendList, updateFavoriteFriendList }:
     <SwipeLayout
       itemWidth={74}
       rightContent={[
+        // TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
+        /*
         <StyledSwipeButton key="hide" backgroundColor="DARK_GRAY" onClick={handleHide}>
           <Typo type="body-medium" color="WHITE" textAlign="center">
             {t('hide')}
           </Typo>
         </StyledSwipeButton>,
+        */
         <StyledSwipeButton key="unfriend" backgroundColor="ERROR" onClick={handleClickBreakFriend}>
           <Typo type="body-medium" color="WHITE" textAlign="center">
             {t('unfriend')}
