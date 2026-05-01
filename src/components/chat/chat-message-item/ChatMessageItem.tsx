@@ -360,9 +360,9 @@ function ChatMessageItem({ message, isMine, onReactionUpdate, onImageLoad }: Pro
           justifyContent={isMine ? 'flex-end' : 'flex-start'}
           gap={6}
         >
-          {!isMine && timestamp}
-          {textBubble}
           {isMine && timestamp}
+          {textBubble}
+          {!isMine && timestamp}
         </Layout.FlexRow>
       ) : (
         textBubble
