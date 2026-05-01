@@ -105,6 +105,12 @@ export interface AnalyticsSetUserData {
   notification_enabled: string;
 }
 
+export interface AnalyticsTrackEventData {
+  key: 'ANALYTICS_TRACK_EVENT';
+  name: string;
+  params?: Record<string, string | number>;
+}
+
 // 앱, 웹 서로 약속한 키값에 따른 메시지 타입
 export type PostMessageDataType =
   | ScreenNavigateData
@@ -124,7 +130,8 @@ export type PostMessageDataType =
   | WidgetDataUpdatedData
   | SetAppStateData
   | AnalyticsPageViewData
-  | AnalyticsSetUserData;
+  | AnalyticsSetUserData
+  | AnalyticsTrackEventData;
 
 // 앱, 웹 서로 약속한 키값
 export type PostMessageKeyType = PostMessageDataType['key'];
@@ -149,4 +156,5 @@ export type PostMessageKeyToData = {
   SET_APP_STATE: SetAppStateData;
   ANALYTICS_PAGE_VIEW: AnalyticsPageViewData;
   ANALYTICS_SET_USER: AnalyticsSetUserData;
+  ANALYTICS_TRACK_EVENT: AnalyticsTrackEventData;
 };

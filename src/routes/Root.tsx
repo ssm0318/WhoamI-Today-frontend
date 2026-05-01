@@ -1,5 +1,13 @@
-import React, { CSSProperties, ReactNode, RefObject, UIEvent, useCallback, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import React, {
+  CSSProperties,
+  ReactNode,
+  RefObject,
+  UIEvent,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 import NotiPermissionBanner, {
   NOTI_PERMISSION_BANNER_HEIGHT,
@@ -9,14 +17,19 @@ import Header from '@components/header/Header';
 import Tab from '@components/tab/Tab';
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
-import { usePostAppMessage } from '@hooks/useAppMessage';
+import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { useCheckInFreshnessPrompt } from '@hooks/useCheckInFreshnessPrompt';
 import useFcm from '@hooks/useFcm';
+import { SetAppStateData } from '@models/app';
 import { useBoundStore } from '@stores/useBoundStore';
 import { MainWrapper, RootContainer } from '@styles/wrappers';
 import { getMyProfile } from '@utils/apis/my';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
+import {
+  recordCurrentVersion,
+  shouldShowWidgetGuideOnVersionChange,
+} from '@utils/widgetInstallGuide';
 import { useChatListSocket } from './chat/_hooks/useChatListSocket';
 
 function Root() {
@@ -43,19 +56,62 @@ function Root() {
   }));
   const { shouldShow, dismiss, checkIn } = useCheckInFreshnessPrompt();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.debug('featureFlags', featureFlags);
   }, [featureFlags]);
 
-  // Firebase Analytics: screen_view on route change
+  // Firebase Analytics: screen_view + screen_dwell tracking on route change
+  const pageStartTimeRef = useRef<number>(Date.now());
+  const currentPageNameRef = useRef<string | null>(null);
+
+  const flushScreenDwell = useCallback(() => {
+    if (currentPageNameRef.current === null) return;
+    const duration_ms = Date.now() - pageStartTimeRef.current;
+    if (duration_ms < 100) return;
+    postMessage('ANALYTICS_TRACK_EVENT', {
+      name: 'screen_dwell',
+      params: {
+        screen_name: currentPageNameRef.current,
+        duration_ms,
+      },
+    });
+  }, [postMessage]);
+
   useEffect(() => {
     const pageName = location.pathname.split('/').filter(Boolean)[0] || 'home';
+    flushScreenDwell();
+    pageStartTimeRef.current = Date.now();
+    currentPageNameRef.current = pageName;
     postMessage('ANALYTICS_PAGE_VIEW', {
       page_name: pageName,
       page_path: location.pathname,
     });
-  }, [location.pathname, postMessage]);
+  }, [location.pathname, postMessage, flushScreenDwell]);
+
+  // Firebase Analytics: app_foreground / app_background via SET_APP_STATE bridge
+  const lastAppLifecycleStateRef = useRef<'foreground' | 'background' | null>(null);
+  const handleAppLifecycle = useCallback(
+    (data: SetAppStateData) => {
+      if (!data) return;
+      const nextState: 'foreground' | 'background' =
+        data.value === 'active' ? 'foreground' : 'background';
+      if (lastAppLifecycleStateRef.current === nextState) return;
+
+      if (nextState === 'background') {
+        flushScreenDwell();
+        pageStartTimeRef.current = Date.now();
+        postMessage('ANALYTICS_TRACK_EVENT', { name: 'app_background' });
+      } else {
+        pageStartTimeRef.current = Date.now();
+        postMessage('ANALYTICS_TRACK_EVENT', { name: 'app_foreground' });
+      }
+      lastAppLifecycleStateRef.current = nextState;
+    },
+    [postMessage, flushScreenDwell],
+  );
+  useGetAppMessage({ key: 'SET_APP_STATE', cb: handleAppLifecycle });
 
   // Firebase Analytics: set user properties on profile load
   useEffect(() => {
@@ -90,6 +146,20 @@ function Root() {
       notification_enabled: profile.noti_time ? 'true' : 'false',
     });
   }, [myProfile, postMessage]);
+
+  const hasHandledVersionChangeRef = useRef(false);
+  useEffect(() => {
+    if (!myProfile) return;
+    if (hasHandledVersionChangeRef.current) return;
+    hasHandledVersionChangeRef.current = true;
+
+    if (shouldShowWidgetGuideOnVersionChange(myProfile)) {
+      recordCurrentVersion(myProfile);
+      navigate('/widget-install-guide');
+      return;
+    }
+    recordCurrentVersion(myProfile);
+  }, [myProfile, navigate]);
 
   // Refresh unread badge: WebSocket + poll + visibility change
   const refreshUnreadCount = useCallback(() => {

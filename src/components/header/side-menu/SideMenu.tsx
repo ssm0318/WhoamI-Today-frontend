@@ -26,6 +26,7 @@ function SideMenu({ closeSideMenu }: Props) {
 
   const handleClickMenu = (path: string) => () => {
     navigate(path);
+    closeSideMenu();
   };
 
   const handleClickDimmed = () => {
