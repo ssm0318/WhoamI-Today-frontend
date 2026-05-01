@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Typo } from '@design-system';
 import i18n from '@i18n/index';
 import { ComponentVisibility } from '@models/checkIn';
 
@@ -21,6 +20,10 @@ export function getVisibilityLabel(value: ComponentVisibility): string {
   return opt ? i18n.t(opt.i18nKey) : '';
 }
 
+// Tuned for "Close Friends" (longest label) to fit on a single row at 320px viewport
+// while keeping all four chips equal-width.
+const TOGGLE_FONT_SIZE = 10;
+
 function VisibilityToggle({ value, onChange }: Props) {
   const [t] = useTranslation('translation');
   return (
@@ -31,13 +34,7 @@ function VisibilityToggle({ value, onChange }: Props) {
           $isSelected={value === opt.value}
           onClick={() => onChange(opt.value)}
         >
-          <Typo
-            type="label-large"
-            color={value === opt.value ? 'PRIMARY' : 'MEDIUM_GRAY'}
-            fontWeight={value === opt.value ? 600 : 400}
-          >
-            {t(opt.i18nKey)}
-          </Typo>
+          <Label $isSelected={value === opt.value}>{t(opt.i18nKey)}</Label>
         </ToggleOption>
       ))}
     </ToggleContainer>
@@ -46,16 +43,20 @@ function VisibilityToggle({ value, onChange }: Props) {
 
 const ToggleContainer = styled.div`
   display: flex;
-  gap: 4px;
+  gap: 2px;
   background-color: ${({ theme }) => theme.BACKGROUND_COLOR};
   border-radius: 8px;
   padding: 2px;
+  width: 100%;
 `;
 
 const ToggleOption = styled.div<{ $isSelected: boolean }>`
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
-  padding: 6px 10px;
+  justify-content: center;
+  padding: 6px 4px;
   border-radius: 8px;
   cursor: pointer;
   background-color: ${({ $isSelected, theme }) => ($isSelected ? theme.WHITE : 'transparent')};
@@ -63,6 +64,14 @@ const ToggleOption = styled.div<{ $isSelected: boolean }>`
   transition: all 0.15s ease;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+`;
+
+const Label = styled.span<{ $isSelected: boolean }>`
+  font-size: ${TOGGLE_FONT_SIZE}px;
+  font-weight: ${({ $isSelected }) => ($isSelected ? 600 : 400)};
+  color: ${({ $isSelected, theme }) => ($isSelected ? theme.PRIMARY : theme.MEDIUM_GRAY)};
+  white-space: nowrap;
+  line-height: 1.2;
 `;
 
 export default VisibilityToggle;
