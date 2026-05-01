@@ -257,14 +257,20 @@ function FriendStatus({
 
   const PrimaryButton = isUserPage ? Button.Highlight : Button.Primary;
 
+  const ButtonRow = isUserPage ? Layout.FlexRow : CompactButtonRow;
+  const buttonRowProps = isUserPage ? { gap: 8, w: '100%' as const } : { gap: 8 };
+  const sizingProp = isUserPage
+    ? { sizing: 'stretch' as const }
+    : { fontType: 'label-small' as const };
+
   return (
     <>
-      <CompactButtonRow gap={8}>
+      <ButtonRow {...buttonRowProps}>
         {areFriends(user) ? (
           <Button.Secondary
             status="normal"
             text={t('unfriend')}
-            fontType="label-small"
+            {...sizingProp}
             onClick={handleClickUnfriend}
           />
         ) : type === 'requests' || receivedFriendRequest(user) ? (
@@ -272,13 +278,13 @@ function FriendStatus({
             <PrimaryButton
               status="normal"
               text={t('confirm')}
-              fontType="label-small"
+              {...sizingProp}
               onClick={handleClickConfirm}
             />
             <Button.Secondary
               status="normal"
               text={t('reject')}
-              fontType="label-small"
+              {...sizingProp}
               onClick={handleClickRejectFriendRequest}
             />
           </>
@@ -286,11 +292,11 @@ function FriendStatus({
           <>
             {type === 'sent_requests' || sentFriendRequest(user) ? (
               <>
-                <PrimaryButton status="completed" text={t('requested')} fontType="label-small" />
+                <PrimaryButton status="completed" text={t('requested')} {...sizingProp} />
                 <Button.Secondary
                   status="normal"
                   text={t('cancel')}
-                  fontType="label-small"
+                  {...sizingProp}
                   onClick={handleClickCancelRequest}
                 />
               </>
@@ -298,7 +304,7 @@ function FriendStatus({
               <PrimaryButton
                 status="normal"
                 text={t('request')}
-                fontType="label-small"
+                {...sizingProp}
                 onClick={handleClickRequest}
               />
             )}
@@ -306,13 +312,13 @@ function FriendStatus({
               <Button.Secondary
                 status="normal"
                 text={t('block_recommendation')}
-                fontType="label-small"
+                {...sizingProp}
                 onClick={handleClickDeleteRecommendation}
               />
             )}
           </>
         )}
-      </CompactButtonRow>
+      </ButtonRow>
       {isCancelFriendRequestDialogVisible && (
         <CommonDialog
           visible={isCancelFriendRequestDialogVisible}
