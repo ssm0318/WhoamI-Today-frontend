@@ -14,7 +14,8 @@ services:
 
   nginx-reverse-proxy:
     container_name: nginx-reverse-proxy
-    image: nginx:alpine
+    build:
+      dockerfile_inline: "FROM nginx:alpine"
     depends_on:
       frontend-builder:
         condition: service_completed_successfully
