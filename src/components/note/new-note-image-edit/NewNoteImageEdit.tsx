@@ -1,4 +1,5 @@
 import { SyntheticEvent, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import ReactCrop, { centerCrop, Crop, makeAspectCrop, PixelCrop } from 'react-image-crop';
 import SubHeader from '@components/sub-header/SubHeader';
@@ -122,7 +123,16 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
     onCompleteImageCrop(croppedImg);
   };
 
-  return (
+  // iOS WebView 의 -webkit-overflow-scrolling: touch (MainScrollContainer) 안에서는
+  // position: fixed 가 viewport 가 아니라 스크롤 컨테이너 기준으로 잡히는 webkit 이슈가 있어서
+  // 컨테이너 자체를 #modal-container (RootContainer 밖, body 직속) 로 portal 해서
+  // 항상 viewport 기준으로 풀스크린이 되도록 함. SubHeader 가 같은 패턴을 사용함.
+  const portalTarget =
+    typeof document !== 'undefined'
+      ? document.getElementById('modal-container') ?? document.body
+      : null;
+
+  const content = (
     <StyledNoteImageEditContainer bgColor="DARK">
       {croppedImg ? (
         <>
@@ -184,6 +194,8 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
       )}
     </StyledNoteImageEditContainer>
   );
+
+  return portalTarget ? createPortal(content, portalTarget) : content;
 }
 
 export default NewNoteImageEdit;
