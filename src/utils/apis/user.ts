@@ -17,8 +17,8 @@ import {
   SignInResponse,
   SignUpParams,
   UsernameError,
-  VersionSwapRequest,
-  VersionSwapRequestPendingResponse,
+  VersionSwitchRequest,
+  VersionSwitchRequestPendingResponse,
 } from '@models/api/user';
 import { Note, Response } from '@models/post';
 import { User, UserProfile } from '@models/user';
@@ -567,16 +567,16 @@ export const getUserAllPosts = async (username: string) => {
   return data;
 };
 
-export const requestVersionSwap = async (reason?: string) => {
-  const { data } = await axios.post<VersionSwapRequest>('/user/version-swap-request/', {
+export const requestVersionSwitch = async (reason?: string) => {
+  const { data } = await axios.post<VersionSwitchRequest>('/user/version-switch-request/', {
     reason: reason ?? '',
   });
   return data;
 };
 
-export const getMyPendingVersionSwapRequest = async () => {
-  const { data } = await axios.get<VersionSwapRequestPendingResponse>(
-    '/user/version-swap-request/me/',
+export const getMyPendingVersionSwitchRequest = async () => {
+  const { data } = await axios.get<VersionSwitchRequestPendingResponse>(
+    '/user/version-switch-request/me/',
   );
   return data;
 };

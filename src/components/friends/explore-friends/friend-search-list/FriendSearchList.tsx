@@ -147,9 +147,9 @@ export default function FriendSearchList({ query }: Props) {
             </Typo>
             <Button.Primary
               status="normal"
-              text={t('friends.explore_friends.search.request_version_swap')}
+              text={t('friends.explore_friends.search.request_version_switch')}
               sizing="stretch"
-              onClick={() => navigate('/settings/version-swap-request')}
+              onClick={() => navigate('/settings/version-switch-request')}
             />
           </Layout.FlexCol>
         </Layout.FlexCol>

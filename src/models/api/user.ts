@@ -159,7 +159,7 @@ export interface SentFriendRequest {
   requestee_detail: User;
 }
 
-export interface VersionSwapRequest {
+export interface VersionSwitchRequest {
   id: number;
   reason: string | null;
   from_version: VersionType;
@@ -168,6 +168,6 @@ export interface VersionSwapRequest {
   created_at: string;
 }
 
-export interface VersionSwapRequestPendingResponse {
-  pending: VersionSwapRequest | null;
+export interface VersionSwitchRequestPendingResponse {
+  pending: VersionSwitchRequest | null;
 }

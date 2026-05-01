@@ -14,15 +14,15 @@ import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Button, CheckBox, Font, Layout, Typo } from '@design-system';
 import { VersionType } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
-import { requestVersionSwap } from '@utils/apis/user';
+import { requestVersionSwitch } from '@utils/apis/user';
 
 const VERSION_LABEL: Record<VersionType, string> = {
   [VersionType.VER_W]: 'Ver.W',
   [VersionType.VER_Q]: 'Ver.Q',
 };
 
-function VersionSwapRequest() {
-  const [t] = useTranslation('translation', { keyPrefix: 'version_swap' });
+function VersionSwitchRequest() {
+  const [t] = useTranslation('translation', { keyPrefix: 'version_switch' });
   const navigate = useNavigate();
   const { mutate } = useSWRConfig();
   const { myProfile, openToast } = useBoundStore((state) => ({
@@ -48,9 +48,9 @@ function VersionSwapRequest() {
   const handleConfirm = async () => {
     setSubmitting(true);
     try {
-      await requestVersionSwap(reason.trim() || undefined);
+      await requestVersionSwitch(reason.trim() || undefined);
       setConfirmVisible(false);
-      mutate('/user/version-swap-request/me/');
+      mutate('/user/version-switch-request/me/');
       setSuccessVisible(true);
     } catch (e) {
       setConfirmVisible(false);
@@ -102,7 +102,7 @@ function VersionSwapRequest() {
 
         <WarningBox>
           <CheckBox
-            name="version-swap-understood"
+            name="version-switch-understood"
             checked={understood}
             onChange={(e) => setUnderstood(e.target.checked)}
             label={
@@ -170,4 +170,4 @@ const WarningBox = styled.div`
   background: ${({ theme }) => theme.INPUT_GRAY};
 `;
 
-export default VersionSwapRequest;
+export default VersionSwitchRequest;
