@@ -5,7 +5,8 @@ import { Layout, Typo } from '@design-system';
 import { Chip } from './Chip.styled';
 
 const ChipsRow = styled(Layout.FlexRow)`
-  flex-wrap: wrap;
+  width: 100%;
+  justify-content: space-between;
   gap: 8px;
 `;
 
