@@ -130,9 +130,9 @@ function Root() {
         <RootContainer w="100%" bgColor="WHITE" id="root-container">
           <Header />
           <Outlet />
-          <Tab />
           <CheckInFreshnessPrompt visible={shouldShow} onDismiss={dismiss} checkIn={checkIn} />
         </RootContainer>
+        <Tab />
       </Layout.FlexRow>
     </SWRConfig>
   );

@@ -10,9 +10,10 @@ import { QuestionItemWrapper } from './QuestionItem.styled';
 interface QuestionItemProps {
   question: DailyQuestion;
   onSend?: () => void;
+  disableNavigation?: boolean;
 }
 
-function QuestionItem({ question, onSend }: QuestionItemProps) {
+function QuestionItem({ question, onSend, disableNavigation = false }: QuestionItemProps) {
   const navigate = useNavigate();
   const { id, content } = question;
 
@@ -34,7 +35,12 @@ function QuestionItem({ question, onSend }: QuestionItemProps) {
 
   return (
     <>
-      <QuestionItemWrapper p={16} rounded={12} w="100%" onClick={handleClickRespond}>
+      <QuestionItemWrapper
+        p={16}
+        rounded={12}
+        w="100%"
+        onClick={disableNavigation ? undefined : handleClickRespond}
+      >
         <Layout.FlexRow gap={8} alignItems="center">
           <ProfileImage imageUrl="/whoami-profile.svg" username="Whoami Today" size={28} />
           <Typo type="title-medium">Whoami Today</Typo>

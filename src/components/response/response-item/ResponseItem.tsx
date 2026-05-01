@@ -27,6 +27,7 @@ interface ResponseItemProps {
   emojiPickerPortalId?: string;
   profileImageSize?: number;
   previewMode?: boolean;
+  disableQuestionNavigation?: boolean;
 }
 
 function ResponseItem({
@@ -37,6 +38,7 @@ function ResponseItem({
   emojiPickerPortalId,
   profileImageSize = PROFILE_IMAGE_SIZE,
   previewMode = false,
+  disableQuestionNavigation = false,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
   const [tAccess] = useTranslation('translation', { keyPrefix: 'access_setting' });
@@ -208,7 +210,9 @@ function ResponseItem({
     </Layout.FlexCol>
   );
 
-  const questionJsx = question ? <QuestionItem question={question} /> : null;
+  const questionJsx = question ? (
+    <QuestionItem question={question} disableNavigation={disableQuestionNavigation} />
+  ) : null;
 
   const footerJsx = featureFlags?.postsVerQ ? (
     <PostFooterLikeOnly

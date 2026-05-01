@@ -78,6 +78,7 @@ function FriendNewPosts() {
                     key={`response-${post.id}`}
                     response={post as any}
                     displayType="FEED"
+                    disableQuestionNavigation
                   />
                 );
               }
