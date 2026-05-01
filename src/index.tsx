@@ -282,6 +282,9 @@ const router = createBrowserRouter([
       {
         path: 'check-in',
         children: [
+          // DEPRECATED: /check-in/edit is no longer linked from anywhere in the
+          // app. The Check-In bottom tab (`/update`) is the supported flow.
+          // Route kept only for any legacy bookmarks; do NOT navigate here.
           { path: 'edit', element: <CheckInEdit /> },
           { path: 'archive', element: <Archive /> },
         ],

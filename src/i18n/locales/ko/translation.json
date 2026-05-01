@@ -233,6 +233,7 @@
         "explore_friends": "친구 추가",
         "questions": "전체 질문",
         "my_profile": "마이 프로필",
+        "browsing_mode": "브라우즈 모드",
         "survey_results": "설문 결과",
         "settings": "설정",
         "edit_profile": "프로필 편집",
@@ -1230,5 +1231,142 @@
     "ok": "확인",
     "already_pending": "이미 진행 중인 버전 변경 신청이 있어.",
     "submit_failed": "신청에 실패했어. 다시 시도해줘."
+  },
+  "browse_mode": {
+    "full_screen": {
+      "skip": "건너뛰기"
+    },
+    "preview_bar": {
+      "label": "✨ 미리보기 모드",
+      "exit_aria": "미리보기 종료하고 브라우즈 모드 목록으로 돌아가기",
+      "blocked_toast": "미리보기 모드에서는 사용할 수 없어"
+    },
+    "toasts": {
+      "battery_set": "배터리를 {{emoji}} {{label}}(으)로 설정했어",
+      "browsing_in": "{{name}} 모드로 둘러보는 중",
+      "browsing_in_with_battery": "{{name}} 모드로 둘러보는 중 · {{emoji}} {{label}}",
+      "adjust": "조정",
+      "delete_failed": "삭제하지 못했어 — 다시 해볼까?"
+    },
+    "steps": {
+      "mode": {
+        "title": "오늘은 뭐가 끌려?",
+        "saved_label": "저장한 모드",
+        "customize": "✨ 새 브라우즈 모드 만들기",
+        "wishlist_link": "💭 원하는 게 안 보여?",
+        "last_used_badge": "마지막 사용",
+        "current_badge": "현재",
+        "battery_hint": "배터리 → {{emoji}} {{label}}",
+        "sync_toggle": "배터리도 같이 설정",
+        "sync_subtitle": "이 모드에 맞춰 자동으로 — 들어가서 조정할 수 있어",
+        "edit_preset_aria": "{{name}} 수정",
+        "delete_preset_aria": "{{name}} 삭제",
+        "hide_preset_aria": "{{name}} 목록에서 숨기기",
+        "clone_builtin_aria": "{{name}} 내 스타일로 만들기",
+        "hide_builtin_aria": "{{name}} 목록에서 숨기기",
+        "clone_name_suffix": "내 {{name}}",
+        "edit_list": "목록 편집",
+        "edit_done": "완료",
+        "hidden_label": "숨긴 모드",
+        "show_again": "다시 보기",
+        "delete_forever": "완전 삭제",
+        "delete_confirm_title": "이 모드를 삭제할까?",
+        "delete_confirm_content": "\"{{name}}\"이(가) 저장한 모드 목록에서 사라질 거야.",
+        "delete_confirm_cancel": "취소",
+        "delete_confirm_confirm": "삭제"
+      },
+      "customize": {
+        "title": "커스텀 모드 만들기",
+        "title_edit": "모드 수정",
+        "subtitle": "",
+        "subtitle_edit": "바꾸고 싶은 부분만 손봐 — 저장하면 기존 모드가 갱신돼",
+        "templates_section": "빠른 시작",
+        "templates_subtitle": "하나 골라서 편집해보고 저장해봐",
+        "tabs_section": "보여줄 탭",
+        "tabs_subtitle": "탭마다 시간 제한을 골라봐 — 시간이 지나면 사라져. \"항상\"은 그대로 유지돼.",
+        "duration_aria": "{{tab}} 시간 제한",
+        "duration_options": {
+          "always": "항상",
+          "minutes_5": "5분",
+          "minutes_15": "15분",
+          "minutes_30": "30분",
+          "minutes_60": "1시간"
+        },
+        "filters_section": "필터 기본값",
+        "battery_section": "기본 배터리",
+        "battery_subtitle": "'배터리도 같이 설정' 토글이 켜진 상태에서 이 모드를 고르면 적용될 배터리야. 선택사항.",
+        "battery_none": "안 정함",
+        "save_as": "모드로 저장하기",
+        "name_label": "모드 이름",
+        "name_placeholder": "예: 가벼운 모드, 야간 모드",
+        "description_label": "설명 (선택)",
+        "description_placeholder": "예: 시험 기간, 채팅 최소화",
+        "save": "저장",
+        "apply_without_saving": "저장 안 하고 적용",
+        "errors": {
+          "name_required": "모드 이름을 입력해줘",
+          "save_failed": "저장에 실패했어. 다시 해볼까?",
+          "tabs_required": "탭을 하나 이상 골라줘"
+        }
+      }
+    },
+    "wishlist": {
+      "title": "원하는 게 안 보여?",
+      "subtitle": "브라우즈 모드에서 또 어떤 옵션을 커스텀할 수 있으면 좋겠어?",
+      "placeholder": "예: 밤에 자동으로 Soft 모드, 특정 사람 체크인 숨기기, 탭별로 필터 저장하기…",
+      "send": "보내기",
+      "sent_toast": "WIT 관리자에게 전송됐어. 의견 고마워!",
+      "error": "보내지 못했어 — 다시 해볼까?"
+    },
+    "modes": {
+      "very_social": {
+        "name": "Full social",
+        "description": "오늘은 다 보여줘 — 다 즐길 준비됐어"
+      },
+      "selectively_social": {
+        "name": "Just my people",
+        "description": "친한 친구들만, 랜덤 추천은 빼줘"
+      },
+      "quiet": {
+        "name": "Soft mode",
+        "description": "오늘은 그냥 공유만 — 조용히 갈게"
+      }
+    },
+    "tabs": {
+      "friends": "친구",
+      "update": "업데이트",
+      "share": "공유",
+      "discover": "둘러보기",
+      "chats": "채팅",
+      "my": "마이",
+      "questions": "질문"
+    },
+    "filters": {
+      "friends_close_only": "친구 탭에서 친한 친구만 보기",
+      "chats_close_only": "채팅 탭에서 친한 친구만 보기"
+    },
+    "sections": {
+      "hide_synthetic_discover_cards": "둘러보기 추천 숨기기",
+      "hide_ping_buttons": "Ping 버튼 숨기기",
+      "hide_new_post_badge": "\"New post\" 배지 숨기기"
+    },
+    "templates": {
+      "no_discover": {
+        "name": "친구는 보고, 둘러보기는 빼고",
+        "description": "아는 친구들과만 — 오늘은 새 친구는 패스"
+      },
+      "just_chat": {
+        "name": "채팅만",
+        "description": "메시지 답장만, 다른 건 패스"
+      },
+      "just_discover": {
+        "name": "둘러보기만",
+        "description": "새로운 사람과 콘텐츠만 보기"
+      },
+      "digital_detox": {
+        "name": "디지털 디톡스",
+        "description": "스크롤은 잠시 쉬고, 답장만 열어두기"
+      }
+    }
   }
 }

@@ -1,6 +1,7 @@
 import { create, StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
+import { BrowseModeSlice, createBrowseModeSlice } from './browseMode';
 import { CheckInSlice, createCheckInSlice } from './checkIn';
 import { createEmojiPickerSlice, EmojiPickerSlice } from './emojiPicker';
 import { createMomentSlice, MomentSlice } from './moment';
@@ -19,7 +20,8 @@ export type BoundState = MomentSlice &
   NotificationSlice &
   CheckInSlice &
   ToastSlice &
-  EmojiPickerSlice;
+  EmojiPickerSlice &
+  BrowseModeSlice;
 
 export type SliceStateCreator<Slice> = StateCreator<
   BoundState,
@@ -47,5 +49,6 @@ export const useBoundStore = create<BoundState>()(
     ...createCheckInSlice(...a),
     ...createToastSlice(...a),
     ...createEmojiPickerSlice(...a),
+    ...createBrowseModeSlice(...a),
   })),
 );
