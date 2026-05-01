@@ -12,7 +12,7 @@ import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import { VersionType } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getMyPendingVersionSwapRequest } from '@utils/apis/user';
+import { getMyPendingVersionSwitchRequest } from '@utils/apis/user';
 
 type SideMenuItem =
   | { key: string; emoji: string; kind: 'route'; path: string; flag?: FeatureFlagKey }
@@ -49,8 +49,8 @@ function SideMenu({ closeSideMenu }: Props) {
 
   const myProfile = useBoundStore((state) => state.myProfile);
   const { data: pendingResp } = useSWR(
-    '/user/version-swap-request/me/',
-    getMyPendingVersionSwapRequest,
+    '/user/version-switch-request/me/',
+    getMyPendingVersionSwitchRequest,
   );
   const isPending = !!pendingResp?.pending;
 
@@ -69,9 +69,9 @@ function SideMenu({ closeSideMenu }: Props) {
     closeSideMenu();
   };
 
-  const handleClickVersionSwap = () => {
+  const handleClickVersionSwitch = () => {
     if (isPending) return;
-    navigate('/settings/version-swap-request');
+    navigate('/settings/version-switch-request');
     closeSideMenu();
   };
 
@@ -138,9 +138,9 @@ function SideMenu({ closeSideMenu }: Props) {
                 </Layout.FlexRow>
                 <Button.Secondary
                   status={isPending ? 'disabled' : 'normal'}
-                  text={isPending ? t('request_pending') : t('request_version_swap')}
+                  text={isPending ? t('request_pending') : t('request_version_switch')}
                   sizing="fit-content"
-                  onClick={handleClickVersionSwap}
+                  onClick={handleClickVersionSwitch}
                 />
               </Layout.FlexCol>
             )}

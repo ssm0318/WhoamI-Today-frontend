@@ -248,7 +248,7 @@
         "feedback_to_researcher": "연구팀에게 피드백",
         "question_suggest": "질문 제안하기",
         "current_version": "현재 사용 중인 버전:",
-        "request_version_swap": "버전 변경 신청",
+        "request_version_switch": "버전 변경 신청",
         "request_pending": "신청 처리 중"
       },
       "bottom_sheet": {
@@ -838,7 +838,7 @@
         "your_friends": "친구",
         "more_results": "더 많은 검색 결과",
         "different_version_cta": "친구가 안 보여? 버전이 달라서 그럴 수도 있어. 버전 변경 신청할래?",
-        "request_version_swap": "버전 변경 신청"
+        "request_version_switch": "버전 변경 신청"
       },
       "invite": {
         "text": "친구 초대",
@@ -1224,7 +1224,7 @@
       "suppressed": "{{min}}명 미만이 답한 단어 {{count}}개는 개인정보 보호를 위해 숨겼어요."
     }
   },
-  "version_swap": {
+  "version_switch": {
     "title": "버전 변경 신청",
     "confirm_question": "변경하고자 하는 게 확실해?",
     "confirm_explanation": "친구랑 확인했어? 그들은 사이드바를 통해 자신의 버전을 확인할 수 있어.",

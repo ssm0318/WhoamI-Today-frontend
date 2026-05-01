@@ -248,7 +248,7 @@
                 "feedback_to_researcher": "Feedback to Researchers",
                 "question_suggest": "Suggest Questions",
                 "current_version": "You are currently using",
-                "request_version_swap": "Request Version Swap",
+                "request_version_switch": "Request Version Switch",
                 "request_pending": "Request Pending"
             },
             "bottom_sheet": {
@@ -845,8 +845,8 @@
                 "cancel": "Cancel",
                 "your_friends": "YOUR FRIENDS",
                 "more_results": "MORE RESULTS",
-                "different_version_cta": "Don't see your friend? They might be on a different version. Want to request a version swap?",
-                "request_version_swap": "Request Version Swap"
+                "different_version_cta": "Don't see your friend? They might be on a different version. Want to request a version switch?",
+                "request_version_switch": "Request Version Switch"
             },
             "invite": {
                 "text": "Invite Friends",
@@ -1233,22 +1233,22 @@
             "suppressed": "{{count}} words said by fewer than {{min}} people are hidden to protect privacy."
         }
     },
-    "version_swap": {
-        "title": "Request Version Swap",
-        "confirm_question": "Are you sure you want to swap?",
-        "confirm_explanation": "Have you confirmed with your friend? They can check their version in the side menu.",
-        "your_version_is": "Your version is",
-        "reason_label": "Why do you want to swap? (optional)",
-        "reason_placeholder": "Tell us briefly why you'd like to swap versions.",
-        "understand_irreversible": "I understand this request cannot be cancelled. The swap cannot be reversed — to go back, I'd need to create a new account.",
+    "version_switch": {
+        "title": "Request Version Switch",
+        "confirm_question": "Are you sure you want to switch versions?",
+        "confirm_explanation": "Did you check in with your friend first? They can find their version anytime in the side menu.",
+        "your_version_is": "You're on",
+        "reason_label": "Why do you want to switch? (optional)",
+        "reason_placeholder": "Briefly tell us why you'd like to switch.",
+        "understand_irreversible": "I understand this is a one-way switch. Once I change versions, the only way to go back is to create a new account.",
         "submit": "Submit Request",
         "cancel": "Cancel",
-        "confirm_modal_title": "Submit version swap request?",
-        "confirm_modal_body": "This request cannot be cancelled and the swap cannot be reversed. Do you want to continue?",
+        "confirm_modal_title": "Send version switch request?",
+        "confirm_modal_body": "This can't be undone. Want to continue?",
         "submitted_title": "Request Submitted",
-        "submitted_popup": "An admin will review your request and apply the swap.",
+        "submitted_popup": "We'll review your request and apply the switch soon.",
         "ok": "OK",
-        "already_pending": "You already have a pending version swap request.",
+        "already_pending": "You already have a pending version switch request.",
         "submit_failed": "Could not submit your request. Please try again."
     },
     "browse_mode": {
