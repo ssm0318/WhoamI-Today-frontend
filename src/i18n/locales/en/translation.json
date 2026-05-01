@@ -1215,6 +1215,7 @@
         "responder_count_today": "{{count}} people took this on WIT today",
         "responder_count_today_zero": "Be the first to take this on WIT today",
         "view_results": "View results",
+        "done": "Done",
         "answered_view_results": "Answered — view results",
         "answer_to_view_results": "Answer to view results",
         "locked_title": "Results not yet available",
