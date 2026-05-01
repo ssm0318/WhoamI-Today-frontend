@@ -3,6 +3,29 @@ import { getStyle, toMarginPaddingString } from '../layouts';
 import { TextPropsBase, TypoPropBase } from './Font';
 import { FontAttrs, FontSettings } from './Font.types';
 
+const CUSTOM_PROPS = new Set([
+  'fontSize',
+  'fontWeight',
+  'lineHeight',
+  'lineThrough',
+  'underline',
+  'numberOfLines',
+  'pre',
+  'italic',
+  'bold',
+  'ellipsis',
+  'textAlign',
+  'm',
+  'mh',
+  'mv',
+  'mt',
+  'mr',
+  'mb',
+  'ml',
+]);
+
+const shouldForwardProp = (prop: string | number) => !CUSTOM_PROPS.has(String(prop));
+
 const getTextDecoration = ({
   lineThrough,
   underline,
@@ -23,7 +46,9 @@ const getTextDecoration = ({
 /**
  * @deprecated use StyledFont
  */
-export const Font = styled.span<FontSettings & TextPropsBase>`
+export const Font = styled.span.withConfig({
+  shouldForwardProp: shouldForwardProp as any,
+})<FontSettings & TextPropsBase>`
   display: block;
   max-width: 100%;
   font-size: ${({ fontSize }) => fontSize}px;
@@ -54,7 +79,9 @@ export const Font = styled.span<FontSettings & TextPropsBase>`
     `}
 `;
 
-export const StyledFont = styled.span<FontAttrs & TypoPropBase>`
+export const StyledFont = styled.span.withConfig({
+  shouldForwardProp: shouldForwardProp as any,
+})<FontAttrs & TypoPropBase>`
   font-size: ${({ fontSize }) => fontSize}px;
   font-weight: ${({ fontWeight }) => fontWeight};
   line-height: ${({ lineHeight }) => (lineHeight ? `${lineHeight}px` : '140%')};

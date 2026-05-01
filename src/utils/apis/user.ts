@@ -568,7 +568,7 @@ export const getUserAllPosts = async (username: string) => {
 };
 
 export const requestVersionSwitch = async (reason?: string) => {
-  const { data } = await axios.post<VersionSwitchRequest>('/user/version-switch-request/', {
+  const { data } = await axios.post<VersionSwitchRequest>('/user/version-swap-request/', {
     reason: reason ?? '',
   });
   return data;
@@ -576,7 +576,7 @@ export const requestVersionSwitch = async (reason?: string) => {
 
 export const getMyPendingVersionSwitchRequest = async () => {
   const { data } = await axios.get<VersionSwitchRequestPendingResponse>(
-    '/user/version-switch-request/me/',
+    '/user/version-swap-request/me/',
   );
   return data;
 };
