@@ -136,7 +136,7 @@ function BrowseModeStepMode({
           return (
             <ModeCard
               key={mode.id}
-              type="button"
+              role={editListMode ? undefined : 'button'}
               $selected={selected}
               $editing={editListMode}
               onClick={handleCardClick}
@@ -225,7 +225,7 @@ function BrowseModeStepMode({
               return (
                 <ModeCard
                   key={preset.id}
-                  type="button"
+                  role={editListMode ? undefined : 'button'}
                   $selected={selected}
                   $editing={editListMode}
                   onClick={handleCardClick}
@@ -400,7 +400,12 @@ function BrowseModeStepMode({
 
 export default BrowseModeStepMode;
 
-const ModeCard = styled.button<{ $selected: boolean; $editing: boolean }>`
+// ModeCard is a div (not a <button>) because it nests inner <button> icons
+// for the chevron / X — <button> inside <button> is invalid HTML.
+// role="button" + tabIndex give it the same a11y semantics. Click is the
+// only activation we surface; keyboard activation isn't critical here
+// because the inner chevron / X covers that path.
+const ModeCard = styled.div<{ $selected: boolean; $editing: boolean }>`
   background: ${({ $selected }) => ($selected ? '#F3E8FF' : Colors.WHITE)};
   border: 1px solid ${({ $selected }) => ($selected ? Colors.PRIMARY : Colors.LIGHT_GRAY)};
   border-radius: 12px;
