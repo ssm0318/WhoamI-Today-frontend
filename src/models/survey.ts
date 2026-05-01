@@ -1,4 +1,6 @@
-export type SurveyType = 'likert_5' | 'single_choice' | 'multi_choice';
+// Question types — defined per-question so a single Survey can mix them.
+// Mirror of surveys/models.py TYPE_CHOICES.
+export type QuestionType = 'likert_5' | 'single_choice' | 'multi_choice' | 'free_text';
 
 export interface SurveyOption {
   id: number;
@@ -11,6 +13,7 @@ export interface SurveyOption {
 export interface SurveyQuestion {
   id: number;
   order: number;
+  type: QuestionType;
   prompt_en: string;
   prompt_ko: string;
   low_label_en: string;
@@ -23,7 +26,6 @@ export interface SurveyQuestion {
 
 export interface Survey {
   slug: string;
-  type: SurveyType;
   title_en: string;
   title_ko: string;
   description_en: string;
@@ -41,7 +43,7 @@ export interface SurveyOfTheDayResponse {
 
 export interface SurveyAnswerInput {
   question_id: number;
-  value: number | number[];
+  value: number | number[] | string;
 }
 
 export type SuppressedReason =
@@ -49,6 +51,7 @@ export type SuppressedReason =
   | 'too_few_responders'
   | 'too_few_close_friends'
   | 'delta_too_small'
+  | 'view_friend_disabled'
   | null;
 
 export interface AggregatedLikertDistribution {
@@ -72,7 +75,18 @@ export interface OptionCountsDistribution {
   user_choice: number | number[] | null;
 }
 
-export type SurveyDistribution = AggregatedLikertDistribution | OptionCountsDistribution;
+export interface WordcloudDistribution {
+  kind: 'wordcloud';
+  tokens: { token: string; count: number }[];
+  min_token_frequency: number;
+  suppressed_token_count: number;
+  viewer_tokens: string[];
+}
+
+export type SurveyDistribution =
+  | AggregatedLikertDistribution
+  | OptionCountsDistribution
+  | WordcloudDistribution;
 
 export interface BucketResult {
   n: number;
@@ -80,8 +94,12 @@ export interface BucketResult {
   user_percentile: number | null;
 }
 
-export interface SurveyResults {
-  user_response: { id: number | null };
+export interface ResultPanel {
+  group_key: string;
+  kind: SurveyDistribution['kind'];
+  title_en: string;
+  title_ko: string;
+  question_count: number;
   population: BucketResult | null;
   population_available: boolean;
   population_suppressed_reason: SuppressedReason;
@@ -94,6 +112,11 @@ export interface SurveyResults {
   close_friends_available: boolean;
   close_friends_suppressed_reason: SuppressedReason;
   close_friends_required_n: number;
+}
+
+export interface SurveyResults {
+  user_response: { id: number | null };
+  panels: ResultPanel[];
 }
 
 export interface SurveyResultsError {

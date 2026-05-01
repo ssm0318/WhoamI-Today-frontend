@@ -1159,7 +1159,19 @@
             "too_few_friends": "Available once you have 5 friends.",
             "too_few_responders": "Available once 5 of your friends have responded.",
             "too_few_close_friends": "Available once you have 5 close friends.",
-            "delta_too_small": "Available once you have at least 5 more friends than close friends."
+            "delta_too_small": "Available once you have at least 5 more friends than close friends.",
+            "view_friend_disabled": "Friend-level breakdown is disabled for this view to protect individual responses."
+        },
+        "panel_kinds": {
+            "aggregated_likert": "Score distribution",
+            "option_counts": "Choices",
+            "wordcloud": "Reflections"
+        },
+        "panel_questions_count": "{{count}} questions aggregated",
+        "free_text_placeholder": "Type your response…",
+        "wordcloud": {
+            "empty": "No words shared yet — the population is too small to display.",
+            "suppressed": "{{count}} words said by fewer than {{min}} people are hidden to protect privacy."
         }
     }
 }

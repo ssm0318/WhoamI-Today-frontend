@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { useBoundStore } from '@stores/useBoundStore';
 
-export type DraftAnswers = Record<number, number | number[]>;
+export type DraftAnswers = Record<number, number | number[] | string>;
 
 interface DraftPayload {
   answers: DraftAnswers;
@@ -48,7 +48,7 @@ export function useSurveyDraft(slug: string | undefined) {
   }, [key]);
 
   const setAnswer = useCallback(
-    (questionId: number, value: number | number[]) => {
+    (questionId: number, value: number | number[] | string) => {
       setAnswers((prev) => {
         const next = { ...prev, [questionId]: value };
         if (key) writeDraft(key, next);

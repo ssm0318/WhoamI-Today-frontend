@@ -8,16 +8,26 @@ import { SurveyResultsBucket } from '@components/survey/SurveyResultsBucket';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import i18n from '@i18n/index';
-import { Survey, SurveyResultsError } from '@models/survey';
+import { ResultPanel, Survey, SurveyResultsError } from '@models/survey';
 import { getSurveyDetail, getSurveyResults } from '@utils/apis/survey';
 
 const Page = styled(Layout.FlexCol)`
   width: 100%;
   padding: 16px;
   padding-top: ${TITLE_HEADER_HEIGHT + 16}px;
-  gap: 16px;
+  gap: 24px;
   background: ${Colors.LIGHT};
   min-height: 100vh;
+`;
+
+const PanelGroup = styled(Layout.FlexCol)`
+  width: 100%;
+  gap: 12px;
+`;
+
+const PanelHeader = styled(Layout.FlexCol)`
+  width: 100%;
+  gap: 4px;
 `;
 
 const ActionButton = styled.button`
@@ -38,6 +48,51 @@ interface AxiosError {
     status: number;
     data: SurveyResultsError;
   };
+}
+
+function panelHeading(panel: ResultPanel, t: (k: string) => string) {
+  // Single-question panels carry the prompt as title; multi-question panels render
+  // a kind label as the section heading.
+  const localized = pickLocalized(panel.title_en, panel.title_ko);
+  if (localized) return localized;
+  return t(`panel_kinds.${panel.kind}`);
+}
+
+function PanelView({ panel, interpretation }: { panel: ResultPanel; interpretation?: string }) {
+  const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
+  return (
+    <PanelGroup>
+      <PanelHeader>
+        <Typo type="title-medium" color="BLACK">
+          {panelHeading(panel, t)}
+        </Typo>
+        {panel.question_count > 1 && (
+          <Typo type="label-medium" color="DARK_GRAY">
+            {t('panel_questions_count', { count: panel.question_count })}
+          </Typo>
+        )}
+      </PanelHeader>
+      <SurveyResultsBucket
+        title={t('buckets.population')}
+        available={panel.population_available}
+        reason={panel.population_suppressed_reason}
+        bucket={panel.population}
+        interpretation={interpretation}
+      />
+      <SurveyResultsBucket
+        title={t('buckets.friends')}
+        available={panel.friends_available}
+        reason={panel.friends_suppressed_reason}
+        bucket={panel.friends}
+      />
+      <SurveyResultsBucket
+        title={t('buckets.close_friends')}
+        available={panel.close_friends_available}
+        reason={panel.close_friends_suppressed_reason}
+        bucket={panel.close_friends}
+      />
+    </PanelGroup>
+  );
 }
 
 function SurveyResults() {
@@ -82,25 +137,14 @@ function SurveyResults() {
     <>
       <SubHeader title={pickLocalized(survey.title_en, survey.title_ko)} />
       <Page>
-        <SurveyResultsBucket
-          title={t('buckets.population')}
-          available={data.population_available}
-          reason={data.population_suppressed_reason}
-          bucket={data.population}
-          interpretation={interpretation}
-        />
-        <SurveyResultsBucket
-          title={t('buckets.friends')}
-          available={data.friends_available}
-          reason={data.friends_suppressed_reason}
-          bucket={data.friends}
-        />
-        <SurveyResultsBucket
-          title={t('buckets.close_friends')}
-          available={data.close_friends_available}
-          reason={data.close_friends_suppressed_reason}
-          bucket={data.close_friends}
-        />
+        {data.panels.map((panel, idx) => (
+          <PanelView
+            key={panel.group_key}
+            panel={panel}
+            // Show the survey-level interpretation only on the first panel.
+            interpretation={idx === 0 ? interpretation : undefined}
+          />
+        ))}
       </Page>
     </>
   );

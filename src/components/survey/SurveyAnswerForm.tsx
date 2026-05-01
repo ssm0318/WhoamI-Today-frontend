@@ -9,6 +9,7 @@ import { Survey, SurveyAnswerInput } from '@models/survey';
 import { submitSurveyResponse } from '@utils/apis/survey';
 
 import { ChoiceChips } from './ChoiceChips';
+import { FreeTextInput } from './FreeTextInput';
 import { LikertChips } from './LikertChips';
 
 const ProgressBarTrack = styled.div`
@@ -62,9 +63,10 @@ interface SurveyAnswerFormProps {
 
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
-const isAnswered = (value: number | number[] | undefined) => {
-  if (value === undefined) return false;
+const isAnswered = (value: number | number[] | string | undefined) => {
+  if (value === undefined || value === null) return false;
   if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === 'string') return value.trim().length > 0;
   return true;
 };
 
@@ -141,7 +143,7 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
         <Typo type="title-medium" color="BLACK">
           {pickLocalized(currentQuestion.prompt_en, currentQuestion.prompt_ko)}
         </Typo>
-        {survey.type === 'likert_5' && (
+        {currentQuestion.type === 'likert_5' && (
           <LikertChips
             selected={(currentValue as number | undefined) ?? null}
             onSelect={(v) => setAnswer(currentQuestion.id, v)}
@@ -149,15 +151,22 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
             highLabel={pickLocalized(currentQuestion.high_label_en, currentQuestion.high_label_ko)}
           />
         )}
-        {(survey.type === 'single_choice' || survey.type === 'multi_choice') && (
+        {(currentQuestion.type === 'single_choice' || currentQuestion.type === 'multi_choice') && (
           <ChoiceChips
             options={currentQuestion.options.map((o) => ({
               value: o.value,
               label: pickLocalized(o.label_en, o.label_ko),
             }))}
-            multi={survey.type === 'multi_choice'}
-            selected={currentValue ?? null}
+            multi={currentQuestion.type === 'multi_choice'}
+            selected={(currentValue as number | number[] | undefined) ?? null}
             onSelect={(v) => setAnswer(currentQuestion.id, v)}
+          />
+        )}
+        {currentQuestion.type === 'free_text' && (
+          <FreeTextInput
+            value={(currentValue as string | undefined) ?? ''}
+            onChange={(v) => setAnswer(currentQuestion.id, v)}
+            placeholder={t('free_text_placeholder')}
           />
         )}
       </Layout.FlexCol>
