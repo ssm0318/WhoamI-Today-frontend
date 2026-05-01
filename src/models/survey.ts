@@ -1,6 +1,6 @@
 // Question types — defined per-question so a single Survey can mix them.
 // Mirror of surveys/models.py TYPE_CHOICES.
-export type QuestionType = 'likert_5' | 'single_choice' | 'multi_choice' | 'free_text';
+export type QuestionType = 'likert_5' | 'single_choice' | 'multi_choice' | 'free_text' | 'slider';
 
 export interface SurveyOption {
   id: number;
@@ -21,6 +21,10 @@ export interface SurveyQuestion {
   high_label_en: string;
   high_label_ko: string;
   reverse_scored: boolean;
+  // Slider-only inclusive bounds; null for non-slider types. low_label /
+  // high_label double as the slider's min/max labels.
+  slider_min_value: number | null;
+  slider_max_value: number | null;
   options: SurveyOption[];
 }
 
@@ -84,10 +88,22 @@ export interface WordcloudDistribution {
   viewer_tokens: string[];
 }
 
+export interface SliderHistogramDistribution {
+  kind: 'slider_histogram';
+  question_id: number | null;
+  min_value: number | null;
+  max_value: number | null;
+  bins: { lo: number; hi: number; count: number }[];
+  mean: number | null;
+  median: number | null;
+  user_value: number | null;
+}
+
 export type SurveyDistribution =
   | AggregatedLikertDistribution
   | OptionCountsDistribution
-  | WordcloudDistribution;
+  | WordcloudDistribution
+  | SliderHistogramDistribution;
 
 export interface BucketResult {
   n: number;
