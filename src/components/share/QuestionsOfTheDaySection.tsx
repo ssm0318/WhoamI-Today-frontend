@@ -8,7 +8,7 @@ import { Layout, Typo } from '@design-system';
 import { DailyQuestion } from '@models/post';
 import { getTodayQuestions } from '@utils/apis/question';
 
-const MAX_VISIBLE_QUESTIONS = 3;
+const MAX_VISIBLE_QUESTIONS = 1;
 
 function QuestionsOfTheDaySection() {
   const [t] = useTranslation('translation');
@@ -24,7 +24,7 @@ function QuestionsOfTheDaySection() {
   return (
     <Card>
       <Typo type="head-line" bold mb={24}>
-        Questions of the Day
+        Question of the Day
       </Typo>
       {visibleQuestions.length > 0 ? (
         <Layout.FlexCol w="100%" gap={10}>
