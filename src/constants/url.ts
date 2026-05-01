@@ -16,8 +16,6 @@ export const FRIENDS_Q_DEFAULT_REDIRECTION_PATH = '/feed';
 
 export const FEED_DEFAULT_REDIRECTION_PATH = '/feed';
 
-export const AFTER_SIGNUP_PATH = '/my';
-
 export const INVITATION_LINK = 'https://whoamitoday.page.link/invite-friend';
 
 export const RESEARCH_SIGNUP_FORM_URL_EN =
