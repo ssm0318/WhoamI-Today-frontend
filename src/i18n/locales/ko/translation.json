@@ -17,6 +17,12 @@
     "my_snippets": "내 Daily Snippets",
     "pinned_link": "고정된 Daily Snippets ({{count}})",
     "all_link": "모든 Daily Snippets ({{count}})",
+    "add_photo_prompt": "사진을 추가해 보세요",
+    "choose_photo": "사진 선택",
+    "take_photo": "사진 촬영",
+    "add_caption_placeholder": "캡션 추가...",
+    "change_photo": "변경",
+    "retake": "다시 찍기",
     "archive": {
       "title": "Daily Snippets",
       "tab_all": "All",

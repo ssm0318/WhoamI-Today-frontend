@@ -28,6 +28,12 @@
         "my_snippets": "My Daily Snippets",
         "pinned_link": "Pinned Daily Snippets ({{count}})",
         "all_link": "All Daily Snippets ({{count}})",
+        "add_photo_prompt": "Add a photo to share",
+        "choose_photo": "Choose Photo",
+        "take_photo": "Take a Photo",
+        "add_caption_placeholder": "Add a caption...",
+        "change_photo": "Change",
+        "retake": "Retake",
         "archive": {
             "title": "Daily Snippets",
             "tab_all": "All",

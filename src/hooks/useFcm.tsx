@@ -24,8 +24,6 @@ const useFcm = () => {
 
       const token = await getFCMRegistrationToken(messaging);
       setFcmToken(token);
-
-      console.log(`[useFcm] Fcm initialized with token: ${token}`);
     } catch (e) {
       console.log(e);
     }

@@ -13,6 +13,7 @@ interface SubHeaderProps {
   onClickTitle?: () => void;
   RightComponent?: React.ReactNode;
   LeftComponent?: React.ReactNode;
+  disablePortal?: boolean;
 }
 /**
  *
@@ -25,6 +26,7 @@ function SubHeader({
   onClickTitle,
   RightComponent,
   LeftComponent,
+  disablePortal,
 }: SubHeaderProps) {
   const navigate = useNavigate();
 
@@ -94,6 +96,8 @@ function SubHeader({
       </Layout.FlexRow>
     </SubHeaderWrapper>
   );
+
+  if (disablePortal) return headerNode;
 
   return portalTarget ? createPortal(headerNode, portalTarget) : headerNode;
 }

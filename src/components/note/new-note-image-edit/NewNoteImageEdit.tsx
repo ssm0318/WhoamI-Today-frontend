@@ -128,6 +128,7 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
         <>
           <SubHeader
             title={t('crop_photo')}
+            disablePortal
             RightComponent={
               <button type="button" onClick={handleClickCheck}>
                 <Typo type="title-large" color="PRIMARY">
@@ -146,6 +147,7 @@ function NewNoteImageEdit({ setIsVisible, imageUrl, onCompleteImageCrop }: NewNo
           <>
             <SubHeader
               title={t('crop_photo')}
+              disablePortal
               RightComponent={
                 <button type="button" onClick={handleCropDone}>
                   <Typo type="title-large" color="PRIMARY">
