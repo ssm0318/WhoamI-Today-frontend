@@ -7,6 +7,7 @@ import PostFooterDefault from '@components/_common/post-footer/PostFooterDefault
 import PostFooterLikeOnly from '@components/_common/post-footer/PostFooterLikeOnly';
 import PostTypeTag from '@components/_common/post-type-tag/PostTypeTag';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import PromptSummaryCard from '@components/_common/prompt-summary-card/PromptSummaryCard';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import { Layout, Typo } from '@design-system';
 import { MissionGroupItem as MissionGroupItemModel, POST_DP_TYPE } from '@models/post';
@@ -151,22 +152,13 @@ function MissionGroupItem({ group, displayType = 'LIST', refresh }: MissionGroup
         )}
 
         {group.mission_prompt && (
-          <MissionPromptCard
-            type="button"
+          <PromptSummaryCard
+            content={group.mission_prompt}
+            date={group.created_at}
             onClick={() => {
               if (group.mission_id) navigate(`/missions/${group.mission_id}`);
             }}
-          >
-            <WhoamiIcon src="/whoami-profile.svg" alt="" />
-            <Layout.FlexCol gap={2}>
-              <Typo type="label-medium" color="PRIMARY" bold>
-                Mission of the Day
-              </Typo>
-              <Typo type="body-medium" color="BLACK">
-                {group.mission_prompt}
-              </Typo>
-            </Layout.FlexCol>
-          </MissionPromptCard>
+          />
         )}
 
         {/* Likes and comments are temporarily attributed to the latest attempt. */}
@@ -244,23 +236,4 @@ const Dot = styled.button<{ $active: boolean }>`
   border: 0;
   border-radius: 50%;
   background: ${({ $active, theme }) => ($active ? theme.PRIMARY : theme.LIGHT_GRAY)};
-`;
-
-const MissionPromptCard = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 10px;
-  border: 1px solid ${({ theme }) => theme.LIGHT_GRAY};
-  border-radius: 8px;
-  background: ${({ theme }) => theme.WHITE};
-  text-align: left;
-`;
-
-const WhoamiIcon = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  flex: 0 0 32px;
 `;

@@ -30,6 +30,7 @@ interface ResponseItemProps {
   profileImageSize?: number;
   previewMode?: boolean;
   disableQuestionNavigation?: boolean;
+  hideQuestionPrompt?: boolean;
 }
 
 function ResponseItem({
@@ -41,6 +42,7 @@ function ResponseItem({
   profileImageSize = PROFILE_IMAGE_SIZE,
   previewMode = false,
   disableQuestionNavigation = false,
+  hideQuestionPrompt = false,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
   const [tAccess] = useTranslation('translation', { keyPrefix: 'access_setting' });
@@ -224,9 +226,10 @@ function ResponseItem({
     </Layout.FlexCol>
   );
 
-  const questionJsx = question ? (
-    <QuestionItem question={question} disableNavigation={disableQuestionNavigation} />
-  ) : null;
+  const questionJsx =
+    question && !hideQuestionPrompt ? (
+      <QuestionItem question={question} disableNavigation={disableQuestionNavigation} />
+    ) : null;
 
   const footerJsx = featureFlags?.postsVerQ ? (
     <PostFooterLikeOnly

@@ -47,6 +47,7 @@ import FriendsList from './routes/friends/FriendsList';
 import HiddenFriends from './routes/friends/HiddenFriends';
 import Intro from './routes/Intro';
 import Likes from './routes/Likes';
+import MissionAttemptsThread from './routes/missions/MissionAttemptsThread';
 import My from './routes/My';
 import AllNotes from './routes/notes/AllNotes';
 import NewNote from './routes/notes/NewNote';
@@ -54,6 +55,7 @@ import { NoteDetail } from './routes/notes/NoteDetail';
 import Notifications from './routes/Notifications';
 // PingList replaced by ChatList
 import PinnedPosts from './routes/pinned-posts/PinnedPosts';
+import QuestionResponsesThread from './routes/questions/QuestionResponsesThread';
 import Reactions from './routes/Reactions';
 import ReceivedPrompts from './routes/ReceivedPrompts';
 import ResearchIntro from './routes/ResearchIntro';
@@ -228,8 +230,13 @@ const router = createBrowserRouter([
         path: 'questions',
         children: [
           { path: '', element: <AllQuestions /> },
+          { path: ':questionId', element: <QuestionResponsesThread /> },
           { path: ':questionId/new', element: <NewResponse /> },
         ],
+      },
+      {
+        path: 'missions',
+        children: [{ path: ':missionId', element: <MissionAttemptsThread /> }],
       },
       {
         path: 'notifications',

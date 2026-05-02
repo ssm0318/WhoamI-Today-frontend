@@ -21,7 +21,7 @@ function QuickShareInput() {
       aria-label={t('share_page.quick_share_aria') ?? undefined}
     >
       <ProfileImage imageUrl={myProfile?.profile_image} username={myProfile?.username} size={36} />
-      <PlaceholderText type="body-medium" color="MEDIUM_GRAY" ellipsis={{ enabled: true }}>
+      <PlaceholderText type="body-medium" ellipsis={{ enabled: true }}>
         {t('notes.whats_on_your_mind')}
       </PlaceholderText>
       <SvgIcon name="chat_media_image" size={22} fill="DARK_GRAY" />
@@ -36,7 +36,7 @@ const CardWrapper = styled.div`
   width: 100%;
   padding: 10px 14px;
   border-radius: 14px;
-  border: 1px solid ${Colors.LIGHT_GRAY};
+  border: 1px solid #aeaeae;
   background-color: ${Colors.WHITE};
   cursor: pointer;
   box-sizing: border-box;
@@ -50,6 +50,7 @@ const CardWrapper = styled.div`
 const PlaceholderText = styled(Typo)`
   flex: 1;
   min-width: 0;
+  color: #808080;
 `;
 
 export default QuickShareInput;

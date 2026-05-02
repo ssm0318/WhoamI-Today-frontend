@@ -28,6 +28,7 @@ interface NoteItemProps {
   refresh?: () => void;
   profileImageSize?: number;
   previewMode?: boolean;
+  hideMissionPrompt?: boolean;
 }
 
 function NoteItem({
@@ -37,6 +38,7 @@ function NoteItem({
   refresh,
   profileImageSize = PROFILE_IMAGE_SIZE,
   previewMode = false,
+  hideMissionPrompt = false,
 }: NoteItemProps) {
   const {
     content,
@@ -194,7 +196,7 @@ function NoteItem({
   );
 
   const missionPromptJsx =
-    isMissionPost && mission_prompt ? (
+    isMissionPost && mission_prompt && !hideMissionPrompt ? (
       <Typo type="label-medium" color="MEDIUM_GRAY" italic>
         ↳ {`"${mission_prompt}"`}
       </Typo>

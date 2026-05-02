@@ -1,29 +1,32 @@
 import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Icon from '@components/_common/icon/Icon';
-import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SendPromptModal from '@components/_common/prompt/SendPromptModal';
-import { Layout, Typo } from '@design-system';
+import PromptSummaryCard from '@components/_common/prompt-summary-card/PromptSummaryCard';
 import { DailyQuestion } from '@models/post';
-import { QuestionItemWrapper } from './QuestionItem.styled';
 
 interface QuestionItemProps {
   question: DailyQuestion;
   onSend?: () => void;
   disableNavigation?: boolean;
+  navigationTarget?: 'detail' | 'respond';
 }
 
-function QuestionItem({ question, onSend, disableNavigation = false }: QuestionItemProps) {
+function QuestionItem({
+  question,
+  onSend,
+  disableNavigation = false,
+  navigationTarget = 'detail',
+}: QuestionItemProps) {
   const navigate = useNavigate();
-  const { id, content } = question;
+  const { id, content, created_at, selected_dates } = question;
 
   const [sendPromptModalVisible, setSendPromptBottomModalVisible] = useState(false);
-  const handleClickRespond = (e: MouseEvent) => {
+  const handleClickQuestion = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    navigate(`/questions/${id}/new`);
+    navigate(navigationTarget === 'detail' ? `/questions/${id}` : `/questions/${id}/new`);
   };
 
-  const handleClickSend = (e: MouseEvent) => {
+  const handleClickSend = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     onSend?.();
     setSendPromptBottomModalVisible(true);
@@ -35,23 +38,12 @@ function QuestionItem({ question, onSend, disableNavigation = false }: QuestionI
 
   return (
     <>
-      <QuestionItemWrapper
-        p={16}
-        rounded={12}
-        w="100%"
-        onClick={disableNavigation ? undefined : handleClickRespond}
-      >
-        <Layout.FlexRow gap={8} alignItems="center">
-          <ProfileImage imageUrl="/whoami-profile.svg" username="Whoami Today" size={28} />
-          <Typo type="title-medium">Whoami Today</Typo>
-        </Layout.FlexRow>
-        <Typo type="body-large" mt={14}>
-          {content}
-        </Typo>
-        <Layout.FlexRow w="100%" alignItems="center" justifyContent="flex-end" gap={18} mt={4}>
-          <Icon name="question_send" size={22} onClick={handleClickSend} />
-        </Layout.FlexRow>
-      </QuestionItemWrapper>
+      <PromptSummaryCard
+        content={content}
+        date={selected_dates?.[selected_dates.length - 1] ?? created_at}
+        onClick={disableNavigation ? undefined : handleClickQuestion}
+        onSend={handleClickSend}
+      />
       {sendPromptModalVisible && (
         <SendPromptModal
           visible={sendPromptModalVisible}

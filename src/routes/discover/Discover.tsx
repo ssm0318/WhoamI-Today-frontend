@@ -285,15 +285,19 @@ function Discover() {
               group={item}
             />
           );
-        case 'Question':
+        case 'Question': {
+          const questionDate =
+            item.body.selected_dates?.[item.body.selected_dates.length - 1] ?? item.body.created_at;
           return (
             <HighlightQuestionSection
               key={`question-${item.body.id}`}
               questionId={item.body.id}
               question={item.body.content}
+              date={questionDate}
               tag="Question of the Day"
             />
           );
+        }
         case 'Interest':
           return showInterestCard ? (
             <S.AnimatedCardWrapper key={`interest-${index}`} $isAnimating={isInterestAnimating}>

@@ -1,23 +1,22 @@
 import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Icon from '@components/_common/icon/Icon';
-import { Layout, Typo } from '@design-system';
+import PromptSummaryCard from '@components/_common/prompt-summary-card/PromptSummaryCard';
 import { AdminAuthor, isAdminAuthor } from '@models/post';
 import { User } from '@models/user';
-import ProfileImage from '../profile-image/ProfileImage';
-import { StyledPromptCard, StyledPromptCardButtons } from './PromptCard.styled';
 import SendPromptModal from './SendPromptModal';
 
 interface PromptCardProps {
   widthMode?: 'full' | 'normal';
   id: number;
   content: string;
+  date?: string | null;
   authorDetail?: User | AdminAuthor;
   missionMode?: boolean;
 }
 function PromptCard({
   id,
   content,
+  date,
   widthMode = 'normal',
   authorDetail,
   missionMode,
@@ -25,11 +24,12 @@ function PromptCard({
   const navigate = useNavigate();
 
   const [sendPromptModalVisible, setSendPromptBottomModalVisible] = useState(false);
-  const handleClickRespond = () => {
+  const handleClickRespond = (e?: MouseEvent<HTMLDivElement>) => {
+    e?.stopPropagation();
     navigate(`/questions/${id}/new`, missionMode ? { state: { missionMode: true } } : undefined);
   };
 
-  const handleClickSend = (e: MouseEvent) => {
+  const handleClickSend = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setSendPromptBottomModalVisible(true);
   };
@@ -66,20 +66,17 @@ function PromptCard({
 
   return (
     <>
-      <StyledPromptCard w={widthMode === 'full' ? '100%' : 250} onClick={handleClickRespond}>
-        <Layout.FlexRow gap={8} alignItems="center">
-          {shouldUseColorHex ? (
-            <Layout.LayoutBase w={28} h={28} rounded={14} style={{ backgroundColor: colorHex }} />
-          ) : (
-            <ProfileImage imageUrl={profileImageUrl} username={username} size={28} />
-          )}
-          <Typo type="title-medium">{username}</Typo>
-        </Layout.FlexRow>
-        <Typo type="body-large">{content}</Typo>
-        <StyledPromptCardButtons gap={18}>
-          <Icon name="question_send" size={22} onClick={handleClickSend} />
-        </StyledPromptCardButtons>
-      </StyledPromptCard>
+      <PromptSummaryCard
+        content={content}
+        date={date}
+        width={widthMode === 'full' ? '100%' : 250}
+        authorName={username}
+        profileImageUrl={profileImageUrl}
+        colorHex={shouldUseColorHex ? colorHex : undefined}
+        sendLabel="Send"
+        onClick={handleClickRespond}
+        onSend={handleClickSend}
+      />
       {sendPromptModalVisible && (
         <SendPromptModal
           visible={sendPromptModalVisible}
