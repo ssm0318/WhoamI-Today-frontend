@@ -13,6 +13,7 @@ import { Button, Font, Layout } from '@design-system';
 import { SignInParams, VersionType } from '@models/api/user';
 import { getMe } from '@utils/apis/my';
 import { signIn } from '@utils/apis/user';
+import { shouldRedirectToEditProfile } from '@utils/editProfilePrompt';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 function SignIn() {
@@ -47,6 +48,11 @@ function SignIn() {
 
           if (!me.has_changed_pw) {
             navigate('/settings/reset-password?first_login=true');
+            return;
+          }
+
+          if (shouldRedirectToEditProfile(me)) {
+            navigate('/settings/edit-profile?from_login_setup=true');
           }
         });
       },
