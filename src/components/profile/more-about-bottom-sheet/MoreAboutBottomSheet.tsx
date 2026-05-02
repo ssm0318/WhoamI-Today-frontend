@@ -34,20 +34,37 @@ function MoreAboutBottomSheet({
     navigate('/settings/edit-profile?tab=interests');
   };
 
-  // Backend filters user_interests / user_personas per-category for non-friends already.
-  const allUserChips = [
-    ...(user?.user_interests ?? []).map((i) => i.replace(/^#+/, '')),
-    ...(user?.user_personas ?? []).map((p) => p.replace(/^#+/, '')),
-  ];
+  // Source of truth: `chips_by_category` (per-category Interest rows from backend).
+  // The legacy flat `user_interests` array cannot disambiguate chip names that appear in
+  // multiple categories (e.g. "Instagram" in both favorite_platform and least_favorite_platform),
+  // so flat-list-against-cat.chips matching wrongly placed every shared chip into every
+  // matching category. Read from chips_by_category instead.
+  //
+  // Custom chips (user-created) carry their own category attribution. Legacy `user_personas`
+  // entries that match an `online_persona` chip are merged in for backward compatibility
+  // with users whose persona selections predate the chip-by-category system.
+  const chipsByCategory = user?.chips_by_category ?? {};
+  const customChips = user?.custom_chips ?? [];
+  const legacyPersonas = (user?.user_personas ?? []).map((p) => p.replace(/^#+/, ''));
 
-  // Group chips by category
   const groupedByCategory = categories
-    .map((cat) => ({
-      category: cat,
-      chips: allUserChips.filter((chip) =>
-        cat.chips.some((c) => normalizeChipText(c) === normalizeChipText(chip)),
-      ),
-    }))
+    .map((cat) => {
+      const stored = chipsByCategory[cat.key] ?? [];
+      const custom = customChips.filter((c) => c.category === cat.key).map((c) => c.text);
+      const chips = [...stored, ...custom];
+
+      if (cat.key === 'online_persona') {
+        const storedNormalized = new Set(stored.map((s) => normalizeChipText(s)));
+        const matchingPersonas = legacyPersonas.filter(
+          (p) =>
+            cat.chips.some((c) => normalizeChipText(c) === normalizeChipText(p)) &&
+            !storedNormalized.has(normalizeChipText(p)),
+        );
+        chips.push(...matchingPersonas);
+      }
+
+      return { category: cat, chips };
+    })
     .filter((group) => group.chips.length > 0);
 
   return createPortal(

@@ -19,6 +19,12 @@ export interface User {
   connection_status: Connection | null;
   user_interests: string[]; // ['#hiking', '#dogs']과 같은 형식
   user_personas: string[]; // ['#lurker', '#openbook']과 같은 형식
+  /** Backend-grouped chips: keyed by chip category, values are the chip texts the user selected.
+   * Authoritative for category disambiguation — `user_interests` is a flat legacy array that
+   * cannot distinguish identical chip names across categories (e.g. "Instagram" in both
+   * favorite_platform and least_favorite_platform). */
+  chips_by_category?: Record<string, string[]>;
+  custom_chips?: { id: number; text: string; category: string }[];
   // 4-way visibility (only present on MyProfile responses; absent on others)
   name_visibility?: ComponentVisibility;
   pronouns_visibility?: ComponentVisibility;
