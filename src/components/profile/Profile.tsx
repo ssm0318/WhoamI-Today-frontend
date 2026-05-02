@@ -6,6 +6,7 @@ import { useShallow } from 'zustand/react/shallow';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import ChatRequestButton from '@components/_common/chat-request-button/ChatRequestButton';
 import FriendStatus from '@components/_common/friend-status/FriendStatus';
+import InfoPopup from '@components/_common/info-popup/InfoPopup';
 import MutualTraitsList from '@components/_common/mutual-meta-text/MutualTraitsList';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SubscriptionPopup from '@components/friends/subscription-popup/SubscriptionPopup';
@@ -127,6 +128,7 @@ function Profile({ user }: ProfileProps) {
   };
 
   const [showMoreAbout, setShowMoreAbout] = useState(false);
+  const [showSharedTraitsModal, setShowSharedTraitsModal] = useState(false);
 
   const isVerQ = !!featureFlags?.postsVerQ;
 
@@ -350,27 +352,33 @@ function Profile({ user }: ProfileProps) {
           )}
           <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />
 
-          {/* Shared traits — grouped by category. Shown for any non-self profile
-              (friends and non-friends) when mutual data is available. */}
-          {!featureFlags?.postsVerQ &&
-            !isMyProfile(user) &&
-            viewData &&
-            ((viewData.mutual_interests && viewData.mutual_interests.length > 0) ||
-              (viewData.mutual_personas && viewData.mutual_personas.length > 0)) && (
-              <Layout.FlexCol gap={8} w="100%">
-                <Typo type="label-medium" color="MEDIUM_GRAY">
-                  {t('shared_traits')}
-                </Typo>
-                <MutualTraitsList
-                  traits={[
-                    ...(viewData.mutual_interests ?? []),
-                    ...(viewData.mutual_personas ?? []),
-                  ]}
-                  isLoading={false}
-                  emptyText=""
-                />
-              </Layout.FlexCol>
-            )}
+          {/* Shared traits — surfaced as a tappable count that opens the
+              categorized modal. Shown for any non-self profile (friends and
+              non-friends) when mutual data is available. */}
+          {(() => {
+            if (featureFlags?.postsVerQ || isMyProfile(user) || !viewData) return null;
+            const traits = [
+              ...(viewData.mutual_interests ?? []),
+              ...(viewData.mutual_personas ?? []),
+            ];
+            if (traits.length === 0) return null;
+            return (
+              <>
+                <SharedTraitsButton type="button" onClick={() => setShowSharedTraitsModal(true)}>
+                  <Typo type="label-medium" color="PRIMARY" fontWeight={500}>
+                    {t('mutual_traits_count', { count: traits.length })}
+                  </Typo>
+                </SharedTraitsButton>
+                <InfoPopup
+                  isOpen={showSharedTraitsModal}
+                  onClose={() => setShowSharedTraitsModal(false)}
+                  title={t('mutual_traits_title')}
+                >
+                  <MutualTraitsList traits={traits} isLoading={false} emptyText="" />
+                </InfoPopup>
+              </>
+            );
+          })()}
         </>
       )}
       {/* my-page actions: Edit Profile + Public/Private toggle (Q) or View As (W) */}
@@ -467,6 +475,18 @@ const ViewAsButton = styled(Button.Secondary)`
     color: ${({ theme }) => theme.PRIMARY};
     font-size: 14.4px;
   }
+`;
+
+const SharedTraitsButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 `;
 
 function AccountStatusBadge({ children }: { children: ReactNode }) {

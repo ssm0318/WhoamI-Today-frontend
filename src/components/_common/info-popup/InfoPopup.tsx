@@ -13,6 +13,9 @@ function InfoPopup({ isOpen, onClose, title, children }: PropsWithChildren<InfoP
   const suppressBackdropCloseUntilRef = useRef(0);
 
   const markBackdropMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    // Always stop propagation so ancestor click handlers (e.g. a post card)
+    // never see a backdrop tap meant only to dismiss the popup.
+    e.stopPropagation();
     if (Date.now() < suppressBackdropCloseUntilRef.current) {
       shouldCloseFromBackdropRef.current = false;
       return;
@@ -21,6 +24,7 @@ function InfoPopup({ isOpen, onClose, title, children }: PropsWithChildren<InfoP
   };
 
   const markBackdropTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     const isBackdrop = e.target === e.currentTarget;
     if (!isBackdrop) {
       // iOS WebView can emit follow-up ghost mouse events on backdrop.
@@ -30,6 +34,7 @@ function InfoPopup({ isOpen, onClose, title, children }: PropsWithChildren<InfoP
   };
 
   const handleOverlayClick = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     if (Date.now() < suppressBackdropCloseUntilRef.current) {
       shouldCloseFromBackdropRef.current = false;
       return;
