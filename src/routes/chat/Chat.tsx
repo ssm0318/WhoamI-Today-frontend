@@ -28,6 +28,22 @@ import { useChatSocketProvider } from './_hooks/useChatSocketProvider';
 
 const NEAR_BOTTOM_PX = 120;
 
+// Insert a message into the list at its chronological position. Both REST
+// (postChatMessage response) and WebSocket (incoming) paths use this so a
+// race between bot reply WS push and user-message REST resolution can't
+// reorder the bubbles.
+function insertChronologically<T extends { id: number; created_at: string }>(
+  list: T[],
+  msg: T,
+): T[] {
+  if (list.some((m) => m.id === msg.id)) return list;
+  const ts = new Date(msg.created_at).getTime();
+  let i = list.length;
+  while (i > 0 && new Date(list[i - 1].created_at).getTime() > ts) i -= 1;
+  if (i === list.length) return [...list, msg];
+  return [...list.slice(0, i), msg, ...list.slice(i)];
+}
+
 function Chat() {
   const { username: userId } = useParams<{ username: string }>();
   const navigate = useNavigate();
@@ -190,10 +206,7 @@ function Chat() {
   const handleMessageSent = (newMsg: PostChatMessageRes) => {
     justSentIdsRef.current.add(newMsg.id);
     setPrevScrollHeight(scrollRef.current?.clientHeight);
-    setMessages((prev) => {
-      if (prev.some((m) => m.id === newMsg.id)) return prev;
-      return [...prev, newMsg];
-    });
+    setMessages((prev) => insertChronologically(prev, newMsg));
   };
 
   const handleBotButtonClick = useCallback(
@@ -260,10 +273,7 @@ function Chat() {
         if (isNearBottom) shouldPinToBottomRef.current.add(msg.id);
 
         setPrevScrollHeight(scrollRef.current?.clientHeight);
-        setMessages((prev) => {
-          if (prev.some((m) => m.id === msg.id)) return prev;
-          return [...prev, { ...msg, is_read: true }];
-        });
+        setMessages((prev) => insertChronologically(prev, { ...msg, is_read: true }));
         if (userId) {
           clearTimeout(markReadTimerRef.current);
           markReadTimerRef.current = setTimeout(() => {
