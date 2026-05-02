@@ -6,6 +6,12 @@ import { useBoundStore } from '@stores/useBoundStore';
 
 const AWAY_THRESHOLD_MS = 15 * 60 * 1000; // 15 min — anything shorter is "same session"
 const COOLDOWN_MS = 60 * 60 * 1000; // 1 hour cooldown after the user dismisses the prompt
+// Debounce hidden-state saves: a page reload or a tab-switch lasting under
+// this many ms shouldn't move `last_session` forward. Without this, the
+// hidden event the OLD page fires during reload writes last_session=now,
+// the new page reads it, decides the user was "just here," and skips the
+// prompt — even after hours of real away time.
+const HIDE_SETTLE_MS = 5000;
 
 function getStorageKey(userId: number, suffix: string) {
   return `browse_mode_${suffix}_${userId}`;
@@ -48,6 +54,11 @@ export function useBrowseModeSessionPrompt() {
   const userId = myProfile?.id;
   const browseModeEnabled = featureFlags?.[FeatureFlagKey.BROWSE_MODE] ?? false;
 
+  // Pending hidden-state save. A brief hidden state (reload, tab-switch
+  // for a few seconds) shouldn't move last_session forward — it'd trick
+  // the next foreground into thinking the user just left.
+  const pendingHideTimerRef = useRef<number | null>(null);
+
   const tryTrigger = useCallback(() => {
     if (!userId || !browseModeEnabled) return;
     if (isCooldownActive(userId)) return;
@@ -57,6 +68,13 @@ export function useBrowseModeSessionPrompt() {
   // Stable refs so the SET_APP_STATE callback doesn't re-bind every render.
   const handleBecomeActive = useCallback(() => {
     if (!userId) return;
+    // The user came back before the pending hide-save fired — that means
+    // hidden state was brief (reload, quick tab-switch). Cancel the save
+    // so last_session keeps its old (real) value.
+    if (pendingHideTimerRef.current !== null) {
+      window.clearTimeout(pendingHideTimerRef.current);
+      pendingHideTimerRef.current = null;
+    }
     const lastTs = getLastSessionTimestamp(userId);
     if (lastTs && Date.now() - lastTs >= AWAY_THRESHOLD_MS) {
       tryTrigger();
@@ -65,7 +83,15 @@ export function useBrowseModeSessionPrompt() {
 
   const handleBecomeInactive = useCallback(() => {
     if (!userId) return;
-    saveLastSessionTimestamp(userId);
+    // Only commit last_session if the page stays hidden for a few seconds.
+    // Reloads and brief tab-switches happen in well under HIDE_SETTLE_MS.
+    if (pendingHideTimerRef.current !== null) {
+      window.clearTimeout(pendingHideTimerRef.current);
+    }
+    pendingHideTimerRef.current = window.setTimeout(() => {
+      saveLastSessionTimestamp(userId);
+      pendingHideTimerRef.current = null;
+    }, HIDE_SETTLE_MS);
   }, [userId]);
 
   const handleBecomeActiveRef = useRef(handleBecomeActive);
