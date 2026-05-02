@@ -366,28 +366,21 @@ function Profile({ user }: ProfileProps) {
             (myProfile?.user_interests ?? []).length === 0 && <InterestPlaceholder />}
 
           {/* See more details */}
-          {!featureFlags?.postsVerQ &&
-            featureFlags?.persona &&
-            (isMyPage || previewMode || (user && areFriends(user))) &&
-            hasInterestsOrPersonas && (
-              <Layout.FlexRow
-                onClick={() => {
-                  // Tap on "See more details" — the gateway into the
-                  // chip-category sheet (interests / personas etc.).
-                  // Pairs with the section-dwell events inside the sheet
-                  // to tell us "users open this, but how engaged?"
-                  trackEvent('profile_see_more_details_tapped', {
-                    is_my_page: isMyPage ? 'true' : 'false',
-                  });
-                  setShowMoreAbout(true);
-                }}
-                style={{ cursor: 'pointer' }}
-              >
-                <Typo type="label-medium" color="PRIMARY">
-                  {t('see_more_details')}
-                </Typo>
-              </Layout.FlexRow>
-            )}
+          {!featureFlags?.postsVerQ && featureFlags?.persona && hasInterestsOrPersonas && (
+            <Layout.FlexRow
+              onClick={() => {
+                trackEvent('profile_see_more_details_tapped', {
+                  is_my_page: isMyPage ? 'true' : 'false',
+                });
+                setShowMoreAbout(true);
+              }}
+              style={{ cursor: 'pointer' }}
+            >
+              <Typo type="label-medium" color="PRIMARY">
+                {t('see_more_details')}
+              </Typo>
+            </Layout.FlexRow>
+          )}
         </Layout.FlexCol>
       </Layout.FlexRow>
 
