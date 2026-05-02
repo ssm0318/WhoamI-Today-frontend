@@ -227,6 +227,15 @@ function Chat() {
             bot_payload: { kind: 'choice', payload: button.payload },
           });
           handleMessageSent(data);
+          // The "Call in the admin" tap triggers escalation server-side: the
+          // post_save signal runs escalate_to_human, which flips the room to
+          // is_group=True with wit_admin added. The user is currently on the
+          // 1-on-1 route (/users/:id/chat) and won't see the escalation until
+          // they navigate. Take them to the group view directly so admin
+          // appears without a refresh.
+          if (button.payload === 'admin' && data.chat_room_id) {
+            navigate(`/chats/group/${data.chat_room_id}`, { replace: true });
+          }
         } catch {
           // Silent — matches existing chat send-error pattern.
         }

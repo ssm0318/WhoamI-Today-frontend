@@ -81,6 +81,7 @@ export type ChatEventType = '' | 'member_added' | 'member_left';
 
 export interface ChatMessage extends Omit<InputChatMessage, 'parent'> {
   id: number;
+  chat_room_id: number;
   sender: Pick<User, 'id' | 'username' | 'url' | 'profile_pic' | 'profile_image'>;
   image: string | null;
   is_read: boolean;

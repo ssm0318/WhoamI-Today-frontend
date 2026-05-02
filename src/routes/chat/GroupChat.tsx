@@ -21,6 +21,7 @@ import {
 import { useBoundStore } from '@stores/useBoundStore';
 import axios from '@utils/apis/axios';
 import {
+  dismissWitAdmin,
   getGroupMessages,
   leaveGroupChat,
   markGroupMessagesRead,
@@ -303,27 +304,31 @@ function GroupChat() {
 
   const handleLeave = async () => {
     if (!roomId) return;
-    const { data } = await leaveGroupChat(Number(roomId));
-    if (data?.status === 'admin_evicted' && data?.redirect_user_id) {
-      navigate(`/users/${data.redirect_user_id}/chat`, { replace: true });
-      return;
-    }
+    await leaveGroupChat(Number(roomId));
     navigate('/chats');
   };
 
   const groupTitle = room?.name || 'Group Chat';
   const members = room?.members_detail || [];
   const typingNames = Object.values(typingUsers);
-  // wit_bot escalated room: 3-member group containing wit_bot. Leaving here
-  // doesn't actually remove the user — it dismisses the admin and demotes
-  // back to a 1-on-1 with the bot. Relabel so the user knows what they're
-  // doing.
-  const isWitBotEscalated = members.some((m) => m.username === 'wit_bot');
-  const leaveButtonLabel = isWitBotEscalated ? 'Dismiss wit_admin' : 'Leave Group';
-  const leaveConfirmText = isWitBotEscalated
-    ? 'Dismiss wit_admin and go back to chatting with wit_bot only?'
-    : 'Are you sure you want to leave this group?';
-  const leaveConfirmAction = isWitBotEscalated ? 'Dismiss' : 'Leave';
+  // wit_bot escalated room: 3-member group containing wit_bot. The user can
+  // dismiss wit_admin via the per-member Remove button (separate from Leave,
+  // which actually removes the user themselves like in any group chat).
+  const witBotMember = members.find((m) => m.username === 'wit_bot');
+  const witAdminMember = members.find((m) => m.username === 'wit_admin');
+  const isWitBotEscalated = !!witBotMember && !!witAdminMember;
+
+  const handleDismissAdmin = async () => {
+    if (!roomId || !witBotMember) return;
+    try {
+      const { data } = await dismissWitAdmin(Number(roomId));
+      if (data?.status === 'admin_dismissed' && data?.redirect_user_id) {
+        navigate(`/users/${data.redirect_user_id}/chat`, { replace: true });
+      }
+    } catch {
+      // Silent — match existing chat error pattern.
+    }
+  };
 
   return (
     <MainScrollContainer scrollRef={scrollRef} style={{ marginTop: 0 }}>
@@ -507,36 +512,65 @@ function GroupChat() {
             </Layout.FlexRow>
             {/* Member list — clickable to profile */}
             <Layout.FlexCol w="100%" style={{ flex: 1, overflowY: 'auto' }}>
-              {members.map((m) => (
-                <Layout.FlexRow
-                  key={m.id}
-                  gap={10}
-                  alignItems="center"
-                  ph={16}
-                  pv={8}
-                  cursor="pointer"
-                  onClick={() => {
-                    setShowMemberDrawer(false);
-                    navigate(`/users/${m.username}`);
-                  }}
-                >
-                  <ProfileImage imageUrl={m.profile_image} size={32} />
-                  <Typo type="body-medium" color="BLACK">
-                    {m.username}
-                  </Typo>
-                  {currentUser && Number(m.id) === Number(currentUser.id) && (
-                    <Typo type="label-small" color="MEDIUM_GRAY">
-                      (you)
+              {members.map((m) => {
+                const showRemoveAdmin =
+                  isWitBotEscalated &&
+                  m.username === 'wit_admin' &&
+                  !!currentUser &&
+                  Number(currentUser.id) !== Number(m.id);
+                return (
+                  <Layout.FlexRow
+                    key={m.id}
+                    gap={10}
+                    alignItems="center"
+                    ph={16}
+                    pv={8}
+                    cursor="pointer"
+                    onClick={() => {
+                      setShowMemberDrawer(false);
+                      navigate(`/users/${m.username}`);
+                    }}
+                  >
+                    <ProfileImage imageUrl={m.profile_image} size={32} />
+                    <Typo type="body-medium" color="BLACK">
+                      {m.username}
                     </Typo>
-                  )}
-                </Layout.FlexRow>
-              ))}
+                    {currentUser && Number(m.id) === Number(currentUser.id) && (
+                      <Typo type="label-small" color="MEDIUM_GRAY">
+                        (you)
+                      </Typo>
+                    )}
+                    {showRemoveAdmin && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDismissAdmin();
+                        }}
+                        style={{
+                          marginLeft: 'auto',
+                          background: 'none',
+                          border: '1px solid #FF3B30',
+                          color: '#FF3B30',
+                          borderRadius: 8,
+                          padding: '4px 10px',
+                          fontSize: 13,
+                          fontWeight: 500,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </Layout.FlexRow>
+                );
+              })}
             </Layout.FlexCol>
             <Layout.FlexCol w="100%" ph={16} pv={12} gap={8}>
               {showLeaveConfirm ? (
                 <>
                   <Typo type="body-small" color="BLACK">
-                    {leaveConfirmText}
+                    Are you sure you want to leave this group?
                   </Typo>
                   <Layout.FlexRow gap={12}>
                     <button
@@ -553,7 +587,7 @@ function GroupChat() {
                         cursor: 'pointer',
                       }}
                     >
-                      {leaveConfirmAction}
+                      Leave
                     </button>
                     <button
                       type="button"
@@ -579,7 +613,7 @@ function GroupChat() {
                   style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                 >
                   <Typo type="label-medium" color="WARNING">
-                    {leaveButtonLabel}
+                    Leave Group
                   </Typo>
                 </button>
               )}
