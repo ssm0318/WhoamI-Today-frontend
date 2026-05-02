@@ -79,12 +79,6 @@ export interface ProfileSuggestionCardBody {
   missingFields: string[];
 }
 
-// MusicHighlight Card Body (frontend-only injection)
-export interface MusicHighlightCardBody {
-  trackId: string;
-  sharedByUsername: string;
-}
-
 // SurveyResults Card Body (frontend-only injection)
 export interface SurveyResultsCardBody {
   slug: string;
@@ -125,10 +119,6 @@ export type DiscoverResultItem =
   | {
       type: 'ProfileSuggestion';
       body: ProfileSuggestionCardBody;
-    }
-  | {
-      type: 'MusicHighlight';
-      body: MusicHighlightCardBody;
     }
   | {
       type: 'SurveyResults';

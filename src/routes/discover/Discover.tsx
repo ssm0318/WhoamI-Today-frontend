@@ -6,7 +6,6 @@ import FilterChip from '@components/_common/filter-chip/FilterChip';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import HighlightQuestionSection from '@components/discover/HighlightQuestionSection/HighlightQuestionSection';
 import MissionPromptCard from '@components/discover/MissionPromptCard/MissionPromptCard';
-import MusicHighlightCard from '@components/discover/MusicHighlightCard/MusicHighlightCard';
 import ProfileSuggestionCard from '@components/discover/ProfileSuggestionCard/ProfileSuggestionCard';
 import SelectInterestSection from '@components/discover/SelectInterestSection/SelectInterestSection';
 import SelectPersonaSection from '@components/discover/SelectPersonaSection/SelectPersonaSection';
@@ -134,17 +133,6 @@ function Discover() {
     };
   }, [myProfile]);
 
-  const musicHighlightCard: DiscoverResultItem | null = useMemo(() => {
-    if (musicTracks.length === 0) return null;
-    const randomTrack = musicTracks[getDayOfYear() % musicTracks.length];
-    const trackId = typeof randomTrack.track === 'string' ? randomTrack.track : null;
-    if (!trackId) return null;
-    return {
-      type: 'MusicHighlight' as const,
-      body: { trackId, sharedByUsername: randomTrack.sharedBy.username },
-    };
-  }, [musicTracks]);
-
   const { data: pastSurveysData } = useSWR('/surveys/past/', getPastSurveys, {
     revalidateOnFocus: false,
   });
@@ -173,7 +161,7 @@ function Discover() {
 
     // Pick at most 2 injected cards per day (rotate daily)
     const allCards = (
-      [surveyResultsCard, missionPromptCard, profileSuggestionCard, musicHighlightCard] as const
+      [surveyResultsCard, missionPromptCard, profileSuggestionCard] as const
     ).filter((c) => c !== null) as DiscoverResultItem[];
     const dayOfYear = getDayOfYear();
     const selectedCards =
@@ -195,13 +183,7 @@ function Discover() {
       });
 
     return result;
-  }, [
-    discoverData,
-    missionPromptCard,
-    profileSuggestionCard,
-    musicHighlightCard,
-    surveyResultsCard,
-  ]);
+  }, [discoverData, missionPromptCard, profileSuggestionCard, surveyResultsCard]);
 
   // If the active browse mode says to hide synthetic discover cards, drop them here.
   const hideSyntheticCards = !!activeBrowseMode?.config.sections.hide_synthetic_discover_cards;
@@ -213,7 +195,6 @@ function Discover() {
       if (
         item.type === 'MissionPrompt' ||
         item.type === 'ProfileSuggestion' ||
-        item.type === 'MusicHighlight' ||
         item.type === 'SurveyResults'
       ) {
         return !hideSyntheticCards;
@@ -285,8 +266,6 @@ function Discover() {
           return (
             <ProfileSuggestionCard key={`profile-suggestion-${index}`} suggestion={item.body} />
           );
-        case 'MusicHighlight':
-          return <MusicHighlightCard key={`music-highlight-${index}`} highlight={item.body} />;
         case 'SurveyResults':
           return <SurveyResultsCard key={`survey-results-${index}`} card={item.body} />;
         default:
