@@ -26,6 +26,7 @@ import { useMissions } from '@hooks/useMissions';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSaveAndHide } from '@hooks/useSaveAndHide';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
+import i18n from '@i18n/index';
 import {
   DiscoverFilter,
   DiscoverFilterLabel,
@@ -41,6 +42,28 @@ import { getPastSurveys } from '@utils/apis/survey';
 import { getItemFromSessionStorage, setItemToSessionStorage } from '@utils/sessionStorage';
 import { MainScrollContainer } from 'src/routes/Root';
 import * as S from './Discover.styled';
+
+function getLocalRefreshTime(): string {
+  const now = new Date();
+  const laHourStr = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Los_Angeles',
+    hour: 'numeric',
+    hour12: false,
+  }).format(now);
+  const laHour = parseInt(laHourStr, 10);
+  const localHour = now.getHours();
+  let diff = localHour - laHour;
+  if (diff > 12) diff -= 24;
+  if (diff < -12) diff += 24;
+  const refreshHour = (7 + diff + 24) % 24;
+
+  const refDate = new Date();
+  refDate.setHours(refreshHour, 0, 0, 0);
+  return new Intl.DateTimeFormat(i18n.language === 'ko' ? 'ko-KR' : 'en-US', {
+    hour: 'numeric',
+    hour12: true,
+  }).format(refDate);
+}
 
 function Discover() {
   const [t] = useTranslation('translation');
@@ -368,6 +391,17 @@ function Discover() {
           )}
 
           {!isVerQ && !isLoading && <SharedPlaylistSection tracks={musicTracks} />}
+
+          {!isVerQ && !isLoading && (
+            <Layout.FlexCol w="100%" ph={16} pv={8} mb={8} alignItems="center">
+              <Typo type="label-large" color="MEDIUM_GRAY" textAlign="center">
+                {t('discover_banner.daily_refresh_1', { time: getLocalRefreshTime() })}
+              </Typo>
+              <Typo type="label-large" color="MEDIUM_GRAY" textAlign="center">
+                {t('discover_banner.daily_refresh_2')}
+              </Typo>
+            </Layout.FlexCol>
+          )}
 
           <PullToRefresh onRefresh={handleRefresh}>
             <Layout.FlexCol

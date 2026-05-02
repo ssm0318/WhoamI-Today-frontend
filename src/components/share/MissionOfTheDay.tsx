@@ -12,8 +12,12 @@ export interface Mission {
 
 export function getDayOfYear(): number {
   const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const diff = now.getTime() - start.getTime();
+  // 7 AM America/Los_Angeles boundary: the "day" changes at 7 AM LA time
+  const laStr = now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
+  const laTime = new Date(laStr);
+  const shifted = new Date(laTime.getTime() - 7 * 60 * 60 * 1000);
+  const start = new Date(shifted.getFullYear(), 0, 0);
+  const diff = shifted.getTime() - start.getTime();
   return Math.floor(diff / (1000 * 60 * 60 * 24));
 }
 

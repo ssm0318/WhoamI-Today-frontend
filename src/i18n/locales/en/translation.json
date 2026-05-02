@@ -764,6 +764,10 @@
         "create_post": "Share a post",
         "qna_title": "Q&A"
     },
+    "discover_banner": {
+        "daily_refresh_1": "Playlist and post feed update daily at {{time}} — up to 10 items each.",
+        "daily_refresh_2": "Questions, surveys & missions refresh at the same time as well!"
+    },
     "no_contents": {
         "discover": "No posts yet.",
         "friends": "No friends yet.",

@@ -58,11 +58,18 @@ function AllPostSection({ username }: AllPostSectionProps) {
   const renderPostItem = useCallback(
     (item: Note | Response) => {
       if (item.type === POST_TYPE.NOTE) {
-        return <NoteItem key={item.id} note={item} isMyPage={isMyPage} refresh={refetchPosts} />;
+        return (
+          <NoteItem
+            key={`note-${item.id}`}
+            note={item}
+            isMyPage={isMyPage}
+            refresh={refetchPosts}
+          />
+        );
       }
       return (
         <ResponseItem
-          key={item.id}
+          key={`response-${item.id}`}
           response={item}
           isMyPage={isMyPage}
           displayType="FEED"

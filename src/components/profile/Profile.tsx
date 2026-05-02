@@ -360,23 +360,30 @@ function Profile({ user }: ProfileProps) {
                   {t('shared_traits')}
                 </Typo>
                 <Layout.FlexRow w="100%" gap={6} style={{ flexWrap: 'wrap' }}>
-                  {[...(viewData.mutual_interests ?? []), ...(viewData.mutual_personas ?? [])].map(
-                    (trait) => {
-                      const matchedCat = categories.find((cat) =>
-                        cat.chips.some(
-                          (c) => normalizeChipText(c) === normalizeChipText(trait.content),
-                        ),
-                      );
-                      return (
-                        <CategoryChip
-                          key={trait.id}
-                          label={trait.content}
-                          category={matchedCat?.key ?? categories[0].key}
-                          isSelected
-                        />
-                      );
-                    },
-                  )}
+                  {[
+                    ...(viewData.mutual_interests ?? []).map((item) => ({
+                      ...item,
+                      kind: 'interest' as const,
+                    })),
+                    ...(viewData.mutual_personas ?? []).map((item) => ({
+                      ...item,
+                      kind: 'persona' as const,
+                    })),
+                  ].map((trait) => {
+                    const matchedCat = categories.find((cat) =>
+                      cat.chips.some(
+                        (c) => normalizeChipText(c) === normalizeChipText(trait.content),
+                      ),
+                    );
+                    return (
+                      <CategoryChip
+                        key={`${trait.kind}-${trait.id}`}
+                        label={trait.content}
+                        category={matchedCat?.key ?? categories[0].key}
+                        isSelected
+                      />
+                    );
+                  })}
                 </Layout.FlexRow>
               </Layout.FlexCol>
             )}

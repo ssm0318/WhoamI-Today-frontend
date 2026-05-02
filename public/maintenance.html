@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhoAmI Today - Under Maintenance</title>
+    <title>WhoAmI Today</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap" rel="stylesheet">
@@ -43,14 +43,19 @@
             font-size: 22px;
             font-weight: 700;
             color: #8700FF;
-            margin-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .emoji {
+            font-size: 40px;
+            margin-bottom: 16px;
         }
 
         .message {
             font-size: 16px;
             font-weight: 400;
-            color: #666666;
-            line-height: 1.6;
+            color: #333333;
+            line-height: 1.7;
         }
 
         .divider {
@@ -64,6 +69,7 @@
         .sub-message {
             font-size: 13px;
             color: #999999;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -88,10 +94,21 @@
             </svg>
         </div>
         <div class="title">WhoAmI Today</div>
-        <p class="message">
-            We're currently under maintenance.<br>
-            We'll be back soon with improvements.
-        </p>
+        <div class="emoji" id="emoji"></div>
+        <p class="message" id="message"></p>
+        <div class="divider"></div>
+        <p class="sub-message" id="sub-message"></p>
     </div>
+    <script>
+        var isKo = (navigator.language || '').startsWith('ko');
+        document.getElementById('emoji').textContent = isKo ? '\uD83D\uDE2E\u200D\uD83D\uDCA8' : '\uD83E\uDE9E\u2728';
+        document.getElementById('message').innerHTML = isKo
+            ? '잠깐 심호흡 중이에요<br>금방 새로워진 모습으로 돌아올게요!'
+            : 'Excuse us —<br>we\'re getting a little glow-up!';
+        document.getElementById('sub-message').textContent = isKo
+            ? '5분 후에 다시 접속해 주세요'
+            : 'Please come back in 5 minutes';
+        document.documentElement.lang = isKo ? 'ko' : 'en';
+    </script>
 </body>
 </html>
