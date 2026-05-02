@@ -4,7 +4,7 @@ import { Layout, Typo } from '@design-system';
 
 const ROTATING_PLACEHOLDERS = [
   'What is on your mind right now?',
-  'Share a random blurb...',
+  'Share a random thought...',
   'Something you noticed today...',
   'A small win from today...',
   'What are you overthinking about?',
@@ -14,7 +14,7 @@ const ROTATING_PLACEHOLDERS = [
   'What would you tell your past self?',
   'Something that surprised you recently...',
   'Your current mood in one sentence...',
-  'A blurb you have not shared yet...',
+  "A random thought you haven't shared yet...",
   'What keeps you up at night?',
   'Something you are grateful for...',
   'Your hot take of the day...',
@@ -64,7 +64,7 @@ function ThoughtSnippetInput({ visible, onClose, onSubmit }: Props) {
     <Overlay onClick={onClose}>
       <InputCard onClick={(e) => e.stopPropagation()}>
         <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" pb={8}>
-          <Typo type="title-medium">Blurbs</Typo>
+          <Typo type="title-medium">Be Random</Typo>
           <button type="button" onClick={handleSubmit} disabled={!text.trim()}>
             <Typo type="title-medium" color={text.trim() ? 'PRIMARY' : 'LIGHT_GRAY'}>
               Post
