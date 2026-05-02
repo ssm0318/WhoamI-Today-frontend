@@ -6,6 +6,7 @@ import { useShallow } from 'zustand/react/shallow';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import ChatRequestButton from '@components/_common/chat-request-button/ChatRequestButton';
 import FriendStatus from '@components/_common/friend-status/FriendStatus';
+import MutualTraitsList from '@components/_common/mutual-meta-text/MutualTraitsList';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SubscriptionPopup from '@components/friends/subscription-popup/SubscriptionPopup';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
@@ -14,17 +15,14 @@ import { useIsPreviewMode, useViewAs, useViewAsUser } from '@components/view-as/
 import { FeatureFlagKey } from '@constants/featureFlag';
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
-import { useChipCategories } from '@hooks/useChipCategories';
 import { Connection } from '@models/api/friends';
 import { MyProfile } from '@models/api/user';
-import { normalizeChipText } from '@models/chips';
 import { areFriends, isMyProfile, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { editProfile } from '@utils/apis/my';
 import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
-import CategoryChip from './chip/CategoryChip';
 import MoreAboutBottomSheet from './more-about-bottom-sheet/MoreAboutBottomSheet';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
 import PinnedPostsSection from './pinned-posts-section/PinnedPostsSection';
@@ -40,7 +38,6 @@ interface ProfileProps {
 function Profile({ user }: ProfileProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
   const [tViewAs] = useTranslation('translation', { keyPrefix: 'view_as' });
-  const { categories } = useChipCategories();
 
   const { featureFlags, myProfile } = useBoundStore(useShallow(UserSelector));
   const previewMode = useIsPreviewMode();
@@ -353,10 +350,10 @@ function Profile({ user }: ProfileProps) {
           )}
           <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />
 
-          {/* Mutual traits for non-friend users (from discover context) */}
+          {/* Shared traits — grouped by category. Shown for any non-self profile
+              (friends and non-friends) when mutual data is available. */}
           {!featureFlags?.postsVerQ &&
             !isMyProfile(user) &&
-            !areFriends(user) &&
             viewData &&
             ((viewData.mutual_interests && viewData.mutual_interests.length > 0) ||
               (viewData.mutual_personas && viewData.mutual_personas.length > 0)) && (
@@ -364,32 +361,14 @@ function Profile({ user }: ProfileProps) {
                 <Typo type="label-medium" color="MEDIUM_GRAY">
                   {t('shared_traits')}
                 </Typo>
-                <Layout.FlexRow w="100%" gap={6} style={{ flexWrap: 'wrap' }}>
-                  {[
-                    ...(viewData.mutual_interests ?? []).map((item) => ({
-                      ...item,
-                      kind: 'interest' as const,
-                    })),
-                    ...(viewData.mutual_personas ?? []).map((item) => ({
-                      ...item,
-                      kind: 'persona' as const,
-                    })),
-                  ].map((trait) => {
-                    const matchedCat = categories.find((cat) =>
-                      cat.chips.some(
-                        (c) => normalizeChipText(c) === normalizeChipText(trait.content),
-                      ),
-                    );
-                    return (
-                      <CategoryChip
-                        key={`${trait.kind}-${trait.id}`}
-                        label={trait.content}
-                        category={matchedCat?.key ?? categories[0].key}
-                        isSelected
-                      />
-                    );
-                  })}
-                </Layout.FlexRow>
+                <MutualTraitsList
+                  traits={[
+                    ...(viewData.mutual_interests ?? []),
+                    ...(viewData.mutual_personas ?? []),
+                  ]}
+                  isLoading={false}
+                  emptyText=""
+                />
               </Layout.FlexCol>
             )}
         </>
