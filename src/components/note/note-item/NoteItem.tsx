@@ -1,6 +1,6 @@
 import { MouseEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ContentTranslation from '@components/_common/content-translation/ContentTranslation';
 import Icon from '@components/_common/icon/Icon';
@@ -16,6 +16,7 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import { Note, POST_DP_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
+import { classifyPathnameAsSource } from '@utils/navSource';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import { NoteImage } from '../note-image/NoteImage.styled';
 
@@ -38,6 +39,7 @@ function NoteItem({
 }: NoteItemProps) {
   const { content, created_at, id, author_detail, images, is_edited, visibility } = note;
   const navigate = useNavigate();
+  const location = useLocation();
   const { featureFlags } = useBoundStore(UserSelector);
 
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
@@ -87,8 +89,13 @@ function NoteItem({
 
   const navigateToProfile = (e: MouseEvent) => {
     e.stopPropagation();
-
-    navigate(`/users/${username}`);
+    // Derive a source label from the current pathname so the destination
+    // UserPage knows the entry surface. NoteItem is reused across many
+    // routes; rather than thread a `source` prop through every parent,
+    // we infer from where the click happened.
+    navigate(`/users/${username}`, {
+      state: { source: classifyPathnameAsSource(location.pathname) },
+    });
   };
 
   if (isHidden) return null;

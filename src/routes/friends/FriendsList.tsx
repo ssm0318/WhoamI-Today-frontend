@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
 // import { useNavigate } from 'react-router-dom';
@@ -46,6 +46,37 @@ function FriendsList() {
       return next;
     });
   };
+
+  // Sub-tab dwell: 'check-in' vs 'posts' switching is React state, not URL.
+  // screen_view fires once per /friends visit and can't tell us how the
+  // time was split between the two sub-tabs. This effect flushes a
+  // dwell event each time the user switches AND on unmount, paired with
+  // the tab the time accrued under.
+  const tabStartedAtRef = useRef<number>(Date.now());
+  const previousTabRef = useRef<TabType>(selectedTab);
+  useEffect(() => {
+    if (previousTabRef.current === selectedTab) return;
+    const duration_ms = Date.now() - tabStartedAtRef.current;
+    if (duration_ms >= 500) {
+      trackEvent('friends_subtab_dwell', {
+        tab: previousTabRef.current,
+        duration_ms,
+      });
+    }
+    previousTabRef.current = selectedTab;
+    tabStartedAtRef.current = Date.now();
+  }, [selectedTab, trackEvent]);
+  useEffect(() => {
+    return () => {
+      const duration_ms = Date.now() - tabStartedAtRef.current;
+      if (duration_ms < 500) return;
+      trackEvent('friends_subtab_dwell', {
+        tab: previousTabRef.current,
+        duration_ms,
+      });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const friendType: FriendType = closeFriendsOnly ? 'close_friends' : 'all';
 
   const {

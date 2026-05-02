@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Outlet, useNavigate, useOutlet, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useOutlet, useParams } from 'react-router-dom';
 import { mutate } from 'swr';
 import CommonError from '@components/_common/common-error/CommonError';
 import { Divider } from '@components/_common/divider/Divider.styled';
@@ -21,6 +21,8 @@ import {
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { useDwellTime } from '@hooks/useDwellTime';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { readFriendCheckIn } from '@utils/apis/checkIn';
@@ -37,7 +39,35 @@ function UserPage({ usernameOverride }: UserPageProps = {}) {
   const previewMode = useIsPreviewMode();
   const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { featureFlags } = useBoundStore(UserSelector);
+  const trackEvent = useTrackEvent();
+
+  // Source-of-navigation tracking: callers can pass `state: { source: 'X' }`
+  // to react-router's navigate(). Tells us "this profile visit came from
+  // the shared playlist" vs "the discover feed" vs "search". Backend can't
+  // see the referrer because the profile fetch URL is identical regardless.
+  const navSource: string =
+    typeof (location.state as { source?: unknown } | null)?.source === 'string'
+      ? ((location.state as { source: string }).source as string)
+      : 'unknown';
+
+  useEffect(() => {
+    trackEvent('profile_visited', {
+      is_my_page: isMyPage ? 'true' : 'false',
+      preview_mode: previewMode ? 'true' : 'false',
+      source: navSource,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Total profile-page dwell. screen_dwell already covers route-level
+  // time, but UserPage is special because its sub-routes (notes, posts,
+  // reactions) keep the user "on the profile" conceptually. This event
+  // collapses all of that into one number per visit.
+  useDwellTime('profile_dwell', {
+    is_my_page: isMyPage ? 'true' : 'false',
+  });
 
   const { user, refreshAfterFriendshipChange } = useContext(UserPageContext);
   const userId = user.data?.id;

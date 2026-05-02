@@ -1,4 +1,4 @@
-import { MouseEvent, ReactNode, useContext, useState } from 'react';
+import { MouseEvent, ReactNode, useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -14,6 +14,8 @@ import { useIsPreviewMode, useViewAs, useViewAsUser } from '@components/view-as/
 import { FeatureFlagKey } from '@constants/featureFlag';
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { useTrackEvent } from '@hooks/useTrackEvent';
+import { useVisibleDwell } from '@hooks/useVisibleDwell';
 import { Connection } from '@models/api/friends';
 import { MyProfile } from '@models/api/user';
 import { areFriends, isMyProfile, UserProfile } from '@models/user';
@@ -52,6 +54,30 @@ function Profile({ user }: ProfileProps) {
 
   const { username } = useParams();
   const navigate = useNavigate();
+  const trackEvent = useTrackEvent();
+
+  // Section-level visible-dwell — measures actual viewport time on each
+  // major part of the profile, so research can answer "did the user
+  // even look at the pinned posts? the check-in panel?" rather than
+  // "did the page render". Refs are attached to wrapper divs below.
+  const pinnedPostsRef = useRef<HTMLDivElement>(null);
+  const checkInRef = useRef<HTMLDivElement>(null);
+  const mutualFriendsRef = useRef<HTMLDivElement>(null);
+  // Disambiguate "viewing my own profile" from "viewing someone else's"
+  // in dashboards — they're very different engagement contexts.
+  const sectionParams = { is_my_page: isMyPage ? 'true' : 'false' };
+  useVisibleDwell(pinnedPostsRef, 'profile_section_dwell', {
+    ...sectionParams,
+    section: 'pinned_posts',
+  });
+  useVisibleDwell(checkInRef, 'profile_section_dwell', {
+    ...sectionParams,
+    section: 'check_in',
+  });
+  useVisibleDwell(mutualFriendsRef, 'profile_section_dwell', {
+    ...sectionParams,
+    section: 'mutual_friends',
+  });
 
   const handleOpenSubscriptionPopup = (e: MouseEvent) => {
     e.stopPropagation();
@@ -318,7 +344,19 @@ function Profile({ user }: ProfileProps) {
             featureFlags?.persona &&
             (isMyPage || previewMode || (user && areFriends(user))) &&
             hasInterestsOrPersonas && (
-              <Layout.FlexRow onClick={() => setShowMoreAbout(true)} style={{ cursor: 'pointer' }}>
+              <Layout.FlexRow
+                onClick={() => {
+                  // Tap on "See more details" — the gateway into the
+                  // chip-category sheet (interests / personas etc.).
+                  // Pairs with the section-dwell events inside the sheet
+                  // to tell us "users open this, but how engaged?"
+                  trackEvent('profile_see_more_details_tapped', {
+                    is_my_page: isMyPage ? 'true' : 'false',
+                  });
+                  setShowMoreAbout(true);
+                }}
+                style={{ cursor: 'pointer' }}
+              >
                 <Typo type="label-medium" color="PRIMARY">
                   {t('see_more_details')}
                 </Typo>
@@ -328,7 +366,9 @@ function Profile({ user }: ProfileProps) {
       </Layout.FlexRow>
 
       {featureFlags?.persona && isMyPage && (
-        <PinnedPostsSection pinnedPostsCount={myProfile?.pinned_cnt ?? 0} />
+        <div ref={pinnedPostsRef}>
+          <PinnedPostsSection pinnedPostsCount={myProfile?.pinned_cnt ?? 0} />
+        </div>
       )}
 
       {!isMyPage && user && (
@@ -347,7 +387,9 @@ function Profile({ user }: ProfileProps) {
               <ChatRequestButton user={user} />
             </Layout.FlexRow>
           )}
-          <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />
+          <div ref={mutualFriendsRef} style={{ width: '100%' }}>
+            <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />
+          </div>
         </>
       )}
       {/* my-page actions: Edit Profile + Public/Private toggle (Q) or View As (W) */}
@@ -381,7 +423,11 @@ function Profile({ user }: ProfileProps) {
       )}
 
       {/* 체크인 (status) */}
-      {featureFlags?.checkIn && user && <CheckInSection user={user} />}
+      {featureFlags?.checkIn && user && (
+        <div ref={checkInRef} style={{ width: '100%' }}>
+          <CheckInSection user={user} />
+        </div>
+      )}
 
       {/* More about bottom sheet */}
       {user && showMoreAbout && (
