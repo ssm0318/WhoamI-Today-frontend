@@ -144,6 +144,10 @@ export interface MyProfile extends User {
   following_count: number;
   friend_count: number;
   is_public: boolean;
+  /** Backend-grouped chips: keyed by chip category, values are the chip texts the user selected.
+   * Authoritative for category disambiguation — `user_interests`/`user_personas` are flat legacy arrays. */
+  chips_by_category?: Record<string, string[]>;
+  custom_chips?: { id: number; text: string; category: string }[];
 }
 
 export interface FriendRequest {
