@@ -394,7 +394,9 @@ function EditProfile() {
         };
         updateMyProfile(updatedProfile);
         openToast({ message: t('response.updated') });
-        if (shouldShowWidgetGuide(updatedProfile)) {
+        const shouldNavigateToWidgetGuide =
+          (isFromSignUp || isFromLoginSetup) && shouldShowWidgetGuide(updatedProfile);
+        if (shouldNavigateToWidgetGuide) {
           navigate('/widget-install-guide', { replace: true });
         } else {
           navigate('/my');
