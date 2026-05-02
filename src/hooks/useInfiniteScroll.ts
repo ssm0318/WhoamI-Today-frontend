@@ -29,7 +29,12 @@ const useInfiniteScroll = <T extends HTMLElement>(
     let observer: IntersectionObserver | undefined;
     const { current } = targetRef;
     if (current) {
-      observer = new IntersectionObserver(onIntersect, { threshold: 1 });
+      // WebView can under-report full visibility at the bottom edge.
+      // Use a forgiving threshold and margin so pagination still triggers in app.
+      observer = new IntersectionObserver(onIntersect, {
+        threshold: 0,
+        rootMargin: '0px 0px 120px 0px',
+      });
       observer.observe(current);
     }
     return () => observer?.disconnect();

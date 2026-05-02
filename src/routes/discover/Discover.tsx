@@ -122,6 +122,7 @@ function Discover() {
     data: discoverData,
     isLoadingMore,
     isLoading,
+    isEndPage,
     mutate,
   } = useSWRInfiniteScroll<DiscoverResultItem>({ key: swrKey });
 
@@ -459,6 +460,9 @@ function Discover() {
                       {t('no_contents.discover')}
                     </Typo>
                   </div>
+                  {/* Keep sentinel mounted for filtered-empty states so pagination can continue. */}
+                  {feedWithInjections.length > 0 && !isEndPage && <div ref={targetRef} />}
+                  {isLoadingMore && <NoteLoader />}
                 </Layout.FlexCol>
               )}
             </Layout.FlexCol>
