@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { Layout, Typo } from '@design-system';
 import { useMissions } from '@hooks/useMissions';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 
 export type MissionType = 'song' | 'question' | 'text' | 'compliment';
 
@@ -42,6 +43,23 @@ export function markMissionCompleted(): void {
     MISSION_STORAGE_KEY,
     JSON.stringify({ day: getDayOfYear(), count: current + 1 }),
   );
+  // Fire the completion event directly through the WebView bridge —
+  // this util is called from non-hook contexts (post-publish handlers in
+  // Share.tsx / NewNoteHeader.tsx / NewResponse.tsx) so we can't use
+  // useTrackEvent here. Bridge call mirrors what useTrackEvent emits.
+  if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+    try {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({
+          actionType: 'ANALYTICS_TRACK_EVENT',
+          name: 'mission_completed',
+          params: { attempt_number: current + 1 },
+        }),
+      );
+    } catch {
+      /* best-effort analytics */
+    }
+  }
 }
 
 interface Props {
@@ -52,11 +70,18 @@ function MissionOfTheDay({ onDoMission }: Props) {
   const { missions } = useMissions();
   const todayMission = missions[getDayOfYear() % missions.length];
   const [attempts, setAttempts] = useState(getAttemptsToday());
+  const trackEvent = useTrackEvent();
 
   const allUsed = attempts >= MAX_ATTEMPTS;
 
   const handleDoIt = () => {
     if (allUsed) return;
+    // Funnel start: paired with mission_completed in markMissionCompleted.
+    // Diff = users who tapped "Do it" but never published — abandon rate.
+    trackEvent('mission_attempt_started', {
+      mission_type: todayMission.type,
+      attempt_number: attempts + 1,
+    });
     onDoMission(todayMission);
   };
 

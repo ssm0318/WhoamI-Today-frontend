@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FeatureFlagKey } from '@constants/featureFlag';
 import { useGetAppMessage } from '@hooks/useAppMessage';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { SetAppStateData } from '@models/app';
 import { MyCheckIn } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -67,6 +68,7 @@ export function useCheckInFreshnessPrompt() {
   const [shouldShow, setShouldShow] = useState(false);
   const continuousTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingTriggerRef = useRef(false);
+  const trackEvent = useTrackEvent();
 
   const myProfile = useBoundStore((state) => state.myProfile);
   const featureFlags = useBoundStore((state) => state.featureFlags);
@@ -104,9 +106,10 @@ export function useCheckInFreshnessPrompt() {
       pendingTriggerRef.current = false;
       if (canShowPrompt()) {
         setShouldShow(true);
+        trackEvent('check_in_freshness_prompt_shown');
       }
     }
-  }, [checkIn, canShowPrompt]);
+  }, [checkIn, canShowPrompt, trackEvent]);
 
   // 연속 사용 타이머 시작
   const startContinuousTimer = useCallback(() => {
@@ -199,11 +202,12 @@ export function useCheckInFreshnessPrompt() {
   // dismiss 핸들러
   const dismiss = useCallback(() => {
     setShouldShow(false);
+    trackEvent('check_in_freshness_prompt_dismissed');
     if (userId) {
       saveDismissTimestamp(userId);
     }
     startContinuousTimer();
-  }, [userId, startContinuousTimer]);
+  }, [userId, startContinuousTimer, trackEvent]);
 
   return { shouldShow, dismiss, checkIn };
 }

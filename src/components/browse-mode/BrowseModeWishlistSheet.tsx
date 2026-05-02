@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -6,6 +6,7 @@ import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
 import Icon from '@components/_common/icon/Icon';
 import { Colors, Layout, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { useBoundStore } from '@stores/useBoundStore';
 import { submitBrowseModeWishlist } from '@utils/apis/browseMode';
 
@@ -27,13 +28,19 @@ interface BrowseModeWishlistSheetProps {
 function BrowseModeWishlistSheet({ visible, onClose }: BrowseModeWishlistSheetProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'browse_mode' });
   const openToast = useBoundStore((state) => state.openToast);
+  const trackEvent = useTrackEvent();
   const [text, setText] = useState('');
   const [state, setState] = useState<'idle' | 'sending' | 'error'>('idle');
+  // Tracks whether a submit succeeded in this open session — used to
+  // decide between a `submitted` (positive) vs `abandoned` (negative)
+  // event when the sheet closes.
+  const submittedRef = useRef(false);
 
   useEffect(() => {
     if (visible) {
       setText('');
       setState('idle');
+      submittedRef.current = false;
     }
   }, [visible]);
 
@@ -43,6 +50,8 @@ function BrowseModeWishlistSheet({ visible, onClose }: BrowseModeWishlistSheetPr
     setState('sending');
     try {
       await submitBrowseModeWishlist(trimmed);
+      submittedRef.current = true;
+      trackEvent('browse_mode_wishlist_submitted', { length: trimmed.length });
       openToast({ message: String(t('wishlist.sent_toast')) });
       onClose();
     } catch {
@@ -50,8 +59,17 @@ function BrowseModeWishlistSheet({ visible, onClose }: BrowseModeWishlistSheetPr
     }
   };
 
+  const handleClose = useCallback(() => {
+    if (!submittedRef.current) {
+      // `length` lets us distinguish "opened, typed something, abandoned"
+      // from "opened, typed nothing, closed" — different UX signals.
+      trackEvent('browse_mode_wishlist_abandoned', { length: text.trim().length });
+    }
+    onClose();
+  }, [onClose, text, trackEvent]);
+
   return createPortal(
-    <BottomModal visible={visible} onClose={onClose} heightMode="content">
+    <BottomModal visible={visible} onClose={handleClose} heightMode="content">
       <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE" pb={32}>
         <Icon name="home_indicator" />
         <Layout.FlexCol alignItems="center" gap={4} pt={4} ph={16}>
