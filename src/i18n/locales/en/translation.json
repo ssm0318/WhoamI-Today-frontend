@@ -929,6 +929,13 @@
                     "cancel": "Cancel",
                     "confirm": "Unfriend"
                 },
+                "reply_to_request": "Reply to friend request",
+                "reply_dialog": {
+                    "title": "Reply to friend request",
+                    "content": "{{user}} sent you a friend request.",
+                    "accept": "Accept",
+                    "reject": "Reject"
+                },
                 "friend_request_success": "Friend request sent successfully 🎉",
                 "friend_accept_success": "Friend request accepted successfully 🎉",
                 "friend_reject_success": "Friend request rejected successfully.",

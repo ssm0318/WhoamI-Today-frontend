@@ -921,6 +921,13 @@
           "cancel": "취소",
           "confirm": "삭제"
         },
+        "reply_to_request": "친구 요청에 답하기",
+        "reply_dialog": {
+          "title": "친구 요청에 답하기",
+          "content": "{{user}}님이 친구 요청을 보냈습니다.",
+          "accept": "수락",
+          "reject": "거절"
+        },
         "friend_request_success": "친구 요청이 성공적으로 완료되었습니다 🎉",
         "friend_accept_success": "친구 요청이 수락되었습니다 🎉",
         "friend_reject_success": "친구 요청이 거절되었습니다.",

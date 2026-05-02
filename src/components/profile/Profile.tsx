@@ -18,7 +18,7 @@ import { useChipCategories } from '@hooks/useChipCategories';
 import { Connection } from '@models/api/friends';
 import { MyProfile } from '@models/api/user';
 import { normalizeChipText } from '@models/chips';
-import { areFriends, isMyProfile, receivedFriendRequest, UserProfile } from '@models/user';
+import { areFriends, isMyProfile, UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { editProfile } from '@utils/apis/my';
@@ -119,7 +119,7 @@ function Profile({ user }: ProfileProps) {
     const friend = await getUserProfile(username, viewAs, viewAsUser);
 
     setFriendData(friend);
-  }, [isMyPage, username, viewAs, viewAsUser]);
+  }, [isMyPage, username, viewAs, viewAsUser, user]);
 
   const [showEditConnectionsModal, setShowEditConnectionsModal] = useState(false);
   const closeEditConnectionsModal = () => setShowEditConnectionsModal(false);
@@ -162,7 +162,12 @@ function Profile({ user }: ProfileProps) {
                   <Typo type="title-large" numberOfLines={1}>
                     {isMyPage
                       ? (myProfile as any)?.name || myProfile?.username || ''
-                      : (viewData as any)?.name || viewData?.username || username || ''}
+                      : (viewData as any)?.name ||
+                        viewData?.username ||
+                        (user as any)?.name ||
+                        user?.username ||
+                        username ||
+                        ''}
                   </Typo>
                   {isMyPage && isVerQ && (
                     <AccountStatusBadge>
@@ -332,7 +337,7 @@ function Profile({ user }: ProfileProps) {
 
       {!isMyPage && user && (
         <>
-          {!isMyProfile(user) && !areFriends(user) && !receivedFriendRequest(user) && (
+          {!isMyProfile(user) && !areFriends(user) && (
             <Layout.FlexRow w="100%" gap={8}>
               <FriendStatus
                 type="user"

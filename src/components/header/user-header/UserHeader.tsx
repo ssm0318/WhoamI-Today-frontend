@@ -18,6 +18,7 @@ function UserHeader({ username, userId, unreadCount, onClickMore }: UserHeaderPr
   const { user } = useContext(UserPageContext);
   const currentUser = useBoundStore((state) => state.myProfile);
   const areFriends = user?.data?.are_friends === true;
+  const canChat = areFriends || user?.data?.accepted_chat_request === true;
   const isMyPage = currentUser && userId ? Number(currentUser.id) === Number(userId) : false;
 
   const handleClickChat = () => {
@@ -32,10 +33,11 @@ function UserHeader({ username, userId, unreadCount, onClickMore }: UserHeaderPr
   if (!username) return null;
   return (
     <SubHeader
+      title={username}
       RightComponent={
         <Layout.FlexRow gap={8} alignItems="center">
           <Icon name="dots_menu" size={44} onClick={handleClickMore} />
-          {!isMyPage && areFriends && (
+          {!isMyPage && canChat && (
             <Layout.FlexRow>
               <Layout.LayoutBase pb={2}>
                 <Icon name="chat_outline" size={44} onClick={handleClickChat} />

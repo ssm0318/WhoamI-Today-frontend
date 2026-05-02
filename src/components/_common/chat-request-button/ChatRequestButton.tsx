@@ -32,6 +32,8 @@ function ChatRequestButton({ user, onChange }: Props) {
     setSent(user.sent_chat_request_to);
   }, [user.sent_chat_request_to]);
 
+  if (user.accepted_chat_request) return null;
+
   const handleClickRequest = async (e: MouseEvent) => {
     e.stopPropagation();
     if (previewMode) return;

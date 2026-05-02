@@ -1,13 +1,11 @@
 import { AxiosError } from 'axios';
-import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import Icon from '@components/_common/icon/Icon';
-import { BOTTOM_TABBAR_HEIGHT, Z_INDEX } from '@constants/layout';
-import { Colors, Layout, Typo } from '@design-system';
+import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
+import { Layout, Typo } from '@design-system';
 import {
   ChatEmojiDict,
   ChatEmojiType,
@@ -66,29 +64,6 @@ const RemoveButton = styled.button`
   line-height: 1;
 `;
 
-const EmojiOverlay = styled(Layout.FlexCol)`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: ${Z_INDEX.COMMENT_LIKES_POPUP};
-  justify-content: center;
-  align-items: center;
-`;
-
-const EmojiContent = styled.div`
-  position: relative;
-  width: 85%;
-  max-width: 400px;
-  max-height: 70vh;
-  padding: 20px;
-  border-radius: 16px;
-  background-color: ${Colors.WHITE};
-  overflow-y: auto;
-`;
-
 interface Props {
   userId: number;
   replyTarget: ChatMessage | null;
@@ -115,7 +90,6 @@ function ChatMessageInput({
   isAnnouncement,
 }: Props) {
   const [inputValue, setInputValue] = useState('');
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [showAnnouncementConfirm, setShowAnnouncementConfirm] = useState(false);
@@ -196,7 +170,6 @@ function ChatMessageInput({
       setSelectedImage(null);
       setImagePreview(null);
       onClearReply();
-      setShowEmojiPicker(false);
     } catch (err) {
       const axiosErr = err as AxiosError<{ detail?: string }>;
       const status = axiosErr?.response?.status;
@@ -208,13 +181,6 @@ function ChatMessageInput({
     } finally {
       setIsSending(false);
     }
-  };
-
-  // Full emoji picker: insert emoji character into text
-  const handleEmojiClick = (emojiData: EmojiClickData) => {
-    setInputValue((prev) => prev + emojiData.emoji);
-    setShowEmojiPicker(false);
-    textareaRef.current?.focus();
   };
 
   // Image selection
@@ -297,21 +263,6 @@ function ChatMessageInput({
           position: 'relative',
         }}
       >
-        {showEmojiPicker &&
-          createPortal(
-            <EmojiOverlay onClick={() => setShowEmojiPicker(false)}>
-              <EmojiContent onClick={(e) => e.stopPropagation()}>
-                <EmojiPicker
-                  onEmojiClick={handleEmojiClick}
-                  width="100%"
-                  height={350}
-                  skinTonesDisabled
-                  previewConfig={{ showPreview: false }}
-                />
-              </EmojiContent>
-            </EmojiOverlay>,
-            document.body,
-          )}
         {/* Image preview */}
         {imagePreview && (
           <ImagePreviewWrapper>
@@ -339,12 +290,6 @@ function ChatMessageInput({
             onKeyDown={handleKeyDownInput}
             rows={isAnnouncement ? 4 : 1}
             style={{ maxHeight: `${maxHeight}px` }}
-          />
-          <Icon
-            name="emoji"
-            size={24}
-            fill="DARK_GRAY"
-            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
           />
           {!isAnnouncement && (inputValue.trim() || selectedImage) && (
             <Icon

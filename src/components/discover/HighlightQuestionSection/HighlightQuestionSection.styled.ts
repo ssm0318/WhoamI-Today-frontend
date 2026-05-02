@@ -7,6 +7,7 @@ export const HighlightSectionWrapper = styled(Layout.FlexCol)`
   padding: 24px;
   width: 100%;
   box-sizing: border-box;
+  cursor: pointer;
 `;
 
 export const SaveButton = styled.div`

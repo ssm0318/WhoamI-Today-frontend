@@ -66,6 +66,7 @@ function Chat() {
   const [areFriends, setAreFriends] = useState<boolean | null>(null);
   const [sentChatRequest, setSentChatRequest] = useState(false);
   const [receivedChatRequestId, setReceivedChatRequestId] = useState<number | null>(null);
+  const [acceptedChatRequest, setAcceptedChatRequest] = useState(false);
 
   const currentUser = useBoundStore((state) => state.myProfile);
   const openToast = useBoundStore((state) => state.openToast);
@@ -77,6 +78,7 @@ function Chat() {
       setAreFriends(profile.are_friends === true);
       setSentChatRequest(profile.sent_chat_request_to === true);
       setReceivedChatRequestId(profile.received_chat_request_from ?? null);
+      setAcceptedChatRequest(profile.accepted_chat_request === true);
     } catch {
       setAreFriends(true);
     }
@@ -328,7 +330,7 @@ function Chat() {
     onFriendshipBroken,
   });
 
-  const showRequestBar = areFriends === false;
+  const showRequestBar = areFriends === false && !acceptedChatRequest;
 
   return (
     <MainScrollContainer scrollRef={scrollRef}>

@@ -78,6 +78,7 @@ function FriendStatus({
   const [isCancelFriendRequestDialogVisible, setIsCancelFriendRequestDialogVisible] =
     useState(false);
   const [isVisitProfileDialogVisible, setIsVisitProfileDialogVisible] = useState(false);
+  const [isReplyDialogVisible, setIsReplyDialogVisible] = useState(false);
   const [isRejectFriendRequestDialogVisible, setIsRejectFriendRequestDialogVisible] =
     useState(false);
   const [isUnfriendDialogVisible, setIsUnfriendDialogVisible] = useState(false);
@@ -280,20 +281,33 @@ function FriendStatus({
             onClick={handleClickUnfriend}
           />
         ) : type === 'requests' || receivedFriendRequest(user) ? (
-          <>
+          isUserPage ? (
             <PrimaryButton
               status="normal"
-              text={t('confirm')}
+              text={t('reply_to_request')}
               {...sizingProp}
-              onClick={handleClickConfirm}
+              onClick={(e: MouseEvent) => {
+                e.stopPropagation();
+                if (previewMode) return;
+                setIsReplyDialogVisible(true);
+              }}
             />
-            <Button.Secondary
-              status="normal"
-              text={t('reject')}
-              {...sizingProp}
-              onClick={handleClickRejectFriendRequest}
-            />
-          </>
+          ) : (
+            <>
+              <PrimaryButton
+                status="normal"
+                text={t('confirm')}
+                {...sizingProp}
+                onClick={handleClickConfirm}
+              />
+              <Button.Secondary
+                status="normal"
+                text={t('reject')}
+                {...sizingProp}
+                onClick={handleClickRejectFriendRequest}
+              />
+            </>
+          )
         ) : (
           <>
             {type === 'sent_requests' || sentFriendRequest(user) ? (
@@ -334,6 +348,25 @@ function FriendStatus({
           </>
         )}
       </ButtonRow>
+      {isReplyDialogVisible && (
+        <CommonDialog
+          visible={isReplyDialogVisible}
+          title={t('reply_dialog.title')}
+          titleType="title-medium"
+          cancelText={t('reply_dialog.reject')}
+          confirmText={t('reply_dialog.accept')}
+          cancelTextColor="WARNING"
+          onClickConfirm={() => {
+            setIsReplyDialogVisible(false);
+            setIsFriendTypeSelectModalVisible({ visible: true, type: 'accept' });
+          }}
+          onClickCancel={() => {
+            setIsReplyDialogVisible(false);
+            setIsRejectFriendRequestDialogVisible(true);
+          }}
+          onClickClose={() => setIsReplyDialogVisible(false)}
+        />
+      )}
       {isCancelFriendRequestDialogVisible && (
         <CommonDialog
           visible={isCancelFriendRequestDialogVisible}
