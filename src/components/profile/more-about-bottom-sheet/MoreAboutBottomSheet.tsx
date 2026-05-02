@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
@@ -49,7 +50,7 @@ function MoreAboutBottomSheet({
     }))
     .filter((group) => group.chips.length > 0);
 
-  return (
+  return createPortal(
     <BottomModal visible={visible} onClose={onClose}>
       <Layout.FlexCol w="100%" ph={16} pv={16} gap={16}>
         {/* Header */}
@@ -79,7 +80,8 @@ function MoreAboutBottomSheet({
           </Layout.FlexCol>
         ))}
       </Layout.FlexCol>
-    </BottomModal>
+    </BottomModal>,
+    document.getElementById('modal-container') || document.body,
   );
 }
 
