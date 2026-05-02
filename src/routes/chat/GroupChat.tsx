@@ -314,6 +314,16 @@ function GroupChat() {
   const groupTitle = room?.name || 'Group Chat';
   const members = room?.members_detail || [];
   const typingNames = Object.values(typingUsers);
+  // wit_bot escalated room: 3-member group containing wit_bot. Leaving here
+  // doesn't actually remove the user — it dismisses the admin and demotes
+  // back to a 1-on-1 with the bot. Relabel so the user knows what they're
+  // doing.
+  const isWitBotEscalated = members.some((m) => m.username === 'wit_bot');
+  const leaveButtonLabel = isWitBotEscalated ? 'Dismiss wit_admin' : 'Leave Group';
+  const leaveConfirmText = isWitBotEscalated
+    ? 'Dismiss wit_admin and go back to chatting with wit_bot only?'
+    : 'Are you sure you want to leave this group?';
+  const leaveConfirmAction = isWitBotEscalated ? 'Dismiss' : 'Leave';
 
   return (
     <MainScrollContainer scrollRef={scrollRef} style={{ marginTop: 0 }}>
@@ -526,7 +536,7 @@ function GroupChat() {
               {showLeaveConfirm ? (
                 <>
                   <Typo type="body-small" color="BLACK">
-                    Are you sure you want to leave this group?
+                    {leaveConfirmText}
                   </Typo>
                   <Layout.FlexRow gap={12}>
                     <button
@@ -543,7 +553,7 @@ function GroupChat() {
                         cursor: 'pointer',
                       }}
                     >
-                      Leave
+                      {leaveConfirmAction}
                     </button>
                     <button
                       type="button"
@@ -569,7 +579,7 @@ function GroupChat() {
                   style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                 >
                   <Typo type="label-medium" color="WARNING">
-                    Leave Group
+                    {leaveButtonLabel}
                   </Typo>
                 </button>
               )}
