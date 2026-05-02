@@ -11,6 +11,7 @@ import NoCloseFriends from '@components/friends/no-close-friends/NoCloseFriends'
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import { Colors, Layout, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { Connection, FriendType, UpdatedProfile } from '@models/api/friends';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMe } from '@utils/apis/my';
@@ -35,6 +36,16 @@ function FriendsList() {
   useEffect(() => {
     if (browseModeForcesCloseFriends) setCloseFriendsOnly(true);
   }, [browseModeForcesCloseFriends]);
+  const trackEvent = useTrackEvent();
+  const handleToggleCloseFriends = () => {
+    setCloseFriendsOnly((prev) => {
+      const next = !prev;
+      // Filter is local-state only — never hits the backend, so this event
+      // is the only way to know how often users actually use it.
+      trackEvent('friends_filter_close_only_toggled', { value: next ? 'on' : 'off' });
+      return next;
+    });
+  };
   const friendType: FriendType = closeFriendsOnly ? 'close_friends' : 'all';
 
   const {
@@ -176,7 +187,7 @@ function FriendsList() {
               alignItems="center"
               style={{ cursor: 'pointer' }}
               data-preview-exempt
-              onClick={() => setCloseFriendsOnly((prev) => !prev)}
+              onClick={handleToggleCloseFriends}
             >
               <CheckboxIcon checked={closeFriendsOnly} />
               <Typo type="label-medium" color={closeFriendsOnly ? 'BLACK' : 'MEDIUM_GRAY'}>

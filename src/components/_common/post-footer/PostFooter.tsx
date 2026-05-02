@@ -6,6 +6,7 @@ import EmojiPicker from '@components/emoji-picker/EmojiPicker';
 import { getEmojiPickerPosition } from '@components/emoji-picker/EmojiPicker.helper';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { Note, POST_DP_TYPE, POST_TYPE, ReactionUserSample, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { deleteReaction, postReaction } from '@utils/apis/reaction';
@@ -45,6 +46,13 @@ function PostFooter({
   const [t] = useTranslation('translation', {
     keyPrefix: post.type === POST_TYPE.RESPONSE ? 'responses' : 'notes',
   });
+  const trackEvent = useTrackEvent();
+  // True iff the picker was opened during this PostFooter mount and a
+  // reaction was posted. Lets the close-without-pick branch fire
+  // `reaction_picker_dismissed` (vs the picker being closed because the
+  // user actually reacted, which we already see via postReaction).
+  const pickerOpenedRef = useRef(false);
+  const reactionPostedRef = useRef(false);
 
   const handleClickCommentText = (e: MouseEvent) => {
     e.stopPropagation();
@@ -67,7 +75,7 @@ function PostFooter({
   const handleSelectEmoji = async (emoji: EmojiClickData) => {
     if (!myProfile) return;
     const response = await postReaction(post.type, post.id, emoji.emoji);
-
+    reactionPostedRef.current = true;
     setEmojiPickerTarget(null);
     setMyReactionList([
       ...myReactionList,
@@ -125,9 +133,24 @@ function PostFooter({
         displayType === 'DETAIL' ? BOTTOM_TABBAR_HEIGHT + 100 : BOTTOM_TABBAR_HEIGHT,
     });
 
-    setEmojiPickerTarget(
-      isCurrentlyActive ? null : { type: post.type, id: post.id, ...pickerPosition },
-    );
+    if (isCurrentlyActive) {
+      // Tapped the button again to close — count as a dismiss only if no
+      // reaction was actually posted in this open session.
+      if (pickerOpenedRef.current && !reactionPostedRef.current) {
+        trackEvent('reaction_picker_dismissed', {
+          post_type: String(post.type),
+          source: 'toggle',
+        });
+      }
+      pickerOpenedRef.current = false;
+      reactionPostedRef.current = false;
+      setEmojiPickerTarget(null);
+    } else {
+      pickerOpenedRef.current = true;
+      reactionPostedRef.current = false;
+      trackEvent('reaction_picker_opened', { post_type: String(post.type) });
+      setEmojiPickerTarget({ type: post.type, id: post.id, ...pickerPosition });
+    }
   };
 
   useEffect(() => {

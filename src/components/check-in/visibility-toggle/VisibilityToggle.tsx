@@ -1,11 +1,20 @@
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import i18n from '@i18n/index';
 import { ComponentVisibility } from '@models/checkIn';
 
 interface Props {
   value: ComponentVisibility;
   onChange: (visibility: ComponentVisibility) => void;
+  /**
+   * Optional analytics tag for distinguishing different visibility-toggle
+   * locations in Firebase (e.g. 'check_in_battery', 'photo_caption',
+   * 'note_compose'). Without this, all toggles look the same in the
+   * dashboard. Backend only sees the FINAL persisted value, so this event
+   * captures pre-save fiddle (toggling between options before settling).
+   */
+  trackingId?: string;
 }
 
 interface VisibilityOption {
@@ -36,15 +45,25 @@ export function getVisibilityLabel(value: ComponentVisibility): string {
   return opt ? i18n.t(opt.i18nKey) : '';
 }
 
-function VisibilityToggle({ value, onChange }: Props) {
+function VisibilityToggle({ value, onChange, trackingId }: Props) {
   const [t] = useTranslation('translation');
+  const trackEvent = useTrackEvent();
+  const handleChange = (next: ComponentVisibility) => {
+    if (next === value) return;
+    trackEvent('visibility_toggle_changed', {
+      from: String(value),
+      to: String(next),
+      ...(trackingId ? { surface: trackingId } : {}),
+    });
+    onChange(next);
+  };
   return (
     <ToggleContainer>
       {VISIBILITY_OPTIONS.map((opt) => (
         <ToggleOption
           key={opt.value}
           $isSelected={value === opt.value}
-          onClick={() => onChange(opt.value)}
+          onClick={() => handleChange(opt.value)}
         >
           <Label
             $isSelected={value === opt.value}
