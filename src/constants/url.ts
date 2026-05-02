@@ -32,8 +32,7 @@ export const RESEARCH_INQUIRY_DISCORD_LINK = 'https://discordapp.com/users/12218
 export const USER_MANUAL_URL =
   'https://drive.google.com/drive/folders/131GPATMKThegtTlw86OtBYOgfx1uu6S4?usp=sharing';
 
-export const ONBOARDING_VIDEO_URL =
-  'https://www.youtube.com/playlist?list=PLeg7yLjhFvgw7tWm9QpU536mfHjLQWy7S';
+export const ONBOARDING_VIDEO_URL = 'https://tinyurl.com/wit-videos';
 
 export const DAILY_SURVEY_URL_EN = 'https://uwashington.qualtrics.com/jfe/form/SV_b4017RNxNe5wvMq';
 export const DAILY_SURVEY_URL_KO = 'https://uwashington.qualtrics.com/jfe/form/SV_cCnY8BhEGcTrdrM';
