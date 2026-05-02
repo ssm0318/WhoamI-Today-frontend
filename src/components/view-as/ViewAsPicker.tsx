@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Layout, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { Connection } from '@models/api/friends';
 import { User } from '@models/user';
 import { getFriendList } from '@utils/apis/user';
@@ -19,6 +20,7 @@ interface ViewAsPickerProps {
 function ViewAsPicker({ visible, onClose, onSelect }: ViewAsPickerProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'view_as.picker' });
   const [friends, setFriends] = useState<User[] | null>(null);
+  const trackEvent = useTrackEvent();
 
   useEffect(() => {
     if (!visible || friends !== null) return;
@@ -45,11 +47,25 @@ function ViewAsPicker({ visible, onClose, onSelect }: ViewAsPickerProps) {
   const regularFriends = (friends ?? []).filter((f) => f.connection_status === Connection.FRIEND);
 
   const handleSelectPublic = () => {
+    // Picker-level event: "user chose public" (tier-specific). Distinct
+    // from the page-level `view_as_audience_changed` because that fires
+    // on URL-param change, including initial mount with the default tier.
+    // This event ONLY fires when the user explicitly tapped Public in the
+    // picker — the engagement intent signal.
+    trackEvent('view_as_audience_picked', { kind: 'tier', tier: 'public' });
     onSelect({ kind: 'tier', tier: 'public' });
     onClose();
   };
 
-  const handleSelectFriend = (username: string) => {
+  const handleSelectFriend = (username: string, isCloseFriend: boolean) => {
+    // is_close_friend distinguishes 'checking what intimate people see'
+    // from 'checking what acquaintances see' — different privacy signals.
+    // Username itself is intentionally NOT logged (high cardinality and
+    // analytically not useful — what matters is the relationship category).
+    trackEvent('view_as_audience_picked', {
+      kind: 'user',
+      is_close_friend: isCloseFriend ? 'true' : 'false',
+    });
     onSelect({ kind: 'user', username });
     onClose();
   };
@@ -88,7 +104,7 @@ function ViewAsPicker({ visible, onClose, onSelect }: ViewAsPickerProps) {
               {t('close_friends_section')}
             </Typo>
             {closeFriends.map((f) => (
-              <S.Row key={f.id} onClick={() => handleSelectFriend(f.username)}>
+              <S.Row key={f.id} onClick={() => handleSelectFriend(f.username, true)}>
                 <ProfileImage imageUrl={f.profile_image} username={f.username} size={32} />
                 <Typo type="body-medium" color="BLACK">
                   {f.username}
@@ -105,7 +121,7 @@ function ViewAsPicker({ visible, onClose, onSelect }: ViewAsPickerProps) {
               {t('friends_section')}
             </Typo>
             {regularFriends.map((f) => (
-              <S.Row key={f.id} onClick={() => handleSelectFriend(f.username)}>
+              <S.Row key={f.id} onClick={() => handleSelectFriend(f.username, false)}>
                 <ProfileImage imageUrl={f.profile_image} username={f.username} size={32} />
                 <Typo type="body-medium" color="BLACK">
                   {f.username}
