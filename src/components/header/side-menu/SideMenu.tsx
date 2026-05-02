@@ -92,6 +92,22 @@ function SideMenu({ closeSideMenu }: Props) {
         <Layout.FlexCol pt={20} pl={24}>
           <SvgIcon name="close" color="BLACK" size={24} onClick={handleClickDimmed} />
           <Layout.FlexCol gap={12} pt={30}>
+            {myProfile && (
+              <Layout.FlexCol gap={10} mb={20}>
+                <Layout.FlexRow gap={4} alignItems="center" style={{ flexWrap: 'wrap' }}>
+                  <Typo type="body-medium" color="DARK_GRAY">
+                    {t('current_version')}
+                  </Typo>
+                  <VersionCode>{VERSION_LABEL[myProfile.current_ver]}</VersionCode>
+                </Layout.FlexRow>
+                <Button.Secondary
+                  status={isPending ? 'disabled' : 'normal'}
+                  text={isPending ? t('request_pending') : t('request_version_switch')}
+                  sizing="fit-content"
+                  onClick={handleClickVersionSwitch}
+                />
+              </Layout.FlexCol>
+            )}
             {visibleItems.map((menu) => (
               <button type="button" key={menu.key} onClick={handleClickMenu(menu)}>
                 <Layout.FlexRow gap={6} alignItems="center">
@@ -128,22 +144,6 @@ function SideMenu({ closeSideMenu }: Props) {
                 </Layout.FlexRow>
               </a>
             </Layout.FlexCol>
-            {myProfile && (
-              <Layout.FlexCol mt={60} gap={10}>
-                <Layout.FlexRow gap={4} alignItems="center" style={{ flexWrap: 'wrap' }}>
-                  <Typo type="body-medium" color="DARK_GRAY">
-                    {t('current_version')}
-                  </Typo>
-                  <VersionCode>{VERSION_LABEL[myProfile.current_ver]}</VersionCode>
-                </Layout.FlexRow>
-                <Button.Secondary
-                  status={isPending ? 'disabled' : 'normal'}
-                  text={isPending ? t('request_pending') : t('request_version_switch')}
-                  sizing="fit-content"
-                  onClick={handleClickVersionSwitch}
-                />
-              </Layout.FlexCol>
-            )}
           </Layout.FlexCol>
         </Layout.FlexCol>
       </Layout.Absolute>
