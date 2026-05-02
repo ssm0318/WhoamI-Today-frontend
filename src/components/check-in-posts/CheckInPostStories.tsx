@@ -207,7 +207,7 @@ function CheckInPostStories({
               >
                 <Plus>
                   <PlusIcon>+</PlusIcon>
-                  <Typo type="label-small" color="PRIMARY">
+                  <Typo type="label-small" color="PRIMARY" textAlign="center">
                     {t('compose_line2')}
                   </Typo>
                 </Plus>

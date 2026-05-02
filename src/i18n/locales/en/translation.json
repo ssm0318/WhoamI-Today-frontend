@@ -765,8 +765,8 @@
         "qna_title": "Q&A"
     },
     "discover_banner": {
-        "daily_refresh_1": "Playlist and post feed update daily at {{time}} — up to 10 items each.",
-        "daily_refresh_2": "Questions, surveys & missions refresh at the same time as well!"
+        "daily_refresh_1": "We're working on the algorithm for this tab at the moment.",
+        "daily_refresh_2": "For today, you'll see posts shared until yesterday."
     },
     "no_contents": {
         "discover": "No posts yet.",

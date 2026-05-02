@@ -758,8 +758,8 @@
     "qna_title": "Q&A"
   },
   "discover_banner": {
-    "daily_refresh_1": "매일 {{time}}, 플레이리스트와 피드가 각각 최대 10개씩 업데이트돼요.",
-    "daily_refresh_2": "질문, 설문, 미션도요!"
+    "daily_refresh_1": "현재 이 탭의 알고리즘을 수정 중이에요.",
+    "daily_refresh_2": "오늘은 어제까지 공유된 포스트가 보여요."
   },
   "no_contents": {
     "discover": "아직 게시글이 없습니다.",
