@@ -75,12 +75,19 @@ function CheckInPostStories({
     mutate();
   }, [mutate]);
 
-  const { highlights, sortedAll } = useMemo(() => {
+  const { highlights, sortedAll, archivedCount } = useMemo(() => {
     const h = friendStories.filter((s) => s.is_pinned);
     const all = [...friendStories].sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
-    return { highlights: h, sortedAll: all };
+    const expiryMs = 24 * 60 * 60 * 1000;
+    const now = Date.now();
+    const expired = friendStories.filter((s) => now - new Date(s.created_at).getTime() > expiryMs);
+    return {
+      highlights: h,
+      sortedAll: all,
+      archivedCount: expired.length,
+    };
   }, [friendStories]);
 
   // Profile mode (authorUserId provided): split into Highlights + Today,
@@ -111,7 +118,7 @@ function CheckInPostStories({
                 <SnippetArchiveLink
                   prefix={<ArchiveIcon />}
                   i18nKey="all_link"
-                  count={friendStories.length}
+                  count={archivedCount}
                   to="/check-in-posts/archive?tab=all"
                 />
               </Layout.FlexRow>

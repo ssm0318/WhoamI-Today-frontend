@@ -65,8 +65,14 @@ function MySnippetsArchive() {
     };
   }, [myProfile?.id]);
 
+  const archived = useMemo(() => {
+    const expiryMs = 24 * 60 * 60 * 1000;
+    const now = Date.now();
+    return snippets.filter((s) => now - new Date(s.created_at).getTime() > expiryMs);
+  }, [snippets]);
+
   const pinned = useMemo(() => snippets.filter((s) => s.is_pinned), [snippets]);
-  const visible = tab === 'pinned' ? pinned : snippets;
+  const visible = tab === 'pinned' ? pinned : archived;
 
   const setTab = (next: 'all' | 'pinned') => {
     setSearchParams({ tab: next }, { replace: true });
@@ -105,7 +111,7 @@ function MySnippetsArchive() {
           </SegmentButton>
           <SegmentButton active={tab === 'all'} onClick={() => setTab('all')}>
             <ArchiveIcon active={tab === 'all'} />
-            {t('tab_all')} ({snippets.length})
+            {t('tab_all')} ({archived.length})
           </SegmentButton>
         </Layout.FlexRow>
 
