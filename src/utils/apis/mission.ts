@@ -1,7 +1,7 @@
-import { Mission } from '@components/share/MissionOfTheDay';
+import { DailyMission } from '@models/mission';
 import axios from './axios';
 
-export const getMissions = async (): Promise<Mission[]> => {
-  const { data } = await axios.get<Mission[]>('/missions/');
-  return data;
+export const getDailyMission = async (): Promise<DailyMission | null> => {
+  const { data } = await axios.get<DailyMission[]>('/missions/');
+  return data[0] ?? null;
 };
