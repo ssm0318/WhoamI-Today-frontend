@@ -170,6 +170,36 @@ function EditProfile() {
     categoryVisibility: initialCategoryVisibility,
   });
 
+  // Re-sync chip selections when the source data arrives. Two async sources
+  // can be late: `myProfile.chips_by_category` (Zustand store) and `categories`
+  // (useChipCategories API). Without this, a user who lands on Edit Profile
+  // before either resolves would see ALL chips unselected — and tapping Save
+  // (or just toggling one new chip) would clobber their saved selections.
+  // Only re-sync when the draft is currently empty AND the backend has chips,
+  // so we don't trample edits-in-progress.
+  useEffect(() => {
+    const savedByCategory = myProfile?.chips_by_category ?? {};
+    const savedTotal = Object.values(savedByCategory).reduce(
+      (s, l) => s + (Array.isArray(l) ? l.length : 0),
+      0,
+    );
+    const draftTotal = Object.values(draft.chipSelections).reduce(
+      (s, l) => s + (Array.isArray(l) ? l.length : 0),
+      0,
+    );
+    if (draftTotal > 0 || savedTotal === 0) return;
+    const refreshed: Record<string, string[]> = {};
+    Object.entries(savedByCategory).forEach(([catKey, stored]) => {
+      if (!Array.isArray(stored)) return;
+      const cat = categories.find((c) => c.key === catKey);
+      refreshed[catKey] = stored.map(
+        (m) => cat?.chips.find((c) => normalizeChipText(c) === normalizeChipText(m)) || m,
+      );
+    });
+    setDraft((prev) => ({ ...prev, chipSelections: refreshed }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [myProfile?.chips_by_category, categories.length]);
+
   const [usernameError, setUsernameError] = useState<string>();
 
   const inputRef = useRef<HTMLInputElement>(null);
