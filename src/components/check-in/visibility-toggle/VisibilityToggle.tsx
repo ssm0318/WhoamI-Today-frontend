@@ -1,8 +1,11 @@
+import { TouchEvent, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import i18n from '@i18n/index';
 import { ComponentVisibility } from '@models/checkIn';
+
+const TAP_MOVEMENT_THRESHOLD_PX = 10;
 
 interface Props {
   value: ComponentVisibility;
@@ -48,6 +51,8 @@ export function getVisibilityLabel(value: ComponentVisibility): string {
 function VisibilityToggle({ value, onChange, trackingId }: Props) {
   const [t] = useTranslation('translation');
   const trackEvent = useTrackEvent();
+  const touchStartPosRef = useRef<{ x: number; y: number } | null>(null);
+
   const handleChange = (next: ComponentVisibility) => {
     if (next === value) return;
     trackEvent('visibility_toggle_changed', {
@@ -57,12 +62,36 @@ function VisibilityToggle({ value, onChange, trackingId }: Props) {
     });
     onChange(next);
   };
+
+  const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    const touch = e.touches[0];
+    touchStartPosRef.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  // Fire on touchend (with movement guard) so the action isn't lost when
+  // a software keyboard is up — iOS WebView can swallow the synthesized
+  // click while it dismisses the keyboard / reflows the viewport.
+  const handleTouchEnd = (e: TouchEvent<HTMLDivElement>, next: ComponentVisibility) => {
+    const start = touchStartPosRef.current;
+    touchStartPosRef.current = null;
+    if (!start) return;
+    const touch = e.changedTouches[0];
+    const dx = Math.abs(touch.clientX - start.x);
+    const dy = Math.abs(touch.clientY - start.y);
+    if (dx >= TAP_MOVEMENT_THRESHOLD_PX || dy >= TAP_MOVEMENT_THRESHOLD_PX) return;
+    e.preventDefault();
+    e.stopPropagation();
+    handleChange(next);
+  };
+
   return (
     <ToggleContainer>
       {VISIBILITY_OPTIONS.map((opt) => (
         <ToggleOption
           key={opt.value}
           $isSelected={value === opt.value}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={(e) => handleTouchEnd(e, opt.value)}
           onClick={() => handleChange(opt.value)}
         >
           <Label
