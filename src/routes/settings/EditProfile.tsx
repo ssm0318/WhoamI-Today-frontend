@@ -65,23 +65,32 @@ function EditProfile() {
 
   const { categories } = useChipCategories();
 
-  // Parse existing user chips into per-category selections
+  // Parse existing user chips into per-category selections.
+  //
+  // Source of truth: `myProfile.chips_by_category` (keyed by category, set per Interest row).
+  // The legacy flat arrays `user_interests`/`user_personas` lose the category attribution,
+  // so a chip name shared across categories (e.g. "Instagram" appearing in both
+  // favorite_platform and least_favorite_platform, or "Night Owl" in both basic_identities
+  // and as_a_friend) would resolve to ALL matching categories — visible to users as
+  // a chip wrongly selected in every category. Read from chips_by_category instead.
   const parseExistingChips = () => {
-    const existing = [
-      ...(myProfile?.user_interests ?? []).map((i) => i.replace(/^#+/, '')),
-      ...(myProfile?.user_personas ?? []).map((p) => p.replace(/^#+/, '')),
-    ];
+    const chipsByCategory = myProfile?.chips_by_category ?? {};
     const result: Record<string, string[]> = {};
-    const customResult: CustomChip[] = [];
 
     categories.forEach((cat) => {
-      const matched = existing.filter((chip) =>
-        cat.chips.some((c) => normalizeChipText(c) === normalizeChipText(chip)),
-      );
-      result[cat.key] = matched.map(
+      const stored = chipsByCategory[cat.key] ?? [];
+      // Map each stored chip to its canonical-cased option, falling back to the stored
+      // text (so chips removed from the option list still render as user-selected).
+      result[cat.key] = stored.map(
         (m) => cat.chips.find((c) => normalizeChipText(c) === normalizeChipText(m)) || m,
       );
     });
+
+    const customResult: CustomChip[] = (myProfile?.custom_chips ?? []).map((c) => ({
+      id: c.id,
+      text: c.text,
+      category: c.category as ChipCategory,
+    }));
     return { selections: result, customs: customResult };
   };
 
