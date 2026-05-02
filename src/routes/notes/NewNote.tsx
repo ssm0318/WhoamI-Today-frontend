@@ -5,6 +5,7 @@ import NewNoteHeader from '@components/note/new-note-header/NewNoteHeader';
 import { NewNoteForm, PostVisibility, ShareType } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertImagesToFiles } from '@utils/convertImageToFiles';
+import { getLastVisibility, VisibilityMemoryKeys } from '@utils/visibilityMemory';
 import NewNoteContent from '../../components/note/new-note-content/NewNoteContent';
 import { MainScrollContainer } from '../Root';
 
@@ -22,9 +23,12 @@ function NewNote() {
   const title = !isEditing ? t('new_note') : t('edit_note');
   const noteId = location.state?.post?.id || '';
   const content = location.state?.post?.content || '';
-  const defaultVisibility = myProfile?.is_public
-    ? [PostVisibility.PUBLIC]
-    : [PostVisibility.FRIENDS];
+  const predetermined = myProfile?.is_public ? [PostVisibility.PUBLIC] : [PostVisibility.FRIENDS];
+  // For NEW notes, prefer the user's last-picked share visibility (per the
+  // "remember my last choice" rule). For EDITING an existing note, keep its
+  // original visibility so we don't silently flip what they previously shared.
+  const remembered = !isEditing ? getLastVisibility(VisibilityMemoryKeys.share.note) : undefined;
+  const defaultVisibility = remembered ? [remembered as unknown as PostVisibility] : predetermined;
   const visibility = location.state?.post?.visibility || defaultVisibility;
   const images = useMemo(() => location.state?.post?.images || [], [location.state?.post?.images]);
 

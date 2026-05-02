@@ -14,6 +14,7 @@ import { UserSelector } from '@stores/user';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import { processImageFromApp } from '@utils/imageHelpers';
+import { setLastVisibility, VisibilityMemoryKeys } from '@utils/visibilityMemory';
 import { FlexRow } from 'src/design-system/layouts';
 import NewNoteImageEdit from '../new-note-image-edit/NewNoteImageEdit';
 import NewNotePhotoUploadBottomSheet from '../new-note-photo-upload-bottom-sheet/NewNotePhotoUploadBottomSheet';
@@ -138,6 +139,12 @@ function NewNoteContent({
       ...prevNoteInfo,
       visibility: visibilities,
     }));
+    if (visibilities[0]) {
+      setLastVisibility(
+        VisibilityMemoryKeys.share.note,
+        visibilities[0] as unknown as ComponentVisibility,
+      );
+    }
   };
 
   const onCompleteImageCrop = (croppedImage: CroppedImg) => {

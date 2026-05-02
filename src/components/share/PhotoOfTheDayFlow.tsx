@@ -10,6 +10,11 @@ import { PostVisibility, ShareType } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { postNote } from '@utils/apis/note';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
+import {
+  getLastVisibility,
+  setLastVisibility,
+  VisibilityMemoryKeys,
+} from '@utils/visibilityMemory';
 import { MainScrollContainer } from '../../routes/Root';
 
 type Step = 'pick' | 'edit' | 'caption';
@@ -24,7 +29,13 @@ function PhotoOfTheDayFlow() {
   const [rawImageUrl, setRawImageUrl] = useState<string | undefined>(imageFromState);
   const [croppedImg, setCroppedImg] = useState<CroppedImg>();
   const [caption, setCaption] = useState('');
-  const [visibility, setVisibility] = useState<ComponentVisibility>(ComponentVisibility.FRIENDS);
+  const [visibility, setVisibilityState] = useState<ComponentVisibility>(
+    () => getLastVisibility(VisibilityMemoryKeys.share.photo) ?? ComponentVisibility.FRIENDS,
+  );
+  const setVisibility = (v: ComponentVisibility) => {
+    setVisibilityState(v);
+    setLastVisibility(VisibilityMemoryKeys.share.photo, v);
+  };
   const [isPosting, setIsPosting] = useState(false);
 
   const handlePickGallery = () => {

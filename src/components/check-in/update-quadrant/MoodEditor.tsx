@@ -4,6 +4,11 @@ import styled from 'styled-components';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { Colors, Layout, Typo } from '@design-system';
 import { ComponentVisibility } from '@models/checkIn';
+import {
+  getLastVisibility,
+  setLastVisibility,
+  VisibilityMemoryKeys,
+} from '@utils/visibilityMemory';
 import EditorPopup from './EditorPopup';
 
 const MAX_MOOD_EMOJIS = 5;
@@ -30,12 +35,19 @@ export default function MoodEditor({
   onVisibilityChange,
 }: Props) {
   const [draftValue, setDraftValue] = useState<string[]>(value);
-  const [draftVisibility, setDraftVisibility] = useState<ComponentVisibility>(visibility);
+  const [draftVisibility, setDraftVisibility] = useState<ComponentVisibility>(
+    () => getLastVisibility(VisibilityMemoryKeys.checkInMood) ?? visibility,
+  );
+
+  const handleVisibilityChange = useCallback((v: ComponentVisibility) => {
+    setDraftVisibility(v);
+    setLastVisibility(VisibilityMemoryKeys.checkInMood, v);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
       setDraftValue(value);
-      setDraftVisibility(visibility);
+      setDraftVisibility(getLastVisibility(VisibilityMemoryKeys.checkInMood) ?? visibility);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -104,7 +116,7 @@ export default function MoodEditor({
           previewConfig={{ showPreview: false }}
         />
       </Layout.FlexCol>
-      <VisibilityToggle value={draftVisibility} onChange={setDraftVisibility} />
+      <VisibilityToggle value={draftVisibility} onChange={handleVisibilityChange} />
     </EditorPopup>
   );
 }
