@@ -42,21 +42,62 @@ jobs:
           docker volume inspect frontend_build_volume >/dev/null 2>&1 \
             || docker volume create frontend_build_volume
 
-          echo "🛑 기존 컨테이너 종료"
-          docker compose -f docker-compose.production.yml down
-
-          echo "🧹 Legacy 컨테이너 및 디스크 정리 (volume은 보존)"
-          docker rm -f nginx-reverse-proxy 2>/dev/null || true
-          docker rm -f whoami-frontend 2>/dev/null || true
+          echo "🧹 디스크 정리 (volume은 보존)"
           docker builder prune -af || true
           docker image prune -f --filter "until=24h" || true
           docker container prune -f || true
           df -h / | tail -1
 
-          echo "📥 이미지 Pull"
-          docker compose -f docker-compose.production.yml pull nginx-reverse-proxy
+          echo "🏗  새 이미지 빌드 (nginx는 계속 동작 중 — 다운타임 없음)"
+          docker compose -f docker-compose.production.yml build frontend-builder
 
-          echo "🔄 컨테이너 재배포 (Build & Run)"
-          docker compose -f docker-compose.production.yml up --build -d
+          echo "💾 현재 빌드 백업 (롤백용)"
+          BACKUP_DIR="/tmp/frontend_backup_$(date +%Y%m%d_%H%M%S)"
+          docker run --rm -v frontend_build_volume:/src -v /tmp:/backup alpine \
+            sh -c "mkdir -p /backup/$(basename $BACKUP_DIR) && cp -a /src/. /backup/$(basename $BACKUP_DIR)/" || echo "⚠️ 백업 실패 (첫 배포일 수 있음)"
 
-          echo "✅ 배포 완료!"
+          echo "🔄 빌드 결과 볼륨에 복사 (builder만 실행)"
+          docker compose -f docker-compose.production.yml run --rm frontend-builder
+
+          echo "♻️  nginx에 새 빌드 반영 (reload로 무중단)"
+          docker compose -f docker-compose.production.yml exec nginx-reverse-proxy nginx -s reload 2>/dev/null || {
+            echo "nginx reload 실패 — 컨테이너 재시작으로 대체"
+            docker compose -f docker-compose.production.yml up -d --no-deps --force-recreate nginx-reverse-proxy
+          }
+
+          echo "🧪 헬스체크"
+          sleep 3
+          HTTP_STATUS=$(curl -s -o /dev/null -w '%{http_code}' https://whoami-test-group.gina-park.site/ 2>/dev/null || echo "000")
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
+            echo "✅ 배포 완료! (HTTP $HTTP_STATUS)"
+            rm -rf "$BACKUP_DIR" 2>/dev/null || true
+          else
+            echo "❌ 헬스체크 실패 (HTTP $HTTP_STATUS) — 롤백 시작"
+            if [ -d "$BACKUP_DIR" ]; then
+              docker run --rm -v frontend_build_volume:/dst -v /tmp:/backup alpine \
+                sh -c "rm -rf /dst/* /dst/.[!.]* 2>/dev/null; cp -a /backup/$(basename $BACKUP_DIR)/. /dst/"
+              docker compose -f docker-compose.production.yml exec nginx-reverse-proxy nginx -s reload 2>/dev/null || \
+                docker compose -f docker-compose.production.yml up -d --no-deps --force-recreate nginx-reverse-proxy
+              echo "🔄 롤백 완료 (이전 빌드로 복구)"
+              rm -rf "$BACKUP_DIR"
+            fi
+            exit 1
+          fi
+
+    - name: Slack 알림 (성공)
+      if: success()
+      uses: slackapi/slack-github-action@v2.0.0
+      with:
+        webhook: ${{ secrets.SLACK_DEPLOY_WEBHOOK }}
+        webhook-type: incoming-webhook
+        payload: |
+          text: "✅ 프론트엔드 배포 성공 (${{ github.ref_name }})\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+    - name: Slack 알림 (실패/롤백)
+      if: failure()
+      uses: slackapi/slack-github-action@v2.0.0
+      with:
+        webhook: ${{ secrets.SLACK_DEPLOY_WEBHOOK }}
+        webhook-type: incoming-webhook
+        payload: |
+          text: "❌ 프론트엔드 배포 실패 — 롤백 실행됨 (${{ github.ref_name }})\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
