@@ -17,6 +17,7 @@ import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatt
 import ResponseItem from '@components/response/response-item/ResponseItem';
 import { FeatureFlagKey } from '@constants/featureFlag';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { Connection, UpdatedProfile } from '@models/api/friends';
 import { SocialBattery } from '@models/checkIn';
 import { Note, POST_TYPE, Response } from '@models/post';
@@ -100,10 +101,28 @@ function FriendItemWithUpdates({
   const [checkInDetailFocus, setCheckInDetailFocus] = useState<
     'battery' | 'mood' | 'thought' | 'song' | null
   >(null);
+  const trackEvent = useTrackEvent();
+
+  // Wraps setCheckInDetailFocus(...) for the OPEN paths (the close path
+  // calls setCheckInDetailFocus(null) and shouldn't fire). Each open is a
+  // discrete user action — no de-dup, even if the same component is
+  // opened multiple times in a row, because each tap is itself a signal.
+  // friend_id is included so dashboards can answer 'how often does the
+  // user inspect each friend's check-in?'; it's a numeric id, not PII.
+  const openCheckInDetail = (component: 'battery' | 'mood' | 'thought' | 'song') => {
+    trackEvent('friend_check_in_component_opened', {
+      component,
+      friend_id: id,
+      is_close_friend: user.connection_status === Connection.CLOSE_FRIEND ? 'true' : 'false',
+    });
+    setCheckInDetailFocus(component);
+  };
 
   const handleClickProfile = (e: MouseEvent) => {
     e.stopPropagation();
-    navigate(`/users/${username}`);
+    // Tag profile nav with source so UserPage knows the user came from the
+    // Friends list (vs Discover, vs shared playlist, vs search).
+    navigate(`/users/${username}`, { state: { source: 'friends_list' } });
   };
 
   const handleClickChat = (e: MouseEvent) => {
@@ -273,7 +292,7 @@ function FriendItemWithUpdates({
                 <SocialBatteryChip
                   socialBattery={social_battery}
                   compact
-                  onClick={() => setCheckInDetailFocus('battery')}
+                  onClick={() => openCheckInDetail('battery')}
                 />
               ) : (
                 showPings && (
@@ -293,7 +312,7 @@ function FriendItemWithUpdates({
                   alignItems="center"
                   rounded={8}
                   style={{ flexShrink: 0, cursor: 'pointer' }}
-                  onClick={() => setCheckInDetailFocus('mood')}
+                  onClick={() => openCheckInDetail('mood')}
                 >
                   {moodArray.map((emoji, idx) => {
                     const dupeCount = moodArray.slice(0, idx).filter((e) => e === emoji).length;
@@ -332,7 +351,7 @@ function FriendItemWithUpdates({
               alignItems="center"
               rounded={8}
               style={{ flexShrink: 0, cursor: 'pointer', alignSelf: 'flex-start' }}
-              onClick={() => setCheckInDetailFocus('thought')}
+              onClick={() => openCheckInDetail('thought')}
             >
               <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden>
                 🤪
@@ -359,7 +378,7 @@ function FriendItemWithUpdates({
                 sharer={user}
                 fontType="label-large"
                 useAlbumImg
-                onClick={() => setCheckInDetailFocus('song')}
+                onClick={() => openCheckInDetail('song')}
               />
             </Layout.FlexRow>
           ) : (

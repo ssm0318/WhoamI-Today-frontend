@@ -1,11 +1,13 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SharedPlaylistBottomSheet from '@components/friends/shared-playlist-bottom-sheet/SharedPlaylistBottomSheet';
 import MusicDetailBottomSheet from '@components/music/music-detail-bottom-sheet/MusicDetailBottomSheet';
 import { Layout, Typo } from '@design-system';
+import { useImpressionTracker } from '@hooks/useImpressionTracker';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import SpotifyManager from '@libs/SpotifyManager';
 import { PlaylistCard, ScrollableCardList } from './SharedPlaylistSection.styled';
 
@@ -34,14 +36,23 @@ function TrackCardItem({ track }: TrackCardItemProps) {
   const spotifyManager = SpotifyManager.getInstance();
   const [showMusicDetail, setShowMusicDetail] = useState(false);
   const navigate = useNavigate();
+  const trackEvent = useTrackEvent();
 
   const handleClickTrack = () => {
+    trackEvent('shared_playlist_track_tapped');
     setShowMusicDetail(true);
   };
 
   const handleClickProfile = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/users/${track.sharedBy.username}`);
+    // Tag the navigation with `source` so UserPage knows the user came
+    // from the shared playlist (vs Discover, vs Friends list, vs search).
+    // Lets us answer 'how often does the playlist surface lead to actual
+    // profile visits, and how does that compare to other entry points?'
+    trackEvent('shared_playlist_profile_pic_tapped');
+    navigate(`/users/${track.sharedBy.username}`, {
+      state: { source: 'shared_playlist' },
+    });
   };
 
   useEffect(() => {
@@ -153,13 +164,23 @@ function TrackCardItem({ track }: TrackCardItemProps) {
 function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'shared_playlist' });
   const [showPlaylistDetail, setShowPlaylistDetail] = useState(false);
+  const trackEvent = useTrackEvent();
+  const sectionRef = useRef<HTMLDivElement>(null);
+  // 'browsed' = the section was actually visible long enough to count as
+  // user attention (not just rendered above-the-fold and scrolled past).
+  // Same threshold as other impression hooks. `track_count` lets us see
+  // empty-state impressions vs full ones in the same dashboard.
+  useImpressionTracker(sectionRef, 'shared_playlist_browsed', {
+    track_count: tracks.length,
+  });
 
   const handleViewAll = () => {
+    trackEvent('shared_playlist_view_all_tapped', { track_count: tracks.length });
     setShowPlaylistDetail(true);
   };
 
   return (
-    <Layout.FlexCol w="100%" mb={12} mt={4} style={{ minWidth: 0 }}>
+    <Layout.FlexCol w="100%" mb={12} mt={4} style={{ minWidth: 0 }} ref={sectionRef}>
       <ScrollableCardList gap={18} ph={16}>
         {tracks.length > 0 && (
           <>

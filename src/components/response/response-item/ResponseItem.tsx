@@ -1,6 +1,6 @@
 import { MouseEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ContentTranslation from '@components/_common/content-translation/ContentTranslation';
 import Icon from '@components/_common/icon/Icon';
@@ -16,6 +16,7 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import { POST_DP_TYPE, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
+import { classifyPathnameAsSource } from '@utils/navSource';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
@@ -56,6 +57,7 @@ function ResponseItem({
   const { featureFlags } = useBoundStore(UserSelector);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (displayType !== 'LIST') {
@@ -97,7 +99,11 @@ function ResponseItem({
 
   const navigateToProfile = (e: MouseEvent) => {
     e.stopPropagation();
-    navigate(`/users/${username}`);
+    // Tag with source so UserPage knows the entry surface (Discover,
+    // Friends, etc.). Same pattern as NoteItem — derive from location.
+    navigate(`/users/${username}`, {
+      state: { source: classifyPathnameAsSource(location.pathname) },
+    });
   };
 
   if (isHidden) return null;

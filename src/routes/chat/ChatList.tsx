@@ -7,6 +7,7 @@ import { ToggleSwitch } from '@components/_common/toggle-switch/ToggleSwitch';
 import ChatsHeader from '@components/header/chats-header/ChatsHeader';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { ChatRoom } from '@models/chat';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getChatRooms } from '@utils/apis/chat';
@@ -40,6 +41,24 @@ function ChatList() {
     if (browseModeForcesCloseFriends) setCloseFriendsOnly(true);
   }, [browseModeForcesCloseFriends]);
   const typingTimers = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
+  const trackEvent = useTrackEvent();
+  // Toggle is local-state only; backend never sees it. Mirrors the
+  // friends_filter_close_only_toggled event for cross-tab comparison.
+  const handleToggleCloseFriendsChat = () => {
+    setCloseFriendsOnly((prev) => {
+      const next = !prev;
+      trackEvent('chats_filter_close_only_toggled', { value: next ? 'on' : 'off' });
+      return next;
+    });
+  };
+  // Same pattern for the unread-only toggle (also pure client state).
+  const handleToggleUnreadOnly = () => {
+    setUnreadOnly((prev) => {
+      const next = !prev;
+      trackEvent('chats_filter_unread_only_toggled', { value: next ? 'on' : 'off' });
+      return next;
+    });
+  };
 
   const passesCloseFriend = (r: ChatRoom) => {
     if (!closeFriendsOnly) return true;
@@ -131,11 +150,7 @@ function ChatList() {
           >
             <Layout.FlexRow gap={10} alignItems="center">
               <PurpleToggleWrapper>
-                <ToggleSwitch
-                  type="small"
-                  checked={unreadOnly}
-                  onChange={() => setUnreadOnly((v) => !v)}
-                />
+                <ToggleSwitch type="small" checked={unreadOnly} onChange={handleToggleUnreadOnly} />
               </PurpleToggleWrapper>
               <Typo type="body-medium" color="DARK_GRAY">
                 {(() => {
@@ -152,7 +167,7 @@ function ChatList() {
                   <ToggleSwitch
                     type="small"
                     checked={closeFriendsOnly}
-                    onChange={() => setCloseFriendsOnly((v) => !v)}
+                    onChange={handleToggleCloseFriendsChat}
                   />
                 </PurpleToggleWrapper>
                 <Typo type="body-medium" color="DARK_GRAY">

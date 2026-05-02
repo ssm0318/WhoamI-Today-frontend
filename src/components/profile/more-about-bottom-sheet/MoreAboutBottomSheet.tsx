@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +7,7 @@ import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import Icon from '@components/_common/icon/Icon';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { useChipCategories } from '@hooks/useChipCategories';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { MyProfile } from '@models/api/user';
 import { normalizeChipText } from '@models/chips';
 import { UserProfile } from '@models/user';
@@ -29,6 +31,29 @@ function MoreAboutBottomSheet({
   const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
   const { categories } = useChipCategories();
   const navigate = useNavigate();
+  const trackEvent = useTrackEvent();
+  // Captured on every visible→hidden transition so we know how long the
+  // user lingered on the chip categories. The bottom sheet stays mounted
+  // even when hidden (animations) so we can't rely on unmount alone.
+  const openedAtRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (visible) {
+      openedAtRef.current = Date.now();
+      trackEvent('profile_more_about_opened', {
+        is_my_page: isMyPage ? 'true' : 'false',
+      });
+    } else if (openedAtRef.current !== null) {
+      const duration_ms = Date.now() - openedAtRef.current;
+      openedAtRef.current = null;
+      if (duration_ms >= 500) {
+        trackEvent('profile_more_about_dwell', {
+          is_my_page: isMyPage ? 'true' : 'false',
+          duration_ms,
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
 
   const handleClickEdit = () => {
     onClose();
