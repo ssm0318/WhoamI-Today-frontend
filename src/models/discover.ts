@@ -1,4 +1,4 @@
-import { AdminAuthor, Note, Response } from './post';
+import { AdminAuthor, MissionGroupItem, Note, Response } from './post';
 import { User } from './user';
 
 export enum DiscoverFilter {
@@ -18,6 +18,9 @@ export type ResponseCardBody = Response;
 
 // Note Card Body (type: "Note")
 export type NoteCardBody = Note;
+
+// MissionGroup Body (type: "MissionGroup")
+export type MissionGroupCardBody = MissionGroupItem;
 
 // Question Card Body (type: "Question")
 export interface QuestionCardBody {
@@ -104,6 +107,7 @@ export type DiscoverResultItem =
       category?: string;
       body: NoteCardBody;
     }
+  | MissionGroupCardBody
   | {
       type: 'Question';
       body: QuestionCardBody;

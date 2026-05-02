@@ -20,7 +20,7 @@ import {
   VersionSwitchRequest,
   VersionSwitchRequestPendingResponse,
 } from '@models/api/user';
-import { Note, Response } from '@models/post';
+import { AllPostFeedItem, NoteFeedItem, Response } from '@models/post';
 import { User, UserProfile } from '@models/user';
 import { VisibilityTier } from '@models/viewAs';
 import { resetBoundStores } from '@stores/resetSlices';
@@ -529,7 +529,7 @@ export const blockRecommendation = async (userId: number) => {
 // users notes
 export const getUserNotes = async (username: string, next?: string | null) => {
   const requestPage = next ? next.split('page=')[1] : null;
-  const { data } = await axios.get<PaginationResponse<Note[]>>(
+  const { data } = await axios.get<PaginationResponse<NoteFeedItem[]>>(
     `/user/${encodeURIComponent(username)}/notes/${requestPage ? `?page=${requestPage}` : ''}`,
   );
   if (data.results?.length) axios.patch('/user/mark-all-notes-as-read/', { username });
@@ -567,10 +567,10 @@ export const markAllFriendPostsAsRead = async () => {
 /**
  *
  * @param username username
- * @returns PaginationResponse<Response | Note[]>
+ * @returns PaginationResponse<AllPostFeedItem[]>
  */
 export const getUserAllPosts = async (username: string) => {
-  const { data } = await axios.get<PaginationResponse<Response | Note[]>>(
+  const { data } = await axios.get<PaginationResponse<AllPostFeedItem[]>>(
     `/user/${encodeURIComponent(username)}/all-posts/`,
   );
   return data;

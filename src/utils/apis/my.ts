@@ -1,7 +1,7 @@
 import { PaginationResponse } from '@models/api/common';
 import { ResponseRequest } from '@models/api/question';
 import { MyProfile } from '@models/api/user';
-import { Note, Response } from '@models/post';
+import { AllPostFeedItem, NoteFeedItem, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import axios, { axiosFormDataInstance } from './axios';
 
@@ -150,7 +150,7 @@ export const getMyResponses = async (page: string | null) => {
 
 export const getMyNotes = async (page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
-  const { data } = await axios.get<PaginationResponse<Note[]>>(
+  const { data } = await axios.get<PaginationResponse<NoteFeedItem[]>>(
     `/user/me/notes/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
@@ -166,7 +166,7 @@ export const getResponseRequests = async (page: string | null) => {
 
 export const getMyAllPosts = async (page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
-  const { data } = await axios.get<PaginationResponse<Response | Note[]>>(
+  const { data } = await axios.get<PaginationResponse<AllPostFeedItem[]>>(
     `/user/me/all-posts/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;

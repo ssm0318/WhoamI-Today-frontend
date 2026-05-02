@@ -1,11 +1,11 @@
 import { PaginationResponse } from '@models/api/common';
-import { Comment, Like, NewNoteForm, Note, PostReaction } from '@models/post';
+import { Comment, Like, NewNoteForm, Note, NoteFeedItem, PostReaction } from '@models/post';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 import { objectFormDataSerializer } from '@utils/validateHelpers';
 
 export const getNoteList = async (page: string | null) => {
   const requestPage = page ? page.split('page=')[1] : null;
-  const { data } = await axios.get<PaginationResponse<Note[]>>(
+  const { data } = await axios.get<PaginationResponse<NoteFeedItem[]>>(
     `/notes/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;

@@ -6,6 +6,7 @@ export enum POST_TYPE {
   RESPONSE = 'Response',
   QUESTION = 'Question',
   NOTE = 'Note',
+  MISSION_GROUP = 'MissionGroup',
   COMMENT = 'Comment',
   // 새로 추가된 타입
   SELECT_PERSONA = 'SelectPersona',
@@ -117,9 +118,25 @@ export interface Note extends ContentsCommon {
   is_edited: boolean;
   visibility: PostVisibility;
   share_type?: ShareType;
+  mission_id?: number | null;
   mission_prompt?: string | null;
   mission_attempt_number?: number | null;
 }
+
+export interface MissionGroupItem {
+  type: POST_TYPE.MISSION_GROUP;
+  mission_id: number | null;
+  mission_prompt: string | null;
+  author: string | null;
+  author_detail: User;
+  created_at: string;
+  updated_at: string;
+  attempts: Note[];
+  category?: string;
+}
+
+export type NoteFeedItem = Note | MissionGroupItem;
+export type AllPostFeedItem = NoteFeedItem | Response;
 
 export interface NewNoteForm {
   content: string;
