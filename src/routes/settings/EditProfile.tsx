@@ -525,21 +525,27 @@ function EditProfile() {
           </>
         ) : (
           <>
-            <ChipCounterBar>
-              <Typo
-                type="label-medium"
-                color={
-                  Object.values(draft.chipSelections).reduce((s, l) => s + l.length, 0) >=
-                  MAX_TOTAL_PROFILE_CHIPS
-                    ? 'PRIMARY'
-                    : 'DARK_GRAY'
-                }
-                fontWeight={600}
-              >
-                {Object.values(draft.chipSelections).reduce((s, l) => s + l.length, 0)} /{' '}
-                {MAX_TOTAL_PROFILE_CHIPS} chips selected
-              </Typo>
-            </ChipCounterBar>
+            {(() => {
+              const total = Object.values(draft.chipSelections).reduce((s, l) => s + l.length, 0);
+              const isOverCap = total > MAX_TOTAL_PROFILE_CHIPS;
+              const isAtCap = total === MAX_TOTAL_PROFILE_CHIPS;
+              return (
+                <ChipCounterBar $tall={isOverCap}>
+                  <Typo
+                    type="label-medium"
+                    color={isOverCap ? 'TERTIARY_PINK' : isAtCap ? 'PRIMARY' : 'DARK_GRAY'}
+                    fontWeight={600}
+                  >
+                    {total} / {MAX_TOTAL_PROFILE_CHIPS} chips selected
+                  </Typo>
+                  {isOverCap && (
+                    <Typo type="label-small" color="MEDIUM_GRAY">
+                      Trim to {MAX_TOTAL_PROFILE_CHIPS} or fewer to add new chips.
+                    </Typo>
+                  )}
+                </ChipCounterBar>
+              );
+            })()}
             <ChipsScrollArea>
               {categories.map((categoryInfo) => (
                 <Layout.FlexCol key={categoryInfo.key} gap={6} w="100%">
@@ -610,29 +616,35 @@ const EditProfileTabButton = styled.button<{ $active: boolean }>`
 // regardless of which scroll context is active or what overflow rules nearby
 // flex containers might enforce. Centered to honor the app's MAX_WINDOW_WIDTH.
 const CHIP_COUNTER_BAR_HEIGHT = 36;
+// When the user has more chips selected than the cap (grandfathered legacy
+// state), the bar grows to accommodate a hint line under the counter.
+const CHIP_COUNTER_BAR_HEIGHT_TALL = 56;
 
-const ChipCounterBar = styled.div`
+const ChipCounterBar = styled.div<{ $tall?: boolean }>`
   position: fixed;
   top: ${TITLE_HEADER_HEIGHT}px;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
   max-width: ${MAX_WINDOW_WIDTH}px;
-  height: ${CHIP_COUNTER_BAR_HEIGHT}px;
+  height: ${({ $tall }) => ($tall ? CHIP_COUNTER_BAR_HEIGHT_TALL : CHIP_COUNTER_BAR_HEIGHT)}px;
   z-index: ${Z_INDEX.TITLE_HEADER - 1};
   padding: 8px 16px;
   background-color: ${Colors.WHITE};
   border-bottom: 1px solid ${Colors.LIGHT_GRAY};
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2px;
 `;
 
-// Spacer pushes the chip categories below the fixed counter so the first
-// section isn't hidden behind it.
+// Spacer pushes the chip categories below the fixed counter. Use the taller
+// height so legacy over-cap users with a 2-line counter don't overlap the first
+// chip section.
 const ChipsScrollArea = styled.div`
   width: 100%;
-  padding-top: ${CHIP_COUNTER_BAR_HEIGHT}px;
+  padding-top: ${CHIP_COUNTER_BAR_HEIGHT_TALL}px;
   display: flex;
   flex-direction: column;
   gap: 10px;
