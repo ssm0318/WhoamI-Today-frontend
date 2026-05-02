@@ -48,3 +48,23 @@ export const markBrowseModePresetUsed = async (id: number): Promise<CustomBrowse
 export const submitBrowseModeWishlist = async (content: string): Promise<void> => {
   await axios.post(`/browse_mode/wishlist/`, { content });
 };
+
+export type BrowseModePickEventPayload =
+  | { kind: 'built_in'; built_in_id: 'very_social' | 'selectively_social' | 'quiet' }
+  | { kind: 'custom'; preset_id: number }
+  | { kind: 'apply_without_saving' };
+
+/**
+ * Append-only pick log. Fired every time the user actively activates a mode
+ * (built-in / custom / apply-without-saving). Skips and dismisses are NOT
+ * logged. Used by analytics to count picks, switches, and distinct types.
+ *
+ * Best-effort — callers should not block UI on this; failures are silent.
+ */
+export const logBrowseModePick = async (payload: BrowseModePickEventPayload): Promise<void> => {
+  try {
+    await axios.post(`/browse_mode/picks/`, payload);
+  } catch {
+    /* analytics is best-effort */
+  }
+};

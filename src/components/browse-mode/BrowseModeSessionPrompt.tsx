@@ -8,6 +8,7 @@ import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { SocialBatteryChipAssets } from '@components/profile/social-batter-chip/SocialBatteryChip.contants';
 import { BUILT_IN_BROWSE_MODES } from '@constants/browseMode';
 import { Colors, SvgIcon, Typo } from '@design-system';
+import { usePostAppMessage } from '@hooks/useAppMessage';
 import { usePreventScroll } from '@hooks/usePreventScroll';
 import {
   ActiveBrowseMode,
@@ -17,6 +18,7 @@ import {
 } from '@models/browseMode';
 import { ComponentVisibility, DEFAULT_VISIBILITY, SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
+import { logBrowseModePick } from '@utils/apis/browseMode';
 import { postCheckIn } from '@utils/apis/checkIn';
 import { writeLastPickedAt } from '@utils/browseModeActiveSession';
 import { HiddenModeKey, readHiddenModes, writeHiddenModes } from '@utils/browseModeHiddenModes';
@@ -59,6 +61,7 @@ function BrowseModeSessionPrompt({
   // Battery labels are top-level (`social_battery.<key>`) — separate `t` without a keyPrefix.
   const [tRoot] = useTranslation('translation');
   const navigate = useNavigate();
+  const postAppMessage = usePostAppMessage();
   usePreventScroll(fullScreen && visible);
 
   const [syncBattery, setSyncBattery] = useState<boolean>(readSyncPref);
@@ -200,6 +203,28 @@ function BrowseModeSessionPrompt({
         writeLastPickedAt(myProfile.id);
       }
 
+      // Append-only pick log on the backend (research analytics ground
+      // truth) + a parallel Firebase Analytics event via the WebView
+      // bridge. Both fire-and-forget; failures are silent so analytics
+      // never blocks the UI.
+      const eventParams: Record<string, string | number> = {
+        kind: mode.kind,
+        keep_picker_open: keepPickerOpen ? 'true' : 'false',
+        battery_synced: syncBattery ? 'true' : 'false',
+      };
+      if (mode.kind === 'built_in') {
+        eventParams.mode_id = mode.id;
+        logBrowseModePick({ kind: 'built_in', built_in_id: mode.id });
+      } else {
+        eventParams.mode_id = `custom:${mode.id}`;
+        eventParams.preset_id = mode.id;
+        logBrowseModePick({ kind: 'custom', preset_id: mode.id });
+      }
+      postAppMessage('ANALYTICS_TRACK_EVENT', {
+        name: 'browse_mode_picked',
+        params: eventParams,
+      });
+
       let batteryApplied: SocialBattery | null = null;
       if (syncBattery && suggestedBattery) {
         try {
@@ -275,6 +300,7 @@ function BrowseModeSessionPrompt({
       navigate,
       onFinish,
       openToast,
+      postAppMessage,
       setActiveBuiltIn,
       setActiveCustom,
       syncBattery,
@@ -366,9 +392,19 @@ function BrowseModeSessionPrompt({
       // configuration to use right now — bump the freshness timer so the
       // auto-prompt doesn't re-fire mid-preview.
       if (myProfile?.id) writeLastPickedAt(myProfile.id);
+      // Pick log + Firebase event (best-effort, mirrors applyMode).
+      logBrowseModePick({ kind: 'apply_without_saving' });
+      postAppMessage('ANALYTICS_TRACK_EVENT', {
+        name: 'browse_mode_picked',
+        params: {
+          kind: 'apply_without_saving',
+          keep_picker_open: 'false',
+          battery_synced: 'false',
+        },
+      });
       onFinish();
     },
-    [closeCustomize, editingPreset?.id, myProfile?.id, onFinish],
+    [closeCustomize, editingPreset?.id, myProfile?.id, onFinish, postAppMessage],
   );
 
   const handleConfirmDelete = useCallback(async () => {
