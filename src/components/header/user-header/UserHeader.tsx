@@ -38,27 +38,31 @@ function UserHeader({ username, userId, unreadCount, onClickMore }: UserHeaderPr
         <Layout.FlexRow gap={8} alignItems="center">
           <Icon name="dots_menu" size={44} onClick={handleClickMore} />
           {!isMyPage && canChat && (
-            <Layout.FlexRow>
-              <Layout.LayoutBase pb={2}>
-                <Icon name="chat_outline" size={44} onClick={handleClickChat} />
-              </Layout.LayoutBase>
+            <Layout.LayoutBase
+              w={44}
+              pb={2}
+              alignItems="center"
+              justifyContent="center"
+              style={{ position: 'relative', flexShrink: 0 }}
+            >
+              <Icon name="chat_outline" size={44} onClick={handleClickChat} />
               {!!unreadCount && unreadCount > 0 && (
-                <Layout.Absolute
-                  bgColor="BLACK"
-                  alignItems="center"
-                  rounded={10}
-                  t={8}
-                  r={23}
-                  ph={3}
-                  pv={1}
-                  tl={['100%', 0]}
-                >
-                  <Typo type="label-small" color="WHITE" fontSize={7} fontWeight={700}>
-                    {unreadCount > 99 ? '99+' : unreadCount}
-                  </Typo>
+                <Layout.Absolute t={4} r={4}>
+                  <Layout.FlexRow
+                    ph={5}
+                    pv={1}
+                    rounded={8}
+                    bgColor="SECONDARY"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Typo type="label-small" color="BLACK">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </Typo>
+                  </Layout.FlexRow>
                 </Layout.Absolute>
               )}
-            </Layout.FlexRow>
+            </Layout.LayoutBase>
           )}
         </Layout.FlexRow>
       }
