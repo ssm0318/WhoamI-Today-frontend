@@ -7,7 +7,7 @@ import { FRESHNESS_MS, readLastPickedAt, writeLastPickedAt } from '@utils/browse
  * Auto-prompt the Browse Mode picker on app open. Spec: ALWAYS fire when
  *   (a) the user has never picked a mode (first-ever open, or always
  *       skipped before — there's no `last_picked_at` in localStorage), or
- *   (b) it's been more than 2 hours since their last pick.
+ *   (b) it's been more than 15 minutes since their last pick.
  *
  * Trigger: cold start (component mount with userId + feature flag both
  * loaded). Mounted once at Root, so "cold start" really means page load
@@ -18,7 +18,7 @@ import { FRESHNESS_MS, readLastPickedAt, writeLastPickedAt } from '@utils/browse
  * "always skipped" case).
  *
  * No visibility-change re-trigger — brief tab-switches and reloads
- * shouldn't generate a new prompt mid-session. The 2-hour freshness
+ * shouldn't generate a new prompt mid-session. The 15-minute freshness
  * check on the next page load is the only re-trigger.
  *
  * `last_picked_at` is owned by the picker activation path (see
@@ -55,7 +55,7 @@ export function useBrowseModeSessionPrompt() {
 
   /**
    * Called after the user actively picked a mode. Records the pick
-   * timestamp so the next 2-hour freshness window starts from now;
+   * timestamp so the next 15-minute freshness window starts from now;
    * within that window, the prompt won't auto-fire on cold start.
    */
   const finish = useCallback(() => {

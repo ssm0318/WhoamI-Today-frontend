@@ -194,7 +194,7 @@ function BrowseModeSessionPrompt({
       }
       if (myProfile?.id) {
         saveLastPickedMode(myProfile.id, mode);
-        // Stamp the pick time. The auto-prompt's 2-hour freshness window
+        // Stamp the pick time. The auto-prompt's 15-minute freshness window
         // starts from this moment; any pick path (auto-prompt, manual
         // sidebar, post-Save activation) bumps the timer the same way.
         writeLastPickedAt(myProfile.id);

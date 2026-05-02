@@ -7,14 +7,14 @@ import { readActiveMode, writeActiveMode } from '@utils/browseModeActiveSession'
  * localStorage. Mount once at Root.
  *
  * Hydration: on user-load, if the user picked a mode within the last
- * 2 hours (FRESHNESS_MS in browseModeActiveSession), restore it to the
- * store. Stale picks are dropped.
+ * 15 minutes (FRESHNESS_MS in browseModeActiveSession), restore it to
+ * the store. Stale picks are dropped.
  *
  * Subscription: every time activeBrowseMode changes (user pick,
  * auto-tighten removing tabs, etc.), mirror it to localStorage. We do
  * NOT touch last_picked_at here — that's owned by the explicit pick
  * paths in BrowseModeSessionPrompt so non-user mutations (auto-tighten,
- * hydration) don't reset the 2-hour freshness window.
+ * hydration) don't reset the 15-minute freshness window.
  */
 export function useBrowseModeActivePersistence() {
   const userId = useBoundStore((state) => state.myProfile?.id);

@@ -4,14 +4,14 @@
  *
  * Spec: the picker auto-prompt fires when the user opens the app and either
  *   (a) has never picked a mode, or
- *   (b) it's been more than 2 hours since their last pick.
- * Within the 2-hour freshness window, the picked mode is restored on
+ *   (b) it's been more than 15 minutes since their last pick.
+ * Within the 15-minute freshness window, the picked mode is restored on
  * load so the user keeps the experience they chose.
  *
  * Switched from sessionStorage to localStorage so the same mode is
  * available across tabs and after the tab is closed-and-reopened — the
- * 2-hour window is now the source of "is this the same session?" rather
- * than tab lifetime.
+ * 15-minute window is now the source of "is this the same session?"
+ * rather than tab lifetime.
  */
 
 import { ActiveBrowseMode } from '@models/browseMode';
@@ -19,8 +19,8 @@ import { ActiveBrowseMode } from '@models/browseMode';
 const ACTIVE_MODE_PREFIX = 'browse_mode_active_';
 const LAST_PICKED_AT_PREFIX = 'browse_mode_last_picked_at_';
 
-/** 2 hours — anything past this and the auto-prompt fires on next open. */
-export const FRESHNESS_MS = 2 * 60 * 60 * 1000;
+/** 15 minutes — anything past this and the auto-prompt fires on next open. */
+export const FRESHNESS_MS = 15 * 60 * 1000;
 
 function activeModeKey(userId: number): string {
   return `${ACTIVE_MODE_PREFIX}${userId}`;
