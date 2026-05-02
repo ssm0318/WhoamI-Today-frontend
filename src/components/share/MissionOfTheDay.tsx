@@ -16,15 +16,30 @@ interface Props {
 }
 
 function MissionOfTheDay({ onDoMission }: Props) {
-  const { mission, isLoading } = useMissionToday();
+  const { mission, isLoading, error, refresh } = useMissionToday();
   const trackEvent = useTrackEvent();
 
-  if (isLoading || !mission) {
+  if (isLoading) {
     return (
       <Layout.FlexCol gap={12} w="100%">
         <Typo type="title-medium" color="WHITE">
-          ...
+          {`Loading today's mission...`}
         </Typo>
+      </Layout.FlexCol>
+    );
+  }
+
+  if (error || !mission) {
+    return (
+      <Layout.FlexCol gap={12} w="100%">
+        <Typo type="title-medium" color="WHITE">
+          {`Today's mission isn't available right now.`}
+        </Typo>
+        <ActionButton onClick={() => refresh()} $isCompleted={false}>
+          <Typo type="label-large" color="PRIMARY" fontWeight={600}>
+            Refresh
+          </Typo>
+        </ActionButton>
       </Layout.FlexCol>
     );
   }
