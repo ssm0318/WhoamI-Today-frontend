@@ -10,6 +10,7 @@ import SnippetMoreModal from '@components/check-in-posts/SnippetMoreModal';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import { Z_INDEX } from '@constants/layout';
 import { Colors, Layout, SvgIcon, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { CheckInPost, CheckInPostStory, CheckInPostVisibility } from '@models/checkInPost';
 import { useBoundStore } from '@stores/useBoundStore';
 import {
@@ -66,6 +67,68 @@ function CheckInPostViewer({
   const { myProfile, openToast } = useBoundStore(
     useShallow((state) => ({ myProfile: state.myProfile, openToast: state.openToast })),
   );
+  const trackEvent = useTrackEvent();
+  // Per-slide dwell: timestamp at which the current story slide started
+  // showing. Flushed every time storyIndex changes AND on viewer close.
+  // Tells us how long a viewer actually looked at each individual story
+  // — distinct from the auto-advance timer (which only knows the slide
+  // is on-screen, not whether the user is engaged).
+  const slideStartedAtRef = useRef<number>(Date.now());
+  const previousIndexRef = useRef<number>(0);
+  // Tracks whether the viewer was opened (single-story or multi-story)
+  // so the unmount cleanup can fire `_closed` with the final index.
+  const openedRef = useRef(false);
+  const lastIndexReachedRef = useRef(0);
+
+  // Fire `_opened` once per viewer mount cycle. is_self flags whether the
+  // user is viewing their own stories (e.g. preview from MyPage), which is
+  // an analytics-different context from viewing a friend's.
+  useEffect(() => {
+    if (openedRef.current) return;
+    openedRef.current = true;
+    trackEvent('check_in_story_opened', {
+      author_id: story.author_detail.id,
+      is_self: story.author_detail.id === myProfile?.id ? 'true' : 'false',
+      multi_story: enableMultiStory ? 'true' : 'false',
+    });
+    slideStartedAtRef.current = Date.now();
+    previousIndexRef.current = 0;
+    return () => {
+      // Final slide dwell + close summary. last_index reflects how deep
+      // the user got into the story sequence (0-indexed).
+      const dwellMs = Date.now() - slideStartedAtRef.current;
+      if (dwellMs >= 500) {
+        trackEvent('check_in_story_slide_dwell', {
+          author_id: story.author_detail.id,
+          slide_index: previousIndexRef.current,
+          duration_ms: dwellMs,
+        });
+      }
+      trackEvent('check_in_story_closed', {
+        author_id: story.author_detail.id,
+        last_index: lastIndexReachedRef.current,
+      });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Slide change → flush previous slide's dwell + start fresh timer.
+  useEffect(() => {
+    if (storyIndex === previousIndexRef.current) return;
+    const dwellMs = Date.now() - slideStartedAtRef.current;
+    if (dwellMs >= 500) {
+      trackEvent('check_in_story_slide_dwell', {
+        author_id: story.author_detail.id,
+        slide_index: previousIndexRef.current,
+        duration_ms: dwellMs,
+      });
+    }
+    previousIndexRef.current = storyIndex;
+    if (storyIndex > lastIndexReachedRef.current) {
+      lastIndexReachedRef.current = storyIndex;
+    }
+    slideStartedAtRef.current = Date.now();
+  }, [storyIndex, story.author_detail.id, trackEvent]);
 
   useEffect(() => {
     if (!enableMultiStory) {
@@ -219,6 +282,13 @@ function CheckInPostViewer({
   const handleLeft = (e: MouseEvent) => {
     e.stopPropagation();
     if (enableMultiStory && Date.now() - pressStartRef.current > 200) return;
+    // Manual advance via tap — distinct from auto-advance (5s timer).
+    // Manual = user impatient, auto = passive viewing. Different signals.
+    trackEvent('check_in_story_advanced', {
+      direction: 'prev',
+      method: 'tap',
+      author_id: story.author_detail.id,
+    });
     if (enableMultiStory && storyIndex > 0) {
       remainingRef.current = STORY_DURATION_MS;
       setStoryIndex(storyIndex - 1);
@@ -230,6 +300,11 @@ function CheckInPostViewer({
   const handleRight = (e: MouseEvent) => {
     e.stopPropagation();
     if (enableMultiStory && Date.now() - pressStartRef.current > 200) return;
+    trackEvent('check_in_story_advanced', {
+      direction: 'next',
+      method: 'tap',
+      author_id: story.author_detail.id,
+    });
     if (enableMultiStory && storyIndex < userPosts.length - 1) {
       remainingRef.current = STORY_DURATION_MS;
       setStoryIndex(storyIndex + 1);

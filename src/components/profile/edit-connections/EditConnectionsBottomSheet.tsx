@@ -1,10 +1,11 @@
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { Divider } from '@components/_common/divider/Divider.styled';
 import { UserPageContext } from '@components/user-page/UserPage.context';
 import { Button, CheckBox, Layout, RadioButton, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { Connection } from '@models/api/friends';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -32,9 +33,20 @@ function EditConnectionsBottomSheet({
     user?.connection_status ?? Connection.FRIEND,
   );
   const isChanged = connection !== user?.connection_status;
+  const trackEvent = useTrackEvent();
+  const beforeConnectionRef = useRef<Connection | null>(null);
+  const savedRef = useRef(false);
 
   const handleChangeConnection = (e: ChangeEvent<HTMLInputElement>) => {
-    setConnection(e.target.value as Connection);
+    const next = e.target.value as Connection;
+    // Each radio toggle is its own signal — backend only sees the final
+    // saved state, not the back-and-forth.
+    trackEvent('edit_connections_changed', {
+      friend_id: user.id,
+      from: String(connection),
+      to: String(next),
+    });
+    setConnection(next);
   };
 
   const [isUpdatePastPosts, setIsUpdatePastPosts] = useState(false);
@@ -51,6 +63,16 @@ function EditConnectionsBottomSheet({
       update_past_posts: featureFlags?.postsVerQ ? true : isUpdatePastPosts,
     })
       .then(() => {
+        savedRef.current = true;
+        // Backend HAS the final connection state via this API call, but
+        // the saved event is still useful as a funnel terminal: paired
+        // with _opened it gives us the conversion rate (opened → saved
+        // vs opened → dismissed).
+        trackEvent('edit_connections_saved', {
+          friend_id: user.id,
+          from: String(beforeConnectionRef.current ?? ''),
+          to: String(connection),
+        });
         closeBottomSheet();
         updateUser?.();
         onConnectionChanged?.(connection);
@@ -64,9 +86,24 @@ function EditConnectionsBottomSheet({
 
   useEffect(() => {
     if (visible) {
-      setConnection(user?.connection_status ?? Connection.FRIEND);
+      const initial = user?.connection_status ?? Connection.FRIEND;
+      setConnection(initial);
       setIsUpdatePastPosts(false);
+      beforeConnectionRef.current = initial;
+      savedRef.current = false;
+      trackEvent('edit_connections_opened', {
+        friend_id: user.id,
+        current: String(initial),
+      });
+    } else if (beforeConnectionRef.current !== null && !savedRef.current) {
+      // Closed without save. had_changes lets us tell "considered then
+      // backed out" from "opened, did nothing, closed".
+      trackEvent('edit_connections_dismissed', {
+        friend_id: user.id,
+        had_changes: connection !== beforeConnectionRef.current ? 'true' : 'false',
+      });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, user?.connection_status]);
 
   useEffect(() => {

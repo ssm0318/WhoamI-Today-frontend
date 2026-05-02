@@ -1,8 +1,10 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { DEFAULT_MARGIN, SCREEN_WIDTH } from '@constants/layout';
 import { Layout, SvgIcon, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
+import { classifyPathnameAsSource } from '@utils/navSource';
 import { FontType } from 'src/design-system/Font/Font.types';
 import { SubHeaderWrapper } from './SubHeader.styled';
 
@@ -29,8 +31,17 @@ function SubHeader({
   disablePortal,
 }: SubHeaderProps) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const trackEvent = useTrackEvent();
 
   const handleGoBack = () => {
+    // Tracks where the user backs out FROM. High frequency on a given
+    // path = navigation friction (users drilled in then immediately
+    // bounced). Distinct from screen_dwell because back-tap is an
+    // explicit user action, not a duration measurement.
+    trackEvent('subheader_back_tapped', {
+      from: classifyPathnameAsSource(location.pathname),
+    });
     if (onGoBack) {
       onGoBack();
       return;

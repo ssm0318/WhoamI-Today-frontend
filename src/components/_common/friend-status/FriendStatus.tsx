@@ -8,6 +8,7 @@ import FriendEvaluationModal, {
 } from '@components/_common/friend-evaluation-modal/FriendEvaluationModal';
 import { useIsPreviewMode } from '@components/view-as/PreviewModeContext';
 import { Button, Layout } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { Connection } from '@models/api/friends';
 import {
   areFriends,
@@ -203,27 +204,37 @@ function FriendStatus({
     setEvaluationModalState(null);
   };
 
+  const trackEvent = useTrackEvent();
+
   const handleClickConfirm = (e: MouseEvent) => {
     e.stopPropagation();
     if (previewMode) return;
+    // Modal-open events: distinct from the ultimate confirm path (which
+    // backend captures via the API call). Lets us see how many users
+    // open the accept-friend modal but back out — request-acceptance
+    // hesitation signal.
+    trackEvent('friend_accept_modal_opened', { friend_id: user.id });
     setIsFriendTypeSelectModalVisible({ visible: true, type: 'accept' });
   };
 
   const handleClickRejectFriendRequest = (e: MouseEvent) => {
     e.stopPropagation();
     if (previewMode) return;
+    trackEvent('friend_reject_modal_opened', { friend_id: user.id });
     setIsRejectFriendRequestDialogVisible(true);
   };
 
   const handleClickUnfriend = (e: MouseEvent) => {
     e.stopPropagation();
     if (previewMode) return;
+    trackEvent('friend_unfriend_modal_opened', { friend_id: user.id });
     setIsUnfriendDialogVisible(true);
   };
 
   const handleClickCancelRequest = (e: MouseEvent) => {
     e.stopPropagation();
     if (previewMode) return;
+    trackEvent('friend_cancel_request_modal_opened', { friend_id: user.id });
     setIsCancelFriendRequestDialogVisible(true);
   };
 
@@ -259,6 +270,7 @@ function FriendStatus({
   const handleClickRequest = (e: MouseEvent) => {
     e.stopPropagation();
     if (previewMode) return;
+    trackEvent('friend_request_modal_opened', { friend_id: user.id });
     setIsFriendTypeSelectModalVisible({ visible: true, type: 'request' });
   };
 

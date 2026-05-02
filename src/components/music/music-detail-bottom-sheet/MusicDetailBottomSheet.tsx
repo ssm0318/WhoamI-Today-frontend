@@ -1,4 +1,5 @@
 import { Track } from '@spotify/web-api-ts-sdk';
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
@@ -8,6 +9,7 @@ import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Layout, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { User } from '@models/user';
 import * as S from './MusicDetailBottomSheet.styled';
 
@@ -21,9 +23,26 @@ interface Props {
 function MusicDetailBottomSheet({ track, sharer, visible, closeBottomSheet }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'music_detail' });
   const postMessage = usePostAppMessage();
+  const trackEvent = useTrackEvent();
+
+  // sheet 진입 (트랙 또는 공유자 정보 보러 들어옴). `from_shared_playlist`로
+  // 같은 sheet의 두 진입 컨텍스트(공유 플레이리스트 vs 자기 체크인 음악
+  // 미리보기 등)를 분리.
+  useEffect(() => {
+    if (visible) {
+      trackEvent('music_detail_opened', {
+        from_shared_playlist: sharer ? 'true' : 'false',
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
 
   const handleClickGoToSpotify = () => {
     if (!track) return;
+    // External-app launch — frontend's last touch on this user before
+    // they leave for Spotify. Useful funnel signal: how many users
+    // actually follow through after seeing the detail sheet.
+    trackEvent('music_listen_on_spotify_tapped');
     const url = track.external_urls.spotify;
     if (window.ReactNativeWebView) {
       postMessage('OPEN_BROWSER', {

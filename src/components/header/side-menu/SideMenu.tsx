@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
@@ -10,9 +11,11 @@ import { Z_INDEX } from '@constants/layout';
 import { ONBOARDING_VIDEO_URL } from '@constants/url';
 import { Button, Layout, SvgIcon, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { VersionType } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMyPendingVersionSwitchRequest } from '@utils/apis/user';
+import { classifyPathnameAsSource } from '@utils/navSource';
 
 type SideMenuItem =
   | { key: string; emoji: string; kind: 'route'; path: string; flag?: FeatureFlagKey }
@@ -56,7 +59,22 @@ function SideMenu({ closeSideMenu }: Props) {
 
   const visibleItems = SIDE_MENU_LIST.filter((menu) => !menu.flag || featureFlags?.[menu.flag]);
 
+  const trackEvent = useTrackEvent();
+  const location = useLocation();
+  // Source page where the menu was opened FROM. Tells us if users hit the
+  // hamburger from /friends vs /discover vs /chats — entry-surface
+  // engagement signal for the sidebar.
+  const fromSource = classifyPathnameAsSource(location.pathname);
+
+  // SideMenu is conditionally mounted by parent (only when open), so a
+  // single mount-time event correctly equates to "user opened the menu".
+  useEffect(() => {
+    trackEvent('side_menu_opened', { from: fromSource });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleClickMenu = (menu: SideMenuItem) => () => {
+    trackEvent('side_menu_item_tapped', { item_key: menu.key });
     if (menu.kind === 'route') {
       navigate(menu.path);
     } else if (menu.kind === 'browse_mode') {
@@ -71,11 +89,15 @@ function SideMenu({ closeSideMenu }: Props) {
 
   const handleClickVersionSwitch = () => {
     if (isPending) return;
+    trackEvent('version_switch_request_tapped', { from: fromSource });
     navigate('/settings/version-switch-request');
     closeSideMenu();
   };
 
   const handleClickOnboardingVideo = () => {
+    // External link launch — distinct from the auto-prompt onboarding
+    // because this is user-initiated (proactive help-seeking).
+    trackEvent('onboarding_video_tapped', { from: fromSource });
     if (window.ReactNativeWebView) {
       postMessage('OPEN_BROWSER', {
         url: ONBOARDING_VIDEO_URL,

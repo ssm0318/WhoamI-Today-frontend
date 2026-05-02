@@ -1,4 +1,4 @@
-import { MouseEvent, ReactNode, useContext, useRef, useState } from 'react';
+import { MouseEvent, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -152,6 +152,32 @@ function Profile({ user }: ProfileProps) {
   };
 
   const [showMoreAbout, setShowMoreAbout] = useState(false);
+
+  // One-time-per-session prompt for users grandfathered in with more than the
+  // new 20-chip cap. Surfaced on their own profile page (a passive banner in
+  // Edit Profile already covers the editing flow). Tracks shown-state in
+  // sessionStorage so we don't pop it on every profile re-render.
+  const MAX_TOTAL_PROFILE_CHIPS = 20;
+  const OVER_CAP_PROMPT_SHOWN_KEY = 'profile.overCapPrompt.shown.v1';
+  const myChipCount = isMyPage
+    ? Object.values(myProfile?.chips_by_category ?? {}).reduce(
+        (sum, list) => sum + (Array.isArray(list) ? list.length : 0),
+        0,
+      )
+    : 0;
+  const [showOverCapPrompt, setShowOverCapPrompt] = useState(false);
+  useEffect(() => {
+    if (!isMyPage) return;
+    if (myChipCount <= MAX_TOTAL_PROFILE_CHIPS) return;
+    try {
+      if (window.sessionStorage.getItem(OVER_CAP_PROMPT_SHOWN_KEY)) return;
+      window.sessionStorage.setItem(OVER_CAP_PROMPT_SHOWN_KEY, '1');
+    } catch {
+      // sessionStorage unavailable — show anyway, the banner is the only
+      // backstop and a single prompt-per-page-load is acceptable.
+    }
+    setShowOverCapPrompt(true);
+  }, [isMyPage, myChipCount]);
 
   const isVerQ = !!featureFlags?.postsVerQ;
 
@@ -463,6 +489,26 @@ function Profile({ user }: ProfileProps) {
             onClickClose={() => setShowSwitchToPublicDialog(false)}
           />
         </>
+      )}
+      {/* Grandfathered over-cap prompt: surfaces once per session on the
+          user's own profile when they have more chips than the new cap. */}
+      {isMyPage && (
+        <CommonDialog
+          visible={showOverCapPrompt}
+          title="A small design change"
+          content={`We've capped profile chips at ${MAX_TOTAL_PROFILE_CHIPS}. Sorry for the inconvenience, and thanks for understanding! You currently have ${myChipCount} — please trim ${
+            myChipCount - MAX_TOTAL_PROFILE_CHIPS
+          } to fit the new limit.`}
+          cancelText="Maybe later"
+          confirmText="Got it, let's go change that now"
+          onClickConfirm={() => {
+            setShowOverCapPrompt(false);
+            navigate('/settings/edit-profile?tab=interests');
+          }}
+          onClickCancel={() => setShowOverCapPrompt(false)}
+          onClickClose={() => setShowOverCapPrompt(false)}
+          trackingId="profile_chip_over_cap_prompt"
+        />
       )}
     </Layout.FlexCol>
   );
