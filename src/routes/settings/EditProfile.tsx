@@ -29,6 +29,11 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { createCustomChip, deleteCustomChip } from '@utils/apis/chips';
 import { editProfile, updateChipsByCategory } from '@utils/apis/my';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
+import {
+  getLastVisibility,
+  setLastVisibility,
+  VisibilityMemoryKeys,
+} from '@utils/visibilityMemory';
 import { shouldShowWidgetGuide } from '@utils/widgetInstallGuide';
 import { MainScrollContainer } from '../Root';
 
@@ -101,9 +106,17 @@ function EditProfile() {
 
   const parsed = parseExistingChips();
 
+  // Initial visibility per category: prefer the saved value (user's last
+  // explicit choice on this category), then fall back to whatever they last
+  // picked for any category, then to the predetermined default. Each category
+  // remembers its own choice so they don't get synced across categories.
   const initialCategoryVisibility = CATEGORY_KEYS.reduce((acc, key) => {
+    const saved = myProfile?.[`${key}_visibility` as keyof MyProfile] as
+      | ComponentVisibility
+      | undefined;
     acc[key] =
-      (myProfile?.[`${key}_visibility` as keyof MyProfile] as ComponentVisibility | undefined) ??
+      saved ??
+      getLastVisibility(VisibilityMemoryKeys.profile.chipCategory(key)) ??
       ComponentVisibility.PUBLIC;
     return acc;
   }, {} as Record<CategoryKey, ComponentVisibility>);
@@ -126,9 +139,18 @@ function EditProfile() {
     pronouns: myProfile?.pronouns ?? '',
     chipSelections: parsed.selections,
     customChips: parsed.customs,
-    name_visibility: myProfile?.name_visibility ?? ComponentVisibility.PUBLIC,
-    pronouns_visibility: myProfile?.pronouns_visibility ?? ComponentVisibility.PUBLIC,
-    bio_visibility: myProfile?.bio_visibility ?? ComponentVisibility.PUBLIC,
+    name_visibility:
+      myProfile?.name_visibility ??
+      getLastVisibility(VisibilityMemoryKeys.profile.name) ??
+      ComponentVisibility.PUBLIC,
+    pronouns_visibility:
+      myProfile?.pronouns_visibility ??
+      getLastVisibility(VisibilityMemoryKeys.profile.pronouns) ??
+      ComponentVisibility.PUBLIC,
+    bio_visibility:
+      myProfile?.bio_visibility ??
+      getLastVisibility(VisibilityMemoryKeys.profile.bio) ??
+      ComponentVisibility.PUBLIC,
     categoryVisibility: initialCategoryVisibility,
   });
 
@@ -225,6 +247,13 @@ function EditProfile() {
     value: ComponentVisibility,
   ) => {
     setDraft((prev) => ({ ...prev, [field]: value }));
+    const memoryKey =
+      field === 'name_visibility'
+        ? VisibilityMemoryKeys.profile.name
+        : field === 'pronouns_visibility'
+        ? VisibilityMemoryKeys.profile.pronouns
+        : VisibilityMemoryKeys.profile.bio;
+    setLastVisibility(memoryKey, value);
   };
 
   const handleSetCategoryVisibility = (categoryKey: CategoryKey, value: ComponentVisibility) => {
@@ -232,6 +261,7 @@ function EditProfile() {
       ...prev,
       categoryVisibility: { ...prev.categoryVisibility, [categoryKey]: value },
     }));
+    setLastVisibility(VisibilityMemoryKeys.profile.chipCategory(categoryKey), value);
   };
 
   const handleClickUpdate = () => {

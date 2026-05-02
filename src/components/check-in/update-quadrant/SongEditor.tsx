@@ -7,6 +7,11 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
 import { ComponentVisibility } from '@models/checkIn';
+import {
+  getLastVisibility,
+  setLastVisibility,
+  VisibilityMemoryKeys,
+} from '@utils/visibilityMemory';
 import EditorPopup from './EditorPopup';
 
 interface Props {
@@ -31,17 +36,24 @@ export default function SongEditor({
   onVisibilityChange,
 }: Props) {
   const [draftTrackId, setDraftTrackId] = useState<string>(trackId);
-  const [draftVisibility, setDraftVisibility] = useState<ComponentVisibility>(visibility);
+  const [draftVisibility, setDraftVisibility] = useState<ComponentVisibility>(
+    () => getLastVisibility(VisibilityMemoryKeys.checkInSong) ?? visibility,
+  );
   const [query, setQuery] = useState('');
   const [trackList, setTrackList] = useState<Track[]>([]);
   const [searchError, setSearchError] = useState('');
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const spotifyManager = SpotifyManager.getInstance();
 
+  const handleVisibilityChange = useCallback((v: ComponentVisibility) => {
+    setDraftVisibility(v);
+    setLastVisibility(VisibilityMemoryKeys.checkInSong, v);
+  }, []);
+
   useEffect(() => {
     if (isOpen) {
       setDraftTrackId(trackId);
-      setDraftVisibility(visibility);
+      setDraftVisibility(getLastVisibility(VisibilityMemoryKeys.checkInSong) ?? visibility);
       setQuery('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,7 +173,7 @@ export default function SongEditor({
           </Typo>
         )}
       </Layout.FlexCol>
-      <VisibilityToggle value={draftVisibility} onChange={setDraftVisibility} />
+      <VisibilityToggle value={draftVisibility} onChange={handleVisibilityChange} />
     </EditorPopup>
   );
 }

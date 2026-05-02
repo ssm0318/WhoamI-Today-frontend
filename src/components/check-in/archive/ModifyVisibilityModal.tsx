@@ -6,6 +6,7 @@ import { DEFAULT_MARGIN } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import { ComponentVisibility } from '@models/checkIn';
 import { CheckInComponentEntry, ComponentType } from '@models/checkInEntry';
+import { setLastVisibility, VisibilityMemoryKeys } from '@utils/visibilityMemory';
 import BatteryCardBody from './BatteryCardBody';
 import MoodCardBody from './MoodCardBody';
 import SongCardBody from './SongCardBody';
@@ -79,7 +80,16 @@ function ModifyVisibilityModal({ entry, onClose, onConfirm }: Props) {
           <Typo type="label-medium" color="MEDIUM_GRAY">
             {t('visibility_label')}
           </Typo>
-          <VisibilityToggle value={selected} onChange={setSelected} />
+          <VisibilityToggle
+            value={selected}
+            onChange={(v) => {
+              setSelected(v);
+              if (entry) {
+                const key = memoryKeyForComponent(entry.component);
+                if (key) setLastVisibility(key, v);
+              }
+            }}
+          />
         </Layout.FlexCol>
 
         <Layout.FlexRow w="100%" justifyContent="flex-end" gap={8}>
@@ -97,6 +107,21 @@ function ModifyVisibilityModal({ entry, onClose, onConfirm }: Props) {
       </Layout.FlexCol>
     </BottomModal>
   );
+}
+
+function memoryKeyForComponent(component: ComponentType): string | null {
+  switch (component) {
+    case ComponentType.BATTERY:
+      return VisibilityMemoryKeys.checkInBattery;
+    case ComponentType.MOOD:
+      return VisibilityMemoryKeys.checkInMood;
+    case ComponentType.SONG:
+      return VisibilityMemoryKeys.checkInSong;
+    case ComponentType.THOUGHT:
+      return VisibilityMemoryKeys.checkInThought;
+    default:
+      return null;
+  }
 }
 
 function renderPreview(entry: CheckInComponentEntry) {

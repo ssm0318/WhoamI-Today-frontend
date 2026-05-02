@@ -3,6 +3,11 @@ import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityT
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import { Layout } from '@design-system';
 import { ComponentVisibility, SocialBattery } from '@models/checkIn';
+import {
+  getLastVisibility,
+  setLastVisibility,
+  VisibilityMemoryKeys,
+} from '@utils/visibilityMemory';
 import EditorPopup from './EditorPopup';
 
 interface Props {
@@ -29,15 +34,24 @@ export default function BatteryEditor({
   onVisibilityChange,
 }: Props) {
   const [draftValue, setDraftValue] = useState<SocialBattery | null>(value);
-  const [draftVisibility, setDraftVisibility] = useState<ComponentVisibility>(visibility);
+  const [draftVisibility, setDraftVisibility] = useState<ComponentVisibility>(
+    () => getLastVisibility(VisibilityMemoryKeys.checkInBattery) ?? visibility,
+  );
 
   useEffect(() => {
     if (isOpen) {
       setDraftValue(value);
-      setDraftVisibility(visibility);
+      // Default to user's last picked visibility for this content type, falling
+      // back to the parent-supplied default for the very first share.
+      setDraftVisibility(getLastVisibility(VisibilityMemoryKeys.checkInBattery) ?? visibility);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
+
+  const handleVisibilityChange = useCallback((v: ComponentVisibility) => {
+    setDraftVisibility(v);
+    setLastVisibility(VisibilityMemoryKeys.checkInBattery, v);
+  }, []);
 
   const handleShare = useCallback(() => {
     onChange(draftValue);
@@ -63,7 +77,7 @@ export default function BatteryEditor({
           />
         ))}
       </Layout.FlexRow>
-      <VisibilityToggle value={draftVisibility} onChange={setDraftVisibility} />
+      <VisibilityToggle value={draftVisibility} onChange={handleVisibilityChange} />
     </EditorPopup>
   );
 }
