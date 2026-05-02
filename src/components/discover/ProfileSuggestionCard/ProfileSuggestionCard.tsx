@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Button, Layout, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { ProfileSuggestionCardBody, ProfileSuggestionField } from '@models/discover';
 import * as S from './ProfileSuggestionCard.styled';
 
@@ -9,12 +10,23 @@ interface ProfileSuggestionCardProps {
 
 function ProfileSuggestionCard({ suggestion }: ProfileSuggestionCardProps) {
   const navigate = useNavigate();
+  const trackEvent = useTrackEvent();
 
   const handleEditProfile = () => {
+    // CTA conversion: did the suggestion card actually drive users to
+    // open Edit Profile? Backend can't tell — same /settings/edit-profile
+    // URL regardless of source.
+    trackEvent('profile_suggestion_edit_tapped');
     navigate('/settings/edit-profile');
   };
 
   const handleFieldClick = (field: ProfileSuggestionField) => {
+    // Per-missing-field tap: which gaps in the profile users actually
+    // care about filling vs which they ignore.
+    trackEvent('profile_suggestion_field_tapped', {
+      field_label: field.label,
+      tab: String(field.tab ?? 'default'),
+    });
     navigate(field.tab ? `/settings/edit-profile?tab=${field.tab}` : '/settings/edit-profile');
   };
 

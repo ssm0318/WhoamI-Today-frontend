@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { Colors, Layout, Typo } from '@design-system';
 import { useSurveyDraft } from '@hooks/useSurveyDraft';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import i18n from '@i18n/index';
 import { Survey, SurveyAnswerInput } from '@models/survey';
 import { submitSurveyResponse } from '@utils/apis/survey';
@@ -76,6 +77,13 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
   const { answers, setAnswer, clear, hydrated } = useSurveyDraft(survey.slug);
   const [index, setIndex] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  const trackEvent = useTrackEvent();
+  // Time-on-question stamp. Reset every time the displayed question
+  // changes so we can attribute "how long did the user spend deciding
+  // their answer" to the question they actually saw. The post-render
+  // useEffect resets this; manual nav handlers also touch it.
+  const questionStartedAtRef = useRef<number>(Date.now());
+  const previousIndexRef = useRef<number>(0);
 
   const questions = useMemo(
     () => [...survey.questions].sort((a, b) => a.order - b.order),
@@ -92,6 +100,28 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated]);
 
+  // Time-per-question: emit dwell on every index change. Captures the
+  // ACTUAL viewing time of the previous question, which the back/next
+  // handlers below can't report on their own (they don't know how long
+  // the question was visible vs answered earlier). Backend only sees
+  // the final batched submit — per-question timing is invisible there.
+  useEffect(() => {
+    if (index === previousIndexRef.current) return;
+    const dwellMs = Date.now() - questionStartedAtRef.current;
+    if (dwellMs >= 200 && previousIndexRef.current < questions.length) {
+      const prevQ = questions[previousIndexRef.current];
+      trackEvent('survey_question_dwell', {
+        survey_slug: survey.slug,
+        question_id: prevQ.id,
+        question_index: previousIndexRef.current,
+        question_type: prevQ.type,
+        duration_ms: dwellMs,
+      });
+    }
+    previousIndexRef.current = index;
+    questionStartedAtRef.current = Date.now();
+  }, [index, questions, survey.slug, trackEvent]);
+
   if (total === 0) return null;
 
   const currentQuestion = questions[index];
@@ -102,22 +132,58 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
 
   const handleNext = () => {
     if (!currentAnswered) return;
-    if (!isLast) setIndex((i) => i + 1);
+    if (!isLast) {
+      trackEvent('survey_navigated', {
+        survey_slug: survey.slug,
+        direction: 'next',
+        from_index: index,
+      });
+      setIndex((i) => i + 1);
+    }
   };
 
   const handleBack = () => {
-    if (index > 0) setIndex((i) => i - 1);
+    if (index > 0) {
+      // Back-tap is a stronger signal than next-tap: it means the user
+      // wants to revise an earlier answer. High back-rate per question
+      // = ambiguous wording or hard decision.
+      trackEvent('survey_navigated', {
+        survey_slug: survey.slug,
+        direction: 'back',
+        from_index: index,
+      });
+      setIndex((i) => i - 1);
+    }
   };
 
   const handleSubmit = async () => {
     if (!allAnswered || submitting) return;
     setSubmitting(true);
+    // Final-question dwell flush: the index-change effect above won't
+    // fire on submit (we don't change index), so we have to manually log
+    // the time spent on the last question.
+    const lastDwellMs = Date.now() - questionStartedAtRef.current;
+    if (lastDwellMs >= 200 && currentQuestion) {
+      trackEvent('survey_question_dwell', {
+        survey_slug: survey.slug,
+        question_id: currentQuestion.id,
+        question_index: index,
+        question_type: currentQuestion.type,
+        duration_ms: lastDwellMs,
+      });
+    }
     const payload: SurveyAnswerInput[] = questions.map((q) => ({
       question_id: q.id,
       value: answers[q.id],
     }));
     try {
       await submitSurveyResponse(survey.slug, payload);
+      // Backend captures the response, but a typed `survey_submitted`
+      // event keeps Firebase funnels symmetric with `survey_navigated`.
+      trackEvent('survey_submitted', {
+        survey_slug: survey.slug,
+        question_count: questions.length,
+      });
       clear();
       onSubmitted();
     } catch {

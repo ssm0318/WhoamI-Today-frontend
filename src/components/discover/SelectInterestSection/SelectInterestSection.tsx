@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import { Button, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import * as S from './SelectInterestSection.styled';
 
 interface SelectInterestSectionProps {
@@ -15,8 +16,14 @@ function SelectInterestSection({
   onSave,
 }: SelectInterestSectionProps) {
   const navigate = useNavigate();
+  const trackEvent = useTrackEvent();
 
   const handleClickAddInterests = () => {
+    // Card-CTA conversion. categoryLabel distinguishes the per-category
+    // variants (Music, Hobbies, etc.) when the card is reused.
+    trackEvent('discover_add_interests_tapped', {
+      category_label: categoryLabel || 'default',
+    });
     onSave?.();
     navigate('/settings/edit-profile?tab=interests');
   };

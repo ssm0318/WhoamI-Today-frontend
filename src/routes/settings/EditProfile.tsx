@@ -17,6 +17,7 @@ import { MAX_WINDOW_WIDTH, TITLE_HEADER_HEIGHT, Z_INDEX } from '@constants/layou
 import { Colors, Layout, Typo } from '@design-system';
 import { useChipCategories } from '@hooks/useChipCategories';
 import { useDelayedVisible } from '@hooks/useDelayedVisible';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { MyProfile } from '@models/api/user';
 import { ComponentVisibility } from '@models/checkIn';
 import {
@@ -167,6 +168,7 @@ function EditProfile() {
   const [activeTab, setActiveTab] = useState<EditProfileTab>(initialTab);
   const [isSaving, setIsSaving] = useState(false);
   const showUploadOverlay = useDelayedVisible(isSaving);
+  const trackEvent = useTrackEvent();
 
   const handleToggleChip = (category: ChipCategory, chipLabel: string) => {
     setDraft((prev) => {
@@ -175,6 +177,15 @@ function EditProfile() {
         (c) => normalizeChipText(c) === normalizeChipText(chipLabel),
       );
       if (isAlreadySelected) {
+        // Per-chip toggle event. Backend only sees the FINAL saved
+        // selections; this captures pre-save fiddle (toggle on then off,
+        // browse around, etc.). chip_label is bounded by the catalog so
+        // cardinality is fine for Firebase.
+        trackEvent('edit_profile_chip_toggled', {
+          category: String(category),
+          chip_label: chipLabel,
+          value: 'off',
+        });
         return {
           ...prev,
           chipSelections: {
@@ -190,11 +201,21 @@ function EditProfile() {
         0,
       );
       if (totalSelected >= MAX_TOTAL_PROFILE_CHIPS) {
+        // Cap-hit signal: user wants to add more but hit the 20 limit.
+        // Tells us how often the cap is in users' way.
+        trackEvent('edit_profile_chip_cap_hit', {
+          category: String(category),
+        });
         openToast({
           message: `You can select up to ${MAX_TOTAL_PROFILE_CHIPS} chips total.`,
         });
         return prev;
       }
+      trackEvent('edit_profile_chip_toggled', {
+        category: String(category),
+        chip_label: chipLabel,
+        value: 'on',
+      });
       return {
         ...prev,
         chipSelections: {
@@ -265,6 +286,11 @@ function EditProfile() {
   };
 
   const handleClickUpdate = () => {
+    // Avatar-picker entry. We can't detect whether the OS picker dialog
+    // was confirmed vs cancelled — the cancel path returns no files
+    // silently — so the picked / cropped events below are the funnel
+    // continuation. Diff `_opened - _picked` ≈ 'opened then bailed'.
+    trackEvent('avatar_picker_opened');
     inputRef.current?.click();
   };
 
@@ -281,6 +307,11 @@ function EditProfile() {
         return;
       }
 
+      // User actually picked a file from the gallery — distinct from
+      // 'opened the picker but cancelled'. The cancel path silently
+      // returns nothing in `e.target.files`, so we fire this only when
+      // a file was selected.
+      trackEvent('avatar_picker_picked');
       setOriginalImageFileURL(imageDataUrl);
       setIsEditModalVisible(true);
     } catch (error) {
@@ -294,6 +325,10 @@ function EditProfile() {
   };
 
   const handleCompleteImageCrop = (img: CroppedImg) => {
+    // User completed the crop and confirmed — only the actual save
+    // (handled in the save flow below) is the final commit, but this is
+    // the funnel-end of the picker UX.
+    trackEvent('avatar_picker_cropped');
     setCroppedImg(img);
   };
 
@@ -442,14 +477,24 @@ function EditProfile() {
             <EditProfileTabButton
               type="button"
               $active={activeTab === 'pronouns_bio'}
-              onClick={() => setActiveTab('pronouns_bio')}
+              onClick={() => {
+                if (activeTab !== 'pronouns_bio') {
+                  trackEvent('edit_profile_tab_changed', { tab: 'pronouns_bio' });
+                }
+                setActiveTab('pronouns_bio');
+              }}
             >
               Pronouns/Bio
             </EditProfileTabButton>
             <EditProfileTabButton
               type="button"
               $active={activeTab === 'interests'}
-              onClick={() => setActiveTab('interests')}
+              onClick={() => {
+                if (activeTab !== 'interests') {
+                  trackEvent('edit_profile_tab_changed', { tab: 'interests' });
+                }
+                setActiveTab('interests');
+              }}
             >
               Interests
             </EditProfileTabButton>

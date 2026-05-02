@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import SendPromptModal from '@components/_common/prompt/SendPromptModal';
 import { Layout, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import * as S from './HighlightQuestionSection.styled';
 
 type HighlightQuestionSectionProps = {
@@ -14,14 +15,26 @@ type HighlightQuestionSectionProps = {
 function HighlightQuestionSection({ question, tag, questionId }: HighlightQuestionSectionProps) {
   const navigate = useNavigate();
   const [sendPromptModalVisible, setSendPromptBottomModalVisible] = useState(false);
+  const trackEvent = useTrackEvent();
 
   const handleClickRespond = (e: MouseEvent) => {
     e.stopPropagation();
+    // Body tap → respond to the question. tag (e.g. 'Today') captures
+    // the highlight category so we can compare engagement across tags.
+    trackEvent('highlight_question_respond_tapped', {
+      question_id: questionId,
+      tag,
+    });
     navigate(`/questions/${questionId}/new`);
   };
 
   const handleClickSend = (e: MouseEvent) => {
     e.stopPropagation();
+    // Send-icon tap (forward to a friend) — distinct from respond.
+    trackEvent('highlight_question_send_tapped', {
+      question_id: questionId,
+      tag,
+    });
     setSendPromptBottomModalVisible(true);
   };
 

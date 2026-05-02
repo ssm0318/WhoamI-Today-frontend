@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { Layout, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import i18n from '@i18n/index';
 import { SurveyResultsCardBody } from '@models/discover';
 
@@ -16,8 +17,10 @@ const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko :
 function SurveyResultsCard({ card }: SurveyResultsCardProps) {
   const navigate = useNavigate();
   const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
+  const trackEvent = useTrackEvent();
 
   const handleClick = () => {
+    trackEvent('survey_results_card_tapped', { survey_slug: card.slug });
     navigate(`/surveys/${card.slug}/results`);
   };
 

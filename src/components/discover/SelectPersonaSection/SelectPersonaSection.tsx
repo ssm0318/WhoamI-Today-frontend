@@ -3,6 +3,7 @@ import HashTagPill from '@components/_common/hash-tag-pill/HashTagPill';
 import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { Button, Layout, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { friendList } from '@mock/friends';
 import { MyProfile } from '@models/api/user';
 import { PersonaItem } from '@models/discover';
@@ -33,6 +34,7 @@ function SelectPersonaSection({
   }));
   const [selectedPersonas, setSelectedPersonas] = useState<string[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
+  const trackEvent = useTrackEvent();
 
   useEffect(() => {
     const initialSelected = personaList.filter((item) => item.is_selected).map((item) => item.key);
@@ -41,14 +43,36 @@ function SelectPersonaSection({
 
   const handleTogglePersona = (personaKey: string) => {
     setSelectedPersonas((prev) => {
-      if (prev.includes(personaKey)) {
+      const isOn = prev.includes(personaKey);
+      // Per-persona toggle: backend only sees the saved final state, so
+      // pre-save fiddle (toggle on then off) is invisible without this.
+      // persona_key is bounded by the catalog so cardinality is fine.
+      trackEvent('discover_persona_toggled', {
+        persona_key: personaKey,
+        value: isOn ? 'off' : 'on',
+      });
+      if (isOn) {
         return prev.filter((p) => p !== personaKey);
       }
       return [...prev, personaKey];
     });
   };
 
+  const handleToggleExpand = () => {
+    setIsExpanded((prev) => {
+      // 'See more' / 'collapse' click — engagement signal: how many
+      // users actually look beyond the first 10 personas.
+      trackEvent('discover_persona_list_toggled', {
+        value: !prev ? 'expanded' : 'collapsed',
+      });
+      return !prev;
+    });
+  };
+
   const handleSave = () => {
+    trackEvent('discover_persona_saved', {
+      persona_count: selectedPersonas.length,
+    });
     onSave?.();
 
     editProfile({
@@ -84,7 +108,7 @@ function SelectPersonaSection({
       </S.PersonaGrid>
 
       {personaList.length > COLLAPSED_COUNT && (
-        <S.ExpandToggle onClick={() => setIsExpanded(!isExpanded)}>
+        <S.ExpandToggle onClick={handleToggleExpand}>
           <Icon name={isExpanded ? 'chevron_up' : 'chevron_down'} size={20} />
         </S.ExpandToggle>
       )}

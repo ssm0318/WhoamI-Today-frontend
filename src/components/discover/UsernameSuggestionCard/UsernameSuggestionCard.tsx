@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Button, Layout, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { UsernameSuggestionCardBody } from '@models/discover';
 import * as S from './UsernameSuggestionCard.styled';
 
@@ -9,8 +10,12 @@ interface UsernameSuggestionCardProps {
 
 function UsernameSuggestionCard({ suggestion }: UsernameSuggestionCardProps) {
   const navigate = useNavigate();
+  const trackEvent = useTrackEvent();
 
   const handleEdit = () => {
+    // Username-suggestion CTA conversion. Useful for understanding how
+    // many users actually act on the placeholder-username nudge.
+    trackEvent('username_suggestion_edit_tapped');
     navigate('/settings/edit-profile?tab=pronouns_bio');
   };
 
