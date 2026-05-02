@@ -7,7 +7,7 @@ import NoContents from '@components/_common/no-contents/NoContents';
 import MissionGroupItem from '@components/note/mission-group-item/MissionGroupItem';
 import { UserPageContext } from '@components/user-page/UserPage.context';
 import { useViewAs, useViewAsUser } from '@components/view-as/PreviewModeContext';
-import { Layout, SvgIcon, Typo } from '@design-system';
+import { Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { NoteFeedItem, POST_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -87,8 +87,8 @@ function NoteSection({ username }: NoteSectionProps) {
             justifyContent="space-between"
             ph={20}
             pv={10}
-            outline="LIGHT_GRAY"
             bgColor="LIGHT"
+            style={{ border: `1px solid ${Colors.MEDIUM_GRAY}` }}
             onClick={handleClickNewNote}
           >
             <Layout.FlexRow alignItems="center" gap={8}>
