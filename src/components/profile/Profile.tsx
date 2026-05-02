@@ -155,9 +155,9 @@ function Profile({ user }: ProfileProps) {
         </Layout.FlexRow>
         <Layout.FlexCol gap={8} w="100%">
           <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
-            <Layout.FlexRow w="100%" gap={8} alignItems="center">
+            <Layout.FlexRow w="100%">
               <Layout.FlexCol gap={2}>
-                {/* Name or masked */}
+                {/* Name + badges on same line */}
                 <Layout.FlexRow gap={6} alignItems="center">
                   <Typo type="title-large" numberOfLines={1}>
                     {isMyPage
@@ -170,6 +170,43 @@ function Profile({ user }: ProfileProps) {
                         ? t('account_status_public')
                         : t('account_status_private')}
                     </AccountStatusBadge>
+                  )}
+                  {/** connections badge for friends — inside name row for vertical alignment */}
+                  {user && !isMyProfile(user) && (areFriends(user) || previewMode) && (
+                    <>
+                      {(user.connection_status || previewMode) && (
+                        <SvgIcon
+                          name={
+                            !previewMode && user.connection_status === Connection.CLOSE_FRIEND
+                              ? 'close_friend'
+                              : 'default_friend'
+                          }
+                          size={16}
+                          onClick={previewMode ? undefined : handleClickChangeConnection}
+                        />
+                      )}
+                      {subscriptionBellEnabled && isFriendUser && (
+                        <button
+                          type="button"
+                          onClick={handleOpenSubscriptionPopup}
+                          aria-label={t('check_in_subscription.aria.subscribe') ?? ''}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            padding: 0,
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                          }}
+                        >
+                          <SvgIcon
+                            name="notification_inline"
+                            size={20}
+                            color={(user as UserProfile).is_subscribed ? 'PRIMARY' : 'BLACK'}
+                            fill={(user as UserProfile).is_subscribed ? 'PRIMARY' : undefined}
+                          />
+                        </button>
+                      )}
+                    </>
                   )}
                 </Layout.FlexRow>
                 {/* Pronouns | Degree inline */}
@@ -198,41 +235,9 @@ function Profile({ user }: ProfileProps) {
                   </Layout.FlexRow>
                 )}
               </Layout.FlexCol>
-              {/** connections badge for friends */}
+              {/* Modals/popups — positioned independently, kept outside name row */}
               {user && !isMyProfile(user) && areFriends(user) && (
                 <>
-                  {user.connection_status && (
-                    <SvgIcon
-                      name={
-                        user.connection_status === Connection.CLOSE_FRIEND
-                          ? 'close_friend'
-                          : 'default_friend'
-                      }
-                      size={16}
-                      onClick={handleClickChangeConnection}
-                    />
-                  )}
-                  {subscriptionBellEnabled && isFriendUser && (
-                    <button
-                      type="button"
-                      onClick={handleOpenSubscriptionPopup}
-                      aria-label={t('check_in_subscription.aria.subscribe') ?? ''}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        padding: 0,
-                        cursor: 'pointer',
-                        display: 'inline-flex',
-                      }}
-                    >
-                      <SvgIcon
-                        name="notification_inline"
-                        size={20}
-                        color={(user as UserProfile).is_subscribed ? 'PRIMARY' : 'BLACK'}
-                        fill={(user as UserProfile).is_subscribed ? 'PRIMARY' : undefined}
-                      />
-                    </button>
-                  )}
                   {subscriptionBellEnabled && isFriendUser && (
                     <SubscriptionPopup
                       isOpen={showSubscriptionPopup}
