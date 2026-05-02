@@ -1,5 +1,5 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
@@ -9,6 +9,7 @@ import SearchInput from '@components/_common/search-input/SearchInput';
 import { Layout, Typo } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import SpotifyManager from '@libs/SpotifyManager';
 import { getMobileDeviceInfo } from '@utils/getUserAgent';
 import MusicItem from './music-item/MusicItem';
@@ -38,9 +39,21 @@ function MusicSearchBottomSheet({
   const [trackList, setTrackList] = useState<Track[]>([]);
 
   const [selected, setSelected] = useState<string | null>(null);
+  const trackEvent = useTrackEvent();
+  // confirmedRef flips true on successful confirm so the unmount cleanup
+  // can decide between abandoned (typed/searched but didn't pick) vs
+  // success. Backend only sees the eventual song-save call from the
+  // parent — search behavior here is otherwise invisible.
+  const confirmedRef = useRef(false);
+  const everTypedRef = useRef(false);
+  const lastQueryLengthRef = useRef(0);
 
   const handleConfirm = () => {
     if (selected) {
+      confirmedRef.current = true;
+      trackEvent('music_search_confirmed', {
+        last_query_length: lastQueryLengthRef.current,
+      });
       onSelect(selected);
       closeBottomSheet();
     }
@@ -51,8 +64,21 @@ function MusicSearchBottomSheet({
       setTrackList([]);
       return;
     }
+    // First non-empty query in this open session = "user actually searched".
+    // Cheaper engagement signal than logging every keystroke.
+    if (!everTypedRef.current) {
+      everTypedRef.current = true;
+      trackEvent('music_search_typed');
+    }
+    lastQueryLengthRef.current = query.length;
     const tracks = await spotifyManager.searchMusic(query, 20, 0);
     setTrackList(tracks);
+    // Empty result = user typed but Spotify returned nothing — possible
+    // dictionary / language friction.
+    trackEvent('music_search_results', {
+      query_length: query.length,
+      result_count: tracks.length,
+    });
   }, [query]);
 
   const handleSelectMusic = (track: Track) => {
@@ -73,11 +99,25 @@ function MusicSearchBottomSheet({
   });
 
   useEffect(() => {
-    if (!visible) {
+    if (visible) {
+      // Per-open-session reset; mirrors the wishlist sheet pattern.
+      confirmedRef.current = false;
+      everTypedRef.current = false;
+      lastQueryLengthRef.current = 0;
+      trackEvent('music_search_opened');
+    } else {
+      // Sheet closed via dim/cancel/etc. — fire abandoned only if no
+      // selection was confirmed AND the user actually typed something.
+      if (!confirmedRef.current && everTypedRef.current) {
+        trackEvent('music_search_abandoned', {
+          last_query_length: lastQueryLengthRef.current,
+        });
+      }
       setQuery('');
       setTrackList([]);
       setSelected(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   if (!trackList) return null;
