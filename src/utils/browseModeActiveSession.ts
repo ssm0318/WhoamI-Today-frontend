@@ -1,33 +1,79 @@
 /**
- * Per-user, per-tab persistence of the currently active browse mode.
+ * Per-user persistence of the currently active browse mode plus a timestamp
+ * of when the user last actively *picked* one.
  *
- * Lives in sessionStorage (NOT localStorage) so it survives page refreshes
- * within a single tab but resets on tab close. That matches the user's
- * mental model of "I picked Soft mode for THIS session" — refresh shouldn't
- * forget it, but coming back tomorrow is a fresh decision.
+ * Spec: the picker auto-prompt fires when the user opens the app and either
+ *   (a) has never picked a mode, or
+ *   (b) it's been more than 2 hours since their last pick.
+ * Within the 2-hour freshness window, the picked mode is restored on
+ * load so the user keeps the experience they chose.
  *
- * Cross-tab and cross-day "do you want to re-pick" prompting stays the
- * responsibility of `useBrowseModeSessionPrompt` — this util only handles
- * the within-tab survival of an already-chosen mode.
+ * Switched from sessionStorage to localStorage so the same mode is
+ * available across tabs and after the tab is closed-and-reopened — the
+ * 2-hour window is now the source of "is this the same session?" rather
+ * than tab lifetime.
  */
 
 import { ActiveBrowseMode } from '@models/browseMode';
 
-const STORAGE_KEY_PREFIX = 'browse_mode_active_session_';
+const ACTIVE_MODE_PREFIX = 'browse_mode_active_';
+const LAST_PICKED_AT_PREFIX = 'browse_mode_last_picked_at_';
 
-function key(userId: number): string {
-  return `${STORAGE_KEY_PREFIX}${userId}`;
+/** 2 hours — anything past this and the auto-prompt fires on next open. */
+export const FRESHNESS_MS = 2 * 60 * 60 * 1000;
+
+function activeModeKey(userId: number): string {
+  return `${ACTIVE_MODE_PREFIX}${userId}`;
 }
 
-export function readActiveSession(userId: number): ActiveBrowseMode | null {
+function lastPickedAtKey(userId: number): string {
+  return `${LAST_PICKED_AT_PREFIX}${userId}`;
+}
+
+export function readLastPickedAt(userId: number): number | null {
+  const raw = localStorage.getItem(lastPickedAtKey(userId));
+  if (!raw) return null;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
+}
+
+export function writeLastPickedAt(userId: number, when: number = Date.now()): void {
   try {
-    const raw = sessionStorage.getItem(key(userId));
-    if (!raw) return null;
+    localStorage.setItem(lastPickedAtKey(userId), String(when));
+  } catch {
+    /* private mode / quota — best-effort */
+  }
+}
+
+export function clearLastPickedAt(userId: number): void {
+  localStorage.removeItem(lastPickedAtKey(userId));
+}
+
+/** True iff the user picked a mode within the last FRESHNESS_MS. */
+export function isPickFresh(userId: number): boolean {
+  const ts = readLastPickedAt(userId);
+  if (ts === null) return false;
+  return Date.now() - ts < FRESHNESS_MS;
+}
+
+/**
+ * Read the persisted active mode, but only if the last pick is still fresh.
+ * Stale data is cleared as a side effect so subsequent reads are clean.
+ */
+export function readActiveMode(userId: number): ActiveBrowseMode | null {
+  if (!isPickFresh(userId)) {
+    // Drop stale data so we don't carry it across the freshness boundary.
+    localStorage.removeItem(activeModeKey(userId));
+    clearLastPickedAt(userId);
+    return null;
+  }
+  const raw = localStorage.getItem(activeModeKey(userId));
+  if (!raw) return null;
+  try {
     const parsed = JSON.parse(raw) as unknown;
     if (!parsed || typeof parsed !== 'object') return null;
     const mode = parsed as { kind?: unknown };
-    // Defensive shape check — corrupt entries (schema change, manual
-    // tampering) shouldn't blow up rehydration.
+    // Defensive shape check — don't rehydrate corrupt entries.
     if (mode.kind !== 'built_in' && mode.kind !== 'custom') return null;
     return parsed as ActiveBrowseMode;
   } catch {
@@ -35,15 +81,14 @@ export function readActiveSession(userId: number): ActiveBrowseMode | null {
   }
 }
 
-export function writeActiveSession(userId: number, mode: ActiveBrowseMode | null): void {
+export function writeActiveMode(userId: number, mode: ActiveBrowseMode | null): void {
   try {
     if (mode === null) {
-      sessionStorage.removeItem(key(userId));
+      localStorage.removeItem(activeModeKey(userId));
     } else {
-      sessionStorage.setItem(key(userId), JSON.stringify(mode));
+      localStorage.setItem(activeModeKey(userId), JSON.stringify(mode));
     }
   } catch {
-    // sessionStorage can throw in private mode / if quota exceeded —
-    // best-effort persistence, not worth crashing the app over.
+    /* private mode / quota — best-effort */
   }
 }

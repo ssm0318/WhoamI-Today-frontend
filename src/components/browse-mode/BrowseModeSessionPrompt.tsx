@@ -18,6 +18,7 @@ import {
 import { ComponentVisibility, DEFAULT_VISIBILITY, SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
 import { postCheckIn } from '@utils/apis/checkIn';
+import { writeLastPickedAt } from '@utils/browseModeActiveSession';
 import { HiddenModeKey, readHiddenModes, writeHiddenModes } from '@utils/browseModeHiddenModes';
 import { saveLastPickedMode } from '@utils/browseModeLastPick';
 import BrowseModeCustomizeSheet from './BrowseModeCustomizeSheet';
@@ -191,7 +192,13 @@ function BrowseModeSessionPrompt({
           updated_at: '',
         });
       }
-      if (myProfile?.id) saveLastPickedMode(myProfile.id, mode);
+      if (myProfile?.id) {
+        saveLastPickedMode(myProfile.id, mode);
+        // Stamp the pick time. The auto-prompt's 2-hour freshness window
+        // starts from this moment; any pick path (auto-prompt, manual
+        // sidebar, post-Save activation) bumps the timer the same way.
+        writeLastPickedAt(myProfile.id);
+      }
 
       let batteryApplied: SocialBattery | null = null;
       if (syncBattery && suggestedBattery) {
@@ -355,9 +362,13 @@ function BrowseModeSessionPrompt({
           default_battery: snapshot.default_battery,
         },
       });
+      // Apply-without-saving counts as the user actively picking a
+      // configuration to use right now — bump the freshness timer so the
+      // auto-prompt doesn't re-fire mid-preview.
+      if (myProfile?.id) writeLastPickedAt(myProfile.id);
       onFinish();
     },
-    [closeCustomize, editingPreset?.id, onFinish],
+    [closeCustomize, editingPreset?.id, myProfile?.id, onFinish],
   );
 
   const handleConfirmDelete = useCallback(async () => {

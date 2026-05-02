@@ -1,48 +1,28 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FeatureFlagKey } from '@constants/featureFlag';
-import { useGetAppMessage } from '@hooks/useAppMessage';
-import { SetAppStateData } from '@models/app';
 import { useBoundStore } from '@stores/useBoundStore';
-
-const AWAY_THRESHOLD_MS = 15 * 60 * 1000; // 15 min — anything shorter is "same session"
-const COOLDOWN_MS = 60 * 60 * 1000; // 1 hour cooldown after the user dismisses the prompt
-// Debounce hidden-state saves: a page reload or a tab-switch lasting under
-// this many ms shouldn't move `last_session` forward. Without this, the
-// hidden event the OLD page fires during reload writes last_session=now,
-// the new page reads it, decides the user was "just here," and skips the
-// prompt — even after hours of real away time.
-const HIDE_SETTLE_MS = 5000;
-
-function getStorageKey(userId: number, suffix: string) {
-  return `browse_mode_${suffix}_${userId}`;
-}
-
-function isCooldownActive(userId: number): boolean {
-  const ts = localStorage.getItem(getStorageKey(userId, 'dismissed'));
-  if (!ts) return false;
-  return Date.now() - Number(ts) < COOLDOWN_MS;
-}
-
-function saveLastSessionTimestamp(userId: number) {
-  localStorage.setItem(getStorageKey(userId, 'last_session'), String(Date.now()));
-}
-
-function getLastSessionTimestamp(userId: number): number | null {
-  const ts = localStorage.getItem(getStorageKey(userId, 'last_session'));
-  return ts ? Number(ts) : null;
-}
-
-function saveDismissTimestamp(userId: number) {
-  localStorage.setItem(getStorageKey(userId, 'dismissed'), String(Date.now()));
-}
+import { FRESHNESS_MS, readLastPickedAt, writeLastPickedAt } from '@utils/browseModeActiveSession';
 
 /**
- * On a new session — meaning the user has been away for at least 30 minutes —
- * surface the two-step Browse Mode prompt. Quick re-opens (close → reopen
- * within 30 min) are intentionally treated as the same session and skipped.
+ * Auto-prompt the Browse Mode picker on app open. Spec: ALWAYS fire when
+ *   (a) the user has never picked a mode (first-ever open, or always
+ *       skipped before — there's no `last_picked_at` in localStorage), or
+ *   (b) it's been more than 2 hours since their last pick.
  *
- * Mirrors the structure of `useCheckInFreshnessPrompt`: visibilitychange
- * listener + native SET_APP_STATE bridge + per-user localStorage timestamps.
+ * Trigger: cold start (component mount with userId + feature flag both
+ * loaded). Mounted once at Root, so "cold start" really means page load
+ * or full app remount.
+ *
+ * No cooldown after dismiss — if the user skips, they'll be prompted
+ * again next time they open the app (matches the user's spec for the
+ * "always skipped" case).
+ *
+ * No visibility-change re-trigger — brief tab-switches and reloads
+ * shouldn't generate a new prompt mid-session. The 2-hour freshness
+ * check on the next page load is the only re-trigger.
+ *
+ * `last_picked_at` is owned by the picker activation path (see
+ * BrowseModeSessionPrompt's applyMode) so this hook only READS it.
  */
 export function useBrowseModeSessionPrompt() {
   const [shouldShow, setShouldShow] = useState(false);
@@ -54,109 +34,36 @@ export function useBrowseModeSessionPrompt() {
   const userId = myProfile?.id;
   const browseModeEnabled = featureFlags?.[FeatureFlagKey.BROWSE_MODE] ?? false;
 
-  // Pending hidden-state save. A brief hidden state (reload, tab-switch
-  // for a few seconds) shouldn't move last_session forward — it'd trick
-  // the next foreground into thinking the user just left.
-  const pendingHideTimerRef = useRef<number | null>(null);
-
-  const tryTrigger = useCallback(() => {
-    if (!userId || !browseModeEnabled) return;
-    if (isCooldownActive(userId)) return;
-    setShouldShow(true);
-  }, [userId, browseModeEnabled]);
-
-  // Stable refs so the SET_APP_STATE callback doesn't re-bind every render.
-  const handleBecomeActive = useCallback(() => {
-    if (!userId) return;
-    // The user came back before the pending hide-save fired — that means
-    // hidden state was brief (reload, quick tab-switch). Cancel the save
-    // so last_session keeps its old (real) value.
-    if (pendingHideTimerRef.current !== null) {
-      window.clearTimeout(pendingHideTimerRef.current);
-      pendingHideTimerRef.current = null;
-    }
-    const lastTs = getLastSessionTimestamp(userId);
-    if (lastTs && Date.now() - lastTs >= AWAY_THRESHOLD_MS) {
-      tryTrigger();
-    }
-  }, [userId, tryTrigger]);
-
-  const handleBecomeInactive = useCallback(() => {
-    if (!userId) return;
-    // Only commit last_session if the page stays hidden for a few seconds.
-    // Reloads and brief tab-switches happen in well under HIDE_SETTLE_MS.
-    if (pendingHideTimerRef.current !== null) {
-      window.clearTimeout(pendingHideTimerRef.current);
-    }
-    pendingHideTimerRef.current = window.setTimeout(() => {
-      saveLastSessionTimestamp(userId);
-      pendingHideTimerRef.current = null;
-    }, HIDE_SETTLE_MS);
-  }, [userId]);
-
-  const handleBecomeActiveRef = useRef(handleBecomeActive);
-  const handleBecomeInactiveRef = useRef(handleBecomeInactive);
-  useEffect(() => {
-    handleBecomeActiveRef.current = handleBecomeActive;
-    handleBecomeInactiveRef.current = handleBecomeInactive;
-  }, [handleBecomeActive, handleBecomeInactive]);
-
-  const handleAppState = useCallback((data: SetAppStateData) => {
-    if (!data) return;
-    if (data.value === 'active') {
-      handleBecomeActiveRef.current();
-    } else if (data.value === 'inactive' || data.value === 'background') {
-      handleBecomeInactiveRef.current();
-    }
-  }, []);
-
-  useGetAppMessage({ key: 'SET_APP_STATE', cb: handleAppState });
-
-  useEffect(() => {
-    const onVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        handleBecomeActive();
-      } else {
-        handleBecomeInactive();
-      }
-    };
-    document.addEventListener('visibilitychange', onVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', onVisibilityChange);
-  }, [handleBecomeActive, handleBecomeInactive]);
-
-  // Cold start: prompt on first-ever visit AND on returns after 30+ min away.
+  // Cold-start gate: prompt iff user has never picked OR last pick is stale.
   // Also load saved presets so they're ready when the prompt opens.
   useEffect(() => {
     if (!userId || !browseModeEnabled) return;
-
-    const lastTs = getLastSessionTimestamp(userId);
-    if (lastTs === null || Date.now() - lastTs >= AWAY_THRESHOLD_MS) {
-      tryTrigger();
-    }
+    const lastPickedAt = readLastPickedAt(userId);
+    const stale = lastPickedAt === null || Date.now() - lastPickedAt >= FRESHNESS_MS;
+    if (stale) setShouldShow(true);
     fetchPresets();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, browseModeEnabled]);
 
+  /**
+   * Skip the prompt. Doesn't write anything — no cooldown — so the next
+   * time the user opens the app they'll see the prompt again (per spec).
+   */
   const dismiss = useCallback(() => {
     setShouldShow(false);
-    if (userId) {
-      saveDismissTimestamp(userId);
-      saveLastSessionTimestamp(userId);
-    }
-  }, [userId]);
+  }, []);
 
   /**
-   * Like `dismiss`, but called after the user actively chose a mode.
-   * Skips the dismiss-cooldown so the next 30-min-away gap re-prompts as expected.
+   * Called after the user actively picked a mode. Records the pick
+   * timestamp so the next 2-hour freshness window starts from now;
+   * within that window, the prompt won't auto-fire on cold start.
    */
   const finish = useCallback(() => {
     setShouldShow(false);
-    if (userId) {
-      saveLastSessionTimestamp(userId);
-    }
+    if (userId) writeLastPickedAt(userId);
   }, [userId]);
 
-  /** Manually open the prompt (e.g., from the header indicator chip). */
+  /** Manually open the prompt (e.g., from the sidebar's Browsing Mode entry). */
   const open = useCallback(() => {
     setShouldShow(true);
   }, []);
