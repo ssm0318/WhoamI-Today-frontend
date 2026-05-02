@@ -460,13 +460,6 @@ function EditProfile() {
         }
       />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" gap={10}>
-        {isFromLoginSetup && (
-          <Layout.FlexRow w="100%" ph={24} pt={16}>
-            <Typo type="label-medium" color="MEDIUM_GRAY">
-              {t('setup_hint')}
-            </Typo>
-          </Layout.FlexRow>
-        )}
         <Layout.FlexCol pt={24} w="100%" alignItems="center">
           <StyledEditProfileButton type="button" onClick={handleClickUpdate}>
             <ProfileImage
