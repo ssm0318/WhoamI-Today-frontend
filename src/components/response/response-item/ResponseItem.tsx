@@ -321,6 +321,7 @@ export const WRAPPER_PADDING = 12;
 
 const PreviewBody = styled.div`
   flex: 1;
+  width: 100%;
   min-height: 0;
   overflow: hidden;
   position: relative;
