@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSWRConfig } from 'swr';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
+import MissionGroupItem from '@components/note/mission-group-item/MissionGroupItem';
 import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
@@ -11,8 +12,8 @@ import axiosInstance from '@utils/apis/axios';
 import { MainScrollContainer } from '../Root';
 
 interface UnreadPost {
-  id: number;
-  type: 'Note' | 'Response';
+  id?: number;
+  type: 'Note' | 'Response' | 'MissionGroup';
   [key: string]: any;
 }
 
@@ -71,6 +72,14 @@ function FriendNewPosts() {
             posts.map((post) => {
               if (post.type === 'Note') {
                 return <NoteItem key={`note-${post.id}`} note={post as any} isMyPage={false} />;
+              }
+              if (post.type === 'MissionGroup') {
+                return (
+                  <MissionGroupItem
+                    key={`mission-group-${post.mission_id ?? post.mission_prompt}`}
+                    group={post as any}
+                  />
+                );
               }
               if (post.type === 'Response') {
                 return (

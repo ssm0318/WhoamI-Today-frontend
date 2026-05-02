@@ -4,11 +4,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
+import MissionGroupItem from '@components/note/mission-group-item/MissionGroupItem';
 import { UserPageContext } from '@components/user-page/UserPage.context';
 import { useViewAs, useViewAsUser } from '@components/view-as/PreviewModeContext';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
-import { Note } from '@models/post';
+import { NoteFeedItem, POST_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { readUserAllNotes } from '@utils/apis/user';
@@ -44,7 +45,7 @@ function NoteSection({ username }: NoteSectionProps) {
     isLoading: isNotesLoading,
     isLoadingMore: isNotesLoadingMore,
     mutate: refetchNotes,
-  } = useSWRInfiniteScroll<Note>({
+  } = useSWRInfiniteScroll<NoteFeedItem>({
     key: withViewAs(
       `/user/${encodeURIComponent(username || 'me')}/notes/${isDefault ? 'default' : ''}`,
       { viewAs, viewAsUser },
@@ -108,9 +109,22 @@ function NoteSection({ username }: NoteSectionProps) {
           ) : notes?.[0] && notes[0].count > 0 ? (
             <>
               {notes.map(({ results }) =>
-                results?.map((note) => (
-                  <NoteItem key={note.id} note={note} isMyPage={!username} refresh={refetchNotes} />
-                )),
+                results?.map((note) =>
+                  note.type === POST_TYPE.MISSION_GROUP ? (
+                    <MissionGroupItem
+                      key={`mission-group-${note.mission_id ?? note.mission_prompt}`}
+                      group={note}
+                      refresh={refetchNotes}
+                    />
+                  ) : (
+                    <NoteItem
+                      key={note.id}
+                      note={note}
+                      isMyPage={!username}
+                      refresh={refetchNotes}
+                    />
+                  ),
+                ),
               )}
               <div ref={targetRef} />
               {isNotesLoadingMore && (

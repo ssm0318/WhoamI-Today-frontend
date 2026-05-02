@@ -4,13 +4,14 @@ import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import CheckInPostStories from '@components/check-in-posts/CheckInPostStories';
+import MissionGroupItem from '@components/note/mission-group-item/MissionGroupItem';
 import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
 import { Layout } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
-import { Note, POST_TYPE, Response } from '@models/post';
+import { AllPostFeedItem, POST_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { getMe } from '@utils/apis/my';
@@ -33,7 +34,7 @@ function FriendsFeed() {
     isLoading,
     isLoadingMore: isFeedItemsLoadingMore,
     mutate: refetchFeed,
-  } = useSWRInfiniteScroll<Note | Response>({
+  } = useSWRInfiniteScroll<AllPostFeedItem>({
     key: `/user/feed/full`,
   });
 
@@ -42,9 +43,18 @@ function FriendsFeed() {
   }, [refetchFeed, fetchCheckIn]);
 
   const renderFeedItem = useCallback(
-    (item: Note | Response) => {
+    (item: AllPostFeedItem) => {
       if (item.type === POST_TYPE.NOTE) {
         return <NoteItem key={item.id} note={item} isMyPage={false} refresh={refetchFeed} />;
+      }
+      if (item.type === POST_TYPE.MISSION_GROUP) {
+        return (
+          <MissionGroupItem
+            key={`mission-group-${item.mission_id ?? item.mission_prompt}`}
+            group={item}
+            refresh={refetchFeed}
+          />
+        );
       }
       return (
         <ResponseItem

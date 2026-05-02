@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
+import MissionGroupItem from '@components/note/mission-group-item/MissionGroupItem';
 import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
@@ -10,7 +11,7 @@ import { UserPageContext } from '@components/user-page/UserPage.context';
 import { useViewAs, useViewAsUser } from '@components/view-as/PreviewModeContext';
 import { Layout } from '@design-system';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
-import { Note, POST_TYPE, Response } from '@models/post';
+import { AllPostFeedItem, POST_TYPE } from '@models/post';
 import { readUserAllNotes, readUserAllResponses } from '@utils/apis/user';
 import { withViewAs } from '@utils/apis/withViewAs';
 
@@ -33,7 +34,7 @@ function AllPostSection({ username }: AllPostSectionProps) {
     isLoading: isPostsLoading,
     isLoadingMore: isPostsLoadingMore,
     mutate: refetchPosts,
-  } = useSWRInfiniteScroll<Note | Response>({
+  } = useSWRInfiniteScroll<AllPostFeedItem>({
     key: withViewAs(`/user/${encodeURIComponent(username || 'me')}/all-posts/`, {
       viewAs,
       viewAsUser,
@@ -56,13 +57,22 @@ function AllPostSection({ username }: AllPostSectionProps) {
   }, [noteId, responseId, username, user?.state]);
 
   const renderPostItem = useCallback(
-    (item: Note | Response) => {
+    (item: AllPostFeedItem) => {
       if (item.type === POST_TYPE.NOTE) {
         return (
           <NoteItem
             key={`note-${item.id}`}
             note={item}
             isMyPage={isMyPage}
+            refresh={refetchPosts}
+          />
+        );
+      }
+      if (item.type === POST_TYPE.MISSION_GROUP) {
+        return (
+          <MissionGroupItem
+            key={`mission-group-${item.mission_id ?? item.mission_prompt}`}
+            group={item}
             refresh={refetchPosts}
           />
         );

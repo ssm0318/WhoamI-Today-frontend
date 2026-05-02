@@ -14,6 +14,7 @@ import SharedPlaylistSection, {
   SharedTrack,
 } from '@components/friends/shared-playlist/SharedPlaylistSection';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
+import MissionGroupItem from '@components/note/mission-group-item/MissionGroupItem';
 import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
@@ -246,7 +247,9 @@ function Discover() {
       }
       if (selectedFilter.length === 0) return true;
       // When a filter is active, only show Response/Note items matching the category
-      if (item.type !== 'Response' && item.type !== 'Note') return false;
+      if (item.type !== 'Response' && item.type !== 'Note' && item.type !== 'MissionGroup') {
+        return false;
+      }
       return selectedFilter.includes(item.category as DiscoverFilter);
     },
     [selectedFilter, hideSyntheticCards],
@@ -275,6 +278,13 @@ function Discover() {
           );
         case 'Note':
           return <NoteItem key={`note-${item.body.id}`} note={item.body} isMyPage={false} />;
+        case 'MissionGroup':
+          return (
+            <MissionGroupItem
+              key={`mission-group-${item.mission_id ?? item.mission_prompt}`}
+              group={item}
+            />
+          );
         case 'Question':
           return (
             <HighlightQuestionSection
