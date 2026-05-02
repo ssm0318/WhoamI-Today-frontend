@@ -32,6 +32,11 @@ import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import { shouldShowWidgetGuide } from '@utils/widgetInstallGuide';
 import { MainScrollContainer } from '../Root';
 
+// Hard cap on total profile chips a user can pick across all categories.
+// Encourages curated selections — and prevents the "endless clicking" feeling
+// in long lists like values_allyship.
+const MAX_TOTAL_PROFILE_CHIPS = 20;
+
 const CATEGORY_KEYS = [
   'basic_identities',
   'favorite_platform',
@@ -144,7 +149,10 @@ function EditProfile() {
   const handleToggleChip = (category: ChipCategory, chipLabel: string) => {
     setDraft((prev) => {
       const current = [...(prev.chipSelections[category] || [])];
-      if (current.some((c) => normalizeChipText(c) === normalizeChipText(chipLabel))) {
+      const isAlreadySelected = current.some(
+        (c) => normalizeChipText(c) === normalizeChipText(chipLabel),
+      );
+      if (isAlreadySelected) {
         return {
           ...prev,
           chipSelections: {
@@ -154,6 +162,16 @@ function EditProfile() {
             ),
           },
         };
+      }
+      const totalSelected = Object.values(prev.chipSelections).reduce(
+        (sum, list) => sum + list.length,
+        0,
+      );
+      if (totalSelected >= MAX_TOTAL_PROFILE_CHIPS) {
+        openToast({
+          message: `You can select up to ${MAX_TOTAL_PROFILE_CHIPS} chips total.`,
+        });
+        return prev;
       }
       return {
         ...prev,
@@ -477,6 +495,21 @@ function EditProfile() {
           </>
         ) : (
           <>
+            <ChipCounterBar>
+              <Typo
+                type="label-medium"
+                color={
+                  Object.values(draft.chipSelections).reduce((s, l) => s + l.length, 0) >=
+                  MAX_TOTAL_PROFILE_CHIPS
+                    ? 'PRIMARY'
+                    : 'DARK_GRAY'
+                }
+                fontWeight={600}
+              >
+                {Object.values(draft.chipSelections).reduce((s, l) => s + l.length, 0)} /{' '}
+                {MAX_TOTAL_PROFILE_CHIPS} chips selected
+              </Typo>
+            </ChipCounterBar>
             {categories.map((categoryInfo) => (
               <Layout.FlexCol key={categoryInfo.key} gap={6} w="100%">
                 <ChipCategorySection
@@ -539,4 +572,17 @@ const EditProfileTabButton = styled.button<{ $active: boolean }>`
   font-weight: ${({ $active }) => ($active ? 700 : 500)};
   transition: color 0.15s ease, border-color 0.15s ease;
   margin-bottom: -1px;
+`;
+
+const ChipCounterBar = styled.div`
+  position: sticky;
+  top: ${TITLE_HEADER_HEIGHT}px;
+  z-index: 10;
+  width: 100%;
+  padding: 8px 12px;
+  background-color: ${Colors.WHITE};
+  border-bottom: 1px solid ${Colors.LIGHT_GRAY};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
