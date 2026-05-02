@@ -92,16 +92,23 @@ function EditProfile() {
   // favorite_platform and least_favorite_platform, or "Night Owl" in both basic_identities
   // and as_a_friend) would resolve to ALL matching categories — visible to users as
   // a chip wrongly selected in every category. Read from chips_by_category instead.
+  //
+  // CRITICAL: iterate the user's actual saved data (chipsByCategory), NOT the
+  // categories list. The categories list is fetched async via useChipCategories
+  // and may be empty on initial render. If we iterate it here, the draft starts
+  // empty, and a user who taps Done before noticing wipes ALL their saved chips
+  // because handleClickSave unconditionally calls updateChipsByCategory(draft.chipSelections).
   const parseExistingChips = () => {
     const chipsByCategory = myProfile?.chips_by_category ?? {};
     const result: Record<string, string[]> = {};
 
-    categories.forEach((cat) => {
-      const stored = chipsByCategory[cat.key] ?? [];
-      // Map each stored chip to its canonical-cased option, falling back to the stored
-      // text (so chips removed from the option list still render as user-selected).
-      result[cat.key] = stored.map(
-        (m) => cat.chips.find((c) => normalizeChipText(c) === normalizeChipText(m)) || m,
+    Object.entries(chipsByCategory).forEach(([catKey, stored]) => {
+      if (!Array.isArray(stored)) return;
+      // If category metadata is loaded, normalize chip casing against the
+      // canonical option list; otherwise pass the saved text through verbatim.
+      const cat = categories.find((c) => c.key === catKey);
+      result[catKey] = stored.map(
+        (m) => cat?.chips.find((c) => normalizeChipText(c) === normalizeChipText(m)) || m,
       );
     });
 
@@ -357,9 +364,29 @@ function EditProfile() {
   const handleClickSave = async () => {
     if (!myProfile || isSaving) return;
 
+    // Guard against the chip-wipe race: if the categories list never loaded
+    // AND the user has saved chips on the backend that aren't reflected in
+    // the draft (because the draft was initialized before the data arrived),
+    // skip the chip save. Better to no-op than to silently wipe their data.
+    const draftChipCount = Object.values(draft.chipSelections).reduce(
+      (s, l) => s + (Array.isArray(l) ? l.length : 0),
+      0,
+    );
+    const savedChipCount = Object.values(myProfile.chips_by_category ?? {}).reduce(
+      (s, l) => s + (Array.isArray(l) ? l.length : 0),
+      0,
+    );
+    const safeToSaveChips = !(draftChipCount === 0 && savedChipCount > 0);
+
     setIsSaving(true);
     try {
-      await updateChipsByCategory(draft.chipSelections);
+      if (safeToSaveChips) {
+        await updateChipsByCategory(draft.chipSelections);
+      } else {
+        openToast({
+          message: "Couldn't load your chips — try again in a moment.",
+        });
+      }
     } catch {
       // Chip save failed, continue with profile save
     }

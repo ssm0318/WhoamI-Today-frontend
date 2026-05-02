@@ -22,6 +22,7 @@ import { postCheckIn } from '@utils/apis/checkIn';
 import { writeLastPickedAt, writeSnoozeUntilEndOfDay } from '@utils/browseModeActiveSession';
 import { HiddenModeKey, readHiddenModes, writeHiddenModes } from '@utils/browseModeHiddenModes';
 import { saveLastPickedMode } from '@utils/browseModeLastPick';
+import { getLastVisibility, VisibilityMemoryKeys } from '@utils/visibilityMemory';
 import BrowseModeCustomizeSheet from './BrowseModeCustomizeSheet';
 import BrowseModeStepMode, { ModeChoice } from './BrowseModeStepMode';
 import BrowseModeWishlistSheet from './BrowseModeWishlistSheet';
@@ -261,6 +262,55 @@ function BrowseModeSessionPrompt({
     [t, openCustomize],
   );
 
+  // Side-effect helper: write `targetBattery` back to the user's CheckIn so
+  // the in-app battery chip and the home tab's friend-card battery match the
+  // mode the user just picked. Critical detail — the `battery_visibility`
+  // sent here MUST follow the user's last-used visibility for the battery
+  // component (read from localStorage). Earlier we hardcoded
+  // `DEFAULT_VISIBILITY.battery` which silently overwrote the user's
+  // preference (e.g. they were sharing battery to close-friends-only and
+  // picking a mode flipped it back to friends).
+  //
+  // The "no existing checkIn" branch creates a fresh check-in so the
+  // server has a row to attach the battery to. Mood / thought / song
+  // remain empty / default so we don't fabricate data the user didn't
+  // intend to share.
+  const syncBatteryToCheckIn = useCallback(
+    async (targetBattery: SocialBattery): Promise<SocialBattery | null> => {
+      const targetBatteryVisibility =
+        getLastVisibility(VisibilityMemoryKeys.checkInBattery) ?? DEFAULT_VISIBILITY.battery;
+      try {
+        if (checkIn) {
+          await postCheckIn({
+            ...checkIn,
+            social_battery: targetBattery,
+            battery_visibility: targetBatteryVisibility,
+          });
+        } else {
+          await postCheckIn({
+            social_battery: targetBattery,
+            mood: [],
+            thought: '',
+            track_id: '',
+            visibility: [ComponentVisibility.FRIENDS],
+            battery_visibility: targetBatteryVisibility,
+            mood_visibility: DEFAULT_VISIBILITY.mood,
+            song_visibility: DEFAULT_VISIBILITY.song,
+            thought_visibility: DEFAULT_VISIBILITY.thought,
+          });
+        }
+        await fetchCheckIn();
+        return targetBattery;
+      } catch {
+        // Sync failures are non-fatal — the mode pick still applies. Surface
+        // by returning null so the caller can suppress the "battery synced"
+        // toast variant.
+        return null;
+      }
+    },
+    [checkIn, fetchCheckIn],
+  );
+
   const applyMode = useCallback(
     async (
       mode: ActiveBrowseMode,
@@ -323,39 +373,8 @@ function BrowseModeSessionPrompt({
       }
       trackEvent('browse_mode_picked', eventParams);
 
-      let batteryApplied: SocialBattery | null = null;
-      if (syncBattery && suggestedBattery) {
-        try {
-          // Existing check-in → spread it whole and override social_battery
-          // (preserves the user's actual visibility, mood, thought, etc.).
-          // No check-in yet → create a fresh one with empty content fields
-          // and DEFAULT_VISIBILITY values; only the battery carries
-          // meaningful content. Backend requires `visibility` on create,
-          // so we always pass it.
-          if (checkIn) {
-            await postCheckIn({
-              ...checkIn,
-              social_battery: suggestedBattery,
-            });
-          } else {
-            await postCheckIn({
-              social_battery: suggestedBattery,
-              mood: [],
-              thought: '',
-              track_id: '',
-              visibility: [ComponentVisibility.FRIENDS],
-              battery_visibility: DEFAULT_VISIBILITY.battery,
-              mood_visibility: DEFAULT_VISIBILITY.mood,
-              song_visibility: DEFAULT_VISIBILITY.song,
-              thought_visibility: DEFAULT_VISIBILITY.thought,
-            });
-          }
-          await fetchCheckIn();
-          batteryApplied = suggestedBattery;
-        } catch {
-          // Sync is best-effort — don't block mode activation on a battery write failure.
-        }
-      }
+      const batteryApplied =
+        syncBattery && suggestedBattery ? await syncBatteryToCheckIn(suggestedBattery) : null;
 
       if (!keepPickerOpen) onFinish();
 
@@ -389,11 +408,10 @@ function BrowseModeSessionPrompt({
       }
     },
     [
-      checkIn,
-      fetchCheckIn,
       myProfile?.id,
       onFinish,
       openToast,
+      syncBatteryToCheckIn,
       trackEvent,
       setActiveBuiltIn,
       setActiveCustom,
@@ -504,17 +522,34 @@ function BrowseModeSessionPrompt({
       }
       pickedInSessionRef.current = true;
       customizeOutcomeRef.current = 'applied';
+      // Mirror applyMode's battery sync: when the user has the sync toggle on
+      // and the snapshot has a default battery, write it back to their
+      // CheckIn so the apply-without-saving path doesn't silently diverge
+      // from the saved-preset path. Same visibility-from-last-pick rule.
+      const batteryApplied =
+        syncBattery && snapshot.default_battery
+          ? await syncBatteryToCheckIn(snapshot.default_battery)
+          : null;
       // Pick log + Firebase event (best-effort, mirrors applyMode).
       logBrowseModePick({ kind: 'apply_without_saving' });
       trackEvent('browse_mode_picked', {
         kind: 'apply_without_saving',
         keep_picker_open: 'false',
-        battery_synced: 'false',
+        battery_synced: batteryApplied ? 'true' : 'false',
         skip_today: skipToday ? 'true' : 'false',
       });
       onFinish();
     },
-    [closeCustomize, editingPreset?.id, myProfile?.id, onFinish, skipToday, trackEvent],
+    [
+      closeCustomize,
+      editingPreset?.id,
+      myProfile?.id,
+      onFinish,
+      skipToday,
+      syncBattery,
+      syncBatteryToCheckIn,
+      trackEvent,
+    ],
   );
 
   const handleConfirmDelete = useCallback(async () => {
