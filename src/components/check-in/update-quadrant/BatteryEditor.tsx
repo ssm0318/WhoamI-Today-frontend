@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
+import styled from 'styled-components';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
-import { Layout } from '@design-system';
+import { Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { ComponentVisibility, SocialBattery } from '@models/checkIn';
 import {
   getLastVisibility,
@@ -67,7 +68,7 @@ export default function BatteryEditor({
       onArchive={onArchive}
       title="Social Battery"
     >
-      <Layout.FlexRow w="100%" gap={8} mb={16} style={{ flexWrap: 'wrap' }}>
+      <Layout.FlexRow w="100%" gap={8} mb={8} style={{ flexWrap: 'wrap' }}>
         {BATTERY_OPTIONS.map((battery) => (
           <SocialBatteryChip
             key={battery}
@@ -77,7 +78,32 @@ export default function BatteryEditor({
           />
         ))}
       </Layout.FlexRow>
+      {draftValue && (
+        <Layout.FlexRow w="100%" justifyContent="flex-end" mb={16}>
+          <ClearButton type="button" onClick={() => setDraftValue(null)}>
+            <SvgIcon name="close" size={14} color="MEDIUM_GRAY" />
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              Clear
+            </Typo>
+          </ClearButton>
+        </Layout.FlexRow>
+      )}
       <VisibilityToggle value={draftVisibility} onChange={handleVisibilityChange} />
     </EditorPopup>
   );
 }
+
+const ClearButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  cursor: pointer;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: ${Colors.LIGHT};
+  }
+`;

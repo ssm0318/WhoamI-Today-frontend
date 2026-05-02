@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
-import { Colors, Layout, Typo } from '@design-system';
+import { Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { ComponentVisibility } from '@models/checkIn';
 import {
   getLastVisibility,
@@ -79,7 +79,17 @@ export default function ThoughtEditor({
           rows={3}
           maxLength={MAX_LENGTH}
         />
-        <Layout.FlexRow w="100%" justifyContent="flex-end">
+        <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
+          {draftValue ? (
+            <ClearButton type="button" onClick={() => setDraftValue('')}>
+              <SvgIcon name="close" size={14} color="MEDIUM_GRAY" />
+              <Typo type="label-medium" color="MEDIUM_GRAY">
+                Clear
+              </Typo>
+            </ClearButton>
+          ) : (
+            <span />
+          )}
           <Typo type="label-small" color="MEDIUM_GRAY">
             {draftValue.length}/{MAX_LENGTH}
           </Typo>
@@ -89,6 +99,21 @@ export default function ThoughtEditor({
     </EditorPopup>
   );
 }
+
+const ClearButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  cursor: pointer;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: ${Colors.LIGHT};
+  }
+`;
 
 const StyledTextArea = styled.textarea`
   width: 100%;
