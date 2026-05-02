@@ -40,9 +40,6 @@ function QuestionsOfTheDaySection() {
               key={question.id}
               id={question.id}
               content={question.content}
-              date={
-                question.selected_dates?.[question.selected_dates.length - 1] ?? question.created_at
-              }
               widthMode="full"
             />
           ))}
