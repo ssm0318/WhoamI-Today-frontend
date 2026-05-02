@@ -11,6 +11,7 @@ import {
 } from '@constants/url';
 import { Button, CheckBox, Layout, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { useBoundStore } from '@stores/useBoundStore';
 import { validateBirthdate, validateInviterUsername } from '@utils/apis/user';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
@@ -30,6 +31,7 @@ function Info() {
   }));
   const navigate = useNavigate();
   const postMessage = usePostAppMessage();
+  const trackEvent = useTrackEvent();
 
   const privacyPolicyLink =
     i18n.language === 'ko-KR'
@@ -67,6 +69,7 @@ function Info() {
   const onClickNext = () => {
     if (!isValideDateOfBirth(dateOfBirthInput)) {
       setDateOfBirthError(t('date_of_birth_error'));
+      trackEvent('signup_validation_error', { step: 'info', error_type: 'date_of_birth' });
       return;
     }
 
@@ -95,6 +98,7 @@ function Info() {
       },
       onError: () => {
         setFriendUsernameError(t('friend_username_error'));
+        trackEvent('signup_validation_error', { step: 'info', error_type: 'friend_code' });
       },
     });
   };
@@ -106,12 +110,14 @@ function Info() {
     validateBirthdate({
       birthdate,
       onSuccess: () => {
+        trackEvent('signup_step_advanced', { step: 'info' });
         navigate('/signup/password');
       },
       onError: (errorMsg: string) => {
         openToast({
           message: errorMsg,
         });
+        trackEvent('signup_validation_error', { step: 'info', error_type: 'birthdate_api' });
       },
     });
 
