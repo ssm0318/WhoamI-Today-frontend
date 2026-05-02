@@ -20,6 +20,7 @@ import ResponseItem from '@components/response/response-item/ResponseItem';
 import { getDayOfYear } from '@components/share/MissionOfTheDay';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import { useChipCategories } from '@hooks/useChipCategories';
 import { useMissions } from '@hooks/useMissions';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSaveAndHide } from '@hooks/useSaveAndHide';
@@ -29,6 +30,7 @@ import {
   DiscoverFilterLabel,
   DiscoverMusicTrack,
   DiscoverResultItem,
+  ProfileSuggestionField,
 } from '@models/discover';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
@@ -117,21 +119,37 @@ function Discover() {
     };
   }, [missions]);
 
+  const { categories: chipCategories } = useChipCategories();
+
   const profileSuggestionCard: DiscoverResultItem | null = useMemo(() => {
     if (!myProfile) return null;
-    const missingFields: string[] = [];
-    if (!myProfile.pronouns) missingFields.push('Pronouns');
-    if (!myProfile.user_interests || myProfile.user_interests.length === 0)
-      missingFields.push('Interests');
-    if (!myProfile.user_personas || myProfile.user_personas.length === 0)
-      missingFields.push('Personas');
-    if (!myProfile.profile_image) missingFields.push('Profile Photo');
+    const missingFields: ProfileSuggestionField[] = [];
+
+    if (!myProfile.pronouns) missingFields.push({ label: 'Pronouns', tab: 'pronouns_bio' });
+    if (!myProfile.bio) missingFields.push({ label: 'Bio', tab: 'pronouns_bio' });
+
+    // One chip per chip-category the user hasn't filled — `chips_by_category` plus user-created
+    // `custom_chips` together represent everything the Interests tab tracks. The legacy
+    // `user_personas` field is intentionally ignored: persona is now the `online_persona`
+    // chip category, not a separate concept.
+    const chipsByCategory = myProfile.chips_by_category ?? {};
+    const customChips = myProfile.custom_chips ?? [];
+    chipCategories.forEach((cat) => {
+      const hasStored = (chipsByCategory[cat.key] ?? []).length > 0;
+      const hasCustom = customChips.some((c) => c.category === cat.key);
+      if (!hasStored && !hasCustom) {
+        missingFields.push({ label: cat.label, tab: 'interests' });
+      }
+    });
+
+    if (!myProfile.profile_image) missingFields.push({ label: 'Profile Photo' });
+
     if (missingFields.length === 0) return null;
     return {
       type: 'ProfileSuggestion' as const,
       body: { missingFields },
     };
-  }, [myProfile]);
+  }, [myProfile, chipCategories]);
 
   const { data: pastSurveysData } = useSWR('/surveys/past/', getPastSurveys, {
     revalidateOnFocus: false,

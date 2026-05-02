@@ -10,13 +10,19 @@ export const ProfileSuggestionWrapper = styled(Layout.FlexCol)`
   box-sizing: border-box;
 `;
 
-export const MissingFieldChip = styled.div`
+export const MissingFieldChip = styled.button`
   display: inline-flex;
   align-items: center;
   padding: 4px 12px;
   border-radius: 20px;
   background-color: ${Colors.WHITE};
   border: 1px solid ${Colors.LIGHT_GRAY};
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    opacity: 0.85;
+  }
 `;
 
 export const EditButtonWrapper = styled.div`

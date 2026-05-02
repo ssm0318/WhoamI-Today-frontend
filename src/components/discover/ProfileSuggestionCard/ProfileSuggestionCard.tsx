@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Button, Layout, Typo } from '@design-system';
-import { ProfileSuggestionCardBody } from '@models/discover';
+import { ProfileSuggestionCardBody, ProfileSuggestionField } from '@models/discover';
 import * as S from './ProfileSuggestionCard.styled';
 
 interface ProfileSuggestionCardProps {
@@ -12,6 +12,10 @@ function ProfileSuggestionCard({ suggestion }: ProfileSuggestionCardProps) {
 
   const handleEditProfile = () => {
     navigate('/settings/edit-profile');
+  };
+
+  const handleFieldClick = (field: ProfileSuggestionField) => {
+    navigate(field.tab ? `/settings/edit-profile?tab=${field.tab}` : '/settings/edit-profile');
   };
 
   return (
@@ -27,9 +31,13 @@ function ProfileSuggestionCard({ suggestion }: ProfileSuggestionCardProps) {
 
       <Layout.FlexRow gap={8} style={{ flexWrap: 'wrap' }}>
         {suggestion.missingFields.map((field) => (
-          <S.MissingFieldChip key={field}>
+          <S.MissingFieldChip
+            key={`${field.tab ?? 'profile'}-${field.label}`}
+            type="button"
+            onClick={() => handleFieldClick(field)}
+          >
             <Typo type="label-medium" color="PRIMARY">
-              + {field}
+              + {field.label}
             </Typo>
           </S.MissingFieldChip>
         ))}

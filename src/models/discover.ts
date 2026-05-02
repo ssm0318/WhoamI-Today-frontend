@@ -75,8 +75,14 @@ export interface MissionPromptCardBody {
 }
 
 // ProfileSuggestion Card Body (frontend-only injection)
+export interface ProfileSuggestionField {
+  label: string;
+  /** Which Edit Profile tab the chip should open. Omit for fields outside the tabbed sections (e.g. profile photo). */
+  tab?: 'interests' | 'pronouns_bio';
+}
+
 export interface ProfileSuggestionCardBody {
-  missingFields: string[];
+  missingFields: ProfileSuggestionField[];
 }
 
 // SurveyResults Card Body (frontend-only injection)
