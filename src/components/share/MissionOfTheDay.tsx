@@ -1,14 +1,11 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Layout, Typo } from '@design-system';
-import { useMissions } from '@hooks/useMissions';
+import { useDailyMission } from '@hooks/useDailyMission';
+import { MissionType } from '@models/mission';
 
-export type MissionType = 'song' | 'question' | 'text' | 'compliment';
-
-export interface Mission {
-  prompt: string;
-  type: MissionType;
-}
+export type { MissionType } from '@models/mission';
 
 export function getDayOfYear(): number {
   const now = new Date();
@@ -40,20 +37,30 @@ export function markMissionCompleted(): void {
   );
 }
 
+interface MissionCallbackArg {
+  prompt: string;
+  type: MissionType;
+}
+
 interface Props {
-  onDoMission: (mission: Mission) => void;
+  onDoMission: (mission: MissionCallbackArg) => void;
 }
 
 function MissionOfTheDay({ onDoMission }: Props) {
-  const { missions } = useMissions();
-  const todayMission = missions[getDayOfYear() % missions.length];
+  const { i18n } = useTranslation();
+  const { mission } = useDailyMission();
   const [attempts, setAttempts] = useState(getAttemptsToday());
+
+  if (!mission) return null;
+
+  const prompt =
+    i18n.language === 'ko' ? mission.prompt_ko || mission.prompt_en : mission.prompt_en;
 
   const allUsed = attempts >= MAX_ATTEMPTS;
 
   const handleDoIt = () => {
     if (allUsed) return;
-    onDoMission(todayMission);
+    onDoMission({ prompt, type: mission.type });
   };
 
   // Refresh attempts on re-render (e.g. returning from post flow)
@@ -72,7 +79,7 @@ function MissionOfTheDay({ onDoMission }: Props) {
   return (
     <Layout.FlexCol gap={12} w="100%">
       <Typo type="title-medium" color="WHITE">
-        {todayMission.prompt}
+        {prompt}
       </Typo>
       <ActionButton onClick={handleDoIt} $isCompleted={allUsed}>
         <Typo type="label-large" color={allUsed ? 'MEDIUM_GRAY' : 'PRIMARY'} fontWeight={600}>

@@ -21,7 +21,7 @@ import ResponseItem from '@components/response/response-item/ResponseItem';
 import { getDayOfYear } from '@components/share/MissionOfTheDay';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
-import { useMissions } from '@hooks/useMissions';
+import { useDailyMission } from '@hooks/useDailyMission';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSaveAndHide } from '@hooks/useSaveAndHide';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
@@ -78,7 +78,8 @@ function Discover() {
   const discoverHidden = !!allowedTabs && !allowedTabs.includes('discover');
   const fallbackPath = allowedTabs && allowedTabs.length > 0 ? `/${allowedTabs[0]}` : '/friends';
 
-  const { missions } = useMissions();
+  const { mission: dailyMission } = useDailyMission();
+  const { i18n } = useTranslation();
   const discoverFilterList = [DiscoverFilter.MUTUAL_FRIENDS, DiscoverFilter.MUTUAL_TRAITS];
   const { scrollRef } = useRestoreScrollPosition('discoverPage');
 
@@ -111,12 +112,16 @@ function Discover() {
 
   // Build synthetic cards to inject into the feed
   const missionPromptCard: DiscoverResultItem | null = useMemo(() => {
-    const todayMission = missions[getDayOfYear() % missions.length];
+    if (!dailyMission) return null;
+    const prompt =
+      i18n.language === 'ko'
+        ? dailyMission.prompt_ko || dailyMission.prompt_en
+        : dailyMission.prompt_en;
     return {
       type: 'MissionPrompt' as const,
-      body: { prompt: todayMission.prompt, missionType: todayMission.type },
+      body: { prompt, missionType: dailyMission.type },
     };
-  }, [missions]);
+  }, [dailyMission, i18n.language]);
 
   const profileSuggestionCard: DiscoverResultItem | null = useMemo(() => {
     if (!myProfile) return null;
