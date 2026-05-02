@@ -34,11 +34,17 @@ function MutualTraitsList({ traits, isLoading, emptyText }: MutualTraitsListProp
     );
   }
 
+  // Bucket each trait by its server-provided category when present; otherwise
+  // fall back to chip-name matching. Without this, chip names that appear in
+  // multiple categories (e.g. "Instagram" lives in both favorite_platform and
+  // least_favorite_platform) would surface in every matching bucket.
   const groupedByCategory = categories
     .map((cat) => ({
       category: cat,
       traits: traits.filter((trait) =>
-        cat.chips.some((c) => normalizeChipText(c) === normalizeChipText(trait.content)),
+        trait.category
+          ? trait.category === cat.key
+          : cat.chips.some((c) => normalizeChipText(c) === normalizeChipText(trait.content)),
       ),
     }))
     .filter((group) => group.traits.length > 0);

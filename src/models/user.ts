@@ -54,6 +54,8 @@ export interface UserFollowStatus {
 export interface MutualTrait {
   id: number;
   content: string;
+  // Backend serves category for Interest-backed traits; absent for personas.
+  category?: string;
 }
 
 export interface UserProfile extends User, UserFollowStatus {
