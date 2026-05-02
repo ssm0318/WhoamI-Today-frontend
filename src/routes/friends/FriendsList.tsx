@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 // TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
 // import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -26,7 +27,11 @@ function FriendsList() {
   const [t] = useTranslation('translation');
   // TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
   // const navigate = useNavigate();
-  const [selectedTab, setSelectedTab] = useState<TabType>('check-in');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedTab: TabType = searchParams.get('tab') === 'posts' ? 'posts' : 'check-in';
+  const setSelectedTab = (next: TabType) => {
+    setSearchParams(next === 'posts' ? { tab: 'posts' } : {}, { replace: true });
+  };
   // Browse mode can prefill the close-friends-only filter when "Just my people" is active.
   const browseModeForcesCloseFriends = useBoundStore(
     (state) => !!state.activeBrowseMode?.config.filters.friends_close_only,
