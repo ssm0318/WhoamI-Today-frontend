@@ -3,8 +3,10 @@ import { ColorKeys, Typo } from '@design-system';
 
 export type PostTypeTagVariant = 'mission' | 'photo' | 'question' | 'regular';
 
+// Avoid PRIMARY purple — already used heavily for nav, buttons, and mission
+// composer chrome. Each variant gets its own non-purple accent color.
 const TYPE_COLOR: Record<PostTypeTagVariant, ColorKeys> = {
-  mission: 'PRIMARY',
+  mission: 'TERTIARY_GREEN',
   photo: 'TERTIARY_PINK',
   question: 'TERTIARY_BLUE',
   regular: 'DARK_GRAY',
@@ -25,7 +27,7 @@ function PostTypeTag({ variant }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'post_type' });
   return (
     <Typo type="label-medium" color={TYPE_COLOR[variant]}>
-      {t(TYPE_KEY[variant])}
+      ✦ {t(TYPE_KEY[variant])}
     </Typo>
   );
 }
