@@ -64,7 +64,6 @@ function AllQuestions() {
                           key={question.id}
                           id={question.id}
                           content={question.content}
-                          date={questionGroup.date}
                           widthMode="full"
                           missionMode={missionMode}
                         />
