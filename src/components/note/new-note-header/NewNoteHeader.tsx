@@ -1,11 +1,12 @@
 import { AxiosError } from 'axios';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import UploadLoadingOverlay from '@components/_common/upload-loading-overlay/UploadLoadingOverlay';
 import { markMissionCompleted } from '@components/share/MissionOfTheDay';
 import { Layout, Typo } from '@design-system';
 import { useDelayedVisible } from '@hooks/useDelayedVisible';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { NewNoteForm } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { patchNote, postNote } from '@utils/apis/note';
@@ -29,6 +30,34 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
 
   const fromShare = location.state?.fromShare;
   const missionMode = location.state?.missionMode;
+  const trackEvent = useTrackEvent();
+  const publishedRef = useRef(false);
+  const isEditing = !!noteId;
+  // Latest noteInfo via ref so the unmount cleanup checks the most recent
+  // content/image state — unmount fires AFTER state is frozen.
+  const noteInfoRef = useRef(noteInfo);
+  noteInfoRef.current = noteInfo;
+
+  useEffect(() => {
+    trackEvent('note_compose_started', {
+      mode: isEditing ? 'edit' : 'create',
+      mission_mode: missionMode ? 'true' : 'false',
+      from_share: fromShare ? 'true' : 'false',
+    });
+    return () => {
+      if (publishedRef.current) return;
+      // had_content distinguishes "opened then immediately backed out" from
+      // "wrote / attached image then walked away" — different friction signals.
+      const hasContent =
+        !!noteInfoRef.current.content ||
+        (noteInfoRef.current.images && noteInfoRef.current.images.length > 0);
+      trackEvent('note_compose_abandoned', {
+        mode: isEditing ? 'edit' : 'create',
+        had_content: hasContent ? 'true' : 'false',
+      });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const cancelPost = () => {
     if (fromShare) {
@@ -52,6 +81,13 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
         markMissionCompleted();
       }
 
+      publishedRef.current = true;
+      trackEvent('note_compose_published', {
+        mode: isEditing ? 'edit' : 'create',
+        content_length: noteInfo.content?.length ?? 0,
+        image_count: noteInfo.images?.length ?? 0,
+        mission_mode: missionMode ? 'true' : 'false',
+      });
       navigate(`/notes/${newNoteId}`, { state: { new: true, fromShare } });
       openToast({
         message: t(status === 'edit' ? 'updated' : 'posted'),

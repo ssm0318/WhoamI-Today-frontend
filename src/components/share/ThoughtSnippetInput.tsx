@@ -1,6 +1,7 @@
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Layout, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 
 const ROTATING_PLACEHOLDERS = [
   'What is on your mind right now?',
@@ -34,20 +35,40 @@ function ThoughtSnippetInput({ visible, onClose, onSubmit }: Props) {
   const [text, setText] = useState('');
   const [placeholder] = useState(getRandomPlaceholder);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const trackEvent = useTrackEvent();
+  // Mirrors the photo / note pattern: submitted=true on the success path
+  // suppresses the abandoned event on close.
+  const submittedRef = useRef(false);
 
   useEffect(() => {
     if (visible) {
+      submittedRef.current = false;
+      trackEvent('thought_snippet_opened');
       setTimeout(() => inputRef.current?.focus(), 100);
     } else {
       setText('');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   const handleSubmit = () => {
     const trimmed = text.trim();
     if (!trimmed) return;
+    submittedRef.current = true;
+    trackEvent('thought_snippet_submitted', { length: trimmed.length });
     onSubmit(trimmed);
     setText('');
+    onClose();
+  };
+
+  const handleClose = () => {
+    if (!submittedRef.current) {
+      // had_text distinguishes "opened, typed something, closed" from
+      // "opened then immediately closed" — different friction signals.
+      trackEvent('thought_snippet_abandoned', {
+        had_text: text.trim().length > 0 ? 'true' : 'false',
+      });
+    }
     onClose();
   };
 
@@ -61,7 +82,7 @@ function ThoughtSnippetInput({ visible, onClose, onSubmit }: Props) {
   if (!visible) return null;
 
   return (
-    <Overlay onClick={onClose}>
+    <Overlay onClick={handleClose}>
       <InputCard onClick={(e) => e.stopPropagation()}>
         <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" pb={8}>
           <Typo type="title-medium">Be Random</Typo>

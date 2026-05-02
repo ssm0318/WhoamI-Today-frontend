@@ -1,10 +1,11 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import NewNoteImageEdit from '@components/note/new-note-image-edit/NewNoteImageEdit';
 import SubHeader from '@components/sub-header/SubHeader';
 import { Layout, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { ComponentVisibility } from '@models/checkIn';
 import { PostVisibility, ShareType } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -37,6 +38,28 @@ function PhotoOfTheDayFlow() {
     setLastVisibility(VisibilityMemoryKeys.share.photo, v);
   };
   const [isPosting, setIsPosting] = useState(false);
+  const trackEvent = useTrackEvent();
+  // Track which step the user reached so the unmount-abandonment event
+  // can record where in the funnel they bailed. Stored in a ref so the
+  // cleanup callback sees the latest value (state would be stale).
+  const stepRef = useRef(step);
+  stepRef.current = step;
+  const publishedRef = useRef(false);
+
+  // Fire `started` once on mount + `abandoned` on unmount unless they
+  // published. The funnel is:
+  //   started → picked → cropped → published
+  // and abandoned can fire at any step, so the event includes the
+  // last-reached step in `last_step`.
+  useEffect(() => {
+    trackEvent('photo_flow_started', { entry_step: step });
+    return () => {
+      if (!publishedRef.current) {
+        trackEvent('photo_flow_abandoned', { last_step: stepRef.current });
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlePickGallery = () => {
     fileInputRef.current?.click();
@@ -49,6 +72,7 @@ function PhotoOfTheDayFlow() {
       if (typeof dataUrl !== 'string') return;
       setRawImageUrl(dataUrl);
       setStep('edit');
+      trackEvent('photo_flow_picked');
     } catch {
       openToast({ message: 'Failed to load image' });
     }
@@ -57,6 +81,7 @@ function PhotoOfTheDayFlow() {
   const handleCropComplete = (img: CroppedImg) => {
     setCroppedImg(img);
     setStep('caption');
+    trackEvent('photo_flow_cropped');
   };
 
   const handlePost = async () => {
@@ -68,6 +93,12 @@ function PhotoOfTheDayFlow() {
         images: [croppedImg],
         visibility: [visibility as unknown as PostVisibility],
         share_type: ShareType.PHOTO_OF_THE_DAY,
+      });
+      // Mark BEFORE navigate so the unmount cleanup doesn't fire abandoned.
+      publishedRef.current = true;
+      trackEvent('photo_flow_published', {
+        caption_length: caption.length,
+        visibility: String(visibility),
       });
       navigate(`/notes/${newNoteId}`, { state: { new: true } });
       openToast({ message: 'Photo posted!' });

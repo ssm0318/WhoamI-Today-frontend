@@ -6,6 +6,7 @@ import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonD
 import Icon from '@components/_common/icon/Icon';
 import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import {
   ChatEmojiDict,
   ChatEmojiType,
@@ -99,6 +100,16 @@ function ChatMessageInput({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const [t] = useTranslation('translation', { keyPrefix: 'chat' });
+  const trackEvent = useTrackEvent();
+  // Engagement signal: did the user start composing in this room? Set when
+  // first character or image is added; reset after a successful send so
+  // multi-message sessions don't double-count abandonment. Used by the
+  // unmount cleanup to fire `chat_compose_abandoned` only when relevant.
+  const hasContentRef = useRef(false);
+  // True iff the user typed anything during this mount — separate from
+  // hasContent because that gets reset on send. This one stays true so we
+  // track engagement ("typed something") regardless of whether they sent.
+  const everTypedRef = useRef(false);
 
   const maxHeight = isAnnouncement ? MAX_HEIGHT_ANNOUNCEMENT : MAX_HEIGHT_DEFAULT;
 
@@ -118,8 +129,36 @@ function ChatMessageInput({
     }
   }, [replyTarget]);
 
+  // Fire `chat_compose_abandoned` on unmount IF the user typed something
+  // (or attached an image) but the input still has content (they didn't
+  // send the last draft). This catches "wrote a long message, navigated
+  // away" — which is invisible to the backend.
+  useEffect(() => {
+    return () => {
+      if (hasContentRef.current) {
+        trackEvent('chat_compose_abandoned', {
+          is_group: isGroup ? 'true' : 'false',
+          is_announcement: isAnnouncement ? 'true' : 'false',
+        });
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
+    // Mark composition started on first non-empty input — fires once per
+    // unmount cycle, distinct from `_sent` (success) and `_abandoned`
+    // (unmount with content). Tells us how many users started typing,
+    // which the backend can't see at all.
+    if (!everTypedRef.current && e.target.value.length > 0) {
+      everTypedRef.current = true;
+      trackEvent('chat_compose_started', {
+        is_group: isGroup ? 'true' : 'false',
+        is_announcement: isAnnouncement ? 'true' : 'false',
+      });
+    }
+    hasContentRef.current = e.target.value.length > 0 || !!selectedImage;
     if (onTyping) {
       const now = Date.now();
       if (now - lastTypingSent.current > TYPING_DEBOUNCE_MS) {
@@ -170,6 +209,9 @@ function ChatMessageInput({
       setSelectedImage(null);
       setImagePreview(null);
       onClearReply();
+      // Successful send — clear the abandonment guard. (everTypedRef
+      // intentionally NOT reset: that's a per-mount engagement flag.)
+      hasContentRef.current = false;
     } catch (err) {
       const axiosErr = err as AxiosError<{ detail?: string }>;
       const status = axiosErr?.response?.status;
@@ -192,6 +234,7 @@ function ChatMessageInput({
     const file = e.target.files?.[0];
     if (file) {
       setSelectedImage(file);
+      hasContentRef.current = true;
       const reader = new FileReader();
       reader.onload = (ev) => {
         setImagePreview(ev.target?.result as string);
@@ -204,6 +247,7 @@ function ChatMessageInput({
   const removeImage = () => {
     setSelectedImage(null);
     setImagePreview(null);
+    hasContentRef.current = inputValue.length > 0;
   };
 
   return (
