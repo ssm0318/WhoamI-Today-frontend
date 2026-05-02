@@ -6,8 +6,6 @@ import { useShallow } from 'zustand/react/shallow';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import ChatRequestButton from '@components/_common/chat-request-button/ChatRequestButton';
 import FriendStatus from '@components/_common/friend-status/FriendStatus';
-import InfoPopup from '@components/_common/info-popup/InfoPopup';
-import MutualTraitsList from '@components/_common/mutual-meta-text/MutualTraitsList';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SubscriptionPopup from '@components/friends/subscription-popup/SubscriptionPopup';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
@@ -128,7 +126,6 @@ function Profile({ user }: ProfileProps) {
   };
 
   const [showMoreAbout, setShowMoreAbout] = useState(false);
-  const [showSharedTraitsModal, setShowSharedTraitsModal] = useState(false);
 
   const isVerQ = !!featureFlags?.postsVerQ;
 
@@ -350,49 +347,7 @@ function Profile({ user }: ProfileProps) {
               <ChatRequestButton user={user} />
             </Layout.FlexRow>
           )}
-          {/* Mutual friends + shared traits sit on the same row, separated by
-              a "·" so the trait link doesn't float on its own line. */}
-          {(() => {
-            const { mutuals } = user as UserProfile;
-            const hasMutualFriends = mutuals && mutuals.length > 0;
-            const traits =
-              !featureFlags?.postsVerQ && !isMyProfile(user) && viewData
-                ? [...(viewData.mutual_interests ?? []), ...(viewData.mutual_personas ?? [])]
-                : [];
-            const hasTraits = traits.length > 0;
-            if (!hasMutualFriends && !hasTraits) return null;
-            return (
-              <>
-                <Layout.FlexRow alignItems="center" gap={6} style={{ flexWrap: 'wrap' }}>
-                  {hasMutualFriends && <MutualFriendsInfo mutualFriends={mutuals} />}
-                  {hasMutualFriends && hasTraits && (
-                    <Typo type="label-medium" color="MEDIUM_GRAY">
-                      ·
-                    </Typo>
-                  )}
-                  {hasTraits && (
-                    <SharedTraitsButton
-                      type="button"
-                      onClick={() => setShowSharedTraitsModal(true)}
-                    >
-                      <Typo type="label-medium" color="PRIMARY" fontWeight={500}>
-                        {t('mutual_traits_count', { count: traits.length })}
-                      </Typo>
-                    </SharedTraitsButton>
-                  )}
-                </Layout.FlexRow>
-                {hasTraits && (
-                  <InfoPopup
-                    isOpen={showSharedTraitsModal}
-                    onClose={() => setShowSharedTraitsModal(false)}
-                    title={t('mutual_traits_title')}
-                  >
-                    <MutualTraitsList traits={traits} isLoading={false} emptyText="" />
-                  </InfoPopup>
-                )}
-              </>
-            );
-          })()}
+          <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />
         </>
       )}
       {/* my-page actions: Edit Profile + Public/Private toggle (Q) or View As (W) */}
@@ -489,18 +444,6 @@ const ViewAsButton = styled(Button.Secondary)`
     color: ${({ theme }) => theme.PRIMARY};
     font-size: 14.4px;
   }
-`;
-
-const SharedTraitsButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  padding: 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 2px;
 `;
 
 function AccountStatusBadge({ children }: { children: ReactNode }) {

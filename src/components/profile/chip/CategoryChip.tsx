@@ -7,15 +7,29 @@ interface Props {
   category: ChipCategory;
   isSelected?: boolean;
   isCustom?: boolean;
+  /** Render in a distinct (pink) color to mark this chip as shared with the viewer. */
+  isShared?: boolean;
   onClick?: (e: MouseEvent) => void;
 }
 
-function CategoryChip({ label, category, isSelected = false, isCustom = false, onClick }: Props) {
-  const colors = CHIP_CATEGORY_COLORS[category] ?? {
+// Shared-trait highlight palette. Distinct from the standard purple so users
+// can tell at a glance which chips overlap with their own profile.
+const SHARED_COLORS = { bg: '#FFE6F4', text: '#FF00A8', border: '#FF00A8' };
+
+function CategoryChip({
+  label,
+  category,
+  isSelected = false,
+  isCustom = false,
+  isShared = false,
+  onClick,
+}: Props) {
+  const baseColors = CHIP_CATEGORY_COLORS[category] ?? {
     bg: '#F3E8FF',
     text: '#8700FF',
     border: '#8700FF',
   };
+  const colors = isShared ? SHARED_COLORS : baseColors;
 
   return (
     <ChipContainer

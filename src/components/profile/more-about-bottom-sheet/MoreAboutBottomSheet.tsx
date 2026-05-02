@@ -1,6 +1,7 @@
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import Icon from '@components/_common/icon/Icon';
 import { Layout, SvgIcon, Typo } from '@design-system';
@@ -47,6 +48,29 @@ function MoreAboutBottomSheet({
   const customChips = user?.custom_chips ?? [];
   const legacyPersonas = (user?.user_personas ?? []).map((p) => p.replace(/^#+/, ''));
 
+  // Build a set of chip names (normalized) the viewer also has — used to highlight
+  // shared traits in a distinct color. Mutual interests are category-specific so we
+  // index by `${category}::${normalized name}`; mutual personas are name-only.
+  const profileWithMutuals = user as Partial<UserProfile>;
+  const sharedKeys = new Set<string>();
+  (profileWithMutuals?.mutual_interests ?? []).forEach((m) => {
+    const key = m.category
+      ? `${m.category}::${normalizeChipText(m.content)}`
+      : `*::${normalizeChipText(m.content)}`;
+    sharedKeys.add(key);
+  });
+  const sharedPersonaNames = new Set(
+    (profileWithMutuals?.mutual_personas ?? []).map((m) => normalizeChipText(m.content)),
+  );
+
+  const isChipShared = (chip: string, categoryKey: string): boolean => {
+    if (sharedKeys.has(`${categoryKey}::${normalizeChipText(chip)}`)) return true;
+    if (sharedKeys.has(`*::${normalizeChipText(chip)}`)) return true;
+    if (categoryKey === 'online_persona' && sharedPersonaNames.has(normalizeChipText(chip)))
+      return true;
+    return false;
+  };
+
   const groupedByCategory = categories
     .map((cat) => {
       const stored = chipsByCategory[cat.key] ?? [];
@@ -67,6 +91,10 @@ function MoreAboutBottomSheet({
     })
     .filter((group) => group.chips.length > 0);
 
+  const hasAnySharedChip = groupedByCategory.some(({ category, chips }) =>
+    chips.some((chip) => isChipShared(chip, category.key)),
+  );
+
   return createPortal(
     <BottomModal visible={visible} onClose={onClose}>
       <Layout.FlexCol w="100%" ph={16} pv={16} gap={16}>
@@ -83,6 +111,17 @@ function MoreAboutBottomSheet({
           )}
         </Layout.FlexRow>
 
+        {/* Legend for shared-trait highlighting (only when viewing a non-self
+            profile and at least one trait overlaps with the viewer). */}
+        {!isMyPage && hasAnySharedChip && (
+          <Layout.FlexRow alignItems="center" gap={6}>
+            <SharedSwatch />
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              shared with you
+            </Typo>
+          </Layout.FlexRow>
+        )}
+
         {/* Chips grouped by category */}
         {groupedByCategory.map(({ category, chips }) => (
           <Layout.FlexCol key={category.key} gap={6}>
@@ -91,7 +130,13 @@ function MoreAboutBottomSheet({
             </Typo>
             <Layout.FlexRow w="100%" gap={8} style={{ flexWrap: 'wrap' }}>
               {chips.map((chip) => (
-                <CategoryChip key={chip} label={chip} category={category.key} isSelected />
+                <CategoryChip
+                  key={chip}
+                  label={chip}
+                  category={category.key}
+                  isSelected
+                  isShared={!isMyPage && isChipShared(chip, category.key)}
+                />
               ))}
             </Layout.FlexRow>
           </Layout.FlexCol>
@@ -103,3 +148,12 @@ function MoreAboutBottomSheet({
 }
 
 export default MoreAboutBottomSheet;
+
+const SharedSwatch = styled.span`
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  background-color: #ffe6f4;
+  border: 1px solid #ff00a8;
+`;

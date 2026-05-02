@@ -13,7 +13,7 @@ import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityT
 import ChipCategorySection from '@components/profile/chip/ChipCategorySection';
 import { StyledEditProfileButton } from '@components/settings/SettingsButtons.styled';
 import SubHeader from '@components/sub-header/SubHeader';
-import { TITLE_HEADER_HEIGHT } from '@constants/layout';
+import { MAX_WINDOW_WIDTH, TITLE_HEADER_HEIGHT, Z_INDEX } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import { useChipCategories } from '@hooks/useChipCategories';
 import { useDelayedVisible } from '@hooks/useDelayedVisible';
@@ -510,29 +510,31 @@ function EditProfile() {
                 {MAX_TOTAL_PROFILE_CHIPS} chips selected
               </Typo>
             </ChipCounterBar>
-            {categories.map((categoryInfo) => (
-              <Layout.FlexCol key={categoryInfo.key} gap={6} w="100%">
-                <ChipCategorySection
-                  categoryInfo={categoryInfo}
-                  selectedChips={draft.chipSelections[categoryInfo.key] || []}
-                  customChips={draft.customChips}
-                  onToggleChip={handleToggleChip}
-                  onAddCustomChip={handleAddCustomChip}
-                  onRemoveCustomChip={handleRemoveCustomChip}
-                />
-                {!featureFlags?.postsVerQ && (
-                  <VisibilityToggle
-                    value={
-                      draft.categoryVisibility[categoryInfo.key as CategoryKey] ??
-                      ComponentVisibility.PUBLIC
-                    }
-                    onChange={(v) =>
-                      handleSetCategoryVisibility(categoryInfo.key as CategoryKey, v)
-                    }
+            <ChipsScrollArea>
+              {categories.map((categoryInfo) => (
+                <Layout.FlexCol key={categoryInfo.key} gap={6} w="100%">
+                  <ChipCategorySection
+                    categoryInfo={categoryInfo}
+                    selectedChips={draft.chipSelections[categoryInfo.key] || []}
+                    customChips={draft.customChips}
+                    onToggleChip={handleToggleChip}
+                    onAddCustomChip={handleAddCustomChip}
+                    onRemoveCustomChip={handleRemoveCustomChip}
                   />
-                )}
-              </Layout.FlexCol>
-            ))}
+                  {!featureFlags?.postsVerQ && (
+                    <VisibilityToggle
+                      value={
+                        draft.categoryVisibility[categoryInfo.key as CategoryKey] ??
+                        ComponentVisibility.PUBLIC
+                      }
+                      onChange={(v) =>
+                        handleSetCategoryVisibility(categoryInfo.key as CategoryKey, v)
+                      }
+                    />
+                  )}
+                </Layout.FlexCol>
+              ))}
+            </ChipsScrollArea>
           </>
         )}
       </Layout.FlexCol>
@@ -574,15 +576,34 @@ const EditProfileTabButton = styled.button<{ $active: boolean }>`
   margin-bottom: -1px;
 `;
 
+// Position fixed (not sticky) so the counter sits reliably below the SubHeader
+// regardless of which scroll context is active or what overflow rules nearby
+// flex containers might enforce. Centered to honor the app's MAX_WINDOW_WIDTH.
+const CHIP_COUNTER_BAR_HEIGHT = 36;
+
 const ChipCounterBar = styled.div`
-  position: sticky;
+  position: fixed;
   top: ${TITLE_HEADER_HEIGHT}px;
-  z-index: 10;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
-  padding: 8px 12px;
+  max-width: ${MAX_WINDOW_WIDTH}px;
+  height: ${CHIP_COUNTER_BAR_HEIGHT}px;
+  z-index: ${Z_INDEX.TITLE_HEADER - 1};
+  padding: 8px 16px;
   background-color: ${Colors.WHITE};
   border-bottom: 1px solid ${Colors.LIGHT_GRAY};
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+// Spacer pushes the chip categories below the fixed counter so the first
+// section isn't hidden behind it.
+const ChipsScrollArea = styled.div`
+  width: 100%;
+  padding-top: ${CHIP_COUNTER_BAR_HEIGHT}px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
