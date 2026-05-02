@@ -350,32 +350,46 @@ function Profile({ user }: ProfileProps) {
               <ChatRequestButton user={user} />
             </Layout.FlexRow>
           )}
-          <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />
-
-          {/* Shared traits — surfaced as a tappable count that opens the
-              categorized modal. Shown for any non-self profile (friends and
-              non-friends) when mutual data is available. */}
+          {/* Mutual friends + shared traits sit on the same row, separated by
+              a "·" so the trait link doesn't float on its own line. */}
           {(() => {
-            if (featureFlags?.postsVerQ || isMyProfile(user) || !viewData) return null;
-            const traits = [
-              ...(viewData.mutual_interests ?? []),
-              ...(viewData.mutual_personas ?? []),
-            ];
-            if (traits.length === 0) return null;
+            const { mutuals } = user as UserProfile;
+            const hasMutualFriends = mutuals && mutuals.length > 0;
+            const traits =
+              !featureFlags?.postsVerQ && !isMyProfile(user) && viewData
+                ? [...(viewData.mutual_interests ?? []), ...(viewData.mutual_personas ?? [])]
+                : [];
+            const hasTraits = traits.length > 0;
+            if (!hasMutualFriends && !hasTraits) return null;
             return (
               <>
-                <SharedTraitsButton type="button" onClick={() => setShowSharedTraitsModal(true)}>
-                  <Typo type="label-medium" color="PRIMARY" fontWeight={500}>
-                    {t('mutual_traits_count', { count: traits.length })}
-                  </Typo>
-                </SharedTraitsButton>
-                <InfoPopup
-                  isOpen={showSharedTraitsModal}
-                  onClose={() => setShowSharedTraitsModal(false)}
-                  title={t('mutual_traits_title')}
-                >
-                  <MutualTraitsList traits={traits} isLoading={false} emptyText="" />
-                </InfoPopup>
+                <Layout.FlexRow alignItems="center" gap={6} style={{ flexWrap: 'wrap' }}>
+                  {hasMutualFriends && <MutualFriendsInfo mutualFriends={mutuals} />}
+                  {hasMutualFriends && hasTraits && (
+                    <Typo type="label-medium" color="MEDIUM_GRAY">
+                      ·
+                    </Typo>
+                  )}
+                  {hasTraits && (
+                    <SharedTraitsButton
+                      type="button"
+                      onClick={() => setShowSharedTraitsModal(true)}
+                    >
+                      <Typo type="label-medium" color="PRIMARY" fontWeight={500}>
+                        {t('mutual_traits_count', { count: traits.length })}
+                      </Typo>
+                    </SharedTraitsButton>
+                  )}
+                </Layout.FlexRow>
+                {hasTraits && (
+                  <InfoPopup
+                    isOpen={showSharedTraitsModal}
+                    onClose={() => setShowSharedTraitsModal(false)}
+                    title={t('mutual_traits_title')}
+                  >
+                    <MutualTraitsList traits={traits} isLoading={false} emptyText="" />
+                  </InfoPopup>
+                )}
               </>
             );
           })()}
