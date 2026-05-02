@@ -459,6 +459,10 @@ export default Profile;
 const ProfileActionButton = styled(Button.Secondary)`
   && > button > .button_component {
     border-width: 2px;
+    padding: 4px 8px;
+  }
+  && > button > .button_component span {
+    font-size: 14.4px;
   }
 `;
 
@@ -466,9 +470,11 @@ const ViewAsButton = styled(Button.Secondary)`
   && > button > .button_component {
     border-width: 2px;
     border-color: ${({ theme }) => theme.PRIMARY};
+    padding: 4px 8px;
   }
   && > button > .button_component span {
     color: ${({ theme }) => theme.PRIMARY};
+    font-size: 14.4px;
   }
 `;
 
