@@ -25,7 +25,9 @@ import { useChipCategories } from '@hooks/useChipCategories';
 import { useMissions } from '@hooks/useMissions';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSaveAndHide } from '@hooks/useSaveAndHide';
+import { useScrollDepth } from '@hooks/useScrollDepth';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import i18n from '@i18n/index';
 import {
   DiscoverFilter,
@@ -106,6 +108,11 @@ function Discover() {
   const { missions } = useMissions();
   const discoverFilterList = [DiscoverFilter.MUTUAL_FRIENDS, DiscoverFilter.MUTUAL_TRAITS];
   const { scrollRef } = useRestoreScrollPosition('discoverPage');
+  // Discover is a feed — depth telegraphs engagement intensity. Backend
+  // sees pagination requests but can't tell if a user actually read past
+  // the items it loaded.
+  useScrollDepth('discover_scroll', scrollRef);
+  const trackEvent = useTrackEvent();
 
   // SWR key is version-aware — Q users hit /api/q/user/discover/
   const swrKey = isVerQ ? '/q/user/discover/' : '/user/discover/';
@@ -379,7 +386,16 @@ function Discover() {
                   label={DiscoverFilterLabel[filter]}
                   isSelected={selectedFilter.includes(filter)}
                   onClick={() => {
-                    if (selectedFilter.includes(filter)) {
+                    const wasSelected = selectedFilter.includes(filter);
+                    // Filter state is purely client — backend's
+                    // /discover/feed/ call doesn't carry it. This event
+                    // is the only signal of which chips users actually
+                    // engage with.
+                    trackEvent('discover_filter_chip_toggled', {
+                      filter: String(filter),
+                      value: wasSelected ? 'off' : 'on',
+                    });
+                    if (wasSelected) {
                       setSelectedFilter(selectedFilter.filter((f) => f !== filter));
                     } else {
                       setSelectedFilter([...selectedFilter, filter]);

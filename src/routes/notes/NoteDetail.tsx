@@ -11,6 +11,7 @@ import SubHeader from '@components/sub-header/SubHeader';
 import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
+import { useDwellTime } from '@hooks/useDwellTime';
 import { FetchState } from '@models/api/common';
 import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -30,6 +31,12 @@ export function NoteDetail() {
   const [noteDetail, setNoteDetail] = useState<FetchState<Note>>({ state: 'loading' });
   const [reload, setReload] = useState<boolean>(false);
   const [inputFocus, setInputFocus] = useState(false);
+
+  // Read time on a post — invisible to backend (the GET /notes/<id>/ call
+  // doesn't tell us when the user left). Pairs naturally with engagement
+  // measures: low dwell + reaction = "tapped emoji and left", high dwell
+  // + no reaction = "read carefully but didn't engage."
+  useDwellTime('note_detail_dwell', { note_id: Number(noteId) || 0 });
 
   useAsyncEffect(async () => {
     if (!noteId) return;
