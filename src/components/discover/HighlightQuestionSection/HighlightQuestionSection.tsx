@@ -1,8 +1,10 @@
 import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SendPromptModal from '@components/_common/prompt/SendPromptModal';
-import PromptSummaryCard from '@components/_common/prompt-summary-card/PromptSummaryCard';
+import { formatFullDate } from '@components/_common/prompt-summary-card/PromptSummaryCard';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import { useTrackEvent } from '@hooks/useTrackEvent';
+import * as S from './HighlightQuestionSection.styled';
 
 type HighlightQuestionSectionProps = {
   question: string;
@@ -20,6 +22,7 @@ function HighlightQuestionSection({
   const navigate = useNavigate();
   const [sendPromptModalVisible, setSendPromptBottomModalVisible] = useState(false);
   const trackEvent = useTrackEvent();
+  const formattedDate = formatFullDate(date);
 
   const handleClickQuestion = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -48,12 +51,29 @@ function HighlightQuestionSection({
 
   return (
     <>
-      <PromptSummaryCard
-        content={question}
-        date={date}
-        onClick={handleClickQuestion}
-        onSend={handleClickSend}
-      />
+      <S.HighlightSectionWrapper onClick={handleClickQuestion}>
+        <Layout.FlexRow bgColor="TERTIARY_PINK" ph={8} pv={2} rounded={100}>
+          <Typo bold type="label-medium" color="WHITE">
+            {tag}
+          </Typo>
+        </Layout.FlexRow>
+        {formattedDate && (
+          <Typo type="label-medium" color="WHITE" mt={8}>
+            {formattedDate}
+          </Typo>
+        )}
+        <Typo type="title-medium" color="WHITE" mt={6}>
+          {question}
+        </Typo>
+        <Layout.FlexRow w="100%" justifyContent="flex-end" mt={12}>
+          <S.AskFriendsButton type="button" onClick={handleClickSend} aria-label="Ask friends">
+            <SvgIcon name="question_send" size={18} color="PRIMARY" />
+            <Typo type="label-large" color="PRIMARY" fontWeight={600}>
+              Ask friends
+            </Typo>
+          </S.AskFriendsButton>
+        </Layout.FlexRow>
+      </S.HighlightSectionWrapper>
       {sendPromptModalVisible && (
         <SendPromptModal
           visible={sendPromptModalVisible}

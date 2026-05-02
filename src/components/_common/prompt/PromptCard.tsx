@@ -1,8 +1,11 @@
 import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PromptSummaryCard from '@components/_common/prompt-summary-card/PromptSummaryCard';
+import { formatFullDate } from '@components/_common/prompt-summary-card/PromptSummaryCard';
+import { Layout, SvgIcon, Typo } from '@design-system';
 import { AdminAuthor, isAdminAuthor } from '@models/post';
 import { User } from '@models/user';
+import ProfileImage from '../profile-image/ProfileImage';
+import { AskFriendsButton, StyledPromptCard } from './PromptCard.styled';
 import SendPromptModal from './SendPromptModal';
 
 interface PromptCardProps {
@@ -12,6 +15,7 @@ interface PromptCardProps {
   date?: string | null;
   authorDetail?: User | AdminAuthor;
   missionMode?: boolean;
+  navigationTarget?: 'detail' | 'respond';
 }
 function PromptCard({
   id,
@@ -20,12 +24,17 @@ function PromptCard({
   widthMode = 'normal',
   authorDetail,
   missionMode,
+  navigationTarget = 'respond',
 }: PromptCardProps) {
   const navigate = useNavigate();
 
   const [sendPromptModalVisible, setSendPromptBottomModalVisible] = useState(false);
   const handleClickRespond = (e?: MouseEvent<HTMLDivElement>) => {
     e?.stopPropagation();
+    if (navigationTarget === 'detail') {
+      navigate(`/questions/${id}`);
+      return;
+    }
     navigate(`/questions/${id}/new`, missionMode ? { state: { missionMode: true } } : undefined);
   };
 
@@ -63,20 +72,40 @@ function PromptCard({
   }
 
   const shouldUseColorHex = !!colorHex;
+  const formattedDate = formatFullDate(date);
 
   return (
     <>
-      <PromptSummaryCard
-        content={content}
-        date={date}
-        width={widthMode === 'full' ? '100%' : 250}
-        authorName={username}
-        profileImageUrl={profileImageUrl}
-        colorHex={shouldUseColorHex ? colorHex : undefined}
-        sendLabel="Send"
-        onClick={handleClickRespond}
-        onSend={handleClickSend}
-      />
+      <StyledPromptCard w={widthMode === 'full' ? '100%' : 250} onClick={handleClickRespond}>
+        <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="flex-start" gap={12}>
+          <Layout.FlexRow gap={8} alignItems="center" style={{ minWidth: 0 }}>
+            {shouldUseColorHex ? (
+              <Layout.LayoutBase w={28} h={28} rounded={14} style={{ backgroundColor: colorHex }} />
+            ) : (
+              <ProfileImage imageUrl={profileImageUrl} username={username} size={28} />
+            )}
+            <Layout.FlexCol style={{ minWidth: 0 }}>
+              <Typo type="title-medium" ellipsis={{ enabled: true, maxWidth: 150 }}>
+                {username}
+              </Typo>
+              {formattedDate && (
+                <Typo type="label-medium" color="MEDIUM_GRAY">
+                  {formattedDate}
+                </Typo>
+              )}
+            </Layout.FlexCol>
+          </Layout.FlexRow>
+          <AskFriendsButton type="button" onClick={handleClickSend} aria-label="Ask friends">
+            <SvgIcon name="question_send" size={18} />
+            <Typo type="label-large" color="BLACK" fontWeight={600}>
+              Ask friends
+            </Typo>
+          </AskFriendsButton>
+        </Layout.FlexRow>
+        <Typo type="body-large" color="BLACK">
+          {content}
+        </Typo>
+      </StyledPromptCard>
       {sendPromptModalVisible && (
         <SendPromptModal
           visible={sendPromptModalVisible}

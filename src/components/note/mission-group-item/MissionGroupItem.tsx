@@ -20,9 +20,15 @@ interface MissionGroupItemProps {
   group: MissionGroupItemModel;
   displayType?: POST_DP_TYPE;
   refresh?: () => void;
+  hidePromptCard?: boolean;
 }
 
-function MissionGroupItem({ group, displayType = 'LIST', refresh }: MissionGroupItemProps) {
+function MissionGroupItem({
+  group,
+  displayType = 'LIST',
+  refresh,
+  hidePromptCard = false,
+}: MissionGroupItemProps) {
   const navigate = useNavigate();
   const { featureFlags } = useBoundStore(UserSelector);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -125,7 +131,7 @@ function MissionGroupItem({ group, displayType = 'LIST', refresh }: MissionGroup
                 ATTEMPT {attempt.mission_attempt_number ?? '-'} / {group.attempts.length}
               </Typo>
               {attempt.content && (
-                <Typo type="body-medium" color="BLACK" pre>
+                <Typo type="body-large" color="BLACK" pre>
                   <LinkifiedText>{attempt.content}</LinkifiedText>
                 </Typo>
               )}
@@ -151,7 +157,7 @@ function MissionGroupItem({ group, displayType = 'LIST', refresh }: MissionGroup
           </Dots>
         )}
 
-        {group.mission_prompt && (
+        {group.mission_prompt && !hidePromptCard && (
           <PromptSummaryCard
             content={group.mission_prompt}
             date={group.created_at}

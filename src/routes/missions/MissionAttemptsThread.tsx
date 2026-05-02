@@ -2,13 +2,12 @@ import { useParams } from 'react-router-dom';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import PromptSummaryCard from '@components/_common/prompt-summary-card/PromptSummaryCard';
-import NoteItem from '@components/note/note-item/NoteItem';
+import MissionGroupItem from '@components/note/mission-group-item/MissionGroupItem';
 import SubHeader from '@components/sub-header/SubHeader';
 import { Layout, Typo } from '@design-system';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { PaginationResponse } from '@models/api/common';
-import { Note } from '@models/post';
-import { useBoundStore } from '@stores/useBoundStore';
+import { MissionGroupItem as MissionGroupItemModel, Note, POST_TYPE } from '@models/post';
 import { MainScrollContainer } from '../Root';
 
 type MissionAttemptsPage = PaginationResponse<Note[]> & {
@@ -19,7 +18,6 @@ type MissionAttemptsPage = PaginationResponse<Note[]> & {
 
 function MissionAttemptsThread() {
   const { missionId } = useParams();
-  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
   const isValidMissionId = !!missionId && /^\d+$/.test(missionId);
 
   const {
@@ -34,6 +32,9 @@ function MissionAttemptsThread() {
   const firstPage = pages?.[0] as MissionAttemptsPage | undefined;
   const attempts = pages?.flatMap((page) => page.results ?? []) ?? [];
   const promptDate = attempts[0]?.created_at;
+  const missionGroups = firstPage
+    ? groupMissionAttempts(attempts, firstPage.id, firstPage.prompt)
+    : [];
 
   return (
     <MainScrollContainer>
@@ -56,13 +57,12 @@ function MissionAttemptsThread() {
                 {firstPage.count}
               </Typo>
             </Layout.FlexRow>
-            {attempts.length > 0 ? (
-              attempts.map((attempt) => (
-                <NoteItem
-                  key={attempt.id}
-                  note={attempt}
-                  isMyPage={attempt.author_detail?.id === myProfile?.id}
-                  hideMissionPrompt
+            {missionGroups.length > 0 ? (
+              missionGroups.map((group) => (
+                <MissionGroupItem
+                  key={group.author_detail?.id ?? group.author ?? group.created_at}
+                  group={group}
+                  hidePromptCard
                 />
               ))
             ) : (
@@ -81,6 +81,50 @@ function MissionAttemptsThread() {
       </Layout.FlexCol>
     </MainScrollContainer>
   );
+}
+
+function groupMissionAttempts(
+  attempts: Note[],
+  missionId: number,
+  missionPrompt: string,
+): MissionGroupItemModel[] {
+  const groupsByAuthor = new Map<string, Note[]>();
+
+  attempts.forEach((attempt) => {
+    const authorKey = String(attempt.author_detail?.id ?? attempt.author ?? attempt.id);
+    const groupAttempts = groupsByAuthor.get(authorKey) ?? [];
+    groupAttempts.push(attempt);
+    groupsByAuthor.set(authorKey, groupAttempts);
+  });
+
+  return Array.from(groupsByAuthor.values())
+    .map<MissionGroupItemModel>((groupAttempts) => {
+      const attemptsByAttemptOrder = [...groupAttempts].sort(compareMissionAttemptOrder);
+      const latestAttempt = [...groupAttempts].sort(compareCreatedDesc)[0];
+
+      return {
+        type: POST_TYPE.MISSION_GROUP,
+        mission_id: missionId,
+        mission_prompt: missionPrompt,
+        author: latestAttempt.author,
+        author_detail: latestAttempt.author_detail,
+        created_at: latestAttempt.created_at,
+        updated_at: latestAttempt.updated_at,
+        attempts: attemptsByAttemptOrder,
+      };
+    })
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+}
+
+function compareMissionAttemptOrder(a: Note, b: Note) {
+  const aAttempt = a.mission_attempt_number ?? Number.MAX_SAFE_INTEGER;
+  const bAttempt = b.mission_attempt_number ?? Number.MAX_SAFE_INTEGER;
+  if (aAttempt !== bAttempt) return aAttempt - bAttempt;
+  return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+}
+
+function compareCreatedDesc(a: Note, b: Note) {
+  return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
 }
 
 export default MissionAttemptsThread;

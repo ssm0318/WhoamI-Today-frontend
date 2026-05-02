@@ -53,7 +53,7 @@ function PromptSummaryCard({
             </Typo>
             {trailing}
           </MetaRow>
-          <Typo type="body-medium" color="BLACK">
+          <Typo type="body-large" color="BLACK">
             {content}
           </Typo>
         </PromptText>

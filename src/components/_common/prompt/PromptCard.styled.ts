@@ -18,6 +18,20 @@ export const StyledPromptCardButtons = styled(Layout.FlexRow)`
   justify-content: flex-end;
 `;
 
+export const AskFriendsButton = styled.button`
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid ${({ theme }) => theme.DARK_GRAY};
+  border-radius: 8px;
+  background: ${({ theme }) => theme.WHITE};
+  white-space: nowrap;
+`;
+
 export const StyledNewResponsePrompt = styled.div`
   border: 2px solid ${({ theme }) => theme.LIGHT_GRAY};
   border-radius: 12px;

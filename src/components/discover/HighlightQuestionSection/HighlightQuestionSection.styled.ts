@@ -10,6 +10,19 @@ export const HighlightSectionWrapper = styled(Layout.FlexCol)`
   cursor: pointer;
 `;
 
+export const AskFriendsButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid ${Colors.WHITE};
+  border-radius: 8px;
+  background: ${Colors.WHITE};
+  white-space: nowrap;
+`;
+
 export const SaveButton = styled.div`
   button {
     background-color: ${Colors.WHITE} !important;

@@ -36,7 +36,7 @@ const CardWrapper = styled.div`
   width: 100%;
   padding: 10px 14px;
   border-radius: 14px;
-  border: 1px solid #aeaeae;
+  border: 2px solid #aeaeae;
   background-color: ${Colors.WHITE};
   cursor: pointer;
   box-sizing: border-box;
