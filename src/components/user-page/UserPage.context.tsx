@@ -46,6 +46,7 @@ export function UserPageContextProvider({ children, usernameOverride }: Props) {
       setUser({ state: 'hasValue', data: res });
     } catch (error) {
       setUser({ state: 'hasError' });
+      mutate((key) => typeof key === 'string' && key.startsWith('/user/friends/'), undefined);
     }
   }, [username, viewAs, viewAsUser]);
   useAsyncEffect(updateUser, [username, viewAs, viewAsUser]);

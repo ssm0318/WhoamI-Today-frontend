@@ -47,13 +47,13 @@ function AllPostSection({ username }: AllPostSectionProps) {
     if (noteId || responseId) return;
     refetchPosts();
 
-    if (username) {
+    if (username && user?.state === 'hasValue') {
       readUserAllNotes(username);
       readUserAllResponses(username);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [noteId, responseId, username]);
+  }, [noteId, responseId, username, user?.state]);
 
   const renderPostItem = useCallback(
     (item: Note | Response) => {
