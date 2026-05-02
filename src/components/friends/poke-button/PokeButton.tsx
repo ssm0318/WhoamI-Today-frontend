@@ -17,7 +17,7 @@ interface Props {
 const POKE_LABELS: Record<PokeComponentType, { text: string; emoji: string }> = {
   battery: { text: 'Ping for social battery', emoji: '🔋' },
   mood: { text: 'Ping for mood', emoji: '😊' },
-  thought: { text: 'Ping for a blurb', emoji: '💭' },
+  thought: { text: 'Ping to be random', emoji: '🤪' },
   song: { text: 'Ping for a song', emoji: '🎵' },
 };
 

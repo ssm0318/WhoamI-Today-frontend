@@ -144,7 +144,7 @@ function MyCheckInCard() {
         </Layout.FlexRow>
       )}
 
-      {/* Thought pill — leading 💭 emoji reads as a quoted thought. */}
+      {/* Thought pill — leading 🤪 emoji reads as a "be random" prompt. */}
       {thought ? (
         <Layout.FlexRow
           bgColor="WHITE"
@@ -158,7 +158,7 @@ function MyCheckInCard() {
           onClick={goToCheckIn}
         >
           <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden>
-            💭
+            🤪
           </span>
           <Typo type="label-large" numberOfLines={1}>
             {thought}
