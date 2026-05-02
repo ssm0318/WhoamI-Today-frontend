@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { SocialBatteryChipAssets } from '@components/profile/social-batter-chip/
 import { BUILT_IN_BROWSE_MODES } from '@constants/browseMode';
 import { Colors, SvgIcon, Typo } from '@design-system';
 import { usePreventScroll } from '@hooks/usePreventScroll';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import {
   ActiveBrowseMode,
   BrowseModeConfig,
@@ -17,6 +18,7 @@ import {
 } from '@models/browseMode';
 import { ComponentVisibility, DEFAULT_VISIBILITY, SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
+import { logBrowseModePick } from '@utils/apis/browseMode';
 import { postCheckIn } from '@utils/apis/checkIn';
 import { writeLastPickedAt } from '@utils/browseModeActiveSession';
 import { HiddenModeKey, readHiddenModes, writeHiddenModes } from '@utils/browseModeHiddenModes';
@@ -59,10 +61,19 @@ function BrowseModeSessionPrompt({
   // Battery labels are top-level (`social_battery.<key>`) — separate `t` without a keyPrefix.
   const [tRoot] = useTranslation('translation');
   const navigate = useNavigate();
+  const trackEvent = useTrackEvent();
   usePreventScroll(fullScreen && visible);
 
   const [syncBattery, setSyncBattery] = useState<boolean>(readSyncPref);
   const [customizeOpen, setCustomizeOpen] = useState(false);
+  // Tracks customize-sheet outcome so closeCustomize knows whether to fire
+  // an "abandoned" event. Set by the save / apply-without-saving handlers
+  // before they call closeCustomize.
+  const customizeOutcomeRef = useRef<'pending' | 'saved' | 'applied'>('pending');
+  // True iff the user has activated a mode in this picker session — used
+  // by the dismiss handler to decide between `picked` (skip event suppressed)
+  // and `skipped`. applyMode and apply-without-saving both flip this on.
+  const pickedInSessionRef = useRef(false);
   // When set, BrowseModeCustomizeSheet opens in EDIT mode prefilled with this
   // preset's values. Cleared on close so the next "Add a new browsing mode"
   // tap starts from the active mode again.
@@ -91,10 +102,14 @@ function BrowseModeSessionPrompt({
   const deleteCustomBrowseModePreset = useBoundStore((state) => state.deleteCustomBrowseModePreset);
   const openToast = useBoundStore((state) => state.openToast);
 
-  const handleSyncToggle = useCallback((next: boolean) => {
-    setSyncBattery(next);
-    writeSyncPref(next);
-  }, []);
+  const handleSyncToggle = useCallback(
+    (next: boolean) => {
+      setSyncBattery(next);
+      writeSyncPref(next);
+      trackEvent('browse_mode_sync_pref_changed', { value: next ? 'on' : 'off' });
+    },
+    [trackEvent],
+  );
 
   // Hydrate hidden mode keys from localStorage every time the picker opens —
   // captures changes made elsewhere (e.g. another tab) without requiring us
@@ -104,6 +119,46 @@ function BrowseModeSessionPrompt({
       setHiddenModeKeys(readHiddenModes(myProfile.id));
     }
   }, [visible, myProfile?.id]);
+
+  // Picker funnel: prompt shown vs skipped vs picked.
+  // Reset session flags every time the picker becomes visible so the next
+  // close-without-pick correctly counts as `skipped`. `full_screen` flag
+  // distinguishes the auto-prompt path from the sidebar manual-open path,
+  // since their conversion rates probably differ.
+  useEffect(() => {
+    if (visible) {
+      pickedInSessionRef.current = false;
+      trackEvent('browse_mode_prompt_shown', {
+        full_screen: fullScreen ? 'true' : 'false',
+      });
+    }
+  }, [visible, fullScreen, trackEvent]);
+
+  const handleDismiss = useCallback(() => {
+    // Skip event only fires when nothing was picked — picks are
+    // mutually exclusive with skips in the funnel.
+    if (!pickedInSessionRef.current) {
+      trackEvent('browse_mode_prompt_skipped', {
+        full_screen: fullScreen ? 'true' : 'false',
+      });
+    }
+    onDismiss();
+  }, [fullScreen, onDismiss, trackEvent]);
+
+  // Wraps setCustomizeOpen(true) so every entry path into the customize
+  // sheet (new / edit / clone / restore-from-snapshot) emits a single
+  // `customize_opened` event with a `source` param distinguishing them.
+  // The outcome ref resets to `pending` here so the abandon-tracking in
+  // closeCustomize starts fresh per entry.
+  // Defined ahead of the customize-restore useEffect that depends on it.
+  const openCustomize = useCallback(
+    (source: 'new' | 'edit' | 'clone_built_in' | 'restore_snapshot') => {
+      customizeOutcomeRef.current = 'pending';
+      setCustomizeOpen(true);
+      trackEvent('browse_mode_customize_opened', { source });
+    },
+    [trackEvent],
+  );
 
   // When the picker opens with a customize-restore snapshot in the store
   // (the preview bar's exit-X path), re-enter the customize sheet with the
@@ -119,9 +174,15 @@ function BrowseModeSessionPrompt({
       : null;
     setEditingPreset(editingMatch);
     setCloneSeed({ config, name, description, default_battery });
-    setCustomizeOpen(true);
+    openCustomize('restore_snapshot');
     setCustomizeRestoreSnapshot(null);
-  }, [visible, customizeRestoreSnapshot, customPresets, setCustomizeRestoreSnapshot]);
+  }, [
+    visible,
+    customizeRestoreSnapshot,
+    customPresets,
+    setCustomizeRestoreSnapshot,
+    openCustomize,
+  ]);
 
   const persistHiddenModes = useCallback(
     (next: HiddenModeKey[]) => {
@@ -133,18 +194,27 @@ function BrowseModeSessionPrompt({
 
   const handleHideMode = useCallback(
     (modeKey: HiddenModeKey) => {
+      // Idempotent: only track when the key is genuinely added (not a no-op
+      // re-hide) so the count reflects actual user actions, not React StrictMode
+      // double-renders.
+      if (!hiddenModeKeys.includes(modeKey)) {
+        trackEvent('browse_mode_built_in_hidden', { mode_id: String(modeKey) });
+      }
       persistHiddenModes(
         hiddenModeKeys.includes(modeKey) ? hiddenModeKeys : [...hiddenModeKeys, modeKey],
       );
     },
-    [hiddenModeKeys, persistHiddenModes],
+    [hiddenModeKeys, persistHiddenModes, trackEvent],
   );
 
   const handleShowMode = useCallback(
     (modeKey: HiddenModeKey) => {
+      if (hiddenModeKeys.includes(modeKey)) {
+        trackEvent('browse_mode_built_in_unhidden', { mode_id: String(modeKey) });
+      }
       persistHiddenModes(hiddenModeKeys.filter((x) => x !== modeKey));
     },
-    [hiddenModeKeys, persistHiddenModes],
+    [hiddenModeKeys, persistHiddenModes, trackEvent],
   );
 
   const handleCloneBuiltIn = useCallback(
@@ -158,9 +228,9 @@ function BrowseModeSessionPrompt({
         default_battery: built.suggestedBattery,
       });
       setEditingPreset(null);
-      setCustomizeOpen(true);
+      openCustomize('clone_built_in');
     },
-    [t],
+    [t, openCustomize],
   );
 
   const applyMode = useCallback(
@@ -192,6 +262,7 @@ function BrowseModeSessionPrompt({
           updated_at: '',
         });
       }
+      pickedInSessionRef.current = true;
       if (myProfile?.id) {
         saveLastPickedMode(myProfile.id, mode);
         // Stamp the pick time. The auto-prompt's 15-minute freshness window
@@ -199,6 +270,25 @@ function BrowseModeSessionPrompt({
         // sidebar, post-Save activation) bumps the timer the same way.
         writeLastPickedAt(myProfile.id);
       }
+
+      // Append-only pick log on the backend (research analytics ground
+      // truth) + a parallel Firebase Analytics event via the WebView
+      // bridge. Both fire-and-forget; failures are silent so analytics
+      // never blocks the UI.
+      const eventParams: Record<string, string | number> = {
+        kind: mode.kind,
+        keep_picker_open: keepPickerOpen ? 'true' : 'false',
+        battery_synced: syncBattery ? 'true' : 'false',
+      };
+      if (mode.kind === 'built_in') {
+        eventParams.mode_id = mode.id;
+        logBrowseModePick({ kind: 'built_in', built_in_id: mode.id });
+      } else {
+        eventParams.mode_id = `custom:${mode.id}`;
+        eventParams.preset_id = mode.id;
+        logBrowseModePick({ kind: 'custom', preset_id: mode.id });
+      }
+      trackEvent('browse_mode_picked', eventParams);
 
       let batteryApplied: SocialBattery | null = null;
       if (syncBattery && suggestedBattery) {
@@ -275,6 +365,7 @@ function BrowseModeSessionPrompt({
       navigate,
       onFinish,
       openToast,
+      trackEvent,
       setActiveBuiltIn,
       setActiveCustom,
       syncBattery,
@@ -308,29 +399,41 @@ function BrowseModeSessionPrompt({
   );
 
   const closeCustomize = useCallback(() => {
+    // Abandon = close without `save` or `apply_without_saving` having
+    // fired. Lets us measure how many users open the customize sheet
+    // and walk away without committing — a UX pain signal.
+    if (customizeOutcomeRef.current === 'pending') {
+      trackEvent('browse_mode_customize_abandoned');
+    }
+    customizeOutcomeRef.current = 'pending';
     setCustomizeOpen(false);
     setEditingPreset(null);
     setCloneSeed(null);
-  }, []);
+  }, [trackEvent]);
 
-  const handleEditPreset = useCallback((preset: CustomBrowseModePreset) => {
-    setCloneSeed(null);
-    setEditingPreset(preset);
-    setCustomizeOpen(true);
-  }, []);
+  const handleEditPreset = useCallback(
+    (preset: CustomBrowseModePreset) => {
+      setCloneSeed(null);
+      setEditingPreset(preset);
+      openCustomize('edit');
+    },
+    [openCustomize],
+  );
 
   const handleDeletePreset = useCallback((preset: CustomBrowseModePreset) => {
     setPendingDeletePreset(preset);
   }, []);
 
   const handleCustomizeSaved = useCallback(async () => {
+    customizeOutcomeRef.current = 'saved';
+    trackEvent('browse_mode_customize_saved');
     // Save just persists the preset — no auto-activation. The picker stays
     // open and the new / edited preset appears in the saved-modes list;
     // the user explicitly picks it to start browsing in it. Keeps the
     // "create" flow distinct from the "switch" flow so we don't surprise
     // them with a mode change they didn't ask for.
     closeCustomize();
-  }, [closeCustomize]);
+  }, [closeCustomize, trackEvent]);
 
   const handleCustomizeApplyWithoutSaving = useCallback(
     async (snapshot: {
@@ -366,9 +469,18 @@ function BrowseModeSessionPrompt({
       // configuration to use right now — bump the freshness timer so the
       // auto-prompt doesn't re-fire mid-preview.
       if (myProfile?.id) writeLastPickedAt(myProfile.id);
+      pickedInSessionRef.current = true;
+      customizeOutcomeRef.current = 'applied';
+      // Pick log + Firebase event (best-effort, mirrors applyMode).
+      logBrowseModePick({ kind: 'apply_without_saving' });
+      trackEvent('browse_mode_picked', {
+        kind: 'apply_without_saving',
+        keep_picker_open: 'false',
+        battery_synced: 'false',
+      });
       onFinish();
     },
-    [closeCustomize, editingPreset?.id, myProfile?.id, onFinish],
+    [closeCustomize, editingPreset?.id, myProfile?.id, onFinish, trackEvent],
   );
 
   const handleConfirmDelete = useCallback(async () => {
@@ -395,9 +507,12 @@ function BrowseModeSessionPrompt({
       onOpenCustomize={() => {
         setCloneSeed(null);
         setEditingPreset(null);
-        setCustomizeOpen(true);
+        openCustomize('new');
       }}
-      onOpenWishlist={() => setWishlistOpen(true)}
+      onOpenWishlist={() => {
+        setWishlistOpen(true);
+        trackEvent('browse_mode_wishlist_opened');
+      }}
       onCloneBuiltIn={handleCloneBuiltIn}
       onEditPreset={handleEditPreset}
       onHideMode={handleHideMode}
@@ -415,7 +530,7 @@ function BrowseModeSessionPrompt({
                 <SkipBar>
                   <SkipButton
                     type="button"
-                    onClick={onDismiss}
+                    onClick={handleDismiss}
                     aria-label={String(t('full_screen.skip'))}
                   >
                     <Typo type="label-large" color="MEDIUM_GRAY">
@@ -430,7 +545,10 @@ function BrowseModeSessionPrompt({
             document.body,
           )
         : createPortal(
-            <BottomModal visible={visible && !customizeOpen && !wishlistOpen} onClose={onDismiss}>
+            <BottomModal
+              visible={visible && !customizeOpen && !wishlistOpen}
+              onClose={handleDismiss}
+            >
               {stepContent}
             </BottomModal>,
             document.body,

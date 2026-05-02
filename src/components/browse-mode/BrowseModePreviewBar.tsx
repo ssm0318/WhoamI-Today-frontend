@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Colors, SvgIcon, Typo } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { useBoundStore } from '@stores/useBoundStore';
 import { clearLastPickedAt } from '@utils/browseModeActiveSession';
 
@@ -53,6 +54,7 @@ function BrowseModePreviewBar() {
   const openBrowseModePicker = useBoundStore((state) => state.openBrowseModePicker);
   const openToast = useBoundStore((state) => state.openToast);
   const userId = useBoundStore((state) => state.myProfile?.id);
+  const trackEvent = useTrackEvent();
 
   const isPreview = activeBrowseMode?.kind === 'custom' && activeBrowseMode.id === -1;
   // Throttle "blocked click" toasts: rapid taps would otherwise spam the
@@ -110,6 +112,7 @@ function BrowseModePreviewBar() {
   if (!isPreview) return null;
 
   const handleExit = () => {
+    trackEvent('browse_mode_preview_exited');
     clearActiveBrowseMode();
     // The user explicitly abandoned the preview — wipe last_picked_at so
     // the next page-load auto-prompts again. Without this, the freshness
