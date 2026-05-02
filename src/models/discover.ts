@@ -93,6 +93,11 @@ export interface SurveyResultsCardBody {
   date: string;
 }
 
+// UsernameSuggestion Card Body (frontend-only injection)
+export interface UsernameSuggestionCardBody {
+  currentUsername: string;
+}
+
 // Discover Result Item (discriminated union)
 export type DiscoverResultItem =
   | {
@@ -129,4 +134,8 @@ export type DiscoverResultItem =
   | {
       type: 'SurveyResults';
       body: SurveyResultsCardBody;
+    }
+  | {
+      type: 'UsernameSuggestion';
+      body: UsernameSuggestionCardBody;
     };

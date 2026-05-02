@@ -144,6 +144,9 @@ export interface MyProfile extends User {
   following_count: number;
   friend_count: number;
   is_public: boolean;
+  /** Every username this account has ever used (oldest first, including the current one).
+   * Length 1 = the user never changed the placeholder allocated at signup. */
+  username_history?: string[];
 }
 
 export interface FriendRequest {

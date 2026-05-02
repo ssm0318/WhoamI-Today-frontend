@@ -10,6 +10,7 @@ import ProfileSuggestionCard from '@components/discover/ProfileSuggestionCard/Pr
 import SelectInterestSection from '@components/discover/SelectInterestSection/SelectInterestSection';
 import SelectPersonaSection from '@components/discover/SelectPersonaSection/SelectPersonaSection';
 import SurveyResultsCard from '@components/discover/SurveyResultsCard/SurveyResultsCard';
+import UsernameSuggestionCard from '@components/discover/UsernameSuggestionCard/UsernameSuggestionCard';
 import SharedPlaylistSection, {
   SharedTrack,
 } from '@components/friends/shared-playlist/SharedPlaylistSection';
@@ -151,6 +152,20 @@ function Discover() {
     };
   }, [myProfile, chipCategories]);
 
+  const usernameSuggestionCard: DiscoverResultItem | null = useMemo(() => {
+    if (!myProfile) return null;
+    // Show only while the user is still on the placeholder username they were allocated at
+    // signup (`username_history` is initialized to `[initialUsername]` and gets a new entry
+    // appended every time the username is updated). Older accounts whose history was never
+    // backfilled return undefined — treat that as "don't show" so we don't badger them.
+    const history = myProfile.username_history;
+    if (!history || history.length !== 1) return null;
+    return {
+      type: 'UsernameSuggestion' as const,
+      body: { currentUsername: myProfile.username },
+    };
+  }, [myProfile]);
+
   const { data: pastSurveysData } = useSWR('/surveys/past/', getPastSurveys, {
     revalidateOnFocus: false,
   });
@@ -177,21 +192,15 @@ function Discover() {
       if (page.results) flatItems.push(...page.results);
     });
 
-    // Pick at most 2 injected cards per day (rotate daily)
-    const allCards = (
-      [surveyResultsCard, missionPromptCard, profileSuggestionCard] as const
+    // Show every eligible synthetic card — username and profile-completion prompts
+    // disappear on their own once the user fills the corresponding fields, so
+    // rotating them across days hides actionable nudges instead of helping.
+    const selectedCards = (
+      [surveyResultsCard, missionPromptCard, profileSuggestionCard, usernameSuggestionCard] as const
     ).filter((c) => c !== null) as DiscoverResultItem[];
-    const dayOfYear = getDayOfYear();
-    const selectedCards =
-      allCards.length <= 2
-        ? allCards
-        : [
-            allCards[dayOfYear % allCards.length],
-            allCards[(dayOfYear + 1) % allCards.length],
-          ].filter((card, i, arr) => arr.indexOf(card) === i);
 
     const result: DiscoverResultItem[] = [...flatItems];
-    // Insert selected cards at positions 3, 7
+    // Inject at positions 3, 7, 11, … so a card always appears between feed items.
     selectedCards
       .map((card, i) => ({ position: 3 + i * 4, card }))
       .sort((a, b) => b.position - a.position)
@@ -201,7 +210,13 @@ function Discover() {
       });
 
     return result;
-  }, [discoverData, missionPromptCard, profileSuggestionCard, surveyResultsCard]);
+  }, [
+    discoverData,
+    missionPromptCard,
+    profileSuggestionCard,
+    surveyResultsCard,
+    usernameSuggestionCard,
+  ]);
 
   // If the active browse mode says to hide synthetic discover cards, drop them here.
   const hideSyntheticCards = !!activeBrowseMode?.config.sections.hide_synthetic_discover_cards;
@@ -213,7 +228,8 @@ function Discover() {
       if (
         item.type === 'MissionPrompt' ||
         item.type === 'ProfileSuggestion' ||
-        item.type === 'SurveyResults'
+        item.type === 'SurveyResults' ||
+        item.type === 'UsernameSuggestion'
       ) {
         return !hideSyntheticCards;
       }
@@ -286,6 +302,10 @@ function Discover() {
           );
         case 'SurveyResults':
           return <SurveyResultsCard key={`survey-results-${index}`} card={item.body} />;
+        case 'UsernameSuggestion':
+          return (
+            <UsernameSuggestionCard key={`username-suggestion-${index}`} suggestion={item.body} />
+          );
         default:
           return null;
       }
