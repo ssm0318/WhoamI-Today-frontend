@@ -16,7 +16,9 @@ function MainHeader({ title, rightButtons }: MainHeaderProps) {
         <Layout.FlexRow>
           <Typo type="head-line">{title}</Typo>
         </Layout.FlexRow>
-        <Layout.FlexRow gap={8} alignItems="center">
+        {/* gap=5 (down from 8) so the eye-icon entry sits visually
+            grouped with notification / hamburger rather than free-floating. */}
+        <Layout.FlexRow gap={5} alignItems="center">
           {rightButtons}
         </Layout.FlexRow>
       </Layout.FlexRow>

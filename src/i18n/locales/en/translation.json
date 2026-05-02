@@ -1344,7 +1344,7 @@
                 "last_used_badge": "Last used",
                 "current_badge": "Current",
                 "battery_hint": "Battery → {{emoji}} {{label}}",
-                "sync_toggle": "Also set my battery",
+                "sync_toggle": "Also sync my social battery",
                 "sync_subtitle": "We'll match it to the mode you pick — you can adjust afterwards",
                 "edit_preset_aria": "Edit {{name}}",
                 "delete_preset_aria": "Delete {{name}}",
@@ -1381,7 +1381,7 @@
                 },
                 "filters_section": "Apply these filters",
                 "battery_section": "Default battery",
-                "battery_subtitle": "When 'Also set my battery' is on, this is what we'll set when you pick this mode. Optional.",
+                "battery_subtitle": "When 'Also sync my social battery' is on, this is what we'll set when you pick this mode. Optional.",
                 "battery_none": "Skip",
                 "save_as": "Save as a mode",
                 "name_label": "Mode name",
@@ -1407,16 +1407,16 @@
         },
         "modes": {
             "very_social": {
-                "name": "Full social",
-                "description": "Show me everything — I'm here for it"
+                "name": "Fully Social",
+                "description": "See everything — Friends, Discover, Chats"
             },
             "selectively_social": {
-                "name": "Just my people",
-                "description": "Close friends only, no random discovery"
+                "name": "Close Friends Only",
+                "description": "Close Friends Only filter activated, no Discover"
             },
             "quiet": {
-                "name": "Soft mode",
-                "description": "Just here to share — keep it quiet"
+                "name": "Just Here to Share",
+                "description": "Share & profile only"
             }
         },
         "tabs": {
@@ -1454,6 +1454,13 @@
                 "name": "Digital detox",
                 "description": "Step away from the scroll — keep replies open"
             }
+        },
+        "skip_today": {
+            "label": "Don't show me again today",
+            "hint": "You can change this anytime from the eye icon in the header."
+        },
+        "header_button": {
+            "aria": "Open browsing mode"
         }
     }
 }

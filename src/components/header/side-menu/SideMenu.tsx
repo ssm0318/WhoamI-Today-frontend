@@ -17,20 +17,20 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { getMyPendingVersionSwitchRequest } from '@utils/apis/user';
 import { classifyPathnameAsSource } from '@utils/navSource';
 
-type SideMenuItem =
-  | { key: string; emoji: string; kind: 'route'; path: string; flag?: FeatureFlagKey }
-  | { key: string; emoji: string; kind: 'browse_mode'; flag: FeatureFlagKey };
+interface SideMenuItem {
+  key: string;
+  emoji: string;
+  path: string;
+  flag?: FeatureFlagKey;
+}
 
+// Browsing Mode used to live here; moved to a header eye-icon button
+// (`BrowseModeHeaderButton`) for 1-tap access. Sidebar stays focused on
+// pages users navigate to less often.
 const SIDE_MENU_LIST: SideMenuItem[] = [
-  { key: 'my_profile', emoji: '👤', kind: 'route', path: '/my' },
-  {
-    key: 'browsing_mode',
-    emoji: '✨',
-    kind: 'browse_mode',
-    flag: FeatureFlagKey.BROWSE_MODE,
-  },
-  { key: 'surveys', emoji: '📊', kind: 'route', path: '/surveys' },
-  { key: 'settings', emoji: '⚙️', kind: 'route', path: '/settings' },
+  { key: 'my_profile', emoji: '👤', path: '/my' },
+  { key: 'surveys', emoji: '📊', path: '/surveys' },
+  { key: 'settings', emoji: '⚙️', path: '/settings' },
 ];
 
 const VERSION_LABEL: Record<VersionType, string> = {
@@ -48,7 +48,6 @@ function SideMenu({ closeSideMenu }: Props) {
   const navigate = useNavigate();
   const postMessage = usePostAppMessage();
   const featureFlags = useBoundStore((state) => state.featureFlags);
-  const openBrowseModePicker = useBoundStore((state) => state.openBrowseModePicker);
 
   const myProfile = useBoundStore((state) => state.myProfile);
   const { data: pendingResp } = useSWR(
@@ -75,11 +74,7 @@ function SideMenu({ closeSideMenu }: Props) {
 
   const handleClickMenu = (menu: SideMenuItem) => () => {
     trackEvent('side_menu_item_tapped', { item_key: menu.key });
-    if (menu.kind === 'route') {
-      navigate(menu.path);
-    } else if (menu.kind === 'browse_mode') {
-      openBrowseModePicker();
-    }
+    navigate(menu.path);
     closeSideMenu();
   };
 

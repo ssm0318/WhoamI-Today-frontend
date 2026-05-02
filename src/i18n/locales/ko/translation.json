@@ -1335,7 +1335,7 @@
         "last_used_badge": "마지막 사용",
         "current_badge": "현재",
         "battery_hint": "배터리 → {{emoji}} {{label}}",
-        "sync_toggle": "배터리도 같이 설정",
+        "sync_toggle": "소셜 배터리도 같이 동기화",
         "sync_subtitle": "이 모드에 맞춰 자동으로 — 들어가서 조정할 수 있어",
         "edit_preset_aria": "{{name}} 수정",
         "delete_preset_aria": "{{name}} 삭제",
@@ -1372,7 +1372,7 @@
         },
         "filters_section": "필터 기본값",
         "battery_section": "기본 배터리",
-        "battery_subtitle": "'배터리도 같이 설정' 토글이 켜진 상태에서 이 모드를 고르면 적용될 배터리야. 선택사항.",
+        "battery_subtitle": "'소셜 배터리도 같이 동기화' 토글이 켜진 상태에서 이 모드를 고르면 적용될 배터리야. 선택사항.",
         "battery_none": "안 정함",
         "save_as": "모드로 저장하기",
         "name_label": "모드 이름",
@@ -1398,16 +1398,16 @@
     },
     "modes": {
       "very_social": {
-        "name": "Full social",
-        "description": "오늘은 다 보여줘 — 다 즐길 준비됐어"
+        "name": "다 보기",
+        "description": "모든 탭 보기 — 친구, Discover, Chats"
       },
       "selectively_social": {
-        "name": "Just my people",
-        "description": "친한 친구들만, 랜덤 추천은 빼줘"
+        "name": "친한 친구만",
+        "description": "Close Friends Only 필터 활성, Discover 없음"
       },
       "quiet": {
-        "name": "Soft mode",
-        "description": "오늘은 그냥 공유만 — 조용히 갈게"
+        "name": "공유만",
+        "description": "Share / 프로필만"
       }
     },
     "tabs": {
@@ -1445,6 +1445,13 @@
         "name": "디지털 디톡스",
         "description": "스크롤은 잠시 쉬고, 답장만 열어두기"
       }
+    },
+    "skip_today": {
+      "label": "오늘 다시 안 보기",
+      "hint": "헤더의 eye 아이콘에서 언제든 바꿀 수 있어요."
+    },
+    "header_button": {
+      "aria": "브라우징 모드 열기"
     }
   }
 }

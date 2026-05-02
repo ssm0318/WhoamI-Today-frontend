@@ -20,12 +20,25 @@ interface BrowseModeStepModeProps {
   lastActive: ActiveBrowseMode | null;
   syncBattery: boolean;
   /**
+   * "Don't show me again today" checkbox state. Suppresses the auto-prompt
+   * until local end-of-day. Manual-open via the header still works.
+   */
+  skipToday: boolean;
+  /**
+   * Whether to actually render the skip-today checkbox. We only show it on
+   * the auto-prompt path (full-screen takeover). When the user taps the
+   * header eye icon to manually open the picker, they're explicitly
+   * engaging — not the moment to ask "should I stop bothering you?"
+   */
+  showSkipTodayCheckbox: boolean;
+  /**
    * Modes the user has chosen to hide from the picker. Covers both built-ins
    * and custom presets — same hide affordance for both, since the user just
    * wants a clean list either way. See {@link HiddenModeKey}.
    */
   hiddenModeKeys: HiddenModeKey[];
   onSyncToggle: (next: boolean) => void;
+  onSkipTodayToggle: (next: boolean) => void;
   onPick: (choice: ModeChoice) => void;
   onOpenCustomize: () => void;
   /** Open the "tell us what you wish the picker did" sheet. */
@@ -45,8 +58,11 @@ function BrowseModeStepMode({
   presets,
   lastActive,
   syncBattery,
+  skipToday,
+  showSkipTodayCheckbox,
   hiddenModeKeys,
   onSyncToggle,
+  onSkipTodayToggle,
   onPick,
   onOpenCustomize,
   onOpenWishlist,
@@ -376,21 +392,44 @@ function BrowseModeStepMode({
       </Layout.FlexCol>
 
       {!editListMode && (
-        <SyncToggleRow w="100%" ph={16} pv={12} mt={8}>
-          <SyncCheckbox
-            type="button"
-            aria-pressed={syncBattery}
-            onClick={() => onSyncToggle(!syncBattery)}
-          >
-            <CheckSquare $checked={syncBattery} />
-            <Layout.FlexCol alignItems="flex-start" gap={2}>
-              <Typo type="body-medium">{t('steps.mode.sync_toggle')}</Typo>
-              <Typo type="label-small" color="DARK_GRAY">
-                {t('steps.mode.sync_subtitle')}
-              </Typo>
-            </Layout.FlexCol>
-          </SyncCheckbox>
-        </SyncToggleRow>
+        <>
+          <SyncToggleRow w="100%" ph={16} pv={12} mt={8}>
+            <SyncCheckbox
+              type="button"
+              aria-pressed={syncBattery}
+              onClick={() => onSyncToggle(!syncBattery)}
+            >
+              <CheckSquare $checked={syncBattery} />
+              <Layout.FlexCol alignItems="flex-start" gap={2}>
+                <Typo type="body-medium">{t('steps.mode.sync_toggle')}</Typo>
+                <Typo type="label-small" color="DARK_GRAY">
+                  {t('steps.mode.sync_subtitle')}
+                </Typo>
+              </Layout.FlexCol>
+            </SyncCheckbox>
+          </SyncToggleRow>
+
+          {showSkipTodayCheckbox && (
+            <>
+              <SyncToggleRow w="100%" ph={16} pv={8}>
+                <SyncCheckbox
+                  type="button"
+                  aria-pressed={skipToday}
+                  onClick={() => onSkipTodayToggle(!skipToday)}
+                >
+                  <CheckSquare $checked={skipToday} />
+                  <Typo type="body-medium">{t('skip_today.label')}</Typo>
+                </SyncCheckbox>
+              </SyncToggleRow>
+
+              <Layout.FlexRow w="100%" ph={16} pt={4} pb={4}>
+                <Typo type="label-small" color="MEDIUM_GRAY">
+                  {t('skip_today.hint')}
+                </Typo>
+              </Layout.FlexRow>
+            </>
+          )}
+        </>
       )}
 
       <Layout.FlexRow w="100%" pb={20} />

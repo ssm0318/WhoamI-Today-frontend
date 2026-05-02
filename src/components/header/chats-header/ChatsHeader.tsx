@@ -6,6 +6,7 @@ import { Layout } from '@design-system';
 import { resetScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMe } from '@utils/apis/my';
+import BrowseModeHeaderButton from '../browse-mode-header-button/BrowseModeHeaderButton';
 import { HeaderWrapper, Noti } from '../Header.styled';
 import SideMenu from '../side-menu/SideMenu';
 
@@ -28,11 +29,12 @@ function ChatsHeader() {
     <>
       <HeaderWrapper>
         <Layout.FlexRow justifyContent="space-between" w="100%" h="100%" alignItems="center">
-          <Layout.FlexRow gap={8} alignItems="center">
+          <Layout.FlexRow gap={5} alignItems="center">
             <Icon name="group_chat_new" size={44} onClick={() => navigate('/chats/new-group')} />
             <Icon name="search_black" size={44} onClick={() => navigate('/chats/search')} />
           </Layout.FlexRow>
-          <Layout.FlexRow gap={8} alignItems="center">
+          <Layout.FlexRow gap={5} alignItems="center">
+            <BrowseModeHeaderButton />
             <Noti to="/notifications">
               <Icon
                 name="notification"

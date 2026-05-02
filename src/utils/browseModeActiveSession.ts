@@ -18,6 +18,7 @@ import { ActiveBrowseMode } from '@models/browseMode';
 
 const ACTIVE_MODE_PREFIX = 'browse_mode_active_';
 const LAST_PICKED_AT_PREFIX = 'browse_mode_last_picked_at_';
+const SNOOZE_UNTIL_PREFIX = 'browse_mode_snooze_until_';
 
 /** 15 minutes — anything past this and the auto-prompt fires on next open. */
 export const FRESHNESS_MS = 15 * 60 * 1000;
@@ -47,6 +48,57 @@ export function writeLastPickedAt(userId: number, when: number = Date.now()): vo
 
 export function clearLastPickedAt(userId: number): void {
   localStorage.removeItem(lastPickedAtKey(userId));
+}
+
+function snoozeUntilKey(userId: number): string {
+  return `${SNOOZE_UNTIL_PREFIX}${userId}`;
+}
+
+/**
+ * "Don't show me again today" snooze. Stores the local end-of-day timestamp
+ * (23:59:59.999 today) — the auto-prompt is suppressed until that moment.
+ * Distinct from the 15-minute freshness window: snooze is an explicit user
+ * request that overrides freshness regardless of pick history.
+ */
+export function readSnoozeUntil(userId: number): number | null {
+  const raw = localStorage.getItem(snoozeUntilKey(userId));
+  if (!raw) return null;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
+}
+
+export function writeSnoozeUntilEndOfDay(userId: number): void {
+  // Local timezone end-of-day (23:59:59.999). Crossing midnight clears the
+  // snooze automatically since `isSnoozeActive` checks against `Date.now()`.
+  const now = new Date();
+  const endOfDay = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    23,
+    59,
+    59,
+    999,
+  ).getTime();
+  try {
+    localStorage.setItem(snoozeUntilKey(userId), String(endOfDay));
+  } catch {
+    /* private mode / quota — best-effort */
+  }
+}
+
+export function clearSnoozeUntil(userId: number): void {
+  localStorage.removeItem(snoozeUntilKey(userId));
+}
+
+export function isSnoozeActive(userId: number): boolean {
+  const ts = readSnoozeUntil(userId);
+  if (ts === null) return false;
+  if (Date.now() < ts) return true;
+  // Past the snooze deadline — clear stale entry as a side effect so future
+  // reads don't re-check expired data.
+  clearSnoozeUntil(userId);
+  return false;
 }
 
 /** True iff the user picked a mode within the last FRESHNESS_MS. */

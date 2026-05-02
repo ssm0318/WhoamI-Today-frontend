@@ -6,6 +6,7 @@ import { Layout } from '@design-system';
 import { resetScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getMe } from '@utils/apis/my';
+import BrowseModeHeaderButton from '../browse-mode-header-button/BrowseModeHeaderButton';
 import { Noti } from '../Header.styled';
 import MainHeader from '../MainHeader';
 import SideMenu from '../side-menu/SideMenu';
@@ -40,6 +41,7 @@ function CommonHeader({ title, extraActions }: CommonHeaderProps) {
         rightButtons={
           <>
             {extraActions}
+            <BrowseModeHeaderButton />
             <Noti to="/notifications">
               <Icon
                 name="notification"

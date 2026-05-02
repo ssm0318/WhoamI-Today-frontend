@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
@@ -20,7 +19,7 @@ import { ComponentVisibility, DEFAULT_VISIBILITY, SocialBattery } from '@models/
 import { useBoundStore } from '@stores/useBoundStore';
 import { logBrowseModePick } from '@utils/apis/browseMode';
 import { postCheckIn } from '@utils/apis/checkIn';
-import { writeLastPickedAt } from '@utils/browseModeActiveSession';
+import { writeLastPickedAt, writeSnoozeUntilEndOfDay } from '@utils/browseModeActiveSession';
 import { HiddenModeKey, readHiddenModes, writeHiddenModes } from '@utils/browseModeHiddenModes';
 import { saveLastPickedMode } from '@utils/browseModeLastPick';
 import BrowseModeCustomizeSheet from './BrowseModeCustomizeSheet';
@@ -60,11 +59,16 @@ function BrowseModeSessionPrompt({
   const [t] = useTranslation('translation', { keyPrefix: 'browse_mode' });
   // Battery labels are top-level (`social_battery.<key>`) — separate `t` without a keyPrefix.
   const [tRoot] = useTranslation('translation');
-  const navigate = useNavigate();
   const trackEvent = useTrackEvent();
   usePreventScroll(fullScreen && visible);
 
   const [syncBattery, setSyncBattery] = useState<boolean>(readSyncPref);
+  // "Don't show me again today" checkbox — persisted to localStorage as
+  // an end-of-day timestamp when checked, applied on dismiss/finish.
+  // Resets to unchecked on every prompt open (we never default to "skip"
+  // because the user already snoozed it; a snoozed prompt won't mount
+  // unless they explicitly opened it via header).
+  const [skipToday, setSkipToday] = useState(false);
   const [customizeOpen, setCustomizeOpen] = useState(false);
   // Tracks customize-sheet outcome so closeCustomize knows whether to fire
   // an "abandoned" event. Set by the save / apply-without-saving handlers
@@ -111,6 +115,16 @@ function BrowseModeSessionPrompt({
     [trackEvent],
   );
 
+  const handleSkipTodayToggle = useCallback(
+    (next: boolean) => {
+      setSkipToday(next);
+      // Per-toggle event so dashboards can see how many users actively
+      // engage with the snooze checkbox vs leave it untouched.
+      trackEvent('browse_mode_skip_today_toggled', { value: next ? 'on' : 'off' });
+    },
+    [trackEvent],
+  );
+
   // Hydrate hidden mode keys from localStorage every time the picker opens —
   // captures changes made elsewhere (e.g. another tab) without requiring us
   // to thread the value through the store.
@@ -128,6 +142,11 @@ function BrowseModeSessionPrompt({
   useEffect(() => {
     if (visible) {
       pickedInSessionRef.current = false;
+      // Always reset the snooze checkbox on open — never default to "on".
+      // A snoozed user wouldn't see this prompt at all unless they
+      // explicitly opened it via the header, in which case they're
+      // unlikely to want to immediately re-snooze.
+      setSkipToday(false);
       trackEvent('browse_mode_prompt_shown', {
         full_screen: fullScreen ? 'true' : 'false',
       });
@@ -135,15 +154,24 @@ function BrowseModeSessionPrompt({
   }, [visible, fullScreen, trackEvent]);
 
   const handleDismiss = useCallback(() => {
+    // Snooze applies whenever the user dismisses with the checkbox on,
+    // regardless of skip vs implicit close. Mode pick path also honours
+    // the checkbox (see applyMode + apply-without-saving below) — the
+    // user's "leave me alone today" intent is independent of whether
+    // they pick something this time.
+    if (skipToday && myProfile?.id) {
+      writeSnoozeUntilEndOfDay(myProfile.id);
+    }
     // Skip event only fires when nothing was picked — picks are
     // mutually exclusive with skips in the funnel.
     if (!pickedInSessionRef.current) {
       trackEvent('browse_mode_prompt_skipped', {
         full_screen: fullScreen ? 'true' : 'false',
+        skip_today: skipToday ? 'true' : 'false',
       });
     }
     onDismiss();
-  }, [fullScreen, onDismiss, trackEvent]);
+  }, [fullScreen, myProfile?.id, onDismiss, skipToday, trackEvent]);
 
   // Wraps setCustomizeOpen(true) so every entry path into the customize
   // sheet (new / edit / clone / restore-from-snapshot) emits a single
@@ -269,6 +297,10 @@ function BrowseModeSessionPrompt({
         // starts from this moment; any pick path (auto-prompt, manual
         // sidebar, post-Save activation) bumps the timer the same way.
         writeLastPickedAt(myProfile.id);
+        // Honour "Don't show me again today" even on a successful pick —
+        // user's snooze intent is orthogonal to whether they used the
+        // picker this time.
+        if (skipToday) writeSnoozeUntilEndOfDay(myProfile.id);
       }
 
       // Append-only pick log on the backend (research analytics ground
@@ -279,6 +311,7 @@ function BrowseModeSessionPrompt({
         kind: mode.kind,
         keep_picker_open: keepPickerOpen ? 'true' : 'false',
         battery_synced: syncBattery ? 'true' : 'false',
+        skip_today: skipToday ? 'true' : 'false',
       };
       if (mode.kind === 'built_in') {
         eventParams.mode_id = mode.id;
@@ -337,6 +370,9 @@ function BrowseModeSessionPrompt({
           : mode.name;
       if (batteryApplied) {
         const emoji = SocialBatteryChipAssets[batteryApplied].emoji ?? '';
+        // Plain message, no Adjust action — the action button was tripping
+        // users into the /update screen on accidental tap; the picker is
+        // the place to change modes, not the toast.
         openToast({
           message: String(
             t('toasts.browsing_in_with_battery', {
@@ -345,12 +381,6 @@ function BrowseModeSessionPrompt({
               label: tRoot(`social_battery.${batteryApplied}`),
             }),
           ),
-          ...(keepPickerOpen
-            ? {}
-            : {
-                actionText: String(t('toasts.adjust')),
-                action: () => navigate('/update'),
-              }),
         });
       } else {
         openToast({
@@ -362,12 +392,12 @@ function BrowseModeSessionPrompt({
       checkIn,
       fetchCheckIn,
       myProfile?.id,
-      navigate,
       onFinish,
       openToast,
       trackEvent,
       setActiveBuiltIn,
       setActiveCustom,
+      skipToday,
       syncBattery,
       t,
       tRoot,
@@ -468,7 +498,10 @@ function BrowseModeSessionPrompt({
       // Apply-without-saving counts as the user actively picking a
       // configuration to use right now — bump the freshness timer so the
       // auto-prompt doesn't re-fire mid-preview.
-      if (myProfile?.id) writeLastPickedAt(myProfile.id);
+      if (myProfile?.id) {
+        writeLastPickedAt(myProfile.id);
+        if (skipToday) writeSnoozeUntilEndOfDay(myProfile.id);
+      }
       pickedInSessionRef.current = true;
       customizeOutcomeRef.current = 'applied';
       // Pick log + Firebase event (best-effort, mirrors applyMode).
@@ -477,10 +510,11 @@ function BrowseModeSessionPrompt({
         kind: 'apply_without_saving',
         keep_picker_open: 'false',
         battery_synced: 'false',
+        skip_today: skipToday ? 'true' : 'false',
       });
       onFinish();
     },
-    [closeCustomize, editingPreset?.id, myProfile?.id, onFinish, trackEvent],
+    [closeCustomize, editingPreset?.id, myProfile?.id, onFinish, skipToday, trackEvent],
   );
 
   const handleConfirmDelete = useCallback(async () => {
@@ -501,8 +535,11 @@ function BrowseModeSessionPrompt({
       presets={customPresets}
       lastActive={activeBrowseMode}
       syncBattery={syncBattery}
+      skipToday={skipToday}
+      showSkipTodayCheckbox={fullScreen}
       hiddenModeKeys={hiddenModeKeys}
       onSyncToggle={handleSyncToggle}
+      onSkipTodayToggle={handleSkipTodayToggle}
       onPick={handleModePick}
       onOpenCustomize={() => {
         setCloneSeed(null);
