@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 import i18n from '@i18n/index';
 
 // NOTE: PROD_BASE_URL은 실제 배포된 도메인 주소
@@ -30,6 +30,19 @@ export const axiosFormDataInstance: AxiosInstance = axios.create({
     'Content-Type': 'multipart/form-data',
   },
 });
+
+// 쿠키의 JWT를 Authorization 헤더로 전송하여 CSRF 의존성을 제거
+const authInterceptor = (config: InternalAxiosRequestConfig) => {
+  const match = document.cookie.match(/(?:^|;\s*)access_token=([^;]*)/);
+  if (match) {
+    config.headers.Authorization = `Bearer ${match[1]}`; // eslint-disable-line no-param-reassign
+  }
+  config.headers['X-Current-Page'] = window.location.pathname; // eslint-disable-line no-param-reassign
+  return config;
+};
+
+axiosJsonInstance.interceptors.request.use(authInterceptor);
+axiosFormDataInstance.interceptors.request.use(authInterceptor);
 
 // 서버 다운(502/503) 시 maintenance 페이지로 이동
 const maintenanceInterceptor = (error: unknown) => {
