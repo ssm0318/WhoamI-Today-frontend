@@ -9,6 +9,7 @@ import MutualMetaText from '@components/_common/mutual-meta-text/MutualMetaText'
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import PostFooterLikeOnly from '@components/_common/post-footer/PostFooterLikeOnly';
 import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
+import PostTypeTag from '@components/_common/post-type-tag/PostTypeTag';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import { SCREEN_WIDTH } from '@constants/layout';
@@ -136,6 +137,10 @@ function ResponseItem({
             <Typo type="label-medium" color="MEDIUM_GRAY">
               {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
             </Typo>
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              ·
+            </Typo>
+            <PostTypeTag variant="question" />
             {!isMyPage && author_detail && username && (
               <MutualMetaText
                 username={username}

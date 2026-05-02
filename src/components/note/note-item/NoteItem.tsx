@@ -10,6 +10,7 @@ import PostFooter from '@components/_common/post-footer/PostFooter';
 import PostFooterDefault from '@components/_common/post-footer/PostFooterDefault';
 import PostFooterLikeOnly from '@components/_common/post-footer/PostFooterLikeOnly';
 import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
+import PostTypeTag, { PostTypeTagVariant } from '@components/_common/post-type-tag/PostTypeTag';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
@@ -49,6 +50,12 @@ function NoteItem({
     mission_prompt,
   } = note;
   const isMissionPost = share_type === ShareType.MISSION;
+  const postTypeVariant: PostTypeTagVariant =
+    share_type === ShareType.MISSION
+      ? 'mission'
+      : share_type === ShareType.PHOTO_OF_THE_DAY
+      ? 'photo'
+      : 'regular';
   const navigate = useNavigate();
   const location = useLocation();
   const { featureFlags } = useBoundStore(UserSelector);
@@ -139,16 +146,10 @@ function NoteItem({
             <Typo type="label-medium" color="MEDIUM_GRAY">
               {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
             </Typo>
-            {isMissionPost && (
-              <>
-                <Typo type="label-medium" color="MEDIUM_GRAY">
-                  ·
-                </Typo>
-                <Typo type="label-medium" color="PRIMARY">
-                  ✦ {t('mission_label')}
-                </Typo>
-              </>
-            )}
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              ·
+            </Typo>
+            <PostTypeTag variant={postTypeVariant} />
             {!isMyPage && author_detail && username && (
               <MutualMetaText
                 username={username}

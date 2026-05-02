@@ -469,6 +469,12 @@
     "discard": "삭제",
     "keep_editing": "계속 작성"
   },
+  "post_type": {
+    "mission": "미션",
+    "photo": "사진",
+    "question": "질문",
+    "regular": "게시글"
+  },
   "note_detail": {
     "title": "{{username}}의 게시글",
     "error_title": "게시글"

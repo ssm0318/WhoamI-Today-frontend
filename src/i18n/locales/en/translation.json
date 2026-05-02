@@ -472,6 +472,12 @@
         "discard": "Discard",
         "keep_editing": "Keep editing"
     },
+    "post_type": {
+        "mission": "Mission",
+        "photo": "Photo",
+        "question": "Question",
+        "regular": "Post"
+    },
     "note_detail": {
         "title": "{{username}}'s Post",
         "error_title": "Post"
