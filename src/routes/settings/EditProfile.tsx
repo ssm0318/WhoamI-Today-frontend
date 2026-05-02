@@ -1,8 +1,9 @@
 import { isAxiosError } from 'axios';
-import { ChangeEvent, ReactNode, useRef, useState } from 'react';
+import { ChangeEvent, ReactNode, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
+import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import ProfileImageEdit from '@components/_common/profile-image-edit/ProfileImageEdit';
 import ProfileImageEditButton from '@components/_common/profile-image-edit-button/ProfileImageEditButton';
@@ -167,6 +168,27 @@ function EditProfile() {
   const [activeTab, setActiveTab] = useState<EditProfileTab>(initialTab);
   const [isSaving, setIsSaving] = useState(false);
   const showUploadOverlay = useDelayedVisible(isSaving);
+
+  // Grandfathered users: prompt them once when they enter the Interests tab
+  // with more chips than the new cap. We don't auto-trim — they decide what
+  // to keep — but we want a clear, action-prompting nudge instead of just a
+  // passive hint banner.
+  const initialTotalChips = Object.values(parsed.selections).reduce((s, l) => s + l.length, 0);
+  const [showOverCapDialog, setShowOverCapDialog] = useState(
+    initialTab === 'interests' && initialTotalChips > MAX_TOTAL_PROFILE_CHIPS,
+  );
+  const [hasShownOverCapDialog, setHasShownOverCapDialog] = useState(showOverCapDialog);
+  useEffect(() => {
+    if (
+      activeTab === 'interests' &&
+      !hasShownOverCapDialog &&
+      initialTotalChips > MAX_TOTAL_PROFILE_CHIPS
+    ) {
+      setShowOverCapDialog(true);
+      setHasShownOverCapDialog(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
   const handleToggleChip = (category: ChipCategory, chipLabel: string) => {
     setDraft((prev) => {
@@ -583,6 +605,18 @@ function EditProfile() {
         />
       )}
       <UploadLoadingOverlay visible={showUploadOverlay} />
+      <CommonDialog
+        visible={showOverCapDialog}
+        title="Trim your profile chips"
+        content={`You have ${initialTotalChips} chips selected. We now limit profiles to ${MAX_TOTAL_PROFILE_CHIPS} chips so they stay focused. Please deselect at least ${
+          initialTotalChips - MAX_TOTAL_PROFILE_CHIPS
+        } to free up space for new ones.`}
+        cancelText=""
+        confirmText="Got it"
+        onClickConfirm={() => setShowOverCapDialog(false)}
+        onClickClose={() => setShowOverCapDialog(false)}
+        trackingId="profile_chip_over_cap_prompt"
+      />
     </MainScrollContainer>
   );
 }
