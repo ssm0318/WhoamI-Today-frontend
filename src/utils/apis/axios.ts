@@ -31,4 +31,19 @@ export const axiosFormDataInstance: AxiosInstance = axios.create({
   },
 });
 
+// 서버 다운(502/503) 시 maintenance 페이지로 이동
+const maintenanceInterceptor = (error: unknown) => {
+  if (axios.isAxiosError(error)) {
+    const status = error.response?.status;
+    if (status === 502 || status === 503 || !error.response) {
+      window.location.replace('/maintenance.html');
+      return new Promise(() => {}); // 이후 체인 중단
+    }
+  }
+  return Promise.reject(error);
+};
+
+axiosJsonInstance.interceptors.response.use(undefined, maintenanceInterceptor);
+axiosFormDataInstance.interceptors.response.use(undefined, maintenanceInterceptor);
+
 export default axiosJsonInstance;
