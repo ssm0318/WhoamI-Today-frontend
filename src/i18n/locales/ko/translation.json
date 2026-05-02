@@ -460,7 +460,14 @@
       "title": "사진 업로드",
       "album": "앨범에서 선택",
       "camera": "카메라로 촬영"
-    }
+    },
+    "mission_label": "미션",
+    "attempt_n_of_m": "{{n}}/{{m}}회 시도",
+    "mission_response_placeholder": "답변을 작성해보세요...",
+    "discard_draft_title": "작성 중인 글을 삭제할까요?",
+    "discard_draft_content": "작성 내용이 사라집니다.",
+    "discard": "삭제",
+    "keep_editing": "계속 작성"
   },
   "note_detail": {
     "title": "{{username}}의 게시글",
@@ -755,7 +762,8 @@
     "about_me": "A Snippet of Me",
     "about_me_description": "사진과 함께 나를 나타내는 무엇이든 공유해보세요!",
     "create_post": "포스트 공유",
-    "qna_title": "Q&A"
+    "qna_title": "Q&A",
+    "quick_share_aria": "공유 작성 열기"
   },
   "discover_banner": {
     "daily_refresh_1": "현재 이 탭의 알고리즘을 수정 중이에요.",

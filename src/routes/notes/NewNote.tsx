@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import NewNoteHeader from '@components/note/new-note-header/NewNoteHeader';
+import { Mission } from '@components/share/MissionOfTheDay';
 import { NewNoteForm, PostVisibility, ShareType } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { convertImagesToFiles } from '@utils/convertImageToFiles';
@@ -18,6 +19,7 @@ function NewNote() {
   const shareType: ShareType | undefined = location.state?.shareType;
   const tmiPlaceholder: string | undefined = location.state?.tmiPlaceholder;
   const missionMode: boolean = location.state?.missionMode ?? false;
+  const mission: Mission | undefined = location.state?.mission;
   const isEditing = location.state?.post != null;
   // location.state가 없으면 새 노트, 있으면 수정 노트
   const title = !isEditing ? t('new_note') : t('edit_note');
@@ -54,6 +56,8 @@ function NewNote() {
         autoOpenImagePicker={shareType === ShareType.PHOTO_OF_THE_DAY}
         placeholder={tmiPlaceholder}
         missionMode={missionMode}
+        mission={mission}
+        isEditing={isEditing}
       />
     </MainScrollContainer>
   );

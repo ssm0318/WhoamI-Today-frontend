@@ -3,9 +3,12 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
+import { Mission } from '@components/share/MissionOfTheDay';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { CheckBox, Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
+import { useMissionToday } from '@hooks/useMissionToday';
+import { NoteDraftContext, useNoteDraft } from '@hooks/useNoteDraft';
 import { FileSelectedData } from '@models/app';
 import { ComponentVisibility } from '@models/checkIn';
 import { NewNoteForm, PostVisibility } from '@models/post';
@@ -27,7 +30,11 @@ interface NoteInformationProps {
   autoOpenImagePicker?: boolean;
   placeholder?: string;
   missionMode?: boolean;
+  mission?: Mission;
+  isEditing?: boolean;
 }
+
+const DRAFT_DEBOUNCE_MS = 500;
 
 function NewNoteContent({
   noteInfo,
@@ -35,6 +42,8 @@ function NewNoteContent({
   autoOpenImagePicker,
   placeholder,
   missionMode,
+  mission,
+  isEditing,
 }: NoteInformationProps) {
   const [t] = useTranslation('translation');
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
@@ -50,6 +59,47 @@ function NewNoteContent({
   const { isAndroid } = getMobileDeviceInfo();
   const postMessage = usePostAppMessage();
   const hasAutoOpenedRef = useRef(false);
+
+  // Mission-mode helper: read the current attempt count for the inline
+  // "Attempt N/5" label. Reads from cache via useMissionToday's SWR key.
+  const { mission: missionToday } = useMissionToday();
+  const upcomingAttemptNumber = missionMode ? (missionToday?.attempts_used ?? 0) + 1 : null;
+  const attemptsRemaining = missionToday?.attempts_remaining ?? 5;
+
+  // Draft persistence — autosave on text/visibility change, hydrate on mount.
+  // Disabled in edit mode (the existing note IS the source of truth).
+  const draftContext: NoteDraftContext = missionMode ? 'mission' : 'regular';
+  const {
+    draft,
+    save: saveDraft,
+    hydrated,
+  } = useNoteDraft(draftContext, mission?.id ?? null, { disabled: !!isEditing });
+  const draftHydratedRef = useRef(false);
+  useEffect(() => {
+    if (!hydrated || draftHydratedRef.current || isEditing) return;
+    draftHydratedRef.current = true;
+    if (draft && (draft.content || draft.visibility.length > 0)) {
+      setNoteInfo((prev) => ({
+        ...prev,
+        content: draft.content || prev.content,
+        visibility: draft.visibility.length > 0 ? draft.visibility : prev.visibility,
+      }));
+    }
+  }, [hydrated, draft, isEditing, setNoteInfo]);
+
+  // Debounced autosave: re-arm a timer on each change; latest wins. Skips
+  // edit mode and waits until hydration completes to avoid clobbering a
+  // restored draft with the empty initial state.
+  useEffect(() => {
+    if (isEditing || !hydrated) return;
+    const handle = window.setTimeout(() => {
+      saveDraft({
+        content: noteInfo.content ?? '',
+        visibility: noteInfo.visibility ?? [],
+      });
+    }, DRAFT_DEBOUNCE_MS);
+    return () => window.clearTimeout(handle);
+  }, [noteInfo.content, noteInfo.visibility, isEditing, hydrated, saveDraft]);
 
   useEffect(() => {
     if (autoOpenImagePicker && !hasAutoOpenedRef.current) {
@@ -331,10 +381,28 @@ function NewNoteContent({
             <Typo type="title-medium">{myProfile?.username}</Typo>
           </Layout.FlexRow>
 
+          {missionMode && mission && (
+            <MissionPromptBlock>
+              <Typo type="label-medium" color="PRIMARY" bold>
+                {`${t('notes.mission_label').toUpperCase()} · ${t('notes.attempt_n_of_m', {
+                  n: upcomingAttemptNumber ?? 1,
+                  m: 5,
+                })}`}
+              </Typo>
+              <Typo type="body-medium" color="DARK_GRAY" italic>
+                {`"${mission.prompt}"`}
+              </Typo>
+            </MissionPromptBlock>
+          )}
+
           {/* Text input */}
           <NoteInput
             value={noteInfo.content}
-            placeholder={placeholder || t('notes.whats_on_your_mind') || ''}
+            placeholder={
+              missionMode
+                ? t('notes.mission_response_placeholder') || ''
+                : placeholder || t('notes.whats_on_your_mind') || ''
+            }
             onChange={handleChangeInput}
             minRows={4}
             maxRows={10}
@@ -342,6 +410,7 @@ function NewNoteContent({
               marginBottom: 20,
               overflow: 'auto',
             }}
+            disabled={missionMode && attemptsRemaining <= 0}
           />
 
           {/* Media button and visibility options */}
@@ -407,6 +476,16 @@ function NewNoteContent({
     </>
   );
 }
+
+const MissionPromptBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background-color: #f8f4fe;
+  border-left: 3px solid ${Colors.PRIMARY};
+`;
 
 const PhotoFirstPlaceholder = styled.div`
   width: 100%;

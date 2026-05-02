@@ -2,12 +2,16 @@ import { AxiosError } from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { mutate as globalMutate } from 'swr';
+import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import UploadLoadingOverlay from '@components/_common/upload-loading-overlay/UploadLoadingOverlay';
-import { markMissionCompleted } from '@components/share/MissionOfTheDay';
+import { Mission } from '@components/share/MissionOfTheDay';
 import { Layout, Typo } from '@design-system';
 import { useDelayedVisible } from '@hooks/useDelayedVisible';
+import { MISSION_TODAY_KEY } from '@hooks/useMissionToday';
+import { NoteDraftContext, useNoteDraft } from '@hooks/useNoteDraft';
 import { useTrackEvent } from '@hooks/useTrackEvent';
-import { NewNoteForm } from '@models/post';
+import { NewNoteForm, ShareType } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { patchNote, postNote } from '@utils/apis/note';
 import { NewNoteHeaderWrapper } from './NewNoteHeader.styled';
@@ -29,10 +33,17 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
 
   const fromShare = location.state?.fromShare;
-  const missionMode = location.state?.missionMode;
+  const missionMode = !!location.state?.missionMode;
+  const mission: Mission | undefined = location.state?.mission;
   const trackEvent = useTrackEvent();
   const publishedRef = useRef(false);
   const isEditing = !!noteId;
+
+  const draftContext: NoteDraftContext = missionMode ? 'mission' : 'regular';
+  const { clear: clearDraft } = useNoteDraft(draftContext, mission?.id ?? null, {
+    disabled: isEditing,
+  });
+  const [discardDialogVisible, setDiscardDialogVisible] = useState(false);
   // Latest noteInfo via ref so the unmount cleanup checks the most recent
   // content/image state — unmount fires AFTER state is frozen.
   const noteInfoRef = useRef(noteInfo);
@@ -59,7 +70,7 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const cancelPost = () => {
+  const navigateAway = () => {
     if (fromShare) {
       navigate('/share');
     } else {
@@ -67,20 +78,42 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
     }
   };
 
+  const cancelPost = () => {
+    const hasContent =
+      !!noteInfoRef.current.content?.trim() ||
+      (noteInfoRef.current.images && noteInfoRef.current.images.length > 0);
+    if (!isEditing && hasContent) {
+      setDiscardDialogVisible(true);
+      return;
+    }
+    navigateAway();
+  };
+
+  const handleDiscardConfirm = () => {
+    clearDraft();
+    setDiscardDialogVisible(false);
+    navigateAway();
+  };
+
   const confirmPost = async () => {
     if (isSubmitting) return;
 
     setIsSubmitting(true);
     try {
+      const payload: NewNoteForm =
+        missionMode && mission
+          ? { ...noteInfo, share_type: ShareType.MISSION, mission_id: mission.id }
+          : noteInfo;
       const { id: newNoteId } = !noteId
-        ? await postNote(noteInfo)
+        ? await postNote(payload)
         : await patchNote(noteId, noteInfo);
 
-      // Mark mission as completed only after successful post
-      if (missionMode) {
-        markMissionCompleted();
+      // Refresh today's mission counter so the Share card reflects the new attempt.
+      if (missionMode && !noteId) {
+        globalMutate(MISSION_TODAY_KEY);
       }
 
+      clearDraft();
       publishedRef.current = true;
       trackEvent('note_compose_published', {
         mode: isEditing ? 'edit' : 'create',
@@ -130,6 +163,18 @@ function NewNoteHeader({ status, noteId, title, noteInfo }: NewNoteHeaderProps) 
         </Layout.FlexRow>
       </NewNoteHeaderWrapper>
       <UploadLoadingOverlay visible={showUploadOverlay} />
+      <CommonDialog
+        visible={discardDialogVisible}
+        title={t('discard_draft_title')}
+        content={t('discard_draft_content')}
+        cancelText={t('keep_editing')}
+        confirmText={t('discard')}
+        confirmTextColor="ERROR"
+        onClickConfirm={handleDiscardConfirm}
+        onClickCancel={() => setDiscardDialogVisible(false)}
+        onClickClose={() => setDiscardDialogVisible(false)}
+        trackingId="note_discard_draft"
+      />
     </>
   );
 }

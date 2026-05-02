@@ -12,8 +12,8 @@ import PostFooterLikeOnly from '@components/_common/post-footer/PostFooterLikeOn
 import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
-import { Layout, SvgIcon, Typo } from '@design-system';
-import { Note, POST_DP_TYPE } from '@models/post';
+import { Colors, Layout, SvgIcon, Typo } from '@design-system';
+import { Note, POST_DP_TYPE, ShareType } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { classifyPathnameAsSource } from '@utils/navSource';
@@ -37,7 +37,19 @@ function NoteItem({
   profileImageSize = PROFILE_IMAGE_SIZE,
   previewMode = false,
 }: NoteItemProps) {
-  const { content, created_at, id, author_detail, images, is_edited, visibility } = note;
+  const {
+    content,
+    created_at,
+    id,
+    author_detail,
+    images,
+    is_edited,
+    visibility,
+    share_type,
+    mission_prompt,
+    mission_attempt_number,
+  } = note;
+  const isMissionPost = share_type === ShareType.MISSION;
   const navigate = useNavigate();
   const location = useLocation();
   const { featureFlags } = useBoundStore(UserSelector);
@@ -128,6 +140,16 @@ function NoteItem({
             <Typo type="label-medium" color="MEDIUM_GRAY">
               {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
             </Typo>
+            {isMissionPost && (
+              <>
+                <Typo type="label-medium" color="MEDIUM_GRAY">
+                  ·
+                </Typo>
+                <Typo type="label-medium" color="PRIMARY">
+                  ✦ {t('mission_label')}
+                </Typo>
+              </>
+            )}
             {!isMyPage && author_detail && username && (
               <MutualMetaText
                 username={username}
@@ -205,6 +227,22 @@ function NoteItem({
     </Layout.FlexCol>
   );
 
+  const missionFooterJsx =
+    isMissionPost && mission_prompt ? (
+      <MissionFooter>
+        <Typo type="body-medium" color="DARK_GRAY" italic>
+          ✦ {`"${mission_prompt}"`}
+        </Typo>
+        {mission_attempt_number != null && (
+          <MissionAttemptChip>
+            <Typo type="label-medium" color="PRIMARY" bold>
+              {`${mission_attempt_number}/5`}
+            </Typo>
+          </MissionAttemptChip>
+        )}
+      </MissionFooter>
+    ) : null;
+
   const footerJsx = featureFlags?.postsVerQ ? (
     <PostFooterLikeOnly
       post={note}
@@ -272,6 +310,7 @@ function NoteItem({
           <>
             {headerJsx}
             {contentJsx}
+            {missionFooterJsx}
             {footerJsx}
           </>
         )}
@@ -297,6 +336,23 @@ function NoteItem({
 export default NoteItem;
 
 const PROFILE_IMAGE_SIZE = 44;
+
+const MissionFooter = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 0 0;
+  border-top: 1px dashed ${Colors.LIGHT_GRAY};
+`;
+
+const MissionAttemptChip = styled.div`
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background-color: #eee6f4;
+`;
 
 const PreviewImage = styled.img`
   width: 100%;

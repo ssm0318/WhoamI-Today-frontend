@@ -117,6 +117,8 @@ export interface Note extends ContentsCommon {
   is_edited: boolean;
   visibility: PostVisibility;
   share_type?: ShareType;
+  mission_prompt?: string | null;
+  mission_attempt_number?: number | null;
 }
 
 export interface NewNoteForm {
@@ -124,6 +126,7 @@ export interface NewNoteForm {
   images?: CroppedImg[];
   visibility: PostVisibility[];
   share_type?: ShareType;
+  mission_id?: number;
 }
 // Response list for questions
 /** deprecated */
@@ -196,6 +199,7 @@ export enum ShareType {
   REGULAR = 'regular',
   TMI_OF_THE_DAY = 'tmi_of_the_day',
   PHOTO_OF_THE_DAY = 'photo_of_the_day',
+  MISSION = 'mission',
 }
 
 export enum PostVisibility {

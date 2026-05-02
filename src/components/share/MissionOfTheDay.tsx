@@ -1,65 +1,14 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 import { Layout, Typo } from '@design-system';
-import { useMissions } from '@hooks/useMissions';
+import { useMissionToday } from '@hooks/useMissionToday';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 
 export type MissionType = 'song' | 'question' | 'text' | 'compliment';
 
 export interface Mission {
+  id: number;
   prompt: string;
   type: MissionType;
-}
-
-export function getDayOfYear(): number {
-  const now = new Date();
-  // 7 AM America/Los_Angeles boundary: the "day" changes at 7 AM LA time
-  const laStr = now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
-  const laTime = new Date(laStr);
-  const shifted = new Date(laTime.getTime() - 7 * 60 * 60 * 1000);
-  const start = new Date(shifted.getFullYear(), 0, 0);
-  const diff = shifted.getTime() - start.getTime();
-  return Math.floor(diff / (1000 * 60 * 60 * 24));
-}
-
-const MISSION_STORAGE_KEY = 'whoami_mission_attempts';
-const MAX_ATTEMPTS = 5;
-
-export function getAttemptsToday(): number {
-  const stored = localStorage.getItem(MISSION_STORAGE_KEY);
-  if (!stored) return 0;
-  try {
-    const parsed = JSON.parse(stored);
-    if (parsed.day === getDayOfYear()) return parsed.count;
-  } catch {
-    // ignore
-  }
-  return 0;
-}
-
-export function markMissionCompleted(): void {
-  const current = getAttemptsToday();
-  localStorage.setItem(
-    MISSION_STORAGE_KEY,
-    JSON.stringify({ day: getDayOfYear(), count: current + 1 }),
-  );
-  // Fire the completion event directly through the WebView bridge —
-  // this util is called from non-hook contexts (post-publish handlers in
-  // Share.tsx / NewNoteHeader.tsx / NewResponse.tsx) so we can't use
-  // useTrackEvent here. Bridge call mirrors what useTrackEvent emits.
-  if (typeof window !== 'undefined' && window.ReactNativeWebView) {
-    try {
-      window.ReactNativeWebView.postMessage(
-        JSON.stringify({
-          actionType: 'ANALYTICS_TRACK_EVENT',
-          name: 'mission_completed',
-          params: { attempt_number: current + 1 },
-        }),
-      );
-    } catch {
-      /* best-effort analytics */
-    }
-  }
 }
 
 interface Props {
@@ -67,41 +16,43 @@ interface Props {
 }
 
 function MissionOfTheDay({ onDoMission }: Props) {
-  const { missions } = useMissions();
-  const todayMission = missions[getDayOfYear() % missions.length];
-  const [attempts, setAttempts] = useState(getAttemptsToday());
+  const { mission, isLoading } = useMissionToday();
   const trackEvent = useTrackEvent();
 
-  const allUsed = attempts >= MAX_ATTEMPTS;
+  if (isLoading || !mission) {
+    return (
+      <Layout.FlexCol gap={12} w="100%">
+        <Typo type="title-medium" color="WHITE">
+          ...
+        </Typo>
+      </Layout.FlexCol>
+    );
+  }
+
+  const { attempts_used, attempts_remaining } = mission;
+  const allUsed = attempts_remaining <= 0;
 
   const handleDoIt = () => {
     if (allUsed) return;
-    // Funnel start: paired with mission_completed in markMissionCompleted.
+    // Funnel start: paired with mission_completed analytics in NewNoteHeader.
     // Diff = users who tapped "Do it" but never published — abandon rate.
     trackEvent('mission_attempt_started', {
-      mission_type: todayMission.type,
-      attempt_number: attempts + 1,
+      mission_type: mission.type,
+      attempt_number: attempts_used + 1,
     });
-    onDoMission(todayMission);
+    onDoMission({ id: mission.id, prompt: mission.prompt, type: mission.type });
   };
 
-  // Refresh attempts on re-render (e.g. returning from post flow)
-  const currentAttempts = getAttemptsToday();
-  if (currentAttempts !== attempts) {
-    setAttempts(currentAttempts);
-  }
-
-  const remaining = MAX_ATTEMPTS - attempts;
   const buttonLabel = allUsed
     ? 'No attempts left today'
-    : attempts > 0
-    ? `Try again (${remaining} left)`
+    : attempts_used > 0
+    ? `Try again (${attempts_remaining} left)`
     : 'Do it';
 
   return (
     <Layout.FlexCol gap={12} w="100%">
       <Typo type="title-medium" color="WHITE">
-        {todayMission.prompt}
+        {mission.prompt}
       </Typo>
       <ActionButton onClick={handleDoIt} $isCompleted={allUsed}>
         <Typo type="label-large" color={allUsed ? 'MEDIUM_GRAY' : 'PRIMARY'} fontWeight={600}>

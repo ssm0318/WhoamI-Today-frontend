@@ -463,7 +463,14 @@
             "title": "Photo Upload",
             "album": "Select from Album",
             "camera": "Take a Photo"
-        }
+        },
+        "mission_label": "Mission",
+        "attempt_n_of_m": "Attempt {{n}}/{{m}}",
+        "mission_response_placeholder": "Write your response...",
+        "discard_draft_title": "Discard draft?",
+        "discard_draft_content": "Your draft will be deleted.",
+        "discard": "Discard",
+        "keep_editing": "Keep editing"
     },
     "note_detail": {
         "title": "{{username}}'s Post",
@@ -762,7 +769,8 @@
         "about_me": "A Snippet of Me",
         "about_me_description": "Drop a photo and share whatever represents you!",
         "create_post": "Share a post",
-        "qna_title": "Q&A"
+        "qna_title": "Q&A",
+        "quick_share_aria": "Open share composer"
     },
     "discover_banner": {
         "daily_refresh_1": "We're working on the algorithm for this tab at the moment.",

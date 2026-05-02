@@ -5,7 +5,6 @@ import useSWR from 'swr';
 import FilterChip from '@components/_common/filter-chip/FilterChip';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import HighlightQuestionSection from '@components/discover/HighlightQuestionSection/HighlightQuestionSection';
-import MissionPromptCard from '@components/discover/MissionPromptCard/MissionPromptCard';
 import ProfileSuggestionCard from '@components/discover/ProfileSuggestionCard/ProfileSuggestionCard';
 import SelectInterestSection from '@components/discover/SelectInterestSection/SelectInterestSection';
 import SelectPersonaSection from '@components/discover/SelectPersonaSection/SelectPersonaSection';
@@ -18,11 +17,9 @@ import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/Floatin
 import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
-import { getDayOfYear } from '@components/share/MissionOfTheDay';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { useChipCategories } from '@hooks/useChipCategories';
-import { useMissions } from '@hooks/useMissions';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSaveAndHide } from '@hooks/useSaveAndHide';
 import { useScrollDepth } from '@hooks/useScrollDepth';
@@ -105,7 +102,6 @@ function Discover() {
   const discoverHidden = !!allowedTabs && !allowedTabs.includes('discover');
   const fallbackPath = allowedTabs && allowedTabs.length > 0 ? `/${allowedTabs[0]}` : '/friends';
 
-  const { missions } = useMissions();
   const discoverFilterList = [DiscoverFilter.MUTUAL_FRIENDS, DiscoverFilter.MUTUAL_TRAITS];
   const { scrollRef } = useRestoreScrollPosition('discoverPage');
   // Discover is a feed — depth telegraphs engagement intensity. Backend
@@ -141,15 +137,6 @@ function Discover() {
       },
     }));
   }, [discoverData]);
-
-  // Build synthetic cards to inject into the feed
-  const missionPromptCard: DiscoverResultItem | null = useMemo(() => {
-    const todayMission = missions[getDayOfYear() % missions.length];
-    return {
-      type: 'MissionPrompt' as const,
-      body: { prompt: todayMission.prompt, missionType: todayMission.type },
-    };
-  }, [missions]);
 
   const { categories: chipCategories } = useChipCategories();
 
@@ -227,7 +214,7 @@ function Discover() {
     // disappear on their own once the user fills the corresponding fields, so
     // rotating them across days hides actionable nudges instead of helping.
     const selectedCards = (
-      [surveyResultsCard, missionPromptCard, profileSuggestionCard, usernameSuggestionCard] as const
+      [surveyResultsCard, profileSuggestionCard, usernameSuggestionCard] as const
     ).filter((c) => c !== null) as DiscoverResultItem[];
 
     const result: DiscoverResultItem[] = [...flatItems];
@@ -241,13 +228,7 @@ function Discover() {
       });
 
     return result;
-  }, [
-    discoverData,
-    missionPromptCard,
-    profileSuggestionCard,
-    surveyResultsCard,
-    usernameSuggestionCard,
-  ]);
+  }, [discoverData, profileSuggestionCard, surveyResultsCard, usernameSuggestionCard]);
 
   // If the active browse mode says to hide synthetic discover cards, drop them here.
   const hideSyntheticCards = !!activeBrowseMode?.config.sections.hide_synthetic_discover_cards;
@@ -257,7 +238,6 @@ function Discover() {
     (item: DiscoverResultItem): boolean => {
       // Synthetic cards: shown by default, hidden when the active browse mode says so.
       if (
-        item.type === 'MissionPrompt' ||
         item.type === 'ProfileSuggestion' ||
         item.type === 'SurveyResults' ||
         item.type === 'UsernameSuggestion'
@@ -325,8 +305,6 @@ function Discover() {
               />
             </S.AnimatedCardWrapper>
           ) : null;
-        case 'MissionPrompt':
-          return <MissionPromptCard key={`mission-${index}`} mission={item.body} />;
         case 'ProfileSuggestion':
           return (
             <ProfileSuggestionCard key={`profile-suggestion-${index}`} suggestion={item.body} />

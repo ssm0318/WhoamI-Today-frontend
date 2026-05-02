@@ -52,6 +52,9 @@ export const postNote = async (
   if (noteData.share_type) {
     formData.append('share_type', noteData.share_type);
   }
+  if (noteData.mission_id != null) {
+    formData.append('mission_id', String(noteData.mission_id));
+  }
 
   const { data } = await axiosFormDataInstance.post<Note>(`notes/`, formData, {
     onUploadProgress: (progressEvent) => {

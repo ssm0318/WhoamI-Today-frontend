@@ -68,12 +68,6 @@ export interface DiscoverMusicTrack {
   created_at: string;
 }
 
-// MissionPrompt Card Body (frontend-only injection)
-export interface MissionPromptCardBody {
-  prompt: string;
-  missionType: 'song' | 'question' | 'text' | 'compliment';
-}
-
 // ProfileSuggestion Card Body (frontend-only injection)
 export interface ProfileSuggestionField {
   label: string;
@@ -122,10 +116,6 @@ export type DiscoverResultItem =
   | {
       type: 'Persona';
       body: PersonaCardBody;
-    }
-  | {
-      type: 'MissionPrompt';
-      body: MissionPromptCardBody;
     }
   | {
       type: 'ProfileSuggestion';

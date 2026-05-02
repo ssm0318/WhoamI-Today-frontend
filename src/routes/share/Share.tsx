@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import CheckInPostShareCta from '@components/share/CheckInPostShareCta';
-import MissionOfTheDay, { markMissionCompleted } from '@components/share/MissionOfTheDay';
+import MissionOfTheDay, { Mission } from '@components/share/MissionOfTheDay';
 import QuestionsOfTheDaySection from '@components/share/QuestionsOfTheDaySection';
+import QuickShareInput from '@components/share/QuickShareInput';
 import SurveyOfTheDay from '@components/share/SurveyOfTheDay';
 import { DEFAULT_MARGIN } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
@@ -82,21 +83,27 @@ function Share() {
     if (photoInputRef.current) photoInputRef.current.value = '';
   };
 
-  const handleDoMission = (mission: { prompt: string; type: string }) => {
+  const handleDoMission = (mission: Mission) => {
     if (mission.type === 'song') {
-      markMissionCompleted();
       navigate('/update');
-    } else {
-      navigate('/notes/new', {
-        state: { tmiPlaceholder: mission.prompt, fromShare: true, missionMode: true },
-      });
+      return;
     }
+    if (mission.type === 'question') {
+      navigate('/questions', { state: { missionMode: true } });
+      return;
+    }
+    navigate('/notes/new', {
+      state: { fromShare: true, missionMode: true, mission },
+    });
   };
 
   return (
     <MainScrollContainer scrollRef={scrollRef}>
       <PullToRefresh onRefresh={handleRefresh}>
         <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} pv={16} gap={16} pb={100}>
+          {/* Quick share — unstructured ad-hoc post entry */}
+          <QuickShareInput />
+
           {/* Section 1: Photo of the Day */}
           <ColorCard $bg="linear-gradient(135deg, #FF00A8 0%, #C2007E 100%)">
             <Typo type="head-line" color="WHITE" bold>

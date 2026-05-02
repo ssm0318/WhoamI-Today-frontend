@@ -9,7 +9,6 @@ import { StyledNewResponsePrompt } from '@components/_common/prompt/PromptCard.s
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import NewNoteImageEdit from '@components/note/new-note-image-edit/NewNoteImageEdit';
 import { NoteImage } from '@components/note/note-image/NoteImage.styled';
-import { markMissionCompleted } from '@components/share/MissionOfTheDay';
 import SubHeader from '@components/sub-header/SubHeader';
 import { CheckBox, Layout, SvgIcon, TextArea, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -31,7 +30,6 @@ function NewResponse() {
   const location = useLocation();
   const { questionId, responseId } = useParams();
   const isEdit = location.pathname.includes('/edit');
-  const missionMode = location.state?.missionMode;
 
   const currentUser = useBoundStore.getState().myProfile;
   const { featureFlags } = useBoundStore(UserSelector);
@@ -156,10 +154,6 @@ function NewResponse() {
             content: newResponse || '',
             visibility: visibilityList,
           });
-
-      if (missionMode) {
-        markMissionCompleted();
-      }
 
       navigate(`/responses/${newResponseId}`, { state: 'new' });
       openToast({
