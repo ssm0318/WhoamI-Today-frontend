@@ -65,9 +65,9 @@ jobs:
             docker compose -f docker-compose.production.yml up -d --no-deps --force-recreate nginx-reverse-proxy
           }
 
-          echo "🧪 헬스체크"
+          echo "🧪 헬스체크 (bypass 쿠키로 maintenance 모드 우회)"
           sleep 3
-          HTTP_STATUS=$(curl -s -o /dev/null -w '%{http_code}' https://whoami-test-group.gina-park.site/ 2>/dev/null || echo "000")
+          HTTP_STATUS=$(curl -s -o /dev/null -w '%{http_code}' -b 'maintenance_bypass=whoami2026_v18_go' https://whoami-test-group.gina-park.site/ 2>/dev/null || echo "000")
           if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
             echo "✅ 배포 완료! (HTTP $HTTP_STATUS)"
             docker run --rm -v /tmp:/tmp alpine rm -rf "/tmp/$(basename $BACKUP_DIR)" 2>/dev/null || true
@@ -79,7 +79,7 @@ jobs:
               docker compose -f docker-compose.production.yml exec nginx-reverse-proxy nginx -s reload 2>/dev/null || \
                 docker compose -f docker-compose.production.yml up -d --no-deps --force-recreate nginx-reverse-proxy
               echo "🔄 롤백 완료 (이전 빌드로 복구)"
-              rm -rf "$BACKUP_DIR"
+              docker run --rm -v /tmp:/tmp alpine rm -rf "/tmp/$(basename $BACKUP_DIR)" 2>/dev/null || true
             fi
             exit 1
           fi

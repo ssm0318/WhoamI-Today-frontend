@@ -109,6 +109,13 @@
             ? '5분 후에 다시 접속해 주세요'
             : 'Please come back in 5 minutes';
         document.documentElement.lang = isKo ? 'ko' : 'en';
+
+        // 30초마다 서버 상태 확인, 복구되면 자동으로 앱으로 이동
+        setInterval(function() {
+            fetch('/api/health/').then(function(r) {
+                if (r.ok) window.location.replace('/');
+            }).catch(function() {});
+        }, 30000);
     </script>
 </body>
 </html>

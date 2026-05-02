@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios';
+import { AxiosError, isAxiosError } from 'axios';
 import { redirect } from 'react-router-dom';
 import { SESSION_STORAGE_KEY } from '@constants/sessionStorageKey';
 import { ScrollPositionStore } from '@hooks/useRestoreScrollPosition';
@@ -73,7 +73,16 @@ export const checkIfSignIn = async () => {
       return user;
     }
     return user;
-  } catch {
+  } catch (e) {
+    // 서버 다운(502/503) 또는 네트워크 에러 → 로그아웃하지 않고 maintenance 페이지로
+    if (
+      isAxiosError(e) &&
+      (e.response?.status === 502 || e.response?.status === 503 || !e.response)
+    ) {
+      window.location.replace('/maintenance.html');
+      return null;
+    }
+
     resetBoundStores();
     setItemToSessionStorage<ScrollPositionStore>(SESSION_STORAGE_KEY, {});
 
