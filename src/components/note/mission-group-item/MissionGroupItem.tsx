@@ -111,10 +111,6 @@ function MissionGroupItem({
                 <Typo type="label-medium" color="MEDIUM_GRAY">
                   {group.created_at && convertTimeDiffByString({ day: new Date(group.created_at) })}
                 </Typo>
-                <Typo type="label-medium" color="MEDIUM_GRAY">
-                  ·
-                </Typo>
-                <PostTypeTag variant="mission" />
               </Layout.FlexRow>
             </Layout.FlexCol>
           </Layout.FlexRow>
@@ -161,6 +157,14 @@ function MissionGroupItem({
           <PromptSummaryCard
             content={group.mission_prompt}
             date={group.created_at}
+            trailing={
+              <>
+                <Typo type="label-medium" color="MEDIUM_GRAY">
+                  ·
+                </Typo>
+                <PostTypeTag variant="mission" />
+              </>
+            }
             onClick={() => {
               if (group.mission_id) navigate(`/missions/${group.mission_id}`);
             }}

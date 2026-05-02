@@ -1,22 +1,18 @@
 import { useTranslation } from 'react-i18next';
 import { ColorKeys, Typo } from '@design-system';
 
-export type PostTypeTagVariant = 'mission' | 'photo' | 'question' | 'regular';
+export type PostTypeTagVariant = 'mission' | 'question';
 
 // Avoid PRIMARY purple — already used heavily for nav, buttons, and mission
 // composer chrome. Each variant gets its own non-purple accent color.
 const TYPE_COLOR: Record<PostTypeTagVariant, ColorKeys> = {
   mission: 'TERTIARY_GREEN',
-  photo: 'TERTIARY_PINK',
   question: 'TERTIARY_BLUE',
-  regular: 'DARK_GRAY',
 };
 
 const TYPE_KEY: Record<PostTypeTagVariant, string> = {
   mission: 'mission',
-  photo: 'photo',
   question: 'question',
-  regular: 'regular',
 };
 
 interface Props {

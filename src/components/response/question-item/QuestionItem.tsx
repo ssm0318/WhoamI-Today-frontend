@@ -1,6 +1,8 @@
 import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PostTypeTag from '@components/_common/post-type-tag/PostTypeTag';
 import PromptSummaryCard from '@components/_common/prompt-summary-card/PromptSummaryCard';
+import { Typo } from '@design-system';
 import { DailyQuestion } from '@models/post';
 
 interface QuestionItemProps {
@@ -26,6 +28,14 @@ function QuestionItem({
     <PromptSummaryCard
       content={content}
       date={selected_dates?.[selected_dates.length - 1] ?? created_at}
+      trailing={
+        <>
+          <Typo type="label-medium" color="MEDIUM_GRAY">
+            ·
+          </Typo>
+          <PostTypeTag variant="question" />
+        </>
+      }
       onClick={disableNavigation ? undefined : handleClickQuestion}
     />
   );
