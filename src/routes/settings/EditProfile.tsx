@@ -242,7 +242,9 @@ function EditProfile() {
         customChips: [...prev.customChips, { id: chip.id, text: chip.text, category }],
       }));
     } catch (err) {
-      if (isAxiosError(err) && err.response?.status === 400) {
+      if (isAxiosError(err) && err.response?.status === 409) {
+        openToast({ message: `"${text}" already exists in this category` });
+      } else if (isAxiosError(err) && err.response?.status === 400) {
         openToast({
           message: `You can add up to ${MAX_CUSTOM_CHIPS_PER_CATEGORY} custom chips per category`,
         });
@@ -611,6 +613,9 @@ function EditProfile() {
                     onToggleChip={handleToggleChip}
                     onAddCustomChip={handleAddCustomChip}
                     onRemoveCustomChip={handleRemoveCustomChip}
+                    onDuplicateChip={(text) =>
+                      openToast({ message: `"${text}" already exists in this category` })
+                    }
                   />
                   {!featureFlags?.postsVerQ && (
                     <VisibilityToggle

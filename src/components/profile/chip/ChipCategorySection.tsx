@@ -17,6 +17,7 @@ interface Props {
   onToggleChip: (category: ChipCategory, chipLabel: string) => void;
   onAddCustomChip: (category: ChipCategory, text: string) => void;
   onRemoveCustomChip: (category: ChipCategory, text: string) => void;
+  onDuplicateChip?: (text: string) => void;
 }
 
 function ChipCategorySection({
@@ -26,6 +27,7 @@ function ChipCategorySection({
   onToggleChip,
   onAddCustomChip,
   onRemoveCustomChip,
+  onDuplicateChip,
 }: Props) {
   const { key: category, label, description, chips } = categoryInfo;
 
@@ -40,7 +42,10 @@ function ChipCategorySection({
       chips.some((c) => normalizeChipText(c) === normalizeChipText(text)) ||
       categoryCustomChips.some((c) => normalizeChipText(c.text) === normalizeChipText(text));
 
-    if (alreadyExists) return;
+    if (alreadyExists) {
+      onDuplicateChip?.(text);
+      return;
+    }
     onAddCustomChip(category, text);
   };
 

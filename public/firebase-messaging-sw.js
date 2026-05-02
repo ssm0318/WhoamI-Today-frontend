@@ -57,10 +57,7 @@ self.addEventListener('notificationclick', (e) => {
 // Retrieve an instance of Firebase Messaging so that it can handle background messages.
 const messaging = firebase.messaging();
 
-// FCM SDK가 background에서 notification 필드로 자동 표시한 뒤 이 콜백이 호출됨.
-// FCM 자동 표시 알림은 tag가 없어서 쌓이므로, 여기서:
-// 1. FCM이 표시한 tag-없는 알림을 모두 닫고
-// 2. 우리 tag 포함 알림으로 교체
+// data-only 메시지를 수신하여 tag 기반으로 알림 표시 (같은 tag면 이전 것 대체)
 messaging.onBackgroundMessage((payload) => {
   const data = payload?.data;
   if (!data) return;
@@ -74,26 +71,15 @@ messaging.onBackgroundMessage((payload) => {
     return;
   }
 
-  // FCM이 자동 표시한 tag-없는 알림 닫기
-  self.registration.getNotifications().then((notifications) => {
-    notifications.forEach((n) => {
-      // FCM 자동 표시 알림: tag가 없거나 빈 문자열
-      if (!n.tag) {
-        n.close();
-      }
-    });
+  const isKorean = self.navigator?.language?.startsWith('ko');
+  const title = 'WhoAmI Today';
+  const options = {
+    body: isKorean ? message_ko || message_en : message_en || message_ko,
+    tag,
+    renotify: true,
+    icon: '/whoami192.png',
+    data: { url },
+  };
 
-    // tag 포함 알림으로 표시 (같은 tag면 이전 것 대체)
-    const isKorean = self.navigator?.language?.startsWith('ko');
-    const title = 'WhoAmI Today';
-    const options = {
-      body: isKorean ? message_ko || message_en : message_en || message_ko,
-      tag,
-      renotify: true,
-      icon: '/whoami192.png',
-      data: { url },
-    };
-
-    self.registration.showNotification(title, options);
-  });
+  self.registration.showNotification(title, options);
 });
