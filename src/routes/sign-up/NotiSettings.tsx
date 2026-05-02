@@ -6,6 +6,7 @@ import {
   FRIENDS_Q_DEFAULT_REDIRECTION_PATH,
 } from '@constants/url';
 import { Button, Font, Layout } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { hasMandatorySignUpParams } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
@@ -45,8 +46,13 @@ function NotiSettings() {
   };
 
   const navigate = useNavigate();
+  const trackEvent = useTrackEvent();
   const onClickNextOrSkip = () => {
     if (!hasMandatorySignUpParams(signUpInfo)) {
+      trackEvent('signup_validation_error', {
+        step: 'noti_settings',
+        error_type: 'missing_params',
+      });
       navigate('/signup/email');
       // TOOO: 에러 메시지 보강
       return;
@@ -59,6 +65,10 @@ function NotiSettings() {
       },
       onSuccess: () => {
         resetSignUpInfo();
+        trackEvent('signup_completed', {
+          final_step: 'noti_settings',
+          noti_enabled: notiTime ? 'true' : 'false',
+        });
         navigate(
           featureFlags?.friendList
             ? FRIEND_DEFAULT_REDIRECTION_PATH
@@ -68,6 +78,7 @@ function NotiSettings() {
       onError: (e) => {
         // TODO
         console.log(e);
+        trackEvent('signup_failed', { step: 'noti_settings' });
       },
     });
   };

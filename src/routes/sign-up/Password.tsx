@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
 import { Button, Layout } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { useBoundStore } from '@stores/useBoundStore';
 import { signUp, validatePassword } from '@utils/apis/user';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
@@ -22,8 +23,11 @@ function Password() {
     if (passwordError) setPasswordError(null);
   };
 
+  const trackEvent = useTrackEvent();
+
   const handleOnSignUpError = () => {
     openToast({ message: t('error') });
+    trackEvent('signup_failed', { step: 'password' });
     navigate('/');
   };
 
@@ -40,6 +44,9 @@ function Password() {
           onSuccess: () => {
             resetSignUpInfo();
             openToast({ message: t('success') });
+            // Final funnel event — paired with the screen_view chain. Lets
+            // dashboards compute conversion rate from /signup/email entry.
+            trackEvent('signup_completed', { final_step: 'password' });
             // 가입 후 프로필 수정 페이지로 이동
             navigate('/settings/edit-profile', {
               state: { fromSignUp: true },
@@ -48,7 +55,10 @@ function Password() {
           onError: handleOnSignUpError,
         });
       },
-      onError: (e) => setPasswordError(e),
+      onError: (e) => {
+        setPasswordError(e);
+        trackEvent('signup_validation_error', { step: 'password', error_type: 'api' });
+      },
     });
   };
 

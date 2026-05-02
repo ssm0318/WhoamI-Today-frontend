@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import { Button, Layout } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { useBoundStore } from '@stores/useBoundStore';
 import { validateEmail } from '@utils/apis/user';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
@@ -22,14 +23,23 @@ function Email() {
   };
 
   const navigate = useNavigate();
+  const trackEvent = useTrackEvent();
   const onClickNext = () => {
     validateEmail({
       email: emailInput,
       onSuccess: () => {
         setSignUpInfo({ email: emailInput });
+        trackEvent('signup_step_advanced', { step: 'email' });
         navigate('/signup/username');
       },
-      onError: (e) => setEmailError(e),
+      onError: (e) => {
+        setEmailError(e);
+        // error_type=api covers all backend validation rejections
+        // (already-taken, malformed, throttled, etc.). The UI string is
+        // localized so logging it isn't useful; the step + 'api' label
+        // is enough to distinguish from client-side errors below.
+        trackEvent('signup_validation_error', { step: 'email', error_type: 'api' });
+      },
     });
   };
 

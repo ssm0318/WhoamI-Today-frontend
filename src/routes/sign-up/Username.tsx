@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import { Button, Layout } from '@design-system';
+import { useTrackEvent } from '@hooks/useTrackEvent';
 import { useBoundStore } from '@stores/useBoundStore';
 import { validateUsername } from '@utils/apis/user';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
@@ -20,6 +21,7 @@ function Username() {
   const [usernameError, setUsernameError] = useState<string | null>(null);
 
   const navigate = useNavigate();
+  const trackEvent = useTrackEvent();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUsernameInput(e.target.value);
@@ -31,10 +33,12 @@ function Username() {
 
     if (trimmed.length < USERNAME_MIN_LENGTH) {
       setUsernameError(t('username_min_length_error'));
+      trackEvent('signup_validation_error', { step: 'username', error_type: 'min_length' });
       return;
     }
     if (!USERNAME_FORMAT_REGEX.test(trimmed)) {
       setUsernameError(t('username_format_error'));
+      trackEvent('signup_validation_error', { step: 'username', error_type: 'format' });
       return;
     }
 
@@ -42,9 +46,13 @@ function Username() {
       username: trimmed,
       onSuccess: () => {
         setSignUpInfo({ username: trimmed });
+        trackEvent('signup_step_advanced', { step: 'username' });
         navigate('/signup/info');
       },
-      onError: (e) => setUsernameError(e),
+      onError: (e) => {
+        setUsernameError(e);
+        trackEvent('signup_validation_error', { step: 'username', error_type: 'api' });
+      },
     });
   };
 
