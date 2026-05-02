@@ -7,10 +7,12 @@ import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
 import { UserPageContext } from '@components/user-page/UserPage.context';
+import { useViewAs, useViewAsUser } from '@components/view-as/PreviewModeContext';
 import { Layout } from '@design-system';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Note, POST_TYPE, Response } from '@models/post';
 import { readUserAllNotes, readUserAllResponses } from '@utils/apis/user';
+import { withViewAs } from '@utils/apis/withViewAs';
 
 type AllPostSectionProps = {
   /** username이 있으면 username에 대한 posts를, 없으면 내 posts를 보여줍니다. */
@@ -22,6 +24,8 @@ function AllPostSection({ username }: AllPostSectionProps) {
   const { user } = useContext(UserPageContext);
   const areFriends = user?.data?.are_friends === true;
   const isMyPage = !username;
+  const viewAs = useViewAs();
+  const viewAsUser = useViewAsUser();
 
   const {
     targetRef,
@@ -30,7 +34,10 @@ function AllPostSection({ username }: AllPostSectionProps) {
     isLoadingMore: isPostsLoadingMore,
     mutate: refetchPosts,
   } = useSWRInfiniteScroll<Note | Response>({
-    key: `/user/${encodeURIComponent(username || 'me')}/all-posts/`,
+    key: withViewAs(`/user/${encodeURIComponent(username || 'me')}/all-posts/`, {
+      viewAs,
+      viewAsUser,
+    }),
   });
 
   const { noteId, responseId } = useParams();

@@ -6,6 +6,7 @@ const DEFAULT_MARGIN = 16;
 const SCREEN_WIDTH = typeof window !== 'undefined' ? Math.min(window.innerWidth, 500) : 0;
 const SCREEN_HEIGHT = typeof window !== 'undefined' ? window.innerHeight : 0;
 const TITLE_HEADER_HEIGHT = 44;
+const VIEW_AS_BANNER_HEIGHT = 41;
 const CHAT_MESSAGE_INPUT_HEIGHT = 65;
 const CHAT_EMOJI_AREA_SIZE = 30;
 const CHAT_EMOJI_FONT_SIZE = 22;
@@ -41,5 +42,6 @@ export {
   SCREEN_WIDTH,
   TITLE_HEADER_HEIGHT,
   TOP_NAVIGATION_HEIGHT,
+  VIEW_AS_BANNER_HEIGHT,
   Z_INDEX,
 };

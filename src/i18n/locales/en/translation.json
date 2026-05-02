@@ -1051,7 +1051,7 @@
         "friend_feed": {
             "title": "Pinned Check-ins",
             "title_with_username": "{{username}}'s Pinned Check-ins",
-            "empty": "No pinned check-ins visible to you yet."
+            "empty": "No pinned check-ins yet."
         }
     },
     "check_in_edit": {

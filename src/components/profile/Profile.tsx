@@ -133,6 +133,10 @@ function Profile({ user }: ProfileProps) {
 
   const isVerQ = !!featureFlags?.postsVerQ;
 
+  // In preview mode, friendData is null (no username param to fetch with),
+  // so fall back to the user prop which is already view_as-filtered.
+  const viewData = previewMode ? (user as UserProfile | null) : friendData;
+
   // Backend already masks per-field visibility; null/empty means hidden.
   const showPronouns = !!user?.pronouns;
   const showBio = !!user?.bio;
@@ -158,7 +162,7 @@ function Profile({ user }: ProfileProps) {
                   <Typo type="title-large" numberOfLines={1}>
                     {isMyPage
                       ? (myProfile as any)?.name || myProfile?.username || ''
-                      : (friendData as any)?.name || username || ''}
+                      : (viewData as any)?.name || viewData?.username || username || ''}
                   </Typo>
                   {isMyPage && isVerQ && (
                     <AccountStatusBadge>
@@ -171,22 +175,22 @@ function Profile({ user }: ProfileProps) {
                 {/* Pronouns | Degree inline */}
                 {!isMyPage && (
                   <Layout.FlexRow gap={4} alignItems="center">
-                    {showPronouns && friendData?.pronouns && (
+                    {showPronouns && viewData?.pronouns && (
                       <Typo type="label-medium" color="DARK_GRAY">
-                        {friendData.pronouns}
+                        {viewData.pronouns}
                       </Typo>
                     )}
                     {showPronouns &&
-                      friendData?.pronouns &&
-                      friendData?.connection_degree &&
+                      viewData?.pronouns &&
+                      viewData?.connection_degree &&
                       !featureFlags?.postsVerQ && (
                         <Typo type="label-medium" color="MEDIUM_GRAY">
                           |
                         </Typo>
                       )}
-                    {friendData?.connection_degree && !featureFlags?.postsVerQ && (
+                    {viewData?.connection_degree && !featureFlags?.postsVerQ && (
                       <Typo type="label-medium" color="DARK_GRAY">
-                        {friendData.connection_degree === 2
+                        {viewData.connection_degree === 2
                           ? '2nd degree connection'
                           : '3rd+ degree connection'}
                       </Typo>
@@ -277,10 +281,10 @@ function Profile({ user }: ProfileProps) {
             )
           ) : (
             showBio &&
-            friendData?.bio && (
+            viewData?.bio && (
               <Layout.FlexCol w="100%">
                 <Typo type="body-medium" numberOfLines={2}>
-                  {friendData.bio}
+                  {viewData.bio}
                 </Typo>
               </Layout.FlexCol>
             )
@@ -306,7 +310,7 @@ function Profile({ user }: ProfileProps) {
           {/* See more details */}
           {!featureFlags?.postsVerQ &&
             featureFlags?.persona &&
-            (isMyPage || (user && areFriends(user))) &&
+            (isMyPage || previewMode || (user && areFriends(user))) &&
             hasInterestsOrPersonas && (
               <Layout.FlexRow onClick={() => setShowMoreAbout(true)} style={{ cursor: 'pointer' }}>
                 <Typo type="label-medium" color="PRIMARY">
@@ -343,32 +347,31 @@ function Profile({ user }: ProfileProps) {
           {!featureFlags?.postsVerQ &&
             !isMyProfile(user) &&
             !areFriends(user) &&
-            friendData &&
-            ((friendData.mutual_interests && friendData.mutual_interests.length > 0) ||
-              (friendData.mutual_personas && friendData.mutual_personas.length > 0)) && (
+            viewData &&
+            ((viewData.mutual_interests && viewData.mutual_interests.length > 0) ||
+              (viewData.mutual_personas && viewData.mutual_personas.length > 0)) && (
               <Layout.FlexCol gap={8} w="100%">
                 <Typo type="label-medium" color="MEDIUM_GRAY">
                   {t('shared_traits')}
                 </Typo>
                 <Layout.FlexRow w="100%" gap={6} style={{ flexWrap: 'wrap' }}>
-                  {[
-                    ...(friendData.mutual_interests ?? []),
-                    ...(friendData.mutual_personas ?? []),
-                  ].map((trait) => {
-                    const matchedCat = categories.find((cat) =>
-                      cat.chips.some(
-                        (c) => normalizeChipText(c) === normalizeChipText(trait.content),
-                      ),
-                    );
-                    return (
-                      <CategoryChip
-                        key={trait.id}
-                        label={trait.content}
-                        category={matchedCat?.key ?? categories[0].key}
-                        isSelected
-                      />
-                    );
-                  })}
+                  {[...(viewData.mutual_interests ?? []), ...(viewData.mutual_personas ?? [])].map(
+                    (trait) => {
+                      const matchedCat = categories.find((cat) =>
+                        cat.chips.some(
+                          (c) => normalizeChipText(c) === normalizeChipText(trait.content),
+                        ),
+                      );
+                      return (
+                        <CategoryChip
+                          key={trait.id}
+                          label={trait.content}
+                          category={matchedCat?.key ?? categories[0].key}
+                          isSelected
+                        />
+                      );
+                    },
+                  )}
                 </Layout.FlexRow>
               </Layout.FlexCol>
             )}

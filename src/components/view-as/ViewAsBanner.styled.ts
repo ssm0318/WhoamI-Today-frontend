@@ -7,9 +7,11 @@ export const Banner = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
   padding: 8px 12px;
   background: ${({ theme }) => theme.LIGHT};
   border-bottom: 1px solid ${({ theme }) => theme.LIGHT_GRAY};
+  box-sizing: border-box;
 `;
 
 export const LabelRow = styled.button`

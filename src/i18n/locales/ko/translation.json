@@ -1043,7 +1043,7 @@
     "friend_feed": {
       "title": "고정된 체크인",
       "title_with_username": "{{username}}님의 고정된 체크인",
-      "empty": "볼 수 있는 고정된 체크인이 아직 없어요."
+      "empty": "고정된 체크인이 아직 없어요."
     }
   },
   "check_in_edit": {

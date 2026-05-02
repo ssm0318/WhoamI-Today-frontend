@@ -5,12 +5,14 @@ import Icon from '@components/_common/icon/Icon';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import { UserPageContext } from '@components/user-page/UserPage.context';
+import { useViewAs, useViewAsUser } from '@components/view-as/PreviewModeContext';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { readUserAllNotes } from '@utils/apis/user';
+import { withViewAs } from '@utils/apis/withViewAs';
 import NoteItem from '../note-item/NoteItem';
 import NoteLoader from '../note-loader/NoteLoader';
 
@@ -27,6 +29,8 @@ function NoteSection({ username }: NoteSectionProps) {
   const { user } = useContext(UserPageContext);
   const areFriends = user?.data?.are_friends === true;
   const isMyPage = !username;
+  const viewAs = useViewAs();
+  const viewAsUser = useViewAsUser();
 
   const handleClickNewNote = () => {
     return navigate('/notes/new');
@@ -41,7 +45,10 @@ function NoteSection({ username }: NoteSectionProps) {
     isLoadingMore: isNotesLoadingMore,
     mutate: refetchNotes,
   } = useSWRInfiniteScroll<Note>({
-    key: `/user/${encodeURIComponent(username || 'me')}/notes/${isDefault ? 'default' : ''}`,
+    key: withViewAs(
+      `/user/${encodeURIComponent(username || 'me')}/notes/${isDefault ? 'default' : ''}`,
+      { viewAs, viewAsUser },
+    ),
   });
 
   const { noteId } = useParams();

@@ -13,7 +13,11 @@ import Profile from '@components/profile/Profile';
 import UserMoreModal from '@components/user-page/UserMoreModal';
 import { UserPageContext } from '@components/user-page/UserPage.context';
 import { useIsPreviewMode } from '@components/view-as/PreviewModeContext';
-import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
+import {
+  BOTTOM_TABBAR_HEIGHT,
+  TITLE_HEADER_HEIGHT,
+  VIEW_AS_BANNER_HEIGHT,
+} from '@constants/layout';
 import { MAIN_SCROLL_CONTAINER_ID } from '@constants/scroll';
 import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
@@ -88,7 +92,7 @@ function UserPage({ usernameOverride }: UserPageProps = {}) {
           id={MAIN_SCROLL_CONTAINER_ID}
           style={{
             height: previewMode
-              ? `calc(100vh - ${BOTTOM_TABBAR_HEIGHT}px)`
+              ? `calc(100vh - ${BOTTOM_TABBAR_HEIGHT}px - ${VIEW_AS_BANNER_HEIGHT}px)`
               : `calc(100vh - ${TITLE_HEADER_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px)`,
             overflowY: 'auto',
             WebkitOverflowScrolling: 'touch',
