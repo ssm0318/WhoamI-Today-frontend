@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Colors, SvgIcon, Typo } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
+import { clearLastPickedAt } from '@utils/browseModeActiveSession';
 
 /**
  * Top-of-app bar that shows when the user activated a transient "Apply
@@ -51,6 +52,7 @@ function BrowseModePreviewBar() {
   const clearActiveBrowseMode = useBoundStore((state) => state.clearActiveBrowseMode);
   const openBrowseModePicker = useBoundStore((state) => state.openBrowseModePicker);
   const openToast = useBoundStore((state) => state.openToast);
+  const userId = useBoundStore((state) => state.myProfile?.id);
 
   const isPreview = activeBrowseMode?.kind === 'custom' && activeBrowseMode.id === -1;
   // Throttle "blocked click" toasts: rapid taps would otherwise spam the
@@ -109,6 +111,11 @@ function BrowseModePreviewBar() {
 
   const handleExit = () => {
     clearActiveBrowseMode();
+    // The user explicitly abandoned the preview — wipe last_picked_at so
+    // the next page-load auto-prompts again. Without this, the freshness
+    // window from the apply-without-saving moment would still be active
+    // and the picker wouldn't fire on next reload.
+    if (userId) clearLastPickedAt(userId);
     openBrowseModePicker();
   };
 
