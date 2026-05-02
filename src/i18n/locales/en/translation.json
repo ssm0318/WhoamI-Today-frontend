@@ -625,6 +625,7 @@
             "username_valiation_error": "Letters, numbers, Korean, and _ only (max 20 characters).",
             "username_exists_error": "This username is already taken.",
             "name_hint": "Optional — add a name so your friends can easily recognize you! User search still works by username only.",
+            "setup_hint": "Complete your profile so friends can recognize you",
             "email": "Email",
             "bio": "Bio",
             "pronouns": "Pronouns",

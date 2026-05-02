@@ -1,5 +1,5 @@
 import { isAxiosError } from 'axios';
-import { ChangeEvent, ReactNode, useRef, useState } from 'react';
+import { ChangeEvent, ReactNode, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -29,6 +29,7 @@ import {
 import { useBoundStore } from '@stores/useBoundStore';
 import { createCustomChip, deleteCustomChip } from '@utils/apis/chips';
 import { editProfile, updateChipsByCategory } from '@utils/apis/my';
+import { markEditProfilePromptSeen } from '@utils/editProfilePrompt';
 import { CroppedImg, readFile } from '@utils/getCroppedImg';
 import {
   getLastVisibility,
@@ -63,6 +64,7 @@ function EditProfile() {
   const isFromSignUp = !!location.state?.fromSignUp;
   const [searchParams] = useSearchParams();
   const isFromResetPassword = searchParams.get('from_reset_password') === 'true';
+  const isFromLoginSetup = searchParams.get('from_login_setup') === 'true';
   const tabParam = searchParams.get('tab');
   const initialTab: EditProfileTab = tabParam === 'interests' ? 'interests' : 'pronouns_bio';
   const [t] = useTranslation('translation', { keyPrefix: 'settings.edit_profile' });
@@ -73,6 +75,12 @@ function EditProfile() {
     openToast: state.openToast,
     featureFlags: state.featureFlags,
   }));
+
+  useEffect(() => {
+    if ((isFromResetPassword || isFromLoginSetup) && myProfile?.id) {
+      markEditProfilePromptSeen(myProfile.id);
+    }
+  }, [isFromResetPassword, isFromLoginSetup, myProfile?.id]);
 
   const { categories } = useChipCategories();
 
@@ -452,6 +460,13 @@ function EditProfile() {
         }
       />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" gap={10}>
+        {isFromLoginSetup && (
+          <Layout.FlexRow w="100%" ph={24} pt={16}>
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              {t('setup_hint')}
+            </Typo>
+          </Layout.FlexRow>
+        )}
         <Layout.FlexCol pt={24} w="100%" alignItems="center">
           <StyledEditProfileButton type="button" onClick={handleClickUpdate}>
             <ProfileImage
