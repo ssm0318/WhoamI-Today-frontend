@@ -117,201 +117,203 @@ function ChatList() {
   useChatListSocket(onChatListUpdate);
 
   return (
-    <MainScrollContainer>
+    <>
       <ChatsHeader />
-      {!loading && (
-        <Layout.FlexRow
-          w="100%"
-          ph={16}
-          pv={8}
-          bgColor="WHITE"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Layout.FlexRow gap={10} alignItems="center">
-            <PurpleToggleWrapper>
-              <ToggleSwitch
-                type="small"
-                checked={unreadOnly}
-                onChange={() => setUnreadOnly((v) => !v)}
-              />
-            </PurpleToggleWrapper>
-            <Typo type="body-medium" color="DARK_GRAY">
-              {(() => {
-                const unreadCount = rooms.filter((r) => (r.unread_count || 0) > 0).length;
-                return `Unread Only${unreadCount ? ` (${unreadCount})` : ''}`;
-              })()}
-            </Typo>
-          </Layout.FlexRow>
-          {featureFlags?.chatCloseFriendsFilter && (
-            // Close-friends toggle is a viewing affordance — preview-exempt
-            // so the user can flip it while previewing a custom mode.
-            <Layout.FlexRow gap={10} alignItems="center" data-preview-exempt>
+      <MainScrollContainer>
+        {!loading && (
+          <Layout.FlexRow
+            w="100%"
+            ph={16}
+            pv={8}
+            bgColor="WHITE"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Layout.FlexRow gap={10} alignItems="center">
               <PurpleToggleWrapper>
                 <ToggleSwitch
                   type="small"
-                  checked={closeFriendsOnly}
-                  onChange={() => setCloseFriendsOnly((v) => !v)}
+                  checked={unreadOnly}
+                  onChange={() => setUnreadOnly((v) => !v)}
                 />
               </PurpleToggleWrapper>
               <Typo type="body-medium" color="DARK_GRAY">
-                Close Friends Only
+                {(() => {
+                  const unreadCount = rooms.filter((r) => (r.unread_count || 0) > 0).length;
+                  return `Unread Only${unreadCount ? ` (${unreadCount})` : ''}`;
+                })()}
               </Typo>
             </Layout.FlexRow>
-          )}
-        </Layout.FlexRow>
-      )}
-      {loading && (
-        <Layout.FlexCol w="100%" alignItems="center" mt={30}>
-          <Loader />
-        </Layout.FlexCol>
-      )}
-      {!loading && rooms.length === 0 && (
-        <Layout.FlexCol w="100%" alignItems="center" mt={50}>
-          <Typo type="body-medium" color="MEDIUM_GRAY">
-            No conversations yet.
-          </Typo>
-        </Layout.FlexCol>
-      )}
-      {!loading && rooms.length > 0 && filteredRooms.length === 0 && (
-        <Layout.FlexCol w="100%" alignItems="center" mt={50}>
-          <Typo type="body-medium" color="MEDIUM_GRAY">
-            {closeFriendsOnly && !unreadOnly
-              ? 'No close-friend chats.'
-              : closeFriendsOnly && unreadOnly
-              ? 'No unread close-friend chats.'
-              : 'No unread chats.'}
-          </Typo>
-        </Layout.FlexCol>
-      )}
-      {!loading &&
-        filteredRooms.map((room) => {
-          // After wit_admin leaves an escalated wit_bot chat, the room stays
-          // is_group=True with members shrunk to {user, wit_bot}. Render that
-          // demoted shape as a plain wit_bot 1-on-1 (single avatar, no count).
-          const witBotMember =
-            room.is_group && room.members_detail?.length === 2
-              ? room.members_detail.find((m) => m.username === 'wit_bot')
-              : undefined;
-          const renderAsWitBotDM = !!witBotMember;
+            {featureFlags?.chatCloseFriendsFilter && (
+              // Close-friends toggle is a viewing affordance — preview-exempt
+              // so the user can flip it while previewing a custom mode.
+              <Layout.FlexRow gap={10} alignItems="center" data-preview-exempt>
+                <PurpleToggleWrapper>
+                  <ToggleSwitch
+                    type="small"
+                    checked={closeFriendsOnly}
+                    onChange={() => setCloseFriendsOnly((v) => !v)}
+                  />
+                </PurpleToggleWrapper>
+                <Typo type="body-medium" color="DARK_GRAY">
+                  Close Friends Only
+                </Typo>
+              </Layout.FlexRow>
+            )}
+          </Layout.FlexRow>
+        )}
+        {loading && (
+          <Layout.FlexCol w="100%" alignItems="center" mt={30}>
+            <Loader />
+          </Layout.FlexCol>
+        )}
+        {!loading && rooms.length === 0 && (
+          <Layout.FlexCol w="100%" alignItems="center" mt={50}>
+            <Typo type="body-medium" color="MEDIUM_GRAY">
+              No conversations yet.
+            </Typo>
+          </Layout.FlexCol>
+        )}
+        {!loading && rooms.length > 0 && filteredRooms.length === 0 && (
+          <Layout.FlexCol w="100%" alignItems="center" mt={50}>
+            <Typo type="body-medium" color="MEDIUM_GRAY">
+              {closeFriendsOnly && !unreadOnly
+                ? 'No close-friend chats.'
+                : closeFriendsOnly && unreadOnly
+                ? 'No unread close-friend chats.'
+                : 'No unread chats.'}
+            </Typo>
+          </Layout.FlexCol>
+        )}
+        {!loading &&
+          filteredRooms.map((room) => {
+            // After wit_admin leaves an escalated wit_bot chat, the room stays
+            // is_group=True with members shrunk to {user, wit_bot}. Render that
+            // demoted shape as a plain wit_bot 1-on-1 (single avatar, no count).
+            const witBotMember =
+              room.is_group && room.members_detail?.length === 2
+                ? room.members_detail.find((m) => m.username === 'wit_bot')
+                : undefined;
+            const renderAsWitBotDM = !!witBotMember;
 
-          const opponentId = room.is_group ? null : room.opponent?.id;
-          const isTyping = opponentId ? !!typingUsers[opponentId] : false;
-          const roomName = witBotMember
-            ? witBotMember.username
-            : room.is_group
-            ? room.name || 'Group Chat'
-            : room.opponent?.username || 'Chat';
-          const chatUrl =
-            renderAsWitBotDM || room.is_group
-              ? `/chats/group/${room.id}`
-              : `/users/${opponentId}/chat`;
-          return (
-            <Layout.FlexRow
-              key={room.id}
-              w="100%"
-              ph={16}
-              pv={12}
-              gap={12}
-              alignItems="center"
-              cursor="pointer"
-              onClick={() => navigate(chatUrl)}
-              style={{ borderBottom: '1px solid #F0F0F0' }}
-            >
-              {witBotMember ? (
-                <ProfileImage imageUrl={witBotMember.profile_image} size={44} />
-              ) : room.is_group ? (
-                <div
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 8,
-                    background: '#F0F0F0',
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gridTemplateRows: '1fr 1fr',
-                    overflow: 'hidden',
-                    flexShrink: 0,
-                  }}
-                >
-                  {(room.members_detail || []).slice(0, 4).map((m) => (
-                    <div
-                      key={m.id}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      {m.profile_image ? (
-                        <img
-                          src={m.profile_image}
-                          alt={m.username}
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
-                      ) : (
-                        <div
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            background: '#D9D9D9',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: 10,
-                          }}
-                        >
-                          {m.username[0]?.toUpperCase()}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <ProfileImage imageUrl={room.opponent?.profile_image} size={44} />
-              )}
-              <Layout.FlexCol style={{ flex: 1, minWidth: 0 }}>
-                <Layout.FlexRow gap={6} alignItems="center">
-                  <Typo type="title-medium" color="BLACK">
-                    {roomName}
-                  </Typo>
-                  {room.is_group && !renderAsWitBotDM && room.members_detail && (
-                    <Typo type="label-small" color="MEDIUM_GRAY">
-                      ({room.members_detail.length})
-                    </Typo>
-                  )}
-                </Layout.FlexRow>
-                {isTyping ? (
-                  <Typo type="body-small" color="PRIMARY">
-                    typing...
-                  </Typo>
+            const opponentId = room.is_group ? null : room.opponent?.id;
+            const isTyping = opponentId ? !!typingUsers[opponentId] : false;
+            const roomName = witBotMember
+              ? witBotMember.username
+              : room.is_group
+              ? room.name || 'Group Chat'
+              : room.opponent?.username || 'Chat';
+            const chatUrl =
+              renderAsWitBotDM || room.is_group
+                ? `/chats/group/${room.id}`
+                : `/users/${opponentId}/chat`;
+            return (
+              <Layout.FlexRow
+                key={room.id}
+                w="100%"
+                ph={16}
+                pv={12}
+                gap={12}
+                alignItems="center"
+                cursor="pointer"
+                onClick={() => navigate(chatUrl)}
+                style={{ borderBottom: '1px solid #F0F0F0' }}
+              >
+                {witBotMember ? (
+                  <ProfileImage imageUrl={witBotMember.profile_image} size={44} />
+                ) : room.is_group ? (
+                  <div
+                    style={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: 8,
+                      background: '#F0F0F0',
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gridTemplateRows: '1fr 1fr',
+                      overflow: 'hidden',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {(room.members_detail || []).slice(0, 4).map((m) => (
+                      <div
+                        key={m.id}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        {m.profile_image ? (
+                          <img
+                            src={m.profile_image}
+                            alt={m.username}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              background: '#D9D9D9',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: 10,
+                            }}
+                          >
+                            {m.username[0]?.toUpperCase()}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 ) : (
-                  room.last_message && (
-                    <Typo type="body-small" color="MEDIUM_GRAY">
-                      {room.last_message}
-                    </Typo>
-                  )
+                  <ProfileImage imageUrl={room.opponent?.profile_image} size={44} />
                 )}
-              </Layout.FlexCol>
-              {room.unread_count > 0 && (
-                <Layout.FlexRow
-                  ph={8}
-                  pv={2}
-                  rounded={10}
-                  alignItems="center"
-                  justifyContent="center"
-                  bgColor="SECONDARY"
-                  style={{ minWidth: 24 }}
-                >
-                  <Typo type="label-small" color="BLACK">
-                    {room.unread_count > 99 ? '99+' : room.unread_count}
-                  </Typo>
-                </Layout.FlexRow>
-              )}
-            </Layout.FlexRow>
-          );
-        })}
-    </MainScrollContainer>
+                <Layout.FlexCol style={{ flex: 1, minWidth: 0 }}>
+                  <Layout.FlexRow gap={6} alignItems="center">
+                    <Typo type="title-medium" color="BLACK">
+                      {roomName}
+                    </Typo>
+                    {room.is_group && !renderAsWitBotDM && room.members_detail && (
+                      <Typo type="label-small" color="MEDIUM_GRAY">
+                        ({room.members_detail.length})
+                      </Typo>
+                    )}
+                  </Layout.FlexRow>
+                  {isTyping ? (
+                    <Typo type="body-small" color="PRIMARY">
+                      typing...
+                    </Typo>
+                  ) : (
+                    room.last_message && (
+                      <Typo type="body-small" color="MEDIUM_GRAY">
+                        {room.last_message}
+                      </Typo>
+                    )
+                  )}
+                </Layout.FlexCol>
+                {room.unread_count > 0 && (
+                  <Layout.FlexRow
+                    ph={8}
+                    pv={2}
+                    rounded={10}
+                    alignItems="center"
+                    justifyContent="center"
+                    bgColor="SECONDARY"
+                    style={{ minWidth: 24 }}
+                  >
+                    <Typo type="label-small" color="BLACK">
+                      {room.unread_count > 99 ? '99+' : room.unread_count}
+                    </Typo>
+                  </Layout.FlexRow>
+                )}
+              </Layout.FlexRow>
+            );
+          })}
+      </MainScrollContainer>
+    </>
   );
 }
 
