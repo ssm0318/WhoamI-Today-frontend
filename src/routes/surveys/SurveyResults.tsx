@@ -6,7 +6,6 @@ import useSWR from 'swr';
 import SubHeader from '@components/sub-header/SubHeader';
 import { SurveyResultsBucket } from '@components/survey/SurveyResultsBucket';
 import { TestingDisclaimer } from '@components/survey/TestingDisclaimer';
-import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import i18n from '@i18n/index';
 import { ResultPanel, Survey, SurveyResultsError } from '@models/survey';
@@ -17,10 +16,7 @@ import { MainScrollContainer } from '../Root';
 const Page = styled(Layout.FlexCol)`
   width: 100%;
   padding: 16px;
-  padding-top: ${TITLE_HEADER_HEIGHT + 16}px;
   gap: 24px;
-  background: ${Colors.LIGHT};
-  min-height: 100%;
 `;
 
 const PanelGroup = styled(Layout.FlexCol)`
@@ -136,7 +132,7 @@ function SurveyResults() {
   if (axiosError?.response?.status === 403) {
     const body = axiosError.response.data;
     return (
-      <MainScrollContainer>
+      <MainScrollContainer style={{ backgroundColor: Colors.LIGHT }}>
         <SubHeader title={headerTitle} RightComponent={headerRight} />
         <Page>
           <TestingDisclaimer />
@@ -158,7 +154,7 @@ function SurveyResults() {
   // a blank screen so the user can still navigate away via Done.
   if (axiosError?.response?.status === 404) {
     return (
-      <MainScrollContainer>
+      <MainScrollContainer style={{ backgroundColor: Colors.LIGHT }}>
         <SubHeader title={headerTitle} RightComponent={headerRight} />
         <Page>
           <TestingDisclaimer />
@@ -175,7 +171,7 @@ function SurveyResults() {
   const interpretation = pickLocalized(survey.interpretation_en, survey.interpretation_ko);
 
   return (
-    <MainScrollContainer>
+    <MainScrollContainer style={{ backgroundColor: Colors.LIGHT }}>
       <SubHeader title={headerTitle} RightComponent={headerRight} />
       <Page>
         <TestingDisclaimer />
