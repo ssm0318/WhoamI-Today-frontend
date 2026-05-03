@@ -82,7 +82,7 @@ function FriendProfileAccordionItem({
     (user.unread_post_cnt ?? 0) > 0 ||
     (user.recent_posts ?? []).some((p) => !p.current_user_read);
 
-  const moodArray: string[] = Array.isArray(mood) ? mood : mood ? [mood] : [];
+  const moodArray: string[] = (Array.isArray(mood) ? mood : mood ? [mood] : []).filter(Boolean);
   const hasMood = moodArray.length > 0;
   const hasThought = !!thought;
   const hasBattery = !!social_battery && Object.values(SocialBattery).includes(social_battery);
