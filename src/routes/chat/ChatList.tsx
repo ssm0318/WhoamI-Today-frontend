@@ -21,6 +21,16 @@ const PurpleToggleWrapper = styled.div`
   }
 `;
 
+const CHAT_PREVIEW_LINES = 2;
+
+const ChatPreviewText = styled(Typo)`
+  min-height: calc(12px * 1.4 * ${CHAT_PREVIEW_LINES});
+`;
+
+const GroupMemberCountText = styled(Typo)`
+  flex-shrink: 0;
+`;
+
 function ChatList() {
   const navigate = useNavigate();
   const currentUser = useBoundStore((state) => state.myProfile);
@@ -287,26 +297,41 @@ function ChatList() {
                   <ProfileImage imageUrl={room.opponent?.profile_image} size={44} />
                 )}
                 <Layout.FlexCol style={{ flex: 1, minWidth: 0 }}>
-                  <Layout.FlexRow gap={6} alignItems="center">
-                    <Typo type="title-medium" color="BLACK">
+                  <Layout.FlexRow gap={6} alignItems="center" style={{ minWidth: 0 }}>
+                    <Typo type="title-medium" color="BLACK" numberOfLines={1}>
                       {roomName}
                     </Typo>
                     {room.is_group && !renderAsWitBotDM && room.members_detail && (
-                      <Typo type="label-small" color="MEDIUM_GRAY">
+                      <GroupMemberCountText type="label-small" color="MEDIUM_GRAY">
                         ({room.members_detail.length})
-                      </Typo>
+                      </GroupMemberCountText>
                     )}
                   </Layout.FlexRow>
                   {isTyping ? (
-                    <Typo type="body-small" color="PRIMARY">
+                    <ChatPreviewText
+                      type="body-small"
+                      color="PRIMARY"
+                      numberOfLines={CHAT_PREVIEW_LINES}
+                    >
                       typing...
-                    </Typo>
+                    </ChatPreviewText>
+                  ) : room.last_message ? (
+                    <ChatPreviewText
+                      type="body-small"
+                      color="MEDIUM_GRAY"
+                      numberOfLines={CHAT_PREVIEW_LINES}
+                    >
+                      {room.last_message}
+                    </ChatPreviewText>
                   ) : (
-                    room.last_message && (
-                      <Typo type="body-small" color="MEDIUM_GRAY">
-                        {room.last_message}
-                      </Typo>
-                    )
+                    <ChatPreviewText
+                      type="body-small"
+                      color="MEDIUM_GRAY"
+                      numberOfLines={CHAT_PREVIEW_LINES}
+                      aria-hidden
+                    >
+                      {' '}
+                    </ChatPreviewText>
                   )}
                 </Layout.FlexCol>
                 {room.unread_count > 0 && (
