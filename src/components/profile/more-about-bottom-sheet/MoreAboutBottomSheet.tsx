@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
-import Icon from '@components/_common/icon/Icon';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { useChipCategories } from '@hooks/useChipCategories';
 import { useTrackEvent } from '@hooks/useTrackEvent';
@@ -121,21 +120,23 @@ function MoreAboutBottomSheet({
   );
 
   return createPortal(
-    <BottomModal visible={visible} onClose={onClose}>
-      <Layout.FlexCol w="100%" ph={16} pv={16} gap={16}>
-        {/* Header */}
-        <Layout.FlexRow w="100%" justifyContent="center" alignItems="center">
-          <Icon name="home_indicator" />
-        </Layout.FlexRow>
-        <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
-          <Typo type="title-large">{t('more_about', { username })}</Typo>
+    <BottomModal visible={visible} onClose={onClose} draggable heightMode="full">
+      <div style={{ width: '100%', backgroundColor: '#FCFCFC', borderBottom: '1px solid #F0F0F0' }}>
+        <Layout.FlexRow w="100%" h={44} alignItems="center" justifyContent="center">
+          <Typo type="title-medium" bold>
+            {t('more_about', { username })}
+          </Typo>
           {isMyPage && (
-            <Layout.FlexRow onClick={handleClickEdit} style={{ cursor: 'pointer' }}>
+            <Layout.FlexRow
+              onClick={handleClickEdit}
+              style={{ cursor: 'pointer', position: 'absolute', right: 48 }}
+            >
               <SvgIcon name="edit_filled" fill="DARK_GRAY" size={20} />
             </Layout.FlexRow>
           )}
         </Layout.FlexRow>
-
+      </div>
+      <Layout.FlexCol w="100%" ph={16} pv={16} gap={16}>
         {/* Legend for shared-trait highlighting (only when viewing a non-self
             profile and at least one trait overlaps with the viewer). */}
         {!isMyPage && hasAnySharedChip && (

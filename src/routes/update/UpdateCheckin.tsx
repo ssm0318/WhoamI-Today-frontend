@@ -472,7 +472,6 @@ export default function UpdateCheckin() {
         isOpen={activeEditor === 'mood'}
         onClose={handleEditorDismiss}
         onShare={handleMoodShare}
-        onArchive={mood.length > 0 ? () => handleArchive('mood') : undefined}
         value={mood}
         onChange={setMood}
         visibility={effectiveMoodVis}

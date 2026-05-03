@@ -5,7 +5,6 @@ import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
 import Divider from '@components/_common/divider/Divider';
 import * as ModalS from '@components/_common/friend-type-select-modal/FriendTypeSelectModal.styled';
-import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { CheckBox, Layout, Typo } from '@design-system';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
@@ -90,13 +89,15 @@ function SelectCloseFriendsBottomSheet({ visible, closeBottomSheet, onFriendAdde
   };
 
   return createPortal(
-    <BottomModal visible={visible} onClose={closeBottomSheet} heightMode="full">
+    <BottomModal visible={visible} onClose={closeBottomSheet} heightMode="full" draggable>
+      <div style={{ width: '100%', backgroundColor: '#FCFCFC', borderBottom: '1px solid #F0F0F0' }}>
+        <Layout.FlexRow w="100%" h={44} alignItems="center" justifyContent="center">
+          <Typo type="title-medium" bold>
+            {t('title')}
+          </Typo>
+        </Layout.FlexRow>
+      </div>
       <S.Container>
-        <Icon name="home_indicator" />
-        <Layout.FlexCol w="100%" ph={16} pv={20}>
-          <Typo type="title-large">{t('title')}</Typo>
-        </Layout.FlexCol>
-
         <S.ScrollableContent>
           {isAllFriendsLoading ? (
             <Layout.FlexCol alignItems="center" justifyContent="center" pv={40}>

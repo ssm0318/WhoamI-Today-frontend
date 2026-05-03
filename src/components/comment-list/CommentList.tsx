@@ -131,7 +131,6 @@ function CommentList({
         bgColor="WHITE"
         style={{
           transition: 'bottom 0.2s ease-out',
-          zIndex: 1000,
         }}
       >
         <Layout.FlexRow w="100%">

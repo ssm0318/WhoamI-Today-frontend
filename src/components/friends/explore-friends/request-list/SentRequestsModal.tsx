@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
-import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import NoContents from '@components/_common/no-contents/NoContents';
 import { Layout, Typo } from '@design-system';
@@ -9,7 +8,6 @@ import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { SentFriendRequest } from '@models/api/user';
 import { getSentFriendRequests } from '@utils/apis/user';
 import FriendItem from '../friend-item/FriendItem';
-import { StyledModalHeader, StyledTitle } from './SentRequestsModal.styled';
 
 interface Props {
   visible: boolean;
@@ -51,39 +49,32 @@ export function SentRequestsModal({ visible, onClose }: Props) {
     });
   };
 
-  const contentHeight = window.innerHeight - 20;
-
   return (
-    <BottomModal visible={visible} onClose={onClose}>
-      <Layout.FlexCol w="100%">
-        <Layout.FlexCol w="100%" h={contentHeight}>
-          <StyledModalHeader w="100%" pv={12} bgColor="WHITE">
-            <StyledTitle w="100%" pt={5} alignItems="center" justifyContent="center">
-              <Layout.Absolute l={16} pv={3}>
-                <Icon name="close" size={20} padding={6} onClick={onClose} />
-              </Layout.Absolute>
-              <Typo type="title-large">{t('title')}</Typo>
-            </StyledTitle>
-          </StyledModalHeader>
-          <Layout.FlexCol w="100%" pv={12} ph={16}>
-            {sentRequests?.length > 0 ? (
-              <>
-                {sentRequests.map(({ requestee_id, requestee_detail }) => (
-                  <FriendItem
-                    key={requestee_id}
-                    type="sent_requests"
-                    user={requestee_detail}
-                    onClickCancelRequest={updateList(requestee_id)}
-                  />
-                ))}
-                <div ref={targetRef} />
-                {isLoading && <Loader />}
-              </>
-            ) : (
-              <NoContents title={t('no_contents.title')} bgColor="INPUT_GRAY" />
-            )}
-          </Layout.FlexCol>
-        </Layout.FlexCol>
+    <BottomModal visible={visible} onClose={onClose} heightMode="full" draggable>
+      <div style={{ width: '100%', backgroundColor: '#FCFCFC', borderBottom: '1px solid #F0F0F0' }}>
+        <Layout.FlexRow w="100%" h={44} alignItems="center" justifyContent="center">
+          <Typo type="title-medium" bold>
+            {t('title')}
+          </Typo>
+        </Layout.FlexRow>
+      </div>
+      <Layout.FlexCol w="100%" pv={12} ph={16}>
+        {sentRequests?.length > 0 ? (
+          <>
+            {sentRequests.map(({ requestee_id, requestee_detail }) => (
+              <FriendItem
+                key={requestee_id}
+                type="sent_requests"
+                user={requestee_detail}
+                onClickCancelRequest={updateList(requestee_id)}
+              />
+            ))}
+            <div ref={targetRef} />
+            {isLoading && <Loader />}
+          </>
+        ) : (
+          <NoContents title={t('no_contents.title')} bgColor="INPUT_GRAY" />
+        )}
       </Layout.FlexCol>
     </BottomModal>
   );

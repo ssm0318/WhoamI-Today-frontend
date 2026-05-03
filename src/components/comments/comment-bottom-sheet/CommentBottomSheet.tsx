@@ -2,9 +2,9 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
-import Icon from '@components/_common/icon/Icon';
 import CommentInputBox from '@components/comment-list/comment-input-box/CommentInputBox';
 import CommentItem from '@components/comment-list/comment-item/CommentItem';
+import { SCREEN_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useCommentList from '@hooks/useCommentList';
 import { CheckInPost } from '@models/checkInPost';
@@ -15,7 +15,6 @@ import { UserSelector } from '@stores/user';
 import {
   CommentBottomContentWrapper,
   CommentBottomFooterWrapper,
-  CommentBottomHeaderWrapper,
 } from './CommentBottomSheet.styled';
 
 interface Props {
@@ -55,10 +54,6 @@ function CommentBottomSheet({
 
   const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
 
-  const handleClick = () => {
-    closeBottomSheet();
-  };
-
   const footerRef = useRef<HTMLDivElement>(null);
   const [footerHeight, setFooterHeight] = useState<number>();
 
@@ -85,22 +80,19 @@ function CommentBottomSheet({
   }, [isScrollToBottom, replyTo]);
 
   return createPortal(
-    <BottomModal visible={visible} onClose={closeBottomSheet} heightMode="full">
-      <CommentBottomHeaderWrapper>
-        <Layout.FlexRow w="100%" justifyContent="center">
-          <Icon name="home_indicator" />
+    <BottomModal
+      visible={visible}
+      onClose={closeBottomSheet}
+      customHeight={Math.round(SCREEN_HEIGHT * 0.75)}
+      draggable
+    >
+      <div style={{ width: '100%', backgroundColor: '#FCFCFC', borderBottom: '1px solid #F0F0F0' }}>
+        <Layout.FlexRow w="100%" h={44} alignItems="center" justifyContent="center">
+          <Typo type="title-medium" bold>
+            {t('comment')}
+          </Typo>
         </Layout.FlexRow>
-        <Layout.FlexRow w="100%" h="100%">
-          <Layout.FlexRow onClick={handleClick} pl={20}>
-            <Typo type="title-large">{t('cancel')}</Typo>
-          </Layout.FlexRow>
-          <Layout.FlexRow
-            style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}
-          >
-            <Typo type="title-large">{t('comment')}</Typo>
-          </Layout.FlexRow>
-        </Layout.FlexRow>
-      </CommentBottomHeaderWrapper>
+      </div>
 
       <CommentBottomContentWrapper mb={footerHeight} ref={scrollRef}>
         {comments.map((comment) => (

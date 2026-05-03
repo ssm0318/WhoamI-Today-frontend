@@ -66,6 +66,7 @@ export interface Comment extends ContentsCommon {
   type: 'Comment';
   user_tags: UserTag[];
   like_user_sample: User[];
+  like_reaction_user_sample: ReactionUserSample[];
 }
 
 export type PrivateComment = Omit<Comment, 'author' | 'author_detail'> &
@@ -168,7 +169,7 @@ export type Reaction = {
   user: User;
 };
 
-export type ReactionPostType = 'Note' | 'Response';
+export type ReactionPostType = 'Note' | 'Response' | 'Comment';
 
 export interface ActorDetail {
   id: number;

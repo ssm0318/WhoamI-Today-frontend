@@ -27,29 +27,26 @@ const firebaseApp = firebase.initializeApp({
 self.addEventListener('notificationclick', (e) => {
   e.stopImmediatePropagation();
 
-  // FCM auto-display: FCM_MSG wrapper 안에 있음
-  // 우리 직접 표시: notification.data에 직접 있음
-  const hasFcmMsg = !!e.notification.data?.FCM_MSG;
-  const notificationTag = hasFcmMsg ? e.notification.data.FCM_MSG.data.tag : e.notification.tag;
-  const notificationUrl = hasFcmMsg
-    ? e.notification.data.FCM_MSG.data.url
-    : e.notification.data?.url;
+  const notificationUrl = e.notification.data?.url;
+  const notificationId = e.notification.data?.notification_id;
 
   if (notificationUrl) {
     e.waitUntil(clients.openWindow(`${self.origin}${notificationUrl}`));
   }
 
   // 알림 읽음 처리
-  e.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      clientList.map((client) => {
-        return client.postMessage({
-          type: 'READ_NOTIFICATION',
-          notificationId: notificationTag,
+  if (notificationId) {
+    e.waitUntil(
+      clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+        clientList.map((client) => {
+          return client.postMessage({
+            type: 'READ_NOTIFICATION',
+            notificationId,
+          });
         });
-      });
-    }),
-  );
+      }),
+    );
+  }
 
   e.notification.close();
 });
@@ -62,7 +59,7 @@ messaging.onBackgroundMessage((payload) => {
   const data = payload?.data;
   if (!data) return;
 
-  const { message_ko, message_en, url, tag, type } = data;
+  const { notification_id, message_ko, message_en, url, tag, type } = data;
 
   if (type === 'cancel') {
     self.registration.getNotifications({ tag }).then((notifications) => {
@@ -78,7 +75,7 @@ messaging.onBackgroundMessage((payload) => {
     tag,
     renotify: true,
     icon: '/whoami192.png',
-    data: { url },
+    data: { url, notification_id },
   };
 
   self.registration.showNotification(title, options);

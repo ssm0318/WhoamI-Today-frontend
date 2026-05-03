@@ -1,17 +1,32 @@
-import { EmojiClickData } from 'emoji-picker-react';
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import ReactEmojiPicker, { EmojiClickData } from 'emoji-picker-react';
+import { CSSProperties, MouseEvent, useCallback, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import EmojiPicker from '@components/emoji-picker/EmojiPicker';
-import { getEmojiPickerPosition } from '@components/emoji-picker/EmojiPicker.helper';
-import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
+import { createGlobalStyle } from 'styled-components';
+import { EMOJI_CATEGORIES } from '@components/emoji-picker/EmojiPicker.constants';
+import { SCREEN_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { POST_TYPE, ReactionUserSample, RecentPost } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { deleteReaction, postReaction } from '@utils/apis/reaction';
+import { getUnifiedEmoji } from '@utils/emojiHelpers';
+import BottomModal from '../bottom-modal/BottomModal';
 import EmojiButton from '../emoji-button/EmojiButton';
 import Icon from '../icon/Icon';
 import PostReactionList from '../post-reaction-list/PostReactionList';
+
+const RecentPostEmojiHighlight = createGlobalStyle<{ unifiedList: string[] }>`
+  ${({ unifiedList }) =>
+    unifiedList.map(
+      (unified) => `
+      .comment-emoji-picker [data-unified='${unified}'] {
+        background-color: #C8EEFF !important;
+        border-radius: 50% !important;
+      }
+    `,
+    )}
+`;
 
 type RecentPostFooterProps = {
   isMyPage: boolean;
@@ -23,21 +38,20 @@ type RecentPostFooterProps = {
 function RecentPostFooter({ isMyPage, post, showComments, setInputFocus }: RecentPostFooterProps) {
   const { comment_count, type, current_user_reaction_id_list, like_reaction_user_sample } = post;
   const navigate = useNavigate();
-  const toggleButtonRef = useRef<HTMLDivElement>(null);
   const [myReactionList, setMyReactionList] = useState<{ id: number; emoji: string }[]>(
     current_user_reaction_id_list,
   );
   const [sampleUserList, setSampleUserList] =
     useState<ReactionUserSample[]>(like_reaction_user_sample);
-  const { emojiPickerTarget, setEmojiPickerTarget, myProfile } = useBoundStore((state) => ({
-    emojiPickerTarget: state.emojiPickerTarget,
-    setEmojiPickerTarget: state.setEmojiPickerTarget,
+  const { myProfile } = useBoundStore((state) => ({
     myProfile: state.myProfile,
   }));
   const myEmojiList = myReactionList?.map((reaction) => reaction.emoji);
+  const unifiedEmojiList = (myEmojiList || []).map((e) => getUnifiedEmoji(e));
   const [t] = useTranslation('translation', {
     keyPrefix: post.type === POST_TYPE.RESPONSE ? 'responses' : 'notes',
   });
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
 
   const handleClickCommentText = (e: MouseEvent) => {
     e.stopPropagation();
@@ -57,70 +71,44 @@ function RecentPostFooter({ isMyPage, post, showComments, setInputFocus }: Recen
     );
   };
 
-  const handleSelectEmoji = async (emoji: EmojiClickData) => {
-    if (!myProfile) return;
-    const response = await postReaction(post.type, post.id, emoji.emoji);
+  const handleEmojiClick = useCallback(
+    async (emoji: EmojiClickData) => {
+      if (!myProfile) return;
+      const isAlreadySelected = (myEmojiList || []).includes(emoji.emoji);
 
-    setEmojiPickerTarget(null);
-    setMyReactionList([
-      ...myReactionList,
-      {
-        id: response.id,
-        emoji: response.emoji,
-      },
-    ]);
-
-    // Update emoji reaction list
-    setSampleUserList((prev) => {
-      const newSample: ReactionUserSample = {
-        id: myProfile.id,
-        like: false,
-        reaction: emoji.emoji,
-        profile_image: myProfile.profile_image,
-        profile_pic: myProfile.profile_pic,
-        url: myProfile.url,
-        username: myProfile.username,
-        bio: myProfile.bio,
-        pronouns: myProfile.pronouns,
-        user_personas: myProfile.user_personas,
-        user_interests: myProfile.user_interests,
-        connection_status: myProfile.connection_status,
-      };
-      return [...prev, newSample];
-    });
-  };
-
-  const handleUnselectEmoji = async (emoji: EmojiClickData) => {
-    if (!myProfile) return;
-    const targetReaction = myReactionList.find((reaction) => reaction.emoji === emoji.emoji);
-
-    if (!targetReaction) return;
-    await deleteReaction(targetReaction.id);
-    setMyReactionList(myReactionList.filter((reaction) => reaction.emoji !== emoji.emoji));
-
-    // Update emoji reaction list
-    setSampleUserList((prev) => {
-      return prev.filter(
-        (sample) => !(sample.reaction === emoji.emoji && sample.id === myProfile.id),
-      );
-    });
-  };
-
-  const handleClickEmojiButton = () => {
-    const isCurrentlyActive =
-      emojiPickerTarget?.type === post.type && emojiPickerTarget?.id === post.id;
-
-    if (!toggleButtonRef.current) return;
-
-    const pickerPosition = getEmojiPickerPosition({
-      targetEl: toggleButtonRef.current,
-      bottomAreaHeight: BOTTOM_TABBAR_HEIGHT,
-    });
-
-    setEmojiPickerTarget(
-      isCurrentlyActive ? null : { type: post.type, id: post.id, ...pickerPosition },
-    );
-  };
+      if (isAlreadySelected) {
+        const targetReaction = myReactionList.find((r) => r.emoji === emoji.emoji);
+        if (!targetReaction) return;
+        await deleteReaction(targetReaction.id);
+        setMyReactionList((prev) => prev.filter((r) => r.emoji !== emoji.emoji));
+        setSampleUserList((prev) =>
+          prev.filter((s) => !(s.reaction === emoji.emoji && s.id === myProfile.id)),
+        );
+      } else {
+        const response = await postReaction(post.type, post.id, emoji.emoji);
+        setMyReactionList((prev) => [...prev, { id: response.id, emoji: response.emoji }]);
+        setSampleUserList((prev) => [
+          ...prev,
+          {
+            id: myProfile.id,
+            like: false,
+            reaction: emoji.emoji,
+            profile_image: myProfile.profile_image,
+            profile_pic: myProfile.profile_pic,
+            url: myProfile.url,
+            username: myProfile.username,
+            bio: myProfile.bio,
+            pronouns: myProfile.pronouns,
+            user_interests: myProfile.user_interests,
+            user_personas: myProfile.user_personas,
+            connection_status: myProfile.connection_status,
+          },
+        ]);
+      }
+      setIsEmojiPickerOpen(false);
+    },
+    [myEmojiList, myProfile, myReactionList, post.id, post.type],
+  );
 
   useEffect(() => {
     setMyReactionList(current_user_reaction_id_list);
@@ -130,27 +118,10 @@ function RecentPostFooter({ isMyPage, post, showComments, setInputFocus }: Recen
     setSampleUserList(like_reaction_user_sample);
   }, [like_reaction_user_sample]);
 
-  useEffect(() => {
-    return () => {
-      setEmojiPickerTarget(null);
-    };
-  }, [setEmojiPickerTarget]);
-
   return (
     <Layout.FlexRow gap={8} w="100%" alignItems="center">
       <Layout.FlexRow alignItems="center">
-        {!isMyPage && (
-          <Layout.FlexRow ref={toggleButtonRef} alignItems="center">
-            {(myEmojiList || []).length === 0 ? (
-              <EmojiButton onClick={handleClickEmojiButton} />
-            ) : (
-              <>
-                {/* <PostMyEmojiList emojiList={myEmojiList} /> */}
-                <EmojiButton onClick={handleClickEmojiButton} />
-              </>
-            )}
-          </Layout.FlexRow>
-        )}
+        {!isMyPage && <EmojiButton onClick={() => setIsEmojiPickerOpen(true)} />}
         <Layout.FlexRow w={48} h={48} alignItems="center" justifyContent="center">
           <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
         </Layout.FlexRow>
@@ -169,14 +140,40 @@ function RecentPostFooter({ isMyPage, post, showComments, setInputFocus }: Recen
           </button>
         </Layout.FlexRow>
       )}
-      <EmojiPicker
-        postId={post.id}
-        postType={post.type}
-        createPortalId={post.type === 'Response' ? 'response_section_emoji_picker' : undefined}
-        selectedEmojis={myEmojiList}
-        onSelectEmoji={handleSelectEmoji}
-        onUnselectEmoji={handleUnselectEmoji}
-      />
+      {isEmojiPickerOpen &&
+        createPortal(
+          <BottomModal
+            visible={isEmojiPickerOpen}
+            onClose={() => setIsEmojiPickerOpen(false)}
+            customHeight={Math.round(SCREEN_HEIGHT * 0.55)}
+            draggable
+          >
+            <Layout.FlexCol w="100%" h="100%">
+              <RecentPostEmojiHighlight unifiedList={unifiedEmojiList} />
+              <ReactEmojiPicker
+                width="100%"
+                height="100%"
+                onEmojiClick={handleEmojiClick}
+                autoFocusSearch={false}
+                skinTonesDisabled
+                searchPlaceHolder="Search emoji"
+                previewConfig={{ showPreview: false }}
+                categories={EMOJI_CATEGORIES}
+                lazyLoadEmojis
+                className="comment-emoji-picker"
+                style={
+                  {
+                    '--epr-emoji-size': '28px',
+                    '--epr-emoji-padding': '10px',
+                    '--epr-search-input-height': '46px',
+                    '--epr-header-padding': '8px var(--epr-horizontal-padding)',
+                  } as CSSProperties
+                }
+              />
+            </Layout.FlexCol>
+          </BottomModal>,
+          document.getElementById('modal-container') || document.body,
+        )}
     </Layout.FlexRow>
   );
 }

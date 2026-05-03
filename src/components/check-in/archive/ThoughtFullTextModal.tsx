@@ -1,7 +1,6 @@
-import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
-import { DEFAULT_MARGIN } from '@constants/layout';
-import { Colors, Layout, Typo } from '@design-system';
+import { DEFAULT_MARGIN, SCREEN_HEIGHT } from '@constants/layout';
+import { Layout, Typo } from '@design-system';
 import { CheckInComponentEntry } from '@models/checkInEntry';
 import { formatEntryTimestamp } from '@utils/archiveHelpers';
 
@@ -19,12 +18,24 @@ interface Props {
  * not in the archive.
  */
 function ThoughtFullTextModal({ entry, onClose }: Props) {
-  const [t] = useTranslation('translation', { keyPrefix: 'archive.thought_modal' });
   const isOpen = entry !== null && entry.component === 'thought';
   const data = (entry?.data ?? {}) as { thought?: string };
 
   return (
-    <BottomModal visible={isOpen} onClose={onClose}>
+    <BottomModal
+      visible={isOpen}
+      onClose={onClose}
+      draggable
+      customHeight={Math.round(SCREEN_HEIGHT * 0.55)}
+    >
+      <div
+        style={{
+          width: '100%',
+          backgroundColor: '#FCFCFC',
+          borderBottom: '1px solid #F0F0F0',
+          padding: '16px 0',
+        }}
+      />
       <Layout.FlexCol w="100%" p={DEFAULT_MARGIN} gap={12}>
         {entry && (
           <Typo type="label-small" color="MEDIUM_GRAY">
@@ -36,23 +47,6 @@ function ThoughtFullTextModal({ entry, onClose }: Props) {
             {data.thought ?? ''}
           </Typo>
         </div>
-        <Layout.FlexRow w="100%" justifyContent="flex-end">
-          <button
-            type="button"
-            onClick={onClose}
-            style={{
-              border: `1px solid ${Colors.LIGHT_GRAY}`,
-              borderRadius: 8,
-              background: Colors.WHITE,
-              padding: '6px 12px',
-              fontSize: 14,
-              color: Colors.DARK_GRAY,
-              cursor: 'pointer',
-            }}
-          >
-            {t('close')}
-          </button>
-        </Layout.FlexRow>
       </Layout.FlexCol>
     </BottomModal>
   );

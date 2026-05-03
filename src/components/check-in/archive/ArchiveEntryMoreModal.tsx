@@ -94,11 +94,12 @@ function MenuRow({ onClick, children }: { onClick: () => void; children: ReactNo
       w="100%"
       pv={14}
       ph={16}
+      justifyContent="center"
+      alignItems="center"
       style={{
         border: 'none',
         borderBottom: `1px solid ${Colors.LIGHT_GRAY}`,
         background: 'transparent',
-        textAlign: 'center',
         cursor: 'pointer',
       }}
     >

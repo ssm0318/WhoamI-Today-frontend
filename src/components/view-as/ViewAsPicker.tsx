@@ -71,12 +71,15 @@ function ViewAsPicker({ visible, onClose, onSelect }: ViewAsPickerProps) {
   };
 
   return (
-    <BottomModal visible={visible} onClose={onClose} heightMode="full">
+    <BottomModal visible={visible} onClose={onClose} heightMode="full" draggable>
+      <div style={{ width: '100%', backgroundColor: '#FCFCFC', borderBottom: '1px solid #F0F0F0' }}>
+        <Layout.FlexRow w="100%" h={44} alignItems="center" justifyContent="center">
+          <Typo type="title-medium" bold>
+            {t('title')}
+          </Typo>
+        </Layout.FlexRow>
+      </div>
       <Layout.FlexCol w="100%" p={16} gap={16}>
-        <Typo type="title-large" color="BLACK">
-          {t('title')}
-        </Typo>
-
         {/* Public section */}
         <Layout.FlexCol w="100%" gap={8}>
           <Typo type="label-medium" color="MEDIUM_GRAY">

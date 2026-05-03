@@ -55,12 +55,15 @@ function ModifyVisibilityModal({ entry, onClose, onConfirm }: Props) {
   };
 
   return (
-    <BottomModal visible={entry !== null} onClose={onClose}>
+    <BottomModal visible={entry !== null} onClose={onClose} draggable>
+      <div style={{ width: '100%', backgroundColor: '#FCFCFC', borderBottom: '1px solid #F0F0F0' }}>
+        <Layout.FlexRow w="100%" h={44} alignItems="center" justifyContent="center">
+          <Typo type="title-medium" bold>
+            {t('title')}
+          </Typo>
+        </Layout.FlexRow>
+      </div>
       <Layout.FlexCol w="100%" p={DEFAULT_MARGIN} gap={16}>
-        <Typo type="title-medium" color="DARK">
-          {t('title')}
-        </Typo>
-
         {/* Read-only preview of the component being shared. */}
         {entry && (
           <Layout.FlexCol
@@ -92,14 +95,9 @@ function ModifyVisibilityModal({ entry, onClose, onConfirm }: Props) {
           />
         </Layout.FlexCol>
 
-        <Layout.FlexRow w="100%" justifyContent="flex-end" gap={8}>
-          <button type="button" onClick={onClose} style={cancelButtonStyle} disabled={saving}>
-            <Typo type="button-medium" color="DARK_GRAY">
-              {t('cancel')}
-            </Typo>
-          </button>
+        <Layout.FlexRow w="100%">
           <button type="button" onClick={handleSave} style={saveButtonStyle} disabled={saving}>
-            <Typo type="button-medium" color="WHITE">
+            <Typo type="button-medium" color="BLACK">
               {t('save')}
             </Typo>
           </button>
@@ -139,20 +137,13 @@ function renderPreview(entry: CheckInComponentEntry) {
   }
 }
 
-const cancelButtonStyle: CSSProperties = {
-  borderRadius: 8,
-  padding: '6px 14px',
-  background: Colors.WHITE,
-  border: `1px solid ${Colors.LIGHT_GRAY}`,
-  cursor: 'pointer',
-};
-
 const saveButtonStyle: CSSProperties = {
   borderRadius: 8,
-  padding: '6px 14px',
-  background: Colors.PRIMARY,
+  padding: '12px 14px',
+  background: Colors.SECONDARY,
   border: 'none',
   cursor: 'pointer',
+  width: '100%',
 };
 
 export default ModifyVisibilityModal;

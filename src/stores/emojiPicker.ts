@@ -1,7 +1,7 @@
 import { SliceStateCreator } from './useBoundStore';
 
 export interface EmojiPickerTarget {
-  type: 'Note' | 'Response' | 'CheckIn';
+  type: 'Note' | 'Response' | 'CheckIn' | 'Comment';
   id: number | null;
   top?: number;
 }

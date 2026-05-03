@@ -11,7 +11,7 @@ import { EmojiPickerCustomStyle } from './EmojiPicker.styled';
 
 interface EmojiPickerProps {
   postId?: number;
-  postType?: 'Note' | 'Response';
+  postType?: 'Note' | 'Response' | 'Comment';
   onSelectEmoji: (emoji: EmojiClickData) => void;
   onUnselectEmoji?: (emoji: EmojiClickData) => void;
   selectedEmojis?: string[];

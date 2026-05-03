@@ -2,6 +2,7 @@ import { CSSProperties, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import { SCREEN_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import { CheckInPostLike, getCheckInPostLikes } from '@utils/apis/checkInPost';
 
@@ -30,11 +31,20 @@ function LikesListModal({ postId, onClose }: Props) {
   };
 
   return (
-    <BottomModal visible={postId !== null} onClose={onClose}>
+    <BottomModal
+      visible={postId !== null}
+      onClose={onClose}
+      draggable
+      customHeight={Math.round(SCREEN_HEIGHT * 0.4)}
+    >
+      <div style={{ width: '100%', backgroundColor: '#FCFCFC', borderBottom: '1px solid #F0F0F0' }}>
+        <Layout.FlexRow w="100%" h={44} alignItems="center" justifyContent="center">
+          <Typo type="title-medium" bold>
+            Likes
+          </Typo>
+        </Layout.FlexRow>
+      </div>
       <Layout.FlexCol w="100%" p={16} gap={4}>
-        <Typo type="title-medium" color="DARK" mb={12}>
-          Likes
-        </Typo>
         {likes.length === 0 ? (
           <Layout.FlexRow w="100%" justifyContent="center" pv={24}>
             <Typo type="body-medium" color="MEDIUM_GRAY">

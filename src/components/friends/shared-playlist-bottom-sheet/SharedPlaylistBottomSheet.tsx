@@ -2,8 +2,8 @@ import { Track } from '@spotify/web-api-ts-sdk';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
-import Icon from '@components/_common/icon/Icon';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SCREEN_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
@@ -26,6 +26,7 @@ interface TrackItemProps {
 function TrackItem({ track }: TrackItemProps) {
   const [trackData, setTrackData] = useState<Track | null>(null);
   const spotifyManager = SpotifyManager.getInstance();
+  const navigate = useNavigate();
   useEffect(() => {
     if (!track.track) {
       setTrackData(null);
@@ -81,14 +82,21 @@ function TrackItem({ track }: TrackItemProps) {
                 </Typo>
               </Layout.FlexCol>
               <div
+                role="button"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/users/${track.sharedBy.username}`);
+                }}
                 style={{
                   flexShrink: 0,
                   marginLeft: 'auto',
                   display: 'flex',
                   alignItems: 'center',
+                  cursor: 'pointer',
                 }}
               >
-                <Typo type="body-small" color="DARK">
+                <Typo type="body-medium" color="DARK" underline bold>
                   {track.sharedBy.username}
                 </Typo>
               </div>
@@ -119,14 +127,22 @@ function SharedPlaylistBottomSheet({
       onClose={closeBottomSheet}
       heightMode="full"
       customHeight={BOTTOM_SHEET_HEIGHT}
+      draggable
     >
       <S.Container>
-        <Icon name="home_indicator" />
-        <Layout.FlexRow w="100%" alignItems="center" ph={16} pv={12}>
-          <Typo type="title-large">
-            {t('title')} ({tracks.length})
-          </Typo>
-        </Layout.FlexRow>
+        <div
+          style={{
+            width: '100%',
+            backgroundColor: '#FCFCFC',
+            borderBottom: '1px solid #F0F0F0',
+          }}
+        >
+          <Layout.FlexRow w="100%" h={44} alignItems="center" justifyContent="center">
+            <Typo type="title-medium" bold>
+              {t('title')} ({tracks.length})
+            </Typo>
+          </Layout.FlexRow>
+        </div>
 
         <S.ScrollContainer>
           <Layout.FlexCol w="100%" ph={16} pb={20}>

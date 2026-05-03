@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
-import Icon from '@components/_common/icon/Icon';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import {
   ALL_BROWSE_MODE_TABS,
@@ -232,17 +231,24 @@ function BrowseModeCustomizeSheet({
   };
 
   return createPortal(
-    <BottomModal visible={visible} onClose={onClose} heightMode="full">
-      <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE" pb={32}>
-        <Icon name="home_indicator" />
-        <Layout.FlexCol alignItems="center" gap={4} pt={4} ph={16}>
-          <Typo type="title-large">
+    <BottomModal visible={visible} onClose={onClose} heightMode="full" draggable>
+      <div
+        style={{
+          width: '100%',
+          backgroundColor: '#FCFCFC',
+          borderBottom: '1px solid #F0F0F0',
+          position: 'sticky',
+          top: 0,
+          zIndex: 1,
+        }}
+      >
+        <Layout.FlexRow w="100%" h={44} alignItems="center" justifyContent="center">
+          <Typo type="title-medium" bold>
             {isEditing ? t('steps.customize.title_edit') : t('steps.customize.title')}
           </Typo>
-          {/* No subtitle in either mode — the section labels carry the meaning
-              and a separate explanation just adds noise. */}
-        </Layout.FlexCol>
-
+        </Layout.FlexRow>
+      </div>
+      <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE" pb={32}>
         <Layout.FlexCol w="100%" ph={16} pt={16} gap={20}>
           {/* Quick-start templates */}
           <Layout.FlexCol w="100%" gap={6}>

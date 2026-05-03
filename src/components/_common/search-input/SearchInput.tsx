@@ -55,7 +55,7 @@ export default function SearchInput({
         pv={6}
         h={56}
       >
-        <SvgIcon name="search" size={44} fill="MEDIUM_GRAY" />
+        <SvgIcon name="search_black" size={36} color="MEDIUM_GRAY" />
         <S.SearchInput
           ref={inputRef}
           placeholder={placeholder}

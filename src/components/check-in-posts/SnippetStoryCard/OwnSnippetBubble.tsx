@@ -11,7 +11,8 @@ interface OwnSnippetBubbleProps {
 }
 
 function OwnSnippetBubble({ story, onClick, onAddClick }: OwnSnippetBubbleProps) {
-  const { author_detail } = story;
+  const { author_detail, has_unread } = story;
+  const allRead = has_unread === false;
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
@@ -26,7 +27,7 @@ function OwnSnippetBubble({ story, onClick, onAddClick }: OwnSnippetBubbleProps)
   return (
     <S.Bubble onClick={handleClick}>
       <S.RingWrapper>
-        <S.Ring>
+        <S.Ring $read={allRead}>
           <ProfileImage
             imageUrl={author_detail.profile_image}
             username={author_detail.username}
@@ -38,7 +39,7 @@ function OwnSnippetBubble({ story, onClick, onAddClick }: OwnSnippetBubbleProps)
         </S.AddBadge>
       </S.RingWrapper>
       <Typo type="label-small" color="BLACK" numberOfLines={1}>
-        My snippet
+        My snapshot
       </Typo>
     </S.Bubble>
   );

@@ -409,16 +409,18 @@ function EditProfile() {
     const safeToSaveChips = !(draftChipCount === 0 && savedChipCount > 0);
 
     setIsSaving(true);
-    try {
-      if (safeToSaveChips) {
-        await updateChipsByCategory(draft.chipSelections);
-      } else {
-        openToast({
-          message: "Couldn't load your chips — try again in a moment.",
-        });
+    if (!featureFlags?.postsVerQ) {
+      try {
+        if (safeToSaveChips) {
+          await updateChipsByCategory(draft.chipSelections);
+        } else {
+          openToast({
+            message: "Couldn't load your chips — try again in a moment.",
+          });
+        }
+      } catch {
+        // Chip save failed, continue with profile save
       }
-    } catch {
-      // Chip save failed, continue with profile save
     }
 
     const profileData = {

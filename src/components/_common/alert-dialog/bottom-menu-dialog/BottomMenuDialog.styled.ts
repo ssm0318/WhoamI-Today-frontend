@@ -14,6 +14,9 @@ export const StyledBottomMenuDialog = styled(AlertDialog)`
       button {
         width: 100%;
         padding: 18px 16px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
 
         & + button {
           border-top: 0.5px solid ${({ theme }) => theme.LIGHT_GRAY};

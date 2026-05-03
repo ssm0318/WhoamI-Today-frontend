@@ -63,7 +63,6 @@ function SnippetMoreModal({
 
   const handleModify = () => {
     setShowVisibility(true);
-    onClose();
   };
 
   const handleSaveVisibility = async () => {
@@ -74,6 +73,7 @@ function SnippetMoreModal({
     } finally {
       setSaving(false);
       setShowVisibility(false);
+      onClose();
     }
   };
 
@@ -109,11 +109,24 @@ function SnippetMoreModal({
         onClickConfirm={handleConfirmDelete}
       />
 
-      <BottomModal visible={showVisibility} onClose={() => setShowVisibility(false)}>
+      <BottomModal
+        visible={showVisibility}
+        onClose={() => {
+          setShowVisibility(false);
+          onClose();
+        }}
+        draggable
+      >
+        <div
+          style={{ width: '100%', backgroundColor: '#FCFCFC', borderBottom: '1px solid #F0F0F0' }}
+        >
+          <Layout.FlexRow w="100%" h={44} alignItems="center" justifyContent="center">
+            <Typo type="title-medium" bold>
+              {t('visibility_modal_title')}
+            </Typo>
+          </Layout.FlexRow>
+        </div>
         <Layout.FlexCol w="100%" p={DEFAULT_MARGIN} gap={16}>
-          <Typo type="title-medium" color="DARK">
-            {t('visibility_modal_title')}
-          </Typo>
           <Layout.FlexCol w="100%" gap={8}>
             <Typo type="label-medium" color="MEDIUM_GRAY">
               {t('visibility_label')}
@@ -137,24 +150,14 @@ function SnippetMoreModal({
               ))}
             </ToggleRow>
           </Layout.FlexCol>
-          <Layout.FlexRow w="100%" justifyContent="flex-end" gap={8}>
-            <button
-              type="button"
-              onClick={() => setShowVisibility(false)}
-              style={cancelBtnStyle}
-              disabled={saving}
-            >
-              <Typo type="button-medium" color="DARK_GRAY">
-                {t('cancel')}
-              </Typo>
-            </button>
+          <Layout.FlexRow w="100%">
             <button
               type="button"
               onClick={handleSaveVisibility}
               style={saveBtnStyle}
               disabled={saving}
             >
-              <Typo type="button-medium" color="WHITE">
+              <Typo type="button-medium" color="BLACK">
                 {t('confirm')}
               </Typo>
             </button>
@@ -208,20 +211,13 @@ const ToggleChip = styled.button<{ $selected: boolean }>`
   user-select: none;
 `;
 
-const cancelBtnStyle: CSSProperties = {
-  borderRadius: 8,
-  padding: '6px 14px',
-  background: Colors.WHITE,
-  border: `1px solid ${Colors.LIGHT_GRAY}`,
-  cursor: 'pointer',
-};
-
 const saveBtnStyle: CSSProperties = {
   borderRadius: 8,
-  padding: '6px 14px',
-  background: Colors.PRIMARY,
+  padding: '12px 14px',
+  background: Colors.SECONDARY,
   border: 'none',
   cursor: 'pointer',
+  width: '100%',
 };
 
 export default SnippetMoreModal;

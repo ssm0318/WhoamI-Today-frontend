@@ -370,8 +370,8 @@ function Discover() {
         }}
       >
         {/* Filter + shared playlist sit outside ptr__children so WebView can pan horizontal lists. */}
-        <Layout.FlexCol w="100%" pb={FLOATING_BUTTON_SIZE + 20}>
-          {!isVerQ && (
+        <Layout.FlexCol w="100%" pb={hasVisibleItems ? FLOATING_BUTTON_SIZE + 20 : 0}>
+          {!isVerQ && !isLoading && hasVisibleItems && (
             <S.ScrollableFilterRow gap={8} ph={16} pv={12}>
               {discoverFilterList.map((filter) => (
                 <FilterChip
@@ -399,9 +399,11 @@ function Discover() {
             </S.ScrollableFilterRow>
           )}
 
-          {!isVerQ && !isLoading && <SharedPlaylistSection tracks={musicTracks} />}
+          {!isVerQ && !isLoading && musicTracks.length > 0 && (
+            <SharedPlaylistSection tracks={musicTracks} />
+          )}
 
-          {!isVerQ && !isLoading && (
+          {!isVerQ && !isLoading && hasVisibleItems && (
             <Layout.FlexCol w="100%" ph={16} pv={8} mb={8} alignItems="center">
               <Typo type="label-large" color="MEDIUM_GRAY" textAlign="center">
                 {t('discover_banner.daily_refresh_1', { time: getLocalRefreshTime() })}

@@ -2,7 +2,6 @@ import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
-import { Divider } from '@components/_common/divider/Divider.styled';
 import { UserPageContext } from '@components/user-page/UserPage.context';
 import { Button, CheckBox, Layout, RadioButton, Typo } from '@design-system';
 import { useTrackEvent } from '@hooks/useTrackEvent';
@@ -114,12 +113,15 @@ function EditConnectionsBottomSheet({
   }, [connection]);
 
   return createPortal(
-    <BottomModal visible={visible} onClose={closeBottomSheet}>
-      <Layout.FlexCol justifyContent="space-between" w="100%" p={10} gap={4} bgColor="WHITE">
-        <Layout.FlexRow justifyContent="center" w="100%">
-          <Typo type="title-large">{t('edit_connections.title')}</Typo>
+    <BottomModal visible={visible} onClose={closeBottomSheet} draggable>
+      <div style={{ width: '100%', backgroundColor: '#FCFCFC', borderBottom: '1px solid #F0F0F0' }}>
+        <Layout.FlexRow w="100%" h={44} alignItems="center" justifyContent="center">
+          <Typo type="title-medium" bold>
+            {t('edit_connections.title')}
+          </Typo>
         </Layout.FlexRow>
-        <Divider width={1} />
+      </div>
+      <Layout.FlexCol justifyContent="space-between" w="100%" p={10} gap={4} bgColor="WHITE">
         <Layout.FlexCol pv={10} gap={10} w="100%">
           <Layout.FlexCol gap={3} w="100%" bgColor="LIGHT" p={10} rounded={12}>
             <Typo type="title-medium" mb={10}>

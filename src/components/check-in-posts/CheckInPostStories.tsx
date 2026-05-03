@@ -48,11 +48,20 @@ function CheckInPostStories({
 
   const { myStory, friendStories } = useMemo(() => {
     const results = data?.results ?? [];
-    if (authorUserId !== undefined) return { myStory: null, friendStories: results };
+    if (authorUserId !== undefined) {
+      if (!isOwnProfile) {
+        // Other user's profile: filter to 24h only
+        const expiryMs = 24 * 60 * 60 * 1000;
+        const now = Date.now();
+        const recent = results.filter((s) => now - new Date(s.created_at).getTime() < expiryMs);
+        return { myStory: null, friendStories: recent };
+      }
+      return { myStory: null, friendStories: results };
+    }
     const own = results.find((s) => s.author_detail.id === myProfile?.id) ?? null;
     const friends = results.filter((s) => s.author_detail.id !== myProfile?.id);
     return { myStory: own, friendStories: friends };
-  }, [data, authorUserId, myProfile?.id]);
+  }, [data, authorUserId, myProfile?.id, isOwnProfile]);
 
   const allStories: CheckInPostStory[] = useMemo(() => {
     if (!myStory) return friendStories;
@@ -76,12 +85,13 @@ function CheckInPostStories({
   }, [mutate]);
 
   const { highlights, sortedAll, archivedCount } = useMemo(() => {
-    const h = friendStories.filter((s) => s.is_pinned);
-    const all = [...friendStories].sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-    );
     const expiryMs = 24 * 60 * 60 * 1000;
     const now = Date.now();
+    const h = friendStories.filter((s) => s.is_pinned);
+    const recent = friendStories.filter((s) => now - new Date(s.created_at).getTime() < expiryMs);
+    const all = [...recent].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+    );
     const expired = friendStories.filter((s) => now - new Date(s.created_at).getTime() > expiryMs);
     return {
       highlights: h,

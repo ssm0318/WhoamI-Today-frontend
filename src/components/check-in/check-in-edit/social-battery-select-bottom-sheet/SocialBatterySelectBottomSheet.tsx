@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
-import Icon from '@components/_common/icon/Icon';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import { Layout, Typo } from '@design-system';
 import { SocialBattery } from '@models/checkIn';
@@ -35,10 +34,15 @@ function SocialBatterySelectBottomSheet({
   };
 
   return createPortal(
-    <BottomModal visible={visible} onClose={closeBottomSheet}>
+    <BottomModal visible={visible} onClose={closeBottomSheet} draggable>
       <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE">
-        <Icon name="home_indicator" />
-        <Typo type="title-large">{t('title')}</Typo>
+        <div
+          style={{ width: '100%', backgroundColor: '#FCFCFC', borderBottom: '1px solid #F0F0F0' }}
+        >
+          <Layout.FlexRow w="100%" h={44} alignItems="center" justifyContent="center">
+            <Typo type="title-medium">{t('title')}</Typo>
+          </Layout.FlexRow>
+        </div>
         <Layout.FlexRow
           gap={6}
           pv={16}

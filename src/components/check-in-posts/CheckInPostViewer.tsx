@@ -142,7 +142,12 @@ function CheckInPostViewer({
     getUserCheckInPosts(story.author_detail.id)
       .then((data) => {
         if (cancelled) return;
-        const sorted = [...(data.results ?? [])].sort(
+        const expiryMs = 24 * 60 * 60 * 1000;
+        const now = Date.now();
+        const recent = (data.results ?? []).filter(
+          (s) => now - new Date(s.created_at).getTime() < expiryMs,
+        );
+        const sorted = [...recent].sort(
           (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
         );
         const firstUnread = sorted.findIndex((s) => !s.current_user_read);
@@ -308,8 +313,10 @@ function CheckInPostViewer({
     if (enableMultiStory && storyIndex < userPosts.length - 1) {
       remainingRef.current = STORY_DURATION_MS;
       setStoryIndex(storyIndex + 1);
+    } else if (onNext) {
+      onNext();
     } else {
-      onNext?.();
+      onClose();
     }
   };
 
@@ -360,12 +367,10 @@ function CheckInPostViewer({
           <AuthorLink
             onClick={(e) => {
               e.stopPropagation();
-              if (!isOwn) {
-                onClose();
-                navigate(`/users/${currentStory.author_detail.username}`);
-              }
+              onClose();
+              navigate(`/users/${currentStory.author_detail.username}`);
             }}
-            style={{ cursor: isOwn ? 'default' : 'pointer' }}
+            style={{ cursor: 'pointer' }}
           >
             <ProfileImage
               imageUrl={currentStory.author_detail.profile_image}
@@ -522,9 +527,7 @@ function CheckInPostViewer({
         {(enableMultiStory ? storyIndex > 0 || !!onPrev : !!onPrev) && (
           <NavZone $side="left" onClick={handleLeft} />
         )}
-        {(enableMultiStory ? storyIndex < userPosts.length - 1 || !!onNext : !!onNext) && (
-          <NavZone $side="right" onClick={handleRight} />
-        )}
+        <NavZone $side="right" onClick={handleRight} />
       </Card>
 
       {post && (

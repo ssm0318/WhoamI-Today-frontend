@@ -53,7 +53,7 @@ export const addForegroundMessageEventListener = (messaging: Messaging) => {
   onMessage(messaging, (payload: MessagePayload) => {
     const { data } = payload;
     if (!data) return;
-    const { message_ko, url, tag, type, message_en } = data;
+    const { notification_id, message_ko, url, tag, type, message_en } = data;
     const title = 'WhoAmI Today';
     const options = {
       body: i18n.language === 'ko-KR' ? message_ko : message_en,
@@ -61,6 +61,7 @@ export const addForegroundMessageEventListener = (messaging: Messaging) => {
       icon: `${PROD_BASE_URL}/whoami192.png`,
       data: {
         url,
+        notification_id,
       },
     };
 

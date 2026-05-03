@@ -6,7 +6,7 @@ import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonD
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import { SocialBatteryChipAssets } from '@components/profile/social-batter-chip/SocialBatteryChip.contants';
 import { BUILT_IN_BROWSE_MODES } from '@constants/browseMode';
-import { Colors, SvgIcon, Typo } from '@design-system';
+import { Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { usePreventScroll } from '@hooks/usePreventScroll';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import {
@@ -565,32 +565,33 @@ function BrowseModeSessionPrompt({
     }
   }, [deleteCustomBrowseModePreset, openToast, pendingDeletePreset, t]);
 
+  const stepModeProps = {
+    presets: customPresets,
+    lastActive: activeBrowseMode,
+    syncBattery,
+    skipToday,
+    hiddenModeKeys,
+    onSyncToggle: handleSyncToggle,
+    onSkipTodayToggle: handleSkipTodayToggle,
+    onPick: handleModePick,
+    onOpenCustomize: () => {
+      setCloneSeed(null);
+      setEditingPreset(null);
+      openCustomize('new');
+    },
+    onOpenWishlist: () => {
+      setWishlistOpen(true);
+      trackEvent('browse_mode_wishlist_opened');
+    },
+    onCloneBuiltIn: handleCloneBuiltIn,
+    onEditPreset: handleEditPreset,
+    onHideMode: handleHideMode,
+    onShowMode: handleShowMode,
+    onDeleteMode: handleDeletePreset,
+  };
+
   const stepContent = (
-    <BrowseModeStepMode
-      presets={customPresets}
-      lastActive={activeBrowseMode}
-      syncBattery={syncBattery}
-      skipToday={skipToday}
-      showSkipTodayCheckbox={fullScreen}
-      hiddenModeKeys={hiddenModeKeys}
-      onSyncToggle={handleSyncToggle}
-      onSkipTodayToggle={handleSkipTodayToggle}
-      onPick={handleModePick}
-      onOpenCustomize={() => {
-        setCloneSeed(null);
-        setEditingPreset(null);
-        openCustomize('new');
-      }}
-      onOpenWishlist={() => {
-        setWishlistOpen(true);
-        trackEvent('browse_mode_wishlist_opened');
-      }}
-      onCloneBuiltIn={handleCloneBuiltIn}
-      onEditPreset={handleEditPreset}
-      onHideMode={handleHideMode}
-      onShowMode={handleShowMode}
-      onDeleteMode={handleDeletePreset}
-    />
+    <BrowseModeStepMode {...stepModeProps} showSkipTodayCheckbox={fullScreen} hideHeader />
   );
 
   return (
@@ -611,7 +612,14 @@ function BrowseModeSessionPrompt({
                     <SvgIcon name="close" size={20} />
                   </SkipButton>
                 </SkipBar>
-                <FullScreenBody>{stepContent}</FullScreenBody>
+                <FullScreenBody>
+                  <Layout.FlexCol alignItems="center" w="100%" pt={8} pb={4}>
+                    <Typo type="title-large" bold>
+                      {t('steps.mode.title')}
+                    </Typo>
+                  </Layout.FlexCol>
+                  {stepContent}
+                </FullScreenBody>
               </FullScreenOverlay>
             ) : null,
             document.body,
@@ -620,8 +628,22 @@ function BrowseModeSessionPrompt({
             <BottomModal
               visible={visible && !customizeOpen && !wishlistOpen}
               onClose={handleDismiss}
+              draggable
             >
-              {stepContent}
+              <div
+                style={{
+                  width: '100%',
+                  backgroundColor: '#FCFCFC',
+                  borderBottom: '1px solid #F0F0F0',
+                }}
+              >
+                <Layout.FlexRow w="100%" h={52} alignItems="center" justifyContent="center">
+                  <Typo type="title-large" bold>
+                    {t('steps.mode.title')}
+                  </Typo>
+                </Layout.FlexRow>
+              </div>
+              <BrowseModeStepMode {...stepModeProps} showSkipTodayCheckbox={false} hideHeader />
             </BottomModal>,
             document.body,
           )}

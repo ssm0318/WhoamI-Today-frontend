@@ -201,7 +201,7 @@ function FriendsList() {
                 $active={selectedTab === 'check-in'}
                 onClick={() => setSelectedTab('check-in')}
               >
-                Check In
+                Check-In
                 {hasCheckInUpdates && <TabBadge>Update</TabBadge>}
               </TabButton>
               <TabButton $active={selectedTab === 'posts'} onClick={() => setSelectedTab('posts')}>

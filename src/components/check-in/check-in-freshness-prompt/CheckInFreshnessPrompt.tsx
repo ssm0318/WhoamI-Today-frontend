@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
-import { Button, Font, Layout } from '@design-system';
+import { Button, Layout, Typo } from '@design-system';
 import { MyCheckIn } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
 import { archiveLiveComponent } from '@utils/apis/checkIn';
@@ -56,11 +56,15 @@ function CheckInFreshnessPrompt({ visible, onDismiss, checkIn }: CheckInFreshnes
   }, [hasBattery, hasMood, fetchCheckIn, openToast, onDismiss, t]);
 
   return createPortal(
-    <BottomModal visible={visible} onClose={onDismiss}>
-      <Layout.LayoutBase w="100%" bgColor="WHITE" pt={24} ph={24} pb={36}>
-        <Font.Display type="20_bold" mb={20}>
-          {t('title')}
-        </Font.Display>
+    <BottomModal visible={visible} onClose={onDismiss} draggable>
+      <div style={{ width: '100%', backgroundColor: '#FCFCFC', borderBottom: '1px solid #F0F0F0' }}>
+        <Layout.FlexRow w="100%" h={52} alignItems="center" justifyContent="center">
+          <Typo type="title-large" bold>
+            {t('title')}
+          </Typo>
+        </Layout.FlexRow>
+      </div>
+      <Layout.LayoutBase w="100%" bgColor="WHITE" pt={16} ph={24} pb={36}>
         <Layout.FlexRow gap={8} alignItems="center" mb={24}>
           {hasBattery && checkIn?.social_battery && (
             <SocialBatteryChip socialBattery={checkIn.social_battery} />

@@ -1,25 +1,37 @@
-import { useState } from 'react';
+import ReactEmojiPicker, { EmojiClickData } from 'emoji-picker-react';
+import { CSSProperties, useCallback, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { createGlobalStyle } from 'styled-components';
 import CommonDialog, {
   CommonDialogProps,
 } from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import DeleteAlert from '@components/_common/alert-dialog/delete-alert/DeleteAlert';
+import BottomModal from '@components/_common/bottom-modal/BottomModal';
+import EmojiButton from '@components/_common/emoji-button/EmojiButton';
 import Icon from '@components/_common/icon/Icon';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import PostReactionItem from '@components/_common/post-reaction-item/PostReactionItem';
+import PostReactionList from '@components/_common/post-reaction-list/PostReactionList';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { StyledSwipeButton } from '@components/_common/swipe-layout/SwipeButton.styled';
 import { SwipeLayout } from '@components/_common/swipe-layout/SwipeLayout';
+import { EMOJI_CATEGORIES } from '@components/emoji-picker/EmojiPicker.constants';
+import { SCREEN_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useDeleteCommentAlert from '@hooks/useDeleteCommentAlert';
-import { Comment, POST_TYPE, PrivateComment } from '@models/post';
+import { Comment, POST_TYPE, PrivateComment, ReactionUserSample } from '@models/post';
 import { User } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { reportContent } from '@utils/apis/common';
+import { deleteReaction, postReaction } from '@utils/apis/reaction';
+import { getUnifiedEmoji } from '@utils/emojiHelpers';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import CommentLikesPopup from '../comment-likes-popup/CommentLikesPopup';
+import CommentReactionsPopup from '../comment-reactions-popup/CommentReactionsPopup';
 
 interface CommentItemProps {
   isPostAuthor?: boolean;
@@ -35,6 +47,18 @@ type AlertProps = Pick<
   'title' | 'content' | 'confirmText' | 'onClickConfirm' | 'cancelText'
 >;
 
+const CommentEmojiHighlight = createGlobalStyle<{ unifiedList: string[] }>`
+  ${({ unifiedList }) =>
+    unifiedList.map(
+      (unified) => `
+      .comment-emoji-picker [data-unified='${unified}'] {
+        background-color: #C8EEFF !important;
+        border-radius: 50% !important;
+      }
+    `,
+    )}
+`;
+
 function CommentItem({
   isPostAuthor,
   comment,
@@ -44,7 +68,15 @@ function CommentItem({
   onConfirmReport,
 }: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
-  const { author_detail, created_at, is_private, replies, like_user_sample } = comment;
+  const {
+    author_detail,
+    created_at,
+    is_private,
+    replies,
+    like_user_sample,
+    like_reaction_user_sample,
+    current_user_reaction_id_list,
+  } = comment;
   const { username, profile_image } = author_detail ?? {};
   const navigate = useNavigate();
   const [createdAt] = useState(() => (created_at ? new Date(created_at) : null));
@@ -54,10 +86,69 @@ function CommentItem({
     openToast: state.openToast,
     isUserAuthor: state.isUserAuthor,
   }));
+  const { featureFlags, myProfile } = useBoundStore(UserSelector);
+  const isVerW = !featureFlags?.postsVerQ;
 
   const isCommentAuthor = author_detail ? isUserAuthor((author_detail as User).id) : false;
 
   const [isLikesModalOpen, setIsLikesModalOpen] = useState(false);
+  const [isReactionsModalOpen, setIsReactionsModalOpen] = useState(false);
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+  const [myReactionList, setMyReactionList] = useState<{ id: number; emoji: string }[]>(
+    current_user_reaction_id_list ?? [],
+  );
+  const [reactionSampleList, setReactionSampleList] = useState<ReactionUserSample[]>(
+    like_reaction_user_sample ?? [],
+  );
+  const myEmojiList = myReactionList.map((r) => r.emoji);
+  const unifiedEmojiList = myEmojiList.map((e) => getUnifiedEmoji(e));
+
+  useEffect(() => {
+    setMyReactionList(current_user_reaction_id_list ?? []);
+  }, [current_user_reaction_id_list]);
+
+  useEffect(() => {
+    setReactionSampleList(like_reaction_user_sample ?? []);
+  }, [like_reaction_user_sample]);
+
+  const handleEmojiClick = useCallback(
+    async (emoji: EmojiClickData) => {
+      if (!myProfile) return;
+      const isAlreadySelected = myEmojiList.includes(emoji.emoji);
+
+      if (isAlreadySelected) {
+        const targetReaction = myReactionList.find((r) => r.emoji === emoji.emoji);
+        if (!targetReaction) return;
+        await deleteReaction(targetReaction.id);
+        setMyReactionList((prev) => prev.filter((r) => r.emoji !== emoji.emoji));
+        setReactionSampleList((prev) =>
+          prev.filter((s) => !(s.reaction === emoji.emoji && s.id === myProfile.id)),
+        );
+      } else {
+        const response = await postReaction('Comment', comment.id, emoji.emoji);
+        setMyReactionList((prev) => [...prev, { id: response.id, emoji: response.emoji }]);
+        setReactionSampleList((prev) => [
+          ...prev,
+          {
+            id: myProfile.id,
+            like: false,
+            reaction: emoji.emoji,
+            profile_image: myProfile.profile_image,
+            profile_pic: myProfile.profile_pic,
+            url: myProfile.url,
+            username: myProfile.username,
+            bio: myProfile.bio,
+            pronouns: myProfile.pronouns,
+            user_interests: myProfile.user_interests,
+            user_personas: myProfile.user_personas,
+            connection_status: myProfile.connection_status,
+          },
+        ]);
+      }
+      setIsEmojiPickerOpen(false);
+    },
+    [comment.id, myEmojiList, myProfile, myReactionList],
+  );
 
   const handleReplyInput = () => {
     onClickReplyBtn?.();
@@ -202,28 +293,43 @@ function CommentItem({
                 </Layout.FlexRow>
               </Layout.FlexCol>
             </Layout.FlexCol>
-            {/* like button */}
-            <Layout.FlexCol w={24}>
-              {isCommentAuthor ? (
-                <Layout.FlexRow onClick={handleClickLikes}>
-                  {like_user_sample.map((user) => (
-                    <PostReactionItem
-                      key={user.username}
-                      imageUrl={user.profile_image}
-                      like
-                      emoji={null}
-                    />
-                  ))}
+            {/* like / reaction button */}
+            <Layout.FlexCol>
+              {isVerW ? (
+                <Layout.FlexRow alignItems="center">
+                  {reactionSampleList.length > 0 && (
+                    <Layout.FlexRow onClick={() => setIsReactionsModalOpen(true)}>
+                      <PostReactionList user_sample_list={reactionSampleList} />
+                    </Layout.FlexRow>
+                  )}
+                  {(!is_private || isPostAuthor || isCommentAuthor) && (
+                    <EmojiButton onClick={() => setIsEmojiPickerOpen(true)} />
+                  )}
                 </Layout.FlexRow>
               ) : (
-                (!is_private || isPostAuthor) && (
-                  <LikeButton
-                    postType="Comment"
-                    postId={comment.id}
-                    currentUserLikeId={comment.current_user_like_id}
-                    iconSize={15}
-                  />
-                )
+                <Layout.FlexCol w={24}>
+                  {isCommentAuthor ? (
+                    <Layout.FlexRow onClick={handleClickLikes}>
+                      {like_user_sample.map((user) => (
+                        <PostReactionItem
+                          key={user.username}
+                          imageUrl={user.profile_image}
+                          like
+                          emoji={null}
+                        />
+                      ))}
+                    </Layout.FlexRow>
+                  ) : (
+                    (!is_private || isPostAuthor) && (
+                      <LikeButton
+                        postType="Comment"
+                        postId={comment.id}
+                        currentUserLikeId={comment.current_user_like_id}
+                        iconSize={15}
+                      />
+                    )
+                  )}
+                </Layout.FlexCol>
               )}
             </Layout.FlexCol>
           </Layout.FlexRow>
@@ -254,6 +360,14 @@ function CommentItem({
           onClickUser={handleClickUser}
         />
       )}
+      {comment.id && (
+        <CommentReactionsPopup
+          isOpen={isReactionsModalOpen}
+          onClose={() => setIsReactionsModalOpen(false)}
+          commentId={comment.id}
+          onClickUser={handleClickUser}
+        />
+      )}
       {showAlert && (
         <CommonDialog
           visible={!!showAlert}
@@ -262,7 +376,43 @@ function CommentItem({
           {...showAlert}
         />
       )}
+      {isVerW &&
+        isEmojiPickerOpen &&
+        createPortal(
+          <BottomModal
+            visible={isEmojiPickerOpen}
+            onClose={() => setIsEmojiPickerOpen(false)}
+            customHeight={Math.round(SCREEN_HEIGHT * 0.55)}
+            draggable
+          >
+            <Layout.FlexCol w="100%" h="100%">
+              <CommentEmojiHighlight unifiedList={unifiedEmojiList} />
+              <ReactEmojiPicker
+                width="100%"
+                height="100%"
+                onEmojiClick={handleEmojiClick}
+                autoFocusSearch={false}
+                skinTonesDisabled
+                searchPlaceHolder="Search emoji"
+                previewConfig={{ showPreview: false }}
+                categories={EMOJI_CATEGORIES}
+                lazyLoadEmojis
+                className="comment-emoji-picker"
+                style={
+                  {
+                    '--epr-emoji-size': '28px',
+                    '--epr-emoji-padding': '10px',
+                    '--epr-search-input-height': '46px',
+                    '--epr-header-padding': '8px var(--epr-horizontal-padding)',
+                  } as CSSProperties
+                }
+              />
+            </Layout.FlexCol>
+          </BottomModal>,
+          document.getElementById('modal-container') || document.body,
+        )}
     </>
   );
 }
+
 export default CommentItem;

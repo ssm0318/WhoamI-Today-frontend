@@ -65,14 +65,14 @@ function ArchiveCard({ entry, onPinClick, onMoreClick, onBodyClick }: ArchiveCar
               <IconButton ariaLabel="pin" onClick={handlePin}>
                 <SvgIcon
                   name={entry.is_pinned ? 'pin_filled' : 'pin_empty'}
-                  size={16}
+                  size={20}
                   color={entry.is_pinned ? 'PRIMARY' : 'DARK_GRAY'}
                 />
               </IconButton>
             )}
             {showMore && (
               <IconButton ariaLabel="more" onClick={handleMore}>
-                <SvgIcon name="dots_menu" size={16} color="DARK_GRAY" />
+                <SvgIcon name="dots_menu" size={20} color="DARK_GRAY" />
               </IconButton>
             )}
           </S.HeaderActions>

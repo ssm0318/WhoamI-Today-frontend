@@ -27,7 +27,6 @@ interface ResponseItemProps {
   isMyPage?: boolean;
   displayType?: POST_DP_TYPE;
   refresh?: () => void;
-  emojiPickerPortalId?: string;
   profileImageSize?: number;
   previewMode?: boolean;
   disableQuestionNavigation?: boolean;
@@ -39,7 +38,6 @@ function ResponseItem({
   isMyPage = false,
   displayType = 'LIST',
   refresh,
-  emojiPickerPortalId,
   profileImageSize = PROFILE_IMAGE_SIZE,
   previewMode = false,
   disableQuestionNavigation = false,
@@ -266,7 +264,6 @@ function ResponseItem({
       showComments={() => setBottomSheet(true)}
       setInputFocus={() => setInputFocus(true)}
       displayType={displayType}
-      emojiPickerPortalId={emojiPickerPortalId}
     />
   );
 

@@ -45,13 +45,14 @@ export const TopComponentContainer = styled(Layout.Absolute)<{
 export const Container = styled(Layout.Absolute)<{
   visible: boolean;
   height: number;
+  bottomOffset?: number;
 }>`
   box-shadow: ${(props) => (props.visible ? '0px -4px 44px rgba(0, 0, 0, 0.12)' : 'none')};
   border-radius: 17px 17px 0px 0px;
   width: 100%;
   left: 50%;
   height: ${(props) => props.height}px;
-  bottom: 0;
+  bottom: ${(props) => props.bottomOffset ?? 0}px;
   transform: translateX(-50%) translateY(${(props) => (props.visible ? '0' : '100%')});
   transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
   overflow: hidden;

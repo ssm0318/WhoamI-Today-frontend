@@ -1,6 +1,7 @@
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { SCREEN_HEIGHT } from '@constants/layout';
 import { Button, Colors, Layout, StyledCheckBox, Typo } from '@design-system';
 import useInfiniteFetchFriends from '@hooks/useInfiniteFetchFriends';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
@@ -19,7 +20,6 @@ import {
   MessageInput,
   SendPromptModalContainer,
   SendPromptModalFriendList,
-  SendPromptModalTitle,
 } from './SendPromptModal.styled';
 
 interface SendPromptModalProps {
@@ -119,12 +119,26 @@ function SendPromptModal({ visible, onClose, questionId }: SendPromptModalProps)
   }, [visible]);
 
   return createPortal(
-    <BottomModal visible={visible} onClose={onClose} heightMode="full">
+    <BottomModal
+      visible={visible}
+      onClose={onClose}
+      customHeight={Math.round(SCREEN_HEIGHT * 0.75)}
+      draggable
+    >
+      <div
+        style={{
+          width: '100%',
+          backgroundColor: '#FCFCFC',
+          borderBottom: '1px solid #F0F0F0',
+        }}
+      >
+        <Layout.FlexRow w="100%" h={52} alignItems="center" justifyContent="center">
+          <Typo type="title-large" bold>
+            {t('prompts.send_this_prompt_to')}
+          </Typo>
+        </Layout.FlexRow>
+      </div>
       <SendPromptModalContainer>
-        <Layout.LayoutBase w={75} h={5} bgColor="MEDIUM_GRAY" />
-        <SendPromptModalTitle type="title-large">
-          {t('prompts.send_this_prompt_to')}
-        </SendPromptModalTitle>
         <Layout.LayoutBase pb={8} bgColor="WHITE" w="100%">
           <SearchInput
             query={query}

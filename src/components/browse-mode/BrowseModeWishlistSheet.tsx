@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import BottomModalActionButton from '@components/_common/bottom-modal/BottomModalActionButton';
-import Icon from '@components/_common/icon/Icon';
 import { Colors, Layout, Typo } from '@design-system';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -69,11 +68,16 @@ function BrowseModeWishlistSheet({ visible, onClose }: BrowseModeWishlistSheetPr
   }, [onClose, text, trackEvent]);
 
   return createPortal(
-    <BottomModal visible={visible} onClose={handleClose} heightMode="content">
+    <BottomModal visible={visible} onClose={handleClose} draggable>
+      <div style={{ width: '100%', backgroundColor: '#FCFCFC', borderBottom: '1px solid #F0F0F0' }}>
+        <Layout.FlexRow w="100%" h={44} alignItems="center" justifyContent="center">
+          <Typo type="title-medium" bold>
+            {t('wishlist.title')}
+          </Typo>
+        </Layout.FlexRow>
+      </div>
       <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE" pb={32}>
-        <Icon name="home_indicator" />
-        <Layout.FlexCol alignItems="center" gap={4} pt={4} ph={16}>
-          <Typo type="title-large">{t('wishlist.title')}</Typo>
+        <Layout.FlexCol alignItems="center" gap={4} pt={12} ph={16}>
           <Typo type="body-medium" color="MEDIUM_GRAY" textAlign="center">
             {t('wishlist.subtitle')}
           </Typo>

@@ -20,11 +20,11 @@ export const RingWrapper = styled.div`
   height: 68px;
 `;
 
-export const Ring = styled.div`
+export const Ring = styled.div<{ $read?: boolean }>`
   width: 68px;
   height: 68px;
   border-radius: 50%;
-  border: 2px solid ${Colors.LIGHT_GRAY};
+  border: 2px solid ${({ $read }) => ($read ? Colors.LIGHT_GRAY : Colors.PRIMARY)};
   padding: 2px;
   box-sizing: border-box;
   display: flex;

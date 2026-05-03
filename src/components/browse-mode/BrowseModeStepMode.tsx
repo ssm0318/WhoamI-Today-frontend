@@ -52,6 +52,7 @@ interface BrowseModeStepModeProps {
   onShowMode: (key: HiddenModeKey) => void;
   /** Permanently delete a saved preset (offered only via the Hidden section). */
   onDeleteMode: (preset: CustomBrowseModePreset) => void;
+  hideHeader?: boolean;
 }
 
 function BrowseModeStepMode({
@@ -71,6 +72,7 @@ function BrowseModeStepMode({
   onHideMode,
   onShowMode,
   onDeleteMode,
+  hideHeader = false,
 }: BrowseModeStepModeProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'browse_mode' });
   // Battery labels live at the top level (`social_battery.<key>`) — outside our keyPrefix.
@@ -130,9 +132,15 @@ function BrowseModeStepMode({
 
   return (
     <Layout.FlexCol alignItems="center" w="100%" bgColor="WHITE">
-      <Icon name="home_indicator" />
-      <Layout.FlexCol alignItems="center" gap={4} pt={4} ph={16}>
-        <Typo type="title-large">{t('steps.mode.title')}</Typo>
+      {!hideHeader && (
+        <>
+          <Icon name="home_indicator" />
+          <Layout.FlexCol alignItems="center" gap={4} pt={4} ph={16}>
+            <Typo type="title-large">{t('steps.mode.title')}</Typo>
+          </Layout.FlexCol>
+        </>
+      )}
+      <Layout.FlexCol alignItems="center" pt={hideHeader ? 4 : 0} ph={16}>
         <EditListToggle type="button" onClick={() => setEditListMode((v) => !v)}>
           <Typo type="label-large" color="PRIMARY">
             {editListMode ? t('steps.mode.edit_done') : t('steps.mode.edit_list')}
