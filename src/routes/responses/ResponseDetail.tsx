@@ -14,7 +14,9 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import { FetchState } from '@models/api/common';
 import { Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { getResponse } from '@utils/apis/responses';
+import { userListApiPrefixForViewer } from '@utils/apis/userApiPrefix';
 import { MainScrollContainer } from '../Root';
 
 function ResponseDetail() {
@@ -24,15 +26,16 @@ function ResponseDetail() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+  const { myProfile, featureFlags } = useBoundStore(UserSelector);
   const [responseDetail, setResponseDetail] = useState<FetchState<Response>>({ state: 'loading' });
   const [reload, setReload] = useState<boolean>(false);
   const [inputFocus, setInputFocus] = useState(false);
 
   useAsyncEffect(async () => {
     if (!responseId) return;
+    const qnaPrefix = userListApiPrefixForViewer(featureFlags?.postsVerQ, myProfile?.current_ver);
     try {
-      const data = await getResponse(Number(responseId));
+      const data = await getResponse(Number(responseId), qnaPrefix);
       setResponseDetail({ state: 'hasValue', data });
       if (reload) {
         setReload(false);
@@ -44,7 +47,7 @@ function ResponseDetail() {
       }
       setResponseDetail({ state: 'hasError' });
     }
-  }, [responseId, reload]);
+  }, [responseId, reload, featureFlags?.postsVerQ, myProfile?.current_ver]);
 
   const handleGoBack = () => {
     navigate('/my');

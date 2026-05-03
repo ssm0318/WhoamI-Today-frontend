@@ -13,6 +13,7 @@ import { NoteFeedItem, POST_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { readUserAllNotes } from '@utils/apis/user';
+import { userListApiPrefixForViewer } from '@utils/apis/userApiPrefix';
 import { withViewAs } from '@utils/apis/withViewAs';
 import NoteItem from '../note-item/NoteItem';
 import NoteLoader from '../note-loader/NoteLoader';
@@ -37,8 +38,6 @@ function NoteSection({ username }: NoteSectionProps) {
     return navigate('/notes/new');
   };
 
-  const isDefault = !!featureFlags?.friendFeed;
-
   const {
     targetRef,
     data: notes,
@@ -47,7 +46,10 @@ function NoteSection({ username }: NoteSectionProps) {
     mutate: refetchNotes,
   } = useSWRInfiniteScroll<NoteFeedItem>({
     key: withViewAs(
-      `/user/${encodeURIComponent(username || 'me')}/notes/${isDefault ? 'default' : ''}`,
+      `${userListApiPrefixForViewer(
+        featureFlags?.postsVerQ,
+        myProfile?.current_ver,
+      )}user/${encodeURIComponent(username || 'me')}/notes/`,
       { viewAs, viewAsUser },
     ),
   });

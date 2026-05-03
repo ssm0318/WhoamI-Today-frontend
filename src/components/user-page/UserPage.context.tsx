@@ -9,6 +9,7 @@ import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { getUserProfile } from '@utils/apis/user';
+import { userListApiPrefixForViewer } from '@utils/apis/userApiPrefix';
 
 interface Props {
   children?: ReactNode | ReactNode[];
@@ -30,7 +31,7 @@ export function UserPageContextProvider({ children, usernameOverride }: Props) {
   const username = usernameOverride ?? params.username;
   const viewAs = useViewAs();
   const viewAsUser = useViewAsUser();
-  const { featureFlags } = useBoundStore(useShallow(UserSelector));
+  const { featureFlags, myProfile } = useBoundStore(useShallow(UserSelector));
   const useAllPosts = !!featureFlags?.questionResponseFeature;
 
   const [user, setUser] = useState<FetchState<UserProfile>>({ state: 'loading' });
@@ -57,11 +58,12 @@ export function UserPageContextProvider({ children, usernameOverride }: Props) {
       return;
     }
     const encoded = encodeURIComponent(username);
+    const p = userListApiPrefixForViewer(featureFlags?.postsVerQ, myProfile?.current_ver);
     await Promise.all([
       updateUser(),
-      mutate(useAllPosts ? `/user/${encoded}/all-posts/` : `/user/${encoded}/notes/`),
+      mutate(`${p}user/${encoded}/${useAllPosts ? 'all-posts/' : 'notes/'}`),
     ]);
-  }, [username, useAllPosts, updateUser]);
+  }, [username, useAllPosts, updateUser, featureFlags?.postsVerQ, myProfile?.current_ver]);
 
   const value = useMemo(
     () => ({

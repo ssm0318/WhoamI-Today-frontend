@@ -8,7 +8,10 @@ import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
 import SubHeader from '@components/sub-header/SubHeader';
 import { Layout, Typo } from '@design-system';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import axiosInstance from '@utils/apis/axios';
+import { userListApiPrefixForViewer } from '@utils/apis/userApiPrefix';
 import { MainScrollContainer } from '../Root';
 
 interface UnreadPost {
@@ -22,6 +25,8 @@ function FriendNewPosts() {
   const [posts, setPosts] = useState<UnreadPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { mutate: globalMutate } = useSWRConfig();
+  const { featureFlags, myProfile } = useBoundStore(UserSelector);
+  const p = userListApiPrefixForViewer(featureFlags?.postsVerQ, myProfile?.current_ver);
 
   const fetchPosts = async () => {
     if (!username) return;
@@ -36,7 +41,7 @@ function FriendNewPosts() {
       } else {
         // Fall back to all posts from this user (most recent)
         const { data: allPosts } = await axiosInstance.get<{ results: UnreadPost[] }>(
-          `/user/${username}/all-posts/?page=1`,
+          `${p}user/${username}/all-posts/?page=1`,
         );
         setPosts((allPosts.results ?? allPosts) as UnreadPost[]);
       }

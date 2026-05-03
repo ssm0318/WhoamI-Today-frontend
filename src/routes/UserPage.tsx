@@ -26,6 +26,7 @@ import { useTrackEvent } from '@hooks/useTrackEvent';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { readFriendCheckIn } from '@utils/apis/checkIn';
+import { userListApiPrefixForViewer } from '@utils/apis/userApiPrefix';
 
 interface UserPageProps {
   usernameOverride?: string;
@@ -96,11 +97,12 @@ function UserPage({ usernameOverride }: UserPageProps = {}) {
     if (!username) return;
 
     const encodedUsername = encodeURIComponent(username);
+    const p = userListApiPrefixForViewer(featureFlags?.postsVerQ, myProfile?.current_ver);
 
     if (featureFlags?.questionResponseFeature) {
-      await Promise.all([mutate(`/user/${encodedUsername}/all-posts/`)]);
+      await Promise.all([mutate(`${p}user/${encodedUsername}/all-posts/`)]);
     } else {
-      await Promise.all([mutate(`/user/${encodedUsername}/notes/`)]);
+      await Promise.all([mutate(`${p}user/${encodedUsername}/notes/`)]);
     }
   };
 

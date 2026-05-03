@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -16,7 +16,9 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import { Note, POST_DP_TYPE, ShareType } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
+import { isPostsVerQClient } from '@utils/apis/userApiPrefix';
 import { classifyPathnameAsSource } from '@utils/navSource';
+import { applyLikeUserSampleOptimistic } from '@utils/optimisticLikeUserSample';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import { NoteImage } from '../note-image/NoteImage.styled';
 
@@ -53,12 +55,35 @@ function NoteItem({
   const isMissionPost = share_type === ShareType.MISSION;
   const navigate = useNavigate();
   const location = useLocation();
-  const { featureFlags } = useBoundStore(UserSelector);
+  const { featureFlags, myProfile } = useBoundStore(UserSelector);
+  const postsVerQUi = isPostsVerQClient(featureFlags?.postsVerQ, myProfile?.current_ver);
 
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [showMore, setShowMore] = useState(false);
   const [inputFocus, setInputFocus] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
+  const [likePatch, setLikePatch] = useState<Partial<Note> | null>(null);
+
+  const footerPost = useMemo(
+    () => (likePatch ? { ...note, ...likePatch } : note),
+    [note, likePatch],
+  );
+
+  useEffect(() => {
+    setLikePatch(null);
+  }, [note.id, note.like_count, note.current_user_like_id]);
+
+  const handleLikeUpdated = (liked: boolean, likeId: number | null) => {
+    setLikePatch((prev) => {
+      const base = { ...note, ...prev };
+      const c = base.like_count ?? 0;
+      return {
+        current_user_like_id: likeId,
+        like_count: liked ? c + 1 : Math.max(0, c - 1),
+        like_user_sample: applyLikeUserSampleOptimistic(base.like_user_sample, liked, myProfile),
+      };
+    });
+  };
 
   const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
     emojiPickerTarget: state.emojiPickerTarget,
@@ -147,7 +172,7 @@ function NoteItem({
                 mutualFriendCount={author_detail.mutual_friend_count ?? 0}
                 mutualInterestCount={author_detail.mutual_interest_count ?? 0}
                 mutualPersonaCount={author_detail.mutual_persona_count ?? 0}
-                hideTraits={featureFlags?.postsVerQ}
+                hideTraits={postsVerQUi}
               />
             )}
           </Layout.FlexRow>
@@ -227,13 +252,14 @@ function NoteItem({
     </Layout.FlexCol>
   );
 
-  const footerJsx = featureFlags?.postsVerQ ? (
+  const footerJsx = postsVerQUi ? (
     <PostFooterLikeOnly
-      post={note}
+      post={footerPost}
       showComments={() => setBottomSheet(true)}
       setInputFocus={() => setInputFocus(true)}
       displayType={displayType}
       refresh={refresh}
+      onLikeUpdated={handleLikeUpdated}
     />
   ) : featureFlags?.friendList ? (
     <PostFooter

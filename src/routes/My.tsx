@@ -13,6 +13,7 @@ import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { getMe, getMyProfile } from '@utils/apis/my';
+import { userListApiPrefixForViewer } from '@utils/apis/userApiPrefix';
 import { MainScrollContainer } from './Root';
 
 function My() {
@@ -31,12 +32,23 @@ function My() {
   }, []);
 
   const handleRefresh = useCallback(async () => {
+    const p = userListApiPrefixForViewer(featureFlags?.postsVerQ, myProfile?.current_ver);
     if (featureFlags?.questionResponseFeature) {
-      await Promise.all([mutate('/user/me/all-posts/'), fetchCheckIn(), getMe(), getMyProfile()]);
+      await Promise.all([
+        mutate(`${p}user/me/all-posts/`),
+        fetchCheckIn(),
+        getMe(),
+        getMyProfile(),
+      ]);
     } else {
-      await Promise.all([mutate('/user/me/notes/'), fetchCheckIn(), getMe(), getMyProfile()]);
+      await Promise.all([mutate(`${p}user/me/notes/`), fetchCheckIn(), getMe(), getMyProfile()]);
     }
-  }, [featureFlags?.questionResponseFeature, fetchCheckIn]);
+  }, [
+    featureFlags?.questionResponseFeature,
+    featureFlags?.postsVerQ,
+    myProfile?.current_ver,
+    fetchCheckIn,
+  ]);
 
   const { scrollRef } = useRestoreScrollPosition('myPage');
 

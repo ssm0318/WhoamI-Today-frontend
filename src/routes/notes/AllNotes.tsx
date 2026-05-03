@@ -11,7 +11,9 @@ import { Layout } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { Note, NoteFeedItem, POST_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { getMyNotes } from '@utils/apis/my';
+import { userListApiPrefixForViewer } from '@utils/apis/userApiPrefix';
 
 const expandNoteFeedItems = (items: NoteFeedItem[]): Note[] =>
   items.flatMap((item) => (item.type === POST_TYPE.MISSION_GROUP ? item.attempts : [item]));
@@ -19,7 +21,8 @@ const expandNoteFeedItems = (items: NoteFeedItem[]): Note[] =>
 function AllNotes() {
   const [t] = useTranslation('translation');
   const { username } = useParams();
-  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+  const { myProfile, featureFlags } = useBoundStore(UserSelector);
+  const listPrefix = userListApiPrefixForViewer(featureFlags?.postsVerQ, myProfile?.current_ver);
 
   const [noteList, setNoteList] = useState<Note[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>(undefined);
@@ -30,7 +33,7 @@ function AllNotes() {
   });
 
   const fetchNotes = async (page: string | null) => {
-    const { results, next } = await getMyNotes(page);
+    const { results, next } = await getMyNotes(page, listPrefix);
     if (!results) return;
     setNextPage(next);
     setNoteList([...noteList, ...expandNoteFeedItems(results)]);

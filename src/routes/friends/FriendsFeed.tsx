@@ -15,6 +15,7 @@ import { AllPostFeedItem, POST_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { getMe } from '@utils/apis/my';
+import { isPostsVerQClient } from '@utils/apis/userApiPrefix';
 import { MainScrollContainer } from 'src/routes/Root';
 
 function FriendsFeed() {
@@ -26,7 +27,10 @@ function FriendsFeed() {
     myProfile: state.myProfile,
     fetchCheckIn: state.fetchCheckIn,
   }));
-  const { featureFlags } = useBoundStore(UserSelector);
+  const { featureFlags, myProfile } = useBoundStore(UserSelector);
+  const friendFeedKey = isPostsVerQClient(featureFlags?.postsVerQ, myProfile?.current_ver)
+    ? '/q/user/feed/'
+    : '/user/feed/full';
 
   const {
     targetRef,
@@ -35,7 +39,7 @@ function FriendsFeed() {
     isLoadingMore: isFeedItemsLoadingMore,
     mutate: refetchFeed,
   } = useSWRInfiniteScroll<AllPostFeedItem>({
-    key: `/user/feed/full`,
+    key: friendFeedKey,
   });
 
   const handleRefresh = useCallback(async () => {

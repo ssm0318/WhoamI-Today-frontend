@@ -16,7 +16,8 @@ import { FetchState } from '@models/api/common';
 import { Note } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { getNoteDetail, getNoteDetailDefault } from '@utils/apis/note';
+import { getNoteDetail } from '@utils/apis/note';
+import { userListApiPrefixForViewer } from '@utils/apis/userApiPrefix';
 import { MainScrollContainer } from '../Root';
 
 export function NoteDetail() {
@@ -25,9 +26,7 @@ export function NoteDetail() {
   const [t] = useTranslation('translation');
   const navigate = useNavigate();
   const location = useLocation();
-  const { featureFlags } = useBoundStore(UserSelector);
-
-  const { myProfile } = useBoundStore((state) => ({ myProfile: state.myProfile }));
+  const { featureFlags, myProfile } = useBoundStore(UserSelector);
   const [noteDetail, setNoteDetail] = useState<FetchState<Note>>({ state: 'loading' });
   const [reload, setReload] = useState<boolean>(false);
   const [inputFocus, setInputFocus] = useState(false);
@@ -40,10 +39,9 @@ export function NoteDetail() {
 
   useAsyncEffect(async () => {
     if (!noteId) return;
+    const notesPrefix = userListApiPrefixForViewer(featureFlags?.postsVerQ, myProfile?.current_ver);
     try {
-      const data = featureFlags?.friendList
-        ? await getNoteDetail(Number(noteId))
-        : await getNoteDetailDefault(Number(noteId));
+      const data = await getNoteDetail(Number(noteId), notesPrefix);
       setNoteDetail({ state: 'hasValue', data });
       if (reload) {
         setReload(false);
@@ -55,7 +53,7 @@ export function NoteDetail() {
       }
       setNoteDetail({ state: 'hasError' });
     }
-  }, [noteId, reload]);
+  }, [noteId, reload, featureFlags?.postsVerQ, myProfile?.current_ver]);
 
   const isNew = location.state === 'new' || location.state?.new;
   const fromShare = location.state?.fromShare;
