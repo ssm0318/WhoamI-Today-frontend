@@ -19,9 +19,11 @@ import { postChatMessage, postGroupMessage } from '@utils/apis/chat';
 
 const StyledTextarea = styled.textarea`
   flex: 1;
+  min-width: 0;
+  width: 0;
   border: none;
   outline: none;
-  font-size: 14px;
+  font-size: 16px;
   resize: none;
   min-height: 20px;
   max-height: 120px;
@@ -33,6 +35,7 @@ const StyledTextarea = styled.textarea`
 
 const TextareaWrapper = styled.div`
   flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   border: 1px solid ${({ theme }) => theme.LIGHT_GRAY};

@@ -30,7 +30,7 @@ const CommonBubble = styled(Layout.FlexCol).attrs({
   pv: 8,
   ph: 13,
 })`
-  max-width: 75%;
+  max-width: min(75vw, 340px);
   white-space: pre-wrap;
   overflow-wrap: break-word;
   word-break: break-word;
@@ -67,7 +67,7 @@ export const ParentPreview = styled(Layout.FlexCol).attrs({
   opacity: 0.7;
   border-left: 2px solid #87dfff;
   background: white;
-  max-width: 75%;
+  max-width: min(75vw, 340px);
 `;
 
 export const SystemMessageRow = styled(Layout.FlexRow).attrs({

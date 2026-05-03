@@ -83,6 +83,7 @@ function BrowseModeStepMode({
   // X = hide (per-user localStorage); custom X = delete (with confirm). In
   // edit mode the card body is non-interactive — you're managing, not picking.
   const [editListMode, setEditListMode] = useState(false);
+  const [pendingChoice, setPendingChoice] = useState<ModeChoice | null>(null);
 
   // Hidden modes never appear in the main list — even in edit mode they
   // surface only via the "Hidden" section below (so the same item never
@@ -151,17 +152,23 @@ function BrowseModeStepMode({
       <Layout.FlexCol w="100%" gap={8} pt={16} ph={16}>
         {visibleBuiltIns.map((mode) => {
           const source = builtInSource(mode.id);
-          const selected = source !== null && !editListMode;
           const batteryEmoji = SocialBatteryChipAssets[mode.suggestedBattery].emoji ?? '';
           const batteryLabel = tRoot(`social_battery.${mode.suggestedBattery}`);
+          const highlighted =
+            !editListMode && pendingChoice?.kind === 'built_in' && pendingChoice.id === mode.id;
           const handleCardClick = editListMode
             ? undefined
-            : () => onPick({ kind: 'built_in', id: mode.id });
+            : () =>
+                setPendingChoice((prev) =>
+                  prev?.kind === 'built_in' && prev.id === mode.id
+                    ? null
+                    : { kind: 'built_in', id: mode.id },
+                );
           return (
             <ModeCard
               key={mode.id}
               role={editListMode ? undefined : 'button'}
-              $selected={selected}
+              $selected={highlighted}
               $editing={editListMode}
               onClick={handleCardClick}
             >
@@ -223,7 +230,7 @@ function BrowseModeStepMode({
                         onCloneBuiltIn(mode.id);
                       }}
                     >
-                      <SvgIcon name="chevron_right" size={18} />
+                      <SvgIcon name="edit" size={22} />
                     </CardIconButton>
                   )}
                 </CardActions>
@@ -239,18 +246,26 @@ function BrowseModeStepMode({
             </Typo>
             {visiblePresets.map((preset) => {
               const source = customSource(preset.id);
-              const selected = source !== null && !editListMode;
               const battery = preset.default_battery;
               const batteryEmoji = battery ? SocialBatteryChipAssets[battery].emoji ?? '' : '';
               const batteryLabel = battery ? tRoot(`social_battery.${battery}`) : '';
+              const highlighted =
+                !editListMode &&
+                pendingChoice?.kind === 'custom' &&
+                pendingChoice.preset.id === preset.id;
               const handleCardClick = editListMode
                 ? undefined
-                : () => onPick({ kind: 'custom', preset });
+                : () =>
+                    setPendingChoice((prev) =>
+                      prev?.kind === 'custom' && prev.preset.id === preset.id
+                        ? null
+                        : { kind: 'custom', preset },
+                    );
               return (
                 <ModeCard
                   key={preset.id}
                   role={editListMode ? undefined : 'button'}
-                  $selected={selected}
+                  $selected={highlighted}
                   $editing={editListMode}
                   onClick={handleCardClick}
                 >
@@ -319,7 +334,7 @@ function BrowseModeStepMode({
                             onEditPreset(preset);
                           }}
                         >
-                          <SvgIcon name="chevron_right" size={18} />
+                          <SvgIcon name="edit" size={22} />
                         </CardIconButton>
                       )}
                     </CardActions>
@@ -378,6 +393,18 @@ function BrowseModeStepMode({
               </HiddenRow>
             ))}
           </Layout.FlexCol>
+        )}
+
+        {!editListMode && (
+          <SelectButton
+            type="button"
+            disabled={!pendingChoice}
+            onClick={() => pendingChoice && onPick(pendingChoice)}
+          >
+            <Typo type="title-medium" color={pendingChoice ? 'BLACK' : 'MEDIUM_GRAY'}>
+              {t('steps.mode.select_button')}
+            </Typo>
+          </SelectButton>
         )}
 
         {!editListMode && (
@@ -525,6 +552,20 @@ const RestoreButton = styled.button`
   border: none;
   padding: 6px 10px;
   cursor: pointer;
+`;
+
+const SelectButton = styled.button`
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: ${Colors.SECONDARY};
+  cursor: pointer;
+  margin-top: 4px;
+  &:disabled {
+    background: ${Colors.LIGHT_GRAY};
+    cursor: default;
+  }
 `;
 
 const CustomizeLink = styled.button`

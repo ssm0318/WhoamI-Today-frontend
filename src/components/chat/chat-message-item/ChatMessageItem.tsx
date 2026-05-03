@@ -213,7 +213,7 @@ function ChatMessageItem({
   const Bubble = isMine ? RightBubble : LeftBubble;
 
   const timestamp = (
-    <Typo type="label-small" color="MEDIUM_GRAY" ml={isMine ? 0 : 2} mr={isMine ? 2 : 0}>
+    <Typo type="label-small" color="MEDIUM_GRAY" ml={isMine ? 0 : 6} mr={isMine ? 6 : 0}>
       {format(date, 'h:mm a')}
     </Typo>
   );

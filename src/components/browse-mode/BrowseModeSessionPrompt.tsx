@@ -591,7 +591,12 @@ function BrowseModeSessionPrompt({
   };
 
   const stepContent = (
-    <BrowseModeStepMode {...stepModeProps} showSkipTodayCheckbox={fullScreen} hideHeader />
+    <BrowseModeStepMode
+      key={visible ? 'open' : 'closed'}
+      {...stepModeProps}
+      showSkipTodayCheckbox={fullScreen}
+      hideHeader
+    />
   );
 
   return (
@@ -643,7 +648,12 @@ function BrowseModeSessionPrompt({
                   </Typo>
                 </Layout.FlexRow>
               </div>
-              <BrowseModeStepMode {...stepModeProps} showSkipTodayCheckbox={false} hideHeader />
+              <BrowseModeStepMode
+                key={visible ? 'open' : 'closed'}
+                {...stepModeProps}
+                showSkipTodayCheckbox={false}
+                hideHeader
+              />
             </BottomModal>,
             document.body,
           )}
