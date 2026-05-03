@@ -65,5 +65,5 @@ export const HistoryDescription = styled.p`
   color: ${Colors.MEDIUM_GRAY};
   text-align: center;
   padding: 0 12px;
-  margin: 8px 0 24px;
+  margin: 12px 0 4px;
 `;
