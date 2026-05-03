@@ -33,6 +33,12 @@ export interface UpdatedProfile extends User {
   sent_pokes?: Partial<Record<'battery' | 'mood' | 'thought' | 'song', number>>;
   /** Viewer-visible pinned archive entries for this friend. 0 when none. */
   pinned_count?: number;
+  /** Check-in components updated in the last 24h (e.g. ['mood', 'song']). */
+  recently_updated_check_in?: ('battery' | 'mood' | 'thought' | 'song')[];
+  battery_updated_at?: string | null;
+  mood_updated_at?: string | null;
+  song_updated_at?: string | null;
+  thought_updated_at?: string | null;
 }
 
 export type GetAllFriendsResponse = PaginationResponse<UpdatedProfile[]>;

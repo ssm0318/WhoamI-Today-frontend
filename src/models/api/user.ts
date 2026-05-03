@@ -1,4 +1,5 @@
 import { MyCheckIn } from '@models/checkIn';
+import { Note, Response } from '@models/post';
 import { User } from '@models/user';
 
 export interface SignInParams {
@@ -147,6 +148,7 @@ export interface MyProfile extends User {
   /** Every username this account has ever used (oldest first, including the current one).
    * Length 1 = the user never changed the placeholder allocated at signup. */
   username_history?: string[];
+  recent_posts?: (Note | Response)[];
 }
 
 export interface FriendRequest {

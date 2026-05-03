@@ -30,6 +30,7 @@ interface NoteItemProps {
   profileImageSize?: number;
   previewMode?: boolean;
   hideMissionPrompt?: boolean;
+  isCarouselItem?: boolean;
 }
 
 function NoteItem({
@@ -40,6 +41,7 @@ function NoteItem({
   profileImageSize = PROFILE_IMAGE_SIZE,
   previewMode = false,
   hideMissionPrompt = false,
+  isCarouselItem = false,
 }: NoteItemProps) {
   const {
     content,
@@ -59,10 +61,24 @@ function NoteItem({
   const postsVerQUi = isPostsVerQClient(featureFlags?.postsVerQ, myProfile?.current_ver);
 
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
+  const [overflowSummary, setOverflowSummary] = useState<string>();
   const [showMore, setShowMore] = useState(false);
   const [inputFocus, setInputFocus] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [likePatch, setLikePatch] = useState<Partial<Note> | null>(null);
+
+  useEffect(() => {
+    if (displayType !== 'LIST') {
+      setOverflowSummary(undefined);
+      return;
+    }
+    if (content.length > MAX_NOTE_CONTENT_LENGTH)
+      setOverflowSummary(content.slice(0, MAX_NOTE_CONTENT_LENGTH));
+
+    const contentArrWithNewLine = content.split('\n');
+    if (contentArrWithNewLine.length > MAX_NOTE_NEW_LINE)
+      setOverflowSummary(contentArrWithNewLine.slice(0, MAX_NOTE_NEW_LINE).join('\n'));
+  }, [content, displayType]);
 
   const footerPost = useMemo(
     () => (likePatch ? { ...note, ...likePatch } : note),
@@ -230,10 +246,22 @@ function NoteItem({
         </>
       ) : (
         <>
-          <ContentTranslation
-            content={content}
-            translateContent={!isMyPage && displayType === 'DETAIL'}
-          />
+          {displayType === 'DETAIL' ? (
+            <ContentTranslation content={content} translateContent={!isMyPage} />
+          ) : (
+            <Typo type="body-large" color="BLACK" pre>
+              {overflowSummary ? (
+                <>
+                  <LinkifiedText>{`${overflowSummary}...`}</LinkifiedText>
+                  <Typo type="body-medium" color="BLACK" italic underline ml={3}>
+                    {t('more').toLowerCase()}
+                  </Typo>
+                </>
+              ) : (
+                <LinkifiedText>{content || ''}</LinkifiedText>
+              )}
+            </Typo>
+          )}
           {/* Note image - only show 1 */}
           {images[0] && (
             <Layout.FlexRow w="100%" mv={10}>
@@ -284,7 +312,7 @@ function NoteItem({
         w="100%"
         p={12}
         gap={8}
-        outline="LIGHT"
+        outline={isCarouselItem && isMyPage ? 'MEDIUM_GRAY' : 'LIGHT'}
         rounded={12}
         onClick={featureFlags?.friendList ? handleClickNote : handleClickNoteDefault}
         style={
@@ -345,6 +373,8 @@ function NoteItem({
 export default NoteItem;
 
 const PROFILE_IMAGE_SIZE = 44;
+const MAX_NOTE_CONTENT_LENGTH = 450;
+const MAX_NOTE_NEW_LINE = 14;
 
 const PreviewImage = styled.img`
   width: 100%;

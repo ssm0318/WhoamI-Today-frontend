@@ -31,6 +31,7 @@ interface ResponseItemProps {
   previewMode?: boolean;
   disableQuestionNavigation?: boolean;
   hideQuestionPrompt?: boolean;
+  isCarouselItem?: boolean;
 }
 
 function ResponseItem({
@@ -42,6 +43,7 @@ function ResponseItem({
   previewMode = false,
   disableQuestionNavigation = false,
   hideQuestionPrompt = false,
+  isCarouselItem = false,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
   const [tAccess] = useTranslation('translation', { keyPrefix: 'access_setting' });
@@ -272,7 +274,7 @@ function ResponseItem({
       <Layout.FlexRow
         p={WRAPPER_PADDING}
         rounded={12}
-        outline="LIGHT"
+        outline={isCarouselItem && isMyPage ? 'MEDIUM_GRAY' : 'LIGHT'}
         w="100%"
         onClick={handleClickDetail}
         style={
@@ -380,8 +382,8 @@ const RESPONSE_MARGIN = 12;
 export const RESPONSE_WIDTH = SCREEN_WIDTH - 4 * RESPONSE_MARGIN - RESPONSE_GAP * 2;
 export const RESPONSE_HEIGHT = 368;
 
-const MAX_RESPONSE_CONTENT_LENGTH = 140;
-const MAX_RESPONSE_NEW_LINE = 5;
+const MAX_RESPONSE_CONTENT_LENGTH = 400;
+const MAX_RESPONSE_NEW_LINE = 12;
 
 const RespImageWrapper = styled.div`
   width: 100%;

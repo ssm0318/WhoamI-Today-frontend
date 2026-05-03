@@ -1,32 +1,33 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-// TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
-// import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Divider from '@components/_common/divider/Divider';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
-import MyCheckInCard from '@components/check-in/my-check-in-card/MyCheckInCard';
-import FriendItemWithUpdates from '@components/friends/friend-item-with-updates/FriendItemWithUpdates';
+import FriendProfileAccordionItem from '@components/friends/friend-profile-accordion-item/FriendProfileAccordionItem';
+import FriendsTimelineFeed from '@components/friends/friends-timeline-feed/FriendsTimelineFeed';
 import NoCloseFriends from '@components/friends/no-close-friends/NoCloseFriends';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
-import { Colors, Layout, Typo } from '@design-system';
+import { Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import { Connection, FriendType, UpdatedProfile } from '@models/api/friends';
+import { POST_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
+import { readFriendCheckIn } from '@utils/apis/checkIn';
 import { getMe } from '@utils/apis/my';
-import { markAllFriendCheckInsAsRead, markAllFriendPostsAsRead } from '@utils/apis/user';
+import { readNote } from '@utils/apis/note';
+import { readResponse } from '@utils/apis/responses';
 import { MainScrollContainer } from 'src/routes/Root';
 import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
 import { AllFriendItemLoader, AllFriendListLoader } from './FriendsLoader';
 
-type TabType = 'check-in' | 'posts';
+type TabType = 'people' | 'feed';
 
 function FriendsList() {
   const [t] = useTranslation('translation');
-  // TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
-  // const navigate = useNavigate();
-  const [selectedTab, setSelectedTab] = useState<TabType>('check-in');
+  const [selectedTab, setSelectedTab] = useState<TabType>('people');
+  const [expandedFriendId, setExpandedFriendId] = useState<number | null>(null);
+
   // Browse mode can prefill the close-friends-only filter when "Just my people" is active.
   const browseModeForcesCloseFriends = useBoundStore(
     (state) => !!state.activeBrowseMode?.config.filters.friends_close_only,
@@ -40,18 +41,12 @@ function FriendsList() {
   const handleToggleCloseFriends = () => {
     setCloseFriendsOnly((prev) => {
       const next = !prev;
-      // Filter is local-state only — never hits the backend, so this event
-      // is the only way to know how often users actually use it.
       trackEvent('friends_filter_close_only_toggled', { value: next ? 'on' : 'off' });
       return next;
     });
   };
 
-  // Sub-tab dwell: 'check-in' vs 'posts' switching is React state, not URL.
-  // screen_view fires once per /friends visit and can't tell us how the
-  // time was split between the two sub-tabs. This effect flushes a
-  // dwell event each time the user switches AND on unmount, paired with
-  // the tab the time accrued under.
+  // Sub-tab dwell tracking
   const tabStartedAtRef = useRef<number>(Date.now());
   const previousTabRef = useRef<TabType>(selectedTab);
   useEffect(() => {
@@ -77,6 +72,7 @@ function FriendsList() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   const friendType: FriendType = closeFriendsOnly ? 'close_friends' : 'all';
 
   const {
@@ -89,94 +85,174 @@ function FriendsList() {
   } = useInfiniteFetchFriends({ type: friendType });
 
   // Keep hooks for cross-tab updates
-  const postsFriendsHook = useInfiniteFetchFriends({ type: friendType });
   const closeFriendsHook = useInfiniteFetchFriends({ type: 'close_friends' });
-  const hiddenFriendsHook = useInfiniteFetchFriends({ type: 'hidden' });
 
-  const { fetchCheckIn, openToast } = useBoundStore((state) => ({
+  const { fetchCheckIn, myProfile, checkIn } = useBoundStore((state) => ({
     fetchCheckIn: state.fetchCheckIn,
-    openToast: state.openToast,
+    myProfile: state.myProfile,
+    checkIn: state.checkIn,
   }));
 
-  const handleRefresh = async () => {
-    if (selectedTab === 'check-in') {
-      await Promise.all([refetchAllFriends(), getMe()]);
-    } else {
-      await Promise.all([postsFriendsHook.refetchAllFriends(), fetchCheckIn(), getMe()]);
-    }
-  };
-
+  // Fetch my check-in on mount (MyCheckInCard used to do this internally)
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        if (selectedTab === 'check-in') {
-          await markAllFriendCheckInsAsRead();
-          if (!cancelled) refetchAllFriends();
-        } else {
-          await markAllFriendPostsAsRead();
-          if (!cancelled) postsFriendsHook.refetchAllFriends();
-        }
-      } catch {
-        /* mark-as-read \uc2e4\ud328\ub294 \ub69c\uc9c0 \ud45c\uc2dc \uc678 UX \uc5d0 \uc601\ud5a5 \uc5c6\uc73c\ubbc0\ub85c \uc870\uc6a9\ud788 \ubb34\uc2dc */
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTab]);
+    fetchCheckIn();
+  }, [fetchCheckIn]);
+
+  const handleRefresh = async () => {
+    await Promise.all([refetchAllFriends(), fetchCheckIn(), getMe()]);
+  };
 
   const { scrollRef } = useRestoreScrollPosition('friendsPage');
 
-  const { filteredFriends, filteredPostsFriends } = useMemo(() => {
-    const allFriendsList = (allFriends || [])
+  const filteredFriends = useMemo(() => {
+    return (allFriends || [])
       .flatMap(({ results }) => results || [])
       .filter((user) => !user.is_hidden);
-    const postsFriendsList = (postsFriendsHook.allFriends || [])
-      .flatMap(({ results }) => results || [])
-      .filter((user) => !user.is_hidden);
-
-    return {
-      filteredFriends: allFriendsList,
-      filteredPostsFriends: postsFriendsList,
-    };
-  }, [allFriends, postsFriendsHook.allFriends]);
-
-  // TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
-  /*
-  const hiddenFriendsCount = useMemo(
-    () => (hiddenFriendsHook.allFriends || []).flatMap(({ results }) => results || []).length,
-    [hiddenFriendsHook.allFriends],
-  );
-  */
-
-  const handleHidden = (user: UpdatedProfile) => {
-    updateFriendList({ type: 'is_hidden', item: user, value: true });
-    postsFriendsHook.updateFriendList({ type: 'is_hidden', item: user, value: true });
-    closeFriendsHook.updateFriendList({ type: 'is_hidden', item: user, value: true });
-    hiddenFriendsHook.refetchAllFriends();
-    openToast({ message: t('friend.toast_hidden') });
-  };
+  }, [allFriends]);
 
   const isEmpty = filteredFriends.length === 0 && !isAllFriendsLoading;
-  const isPostsEmpty = filteredPostsFriends.length === 0 && !postsFriendsHook.isAllFriendsLoading;
 
-  const hasCheckInUpdates = filteredFriends.some(
-    (user) =>
-      !user.current_user_read_check_in &&
-      !!(
-        user.track_id ||
-        user.mood ||
-        user.social_battery ||
-        (user as unknown as { thought?: string }).thought
-      ),
+  // Build "my" data as an UpdatedProfile-like object for the accordion item
+  const myAccordionUser = useMemo((): UpdatedProfile | null => {
+    if (!myProfile) return null;
+    return {
+      ...myProfile,
+      is_favorite: false,
+      is_hidden: false,
+      current_user_read: true,
+      current_user_read_check_in: true,
+      unread_cnt: 0,
+      unread_chat_count: 0,
+      check_in_id: checkIn?.id ?? null,
+      track_id: checkIn?.track_id,
+      mood: checkIn?.mood
+        ? Array.isArray(checkIn.mood)
+          ? checkIn.mood.join(',')
+          : checkIn.mood
+        : undefined,
+      social_battery: checkIn?.social_battery,
+      description: checkIn?.thought ?? '',
+      thought: checkIn?.thought ?? '',
+      recent_posts: myProfile.recent_posts ?? [],
+      sent_pokes: {},
+    } as UpdatedProfile;
+  }, [myProfile, checkIn]);
+
+  // Per-friend read marking when expanding
+  const markFriendAsRead = useCallback(
+    async (friend: UpdatedProfile) => {
+      const promises: Promise<unknown>[] = [];
+
+      if (friend.check_in_id && !friend.current_user_read_check_in) {
+        promises.push(readFriendCheckIn(friend.check_in_id));
+      }
+
+      const unreadNoteIds = (friend.recent_posts ?? [])
+        .filter((p) => p.type === POST_TYPE.NOTE && !p.current_user_read)
+        .map((p) => p.id);
+      const unreadResponseIds = (friend.recent_posts ?? [])
+        .filter((p) => p.type === POST_TYPE.RESPONSE && !p.current_user_read)
+        .map((p) => p.id);
+
+      if (unreadNoteIds.length) promises.push(readNote(unreadNoteIds));
+      if (unreadResponseIds.length) promises.push(readResponse(unreadResponseIds));
+
+      if (promises.length > 0) {
+        await Promise.allSettled(promises);
+      }
+
+      // Optimistic update
+      updateFriendList({ type: 'mark_read', item: friend });
+      closeFriendsHook.updateFriendList({ type: 'mark_read', item: friend });
+    },
+    [updateFriendList, closeFriendsHook],
   );
-  const hasUnreadPosts = (user: UpdatedProfile) => {
-    if ((user.unread_post_cnt || 0) > 0) return true;
-    return (user.recent_posts ?? []).some((p) => !p.current_user_read);
-  };
-  const hasNewPosts = filteredPostsFriends.some((user) => hasUnreadPosts(user));
+
+  const handleToggleExpand = useCallback(
+    (friendId: number) => {
+      setExpandedFriendId((prev) => {
+        if (prev === friendId) return null;
+
+        // Mark as read when expanding
+        const friend = filteredFriends.find((f) => f.id === friendId);
+        if (friend) {
+          markFriendAsRead(friend);
+        }
+
+        trackEvent('friends_profile_expanded', { friend_id: friendId });
+        return friendId;
+      });
+    },
+    [filteredFriends, markFriendAsRead, trackEvent],
+  );
+
+  const handleToggleMyExpand = useCallback(() => {
+    setExpandedFriendId((prev) => (prev === -1 ? null : -1));
+  }, []);
+
+  const handleConnectionChanged = useCallback(
+    (userId: number, connection: Connection) => {
+      const user = filteredFriends.find((f) => f.id === userId);
+      if (!user) return;
+
+      if (closeFriendsOnly && connection === Connection.FRIEND) {
+        updateFriendList({ type: 'break_friends', item: user });
+      } else {
+        updateFriendList({ type: 'connection_status', item: user, value: connection });
+
+        if (!closeFriendsOnly) {
+          if (connection === Connection.CLOSE_FRIEND) {
+            const closeFriendsData = closeFriendsHook.allFriends;
+            if (closeFriendsData) {
+              const exists = closeFriendsData.some((page) =>
+                page.results?.some((u) => u.id === userId),
+              );
+              if (!exists) {
+                const firstPage = closeFriendsData[0];
+                if (firstPage?.results) {
+                  const updatedFirstPage = {
+                    ...firstPage,
+                    count: (firstPage.count || 0) + 1,
+                    results: [
+                      { ...user, connection_status: Connection.CLOSE_FRIEND },
+                      ...firstPage.results,
+                    ],
+                  };
+                  closeFriendsHook.refetchAllFriends(
+                    [updatedFirstPage, ...closeFriendsData.slice(1)],
+                    { revalidate: false },
+                  );
+                }
+              } else {
+                closeFriendsHook.updateFriendList({
+                  type: 'connection_status',
+                  item: user,
+                  value: connection,
+                });
+              }
+            }
+          } else {
+            closeFriendsHook.updateFriendList({ type: 'break_friends', item: user });
+          }
+        }
+      }
+    },
+    [closeFriendsOnly, filteredFriends, updateFriendList, closeFriendsHook],
+  );
+
+  const handleSubscriptionChanged = useCallback(
+    (userId: number, hasSubscription: boolean) => {
+      const user = filteredFriends.find((f) => f.id === userId);
+      if (!user) return;
+      updateFriendList({ type: 'is_subscribed', item: user, value: hasSubscription });
+      closeFriendsHook.updateFriendList({
+        type: 'is_subscribed',
+        item: user,
+        value: hasSubscription,
+      });
+    },
+    [filteredFriends, updateFriendList, closeFriendsHook],
+  );
 
   return (
     <MainScrollContainer scrollRef={scrollRef} showNotificationPermission>
@@ -184,35 +260,31 @@ function FriendsList() {
         <Layout.FlexCol
           w="100%"
           pb={FLOATING_BUTTON_SIZE + 20}
-          h={isEmpty && selectedTab === 'check-in' ? '100%' : undefined}
+          h={isEmpty && selectedTab === 'people' ? '100%' : undefined}
         >
-          {/* My Check-in Card */}
-          <Layout.FlexCol w="100%" ph={16} pt={12} pb={8}>
-            <MyCheckInCard />
-          </Layout.FlexCol>
-
-          {/* Divider */}
-          <Divider width={2} bgColor="LIGHT" />
-
           {/* Tab bar */}
           <Layout.FlexRow w="100%" alignItems="center" ph={16} pt={4}>
             <Layout.FlexRow gap={16} flex={1}>
               <TabButton
-                $active={selectedTab === 'check-in'}
-                onClick={() => setSelectedTab('check-in')}
+                $active={selectedTab === 'people'}
+                onClick={() => setSelectedTab('people')}
               >
-                Check-In
-                {hasCheckInUpdates && <TabBadge>Update</TabBadge>}
+                <SvgIcon
+                  name={selectedTab === 'people' ? 'friends_active' : 'friends_inactive'}
+                  size={18}
+                />
+                People
               </TabButton>
-              <TabButton $active={selectedTab === 'posts'} onClick={() => setSelectedTab('posts')}>
-                Posts
-                {hasNewPosts && <TabBadge>New</TabBadge>}
+              <TabButton $active={selectedTab === 'feed'} onClick={() => setSelectedTab('feed')}>
+                <SvgIcon
+                  name={selectedTab === 'feed' ? 'feed_active' : 'feed_inactive'}
+                  size={18}
+                />
+                Feed
               </TabButton>
             </Layout.FlexRow>
 
-            {/* Close friends filter — preview-exempt: the user IS allowed to
-                tweak the filter while previewing a custom mode, since it's
-                a viewing affordance (not a write). */}
+            {/* Close friends filter */}
             <Layout.FlexRow
               gap={6}
               alignItems="center"
@@ -227,116 +299,38 @@ function FriendsList() {
             </Layout.FlexRow>
           </Layout.FlexRow>
 
-          {/* TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제. */}
-          {/*
-          {hiddenFriendsCount > 0 && (
-            <Layout.FlexRow w="100%" justifyContent="flex-end" ph={16} pt={8}>
-              <HiddenFriendsLinkButton type="button" onClick={() => navigate('/friends/hidden')}>
-                <SvgIcon name="view_alt" size={14} color="BLACK" />
-                <Typo type="label-medium" color="BLACK">
-                  {t('friend.hidden_friends_link', { count: hiddenFriendsCount })}
-                </Typo>
-              </HiddenFriendsLinkButton>
-            </Layout.FlexRow>
-          )}
-          */}
-
           {/* Tab content */}
-          {selectedTab === 'check-in' ? (
+          {selectedTab === 'people' ? (
             <Layout.FlexCol w="100%" flex={isEmpty ? 1 : undefined}>
+              {/* My card */}
+              {myAccordionUser && (
+                <Layout.FlexCol w="100%" pv={8}>
+                  <FriendProfileAccordionItem
+                    user={myAccordionUser}
+                    isExpanded={expandedFriendId === -1}
+                    onToggleExpand={handleToggleMyExpand}
+                    isMyCard
+                  />
+                </Layout.FlexCol>
+              )}
+
+              <Divider width={2} bgColor="LIGHT" />
+
               {isAllFriendsLoading ? (
                 <Layout.FlexCol w="100%" pv={8}>
                   <AllFriendListLoader />
                 </Layout.FlexCol>
               ) : filteredFriends.length > 0 ? (
                 <Layout.FlexCol w="100%" pv={8}>
-                  <Layout.FlexCol w="100%" gap={12}>
+                  <Layout.FlexCol w="100%" gap={8}>
                     {filteredFriends.map((user) => (
-                      <FriendItemWithUpdates
+                      <FriendProfileAccordionItem
                         user={user}
                         key={user.id}
-                        onHidden={() => handleHidden(user)}
-                        onSubscriptionChanged={(_userId, hasSubscription) => {
-                          updateFriendList({
-                            type: 'is_subscribed',
-                            item: user,
-                            value: hasSubscription,
-                          });
-                          postsFriendsHook.updateFriendList({
-                            type: 'is_subscribed',
-                            item: user,
-                            value: hasSubscription,
-                          });
-                          closeFriendsHook.updateFriendList({
-                            type: 'is_subscribed',
-                            item: user,
-                            value: hasSubscription,
-                          });
-                        }}
-                        onConnectionChanged={(userId, connection) => {
-                          if (closeFriendsOnly && connection === Connection.FRIEND) {
-                            updateFriendList({
-                              type: 'break_friends',
-                              item: user,
-                            });
-                            postsFriendsHook.updateFriendList({
-                              type: 'connection_status',
-                              item: user,
-                              value: connection,
-                            });
-                          } else {
-                            updateFriendList({
-                              type: 'connection_status',
-                              item: user,
-                              value: connection,
-                            });
-
-                            if (!closeFriendsOnly) {
-                              if (connection === Connection.CLOSE_FRIEND) {
-                                const closeFriendsData = closeFriendsHook.allFriends;
-                                if (closeFriendsData) {
-                                  const exists = closeFriendsData.some((page) =>
-                                    page.results?.some((u) => u.id === userId),
-                                  );
-                                  if (!exists) {
-                                    const firstPage = closeFriendsData[0];
-                                    if (firstPage?.results) {
-                                      const updatedFirstPage = {
-                                        ...firstPage,
-                                        count: (firstPage.count || 0) + 1,
-                                        results: [
-                                          { ...user, connection_status: Connection.CLOSE_FRIEND },
-                                          ...firstPage.results,
-                                        ],
-                                      };
-                                      closeFriendsHook.refetchAllFriends(
-                                        [updatedFirstPage, ...closeFriendsData.slice(1)],
-                                        { revalidate: false },
-                                      );
-                                    }
-                                  } else {
-                                    closeFriendsHook.updateFriendList({
-                                      type: 'connection_status',
-                                      item: user,
-                                      value: connection,
-                                    });
-                                  }
-                                }
-                              } else {
-                                closeFriendsHook.updateFriendList({
-                                  type: 'break_friends',
-                                  item: user,
-                                });
-                              }
-                            } else {
-                              postsFriendsHook.updateFriendList({
-                                type: 'connection_status',
-                                item: user,
-                                value: connection,
-                              });
-                            }
-                          }
-                        }}
+                        isExpanded={expandedFriendId === user.id}
+                        onToggleExpand={() => handleToggleExpand(user.id)}
+                        onSubscriptionChanged={handleSubscriptionChanged}
+                        onConnectionChanged={handleConnectionChanged}
                       />
                     ))}
                   </Layout.FlexCol>
@@ -354,59 +348,8 @@ function FriendsList() {
               )}
             </Layout.FlexCol>
           ) : (
-            /* Posts tab */
-            <Layout.FlexCol w="100%">
-              {postsFriendsHook.isAllFriendsLoading ? (
-                <Layout.FlexCol w="100%" pv={8}>
-                  <AllFriendListLoader />
-                </Layout.FlexCol>
-              ) : filteredPostsFriends.length > 0 ? (
-                <Layout.FlexCol w="100%" pv={8}>
-                  <Layout.FlexCol w="100%" gap={20}>
-                    {filteredPostsFriends.map((user) => (
-                      <FriendItemWithUpdates
-                        key={user.id}
-                        user={user}
-                        tabMode="posts"
-                        hasNewPost={hasUnreadPosts(user)}
-                        onHidden={() => handleHidden(user)}
-                        onSubscriptionChanged={(_userId, hasSubscription) => {
-                          updateFriendList({
-                            type: 'is_subscribed',
-                            item: user,
-                            value: hasSubscription,
-                          });
-                          postsFriendsHook.updateFriendList({
-                            type: 'is_subscribed',
-                            item: user,
-                            value: hasSubscription,
-                          });
-                          closeFriendsHook.updateFriendList({
-                            type: 'is_subscribed',
-                            item: user,
-                            value: hasSubscription,
-                          });
-                        }}
-                      />
-                    ))}
-                  </Layout.FlexCol>
-                  <div ref={postsFriendsHook.targetRef} />
-                  {postsFriendsHook.isLoadingMoreAllFriends && <AllFriendItemLoader />}
-                </Layout.FlexCol>
-              ) : isPostsEmpty ? (
-                <Layout.FlexRow w="100%" justifyContent="center" pv={20}>
-                  <Typo type="title-small" color="MEDIUM_GRAY">
-                    {t('no_contents.friends')}
-                  </Typo>
-                </Layout.FlexRow>
-              ) : (
-                <Layout.FlexRow alignItems="center" w="100%" h="100%">
-                  <Typo type="title-small" color="MEDIUM_GRAY">
-                    {t('no_contents.notes')}
-                  </Typo>
-                </Layout.FlexRow>
-              )}
-            </Layout.FlexCol>
+            /* Feed tab */
+            <FriendsTimelineFeed closeFriendsOnly={closeFriendsOnly} />
           )}
         </Layout.FlexCol>
       </PullToRefresh>
@@ -426,34 +369,6 @@ const TabButton = styled.button<{ $active: boolean }>`
   font-weight: ${({ $active }) => ($active ? 700 : 400)};
   color: ${({ $active }) => ($active ? Colors.BLACK : Colors.MEDIUM_GRAY)};
   border-bottom: 2px solid ${({ $active }) => ($active ? '#8700FF' : 'transparent')};
-`;
-
-// TODO: hide friend 기능 임시 비활성화 (2026-05-02). 복구시 주석 해제.
-/*
-const HiddenFriendsLinkButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-`;
-*/
-
-const TabBadge = styled.span`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px 6px;
-  border-radius: 999px;
-  background: #eee6f4;
-  color: #8700ff;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1.1;
 `;
 
 function CheckboxIcon({ checked }: { checked: boolean }) {
