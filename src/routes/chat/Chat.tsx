@@ -130,19 +130,26 @@ function Chat() {
   // Track the live compose-input height. Announcement compose is much taller
   // than regular chat (~162px baseline, can grow to 360px+) and grows further
   // when the user types multi-line. Without this the bottom of the chat gets
-  // covered by the compose box and the last message looks truncated. Re-runs
-  // when `username` changes (announcement vs. regular swaps the compose
-  // component); ResizeObserver handles textarea autosize within a session.
+  // covered by the compose box and the last message looks truncated.
+  //
+  // ChatMessageInput's root is `position: fixed`, which means our wrapping div
+  // has 0 flow height. Observe the fixed child (firstElementChild) instead:
+  // it has a real getBoundingClientRect even though it doesn't take flow.
+  // Re-runs when `username` changes (announcement vs. regular swaps the
+  // compose component); ResizeObserver handles textarea autosize within a
+  // session.
   useEffect(() => {
-    const el = composeWrapperRef.current;
-    if (!el) return undefined;
+    const wrapper = composeWrapperRef.current;
+    if (!wrapper) return undefined;
+    const target = wrapper.firstElementChild as HTMLElement | null;
+    if (!target) return undefined;
     const update = () => {
-      const h = el.getBoundingClientRect().height;
+      const h = target.getBoundingClientRect().height;
       if (h > 0) setComposeHeight(h);
     };
     update();
     const ro = new ResizeObserver(update);
-    ro.observe(el);
+    ro.observe(target);
     return () => ro.disconnect();
   }, [username]);
 
