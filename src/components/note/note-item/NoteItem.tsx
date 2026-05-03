@@ -1,4 +1,5 @@
 import { MouseEvent, useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -66,6 +67,7 @@ function NoteItem({
   const [inputFocus, setInputFocus] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [likePatch, setLikePatch] = useState<Partial<Note> | null>(null);
+  const [showImagePopup, setShowImagePopup] = useState(false);
 
   useEffect(() => {
     if (displayType !== 'LIST') {
@@ -152,6 +154,11 @@ function NoteItem({
     });
   };
 
+  const openImagePopup = (e: MouseEvent) => {
+    e.stopPropagation();
+    setShowImagePopup(true);
+  };
+
   if (isHidden) return null;
 
   const headerJsx = (
@@ -236,7 +243,11 @@ function NoteItem({
     <Layout.FlexCol gap={4}>
       {previewMode ? (
         <>
-          {images[0] && <PreviewImage src={images[0]} />}
+          {images[0] && (
+            <PostImageButton type="button" aria-label="Open image preview" onClick={openImagePopup}>
+              <PreviewImage src={images[0]} alt="note" />
+            </PostImageButton>
+          )}
           {content && (
             <Typo type="body-medium" color="BLACK" pre>
               <LinkifiedText>{content}</LinkifiedText>
@@ -265,7 +276,13 @@ function NoteItem({
           {/* Note image - only show 1 */}
           {images[0] && (
             <Layout.FlexRow w="100%" mv={10}>
-              <NoteImage src={images[0]} />
+              <PostImageButton
+                type="button"
+                aria-label="Open image preview"
+                onClick={openImagePopup}
+              >
+                <NoteImage src={images[0]} alt="note" />
+              </PostImageButton>
             </Layout.FlexRow>
           )}
           {missionPromptJsx}
@@ -352,6 +369,14 @@ function NoteItem({
           </>
         )}
       </Layout.FlexCol>
+      {images[0] &&
+        showImagePopup &&
+        createPortal(
+          <ImagePreviewBackdrop type="button" onClick={() => setShowImagePopup(false)}>
+            <ImagePreview src={images[0]} alt="Full size note" />
+          </ImagePreviewBackdrop>,
+          document.body,
+        )}
       {bottomSheet && (
         <CommentBottomSheet
           postType="Note"
@@ -381,6 +406,38 @@ const PreviewImage = styled.img`
   height: 100px;
   object-fit: cover;
   border-radius: 8px;
+`;
+
+const PostImageButton = styled.button`
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: zoom-in;
+`;
+
+const ImagePreviewBackdrop = styled.button`
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 500px;
+  height: 100vh;
+  padding: 0;
+  border: none;
+  background: rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  transform: translateX(-50%);
+`;
+
+const ImagePreview = styled.img`
+  max-width: 90%;
+  max-height: 80vh;
+  object-fit: contain;
 `;
 
 const PreviewBody = styled.div`
