@@ -15,10 +15,11 @@ const Row = styled(Layout.FlexRow)`
   gap: 8px;
 `;
 
-const Label = styled.div`
+const Label = styled.div<{ highlighted: boolean }>`
   width: 96px;
   font-size: 14px;
-  color: ${Colors.DARK_GRAY};
+  font-weight: ${({ highlighted }) => (highlighted ? 700 : 400)};
+  color: ${({ highlighted }) => (highlighted ? Colors.PRIMARY : Colors.DARK_GRAY)};
   flex-shrink: 0;
 `;
 
@@ -35,10 +36,11 @@ const Bar = styled.div<{ highlighted: boolean }>`
   transition: width 200ms ease-out;
 `;
 
-const Count = styled.div`
+const Count = styled.div<{ highlighted: boolean }>`
   width: 32px;
   font-size: 14px;
-  color: ${Colors.DARK_GRAY};
+  font-weight: ${({ highlighted }) => (highlighted ? 700 : 400)};
+  color: ${({ highlighted }) => (highlighted ? Colors.PRIMARY : Colors.DARK_GRAY)};
   text-align: right;
   flex-shrink: 0;
 `;
@@ -56,15 +58,18 @@ export function OptionCountsRenderer({ distribution }: Props) {
     Array.isArray(userChoice) ? userChoice.includes(value) : userChoice === value;
   return (
     <Col>
-      {distribution.options.map((o) => (
-        <Row key={o.option_id}>
-          <Label>{pickLabel(o.label_en, o.label_ko)}</Label>
-          <BarTrack>
-            <Bar style={{ width: `${(o.count / max) * 100}%` }} highlighted={isUser(o.value)} />
-          </BarTrack>
-          <Count>{o.count}</Count>
-        </Row>
-      ))}
+      {distribution.options.map((o) => {
+        const highlighted = isUser(o.value);
+        return (
+          <Row key={o.option_id}>
+            <Label highlighted={highlighted}>{pickLabel(o.label_en, o.label_ko)}</Label>
+            <BarTrack>
+              <Bar style={{ width: `${(o.count / max) * 100}%` }} highlighted={highlighted} />
+            </BarTrack>
+            <Count highlighted={highlighted}>{o.count}</Count>
+          </Row>
+        );
+      })}
     </Col>
   );
 }
