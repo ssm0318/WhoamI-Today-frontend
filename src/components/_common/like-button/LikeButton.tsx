@@ -12,7 +12,11 @@ interface LikeButtonProps {
   m?: number;
   iconSize: number;
   outerSize?: number;
+  /** Align icon inside the hit box; `start` avoids dead space before trailing footer text. */
+  iconAlign?: 'center' | 'start';
   refresh?: () => void;
+  /** Called after a successful like/unlike so parents can optimistically update counts before `refresh` finishes. */
+  onLikeUpdated?: (liked: boolean, likeId: number | null) => void;
 }
 
 function LikeButton({
@@ -22,7 +26,9 @@ function LikeButton({
   iconSize,
   m = 6,
   outerSize = 48,
+  iconAlign = 'center',
   refresh,
+  onLikeUpdated,
 }: LikeButtonProps) {
   const [t] = useTranslation('translation');
   const { openToast } = useBoundStore((state) => ({
@@ -50,6 +56,7 @@ function LikeButton({
         },
       );
       setLikeId(like_id);
+      onLikeUpdated?.(true, like_id);
       openToast({ message: t('likes.toast_liked') });
       refresh?.();
     } catch (error) {
@@ -70,6 +77,7 @@ function LikeButton({
         });
       });
       setLikeId(null);
+      onLikeUpdated?.(false, null);
       openToast({ message: t('likes.toast_unliked') });
       refresh?.();
     } catch (error) {
@@ -86,7 +94,12 @@ function LikeButton({
   };
 
   return (
-    <Layout.FlexRow alignItems="center" w={outerSize} h={outerSize} justifyContent="center">
+    <Layout.FlexRow
+      alignItems="center"
+      w={outerSize}
+      h={outerSize}
+      justifyContent={iconAlign === 'start' ? 'flex-start' : 'center'}
+    >
       {postId && (
         <S.IconButton type="button" m={m} onClick={toggleLike} size={iconSize} disabled={isLoading}>
           <SvgIcon name={likeId ? 'like_filled' : 'like'} size={iconSize} />

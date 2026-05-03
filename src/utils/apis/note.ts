@@ -11,19 +11,9 @@ export const getNoteList = async (page: string | null) => {
   return data;
 };
 
-export const getNoteDetail = async (noteId: number) => {
-  const { data } = await axios.get<Note>(`/notes/${noteId}/`);
-  const { id, current_user_read } = data;
-
-  if (!current_user_read) {
-    readNote([id]);
-  }
-
-  return data;
-};
-
-export const getNoteDetailDefault = async (noteId: number) => {
-  const { data } = await axios.get<Note>(`/notes/${noteId}/`);
+/** @param notesApiPrefix `q/` so `/api/q/notes/<id>/` uses Q serializers (likes fields) for Ver.Q viewers */
+export const getNoteDetail = async (noteId: number, notesApiPrefix = '') => {
+  const { data } = await axios.get<Note>(`${notesApiPrefix}notes/${noteId}/`);
   const { id, current_user_read } = data;
 
   if (!current_user_read) {

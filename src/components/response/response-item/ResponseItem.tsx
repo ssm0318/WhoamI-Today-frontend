@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -16,7 +16,9 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import { POST_DP_TYPE, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
+import { isPostsVerQClient } from '@utils/apis/userApiPrefix';
 import { classifyPathnameAsSource } from '@utils/navSource';
+import { applyLikeUserSampleOptimistic } from '@utils/optimisticLikeUserSample';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import QuestionItem from '../question-item/QuestionItem';
 
@@ -51,12 +53,35 @@ function ResponseItem({
   const [inputFocus, setInputFocus] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
+  const [likePatch, setLikePatch] = useState<Partial<Response> | null>(null);
+
+  const footerPost = useMemo(
+    () => (likePatch ? { ...response, ...likePatch } : response),
+    [response, likePatch],
+  );
+
+  useEffect(() => {
+    setLikePatch(null);
+  }, [response.id, response.like_count, response.current_user_like_id]);
 
   const { emojiPickerTarget, setEmojiPickerTarget } = useBoundStore((state) => ({
     emojiPickerTarget: state.emojiPickerTarget,
     setEmojiPickerTarget: state.setEmojiPickerTarget,
   }));
-  const { featureFlags } = useBoundStore(UserSelector);
+  const { featureFlags, myProfile } = useBoundStore(UserSelector);
+  const postsVerQUi = isPostsVerQClient(featureFlags?.postsVerQ, myProfile?.current_ver);
+
+  const handleLikeUpdated = (liked: boolean, likeId: number | null) => {
+    setLikePatch((prev) => {
+      const base = { ...response, ...prev };
+      const c = base.like_count ?? 0;
+      return {
+        current_user_like_id: likeId,
+        like_count: liked ? c + 1 : Math.max(0, c - 1),
+        like_user_sample: applyLikeUserSampleOptimistic(base.like_user_sample, liked, myProfile),
+      };
+    });
+  };
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -144,7 +169,7 @@ function ResponseItem({
                 mutualFriendCount={author_detail.mutual_friend_count ?? 0}
                 mutualInterestCount={author_detail.mutual_interest_count ?? 0}
                 mutualPersonaCount={author_detail.mutual_persona_count ?? 0}
-                hideTraits={featureFlags?.postsVerQ}
+                hideTraits={postsVerQUi}
               />
             )}
           </Layout.FlexRow>
@@ -226,13 +251,14 @@ function ResponseItem({
       <QuestionItem question={question} disableNavigation={disableQuestionNavigation} />
     ) : null;
 
-  const footerJsx = featureFlags?.postsVerQ ? (
+  const footerJsx = postsVerQUi ? (
     <PostFooterLikeOnly
-      post={response}
+      post={footerPost}
       showComments={() => setBottomSheet(true)}
       setInputFocus={() => setInputFocus(true)}
       displayType={displayType}
       refresh={refresh}
+      onLikeUpdated={handleLikeUpdated}
     />
   ) : (
     <PostFooter

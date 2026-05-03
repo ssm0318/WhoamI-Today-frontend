@@ -12,7 +12,10 @@ import { useViewAs, useViewAsUser } from '@components/view-as/PreviewModeContext
 import { Layout } from '@design-system';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { AllPostFeedItem, POST_TYPE } from '@models/post';
+import { useBoundStore } from '@stores/useBoundStore';
+import { UserSelector } from '@stores/user';
 import { readUserAllNotes, readUserAllResponses } from '@utils/apis/user';
+import { userListApiPrefixForViewer } from '@utils/apis/userApiPrefix';
 import { withViewAs } from '@utils/apis/withViewAs';
 
 type AllPostSectionProps = {
@@ -23,6 +26,7 @@ type AllPostSectionProps = {
 function AllPostSection({ username }: AllPostSectionProps) {
   const [t] = useTranslation('translation');
   const { user } = useContext(UserPageContext);
+  const { featureFlags, myProfile } = useBoundStore(UserSelector);
   const areFriends = user?.data?.are_friends === true;
   const isMyPage = !username;
   const viewAs = useViewAs();
@@ -35,10 +39,16 @@ function AllPostSection({ username }: AllPostSectionProps) {
     isLoadingMore: isPostsLoadingMore,
     mutate: refetchPosts,
   } = useSWRInfiniteScroll<AllPostFeedItem>({
-    key: withViewAs(`/user/${encodeURIComponent(username || 'me')}/all-posts/`, {
-      viewAs,
-      viewAsUser,
-    }),
+    key: withViewAs(
+      `${userListApiPrefixForViewer(
+        featureFlags?.postsVerQ,
+        myProfile?.current_ver,
+      )}user/${encodeURIComponent(username || 'me')}/all-posts/`,
+      {
+        viewAs,
+        viewAsUser,
+      },
+    ),
   });
 
   const { noteId, responseId } = useParams();

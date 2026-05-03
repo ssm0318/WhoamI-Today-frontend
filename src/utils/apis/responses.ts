@@ -39,8 +39,11 @@ export const getCommentsOfResponse = async (responseId: number, page: string | n
   return data;
 };
 
-export const getResponse = async (responseId: number | string | undefined) => {
-  const { data } = await axios.get<GetResponseDetailResponse>(`/qna/responses/${responseId}/`);
+/** @param qnaApiPrefix `q/` so `/api/q/qna/responses/<id>/` uses Q serializers for Ver.Q viewers */
+export const getResponse = async (responseId: number | string | undefined, qnaApiPrefix = '') => {
+  const { data } = await axios.get<GetResponseDetailResponse>(
+    `${qnaApiPrefix}qna/responses/${responseId}/`,
+  );
   const { id, current_user_read } = data;
 
   if (!current_user_read) {

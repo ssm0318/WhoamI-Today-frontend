@@ -148,10 +148,11 @@ export const getMyResponses = async (page: string | null) => {
   return data;
 };
 
-export const getMyNotes = async (page: string | null) => {
+/** @param userListPrefix `q/` when the viewer is Ver.Q so `/api/q/user/me/notes/` is used. */
+export const getMyNotes = async (page: string | null, userListPrefix = '') => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<NoteFeedItem[]>>(
-    `/user/me/notes/${!requestPage ? '' : `?page=${requestPage}`}`,
+    `${userListPrefix}user/me/notes/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
 };
@@ -164,10 +165,11 @@ export const getResponseRequests = async (page: string | null) => {
   return data;
 };
 
-export const getMyAllPosts = async (page: string | null) => {
+/** @param userListPrefix `q/` when the viewer is Ver.Q so `/api/q/user/me/all-posts/` is used. */
+export const getMyAllPosts = async (page: string | null, userListPrefix = '') => {
   const requestPage = page ? page.split('page=')[1] : null;
   const { data } = await axios.get<PaginationResponse<AllPostFeedItem[]>>(
-    `/user/me/all-posts/${!requestPage ? '' : `?page=${requestPage}`}`,
+    `${userListPrefix}user/me/all-posts/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
 };
