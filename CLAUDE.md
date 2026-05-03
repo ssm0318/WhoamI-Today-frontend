@@ -141,7 +141,7 @@ Text-only labels (Public | Friends | Close Friends | Only Me), `label-large` fon
 ### Other UI components
 - **Nudge buttons:** show per-component independently (not all-or-nothing). 4 types: battery, mood, thought, song.
 - **Ping/poke buttons:** dashed border + dark-gray text — NOT solid border + purple. Same 8px radius / 4px 8px padding.
-- **Bottom nav order:** Friends → Check-In → Share → Discover → Chats.
+- **Bottom nav order (Ver. W):** Friends → Daily Digest → Check-In → Share → Chats. "Daily Digest" is the Ver. W rename of the Discover tab — same `/discover` route + `discover_active/inactive` icon, label from `nav_tab.digest`. Ver. Q order: Friends (label/icon, `/feed` route) → Discover → Share → Chats → My.
 - **Check-In tab:** 2x2 grid, popup editors with "Share" button that auto-saves immediately (no global Save button).
 - **Share page:** single vertical scroll with Photo (TERTIARY_PINK gradient), Mission (purple gradient), Questions (SECONDARY bg). No tabs.
 - **Headers:** all should have notification bell + hamburger menu (including Chats, renamed from "Ping"). "Post" button text says "Share".
