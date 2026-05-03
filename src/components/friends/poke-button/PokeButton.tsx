@@ -63,6 +63,7 @@ function PokeButton({ receiverId, componentType, initialPokeId }: Props) {
     try {
       await deletePoke(pokeRecord.id);
       setPokeRecord(null);
+      openToast({ message: t('ping_removed') });
     } catch {
       // silently fail
     } finally {
@@ -83,13 +84,9 @@ function PokeButton({ receiverId, componentType, initialPokeId }: Props) {
     try {
       const newPoke = await sendPoke(receiverId, componentType);
       setPokeRecord(newPoke);
-    } catch (err: unknown) {
-      if (err && typeof err === 'object' && 'response' in err) {
-        const status = (err as { response: { status: number } }).response?.status;
-        if (status === 429) {
-          openToast({ message: t('ping_daily_limit') });
-        }
-      }
+      openToast({ message: t('ping_sent') });
+    } catch {
+      // silently fail
     } finally {
       setIsLoading(false);
     }
