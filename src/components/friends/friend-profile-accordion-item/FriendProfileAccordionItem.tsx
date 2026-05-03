@@ -128,6 +128,10 @@ function FriendProfileAccordionItem({
     setShowSubscriptionPopup(true);
   };
 
+  const handleClickCollapsedRow = () => {
+    onToggleExpand();
+  };
+
   const handleToggle = (e: MouseEvent) => {
     e.stopPropagation();
     onToggleExpand();
@@ -136,7 +140,12 @@ function FriendProfileAccordionItem({
   return (
     <AccordionContainer $isMyCard={isMyCard} ph={16} pv={12} gap={0} rounded={12}>
       {/* Collapsed Row: always visible */}
-      <CollapsedRow gap={6} justifyContent="space-between">
+      <CollapsedRow
+        gap={6}
+        justifyContent="space-between"
+        onClick={handleClickCollapsedRow}
+        style={{ cursor: 'pointer' }}
+      >
         <Layout.FlexRow alignItems="center" gap={6} style={{ flex: 1, minWidth: 0 }}>
           {/* Profile + Username + Connection badge */}
           <Layout.FlexRow
