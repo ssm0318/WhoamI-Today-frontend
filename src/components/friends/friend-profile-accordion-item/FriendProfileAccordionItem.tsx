@@ -92,6 +92,10 @@ function FriendProfileAccordionItem({
 
   // --- handlers ---
   const openCheckInDetail = (component: 'battery' | 'mood' | 'thought' | 'song') => {
+    if (isMyCard) {
+      navigate('/update');
+      return;
+    }
     trackEvent('friend_check_in_component_opened', {
       component,
       friend_id: id,
