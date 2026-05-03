@@ -54,6 +54,7 @@
         "delete_cancel": "Cancel",
         "delete_confirm": "Delete",
         "expiry_hint": "Your snapshot will be visible for 24 hours.\nAfter posting, you can pin it to keep it on your profile.",
+        "archived_story_toast": "This story is no longer available",
         "friend_pinned_title": "{{username}}'s Pinned Snapshots",
         "archive": {
             "title": "Daily Snapshots",
