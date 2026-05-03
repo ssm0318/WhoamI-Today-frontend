@@ -25,7 +25,7 @@ import { groupEntriesByDate } from '@utils/archiveHelpers';
  * Route: /users/:username/check-in/pinned
  */
 function FriendPinnedFeed() {
-  const [t] = useTranslation('translation', { keyPrefix: 'archive' });
+  const [t] = useTranslation('translation', { keyPrefix: 'history' });
   const { username } = useParams<{ username: string }>();
 
   const baseKey = username ? `/user/${username}/check_in/pinned/` : null;

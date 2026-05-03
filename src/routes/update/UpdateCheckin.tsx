@@ -1,5 +1,5 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
@@ -16,18 +16,11 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
 import { ComponentVisibility, DEFAULT_VISIBILITY, SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
-import {
-  ArchivableCheckInComponent,
-  archiveLiveComponent,
-  getActiveSong,
-  postCheckIn,
-  postSong,
-} from '@utils/apis/checkIn';
+import { getActiveSong, postCheckIn, postSong } from '@utils/apis/checkIn';
 import { MainScrollContainer } from '../Root';
 import {
-  ArchivedBadge,
-  ArchiveDescription,
   GridContainer,
+  HistoryDescription,
   QuadrantCard,
   QuadrantLabel,
   VisibilityBadge,
@@ -35,18 +28,11 @@ import {
 
 type EditorTarget = 'battery' | 'mood' | 'song' | 'thought' | null;
 
-const ARCHIVE_THRESHOLD_MS = 12 * 60 * 60 * 1000;
-
-function isArchived(updatedAt?: string): boolean {
-  if (!updatedAt) return false;
-  return Date.now() - new Date(updatedAt).getTime() > ARCHIVE_THRESHOLD_MS;
-}
-
 export default function UpdateCheckin() {
   const [t] = useTranslation('translation', { keyPrefix: 'social_battery' });
+  const [tHistory] = useTranslation('translation', { keyPrefix: 'history' });
 
-  const { checkIn, fetchCheckIn } = useBoundStore((state) => ({
-    checkIn: state.checkIn,
+  const { fetchCheckIn } = useBoundStore((state) => ({
     fetchCheckIn: state.fetchCheckIn,
   }));
 
@@ -118,28 +104,6 @@ export default function UpdateCheckin() {
     }
     setIsDataLoaded(true);
   }, []);
-
-  const batteryArchived = useMemo(
-    () => !!battery && isArchived(checkIn?.battery_updated_at),
-    [battery, checkIn?.battery_updated_at],
-  );
-  const moodArchived = useMemo(
-    () => mood.length > 0 && isArchived(checkIn?.mood_updated_at),
-    [mood, checkIn?.mood_updated_at],
-  );
-  const songArchived = useMemo(
-    () => !!trackId && isArchived(checkIn?.song_updated_at),
-    [trackId, checkIn?.song_updated_at],
-  );
-  const thoughtArchived = useMemo(
-    () => !!thought && isArchived(checkIn?.thought_updated_at),
-    [thought, checkIn?.thought_updated_at],
-  );
-
-  const effectiveBatteryVis = batteryArchived ? ComponentVisibility.ONLY_ME : batteryVis;
-  const effectiveMoodVis = moodArchived ? ComponentVisibility.ONLY_ME : moodVis;
-  const effectiveSongVis = songArchived ? ComponentVisibility.ONLY_ME : songVis;
-  const effectiveThoughtVis = thoughtArchived ? ComponentVisibility.ONLY_ME : thoughtVis;
 
   // Refs to always have latest values for saving (avoids stale closure issues)
   const stateRef = useRef({
@@ -293,51 +257,12 @@ export default function UpdateCheckin() {
     [doSave],
   );
 
-  /**
-   * Archive a currently-live component (without replacing it). Closes the
-   * editor, hits PATCH /check_in/components/<c>/archive/, then refetches.
-   * The backend ages the live entry's timestamps past the 12h cutoff but
-   * keeps the data, so refetched values still carry the archived content
-   * with `*_updated_at` >12h — `*Archived` memo paints the "Only Me
-   * (Archived)" badge while the value stays visible. Eligible for pinning
-   * via the archive feed.
-   */
-  const handleArchive = useCallback(
-    async (component: ArchivableCheckInComponent) => {
-      setActiveEditor(null);
-      try {
-        await archiveLiveComponent(component);
-        const ci = await fetchCheckIn();
-        if (component === 'battery') setBattery(ci?.social_battery ?? null);
-        if (component === 'mood') {
-          setMood(Array.isArray(ci?.mood) ? ci?.mood ?? [] : ci?.mood ? [ci.mood] : []);
-        }
-        if (component === 'thought') setThought(ci?.thought ?? '');
-        if (component === 'song') setTrackId(ci?.track_id ?? '');
-        openToast({ message: `Archived ${component}` });
-      } catch {
-        openToast({ message: `Couldn't archive ${component}. Please try again.` });
-      }
-    },
-    [fetchCheckIn, openToast],
-  );
-
   return (
     <MainScrollContainer>
       <GridContainer>
         {/* Top-Left: Social Battery */}
-        <QuadrantCard
-          $isEmpty={!battery}
-          $isArchived={batteryArchived}
-          onClick={() => setActiveEditor('battery')}
-        >
-          {battery ? (
-            batteryArchived ? (
-              <ArchivedBadge>Only Me (Archived)</ArchivedBadge>
-            ) : (
-              <VisibilityBadge>{getVisibilityLabel(batteryVis)}</VisibilityBadge>
-            )
-          ) : null}
+        <QuadrantCard $isEmpty={!battery} onClick={() => setActiveEditor('battery')}>
+          {battery ? <VisibilityBadge>{getVisibilityLabel(batteryVis)}</VisibilityBadge> : null}
           {battery ? (
             <Layout.FlexCol alignItems="center" gap={6}>
               <EmojiItem
@@ -362,17 +287,9 @@ export default function UpdateCheckin() {
         </QuadrantCard>
 
         {/* Top-Right: Mood */}
-        <QuadrantCard
-          $isEmpty={mood.length === 0}
-          $isArchived={moodArchived}
-          onClick={() => setActiveEditor('mood')}
-        >
+        <QuadrantCard $isEmpty={mood.length === 0} onClick={() => setActiveEditor('mood')}>
           {mood.length > 0 ? (
-            moodArchived ? (
-              <ArchivedBadge>Only Me (Archived)</ArchivedBadge>
-            ) : (
-              <VisibilityBadge>{getVisibilityLabel(moodVis)}</VisibilityBadge>
-            )
+            <VisibilityBadge>{getVisibilityLabel(moodVis)}</VisibilityBadge>
           ) : null}
           {mood.length > 0 ? (
             <>
@@ -388,18 +305,8 @@ export default function UpdateCheckin() {
         </QuadrantCard>
 
         {/* Bottom-Left: Song */}
-        <QuadrantCard
-          $isEmpty={!trackId}
-          $isArchived={songArchived}
-          onClick={() => setActiveEditor('song')}
-        >
-          {trackId ? (
-            songArchived ? (
-              <ArchivedBadge>Only Me (Archived)</ArchivedBadge>
-            ) : (
-              <VisibilityBadge>{getVisibilityLabel(songVis)}</VisibilityBadge>
-            )
-          ) : null}
+        <QuadrantCard $isEmpty={!trackId} onClick={() => setActiveEditor('song')}>
+          {trackId ? <VisibilityBadge>{getVisibilityLabel(songVis)}</VisibilityBadge> : null}
           {trackId && trackData ? (
             <Layout.FlexCol w="100%" alignItems="center" gap={6}>
               {trackData.album?.images?.[0]?.url && (
@@ -425,18 +332,8 @@ export default function UpdateCheckin() {
         </QuadrantCard>
 
         {/* Bottom-Right: Thought Snippet */}
-        <QuadrantCard
-          $isEmpty={!thought}
-          $isArchived={thoughtArchived}
-          onClick={() => setActiveEditor('thought')}
-        >
-          {thought ? (
-            thoughtArchived ? (
-              <ArchivedBadge>Only Me (Archived)</ArchivedBadge>
-            ) : (
-              <VisibilityBadge>{getVisibilityLabel(thoughtVis)}</VisibilityBadge>
-            )
-          ) : null}
+        <QuadrantCard $isEmpty={!thought} onClick={() => setActiveEditor('thought')}>
+          {thought ? <VisibilityBadge>{getVisibilityLabel(thoughtVis)}</VisibilityBadge> : null}
           {thought ? (
             <Layout.FlexCol w="100%" alignItems="center" gap={4} ph={4}>
               <Typo type="body-medium" textAlign="center">
@@ -453,19 +350,16 @@ export default function UpdateCheckin() {
         </QuadrantCard>
       </GridContainer>
 
-      <ArchiveDescription>
-        Items automatically archive after 12 hours and become visible only to you.
-      </ArchiveDescription>
+      <HistoryDescription>{tHistory('checkin_tab_hint')}</HistoryDescription>
 
       {/* Editor Popups — "Share" auto-saves */}
       <BatteryEditor
         isOpen={activeEditor === 'battery'}
         onClose={handleEditorDismiss}
         onShare={handleBatteryShare}
-        onArchive={battery ? () => handleArchive('battery') : undefined}
         value={battery}
         onChange={setBattery}
-        visibility={effectiveBatteryVis}
+        visibility={batteryVis}
         onVisibilityChange={setBatteryVis}
       />
       <MoodEditor
@@ -474,27 +368,25 @@ export default function UpdateCheckin() {
         onShare={handleMoodShare}
         value={mood}
         onChange={setMood}
-        visibility={effectiveMoodVis}
+        visibility={moodVis}
         onVisibilityChange={setMoodVis}
       />
       <SongEditor
         isOpen={activeEditor === 'song'}
         onClose={handleEditorDismiss}
         onShare={handleSongShare}
-        onArchive={trackId ? () => handleArchive('song') : undefined}
         trackId={trackId}
         onChange={setTrackId}
-        visibility={effectiveSongVis}
+        visibility={songVis}
         onVisibilityChange={setSongVis}
       />
       <ThoughtEditor
         isOpen={activeEditor === 'thought'}
         onClose={handleEditorDismiss}
         onShare={handleThoughtShare}
-        onArchive={thought ? () => handleArchive('thought') : undefined}
         value={thought}
         onChange={setThought}
-        visibility={effectiveThoughtVis}
+        visibility={thoughtVis}
         onVisibilityChange={setThoughtVis}
       />
     </MainScrollContainer>

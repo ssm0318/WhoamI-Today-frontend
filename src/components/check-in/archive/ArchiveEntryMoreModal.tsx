@@ -28,8 +28,8 @@ interface Props {
  * because they don't appear in the archive feed at all).
  */
 function ArchiveEntryMoreModal({ entry, onClose, onModifyVisibility, onDelete }: Props) {
-  const [t] = useTranslation('translation', { keyPrefix: 'archive.more_modal' });
-  const [tConfirm] = useTranslation('translation', { keyPrefix: 'archive.delete_confirm' });
+  const [t] = useTranslation('translation', { keyPrefix: 'history.more_modal' });
+  const [tConfirm] = useTranslation('translation', { keyPrefix: 'history.delete_confirm' });
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const closeAll = () => {

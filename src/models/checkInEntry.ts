@@ -30,12 +30,12 @@ export interface CheckInComponentEntry {
   superseded_at: string | null;
 }
 
-/** Extra fields the archive + friend-pinned endpoints add alongside the paginated results. */
+/** Extra fields the history + friend-pinned endpoints add alongside the paginated results. */
 export interface ArchiveCounts {
-  /** Total pinned archived rows (friend view: only pins visible to the viewer). */
+  /** Total pinned rows (friend view: only pins visible to the viewer). */
   pinned_count: number;
-  /** Only populated by the owner archive endpoint. */
+  /** Total history entries (owner endpoint only). */
+  history_count?: number;
+  /** Backward compat — same value as history_count. */
   archived_count?: number;
 }
-
-export type ArchiveTab = 'all' | 'pinned';

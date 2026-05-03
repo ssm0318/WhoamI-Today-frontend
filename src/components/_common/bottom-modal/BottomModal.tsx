@@ -123,9 +123,11 @@ function BottomModal({
     const container = containerRef.current;
     const body = bodyRef.current;
 
-    // Track touch start Y even in scroll areas for seamless transition
+    // Track touch Y for seamless scroll→drag transition
     const touchStartYRef = { current: 0 };
     const inScrollAreaRef = { current: false };
+    const lastTouchYRef = { current: 0 };
+    const downFramesRef = { current: 0 };
 
     const findScrollParent = (target: HTMLElement): HTMLElement | null => {
       let el: HTMLElement | null = target;
@@ -142,9 +144,10 @@ function BottomModal({
     const onTouchStart = (e: TouchEvent) => {
       if (!e.target || !(e.target instanceof HTMLElement)) return;
       touchStartYRef.current = e.touches[0].clientY;
+      lastTouchYRef.current = e.touches[0].clientY;
+      downFramesRef.current = 0;
       const scrollParent = findScrollParent(e.target);
       if (scrollParent && scrollParent.scrollTop > 0) {
-        // In scroll area and scrolled down — let scroll happen, but track for transition
         inScrollAreaRef.current = true;
         isDraggingRef.current = false;
         return;
@@ -172,18 +175,28 @@ function BottomModal({
     const onTouchMove = (e: TouchEvent) => {
       const { clientY } = e.touches[0];
 
-      // Seamless scroll→drag transition: if we were in a scroll area
-      // and it just reached the top while dragging up→down, switch to drag mode
+      // Seamless scroll→drag transition: require scrollTop===0 AND
+      // sustained downward finger movement (3+ frames) to avoid
+      // accidental triggers during upward scroll momentum.
       if (inScrollAreaRef.current && !isDraggingRef.current) {
         const scrollEl = findScrollParent(e.target as HTMLElement);
-        if (scrollEl && scrollEl.scrollTop <= 0 && clientY > touchStartYRef.current) {
-          // Scroll hit top and finger is moving down — transition to drag
-          inScrollAreaRef.current = false;
-          isDraggingRef.current = true;
-          dragStartY.current = clientY;
-          dragOffsetRef.current = 0;
-          // Skip preventDefault on this frame — scroll is still cancelable=false
-          return;
+        if (scrollEl && scrollEl.scrollTop <= 0) {
+          if (clientY > lastTouchYRef.current) {
+            downFramesRef.current += 1;
+          } else {
+            downFramesRef.current = 0;
+          }
+          lastTouchYRef.current = clientY;
+          if (downFramesRef.current >= 3) {
+            inScrollAreaRef.current = false;
+            isDraggingRef.current = true;
+            dragStartY.current = clientY;
+            dragOffsetRef.current = 0;
+            return;
+          }
+        } else {
+          downFramesRef.current = 0;
+          lastTouchYRef.current = clientY;
         }
         return;
       }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import CheckInArchiveChip from '@components/check-in/archive/CheckInArchiveChip';
+import CheckInHistoryChip from '@components/check-in/archive/CheckInArchiveChip';
 import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
@@ -178,7 +178,7 @@ function CheckIn({ user }: CheckInProps) {
         )}
         <Layout.FlexRow w="100%" justifyContent="flex-end" alignItems="center">
           {isMyPage ? (
-            <CheckInArchiveChip />
+            <CheckInHistoryChip />
           ) : (
             friendUsername && (
               <FriendPinnedChip

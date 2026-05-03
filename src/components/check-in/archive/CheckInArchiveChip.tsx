@@ -3,17 +3,17 @@ import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinne
 import { Colors, Layout, Typo } from '@design-system';
 import { useArchiveCounts } from '@hooks/useArchiveCounts';
 
-function CheckInArchiveChip() {
+function CheckInHistoryChip() {
   const navigate = useNavigate();
-  const { archivedCount, pinnedCount } = useArchiveCounts();
+  const { historyCount, pinnedCount } = useArchiveCounts();
 
   return (
     <Layout.FlexRow gap={12} alignItems="center" style={{ flexShrink: 0 }}>
-      <FriendPinnedChip pinnedCount={pinnedCount} to="/check-in/archive?tab=pinned" />
+      <FriendPinnedChip pinnedCount={pinnedCount} to="/check-in/history?tab=pinned" />
       <Layout.FlexRow
         alignItems="center"
         gap={4}
-        onClick={() => navigate('/check-in/archive?tab=all')}
+        onClick={() => navigate('/check-in/history?tab=all')}
         style={{ cursor: 'pointer' }}
       >
         <svg
@@ -28,16 +28,15 @@ function CheckInArchiveChip() {
           aria-hidden
           style={{ color: Colors.PRIMARY }}
         >
-          <rect x="3" y="3" width="18" height="5" rx="1" />
-          <path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8" />
-          <path d="M10 12h4" />
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
         </svg>
         <Typo type="label-medium" color="PRIMARY" fontWeight={500} underline>
-          Archived ({archivedCount})
+          History ({historyCount})
         </Typo>
       </Layout.FlexRow>
     </Layout.FlexRow>
   );
 }
 
-export default CheckInArchiveChip;
+export default CheckInHistoryChip;

@@ -1027,19 +1027,20 @@
         "title": "Page Not Found",
         "go_home": "Go to main page"
     },
-    "archive": {
-        "title": "Check-ins",
+    "history": {
+        "title": "Check-Ins",
         "today": "Today",
         "yesterday": "Yesterday",
         "segmented": {
-            "all": "Archived",
+            "all": "History",
             "pinned": "Pinned"
         },
         "empty": {
-            "all": "No archived check-ins yet. Check-ins move here after 12 hours or when you update them.",
-            "pinned": "Pin check-ins from All to surface them on your profile."
+            "all": "No check-in history yet.",
+            "pinned": "Pin check-ins from History to surface them on your profile."
         },
-        "archived_hint": "Pin a check-in to keep it visible on your profile.",
+        "history_hint": "This history is visible only to you. Pin items to share them with others.",
+        "checkin_tab_hint": "When you update, previous check-ins move to History on your profile — only you can see them.",
         "end_of_feed": "That's everything.",
         "thought_modal": {
             "close": "Close"
@@ -1049,16 +1050,22 @@
             "unpinned": "Unpinned",
             "error": "Couldn't update pin. Please try again."
         },
+        "pin_confirm": {
+            "title": "Who can see this?",
+            "message": "This was previously set visible to {{visibility}}. Keep it as {{visibility}}?",
+            "confirm": "Pin",
+            "cancel": "Cancel"
+        },
         "more_modal": {
             "modify_visibility": "Modify visibility",
             "delete": "Delete"
         },
         "delete_confirm": {
-            "title": "Delete from archive?",
+            "title": "Delete from history?",
             "content": "This cannot be undone.",
             "cancel": "Cancel",
             "confirm": "Delete",
-            "toast_deleted": "Deleted from archive",
+            "toast_deleted": "Deleted from history",
             "error": "Couldn't delete. Please try again."
         },
         "visibility_modal": {

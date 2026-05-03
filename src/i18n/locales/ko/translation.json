@@ -1019,19 +1019,20 @@
     "title": "존재하지 않는 페이지 입니다.",
     "go_home": "메인 페이지로 이동"
   },
-  "archive": {
-    "title": "Check-ins",
+  "history": {
+    "title": "Check-Ins",
     "today": "오늘",
     "yesterday": "어제",
     "segmented": {
-      "all": "보관함",
+      "all": "히스토리",
       "pinned": "Pinned"
     },
     "empty": {
-      "all": "아직 보관된 체크인이 없어요. 12시간이 지나거나 업데이트하면 여기로 이동돼요.",
-      "pinned": "전체에서 체크인을 고정하면 프로필에 표시돼요."
+      "all": "아직 체크인 기록이 없어요.",
+      "pinned": "히스토리에서 체크인을 고정하면 프로필에 표시돼요."
     },
-    "archived_hint": "체크인을 고정하면 프로필에 계속 표시돼요.",
+    "history_hint": "이 기록은 나만 볼 수 있어요. 고정하면 다른 사람들에게도 공개할 수 있어요.",
+    "checkin_tab_hint": "업데이트하면 이전 체크인은 내 프로필 히스토리에 나만 볼 수 있게 저장돼요.",
     "end_of_feed": "마지막 기록이에요.",
     "thought_modal": {
       "close": "닫기"
@@ -1041,16 +1042,22 @@
       "unpinned": "고정을 해제했어요",
       "error": "고정에 실패했어요. 다시 시도해주세요."
     },
+    "pin_confirm": {
+      "title": "누구에게 공개할까요?",
+      "message": "이전에 {{visibility}} 공개였는데, 그대로 하실래요?",
+      "confirm": "고정",
+      "cancel": "취소"
+    },
     "more_modal": {
       "modify_visibility": "공개 범위 수정",
       "delete": "삭제"
     },
     "delete_confirm": {
-      "title": "보관함에서 삭제할까요?",
+      "title": "히스토리에서 삭제할까요?",
       "content": "되돌릴 수 없어요.",
       "cancel": "취소",
       "confirm": "삭제",
-      "toast_deleted": "보관함에서 삭제했어요",
+      "toast_deleted": "히스토리에서 삭제했어요",
       "error": "삭제에 실패했어요. 다시 시도해주세요."
     },
     "visibility_modal": {

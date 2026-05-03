@@ -30,7 +30,7 @@ interface Props {
  * (empty feed) so users learn where pins would surface.
  */
 function FriendPinnedChip({ pinnedCount, to }: Props) {
-  const [t] = useTranslation('translation', { keyPrefix: 'archive.friend_card' });
+  const [t] = useTranslation('translation', { keyPrefix: 'history.friend_card' });
   const navigate = useNavigate();
 
   const handleClick = (e: MouseEvent) => {

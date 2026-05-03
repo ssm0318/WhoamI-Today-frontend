@@ -32,7 +32,7 @@ interface Props {
  * entry's frozen `visibility`.
  */
 function ModifyVisibilityModal({ entry, onClose, onConfirm }: Props) {
-  const [t] = useTranslation('translation', { keyPrefix: 'archive.visibility_modal' });
+  const [t] = useTranslation('translation', { keyPrefix: 'history.visibility_modal' });
   const [selected, setSelected] = useState<ComponentVisibility>(ComponentVisibility.FRIENDS);
   const [saving, setSaving] = useState(false);
 

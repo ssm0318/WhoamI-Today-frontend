@@ -11,7 +11,7 @@ export const GridContainer = styled.div`
   flex: 1;
 `;
 
-export const QuadrantCard = styled.div<{ $isEmpty?: boolean; $isArchived?: boolean }>`
+export const QuadrantCard = styled.div<{ $isEmpty?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,18 +24,11 @@ export const QuadrantCard = styled.div<{ $isEmpty?: boolean; $isArchived?: boole
   overflow: hidden;
   transition: transform 0.1s ease;
 
-  ${({ $isEmpty, $isArchived }) => {
+  ${({ $isEmpty }) => {
     if ($isEmpty) {
       return `
         border: 1.5px dashed ${Colors.LIGHT_GRAY};
         background-color: #FAFAFA;
-      `;
-    }
-    if ($isArchived) {
-      return `
-        border: 1px solid ${Colors.LIGHT_GRAY};
-        background-color: ${Colors.WHITE};
-        opacity: 0.6;
       `;
     }
     return `
@@ -47,18 +40,6 @@ export const QuadrantCard = styled.div<{ $isEmpty?: boolean; $isArchived?: boole
   &:active {
     transform: scale(0.97);
   }
-`;
-
-export const ArchivedBadge = styled.div`
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background-color: ${Colors.MEDIUM_GRAY};
-  color: ${Colors.WHITE};
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 4px;
 `;
 
 export const VisibilityBadge = styled.div`
@@ -79,7 +60,7 @@ export const QuadrantLabel = styled.span`
   font-weight: 500;
 `;
 
-export const ArchiveDescription = styled.p`
+export const HistoryDescription = styled.p`
   font-size: 12px;
   color: ${Colors.MEDIUM_GRAY};
   text-align: center;

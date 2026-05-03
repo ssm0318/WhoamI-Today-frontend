@@ -28,7 +28,7 @@ import reportWebVitals from './reportWebVitals';
 import ActivateEmail from './routes/ActivateEmail';
 import AllQuestions from './routes/AllQuestions';
 // Chats tab now uses ChatList directly
-import Archive from './routes/check-in/Archive';
+import History from './routes/check-in/Archive';
 import CheckInEdit from './routes/check-in/CheckInEdit';
 import FriendPinnedSnippets from './routes/check-in-posts/FriendPinnedSnippets';
 import MySnippetsArchive from './routes/check-in-posts/MySnippetsArchive';
@@ -296,7 +296,7 @@ const router = createBrowserRouter([
           // app. The Check-In bottom tab (`/update`) is the supported flow.
           // Route kept only for any legacy bookmarks; do NOT navigate here.
           { path: 'edit', element: <CheckInEdit /> },
-          { path: 'archive', element: <Archive /> },
+          { path: 'history', element: <History /> },
         ],
       },
       {

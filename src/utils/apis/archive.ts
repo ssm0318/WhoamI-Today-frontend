@@ -1,6 +1,6 @@
 import { PaginationResponse } from '@models/api/common';
 import { ComponentVisibility } from '@models/checkIn';
-import { ArchiveCounts, ArchiveTab, CheckInComponentEntry } from '@models/checkInEntry';
+import { ArchiveCounts, CheckInComponentEntry } from '@models/checkInEntry';
 import axios from './axios';
 
 export type ArchiveEntriesResponse = PaginationResponse<CheckInComponentEntry[]> & ArchiveCounts;
@@ -28,7 +28,7 @@ export const archiveEntriesFetcher = async (key: string): Promise<ArchiveEntries
 /** Owner archive feed — all archived entries or pinned-only, cursor paginated. */
 export const getArchiveEntries = async (
   cursor?: string,
-  tab: ArchiveTab = 'all',
+  tab: 'all' | 'pinned' = 'all',
 ): Promise<ArchiveEntriesResponse> => {
   const params = new URLSearchParams();
   if (tab !== 'all') params.set('tab', tab);
@@ -54,9 +54,15 @@ export const getUserPinnedEntries = async (
   return data;
 };
 
-/** PATCH toggle pin — inherits entry.visibility into pin_visibility on pin-on. */
-export const togglePin = async (entryId: number): Promise<CheckInComponentEntry> => {
-  const { data } = await axios.patch<CheckInComponentEntry>(`/check_in/entries/${entryId}/pin/`);
+/** PATCH toggle pin — accepts optional pin_visibility when pinning. */
+export const togglePin = async (
+  entryId: number,
+  pinVisibility?: ComponentVisibility,
+): Promise<CheckInComponentEntry> => {
+  const { data } = await axios.patch<CheckInComponentEntry>(
+    `/check_in/entries/${entryId}/pin/`,
+    pinVisibility ? { pin_visibility: pinVisibility } : undefined,
+  );
   return data;
 };
 
@@ -72,7 +78,7 @@ export const updatePinVisibility = async (
   return data;
 };
 
-/** DELETE soft-delete an archived entry (live entries are rejected server-side). */
+/** DELETE soft-delete a history entry. */
 export const deleteArchiveEntry = async (entryId: number): Promise<void> => {
   await axios.delete(`/check_in/entries/${entryId}/`);
 };

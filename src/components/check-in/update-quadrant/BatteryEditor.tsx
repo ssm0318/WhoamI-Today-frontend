@@ -15,7 +15,6 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onShare: (value: SocialBattery | null, visibility: ComponentVisibility) => void;
-  onArchive?: () => void;
   value: SocialBattery | null;
   onChange: (value: SocialBattery | null) => void;
   visibility: ComponentVisibility;
@@ -28,7 +27,6 @@ export default function BatteryEditor({
   isOpen,
   onClose,
   onShare,
-  onArchive,
   value,
   onChange,
   visibility,
@@ -61,13 +59,7 @@ export default function BatteryEditor({
   }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare]);
 
   return (
-    <EditorPopup
-      isOpen={isOpen}
-      onClose={onClose}
-      onShare={handleShare}
-      onArchive={onArchive}
-      title="Social Battery"
-    >
+    <EditorPopup isOpen={isOpen} onClose={onClose} onShare={handleShare} title="Social Battery">
       <Layout.FlexRow w="100%" gap={8} mb={8} style={{ flexWrap: 'wrap' }}>
         {BATTERY_OPTIONS.map((battery) => (
           <SocialBatteryChip

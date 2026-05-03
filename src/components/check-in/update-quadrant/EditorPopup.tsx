@@ -7,10 +7,6 @@ interface EditorPopupProps {
   isOpen: boolean;
   onClose: () => void;
   onShare: () => void;
-  /** Optional archive action — when provided, renders an "Archive" link
-   *  next to the Share button. Hidden when the editor has no current
-   *  live value to archive (i.e. the component is empty). */
-  onArchive?: () => void;
   title: string;
 }
 
@@ -18,7 +14,6 @@ function EditorPopup({
   isOpen,
   onClose,
   onShare,
-  onArchive,
   title,
   children,
 }: PropsWithChildren<EditorPopupProps>) {
@@ -101,22 +96,6 @@ function EditorPopup({
         <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center" mb={12}>
           <Typo type="title-medium">{title}</Typo>
           <Layout.FlexRow alignItems="center" gap={8}>
-            {onArchive && (
-              <ArchiveButton
-                type="button"
-                onTouchEnd={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  onArchive();
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onArchive();
-                }}
-              >
-                Archive
-              </ArchiveButton>
-            )}
             <CloseButton
               type="button"
               onTouchEnd={(e) => {
@@ -171,18 +150,6 @@ const CloseButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   padding: 4px 8px;
-`;
-
-const ArchiveButton = styled.button`
-  background: none;
-  border: none;
-  color: ${Colors.DARK_GRAY};
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 4px 8px;
-  text-decoration: underline;
-  text-underline-offset: 2px;
 `;
 
 export default EditorPopup;

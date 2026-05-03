@@ -46,8 +46,8 @@ export function formatEntryTimestamp(createdAt: string, now: Date = new Date()):
  */
 export function formatDateSectionLabel(date: Date, now: Date = new Date()): string {
   const daysDiff = differenceInCalendarDays(now, date);
-  if (daysDiff === 0) return i18n.t('archive.today');
-  if (daysDiff === 1) return i18n.t('archive.yesterday');
+  if (daysDiff === 0) return i18n.t('history.today');
+  if (daysDiff === 1) return i18n.t('history.yesterday');
 
   const sameYear = date.getFullYear() === now.getFullYear();
   if (i18n.language.startsWith('ko')) {

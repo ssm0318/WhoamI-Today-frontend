@@ -213,7 +213,7 @@ function ChatMessageItem({
   const Bubble = isMine ? RightBubble : LeftBubble;
 
   const timestamp = (
-    <Typo type="label-small" color="MEDIUM_GRAY" ml={isMine ? 0 : 6} mr={isMine ? 6 : 0}>
+    <Typo type="label-small" color="MEDIUM_GRAY" ml={isMine ? 0 : 1} mr={isMine ? 6 : 0}>
       {format(date, 'h:mm a')}
     </Typo>
   );
@@ -432,7 +432,7 @@ function ChatMessageItem({
               />
             )}
           </SenderAvatarSlot>
-          <Layout.FlexCol gap={2} style={{ minWidth: 0 }}>
+          <Layout.FlexCol gap={2} ml={6} style={{ minWidth: 0 }}>
             {showSenderName && isFirstInCluster && (
               <Typo type="label-small" color="MEDIUM_GRAY">
                 {message.sender.username}

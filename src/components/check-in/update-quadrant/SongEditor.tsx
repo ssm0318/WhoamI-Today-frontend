@@ -18,7 +18,6 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onShare: (trackId: string, visibility: ComponentVisibility) => void;
-  onArchive?: () => void;
   trackId: string;
   onChange: (trackId: string) => void;
   visibility: ComponentVisibility;
@@ -29,7 +28,6 @@ export default function SongEditor({
   isOpen,
   onClose,
   onShare,
-  onArchive,
   trackId,
   onChange,
   visibility,
@@ -99,13 +97,7 @@ export default function SongEditor({
   }, [draftTrackId, draftVisibility, onChange, onVisibilityChange, onShare]);
 
   return (
-    <EditorPopup
-      isOpen={isOpen}
-      onClose={onClose}
-      onShare={handleShare}
-      onArchive={onArchive}
-      title="Song"
-    >
+    <EditorPopup isOpen={isOpen} onClose={onClose} onShare={handleShare} title="Song">
       <Layout.FlexCol w="100%" gap={12} mb={16}>
         {currentTrack && !query && (
           <Layout.FlexCol w="100%" gap={8}>
