@@ -208,7 +208,16 @@ function Chat() {
   const handleMessageSent = (newMsg: PostChatMessageRes) => {
     justSentIdsRef.current.add(newMsg.id);
     setPrevScrollHeight(scrollRef.current?.clientHeight);
-    setMessages((prev) => insertChronologically(prev, newMsg));
+    setMessages((prev) => {
+      let next = insertChronologically(prev, newMsg);
+      // wit_bot fast path: bot replies ride back inline so we render them
+      // immediately instead of waiting for a WS round-trip.
+      newMsg.bot_replies?.forEach((reply) => {
+        next = insertChronologically(next, { ...reply, is_read: true });
+        justSentIdsRef.current.add(reply.id);
+      });
+      return next;
+    });
   };
 
   const handleBotButtonClick = useCallback(

@@ -97,6 +97,12 @@ export interface ChatMessage extends Omit<InputChatMessage, 'parent'> {
 
 export interface PostChatMessageRes extends ChatMessage {
   unread_count: number;
+  /**
+   * For wit_bot 1-on-1 rooms only: the bot's reply messages created
+   * synchronously by the engine inside the same POST. Backend ships them
+   * inline so the client doesn't have to wait for a WebSocket hop.
+   */
+  bot_replies?: ChatMessage[];
 }
 
 export interface RefinedChatMessage extends ChatMessage {
