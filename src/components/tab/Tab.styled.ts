@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { BOTTOM_TABBAR_HEIGHT, MAX_WINDOW_WIDTH, Z_INDEX } from '@constants/layout';
 import { Layout } from '@design-system';
 
-export const TabWrapper = styled.nav`
+export const TabWrapper = styled.nav<{ $noShadow?: boolean }>`
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -12,7 +12,7 @@ export const TabWrapper = styled.nav`
   margin: 0 auto;
   background-color: white;
   height: ${BOTTOM_TABBAR_HEIGHT}px;
-  box-shadow: 0px -4px 12px 0px rgba(0, 0, 0, 0.16);
+  box-shadow: ${({ $noShadow }) => ($noShadow ? 'none' : '0px -4px 12px 0px rgba(0, 0, 0, 0.16)')};
   z-index: ${Z_INDEX.BOTTOM_TAB};
 `;
 

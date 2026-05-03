@@ -61,7 +61,14 @@ function RecentPromptCard({ question, requesterName }: PromptCardProps) {
           </Layout.FlexCol>
         </Layout.FlexRow>
         <Layout.FlexRow w="100%" justifyContent="flex-end">
-          <SvgIcon name="question_send" size={22} onClick={handleClickSend} />
+          <span
+            role="button"
+            tabIndex={0}
+            style={{ marginTop: 4, display: 'inline-flex' }}
+            onClick={handleClickSend}
+          >
+            <SvgIcon name="question_send" size={22} />
+          </span>
         </Layout.FlexRow>
       </StyledRecentPromptCard>
       {sendPromptModalVisible && (

@@ -213,8 +213,8 @@ function ChatMessageItem({
   const Bubble = isMine ? RightBubble : LeftBubble;
 
   const timestamp = (
-    <Typo type="label-small" color="MEDIUM_GRAY">
-      {format(date, 'h:mm aaa')}
+    <Typo type="label-small" color="MEDIUM_GRAY" ml={isMine ? 0 : 2} mr={isMine ? 2 : 0}>
+      {format(date, 'h:mm a')}
     </Typo>
   );
 
@@ -374,7 +374,7 @@ function ChatMessageItem({
         <Layout.FlexRow
           alignItems="flex-end"
           justifyContent={isMine ? 'flex-end' : 'flex-start'}
-          gap={6}
+          gap={3}
         >
           {isMine && timestamp}
           {textBubble}

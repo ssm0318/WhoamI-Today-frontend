@@ -67,7 +67,9 @@ function HighlightQuestionSection({
         </Typo>
         <Layout.FlexRow w="100%" justifyContent="flex-end" mt={12}>
           <S.AskFriendsButton type="button" onClick={handleClickSend} aria-label="Ask friends">
-            <SvgIcon name="question_send" size={18} color="PRIMARY" />
+            <span style={{ marginTop: 4, display: 'inline-flex' }}>
+              <SvgIcon name="question_send" size={18} color="PRIMARY" />
+            </span>
             <Typo type="label-large" color="PRIMARY" fontWeight={600}>
               Ask friends
             </Typo>

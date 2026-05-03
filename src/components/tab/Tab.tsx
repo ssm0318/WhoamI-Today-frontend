@@ -86,6 +86,7 @@ function TabItem({ to, type, size = 48, end = false }: TabItemProps) {
 export default function Tab() {
   const { featureFlags } = useBoundStore(UserSelector);
   const activeBrowseMode = useBoundStore((state) => state.activeBrowseMode);
+  const isChatPage = !!useMatch('/users/:username/chat');
 
   // When a browse mode is active, only render tabs whose key is in the mode's allowlist.
   // `my` and `questions` are intentionally exempt — profile lives in the hamburger menu
@@ -99,7 +100,7 @@ export default function Tab() {
 
   if (featureFlags?.checkInPosts) {
     return (
-      <TabWrapper data-preview-exempt>
+      <TabWrapper data-preview-exempt $noShadow={isChatPage}>
         <Layout.FlexRow w="100%" justifyContent="space-evenly" alignItems="center" pt={4}>
           {/* Ver. Q has a "feed" tab that maps to the friends slot conceptually; treat it as 'friends'. */}
           {isTabAllowed('friends') && <TabItem to="/feed" type="feed" size={28} />}
@@ -113,7 +114,7 @@ export default function Tab() {
   }
 
   return (
-    <TabWrapper data-preview-exempt>
+    <TabWrapper data-preview-exempt $noShadow={isChatPage}>
       <Layout.FlexRow w="100%" h="100%" justifyContent="space-evenly" alignItems="center">
         {featureFlags?.friendList ? (
           <>

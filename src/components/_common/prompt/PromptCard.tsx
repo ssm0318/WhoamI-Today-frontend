@@ -96,7 +96,9 @@ function PromptCard({
             </Layout.FlexCol>
           </Layout.FlexRow>
           <AskFriendsButton type="button" onClick={handleClickSend} aria-label="Ask friends">
-            <SvgIcon name="question_send" size={18} />
+            <span style={{ marginTop: 4, display: 'inline-flex' }}>
+              <SvgIcon name="question_send" size={18} />
+            </span>
             <Typo type="label-large" color="BLACK" fontWeight={600}>
               Ask friends
             </Typo>

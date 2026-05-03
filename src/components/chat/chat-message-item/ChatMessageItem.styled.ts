@@ -3,7 +3,7 @@ import { Layout } from '@design-system';
 
 const CommonMessageWrapper = styled(Layout.FlexRow).attrs({
   w: '100%',
-  gap: 6,
+  gap: 0,
   alignItems: 'flex-end',
 })``;
 
@@ -30,7 +30,7 @@ const CommonBubble = styled(Layout.FlexCol).attrs({
   pv: 8,
   ph: 13,
 })`
-  max-width: 208px;
+  max-width: 75%;
   white-space: pre-wrap;
   overflow-wrap: break-word;
   word-break: break-word;
@@ -67,7 +67,7 @@ export const ParentPreview = styled(Layout.FlexCol).attrs({
   opacity: 0.7;
   border-left: 2px solid #87dfff;
   background: white;
-  max-width: 208px;
+  max-width: 75%;
 `;
 
 export const SystemMessageRow = styled(Layout.FlexRow).attrs({

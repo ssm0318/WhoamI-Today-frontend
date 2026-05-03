@@ -8,10 +8,10 @@ export const CommentInputWrapper = styled(Layout.FlexCol)`
 
 export const CommentInput = styled(TextareaAutosize)`
   width: 100%;
-  border-radius: 18px;
-  padding: 6px 12px;
+  border-radius: 15px;
+  padding: 6px 4px;
   border: none;
-  font-size: 16px;
+  font-size: 14px;
 
   ::placeholder {
     color: ${({ theme }) => theme.MEDIUM_GRAY};

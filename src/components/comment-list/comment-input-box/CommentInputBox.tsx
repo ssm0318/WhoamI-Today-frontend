@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import { Button, CheckBox, Layout, SvgIcon, Typo } from '@design-system';
+import { CheckBox, Layout, SvgIcon, Typo } from '@design-system';
 import { useGetAppMessage } from '@hooks/useAppMessage';
 import { CheckInPost } from '@models/checkInPost';
 import { Comment, Note, Response } from '@models/post';
@@ -189,9 +189,15 @@ function CommentInputBox({
           />
         </Layout.FlexRow>
       )}
-      <Layout.FlexRow w="100%" alignItems="flex-end" justifyContent="space-between">
+      <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
         {myProfile && <ProfileImage imageUrl={myProfile.profile_image} size={36} />}
-        <Layout.FlexCol w="100%" ml={4} mr={8} outline="LIGHT_GRAY" rounded={18}>
+        <Layout.FlexCol
+          w="100%"
+          ml={4}
+          outline="LIGHT_GRAY"
+          rounded={15}
+          style={{ padding: '2px 6px 2px 10px' }}
+        >
           {isReply && replyTo && (
             <Layout.FlexRow
               ph={10}
@@ -209,23 +215,37 @@ function CommentInputBox({
               <SvgIcon name="close_comment" size={24} onClick={handleClickCloseReply} />
             </Layout.FlexRow>
           )}
-          <S.CommentInput
-            ref={commentRef}
-            placeholder={placeholder}
-            onChange={handleChangeInput}
-            value={content}
-            onKeyDown={handleKeyDown}
-          />
+          <Layout.FlexRow w="100%" alignItems="center">
+            <S.CommentInput
+              ref={commentRef}
+              placeholder={placeholder}
+              onChange={handleChangeInput}
+              value={content}
+              onKeyDown={handleKeyDown}
+            />
+            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+            <div
+              onPointerDown={(e) => e.preventDefault()}
+              onPointerUp={handleSubmitComment}
+              style={{
+                flexShrink: 0,
+                marginRight: 0.5,
+                padding: '4px 10px',
+                borderRadius: 14,
+                backgroundColor: content && !isSubmitting ? '#87DFFF' : '#E8E8E8',
+                cursor: content && !isSubmitting ? 'pointer' : 'default',
+              }}
+            >
+              <Typo
+                type="label-medium"
+                color={content && !isSubmitting ? 'BLACK' : 'MEDIUM_GRAY'}
+                bold
+              >
+                {t('post')}
+              </Typo>
+            </div>
+          </Layout.FlexRow>
         </Layout.FlexCol>
-
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-        <div onPointerDown={(e) => e.preventDefault()} onPointerUp={handleSubmitComment}>
-          <Button.Primary
-            text={t('post')}
-            status={content && !isSubmitting ? 'normal' : 'disabled'}
-            onClick={handleSubmitComment}
-          />
-        </div>
       </Layout.FlexRow>
     </S.CommentInputWrapper>
   );

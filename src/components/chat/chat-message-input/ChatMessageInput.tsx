@@ -28,6 +28,17 @@ const StyledTextarea = styled.textarea`
   font-family: inherit;
   line-height: 1.4;
   overflow-y: auto;
+  background: transparent;
+`;
+
+const TextareaWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  border: 1px solid ${({ theme }) => theme.LIGHT_GRAY};
+  border-radius: 15px;
+  padding: 2px 6px 2px 10px;
+  overflow: hidden;
 `;
 
 const HiddenFileInput = styled.input`
@@ -303,7 +314,7 @@ function ChatMessageInput({
         pv={10}
         bgColor="WHITE"
         style={{
-          borderTop: '1px solid #D9D9D9',
+          borderTop: 'none',
           position: 'relative',
         }}
       >
@@ -316,34 +327,51 @@ function ChatMessageInput({
             </RemoveButton>
           </ImagePreviewWrapper>
         )}
-        <Layout.FlexRow w="100%" alignItems="flex-end" gap={8}>
-          <Icon name="chat_media_image" size={24} fill="DARK_GRAY" onClick={handleImageClick} />
+        <Layout.FlexRow w="100%" alignItems="center" gap={8}>
+          <Icon name="chat_media_image" size={28} fill="DARK_GRAY" onClick={handleImageClick} />
           <HiddenFileInput
             ref={fileInputRef}
             type="file"
             accept="image/*"
             onChange={handleFileChange}
           />
-          <StyledTextarea
-            ref={textareaRef}
-            value={inputValue}
-            placeholder={
-              isAnnouncement ? 'Compose announcement to all users...' : 'Send a message...'
-            }
-            onChange={handleChangeInput}
-            onKeyDown={handleKeyDownInput}
-            rows={isAnnouncement ? 4 : 1}
-            style={{ maxHeight: `${maxHeight}px` }}
-          />
-          {!isAnnouncement && (inputValue.trim() || selectedImage) && (
-            <Icon
-              name="question_send"
-              size={24}
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={() => sendMessage()}
-              color="PRIMARY"
+          <TextareaWrapper>
+            <StyledTextarea
+              ref={textareaRef}
+              value={inputValue}
+              placeholder={
+                isAnnouncement ? 'Compose announcement to all users...' : 'Send a message...'
+              }
+              onChange={handleChangeInput}
+              onKeyDown={handleKeyDownInput}
+              rows={isAnnouncement ? 4 : 1}
+              style={{ maxHeight: `${maxHeight}px` }}
             />
-          )}
+            {!isAnnouncement && (
+              <div
+                role="button"
+                tabIndex={0}
+                onTouchStart={(e) => {
+                  if (inputValue.trim() || selectedImage) {
+                    e.preventDefault();
+                    sendMessage();
+                  }
+                }}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  if (inputValue.trim() || selectedImage) sendMessage();
+                }}
+                style={{
+                  flexShrink: 0,
+                  padding: '2px 4px',
+                  marginTop: 3,
+                  visibility: inputValue.trim() || selectedImage ? 'visible' : 'hidden',
+                }}
+              >
+                <Icon name="question_send" size={26} color="PRIMARY" />
+              </div>
+            )}
+          </TextareaWrapper>
         </Layout.FlexRow>
         {isAnnouncement && (
           <Layout.FlexRow w="100%" pt={10} justifyContent="flex-end">

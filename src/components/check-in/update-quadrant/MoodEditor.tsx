@@ -134,6 +134,12 @@ export default function MoodEditor({
             border: '1px solid #E0E0E0',
             overflow: 'hidden',
           }}
+          onTouchStart={(e) => {
+            // Prevent keyboard dismiss on emoji tap so layout doesn't shift
+            const target = e.target as HTMLElement;
+            if (target.closest('input')) return; // allow input interaction
+            e.preventDefault();
+          }}
         >
           <EmojiPicker
             onEmojiClick={handleEmojiClick}

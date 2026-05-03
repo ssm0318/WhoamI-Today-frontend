@@ -60,7 +60,9 @@ function PromptSummaryCard({
       </PromptRow>
       {onSend && (
         <SendButton type="button" onClick={onSend} aria-label={sendLabel ?? 'Send question'}>
-          <SvgIcon name="question_send" size={18} />
+          <span style={{ marginTop: 4, display: 'inline-flex' }}>
+            <SvgIcon name="question_send" size={18} />
+          </span>
           {sendLabel && (
             <Typo type="label-large" color="BLACK" fontWeight={600}>
               {sendLabel}
