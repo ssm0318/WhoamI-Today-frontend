@@ -210,6 +210,11 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
         <Typo type="title-medium" color="BLACK">
           {pickLocalized(currentQuestion.prompt_en, currentQuestion.prompt_ko)}
         </Typo>
+        {currentQuestion.type === 'multi_choice' && (
+          <Typo type="label-medium" color="DARK_GRAY">
+            {t('multi_choice_hint')}
+          </Typo>
+        )}
         {currentQuestion.type === 'likert_5' && (
           <LikertChips
             selected={(currentValue as number | undefined) ?? null}

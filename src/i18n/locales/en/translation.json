@@ -1307,6 +1307,7 @@
         },
         "panel_questions_count": "{{count}} questions aggregated",
         "free_text_placeholder": "Type your response…",
+        "multi_choice_hint": "Select all that apply",
         "wordcloud": {
             "empty": "No words shared yet — the population is too small to display.",
             "suppressed": "{{count}} words said by fewer than {{min}} people are hidden to protect privacy."
