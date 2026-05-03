@@ -1,8 +1,9 @@
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { ComponentVisibility } from '@models/checkIn';
+import { useBoundStore } from '@stores/useBoundStore';
 import {
   getLastVisibility,
   setLastVisibility,
@@ -35,6 +36,14 @@ export default function ThoughtEditor({
   const [draftVisibility, setDraftVisibility] = useState<ComponentVisibility>(
     () => getLastVisibility(VisibilityMemoryKeys.checkInThought) ?? visibility,
   );
+  const openToast = useBoundStore((state) => state.openToast);
+
+  // Snapshot of value/visibility at popup open — used to skip the share
+  // entirely when the user taps Confirm without changing anything.
+  const initialValueRef = useRef<string>(value);
+  const initialVisibilityRef = useRef<ComponentVisibility>(
+    getLastVisibility(VisibilityMemoryKeys.checkInThought) ?? visibility,
+  );
 
   const handleVisibilityChange = useCallback((v: ComponentVisibility) => {
     setDraftVisibility(v);
@@ -43,8 +52,11 @@ export default function ThoughtEditor({
 
   useEffect(() => {
     if (isOpen) {
+      const initialVis = getLastVisibility(VisibilityMemoryKeys.checkInThought) ?? visibility;
       setDraftValue(value);
-      setDraftVisibility(getLastVisibility(VisibilityMemoryKeys.checkInThought) ?? visibility);
+      setDraftVisibility(initialVis);
+      initialValueRef.current = value;
+      initialVisibilityRef.current = initialVis;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -56,10 +68,18 @@ export default function ThoughtEditor({
   };
 
   const handleShare = useCallback(() => {
+    if (
+      draftValue === initialValueRef.current &&
+      draftVisibility === initialVisibilityRef.current
+    ) {
+      openToast({ message: 'No changes' });
+      onClose();
+      return;
+    }
     onChange(draftValue);
     onVisibilityChange(draftVisibility);
     onShare(draftValue, draftVisibility);
-  }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare]);
+  }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare, onClose, openToast]);
 
   return (
     <EditorPopup isOpen={isOpen} onClose={onClose} onShare={handleShare} title="Be Random">

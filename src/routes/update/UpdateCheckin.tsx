@@ -16,7 +16,7 @@ import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
 import { ComponentVisibility, DEFAULT_VISIBILITY, SocialBattery } from '@models/checkIn';
 import { useBoundStore } from '@stores/useBoundStore';
-import { getActiveSong, postCheckIn, postSong } from '@utils/apis/checkIn';
+import { deactivateSong, getActiveSong, postCheckIn, postSong } from '@utils/apis/checkIn';
 import { MainScrollContainer } from '../Root';
 import {
   GridContainer,
@@ -240,10 +240,36 @@ export default function UpdateCheckin() {
   );
 
   const handleSongShare = useCallback(
-    (nextTrackId: string, nextSongVis: ComponentVisibility) => {
+    async (nextTrackId: string, nextSongVis: ComponentVisibility) => {
+      setActiveEditor(null);
+
+      // User cleared an active song — deactivate on backend so refresh
+      // doesn't bring it back. doSave's empty-trackId branch only skips
+      // postSong; the previously active song would otherwise persist.
+      const wasActive = !!stateRef.current.trackId;
+      if (!nextTrackId && wasActive) {
+        try {
+          const active = await getActiveSong();
+          if (active) {
+            await deactivateSong(active.id);
+          }
+          setTrackId('');
+          setSongVis(nextSongVis);
+          stateRef.current = {
+            ...stateRef.current,
+            trackId: '',
+            songVis: nextSongVis,
+          };
+          await fetchCheckIn();
+          openToast({ message: 'Removed' });
+        } catch {
+          openToast({ message: 'Failed to remove' });
+        }
+        return;
+      }
+
       setTrackId(nextTrackId);
       setSongVis(nextSongVis);
-      setActiveEditor(null);
       requestAnimationFrame(() => {
         const s = stateRef.current;
         stateRef.current = {
@@ -254,7 +280,7 @@ export default function UpdateCheckin() {
         doSave();
       });
     },
-    [doSave],
+    [doSave, fetchCheckIn, openToast],
   );
 
   return (

@@ -53,6 +53,13 @@ export default function MoodEditor({
     () => getLastVisibility(VisibilityMemoryKeys.checkInMood) ?? visibility,
   );
 
+  // Snapshot of value/visibility at popup open — used to skip the share
+  // entirely when the user taps Confirm without changing anything.
+  const initialValueRef = useRef<string[]>(value);
+  const initialVisibilityRef = useRef<ComponentVisibility>(
+    getLastVisibility(VisibilityMemoryKeys.checkInMood) ?? visibility,
+  );
+
   const handleVisibilityChange = useCallback((v: ComponentVisibility) => {
     setDraftVisibility(v);
     setLastVisibility(VisibilityMemoryKeys.checkInMood, v);
@@ -60,8 +67,11 @@ export default function MoodEditor({
 
   useEffect(() => {
     if (isOpen) {
+      const initialVis = getLastVisibility(VisibilityMemoryKeys.checkInMood) ?? visibility;
       setDraftValue(value);
-      setDraftVisibility(getLastVisibility(VisibilityMemoryKeys.checkInMood) ?? visibility);
+      setDraftVisibility(initialVis);
+      initialValueRef.current = value;
+      initialVisibilityRef.current = initialVis;
     } else {
       setDraftValue(value);
     }
@@ -93,10 +103,18 @@ export default function MoodEditor({
   }, []);
 
   const handleShare = useCallback(() => {
+    const initial = initialValueRef.current;
+    const valueUnchanged =
+      draftValue.length === initial.length && draftValue.every((v, i) => v === initial[i]);
+    if (valueUnchanged && draftVisibility === initialVisibilityRef.current) {
+      openToast({ message: 'No changes' });
+      onClose();
+      return;
+    }
     onChange(draftValue);
     onVisibilityChange(draftVisibility);
     onShare(draftValue, draftVisibility);
-  }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare]);
+  }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare, onClose, openToast]);
 
   return (
     <EditorPopup isOpen={isOpen} onClose={onClose} onShare={handleShare} title="Mood">
