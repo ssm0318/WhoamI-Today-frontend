@@ -17,10 +17,33 @@ import {
 
 interface TabItemProps {
   to: string;
-  type: 'friends' | 'my' | 'share' | 'feed' | 'discover' | 'chats' | 'update' | 'questions';
+  type:
+    | 'friends'
+    | 'my'
+    | 'share'
+    | 'feed'
+    | 'discover'
+    | 'digest'
+    | 'chats'
+    | 'update'
+    | 'questions';
   size?: number;
   end?: boolean;
 }
+
+// `digest` is the Ver. W rename of the `discover` tab — same route, icon, and scroll slot
+// (only the label differs). Map other types to themselves.
+const TAB_BASE_TYPE: Record<TabItemProps['type'], Exclude<TabItemProps['type'], 'digest'>> = {
+  friends: 'friends',
+  my: 'my',
+  share: 'share',
+  feed: 'feed',
+  discover: 'discover',
+  digest: 'discover',
+  chats: 'chats',
+  update: 'update',
+  questions: 'questions',
+};
 
 function TabItem({ to, type, size = 48, end = false }: TabItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'nav_tab' });
@@ -35,7 +58,7 @@ function TabItem({ to, type, size = 48, end = false }: TabItemProps) {
     const scrollEl = document.getElementById(MAIN_SCROLL_CONTAINER_ID);
     if (!scrollEl) return;
     scrollEl.scrollTo({ top: 0, behavior: 'smooth' });
-    resetScrollPosition(`${type}Page`);
+    resetScrollPosition(`${TAB_BASE_TYPE[type]}Page`);
   };
 
   return (
@@ -61,12 +84,12 @@ function TabItem({ to, type, size = 48, end = false }: TabItemProps) {
                 )}
                 <TabIconWrapper>
                   <SvgIcon
-                    name={`${type}_inactive`}
+                    name={`${TAB_BASE_TYPE[type]}_inactive`}
                     size={size}
                     className={resolvedActive ? 'hidden' : ''}
                   />
                   <SvgIcon
-                    name={`${type}_active`}
+                    name={`${TAB_BASE_TYPE[type]}_active`}
                     size={size}
                     className={resolvedActive ? '' : 'hidden'}
                   />
@@ -102,10 +125,10 @@ export default function Tab() {
     return (
       <TabWrapper data-preview-exempt $noShadow={isChatPage}>
         <Layout.FlexRow w="100%" justifyContent="space-evenly" alignItems="center" pt={4}>
-          {/* Ver. Q has a "feed" tab that maps to the friends slot conceptually; treat it as 'friends'. */}
-          {isTabAllowed('friends') && <TabItem to="/feed" type="feed" size={28} />}
-          {isTabAllowed('share') && <TabItem to="/share" type="share" size={28} />}
+          {/* Ver. Q's first tab maps to the friends slot — uses friends icon/label, route stays /feed. */}
+          {isTabAllowed('friends') && <TabItem to="/feed" type="friends" size={28} />}
           {isTabAllowed('discover') && <TabItem to="/discover" type="discover" size={28} />}
+          {isTabAllowed('share') && <TabItem to="/share" type="share" size={28} />}
           {isTabAllowed('chats') && <TabItem to="/chats" type="chats" size={28} />}
           {isTabAllowed('my') && <TabItem to="/my" type="my" size={28} />}
         </Layout.FlexRow>
@@ -119,9 +142,9 @@ export default function Tab() {
         {featureFlags?.friendList ? (
           <>
             {isTabAllowed('friends') && <TabItem to="/friends" type="friends" size={28} />}
+            {isTabAllowed('discover') && <TabItem to="/discover" type="digest" size={28} />}
             {isTabAllowed('update') && <TabItem to="/update" type="update" size={28} />}
             {isTabAllowed('share') && <TabItem to="/share" type="share" size={28} />}
-            {isTabAllowed('discover') && <TabItem to="/discover" type="discover" size={28} />}
           </>
         ) : featureFlags?.friendFeed ? (
           isTabAllowed('friends') && <TabItem to="/feed" type="friends" size={28} />
