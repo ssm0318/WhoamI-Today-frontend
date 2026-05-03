@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Layout, RadioButton, Typo } from '@design-system';
@@ -47,6 +47,8 @@ function FriendEvaluationModal({
   const [relationshipTypeDetail, setRelationshipTypeDetail] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [pendingData, setPendingData] = useState<EvaluationData | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const isSubmittingRef = useRef(false);
 
   useEffect(() => {
     if (visible) {
@@ -80,9 +82,11 @@ function FriendEvaluationModal({
   };
 
   const handleConfirm = () => {
-    if (pendingData) {
-      onSubmit(pendingData);
-    }
+    if (isSubmittingRef.current) return;
+    if (!pendingData) return;
+    isSubmittingRef.current = true;
+    setIsSubmitting(true);
+    onSubmit(pendingData);
   };
 
   const handleBack = () => {
@@ -205,10 +209,19 @@ function FriendEvaluationModal({
         <S.ButtonContainer w="100%" justifyContent="space-evenly">
           {showConfirmation ? (
             <>
-              <S.Button onClick={handleBack} pv={11}>
+              <S.Button
+                onClick={isSubmitting ? undefined : handleBack}
+                pv={11}
+                style={{ opacity: isSubmitting ? 0.4 : 1 }}
+              >
                 <Typo type="button-medium">{t('back')}</Typo>
               </S.Button>
-              <S.Button onClick={handleConfirm} pv={11} hasBorderRight={false}>
+              <S.Button
+                onClick={isSubmitting ? undefined : handleConfirm}
+                pv={11}
+                hasBorderRight={false}
+                style={{ opacity: isSubmitting ? 0.4 : 1 }}
+              >
                 <Typo type="button-medium" color="PRIMARY">
                   {t('confirm')}
                 </Typo>
