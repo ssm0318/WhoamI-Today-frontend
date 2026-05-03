@@ -32,6 +32,8 @@ interface NoteItemProps {
   previewMode?: boolean;
   hideMissionPrompt?: boolean;
   isCarouselItem?: boolean;
+  hideTimestamp?: boolean;
+  showMutualCounts?: boolean;
 }
 
 function NoteItem({
@@ -43,6 +45,8 @@ function NoteItem({
   previewMode = false,
   hideMissionPrompt = false,
   isCarouselItem = false,
+  hideTimestamp = false,
+  showMutualCounts = false,
 }: NoteItemProps) {
   const {
     content,
@@ -186,16 +190,27 @@ function NoteItem({
             )}
           </Layout.FlexRow>
           <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
-            <Typo type="label-medium" color="MEDIUM_GRAY">
-              {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
-            </Typo>
+            {!hideTimestamp && (
+              <Typo type="label-medium" color="MEDIUM_GRAY">
+                {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
+              </Typo>
+            )}
             {!isMyPage && author_detail && username && (
               <MutualMetaText
                 username={username}
-                mutualFriendCount={author_detail.mutual_friend_count ?? 0}
-                mutualInterestCount={author_detail.mutual_interest_count ?? 0}
-                mutualPersonaCount={author_detail.mutual_persona_count ?? 0}
-                hideTraits={postsVerQUi}
+                mutualFriendCount={
+                  showMutualCounts
+                    ? (note as any).mutual_friends_count ?? author_detail.mutual_friend_count ?? 0
+                    : author_detail.mutual_friend_count ?? 0
+                }
+                mutualInterestCount={
+                  showMutualCounts
+                    ? (note as any).mutual_traits_count ?? author_detail.mutual_interest_count ?? 0
+                    : author_detail.mutual_interest_count ?? 0
+                }
+                mutualPersonaCount={showMutualCounts ? 0 : author_detail.mutual_persona_count ?? 0}
+                hideTraits={postsVerQUi && !showMutualCounts}
+                hideLeadingSeparator={hideTimestamp}
               />
             )}
           </Layout.FlexRow>

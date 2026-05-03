@@ -12,6 +12,7 @@ interface MutualMetaTextProps {
   mutualInterestCount: number;
   mutualPersonaCount: number;
   hideTraits?: boolean;
+  hideLeadingSeparator?: boolean;
 }
 
 function MutualMetaText({
@@ -20,6 +21,7 @@ function MutualMetaText({
   mutualInterestCount,
   mutualPersonaCount,
   hideTraits = false,
+  hideLeadingSeparator = false,
 }: MutualMetaTextProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page' });
   const [friendsOpen, setFriendsOpen] = useState(false);
@@ -46,13 +48,18 @@ function MutualMetaText({
     setTraitsOpen(true);
   };
 
+  const shouldShowFriendsSeparator = showFriends && !hideLeadingSeparator;
+  const shouldShowTraitsSeparator = showTraits && (!hideLeadingSeparator || showFriends);
+
   return (
     <>
       {showFriends && (
         <>
-          <Typo type="label-medium" color="MEDIUM_GRAY">
-            ·
-          </Typo>
+          {shouldShowFriendsSeparator && (
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              ·
+            </Typo>
+          )}
           <button type="button" onClick={openFriends} style={linkButtonStyle}>
             <span style={{ textDecoration: 'underline', textUnderlineOffset: 2 }}>
               <Typo type="label-medium" color="PRIMARY" fontWeight={500}>
@@ -64,9 +71,11 @@ function MutualMetaText({
       )}
       {showTraits && (
         <>
-          <Typo type="label-medium" color="MEDIUM_GRAY">
-            ·
-          </Typo>
+          {shouldShowTraitsSeparator && (
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              ·
+            </Typo>
+          )}
           <button type="button" onClick={openTraits} style={linkButtonStyle}>
             <span style={{ textDecoration: 'underline', textUnderlineOffset: 2 }}>
               <Typo type="label-medium" color="PRIMARY" fontWeight={500}>

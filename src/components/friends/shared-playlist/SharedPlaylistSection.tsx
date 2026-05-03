@@ -1,29 +1,38 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import SharedPlaylistBottomSheet from '@components/friends/shared-playlist-bottom-sheet/SharedPlaylistBottomSheet';
 import MusicDetailBottomSheet from '@components/music/music-detail-bottom-sheet/MusicDetailBottomSheet';
-import { Layout, Typo } from '@design-system';
+import { SCREEN_HEIGHT } from '@constants/layout';
+import { ColorKeys, Colors, Layout, Typo } from '@design-system';
 import { useImpressionTracker } from '@hooks/useImpressionTracker';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import SpotifyManager from '@libs/SpotifyManager';
 import { PlaylistCard, ScrollableCardList } from './SharedPlaylistSection.styled';
 
+export interface SharedTrackUser {
+  id: string | number;
+  username: string;
+  profileImageUrl?: string | null;
+}
+
 export interface SharedTrack {
   id: string | number;
   name: string;
   track: string | Track | null;
-  sharedBy: {
-    id: string | number;
-    username: string;
-    profileImageUrl?: string | null;
-  };
+  sharedBy: SharedTrackUser;
+  sharedByList?: SharedTrackUser[];
 }
 
 interface SharedPlaylistSectionProps {
   tracks?: SharedTrack[];
+  viewAllMinCount?: number;
+  viewAllColor?: ColorKeys;
 }
 
 interface TrackCardItemProps {
@@ -35,22 +44,32 @@ function TrackCardItem({ track }: TrackCardItemProps) {
   const [trackError, setTrackError] = useState(false);
   const spotifyManager = SpotifyManager.getInstance();
   const [showMusicDetail, setShowMusicDetail] = useState(false);
+  const [showListeners, setShowListeners] = useState(false);
   const navigate = useNavigate();
   const trackEvent = useTrackEvent();
+  const [t] = useTranslation('translation', { keyPrefix: 'shared_playlist' });
+  const listeners = track.sharedByList?.length ? track.sharedByList : [track.sharedBy];
 
   const handleClickTrack = () => {
     trackEvent('shared_playlist_track_tapped');
     setShowMusicDetail(true);
   };
 
-  const handleClickProfile = (e: React.MouseEvent) => {
+  const handleClickListeners = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Tag the navigation with `source` so UserPage knows the user came
-    // from the shared playlist (vs Discover, vs Friends list, vs search).
-    // Lets us answer 'how often does the playlist surface lead to actual
-    // profile visits, and how does that compare to other entry points?'
     trackEvent('shared_playlist_profile_pic_tapped');
-    navigate(`/users/${track.sharedBy.username}`, {
+    if (listeners.length > 1) {
+      setShowListeners(true);
+      return;
+    }
+    navigate(`/users/${listeners[0].username}`, {
+      state: { source: 'shared_playlist' },
+    });
+  };
+
+  const handleClickListenerRow = (username: string) => {
+    setShowListeners(false);
+    navigate(`/users/${username}`, {
       state: { source: 'shared_playlist' },
     });
   };
@@ -122,34 +141,29 @@ function TrackCardItem({ track }: TrackCardItemProps) {
         )}
       </div>
 
-      {/* Overlaid Profile Picture */}
-      <div
+      <ListenerStack
         role="button"
         tabIndex={0}
-        onClick={handleClickProfile}
-        onKeyDown={(e) => e.key === 'Enter' && handleClickProfile(e as unknown as React.MouseEvent)}
-        style={{
-          position: 'absolute',
-          top: -6,
-          right: -6,
-          zIndex: 10,
-          cursor: 'pointer',
-          width: PROFILE_SIZE + PROFILE_BORDER * 2,
-          height: PROFILE_SIZE + PROFILE_BORDER * 2,
-          padding: PROFILE_BORDER,
-          backgroundColor: '#FFFFFF',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        onClick={handleClickListeners}
+        onKeyDown={(e) =>
+          e.key === 'Enter' && handleClickListeners(e as unknown as React.MouseEvent)
+        }
       >
-        <ProfileImage
-          imageUrl={track.sharedBy.profileImageUrl}
-          username={track.sharedBy.username}
-          size={PROFILE_SIZE}
-        />
-      </div>
+        {listeners.slice(0, 3).map((listener, index) => (
+          <ListenerAvatar
+            key={`${track.id}-${listener.id}`}
+            $index={index}
+            $total={Math.min(listeners.length, 3)}
+            $size={PROFILE_SIZE + PROFILE_BORDER * 2}
+          >
+            <ProfileImage
+              imageUrl={listener.profileImageUrl}
+              username={listener.username}
+              size={PROFILE_SIZE}
+            />
+          </ListenerAvatar>
+        ))}
+      </ListenerStack>
       <MusicDetailBottomSheet
         visible={showMusicDetail}
         closeBottomSheet={() => {
@@ -157,11 +171,57 @@ function TrackCardItem({ track }: TrackCardItemProps) {
         }}
         track={trackData}
       />
+      {showListeners &&
+        createPortal(
+          <BottomModal
+            visible={showListeners}
+            onClose={() => setShowListeners(false)}
+            customHeight={Math.round(SCREEN_HEIGHT * 0.45)}
+            draggable
+          >
+            <Layout.FlexCol w="100%" h="100%">
+              <Layout.FlexRow
+                w="100%"
+                h={44}
+                alignItems="center"
+                justifyContent="center"
+                style={{ borderBottom: '1px solid #F0F0F0', flexShrink: 0 }}
+              >
+                <Typo type="title-medium" bold>
+                  {t('listeners_title')} ({listeners.length})
+                </Typo>
+              </Layout.FlexRow>
+              <Layout.FlexCol w="100%" ph={16} pv={8} style={{ overflowY: 'auto' }}>
+                {listeners.map((listener) => (
+                  <ListenerRow
+                    key={listener.id}
+                    type="button"
+                    onClick={() => handleClickListenerRow(listener.username)}
+                  >
+                    <ProfileImage
+                      imageUrl={listener.profileImageUrl}
+                      username={listener.username}
+                      size={40}
+                    />
+                    <Typo type="body-large" color="BLACK" bold>
+                      {listener.username}
+                    </Typo>
+                  </ListenerRow>
+                ))}
+              </Layout.FlexCol>
+            </Layout.FlexCol>
+          </BottomModal>,
+          document.getElementById('modal-container') || document.body,
+        )}
     </PlaylistCard>
   );
 }
 
-function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
+function SharedPlaylistSection({
+  tracks = [],
+  viewAllMinCount = 1,
+  viewAllColor = 'PRIMARY',
+}: SharedPlaylistSectionProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'shared_playlist' });
   const [showPlaylistDetail, setShowPlaylistDetail] = useState(false);
   const trackEvent = useTrackEvent();
@@ -178,6 +238,8 @@ function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
     trackEvent('shared_playlist_view_all_tapped', { track_count: tracks.length });
     setShowPlaylistDetail(true);
   };
+  const showViewAll = tracks.length >= viewAllMinCount;
+  const visibleTracks = showViewAll ? tracks.slice(0, viewAllMinCount) : tracks;
 
   return (
     <Layout.FlexCol w="100%" mb={12} mt={4} style={{ minWidth: 0 }} ref={sectionRef}>
@@ -185,16 +247,17 @@ function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
         {tracks.length > 0 && (
           <>
             {/* Track Cards */}
-            {tracks.map((track) => (
+            {visibleTracks.map((track) => (
               <TrackCardItem key={track.id} track={track} />
             ))}
 
-            {/* View all */}
-            <Layout.FlexRow p={10} pr={20} style={{ flexShrink: 0 }} onClick={handleViewAll}>
-              <Typo type="title-medium" color="PRIMARY">
-                {t('view_all')}
-              </Typo>
-            </Layout.FlexRow>
+            {showViewAll && (
+              <Layout.FlexRow p={10} pr={20} style={{ flexShrink: 0 }} onClick={handleViewAll}>
+                <Typo type="title-medium" color={viewAllColor}>
+                  {t('view_all')}
+                </Typo>
+              </Layout.FlexRow>
+            )}
           </>
         )}
       </ScrollableCardList>
@@ -210,3 +273,39 @@ function SharedPlaylistSection({ tracks = [] }: SharedPlaylistSectionProps) {
 }
 
 export default SharedPlaylistSection;
+
+const ListenerStack = styled.div`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`;
+
+const ListenerAvatar = styled.div<{ $index: number; $total: number; $size: number }>`
+  position: relative;
+  z-index: ${({ $total, $index }) => $total - $index};
+  width: ${({ $size }) => $size}px;
+  height: ${({ $size }) => $size}px;
+  margin-left: ${({ $index, $size }) => ($index === 0 ? 0 : -($size / 2))}px;
+  padding: 2px;
+  background-color: ${Colors.WHITE};
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ListenerRow = styled.button`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+`;

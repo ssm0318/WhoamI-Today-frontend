@@ -786,6 +786,36 @@
         "daily_refresh_1": "We're working on the algorithm for this tab at the moment.",
         "daily_refresh_2": "For today, you'll see posts shared until yesterday."
     },
+    "discover_highlight_question": {
+        "ask_friends": "Ask friends"
+    },
+    "profile_suggestion_card": {
+        "title": "Complete your profile",
+        "description": "Fill in your details so others can get to know you better.",
+        "edit_profile": "Edit Profile",
+        "fields": {
+            "pronouns": "Pronouns",
+            "bio": "Bio",
+            "profile_photo": "Profile Photo"
+        }
+    },
+    "daily_digest": {
+        "banner_title": "Your Daily Digest refreshes at 7 AM PT with yesterday's posts, plus older posts from users we think you'll connect with. Post order reshuffles every 6 hours.",
+        "banner_subtitle": "",
+        "mission_title": "Yesterday's Mission",
+        "mission_badge": "Mission",
+        "mission_description": "See what people wrote for yesterday's mission.",
+        "view_mission_posts": "View mission posts",
+        "question_title": "Yesterday's Question",
+        "question_description": "See how the community answered yesterday's question.",
+        "view_question_responses": "View responses",
+        "music_title": "Songs Shared Yesterday",
+        "music_description": "Listen to what WIT members played yesterday.",
+        "today_question_tag": "Question of the Day",
+        "recommended_title": "For You",
+        "no_recommended_posts": "No extra posts to show right now.",
+        "empty": "No digest items yet."
+    },
     "no_contents": {
         "discover": "No posts yet.",
         "friends": "No friends yet.",
@@ -1190,6 +1220,7 @@
     },
     "shared_playlist": {
         "view_all": "View All",
+        "listeners_title": "People who listened to this song",
         "empty_message": "Add Songs to shared playlist",
         "bottom_sheet": {
             "title": "Shared playlist",

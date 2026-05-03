@@ -42,6 +42,7 @@ import { getPastSurveys } from '@utils/apis/survey';
 import { getItemFromSessionStorage, setItemToSessionStorage } from '@utils/sessionStorage';
 import { MainScrollContainer } from 'src/routes/Root';
 import * as S from './Discover.styled';
+import DiscoverW from './DiscoverW';
 
 function getLocalRefreshTime(): string {
   const now = new Date();
@@ -112,7 +113,8 @@ function Discover() {
   const trackEvent = useTrackEvent();
 
   // SWR key is version-aware — Q users hit /api/q/user/discover/
-  const swrKey = isVerQ ? '/q/user/discover/' : '/user/discover/';
+  // W users use DiscoverW which manages its own fetching.
+  const swrKey = isVerQ ? '/q/user/discover/' : '';
 
   const {
     targetRef,
@@ -356,6 +358,10 @@ function Discover() {
 
   if (discoverHidden) {
     return <Navigate to={fallbackPath} replace />;
+  }
+
+  if (!isVerQ) {
+    return <DiscoverW />;
   }
 
   return (

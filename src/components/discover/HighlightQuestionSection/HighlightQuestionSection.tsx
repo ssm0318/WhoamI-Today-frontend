@@ -1,4 +1,5 @@
 import { MouseEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import SendPromptModal from '@components/_common/prompt/SendPromptModal';
 import { formatFullDate } from '@components/_common/prompt-summary-card/PromptSummaryCard';
@@ -21,8 +22,10 @@ function HighlightQuestionSection({
 }: HighlightQuestionSectionProps) {
   const navigate = useNavigate();
   const [sendPromptModalVisible, setSendPromptBottomModalVisible] = useState(false);
+  const [t] = useTranslation('translation', { keyPrefix: 'discover_highlight_question' });
   const trackEvent = useTrackEvent();
   const formattedDate = formatFullDate(date);
+  const askFriendsLabel = String(t('ask_friends'));
 
   const handleClickQuestion = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -66,12 +69,12 @@ function HighlightQuestionSection({
           {question}
         </Typo>
         <Layout.FlexRow w="100%" justifyContent="flex-end" mt={12}>
-          <S.AskFriendsButton type="button" onClick={handleClickSend} aria-label="Ask friends">
+          <S.AskFriendsButton type="button" onClick={handleClickSend} aria-label={askFriendsLabel}>
             <span style={{ marginTop: 4, display: 'inline-flex' }}>
               <SvgIcon name="question_send" size={18} color="PRIMARY" />
             </span>
             <Typo type="label-large" color="PRIMARY" fontWeight={600}>
-              Ask friends
+              {askFriendsLabel}
             </Typo>
           </S.AskFriendsButton>
         </Layout.FlexRow>

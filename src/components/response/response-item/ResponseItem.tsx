@@ -33,6 +33,8 @@ interface ResponseItemProps {
   disableQuestionNavigation?: boolean;
   hideQuestionPrompt?: boolean;
   isCarouselItem?: boolean;
+  hideTimestamp?: boolean;
+  showMutualCounts?: boolean;
 }
 
 function ResponseItem({
@@ -45,6 +47,8 @@ function ResponseItem({
   disableQuestionNavigation = false,
   hideQuestionPrompt = false,
   isCarouselItem = false,
+  hideTimestamp = false,
+  showMutualCounts = false,
 }: ResponseItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'responses' });
   const [tAccess] = useTranslation('translation', { keyPrefix: 'access_setting' });
@@ -104,6 +108,12 @@ function ResponseItem({
   const { content, created_at, author_detail, question, image, is_edited, visibility } = response;
 
   const { username, profile_image } = author_detail ?? {};
+  const mutualFriendCount = showMutualCounts
+    ? (response as any).mutual_friends_count ?? author_detail?.mutual_friend_count ?? 0
+    : author_detail?.mutual_friend_count ?? 0;
+  const mutualInterestCount = showMutualCounts
+    ? (response as any).mutual_traits_count ?? author_detail?.mutual_interest_count ?? 0
+    : author_detail?.mutual_interest_count ?? 0;
 
   const handleClickMore = (e: MouseEvent) => {
     e.stopPropagation();
@@ -167,16 +177,19 @@ function ResponseItem({
             )}
           </Layout.FlexRow>
           <Layout.FlexRow alignItems="center" gap={4} style={{ flexWrap: 'wrap' }}>
-            <Typo type="label-medium" color="MEDIUM_GRAY">
-              {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
-            </Typo>
+            {!hideTimestamp && (
+              <Typo type="label-medium" color="MEDIUM_GRAY">
+                {created_at && convertTimeDiffByString({ day: new Date(created_at) })}
+              </Typo>
+            )}
             {!isMyPage && author_detail && username && (
               <MutualMetaText
                 username={username}
-                mutualFriendCount={author_detail.mutual_friend_count ?? 0}
-                mutualInterestCount={author_detail.mutual_interest_count ?? 0}
-                mutualPersonaCount={author_detail.mutual_persona_count ?? 0}
-                hideTraits={postsVerQUi}
+                mutualFriendCount={mutualFriendCount}
+                mutualInterestCount={mutualInterestCount}
+                mutualPersonaCount={showMutualCounts ? 0 : author_detail.mutual_persona_count ?? 0}
+                hideTraits={postsVerQUi && !showMutualCounts}
+                hideLeadingSeparator={hideTimestamp}
               />
             )}
           </Layout.FlexRow>
