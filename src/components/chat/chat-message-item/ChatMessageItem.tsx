@@ -235,7 +235,10 @@ function ChatMessageItem({
           <Typo type="body-medium">{ChatEmojiDict[emoji as ChatEmojiType]}</Typo>
         )}
         {content && (
-          <Typo type="body-large" color="BLACK">
+          // `pre` keeps newlines from the input intact. StyledFont sets
+          // `white-space: normal` by default, which would collapse \n into
+          // a single space and turn multi-line messages into one blurb.
+          <Typo type="body-large" color="BLACK" pre>
             <LinkifiedText>{content}</LinkifiedText>
           </Typo>
         )}
@@ -253,7 +256,7 @@ function ChatMessageItem({
           <Typo type="label-small" color="MEDIUM_GRAY">
             {parent_preview.sender.username}
           </Typo>
-          <Typo type="body-small" color="BLACK">
+          <Typo type="body-small" color="BLACK" pre>
             {parent_preview.content ||
               (parent_preview.emoji && ChatEmojiDict[parent_preview.emoji as ChatEmojiType]) ||
               ''}

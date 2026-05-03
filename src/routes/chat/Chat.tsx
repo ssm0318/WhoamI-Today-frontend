@@ -52,10 +52,17 @@ function Chat() {
   const [t] = useTranslation('translation', { keyPrefix: 'chat' });
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const composeWrapperRef = useRef<HTMLDivElement>(null);
   const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
   const justSentIdsRef = useRef<Set<number>>(new Set());
   const shouldPinToBottomRef = useRef<Set<number>>(new Set());
   const markReadTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  // Track the live compose-input height. Defaults to the regular-chat
+  // constant; ResizeObserver below updates it to match the actual rendered
+  // height (announcement compose is ~162px and grows as the user types
+  // multi-line). The messages container's bottom margin uses this so the
+  // last bubble never gets covered by the compose box.
+  const [composeHeight, setComposeHeight] = useState<number>(CHAT_MESSAGE_INPUT_HEIGHT);
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [username, setUsername] = useState<string>('');
@@ -119,6 +126,32 @@ function Chat() {
       clearTimeout(markReadTimerRef.current);
     };
   }, [fetchMessages, userId]);
+
+  // Track the live compose-input height. Announcement compose is much taller
+  // than regular chat (~162px baseline, can grow to 360px+) and grows further
+  // when the user types multi-line. Without this the bottom of the chat gets
+  // covered by the compose box and the last message looks truncated.
+  //
+  // ChatMessageInput's root is `position: fixed`, which means our wrapping div
+  // has 0 flow height. Observe the fixed child (firstElementChild) instead:
+  // it has a real getBoundingClientRect even though it doesn't take flow.
+  // Re-runs when `username` changes (announcement vs. regular swaps the
+  // compose component); ResizeObserver handles textarea autosize within a
+  // session.
+  useEffect(() => {
+    const wrapper = composeWrapperRef.current;
+    if (!wrapper) return undefined;
+    const target = wrapper.firstElementChild as HTMLElement | null;
+    if (!target) return undefined;
+    const update = () => {
+      const h = target.getBoundingClientRect().height;
+      if (h > 0) setComposeHeight(h);
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(target);
+    return () => ro.disconnect();
+  }, [username]);
 
   // Scroll to target message or pin to bottom on first load
   useEffect(() => {
@@ -352,12 +385,7 @@ function Chat() {
           </Layout.FlexCol>
         )}
         {!firstLoad && refinedMessages.length > 0 && (
-          <Layout.FlexCol
-            w="100%"
-            gap={15}
-            p={10}
-            mb={showRequestBar ? 110 : CHAT_MESSAGE_INPUT_HEIGHT}
-          >
+          <Layout.FlexCol w="100%" gap={15} p={10} mb={showRequestBar ? 110 : composeHeight}>
             <div ref={targetRef} />
             {isLoading && <Loader />}
             {refinedMessages.map((message) => (
@@ -396,15 +424,17 @@ function Chat() {
           onCancelled={() => setSentChatRequest(false)}
         />
       ) : (
-        <ChatMessageInput
-          userId={Number(userId)}
-          replyTarget={replyTarget}
-          onClearReply={() => setReplyTarget(null)}
-          onMessageSent={handleMessageSent}
-          onTyping={sendTyping}
-          typingText={isOpponentTyping ? `${username} is typing...` : null}
-          isAnnouncement={username === 'Announcements'}
-        />
+        <div ref={composeWrapperRef}>
+          <ChatMessageInput
+            userId={Number(userId)}
+            replyTarget={replyTarget}
+            onClearReply={() => setReplyTarget(null)}
+            onMessageSent={handleMessageSent}
+            onTyping={sendTyping}
+            typingText={isOpponentTyping ? `${username} is typing...` : null}
+            isAnnouncement={username === 'Announcements'}
+          />
+        </div>
       )}
     </MainScrollContainer>
   );
