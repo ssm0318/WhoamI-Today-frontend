@@ -26,8 +26,8 @@ export type BrowseModeFilters = {
 };
 
 export type BrowseModeSections = {
-  /** Hide synthetic Discover-style cards from the friends feed (mission prompts, profile suggestions, etc.). */
-  hide_synthetic_discover_cards?: boolean;
+  /** Hide synthetic daily-digest-style cards from the friends feed (mission prompts, profile suggestions, etc.). */
+  hide_synthetic_digest_cards?: boolean;
   /** Hide ping/poke buttons on friend cards. */
   hide_ping_buttons?: boolean;
   /** Hide the "New post" badges. */

@@ -218,6 +218,7 @@
         "share": "Share",
         "feed": "Feed",
         "discover": "Discover",
+        "digest": "Digest",
         "update": "Check-In"
     },
     "version_guard": {
@@ -227,7 +228,8 @@
         "my": "My Profile",
         "questions": "Questions",
         "share": "Share",
-        "discover": "Daily Discover"
+        "discover": "Daily Discover",
+        "daily_digest": "Daily Digest"
     },
     "home": {
         "moment": {
@@ -1423,11 +1425,11 @@
         "modes": {
             "very_social": {
                 "name": "Fully Social",
-                "description": "See everything — Friends, Discover, Chats"
+                "description": "See everything — Friends, Daily Digest, Chats"
             },
             "selectively_social": {
                 "name": "Close Friends Only",
-                "description": "Close Friends Only filter activated, no Discover"
+                "description": "Close Friends Only filter activated, no Daily Digest"
             },
             "quiet": {
                 "name": "Just Here to Share",
@@ -1438,7 +1440,7 @@
             "friends": "Friends",
             "update": "Update",
             "share": "Share",
-            "discover": "Discover",
+            "discover": "Daily Digest",
             "chats": "Chats",
             "my": "My",
             "questions": "Questions"
@@ -1448,22 +1450,22 @@
             "chats_close_only": "Show close friends only on Chats"
         },
         "sections": {
-            "hide_synthetic_discover_cards": "Hide discovery suggestions",
+            "hide_synthetic_digest_cards": "Hide digest suggestions",
             "hide_ping_buttons": "Hide ping buttons",
             "hide_new_post_badge": "Hide \"New post\" badges"
         },
         "templates": {
-            "no_discover": {
-                "name": "All friends, no discover",
+            "no_digest": {
+                "name": "All friends, no daily digest",
                 "description": "Stay with people you know — no new friends today"
             },
             "just_chat": {
                 "name": "Just chat",
                 "description": "Replying to messages, nothing else"
             },
-            "just_discover": {
-                "name": "Just discover",
-                "description": "Find new connections and content only"
+            "just_digest": {
+                "name": "Just daily digest",
+                "description": "Browse today's daily digest only"
             },
             "digital_detox": {
                 "name": "Digital detox",

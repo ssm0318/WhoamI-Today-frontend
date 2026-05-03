@@ -231,8 +231,8 @@ function Discover() {
     return result;
   }, [discoverData, profileSuggestionCard, surveyResultsCard, usernameSuggestionCard]);
 
-  // If the active browse mode says to hide synthetic discover cards, drop them here.
-  const hideSyntheticCards = !!activeBrowseMode?.config.sections.hide_synthetic_discover_cards;
+  // If the active browse mode says to hide synthetic digest cards, drop them here.
+  const hideSyntheticCards = !!activeBrowseMode?.config.sections.hide_synthetic_digest_cards;
 
   // Client-side filtering by category
   const filterItem = useCallback(
