@@ -31,13 +31,16 @@ export interface SignUpParams {
   noti_time?: string;
   current_ver?: VersionType;
   user_group?: UserGroup;
-  inviter_id?: number;
+  inviter_id: number;
 }
 
 export const hasMandatorySignUpParams = (
   signUpParams: Partial<SignUpParams>,
 ): signUpParams is SignUpParams =>
-  !!signUpParams.email && !!signUpParams.username && !!signUpParams.password;
+  !!signUpParams.email &&
+  !!signUpParams.username &&
+  !!signUpParams.password &&
+  !!signUpParams.inviter_id;
 
 export enum Gender {
   FEMALE,

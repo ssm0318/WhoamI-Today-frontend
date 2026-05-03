@@ -260,13 +260,19 @@ export const signUp = ({
   formData.append('password', password);
 
   if (noti_time) formData.append('noti_time', noti_time);
-  if (inviter_id) formData.append('inviter_id', String(inviter_id));
+  formData.append('inviter_id', String(inviter_id));
 
   axiosFormDataInstance
     .post('/user/signup/', formData)
     .then(() => onSuccess())
     .catch((e) => {
-      onError(e);
+      const errorData = e.response?.data;
+      const errorMessage =
+        errorData?.detail ||
+        errorData?.inviter_id?.[0] ||
+        errorData?.non_field_errors?.[0] ||
+        i18n.t('error.temporary_error');
+      onError(errorMessage);
     });
 };
 

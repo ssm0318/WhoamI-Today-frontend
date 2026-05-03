@@ -81,8 +81,8 @@ function Info() {
 
     const trimmed = friendUsernameInput.trim();
     if (!trimmed) {
-      setSignUpInfo({ inviter_id: 0 });
-      proceedToAgeConfirm();
+      setFriendUsernameError(t('friend_username_required_error'));
+      trackEvent('signup_validation_error', { step: 'info', error_type: 'missing_friend_code' });
       return;
     }
 
@@ -135,7 +135,11 @@ function Info() {
   };
 
   const nextDisabled =
-    !dateOfBirthInput || !!dateOfBirthError || !privacyPolicyChecked || !!friendUsernameError;
+    !friendUsernameInput.trim() ||
+    !dateOfBirthInput ||
+    !!dateOfBirthError ||
+    !privacyPolicyChecked ||
+    !!friendUsernameError;
 
   return (
     <>

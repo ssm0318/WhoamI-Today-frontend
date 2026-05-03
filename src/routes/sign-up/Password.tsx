@@ -25,8 +25,8 @@ function Password() {
 
   const trackEvent = useTrackEvent();
 
-  const handleOnSignUpError = () => {
-    openToast({ message: t('error') });
+  const handleOnSignUpError = (error?: string) => {
+    openToast({ message: error || t('error') });
     trackEvent('signup_failed', { step: 'password' });
     navigate('/');
   };
