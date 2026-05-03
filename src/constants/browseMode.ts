@@ -11,9 +11,9 @@ import { SocialBattery } from '@models/checkIn';
  */
 export const ALL_BROWSE_MODE_TABS: BrowseModeTabKey[] = [
   'friends',
+  'discover',
   'update',
   'share',
-  'discover',
   'chats',
 ];
 
@@ -25,7 +25,7 @@ export const BUILT_IN_BROWSE_MODES: Record<BuiltInBrowseModeId, BuiltInBrowseMod
     emoji: '🤩',
     suggestedBattery: SocialBattery.fully_charged,
     config: {
-      tabs: ['friends', 'update', 'share', 'discover', 'chats'],
+      tabs: ['friends', 'discover', 'update', 'share', 'chats'],
       filters: {},
       sections: {},
     },
@@ -39,7 +39,7 @@ export const BUILT_IN_BROWSE_MODES: Record<BuiltInBrowseModeId, BuiltInBrowseMod
     config: {
       tabs: ['friends', 'update', 'share', 'chats'],
       filters: { friends_close_only: true },
-      sections: { hide_synthetic_discover_cards: true },
+      sections: { hide_synthetic_digest_cards: true },
     },
   },
   quiet: {
@@ -103,7 +103,7 @@ export const TAB_DURATION_OPTIONS: { value: number | undefined; i18nKey: string 
 export const CUSTOMIZE_TEMPLATES: CustomizeTemplate[] = [
   {
     id: 'no_discover',
-    i18nKey: 'no_discover',
+    i18nKey: 'no_digest',
     emoji: '👯',
     config: {
       tabs: ['friends', 'update', 'share', 'chats'],
@@ -121,7 +121,7 @@ export const CUSTOMIZE_TEMPLATES: CustomizeTemplate[] = [
   },
   {
     id: 'just_discover',
-    i18nKey: 'just_discover',
+    i18nKey: 'just_digest',
     emoji: '🔭',
     config: {
       tabs: ['discover'],
@@ -138,12 +138,12 @@ export const CUSTOMIZE_TEMPLATES: CustomizeTemplate[] = [
     i18nKey: 'digital_detox',
     emoji: '🌿',
     config: {
-      tabs: ['friends', 'update', 'share', 'discover', 'chats'],
+      tabs: ['friends', 'discover', 'update', 'share', 'chats'],
       filters: {},
       tab_durations: {
         friends: DIGITAL_DETOX_DEFAULT_MINUTES,
-        update: DIGITAL_DETOX_DEFAULT_MINUTES,
         discover: DIGITAL_DETOX_DEFAULT_MINUTES,
+        update: DIGITAL_DETOX_DEFAULT_MINUTES,
         chats: DIGITAL_DETOX_DEFAULT_MINUTES,
       },
     },

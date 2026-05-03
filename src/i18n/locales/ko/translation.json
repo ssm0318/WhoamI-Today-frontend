@@ -218,6 +218,7 @@
     "share": "공유",
     "feed": "피드",
     "discover": "발견",
+    "digest": "다이제스트",
     "update": "체크인"
   },
   "version_guard": {
@@ -227,7 +228,8 @@
     "my": "내 프로필",
     "questions": "질문",
     "share": "공유",
-    "discover": "오늘의 발견"
+    "discover": "오늘의 발견",
+    "daily_digest": "오늘의 다이제스트"
   },
   "home": {
     "moment": {
@@ -1414,11 +1416,11 @@
     "modes": {
       "very_social": {
         "name": "다 보기",
-        "description": "모든 탭 보기 — 친구, Discover, Chats"
+        "description": "모든 탭 보기 — 친구, 다이제스트, 채팅"
       },
       "selectively_social": {
         "name": "친한 친구만",
-        "description": "Close Friends Only 필터 활성, Discover 없음"
+        "description": "Close Friends Only 필터 활성, 다이제스트 없음"
       },
       "quiet": {
         "name": "공유만",
@@ -1429,7 +1431,7 @@
       "friends": "친구",
       "update": "업데이트",
       "share": "공유",
-      "discover": "둘러보기",
+      "discover": "다이제스트",
       "chats": "채팅",
       "my": "마이",
       "questions": "질문"
@@ -1439,22 +1441,22 @@
       "chats_close_only": "채팅 탭에서 친한 친구만 보기"
     },
     "sections": {
-      "hide_synthetic_discover_cards": "둘러보기 추천 숨기기",
+      "hide_synthetic_digest_cards": "다이제스트 추천 숨기기",
       "hide_ping_buttons": "Ping 버튼 숨기기",
       "hide_new_post_badge": "\"New post\" 배지 숨기기"
     },
     "templates": {
-      "no_discover": {
-        "name": "친구는 보고, 둘러보기는 빼고",
+      "no_digest": {
+        "name": "친구는 보고, 다이제스트는 빼고",
         "description": "아는 친구들과만 — 오늘은 새 친구는 패스"
       },
       "just_chat": {
         "name": "채팅만",
         "description": "메시지 답장만, 다른 건 패스"
       },
-      "just_discover": {
-        "name": "둘러보기만",
-        "description": "새로운 사람과 콘텐츠만 보기"
+      "just_digest": {
+        "name": "다이제스트만",
+        "description": "오늘의 다이제스트만 보기"
       },
       "digital_detox": {
         "name": "디지털 디톡스",
