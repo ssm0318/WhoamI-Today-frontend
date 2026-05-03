@@ -1,4 +1,5 @@
 import { CSSProperties, MouseEvent, useState } from 'react';
+import { createPortal } from 'react-dom';
 import LikeButton from '@components/_common/like-button/LikeButton';
 import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
@@ -42,6 +43,7 @@ function CheckInPostItem({
   const [commentPost, setCommentPost] = useState<CheckInPost | null>(null);
   const [showComments, setShowComments] = useState(false);
   const [inputFocus, setInputFocus] = useState(false);
+  const [showImagePopup, setShowImagePopup] = useState(false);
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
@@ -129,7 +131,18 @@ function CheckInPostItem({
           )}
         </Layout.FlexRow>
 
-        {image_url && <S.PostImage src={image_url} alt="snippet" />}
+        {image_url && (
+          <S.PostImageButton
+            type="button"
+            aria-label="Open image preview"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowImagePopup(true);
+            }}
+          >
+            <S.PostImage src={image_url} alt="snippet" />
+          </S.PostImageButton>
+        )}
 
         {caption && (
           <div style={{ marginTop: 8, width: '100%', textAlign: 'center' }}>
@@ -208,6 +221,15 @@ function CheckInPostItem({
       </Layout.FlexCol>
 
       <LikesListModal postId={likesPostId} onClose={() => setLikesPostId(null)} />
+
+      {image_url &&
+        showImagePopup &&
+        createPortal(
+          <S.ImagePreviewBackdrop type="button" onClick={() => setShowImagePopup(false)}>
+            <S.ImagePreview src={image_url} alt="Full size snippet" />
+          </S.ImagePreviewBackdrop>,
+          document.body,
+        )}
 
       {commentPost && (
         <CommentBottomSheet

@@ -1,4 +1,5 @@
 import { MouseEvent, useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -54,6 +55,7 @@ function ResponseItem({
   const [showMore, setShowMore] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [likePatch, setLikePatch] = useState<Partial<Response> | null>(null);
+  const [showImagePopup, setShowImagePopup] = useState(false);
 
   const footerPost = useMemo(
     () => (likePatch ? { ...response, ...likePatch } : response),
@@ -131,6 +133,11 @@ function ResponseItem({
     navigate(`/users/${username}`, {
       state: { source: classifyPathnameAsSource(location.pathname) },
     });
+  };
+
+  const openImagePopup = (e: MouseEvent) => {
+    e.stopPropagation();
+    setShowImagePopup(true);
   };
 
   if (isHidden) return null;
@@ -233,7 +240,9 @@ function ResponseItem({
       {/* Response image */}
       {image && (
         <RespImageWrapper>
-          <img src={image} alt="response" style={{ width: '100%', borderRadius: 8 }} />
+          <PostImageButton type="button" aria-label="Open image preview" onClick={openImagePopup}>
+            <img src={image} alt="response" style={{ width: '100%', borderRadius: 8 }} />
+          </PostImageButton>
         </RespImageWrapper>
       )}
       {/* (Edited) */}
@@ -324,6 +333,14 @@ function ResponseItem({
           )}
         </Layout.FlexCol>
       </Layout.FlexRow>
+      {image &&
+        showImagePopup &&
+        createPortal(
+          <ImagePreviewBackdrop type="button" onClick={() => setShowImagePopup(false)}>
+            <ImagePreview src={image} alt="Full size response" />
+          </ImagePreviewBackdrop>,
+          document.body,
+        )}
       {bottomSheet && (
         <CommentBottomSheet
           postType="Response"
@@ -390,4 +407,36 @@ const RespImageWrapper = styled.div`
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 8px;
+`;
+
+const PostImageButton = styled.button`
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: zoom-in;
+`;
+
+const ImagePreviewBackdrop = styled.button`
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 500px;
+  height: 100vh;
+  padding: 0;
+  border: none;
+  background: rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  transform: translateX(-50%);
+`;
+
+const ImagePreview = styled.img`
+  max-width: 90%;
+  max-height: 80vh;
+  object-fit: contain;
 `;
