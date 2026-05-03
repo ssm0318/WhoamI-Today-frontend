@@ -43,7 +43,7 @@
     "delete_cancel": "취소",
     "delete_confirm": "삭제",
     "expiry_hint": "스냅샷은 24시간 동안 표시돼요.\n작성 후 고정하면 프로필에 계속 남길 수 있어요.",
-    "archived_story_toast": "더 이상 볼 수 없는 스토리예요",
+    "archived_story_toast": "더 이상 볼 수 없는 스냅샷이에요",
     "friend_pinned_title": "{{username}}의 Pinned Snapshots",
     "archive": {
       "title": "Daily Snapshots",
