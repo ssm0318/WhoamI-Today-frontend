@@ -5,6 +5,7 @@ import useSWR, { mutate } from 'swr';
 
 import SubHeader from '@components/sub-header/SubHeader';
 import { SurveyAnswerForm } from '@components/survey/SurveyAnswerForm';
+import { TestingDisclaimer } from '@components/survey/TestingDisclaimer';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import { SURVEY_OF_THE_DAY_KEY } from '@hooks/useSurveyOfTheDay';
@@ -48,6 +49,7 @@ function SurveyAnswer() {
     <>
       <SubHeader title={pickLocalized(survey.title_en, survey.title_ko)} />
       <Page>
+        <TestingDisclaimer />
         <Card>
           {survey.description_en && (
             <Typo type="body-medium" color="DARK_GRAY">
@@ -59,7 +61,9 @@ function SurveyAnswer() {
             onSubmitted={() => {
               mutate(SURVEY_OF_THE_DAY_KEY);
               openToast({ message: t('toast.submitted') });
-              navigate(`/surveys/${survey.slug}/results`);
+              // Replace so back-from-/results skips the answer page (avoids
+              // 409 "Already submitted") and lands on the entry page.
+              navigate(`/surveys/${survey.slug}/results`, { replace: true });
             }}
             onError={(message) => openToast({ message })}
           />

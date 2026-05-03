@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
 import SubHeader from '@components/sub-header/SubHeader';
 import { SurveyResultsBucket } from '@components/survey/SurveyResultsBucket';
+import { TestingDisclaimer } from '@components/survey/TestingDisclaimer';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import i18n from '@i18n/index';
@@ -101,6 +102,7 @@ function SurveyResults() {
   const { slug } = useParams<{ slug: string }>();
   const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { data, error } = useSWR(
     slug ? `/surveys/${slug}/results/` : null,
@@ -112,8 +114,18 @@ function SurveyResults() {
   );
 
   const headerTitle = survey ? pickLocalized(survey.title_en, survey.title_ko) : '';
+  const handleDone = () => {
+    // Return to the page the user came from (archive, /share, /surveys, etc.)
+    // — falling back to /share when this is the first history entry (direct
+    // URL hit), otherwise navigate(-1) would no-op.
+    if (location.key === 'default') {
+      navigate('/share');
+    } else {
+      navigate(-1);
+    }
+  };
   const headerRight = (
-    <button type="button" onClick={() => navigate('/share')}>
+    <button type="button" onClick={handleDone}>
       <Typo type="title-large" color="PRIMARY">
         {t('done')}
       </Typo>
@@ -127,6 +139,7 @@ function SurveyResults() {
       <MainScrollContainer>
         <SubHeader title={headerTitle} RightComponent={headerRight} />
         <Page>
+          <TestingDisclaimer />
           <Typo type="title-large" color="BLACK">
             {body.detail}
           </Typo>
@@ -140,6 +153,23 @@ function SurveyResults() {
     );
   }
 
+  // Surveys with `results_hidden=true` (e.g. mid_study, anytime_reflection)
+  // return 404 from the results endpoint. Render a placeholder rather than
+  // a blank screen so the user can still navigate away via Done.
+  if (axiosError?.response?.status === 404) {
+    return (
+      <MainScrollContainer>
+        <SubHeader title={headerTitle} RightComponent={headerRight} />
+        <Page>
+          <TestingDisclaimer />
+          <Typo type="title-large" color="BLACK">
+            {t('results_not_available')}
+          </Typo>
+        </Page>
+      </MainScrollContainer>
+    );
+  }
+
   if (!data || !survey) return null;
 
   const interpretation = pickLocalized(survey.interpretation_en, survey.interpretation_ko);
@@ -148,6 +178,7 @@ function SurveyResults() {
     <MainScrollContainer>
       <SubHeader title={headerTitle} RightComponent={headerRight} />
       <Page>
+        <TestingDisclaimer />
         {data.panels.map((panel, idx) => (
           <PanelView
             key={panel.group_key}
