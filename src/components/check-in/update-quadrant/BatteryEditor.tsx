@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import { Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { ComponentVisibility, SocialBattery } from '@models/checkIn';
+import { useBoundStore } from '@stores/useBoundStore';
 import {
   getLastVisibility,
   setLastVisibility,
@@ -36,13 +37,24 @@ export default function BatteryEditor({
   const [draftVisibility, setDraftVisibility] = useState<ComponentVisibility>(
     () => getLastVisibility(VisibilityMemoryKeys.checkInBattery) ?? visibility,
   );
+  const openToast = useBoundStore((state) => state.openToast);
+
+  // Snapshot of value/visibility at popup open — used to skip the share
+  // entirely when the user taps Confirm without changing anything.
+  const initialValueRef = useRef<SocialBattery | null>(value);
+  const initialVisibilityRef = useRef<ComponentVisibility>(
+    getLastVisibility(VisibilityMemoryKeys.checkInBattery) ?? visibility,
+  );
 
   useEffect(() => {
     if (isOpen) {
-      setDraftValue(value);
       // Default to user's last picked visibility for this content type, falling
       // back to the parent-supplied default for the very first share.
-      setDraftVisibility(getLastVisibility(VisibilityMemoryKeys.checkInBattery) ?? visibility);
+      const initialVis = getLastVisibility(VisibilityMemoryKeys.checkInBattery) ?? visibility;
+      setDraftValue(value);
+      setDraftVisibility(initialVis);
+      initialValueRef.current = value;
+      initialVisibilityRef.current = initialVis;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -53,10 +65,18 @@ export default function BatteryEditor({
   }, []);
 
   const handleShare = useCallback(() => {
+    if (
+      draftValue === initialValueRef.current &&
+      draftVisibility === initialVisibilityRef.current
+    ) {
+      openToast({ message: 'No changes' });
+      onClose();
+      return;
+    }
     onChange(draftValue);
     onVisibilityChange(draftVisibility);
     onShare(draftValue, draftVisibility);
-  }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare]);
+  }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare, onClose, openToast]);
 
   return (
     <EditorPopup isOpen={isOpen} onClose={onClose} onShare={handleShare} title="Social Battery">

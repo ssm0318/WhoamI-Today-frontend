@@ -1,5 +1,5 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import SearchInput from '@components/_common/search-input/SearchInput';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import MusicItem from '@components/music/music-search-bottom-sheet/music-item/MusicItem';
@@ -7,6 +7,7 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import SpotifyManager from '@libs/SpotifyManager';
 import { ComponentVisibility } from '@models/checkIn';
+import { useBoundStore } from '@stores/useBoundStore';
 import {
   getLastVisibility,
   setLastVisibility,
@@ -42,6 +43,14 @@ export default function SongEditor({
   const [searchError, setSearchError] = useState('');
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const spotifyManager = SpotifyManager.getInstance();
+  const openToast = useBoundStore((state) => state.openToast);
+
+  // Snapshot of value/visibility at popup open — used to skip the share
+  // entirely when the user taps Confirm without changing anything.
+  const initialTrackIdRef = useRef<string>(trackId);
+  const initialVisibilityRef = useRef<ComponentVisibility>(
+    getLastVisibility(VisibilityMemoryKeys.checkInSong) ?? visibility,
+  );
 
   const handleVisibilityChange = useCallback((v: ComponentVisibility) => {
     setDraftVisibility(v);
@@ -50,9 +59,12 @@ export default function SongEditor({
 
   useEffect(() => {
     if (isOpen) {
+      const initialVis = getLastVisibility(VisibilityMemoryKeys.checkInSong) ?? visibility;
       setDraftTrackId(trackId);
-      setDraftVisibility(getLastVisibility(VisibilityMemoryKeys.checkInSong) ?? visibility);
+      setDraftVisibility(initialVis);
       setQuery('');
+      initialTrackIdRef.current = trackId;
+      initialVisibilityRef.current = initialVis;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -91,10 +103,18 @@ export default function SongEditor({
   };
 
   const handleShare = useCallback(() => {
+    if (
+      draftTrackId === initialTrackIdRef.current &&
+      draftVisibility === initialVisibilityRef.current
+    ) {
+      openToast({ message: 'No changes' });
+      onClose();
+      return;
+    }
     onChange(draftTrackId);
     onVisibilityChange(draftVisibility);
     onShare(draftTrackId, draftVisibility);
-  }, [draftTrackId, draftVisibility, onChange, onVisibilityChange, onShare]);
+  }, [draftTrackId, draftVisibility, onChange, onVisibilityChange, onShare, onClose, openToast]);
 
   return (
     <EditorPopup isOpen={isOpen} onClose={onClose} onShare={handleShare} title="Song">
