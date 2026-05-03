@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import CheckInHistoryChip from '@components/check-in/archive/CheckInArchiveChip';
+import CheckInDetailBottomSheet from '@components/check-in/check-in-detail-bottom-sheet/CheckInDetailBottomSheet';
 import FriendPinnedChip from '@components/friends/friend-pinned-chip/FriendPinnedChip';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
 import MoodPlaceholder from '@components/profile/placeholders/MoodPlaceholder';
@@ -12,6 +13,8 @@ import { useIsPreviewMode } from '@components/view-as/PreviewModeContext';
 import { Layout, Typo } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { useFriendPinnedCount } from '@hooks/useFriendPinnedCount';
+import { useTrackEvent } from '@hooks/useTrackEvent';
+import { Connection } from '@models/api/friends';
 import { MyProfile } from '@models/api/user';
 import { CheckInBase } from '@models/checkIn';
 import { UserProfile } from '@models/user';
@@ -25,6 +28,7 @@ interface CheckInProps {
 
 function CheckIn({ user }: CheckInProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'user_page.check_in' });
+  const trackEvent = useTrackEvent();
   const {
     myProfile,
     checkIn: initialCheckIn,
@@ -41,6 +45,9 @@ function CheckIn({ user }: CheckInProps) {
   const [checkIn, setCheckIn] = useState<CheckInBase | null | undefined>(
     isMyPage ? initialCheckIn : user.check_in,
   );
+  const [checkInDetailFocus, setCheckInDetailFocus] = useState<
+    'battery' | 'mood' | 'thought' | 'song' | null
+  >(null);
   // Per-component visibility is enforced on the API; render payload as returned.
   const { social_battery, track_id, mood, thought } = checkIn || {};
   // Backend redacts mood to `[]` (truthy) when viewer lacks visibility — normalize to length-checked list.
@@ -54,6 +61,23 @@ function CheckIn({ user }: CheckInProps) {
 
   const handleClickEditCheckIn = () => {
     return navigate('/update');
+  };
+
+  const handleClickCheckInComponent = (component: 'battery' | 'mood' | 'thought' | 'song') => {
+    if (isMyPage) {
+      handleClickEditCheckIn();
+      return;
+    }
+    if (!checkIn?.id) return;
+    trackEvent('friend_check_in_component_opened', {
+      component,
+      friend_id: user.id,
+      is_close_friend:
+        'connection_status' in user && user.connection_status === Connection.CLOSE_FRIEND
+          ? 'true'
+          : 'false',
+    });
+    setCheckInDetailFocus(component);
   };
 
   useAsyncEffect(async () => {
@@ -88,10 +112,7 @@ function CheckIn({ user }: CheckInProps) {
             {social_battery ? (
               <SocialBatteryChip
                 socialBattery={social_battery}
-                onClick={() => {
-                  if (!isMyPage) return;
-                  handleClickEditCheckIn();
-                }}
+                onClick={() => handleClickCheckInComponent('battery')}
               />
             ) : (
               isMyPage && <SocialBatteryPlaceholder />
@@ -100,13 +121,9 @@ function CheckIn({ user }: CheckInProps) {
             {track_id ? (
               <SpotifyMusic
                 track={track_id}
-                useDetailBottomSheet={!isMyPage}
                 useAlbumImg
                 fontType="label-large"
-                onClick={() => {
-                  if (!isMyPage) return;
-                  handleClickEditCheckIn();
-                }}
+                onClick={() => handleClickCheckInComponent('song')}
               />
             ) : (
               isMyPage && <MusicPlaceholder />
@@ -125,11 +142,8 @@ function CheckIn({ user }: CheckInProps) {
                   ph={8}
                   pv={4}
                   rounded={8}
-                  style={{ flexShrink: 0 }}
-                  onClick={() => {
-                    if (!isMyPage) return;
-                    handleClickEditCheckIn();
-                  }}
+                  style={{ flexShrink: 0, cursor: 'pointer' }}
+                  onClick={() => handleClickCheckInComponent('mood')}
                 >
                   {moodList.map((emoji) => (
                     <span key={emoji} style={{ fontSize: 16, lineHeight: 1 }}>
@@ -154,11 +168,8 @@ function CheckIn({ user }: CheckInProps) {
                   ph={8}
                   pv={4}
                   rounded={8}
-                  style={{ minWidth: 0, maxWidth: '100%' }}
-                  onClick={() => {
-                    if (!isMyPage) return;
-                    handleClickEditCheckIn();
-                  }}
+                  style={{ minWidth: 0, maxWidth: '100%', cursor: 'pointer' }}
+                  onClick={() => handleClickCheckInComponent('thought')}
                 >
                   <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden>
                     🤪
@@ -188,6 +199,18 @@ function CheckIn({ user }: CheckInProps) {
             )
           )}
         </Layout.FlexRow>
+        <CheckInDetailBottomSheet
+          visible={!!checkInDetailFocus}
+          closeBottomSheet={() => setCheckInDetailFocus(null)}
+          focusComponent={checkInDetailFocus}
+          checkInId={checkIn?.id}
+          username={'username' in user ? user.username : undefined}
+          profileImage={user.profile_image}
+          socialBattery={social_battery}
+          mood={moodList}
+          description={thought}
+          trackId={track_id}
+        />
       </>
     </Layout.FlexCol>
   );
