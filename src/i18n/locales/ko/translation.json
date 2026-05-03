@@ -1255,6 +1255,7 @@
     "answered_view_results": "응답 완료 — 결과 보기",
     "answer_to_view_results": "답변하면 결과를 볼 수 있어요",
     "locked_title": "결과가 아직 공개되지 않았어요",
+    "results_not_available": "이 설문은 결과를 제공하지 않아요.",
     "archive_title": "일일 체크인 기록",
     "archive_empty": "아직 일일 체크인 기록이 없어요.",
     "index_title": "설문",

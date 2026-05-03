@@ -1264,6 +1264,7 @@
         "answered_view_results": "Answered — view results",
         "answer_to_view_results": "Answer to view results",
         "locked_title": "Results not yet available",
+        "results_not_available": "Results are not available for this survey.",
         "archive_title": "Daily check-ins archive",
         "archive_empty": "No daily check-ins yet.",
         "index_title": "Surveys",
