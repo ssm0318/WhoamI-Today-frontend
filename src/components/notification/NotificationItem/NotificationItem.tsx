@@ -1,8 +1,12 @@
+import { isAxiosError } from 'axios';
 import { MouseEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ProfileImageList from '@components/_common/profile-image-list/ProfileImageList';
 import { IconNames, Layout, SvgIcon, Typo } from '@design-system';
 import { Notification } from '@models/notification';
+import { useBoundStore } from '@stores/useBoundStore';
+import { getCheckInPost } from '@utils/apis/checkInPost';
 import { readNotification } from '@utils/apis/notification';
 import { convertTimeDiffByString } from '@utils/timeHelpers';
 import NotificationActions from './NotificationActions';
@@ -25,6 +29,8 @@ function NotificationItem({ item, onActioned }: NotificationItemProps) {
   } = item;
 
   const navigate = useNavigate();
+  const [t] = useTranslation('translation', { keyPrefix: 'check_in_post' });
+  const openToast = useBoundStore((state) => state.openToast);
 
   const [createdAt] = useState(() => new Date(created_at));
   const [currentDate] = useState(() => new Date());
@@ -33,6 +39,22 @@ function NotificationItem({ item, onActioned }: NotificationItemProps) {
     if (notification_type === 'QuestionSuggest') {
       // Navigate to question suggestion page
       navigate('/suggest-questions');
+    } else if (redirect_url?.startsWith('/check-in-posts/')) {
+      // Pre-check whether the target CheckInPost is still accessible.
+      // Stories expire after 24h and become 403 to non-authors; once
+      // expired, navigating to the detail route would just unmount and
+      // bounce — surface a toast instead so the user understands why.
+      const postId = Number(redirect_url.split('/').pop());
+      try {
+        await getCheckInPost(postId);
+        navigate(redirect_url);
+      } catch (error) {
+        if (isAxiosError(error) && [403, 404].includes(error.response?.status ?? 0)) {
+          openToast({ message: t('archived_story_toast') ?? '' });
+        } else {
+          navigate(redirect_url);
+        }
+      }
     } else {
       navigate(redirect_url);
     }
