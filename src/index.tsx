@@ -30,6 +30,7 @@ import AllQuestions from './routes/AllQuestions';
 // Chats tab now uses ChatList directly
 import History from './routes/check-in/Archive';
 import CheckInEdit from './routes/check-in/CheckInEdit';
+import CheckInPostDetail from './routes/check-in-posts/CheckInPostDetail';
 import FriendPinnedSnippets from './routes/check-in-posts/FriendPinnedSnippets';
 import MySnippetsArchive from './routes/check-in-posts/MySnippetsArchive';
 import NewCheckInPost from './routes/check-in-posts/NewCheckInPost';
@@ -193,6 +194,14 @@ const router = createBrowserRouter([
         element: (
           <VersionGuard allowedVersions={[VersionType.VER_Q]}>
             <MySnippetsArchive />
+          </VersionGuard>
+        ),
+      },
+      {
+        path: 'check-in-posts/:id',
+        element: (
+          <VersionGuard allowedVersions={[VersionType.VER_Q]}>
+            <CheckInPostDetail />
           </VersionGuard>
         ),
       },
