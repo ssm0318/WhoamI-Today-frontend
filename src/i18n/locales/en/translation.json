@@ -1099,7 +1099,7 @@
             "pinned": "Pin check-ins from History to surface them on your profile."
         },
         "history_hint": "This history is visible only to you. Pin items to share them with others.",
-        "checkin_tab_hint": "Updating a check-in saves the previous version to your History (above ↑). Past versions are private until you pin them.",
+        "checkin_tab_hint": "Updating a check-in saves the previous version to your History (above ↑). Check-ins in History are private until you pin them.",
         "end_of_feed": "That's everything.",
         "thought_modal": {
             "close": "Close"
