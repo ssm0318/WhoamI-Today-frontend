@@ -132,4 +132,5 @@ const TextButton = styled.button`
   background: transparent;
   color: #999999;
   cursor: pointer;
+  text-decoration: underline;
 `;
