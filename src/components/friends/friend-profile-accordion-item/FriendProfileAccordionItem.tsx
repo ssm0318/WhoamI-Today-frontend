@@ -35,6 +35,7 @@ import {
   NewPill,
   NoPostsHint,
   PostsButton,
+  PostsSectionDivider,
   ProfileLinkButton,
   SeeAllPostsLink,
 } from './FriendProfileAccordionItem.styled';
@@ -376,6 +377,9 @@ function FriendProfileAccordionItem({
           )}
         </Layout.FlexRow>
       </Layout.FlexCol>
+
+      {/* Hairline anchors the eye to where [See posts] expands content from. */}
+      <PostsSectionDivider />
 
       {/* Posts section — only visible content stays in the accordion now. */}
       <ExpandableSection $isExpanded={isExpanded}>

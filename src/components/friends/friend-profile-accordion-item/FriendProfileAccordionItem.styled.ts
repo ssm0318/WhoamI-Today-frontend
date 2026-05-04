@@ -52,6 +52,17 @@ export const UpdateBadge = styled(Layout.FlexRow).attrs({
   flex-shrink: 0;
 `;
 
+/** Hairline separator between the always-visible check-ins and the (collapsible)
+ *  posts section. Signals where the [See posts] click expands content from. */
+export const PostsSectionDivider = styled.hr`
+  width: 100%;
+  height: 1px;
+  border: 0;
+  margin: 12px 0 0;
+  background-color: ${({ theme }) => theme.LIGHT_GRAY};
+  opacity: 0.6;
+`;
+
 /** Compact inline [UP] used next to a single check-in pill (battery / mood /
  *  thought / song) so the viewer sees which row was updated. Smaller than the
  *  username-row UpdateBadge so it sits comfortably alongside the chip. */
