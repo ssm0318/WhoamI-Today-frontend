@@ -30,6 +30,7 @@ export const StyledLeftContent = styled.div.attrs<StyledSwipeContentProps>(({ di
 }))<StyledSwipeContentProps>`
   position: absolute;
   top: 0;
+  bottom: 0;
   left: 0;
   z-index: 0;
 `;
@@ -41,6 +42,7 @@ export const StyledRightContent = styled.div.attrs<StyledSwipeContentProps>(({ d
 }))<StyledSwipeContentProps>`
   position: absolute;
   top: 0;
+  bottom: 0;
   right: 0;
   z-index: 0;
 `;
