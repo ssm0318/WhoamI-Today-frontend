@@ -13,7 +13,7 @@ import {
   SurveyAnswerInput,
   SurveyQuestion,
 } from '@models/survey';
-import { submitSurveyResponse } from '@utils/apis/survey';
+import { getMyResponse, submitSurveyResponse } from '@utils/apis/survey';
 
 import { ChoiceChips } from './ChoiceChips';
 import { DisplayOnlyBlock } from './DisplayOnlyBlock';
@@ -174,6 +174,39 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
     // intentionally only run on first hydration
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated]);
+
+  // Editable surveys: pre-fill the draft with the user's existing response
+  // on first mount. Only does anything when (a) survey.editable is true and
+  // (b) the local draft is empty (so we don't clobber unsaved edits in
+  // localStorage). Server-side response wins over draft if both exist —
+  // that's the canonical "current value" the user is editing.
+  useEffect(() => {
+    if (!survey.editable || !hydrated) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const prior = await getMyResponse(survey.slug);
+        if (cancelled || !prior) return;
+        prior.answers.forEach((a) => {
+          // Only pre-fill questions the form actually has — defensive in
+          // case the server returned an answer for a question that's been
+          // removed from the survey since.
+          if (allQuestions.some((q) => q.id === a.question_id)) {
+            // a.value can be number | string | (number|string)[] | null —
+            // matches DraftAnswerValue.
+            setAnswer(a.question_id, a.value as Parameters<typeof setAnswer>[1]);
+          }
+        });
+      } catch {
+        // 4xx/5xx other than 404 — fall through to fresh form.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // intentionally only run on first hydration / survey change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated, survey.editable, survey.slug]);
 
   // Time-per-question dwell tracking — same as before, scoped to the visible
   // question stream.

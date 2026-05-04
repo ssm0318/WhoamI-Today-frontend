@@ -108,6 +108,16 @@ export interface Survey {
   // True when the same user may submit multiple times (anytime_reflection-
   // style ongoing feedback).
   repeatable: boolean;
+  // True when re-submitting REPLACES the existing response. The form
+  // pre-fills with prior answers via /api/surveys/<slug>/my_response/.
+  // Distinct from `repeatable` (which creates separate rows).
+  editable: boolean;
+  // Researcher-set close flag. When true, the form shows the past response
+  // read-only; submit returns 410.
+  closed: boolean;
+  // Higher = surfaced earlier in the survey index. 100 = research-critical
+  // (feature_eval, goal_comparison), 80 = daily/SOTD, 50 = weekly, etc.
+  priority: number;
   // When non-empty, overrides per-question result rendering with a single
   // survey-level visualization (scale_score_histogram, slider_histogram_paired).
   result_kind: '' | 'scale_score_histogram' | 'slider_histogram_paired';
@@ -262,7 +272,16 @@ export interface SurveyIndexEntry {
   sequence_index: number;
   window_start: string; // ISO date
   window_end: string | null; // null = open-ended (anytime, endpoint)
-  survey: { slug: string; title_en: string; title_ko: string };
+  survey: {
+    slug: string;
+    title_en: string;
+    title_ko: string;
+    // Sort key + render hints exposed on the index — see backend
+    // SurveyMinimalSerializer.
+    priority: number;
+    editable: boolean;
+    closed: boolean;
+  };
   bucket: Bucket;
   user_answered: boolean;
   submitted_at: string | null;
