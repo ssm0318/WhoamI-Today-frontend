@@ -144,7 +144,6 @@ function MyCheckInCard() {
         </Layout.FlexRow>
       )}
 
-      {/* Thought pill — leading 🤪 emoji reads as a "be random" prompt. */}
       {thought ? (
         <Layout.FlexRow
           bgColor="WHITE"
@@ -157,9 +156,6 @@ function MyCheckInCard() {
           style={{ flexShrink: 0, cursor: 'pointer', alignSelf: 'flex-start' }}
           onClick={goToCheckIn}
         >
-          <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden>
-            🤪
-          </span>
           <Typo type="label-large" numberOfLines={1}>
             {thought}
           </Typo>

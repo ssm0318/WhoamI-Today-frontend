@@ -118,9 +118,6 @@ function CheckInUpdateCard({
               rounded={8}
               style={{ alignSelf: 'flex-start' }}
             >
-              <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden>
-                🤪
-              </span>
               <Typo type="label-large" numberOfLines={2}>
                 {content}
               </Typo>

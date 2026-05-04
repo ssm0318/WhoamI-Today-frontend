@@ -304,9 +304,6 @@ function FriendProfileAccordionItem({
                   style={{ flexShrink: 0, cursor: 'pointer' }}
                   onClick={() => openCheckInDetail('thought')}
                 >
-                  <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden>
-                    🤪
-                  </span>
                   <Typo type="label-large" numberOfLines={1}>
                     {thought}
                   </Typo>
