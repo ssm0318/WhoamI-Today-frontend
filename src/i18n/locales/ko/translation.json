@@ -149,6 +149,15 @@
     "success_message": "이메일 인증이 완료되었습니다!",
     "description": "앱으로 돌아가서 로그인을 진행해주세요."
   },
+  "invite_pending": {
+    "your_friend": "친구",
+    "message": "{{username}}님이 친구 요청을 수락하면\nWAIT을 이용할 수 있어요.",
+    "sub_message": "수락이 완료될 때까지 잠시만 기다려 주세요.",
+    "refresh": "수락됐는지 확인",
+    "not_accepted_toast": "아직 친구 요청이 수락되지 않은 것 같아요.",
+    "refresh_failed_toast": "수락 여부를 확인하지 못했어요. 다시 시도해주세요.",
+    "logout": "로그아웃"
+  },
   "sign_up": {
     "create_an_account": "새로운 계정 만들기",
     "email": "이메일",
@@ -193,8 +202,9 @@
     "friend_email": "친구의 이메일",
     "friend_email_guide": "WIT은 현재 연구 참가자 또는 기존 사용자로부터 초대를 받은 사람들만 이용할 수 있습니다. 가입하려면 이미 WIT을 사용 중인 친구의 이메일을 입력해주세요.",
     "friend_email_error": "올바르지 않은 이메일 주소입니다.",
-    "friend_username": "친구 username (선택)",
-    "friend_username_guide": "선택. 친구가 WAIT에 초대해주었다면 친구의 username을 입력해줘.",
+    "friend_username": "초대해준 친구의 username",
+    "friend_username_guide": "WAIT은 기존 사용자의 초대를 통해서만 가입할 수 있어. 초대해준 친구의 username을 입력해줘.",
+    "friend_username_required_error": "초대해준 친구의 username을 입력해주세요.",
     "friend_username_error": "해당 username을 가진 유저를 찾을 수 없습니다.",
     "no_search_results": "일치하는 사용자가 없어.",
     "must_click_profile": "검색 결과에서 프로필을 눌러서 확인하거나, 칸을 비워줘.",
@@ -917,9 +927,9 @@
       "invite": {
         "text": "친구 초대",
         "copy": "초대 링크를 클립보드에 복사했습니다.",
-        "desktop_message": "저와 함께 WhoAmI Today (WIT) 베타 테스트에 참여하세요. WIT는 워싱턴 대학교 연구팀이 청소년을 위해 개발한 소셜 미디어 플랫폼입니다.\n\n가입할 때 제 username을 입력해주세요.\n\n초대 링크: {{invitation_link}}\n\n제 username: {{username}}",
+        "desktop_message": "저와 함께 WhoAmI Today (WIT) 베타 테스트에 참여하세요. WIT는 워싱턴 대학교 연구팀이 청소년을 위해 개발한 소셜 미디어 플랫폼입니다.\n\n앱에서 초대 링크를 열면 제 초대 코드가 자동으로 입력돼요.\n\n초대 링크: {{invitation_link}}\n\n초대 코드: {{invite_code}}\n제 username: {{username}}",
         "mobile_message_title": "WhoAmI Today (WIT)에서 만나요.",
-        "mobile_message": "가입할 때 제 username을 입력해주세요.\n\n초대 링크: {{invitation_link}}\n\n제 username: {{username}}"
+        "mobile_message": "앱에서 초대 링크를 열면 제 초대 코드가 자동으로 입력돼요.\n\n초대 링크: {{invitation_link}}\n\n초대 코드: {{invite_code}}\n제 username: {{username}}"
       },
       "tab": {
         "requests": "친구 요청",

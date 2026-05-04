@@ -149,6 +149,15 @@
         "success_message": "Your email has been verified!",
         "description": "Please return to the app and sign in."
     },
+    "invite_pending": {
+        "your_friend": "your friend",
+        "message": "You can use WAIT once {{username}}\naccepts your friend request.",
+        "sub_message": "Please wait until your invite is accepted.",
+        "refresh": "I’ve been accepted",
+        "not_accepted_toast": "Looks like your invite has not been accepted yet.",
+        "refresh_failed_toast": "Could not check your invite status. Please try again.",
+        "logout": "Log out"
+    },
     "sign_up": {
         "create_an_account": "Create an Account",
         "email": "Email",
@@ -193,8 +202,9 @@
         "friend_email": "Friend's Email",
         "friend_email_guide": "WIT is currently only available to participants in our study or to people who’ve been invited by existing users. To join, please enter the email of your friend who’s already a WIT user.",
         "friend_email_error": "Invalid email address",
-        "friend_username": "Friend's Username (optional)",
-        "friend_username_guide": "Optional. If someone invited you to WAIT, enter their username here.",
+        "friend_username": "Inviting friend's username",
+        "friend_username_guide": "WAIT is invite-only. Enter the username of the friend who invited you.",
+        "friend_username_required_error": "Enter the username of the friend who invited you.",
         "friend_username_error": "No user found with this username.",
         "no_search_results": "No matching users.",
         "must_click_profile": "Tap a profile from the dropdown to confirm, or clear the field.",
@@ -925,9 +935,9 @@
             "invite": {
                 "text": "Invite Friends",
                 "copy": "Invitation link copied to clipboard.",
-                "desktop_message": "Join me in beta testing WhoAmI Today (WIT) — a social media platform for youth designed by researchers at the University of Washington.\n\nUse my username when signing up.\n\nInvitation link: {{invitation_link}}\n\nMy username: {{username}}",
+                "desktop_message": "Join me in beta testing WhoAmI Today (WIT) — a social media platform for youth designed by researchers at the University of Washington.\n\nOpen this invite link in the app to sign up with my invite code filled in.\n\nInvitation link: {{invitation_link}}\n\nInvite code: {{invite_code}}\nMy username: {{username}}",
                 "mobile_message_title": "Join me on WhoAmI Today (WIT).",
-                "mobile_message": "Use my username when signing up.\n\nInvitation link: {{invitation_link}}\n\nMy username: {{username}}"
+                "mobile_message": "Open this invite link in the app to sign up with my invite code filled in.\n\nInvitation link: {{invitation_link}}\n\nInvite code: {{invite_code}}\nMy username: {{username}}"
             },
             "tab": {
                 "requests": "Requests",

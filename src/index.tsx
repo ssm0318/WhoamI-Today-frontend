@@ -368,6 +368,8 @@ const router = createBrowserRouter([
         element: <SignUp />,
         children: [
           { path: 'email', element: <Email /> },
+          { path: 'email/invited-by/:inviterUsername', element: <Email /> },
+          { path: 'email/invite-code/:inviteCode', element: <Email /> },
           { path: 'username', element: <Username /> },
           { path: 'password', element: <Password /> },
           { path: 'info', element: <Info /> },

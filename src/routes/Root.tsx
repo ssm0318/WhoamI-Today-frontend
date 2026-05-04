@@ -36,6 +36,7 @@ import {
   shouldShowWidgetGuideOnVersionChange,
 } from '@utils/widgetInstallGuide';
 import { useChatListSocket } from './chat/_hooks/useChatListSocket';
+import InvitePending from './InvitePending';
 
 function Root() {
   const { isMobile } = getMobileDeviceInfo();
@@ -228,6 +229,18 @@ function Root() {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [refreshUnreadCount]);
+
+  if (myProfile?.invite_status === 'pending') {
+    return (
+      <SWRConfig value={{ provider: () => new Map() }}>
+        <Layout.FlexRow justifyContent="center" bgColor="BLACK" w="100%">
+          <RootContainer w="100%" bgColor="WHITE" id="root-container">
+            <InvitePending />
+          </RootContainer>
+        </Layout.FlexRow>
+      </SWRConfig>
+    );
+  }
 
   return (
     <SWRConfig value={{ provider: () => new Map() }}>

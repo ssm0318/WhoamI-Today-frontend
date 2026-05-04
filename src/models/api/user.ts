@@ -31,13 +31,18 @@ export interface SignUpParams {
   noti_time?: string;
   current_ver?: VersionType;
   user_group?: UserGroup;
-  inviter_id?: number;
+  inviter_id: number;
+  inviter_username?: string;
+  inviter_code?: string;
 }
 
 export const hasMandatorySignUpParams = (
   signUpParams: Partial<SignUpParams>,
 ): signUpParams is SignUpParams =>
-  !!signUpParams.email && !!signUpParams.username && !!signUpParams.password;
+  !!signUpParams.email &&
+  !!signUpParams.username &&
+  !!signUpParams.password &&
+  !!signUpParams.inviter_id;
 
 export enum Gender {
   FEMALE,
@@ -91,6 +96,7 @@ export interface UsernameError {
 
 export interface InviterUsernameLookupResponse {
   username: string;
+  invite_code: string;
   inviter_id: number;
   user_group: UserGroup;
   current_ver: VersionType;
@@ -149,6 +155,10 @@ export interface MyProfile extends User {
    * Length 1 = the user never changed the placeholder allocated at signup. */
   username_history?: string[];
   recent_posts?: (Note | Response)[];
+  can_publish?: boolean;
+  invite_status?: 'none' | 'pending' | 'accepted';
+  invite_code?: string;
+  invited_from_detail?: User | null;
 }
 
 export interface FriendRequest {
