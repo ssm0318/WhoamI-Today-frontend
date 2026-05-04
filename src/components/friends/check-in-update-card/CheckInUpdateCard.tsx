@@ -90,7 +90,17 @@ function CheckInUpdateCard({
             <SocialBatteryChip socialBattery={socialBattery} compact />
           )}
           {component === 'mood' && moodArray.length > 0 && (
-            <Layout.FlexRow alignItems="center" gap={0}>
+            // Match the People-tab card chip styling so the mood reads as a
+            // tappable pill (same border / radius / padding as thought + song).
+            <Layout.FlexRow
+              bgColor="WHITE"
+              pv={4}
+              ph={8}
+              outline="LIGHT_GRAY"
+              alignItems="center"
+              rounded={8}
+              style={{ alignSelf: 'flex-start' }}
+            >
               {moodArray.map((emoji, idx) => {
                 const dupeCount = moodArray.slice(0, idx).filter((e) => e === emoji).length;
                 return (
