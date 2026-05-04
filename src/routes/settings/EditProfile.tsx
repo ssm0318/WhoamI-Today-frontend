@@ -423,11 +423,13 @@ function EditProfile() {
       }
     }
 
+    const usernameChanged = draft.username !== myProfile.username;
+
     const profileData = {
       bio: draft.bio,
-      username: draft.username,
       name: draft.name,
       pronouns: draft.pronouns,
+      ...(usernameChanged ? { username: draft.username } : {}),
       ...(!featureFlags?.postsVerQ && {
         name_visibility: draft.name_visibility,
         pronouns_visibility: draft.pronouns_visibility,
