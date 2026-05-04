@@ -271,12 +271,6 @@ function Chat() {
             bot_payload: { kind: 'choice', payload: button.payload },
           });
           handleMessageSent(data);
-          // The "Call in the admin" tap triggers escalation server-side: the
-          // post_save signal runs escalate_to_human, which flips the room to
-          // is_group=True with wit_admin added. The user is currently on the
-          // 1-on-1 route (/users/:id/chat) and won't see the escalation until
-          // they navigate. Take them to the group view directly so admin
-          // appears without a refresh.
           if (button.payload === 'admin' && data.chat_room_id) {
             navigate(`/chats/group/${data.chat_room_id}`, { replace: true });
           }
@@ -286,6 +280,44 @@ function Chat() {
       }
     },
     [navigate, userId],
+  );
+
+  const handleBotMultiSelectSubmit = useCallback(
+    async (intent: string, selected: string[]) => {
+      if (!userId) return;
+      try {
+        const { data } = await postChatMessage(Number(userId), {
+          emoji: '',
+          content: 'multi-select submitted',
+          bot_payload: { kind: 'multi_select_response', intent, selected },
+        });
+        handleMessageSent(data);
+      } catch {
+        // Silent.
+      }
+    },
+    [userId],
+  );
+
+  const handleBotUploadSubmit = useCallback(
+    async (file: File, context?: string) => {
+      if (!userId) return;
+      try {
+        const { data } = await postChatMessage(
+          Number(userId),
+          {
+            emoji: '',
+            content: 'screenshot uploaded',
+            bot_payload: { kind: 'upload_response', context },
+          },
+          file,
+        );
+        handleMessageSent(data);
+      } catch {
+        // Silent.
+      }
+    },
+    [userId],
   );
 
   const handleImageLoaded = (messageId: number) => {
@@ -396,6 +428,8 @@ function Chat() {
                   isFirstInCluster={message.is_first_in_cluster}
                   onImageLoad={handleImageLoaded}
                   onBotButtonClick={handleBotButtonClick}
+                  onBotMultiSelectSubmit={handleBotMultiSelectSubmit}
+                  onBotUploadSubmit={handleBotUploadSubmit}
                 />
               </SwipeToReply>
             ))}

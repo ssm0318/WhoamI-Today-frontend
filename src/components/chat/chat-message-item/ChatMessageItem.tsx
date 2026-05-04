@@ -41,6 +41,8 @@ interface Props {
   onReactionUpdate?: () => void;
   onImageLoad?: (messageId: number) => void;
   onBotButtonClick?: (button: BotButton) => void;
+  onBotMultiSelectSubmit?: (intent: string, selected: string[]) => void;
+  onBotUploadSubmit?: (file: File, context?: string) => void;
 }
 
 function ChatMessageItem({
@@ -51,6 +53,8 @@ function ChatMessageItem({
   onReactionUpdate,
   onImageLoad,
   onBotButtonClick,
+  onBotMultiSelectSubmit,
+  onBotUploadSubmit,
 }: Props) {
   const navigate = useNavigate();
   const {
@@ -386,8 +390,13 @@ function ChatMessageItem({
       ) : (
         textBubble
       )}
-      {message.bot_payload?.kind === 'card' && (
-        <BotCard payload={message.bot_payload} onButtonClick={onBotButtonClick} />
+      {message.bot_payload && (
+        <BotCard
+          payload={message.bot_payload}
+          onButtonClick={onBotButtonClick}
+          onMultiSelectSubmit={onBotMultiSelectSubmit}
+          onUploadSubmit={onBotUploadSubmit}
+        />
       )}
       {reactions.length > 0 && (
         <Layout.FlexRow gap={4} mt={2} justifyContent={isMine ? 'flex-end' : 'flex-start'}>

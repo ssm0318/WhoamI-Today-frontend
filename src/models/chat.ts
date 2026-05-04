@@ -39,12 +39,45 @@ export interface BotButton {
   context?: string; // for action: 'upload'
 }
 
-export interface BotPayload {
-  kind: 'card' | 'choice' | 'upload';
-  buttons?: BotButton[]; // when kind === 'card'
-  payload?: string; // when kind === 'choice'
-  context?: string; // when kind === 'upload'
+export interface BotMultiSelectOption {
+  label: string;
+  value: string;
 }
+
+// Discriminated union covering every bot_payload variant the backend emits or
+// the frontend posts back. Keep in sync with chat/wit_bot_payloads.py.
+export type BotPayload =
+  | {
+      kind: 'card';
+      buttons?: BotButton[];
+      intro?: string;
+    }
+  | {
+      kind: 'choice';
+      payload?: string;
+    }
+  | {
+      kind: 'upload';
+      context?: string;
+      label?: string;
+    }
+  | {
+      kind: 'multi_select';
+      intent: string;
+      options: BotMultiSelectOption[];
+      submit_label: string;
+      min_selection: number;
+      max_selection: number | null;
+    }
+  | {
+      kind: 'multi_select_response';
+      intent: string;
+      selected: string[];
+    }
+  | {
+      kind: 'upload_response';
+      context?: string;
+    };
 
 export interface InputChatMessage {
   emoji: ChatEmojiType | '' | null;
