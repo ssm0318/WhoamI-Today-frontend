@@ -154,6 +154,8 @@
     "message": "{{username}}님이 친구 요청을 수락하면\nWAIT을 이용할 수 있어요.",
     "sub_message": "수락이 완료될 때까지 잠시만 기다려 주세요.",
     "refresh": "수락됐는지 확인",
+    "not_accepted_toast": "아직 친구 요청이 수락되지 않은 것 같아요.",
+    "refresh_failed_toast": "수락 여부를 확인하지 못했어요. 다시 시도해주세요.",
     "logout": "로그아웃"
   },
   "sign_up": {

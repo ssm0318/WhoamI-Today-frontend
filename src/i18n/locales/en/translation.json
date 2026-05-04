@@ -154,6 +154,8 @@
         "message": "You can use WAIT once {{username}}\naccepts your friend request.",
         "sub_message": "Please wait until your invite is accepted.",
         "refresh": "I’ve been accepted",
+        "not_accepted_toast": "Looks like your invite has not been accepted yet.",
+        "refresh_failed_toast": "Could not check your invite status. Please try again.",
         "logout": "Log out"
     },
     "sign_up": {

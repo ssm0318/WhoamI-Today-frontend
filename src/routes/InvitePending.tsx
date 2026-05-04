@@ -9,15 +9,23 @@ import { signOut } from '@utils/apis/user';
 function InvitePending() {
   const [t] = useTranslation('translation', { keyPrefix: 'invite_pending' });
   const postMessage = usePostAppMessage();
-  const { myProfile, fcmToken } = useBoundStore((state) => ({
+  const { myProfile, fcmToken, openToast } = useBoundStore((state) => ({
     myProfile: state.myProfile,
     fcmToken: state.fcmToken,
+    openToast: state.openToast,
   }));
 
   const inviterName = myProfile?.invited_from_detail?.username ?? t('your_friend');
 
-  const handleRefresh = () => {
-    getMe().catch(() => {});
+  const handleRefresh = async () => {
+    try {
+      const profile = await getMe();
+      if (profile.invite_status === 'pending') {
+        openToast({ message: t('not_accepted_toast') });
+      }
+    } catch {
+      openToast({ message: t('refresh_failed_toast') });
+    }
   };
 
   const handleLogout = () => {
