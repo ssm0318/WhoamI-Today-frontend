@@ -152,6 +152,9 @@ export interface MyProfile extends User {
    * Length 1 = the user never changed the placeholder allocated at signup. */
   username_history?: string[];
   recent_posts?: (Note | Response)[];
+  can_publish?: boolean;
+  invite_status?: 'none' | 'pending' | 'accepted';
+  invited_from_detail?: User | null;
 }
 
 export interface FriendRequest {

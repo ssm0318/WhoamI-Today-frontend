@@ -149,6 +149,13 @@
         "success_message": "Your email has been verified!",
         "description": "Please return to the app and sign in."
     },
+    "invite_pending": {
+        "your_friend": "your friend",
+        "message": "You can use WAIT once {{username}}\naccepts your friend request.",
+        "sub_message": "Please wait until your invite is accepted.",
+        "refresh": "Check again",
+        "logout": "Log out"
+    },
     "sign_up": {
         "create_an_account": "Create an Account",
         "email": "Email",

@@ -149,6 +149,13 @@
     "success_message": "이메일 인증이 완료되었습니다!",
     "description": "앱으로 돌아가서 로그인을 진행해주세요."
   },
+  "invite_pending": {
+    "your_friend": "친구",
+    "message": "{{username}}님이 친구 요청을 수락하면\nWAIT을 이용할 수 있어요.",
+    "sub_message": "수락이 완료될 때까지 잠시만 기다려 주세요.",
+    "refresh": "다시 확인",
+    "logout": "로그아웃"
+  },
   "sign_up": {
     "create_an_account": "새로운 계정 만들기",
     "email": "이메일",
