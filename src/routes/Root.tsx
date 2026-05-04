@@ -22,10 +22,12 @@ import { Layout } from '@design-system';
 import { useGetAppMessage, usePostAppMessage } from '@hooks/useAppMessage';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { useBrowseModeActivePersistence } from '@hooks/useBrowseModeActivePersistence';
+import { useBrowseModeRouteSync } from '@hooks/useBrowseModeRouteSync';
 import { useBrowseModeSessionPrompt } from '@hooks/useBrowseModeSessionPrompt';
 import { useBrowseModeTabDurations } from '@hooks/useBrowseModeTabDurations';
 import { useCheckInFreshnessPrompt } from '@hooks/useCheckInFreshnessPrompt';
 import useFcm from '@hooks/useFcm';
+import { useLastVisitedTabPersistence } from '@hooks/useLastVisitedTabPersistence';
 import { SetAppStateData } from '@models/app';
 import { useBoundStore } from '@stores/useBoundStore';
 import { MainWrapper, RootContainer } from '@styles/wrappers';
@@ -70,6 +72,10 @@ function Root() {
   // user's pick within the same tab. Cleared on tab close (next visit
   // starts fresh and the auto-prompt logic decides whether to ask again).
   useBrowseModeActivePersistence();
+  // Bounce off tabs the active browse mode no longer surfaces.
+  useBrowseModeRouteSync();
+  // Mirror the user's current tab to localStorage for cold-start restore.
+  useLastVisitedTabPersistence();
   const isBrowseModePickerOpen = useBoundStore((state) => state.isBrowseModePickerOpen);
   const closeBrowseModePicker = useBoundStore((state) => state.closeBrowseModePicker);
   const location = useLocation();
