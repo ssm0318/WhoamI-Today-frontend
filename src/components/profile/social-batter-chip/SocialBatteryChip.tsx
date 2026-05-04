@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
 import { Layout, Typo } from '@design-system';
@@ -11,6 +12,9 @@ interface SocialBatteryChipProps {
   compact?: boolean;
   borderless?: boolean;
   onClick?: () => void;
+  /** Optional content rendered inside the chip after the label (e.g. an
+   *  inline [UP] pill on the friends list). Borderless variant ignores this. */
+  rightSlot?: ReactNode;
 }
 
 function SocialBatteryChip({
@@ -20,6 +24,7 @@ function SocialBatteryChip({
   compact = false,
   borderless = false,
   onClick,
+  rightSlot,
 }: SocialBatteryChipProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'social_battery' });
   const handleOnClick = () => {
@@ -64,6 +69,7 @@ function SocialBatteryChip({
         <EmojiItem emojiString={emoji} size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
       )}
       {!compact && <Typo type="label-large">{t(socialBattery)}</Typo>}
+      {rightSlot}
     </Layout.FlexRow>
   );
 }

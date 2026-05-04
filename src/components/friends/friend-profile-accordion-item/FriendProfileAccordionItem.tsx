@@ -26,12 +26,17 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import {
   AccordionContainer,
-  ChevronButton,
+  CheckInDivider,
   CollapsedRow,
   ExpandableInner,
   ExpandableSection,
   ExpandedContent,
-  UpdateBadge,
+  InlineUpdateBadge,
+  NewPill,
+  NoPostsHint,
+  PostsButton,
+  ProfileLinkButton,
+  SeeAllPostsLink,
 } from './FriendProfileAccordionItem.styled';
 
 interface Props {
@@ -77,10 +82,12 @@ function FriendProfileAccordionItem({
 
   // --- derived state ---
   const hasCheckInContent = !!(track_id || mood || social_battery || thought);
-  const hasUpdate =
-    (!user.current_user_read_check_in && hasCheckInContent) ||
-    (user.unread_post_cnt ?? 0) > 0 ||
-    (user.recent_posts ?? []).some((p) => !p.current_user_read);
+  // `[UP]` red badge — fires only on unread *check-in* changes. New-posts state
+  // is surfaced separately on the [Posts] button so the two signals are
+  // independently dismissable: Posts → tap, check-in → leave the tab.
+  const hasCheckInUpdate = !user.current_user_read_check_in && hasCheckInContent;
+  const hasNewPosts =
+    (user.unread_post_cnt ?? 0) > 0 || (user.recent_posts ?? []).some((p) => !p.current_user_read);
 
   const moodArray: string[] = (Array.isArray(mood) ? mood : mood ? [mood] : []).filter(Boolean);
   const hasMood = moodArray.length > 0;
@@ -89,6 +96,7 @@ function FriendProfileAccordionItem({
   const hasSong = !!track_id;
 
   const postsToShow = useMemo(() => user.recent_posts ?? [], [user.recent_posts]);
+  const hasPosts = postsToShow.length > 0;
 
   // --- handlers ---
   const openCheckInDetail = (component: 'battery' | 'mood' | 'thought' | 'song') => {
@@ -128,25 +136,33 @@ function FriendProfileAccordionItem({
     setShowSubscriptionPopup(true);
   };
 
-  const handleClickCollapsedRow = () => {
-    onToggleExpand();
-  };
-
-  const handleToggle = (e: MouseEvent) => {
+  const handleTogglePosts = (e: MouseEvent) => {
     e.stopPropagation();
     onToggleExpand();
   };
 
+  const handleSeeAllPosts = (e: MouseEvent) => {
+    e.stopPropagation();
+    if (isMyCard) {
+      navigate('/my');
+    } else {
+      navigate(`/users/${username}`, { state: { source: 'friends_list' } });
+    }
+  };
+
   return (
     <AccordionContainer $isMyCard={isMyCard} ph={16} pv={12} gap={0} rounded={12}>
-      {/* Collapsed Row: always visible */}
-      <CollapsedRow
-        gap={6}
-        justifyContent="space-between"
-        onClick={handleClickCollapsedRow}
-        style={{ cursor: 'pointer' }}
-      >
-        <Layout.FlexRow alignItems="center" gap={6} style={{ flex: 1, minWidth: 0 }}>
+      {/* Top row: identity + actions. No longer a click-to-expand surface — */}
+      {/* the [Posts] button on the right owns the expand toggle. */}
+      <CollapsedRow gap={6} justifyContent="space-between" style={{ cursor: 'default' }}>
+        {/* `flex-wrap` lets [Posts]/[UP] drop to a second line when the row */}
+        {/* runs out of room (320px iPhone SE) — without it, username got */}
+        {/* squeezed to 0 width since the buttons have flex-shrink:0. */}
+        <Layout.FlexRow
+          alignItems="center"
+          gap={6}
+          style={{ flex: 1, minWidth: 0, flexWrap: 'wrap', rowGap: 6 }}
+        >
           {/* Profile + Username + Connection badge */}
           <Layout.FlexRow
             alignItems="center"
@@ -168,17 +184,21 @@ function FriendProfileAccordionItem({
               onClick={handleClickFriendBadge}
             />
           )}
-          {/* Update badge */}
-          {!isMyCard && hasUpdate && (
-            <UpdateBadge>
-              <Typo type="label-medium" color="PRIMARY" fontWeight={700}>
-                Update
-              </Typo>
-            </UpdateBadge>
-          )}
+          {/* [Posts] / [Posts NEW] — sits inline with the friend badge so the */}
+          {/* primary CTA is reachable without scanning to the row's edge. The */}
+          {/* NEW pill clears on tap (markFriendPostsAsRead in the parent). */}
+          <PostsButton
+            type="button"
+            onClick={handleTogglePosts}
+            $hasNew={hasNewPosts}
+            aria-expanded={isExpanded}
+          >
+            Posts
+            {hasNewPosts && <NewPill>NEW</NewPill>}
+          </PostsButton>
         </Layout.FlexRow>
 
-        {/* Right side: bell + chat + chevron */}
+        {/* Right side: bell + chat */}
         <Layout.FlexRow alignItems="center" gap={12}>
           {!isMyCard && subscriptionPopupEnabled && (
             <>
@@ -231,123 +251,157 @@ function FriendProfileAccordionItem({
               )}
             </Layout.LayoutBase>
           )}
-          <ChevronButton onClick={handleToggle} aria-label={isExpanded ? 'Collapse' : 'Expand'}>
-            <SvgIcon name={isExpanded ? 'chevron_up' : 'chevron_down'} size={20} color="BLACK" />
-          </ChevronButton>
         </Layout.FlexRow>
       </CollapsedRow>
 
-      {/* Expandable Section */}
+      {/* Always-visible check-ins. Each populated row paints an inline [UP] */}
+      {/* pill while `current_user_read_check_in` is false so the viewer sees */}
+      {/* exactly which check-in component sits in unread state. (Strict */}
+      {/* per-component change detection would need a backend `read_at` */}
+      {/* timestamp; today the boolean covers the whole check-in.) */}
+      <Layout.FlexCol w="100%" gap={6} pt={8} style={{ minWidth: 0 }}>
+        {/* Battery + mood share one row, separated by a soft "|" divider so */}
+        {/* battery's translated label and mood emojis read as paired status. */}
+        <Layout.FlexRow gap={6} alignItems="center" style={{ flexWrap: 'wrap' }}>
+          {hasBattery ? (
+            <SocialBatteryChip
+              socialBattery={social_battery}
+              onClick={() => openCheckInDetail('battery')}
+              rightSlot={
+                !isMyCard && hasCheckInUpdate ? <InlineUpdateBadge>UP</InlineUpdateBadge> : null
+              }
+            />
+          ) : isMyCard ? (
+            <SocialBatteryPlaceholder />
+          ) : (
+            <PokeButton
+              receiverId={id}
+              componentType="battery"
+              initialPokeId={user.sent_pokes?.battery ?? null}
+            />
+          )}
+          {hasBattery && hasMood && <CheckInDivider>|</CheckInDivider>}
+          {hasMood ? (
+            <Layout.FlexRow
+              bgColor="WHITE"
+              pv={4}
+              ph={8}
+              gap={4}
+              outline="LIGHT_GRAY"
+              alignItems="center"
+              rounded={8}
+              style={{ flexShrink: 0, cursor: 'pointer' }}
+              onClick={() => openCheckInDetail('mood')}
+            >
+              {moodArray.map((emoji, idx) => {
+                const dupeCount = moodArray.slice(0, idx).filter((e) => e === emoji).length;
+                return (
+                  <StackedEmoji key={`${emoji}${dupeCount}`} $offset={idx}>
+                    <EmojiItem
+                      emojiString={emoji}
+                      size={16}
+                      bgColor="TRANSPARENT"
+                      outline="TRANSPARENT"
+                    />
+                  </StackedEmoji>
+                );
+              })}
+              {!isMyCard && hasCheckInUpdate && <InlineUpdateBadge>UP</InlineUpdateBadge>}
+            </Layout.FlexRow>
+          ) : isMyCard ? (
+            <MoodPlaceholder />
+          ) : (
+            <PokeButton
+              receiverId={id}
+              componentType="mood"
+              initialPokeId={user.sent_pokes?.mood ?? null}
+            />
+          )}
+        </Layout.FlexRow>
+
+        {/* Thought (Be Random) — own row */}
+        <Layout.FlexRow w="100%" alignItems="center" style={{ minWidth: 0 }}>
+          {hasThought ? (
+            <Layout.FlexRow
+              bgColor="WHITE"
+              pv={4}
+              ph={8}
+              gap={4}
+              outline="LIGHT_GRAY"
+              alignItems="center"
+              rounded={8}
+              style={{ flexShrink: 1, minWidth: 0, cursor: 'pointer', maxWidth: '100%' }}
+              onClick={() => openCheckInDetail('thought')}
+            >
+              <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden>
+                🤪
+              </span>
+              <Typo type="label-large" numberOfLines={1}>
+                {thought}
+              </Typo>
+              {!isMyCard && hasCheckInUpdate && <InlineUpdateBadge>UP</InlineUpdateBadge>}
+            </Layout.FlexRow>
+          ) : isMyCard ? (
+            <ThoughtPlaceholder />
+          ) : (
+            <PokeButton
+              receiverId={id}
+              componentType="thought"
+              initialPokeId={user.sent_pokes?.thought ?? null}
+            />
+          )}
+        </Layout.FlexRow>
+
+        {/* Song — own row */}
+        <Layout.FlexRow w="100%" alignItems="center" style={{ minWidth: 0, overflow: 'hidden' }}>
+          {hasSong ? (
+            <SpotifyMusic
+              track={track_id}
+              sharer={isMyCard ? undefined : user}
+              fontType="label-large"
+              useAlbumImg
+              onClick={() => openCheckInDetail('song')}
+              rightSlot={
+                !isMyCard && hasCheckInUpdate ? <InlineUpdateBadge>UP</InlineUpdateBadge> : null
+              }
+            />
+          ) : isMyCard ? (
+            <MusicPlaceholder />
+          ) : (
+            <PokeButton
+              receiverId={id}
+              componentType="song"
+              initialPokeId={user.sent_pokes?.song ?? null}
+            />
+          )}
+        </Layout.FlexRow>
+      </Layout.FlexCol>
+
+      {/* Posts section — only visible content stays in the accordion now. */}
       <ExpandableSection $isExpanded={isExpanded}>
         <ExpandableInner>
-          <ExpandedContent w="100%" gap={8} pt={8}>
-            {/* Check-in section: battery + mood + thought */}
-            <Layout.FlexRow gap={4} alignItems="center" style={{ flexWrap: 'wrap' }}>
-              {hasBattery ? (
-                <SocialBatteryChip
-                  socialBattery={social_battery}
-                  compact
-                  onClick={() => openCheckInDetail('battery')}
-                />
-              ) : isMyCard ? (
-                <SocialBatteryPlaceholder />
-              ) : (
-                <PokeButton
-                  receiverId={id}
-                  componentType="battery"
-                  initialPokeId={user.sent_pokes?.battery ?? null}
-                />
-              )}
-              {hasMood ? (
-                <Layout.FlexRow
-                  bgColor="WHITE"
-                  pv={4}
-                  ph={8}
-                  outline="LIGHT_GRAY"
-                  alignItems="center"
-                  rounded={8}
-                  style={{ flexShrink: 0, cursor: 'pointer' }}
-                  onClick={() => openCheckInDetail('mood')}
-                >
-                  {moodArray.map((emoji, idx) => {
-                    const dupeCount = moodArray.slice(0, idx).filter((e) => e === emoji).length;
-                    return (
-                      <StackedEmoji key={`${emoji}${dupeCount}`} $offset={idx}>
-                        <EmojiItem
-                          emojiString={emoji}
-                          size={16}
-                          bgColor="TRANSPARENT"
-                          outline="TRANSPARENT"
-                        />
-                      </StackedEmoji>
-                    );
-                  })}
-                </Layout.FlexRow>
-              ) : isMyCard ? (
-                <MoodPlaceholder />
-              ) : (
-                <PokeButton
-                  receiverId={id}
-                  componentType="mood"
-                  initialPokeId={user.sent_pokes?.mood ?? null}
-                />
-              )}
-              {hasThought ? (
-                <Layout.FlexRow
-                  bgColor="WHITE"
-                  pv={4}
-                  ph={8}
-                  gap={4}
-                  outline="LIGHT_GRAY"
-                  alignItems="center"
-                  rounded={8}
-                  style={{ flexShrink: 0, cursor: 'pointer' }}
-                  onClick={() => openCheckInDetail('thought')}
-                >
-                  <Typo type="label-large" numberOfLines={1}>
-                    {thought}
+          <ExpandedContent w="100%" gap={4} pt={12}>
+            {hasPosts ? (
+              <Layout.FlexCol w="100%" gap={4}>
+                <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
+                  <Typo type="label-large" color="BLACK" fontWeight={600}>
+                    Recent Posts
                   </Typo>
+                  <SeeAllPostsLink type="button" onClick={handleSeeAllPosts}>
+                    See all posts
+                  </SeeAllPostsLink>
                 </Layout.FlexRow>
-              ) : isMyCard ? (
-                <ThoughtPlaceholder />
-              ) : (
-                <PokeButton
-                  receiverId={id}
-                  componentType="thought"
-                  initialPokeId={user.sent_pokes?.thought ?? null}
-                />
-              )}
-            </Layout.FlexRow>
-
-            {/* Song */}
-            {hasSong ? (
-              <Layout.FlexRow w="100%" style={{ minWidth: 0, overflow: 'hidden' }}>
-                <SpotifyMusic
-                  track={track_id}
-                  sharer={isMyCard ? undefined : user}
-                  fontType="label-large"
-                  useAlbumImg
-                  onClick={() => openCheckInDetail('song')}
-                />
-              </Layout.FlexRow>
-            ) : isMyCard ? (
-              <MusicPlaceholder />
-            ) : (
-              <PokeButton
-                receiverId={id}
-                componentType="song"
-                initialPokeId={user.sent_pokes?.song ?? null}
-              />
-            )}
-
-            {/* Recent Posts */}
-            {postsToShow.length > 0 && (
-              <Layout.FlexCol w="100%" gap={4} mt={4}>
-                <Typo type="label-large" color="BLACK" fontWeight={600}>
-                  Recent Posts
-                </Typo>
                 <SwipeablePostCarousel posts={postsToShow} isMyPage={isMyCard} />
               </Layout.FlexCol>
+            ) : (
+              <NoPostsHint>
+                <Typo type="label-large" color="MEDIUM_GRAY">
+                  No recent posts. Check {isMyCard ? 'your' : 'their'} profile for past posts.
+                </Typo>
+                <ProfileLinkButton type="button" onClick={handleSeeAllPosts}>
+                  Go to profile
+                </ProfileLinkButton>
+              </NoPostsHint>
             )}
           </ExpandedContent>
         </ExpandableInner>

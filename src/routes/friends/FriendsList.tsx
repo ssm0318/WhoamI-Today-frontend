@@ -167,15 +167,11 @@ function FriendsList() {
     } as UpdatedProfile;
   }, [myProfile, checkIn]);
 
-  // Per-friend read marking when expanding
-  const markFriendAsRead = useCallback(
+  // Per-friend read marking when [Posts] expands. Marks the *posts only* —
+  // check-in [UP] state is independent and clears on tab unmount (see
+  // `markAllUnreadCheckIns` below).
+  const markFriendPostsAsRead = useCallback(
     async (friend: UpdatedProfile) => {
-      const promises: Promise<unknown>[] = [];
-
-      if (friend.check_in_id && !friend.current_user_read_check_in) {
-        promises.push(readFriendCheckIn(friend.check_in_id));
-      }
-
       const unreadNoteIds = (friend.recent_posts ?? [])
         .filter((p) => p.type === POST_TYPE.NOTE && !p.current_user_read)
         .map((p) => p.id);
@@ -183,6 +179,7 @@ function FriendsList() {
         .filter((p) => p.type === POST_TYPE.RESPONSE && !p.current_user_read)
         .map((p) => p.id);
 
+      const promises: Promise<unknown>[] = [];
       if (unreadNoteIds.length) promises.push(readNote(unreadNoteIds));
       if (unreadResponseIds.length) promises.push(readResponse(unreadResponseIds));
 
@@ -190,29 +187,49 @@ function FriendsList() {
         await Promise.allSettled(promises);
       }
 
-      // Optimistic update
       updateFriendList({ type: 'mark_read', item: friend });
       closeFriendsHook.updateFriendList({ type: 'mark_read', item: friend });
     },
     [updateFriendList, closeFriendsHook],
   );
 
+  // [UP] check-in badge resets on leave-and-return: as the friends route
+  // unmounts we POST a read mark for every friend whose check-in is still
+  // unread, so the next mount sees them all clean. Use a ref so the cleanup
+  // closure always has the latest list without re-running on every change.
+  const friendsForReadRef = useRef<UpdatedProfile[]>([]);
+  useEffect(() => {
+    friendsForReadRef.current = filteredFriends;
+  }, [filteredFriends]);
+  useEffect(() => {
+    return () => {
+      const unread = friendsForReadRef.current.filter(
+        (f) => f.check_in_id && !f.current_user_read_check_in,
+      );
+      unread.forEach((f) => {
+        if (f.check_in_id) readFriendCheckIn(f.check_in_id);
+      });
+    };
+  }, []);
+
   const handleToggleExpand = useCallback(
     (friendId: number) => {
       setExpandedFriendId((prev) => {
         if (prev === friendId) return null;
 
-        // Mark as read when expanding
+        // [Posts] click — clear the [NEW] post pill by marking the visible
+        // recent posts as read. Check-in [UP] is intentionally NOT touched
+        // here; it has its own unmount-based reset (see effect above).
         const friend = filteredFriends.find((f) => f.id === friendId);
         if (friend) {
-          markFriendAsRead(friend);
+          markFriendPostsAsRead(friend);
         }
 
         trackEvent('friends_profile_expanded', { friend_id: friendId });
         return friendId;
       });
     },
-    [filteredFriends, markFriendAsRead, trackEvent, setExpandedFriendId],
+    [filteredFriends, markFriendPostsAsRead, trackEvent, setExpandedFriendId],
   );
 
   const handleToggleMyExpand = useCallback(() => {

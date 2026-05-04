@@ -48,6 +48,90 @@ export const UpdateBadge = styled(Layout.FlexRow).attrs({
   ph: 6,
   rounded: 8,
 })`
-  background-color: #eee6f4;
+  background-color: #ffe4e6;
   flex-shrink: 0;
+`;
+
+/** Compact inline [UP] used next to a single check-in pill (battery / mood /
+ *  thought / song) so the viewer sees which row was updated. Smaller than the
+ *  username-row UpdateBadge so it sits comfortably alongside the chip. */
+export const InlineUpdateBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  background-color: #ffe4e6;
+  color: ${({ theme }) => theme.WARNING};
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  padding: 1px 5px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  user-select: none;
+`;
+
+export const PostsButton = styled.button<{ $hasNew?: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: ${({ $hasNew, theme }) => ($hasNew ? theme.PRIMARY : theme.WHITE)};
+  color: ${({ $hasNew, theme }) => ($hasNew ? theme.WHITE : theme.PRIMARY)};
+  border: 1px solid ${({ theme }) => theme.PRIMARY};
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  &:active {
+    opacity: 0.85;
+  }
+`;
+
+export const NewPill = styled.span`
+  display: inline-flex;
+  align-items: center;
+  background: ${({ theme }) => theme.WHITE};
+  color: ${({ theme }) => theme.PRIMARY};
+  border-radius: 6px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+`;
+
+export const CheckInDivider = styled.span`
+  color: ${({ theme }) => theme.MEDIUM_GRAY};
+  font-size: 14px;
+  flex-shrink: 0;
+  user-select: none;
+`;
+
+export const SeeAllPostsLink = styled.button`
+  background: none;
+  border: 0;
+  padding: 8px 4px;
+  color: ${({ theme }) => theme.PRIMARY};
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+`;
+
+export const NoPostsHint = styled(Layout.FlexCol).attrs({ gap: 8, alignItems: 'flex-start' })`
+  padding: 12px 4px 4px;
+`;
+
+export const ProfileLinkButton = styled.button`
+  background: none;
+  border: 1px solid ${({ theme }) => theme.PRIMARY};
+  color: ${({ theme }) => theme.PRIMARY};
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 `;

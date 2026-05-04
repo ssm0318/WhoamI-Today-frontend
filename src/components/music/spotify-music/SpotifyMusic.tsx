@@ -1,5 +1,5 @@
 import { Track } from '@spotify/web-api-ts-sdk';
-import { CSSProperties, MouseEvent, useEffect, useState } from 'react';
+import { CSSProperties, MouseEvent, ReactNode, useEffect, useState } from 'react';
 import MusicDetailBottomSheet from '@components/music/music-detail-bottom-sheet/MusicDetailBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import SpotifyManager from '@libs/SpotifyManager';
@@ -16,6 +16,9 @@ interface Props {
   containerStyle?: CSSProperties;
   fontType?: FontType;
   onClick?: () => void;
+  /** Optional content rendered inside the chip after the title (e.g. an
+   *  inline [UP] pill on the friends list). */
+  rightSlot?: ReactNode;
 }
 
 function SpotifyMusic({
@@ -26,6 +29,7 @@ function SpotifyMusic({
   useDetailBottomSheet = false,
   useAlbumImg = false,
   onClick,
+  rightSlot,
 }: Props) {
   const [trackData, setTrackData] = useState<Track | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -123,6 +127,7 @@ function SpotifyMusic({
                   : trackData.name}
               </Typo>
               {useAlbumImg && <SpotifyIcon />}
+              {rightSlot}
             </Layout.FlexRow>
           )
         )}
