@@ -3,11 +3,13 @@ import { isSameDay } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
 import { SwipeToReply } from '@components/_common/swipe-to-reply/SwipeToReply';
 import ChatMessageInput from '@components/chat/chat-message-input/ChatMessageInput';
 import ChatMessageItem from '@components/chat/chat-message-item/ChatMessageItem';
 import ChatRequestBar from '@components/chat/chat-request-bar/ChatRequestBar';
+import SideMenu from '@components/header/side-menu/SideMenu';
 import SubHeader from '@components/sub-header/SubHeader';
 import { CHAT_MESSAGE_INPUT_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
@@ -69,6 +71,7 @@ function Chat() {
   const [nextUrl, setNextUrl] = useState<string | null>(null);
   const [firstLoad, setFirstLoad] = useState(true);
   const [replyTarget, setReplyTarget] = useState<ChatMessage | null>(null);
+  const [showSideMenu, setShowSideMenu] = useState(false);
 
   const [areFriends, setAreFriends] = useState<boolean | null>(null);
   const [sentChatRequest, setSentChatRequest] = useState(false);
@@ -408,7 +411,12 @@ function Chat() {
     <MainScrollContainer scrollRef={scrollRef}>
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
       <div onClick={markRead} style={{ width: '100%' }}>
-        <SubHeader title={username} onClickTitle={() => navigate(`/users/${username}`)} />
+        <SubHeader
+          title={username}
+          onClickTitle={() => navigate(`/users/${username}`)}
+          RightComponent={<Icon name="hamburger" size={44} onClick={() => setShowSideMenu(true)} />}
+        />
+        {showSideMenu && <SideMenu closeSideMenu={() => setShowSideMenu(false)} />}
         {firstLoad && (
           <Layout.FlexCol w="100%" alignItems="center" mt={30}>
             <Loader />

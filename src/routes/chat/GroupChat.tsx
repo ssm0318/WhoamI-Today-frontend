@@ -8,6 +8,7 @@ import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SwipeToReply } from '@components/_common/swipe-to-reply/SwipeToReply';
 import ChatMessageInput from '@components/chat/chat-message-input/ChatMessageInput';
 import ChatMessageItem from '@components/chat/chat-message-item/ChatMessageItem';
+import SideMenu from '@components/header/side-menu/SideMenu';
 import { CHAT_MESSAGE_INPUT_HEIGHT, TOP_NAVIGATION_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
@@ -54,6 +55,7 @@ function GroupChat() {
   const [firstLoad, setFirstLoad] = useState(true);
   const [replyTarget, setReplyTarget] = useState<ChatMessage | null>(null);
   const [showMemberDrawer, setShowMemberDrawer] = useState(false);
+  const [showSideMenu, setShowSideMenu] = useState(false);
   const socketRef = useRef<WebSocket>();
 
   const [typingUsers, setTypingUsers] = useState<Record<number, string>>({});
@@ -416,8 +418,8 @@ function GroupChat() {
           )}
         </Layout.FlexRow>
 
-        {/* Right: members icon — vertically centered */}
-        <Layout.FlexRow w={36} h={36} alignItems="center" justifyContent="center">
+        {/* Right: members + hamburger */}
+        <Layout.FlexRow alignItems="center" justifyContent="flex-end" gap={4}>
           <button
             type="button"
             onClick={() => setShowMemberDrawer(true)}
@@ -434,8 +436,10 @@ function GroupChat() {
             <EmojiItem emojiString="👤" size={16} bgColor="TRANSPARENT" outline="TRANSPARENT" />
             <span style={{ fontSize: 12, color: '#666', lineHeight: 1 }}>{members.length}</span>
           </button>
+          <Icon name="hamburger" size={44} onClick={() => setShowSideMenu(true)} />
         </Layout.FlexRow>
       </Layout.FlexRow>
+      {showSideMenu && <SideMenu closeSideMenu={() => setShowSideMenu(false)} />}
 
       {/* Right-side member drawer */}
       {showMemberDrawer && (
