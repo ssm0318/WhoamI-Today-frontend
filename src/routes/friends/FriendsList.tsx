@@ -9,6 +9,7 @@ import FriendsTimelineFeed from '@components/friends/friends-timeline-feed/Frien
 import NoCloseFriends from '@components/friends/no-close-friends/NoCloseFriends';
 import { FLOATING_BUTTON_SIZE } from '@components/header/floating-button/FloatingButton.styled';
 import { Colors, Layout, SvgIcon, Typo } from '@design-system';
+import { usePersistedExpandedFriendId } from '@hooks/usePersistedExpandedFriendId';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import { Connection, FriendType, UpdatedProfile } from '@models/api/friends';
@@ -29,7 +30,7 @@ function FriendsList() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialTab: TabType = searchParams.get('tab') === 'feed' ? 'feed' : 'people';
   const [selectedTab, setSelectedTab] = useState<TabType>(initialTab);
-  const [expandedFriendId, setExpandedFriendId] = useState<number | null>(null);
+  const [expandedFriendId, setExpandedFriendId] = usePersistedExpandedFriendId();
 
   // Browse mode can prefill the close-friends-only filter when "Just my people" is active.
   const browseModeForcesCloseFriends = useBoundStore(
@@ -134,6 +135,14 @@ function FriendsList() {
       .filter((user) => !user.is_hidden);
   }, [allFriends]);
 
+  // Collapse a persisted expansion if the friend is no longer in the list
+  // (e.g., filter toggled, friend hidden) — avoids a phantom expansion when they reappear.
+  useEffect(() => {
+    if (expandedFriendId === null || expandedFriendId === -1) return;
+    const stillVisible = filteredFriends.some((f) => f.id === expandedFriendId);
+    if (!stillVisible) setExpandedFriendId(null);
+  }, [filteredFriends, expandedFriendId, setExpandedFriendId]);
+
   const isEmpty = filteredFriends.length === 0 && !isAllFriendsLoading;
 
   // Build "my" data as an UpdatedProfile-like object for the accordion item
@@ -203,12 +212,12 @@ function FriendsList() {
         return friendId;
       });
     },
-    [filteredFriends, markFriendAsRead, trackEvent],
+    [filteredFriends, markFriendAsRead, trackEvent, setExpandedFriendId],
   );
 
   const handleToggleMyExpand = useCallback(() => {
     setExpandedFriendId((prev) => (prev === -1 ? null : -1));
-  }, []);
+  }, [setExpandedFriendId]);
 
   const handleConnectionChanged = useCallback(
     (userId: number, connection: Connection) => {
