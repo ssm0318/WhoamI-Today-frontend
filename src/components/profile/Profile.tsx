@@ -351,6 +351,7 @@ function Profile({ user }: ProfileProps) {
           {/* friend count link (version_q my page only) */}
           {featureFlags?.postsVerQ && isMyPage && (
             <Layout.FlexRow
+              mt={2}
               onClick={() => navigate('/my/friends/list')}
               style={{ cursor: 'pointer' }}
             >

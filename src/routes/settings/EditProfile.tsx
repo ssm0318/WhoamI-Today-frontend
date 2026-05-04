@@ -1,5 +1,5 @@
 import { isAxiosError } from 'axios';
-import { ChangeEvent, ReactNode, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, ReactNode, TouchEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -13,7 +13,12 @@ import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityT
 import ChipCategorySection from '@components/profile/chip/ChipCategorySection';
 import { StyledEditProfileButton } from '@components/settings/SettingsButtons.styled';
 import SubHeader from '@components/sub-header/SubHeader';
-import { MAX_WINDOW_WIDTH, TITLE_HEADER_HEIGHT, Z_INDEX } from '@constants/layout';
+import {
+  BOTTOM_TABBAR_HEIGHT,
+  MAX_WINDOW_WIDTH,
+  TITLE_HEADER_HEIGHT,
+  Z_INDEX,
+} from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import { useChipCategories } from '@hooks/useChipCategories';
 import { useDelayedVisible } from '@hooks/useDelayedVisible';
@@ -37,7 +42,6 @@ import {
   VisibilityMemoryKeys,
 } from '@utils/visibilityMemory';
 import { shouldShowWidgetGuide } from '@utils/widgetInstallGuide';
-import { MainScrollContainer } from '../Root';
 
 // Hard cap on total profile chips a user can pick across all categories.
 // Encourages curated selections — and prevents the "endless clicking" feeling
@@ -504,8 +508,17 @@ function EditProfile() {
       </Layout.FlexRow>
     );
 
+  const handleTouchStart = (e: TouchEvent) => {
+    const target = e.target as Node;
+    if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) return;
+    const el = document.activeElement;
+    if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+      el.blur();
+    }
+  };
+
   return (
-    <MainScrollContainer>
+    <EditProfileViewport onTouchStart={handleTouchStart}>
       <SubHeader
         typo="title-large"
         title={t('title')}
@@ -524,7 +537,7 @@ function EditProfile() {
           </button>
         }
       />
-      <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" gap={10}>
+      <Layout.FlexCol w="100%" gap={10}>
         <Layout.FlexCol pt={24} w="100%" alignItems="center">
           <StyledEditProfileButton type="button" onClick={handleClickUpdate}>
             <ProfileImage
@@ -704,11 +717,26 @@ function EditProfile() {
         />
       )}
       <UploadLoadingOverlay visible={showUploadOverlay} />
-    </MainScrollContainer>
+    </EditProfileViewport>
   );
 }
 
 export default EditProfile;
+
+const EditProfileViewport = styled.div`
+  position: fixed;
+  top: ${TITLE_HEADER_HEIGHT}px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: ${MAX_WINDOW_WIDTH}px;
+  height: calc(100vh - ${TITLE_HEADER_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px);
+  height: calc(100dvh - ${TITLE_HEADER_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: ${({ theme }) => theme.WHITE};
+  -webkit-overflow-scrolling: touch;
+`;
 
 const EditProfileTabRow = styled(Layout.FlexRow)`
   width: 100%;

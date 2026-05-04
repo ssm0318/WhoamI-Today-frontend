@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { getCurrentWsOrigin } from '@utils/devServer';
 
 interface ChatListUpdate {
   opponent_id: number;
@@ -9,7 +10,7 @@ interface ChatListUpdate {
 
 function getWebSocketUrl(token: string) {
   if (process.env.NODE_ENV === 'development') {
-    return `ws://localhost:8000/ws/chat/list/?token=${token}`;
+    return `${getCurrentWsOrigin()}/ws/chat/list/?token=${token}`;
   }
   const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
   return `${protocol}://${window.location.host}/ws/chat/list/?token=${token}`;
