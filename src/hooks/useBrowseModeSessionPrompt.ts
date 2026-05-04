@@ -2,35 +2,29 @@ import { useCallback, useEffect, useState } from 'react';
 import { FeatureFlagKey } from '@constants/featureFlag';
 import { useBoundStore } from '@stores/useBoundStore';
 import {
-  FRESHNESS_MS,
+  hasShownPromptThisSlot,
   isSnoozeActive,
-  readLastPickedAt,
+  markPromptShownThisSlot,
   writeLastPickedAt,
 } from '@utils/browseModeActiveSession';
 
 /**
- * Auto-prompt the Browse Mode picker on app open. Spec: ALWAYS fire when
- *   (a) the user has never picked a mode (first-ever open, or always
- *       skipped before — there's no `last_picked_at` in localStorage), or
- *   (b) it's been more than 15 minutes since their last pick.
- * UNLESS the user has explicitly snoozed via the "Don't show me again
- * today" checkbox — in that case the prompt is suppressed until the
- * local end-of-day, regardless of freshness.
+ * Auto-prompt the Browse Mode picker on app open.
+ *
+ * Frequency cap: at most one auto-fire per day-slot (morning / afternoon /
+ * evening — boundaries at noon and 6pm local), so users see the prompt up
+ * to 3× a day no matter how often they open the app. The previous
+ * 15-minute freshness gate was too noisy. The "Don't show me again today"
+ * snooze still overrides everything — explicit user opt-out wins over the
+ * slot heuristic.
  *
  * Trigger: cold start (component mount with userId + feature flag both
  * loaded). Mounted once at Root, so "cold start" really means page load
  * or full app remount.
  *
- * No cooldown after dismiss — if the user skips, they'll be prompted
- * again next time they open the app (matches the user's spec for the
- * "always skipped" case).
- *
- * No visibility-change re-trigger — brief tab-switches and reloads
- * shouldn't generate a new prompt mid-session. The 15-minute freshness
- * check on the next page load is the only re-trigger.
- *
- * `last_picked_at` is owned by the picker activation path (see
- * BrowseModeSessionPrompt's applyMode) so this hook only READS it.
+ * `last_picked_at` is still written when the user actively picks a mode
+ * (see {@link finish}) — that timestamp drives the active-mode rehydrate
+ * window in `readActiveMode`, separate from auto-prompt frequency.
  */
 export function useBrowseModeSessionPrompt() {
   const [shouldShow, setShouldShow] = useState(false);
@@ -42,17 +36,16 @@ export function useBrowseModeSessionPrompt() {
   const userId = myProfile?.id;
   const browseModeEnabled = featureFlags?.[FeatureFlagKey.BROWSE_MODE] ?? false;
 
-  // Cold-start gate: prompt iff user has never picked OR last pick is stale,
-  // AND the snooze isn't active. Snooze is checked first because it's the
-  // user's most explicit "leave me alone" signal — overrides freshness.
-  // Also load saved presets so they're ready when the prompt opens.
+  // Cold-start gate: snooze always wins; otherwise fire iff this day-slot
+  // hasn't already shown the prompt. Mark the slot as shown immediately
+  // so the prompt doesn't re-fire mid-slot if Root remounts (e.g. nav).
   useEffect(() => {
     if (!userId || !browseModeEnabled) return;
     fetchPresets();
     if (isSnoozeActive(userId)) return;
-    const lastPickedAt = readLastPickedAt(userId);
-    const stale = lastPickedAt === null || Date.now() - lastPickedAt >= FRESHNESS_MS;
-    if (stale) setShouldShow(true);
+    if (hasShownPromptThisSlot(userId)) return;
+    markPromptShownThisSlot(userId);
+    setShouldShow(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, browseModeEnabled]);
 

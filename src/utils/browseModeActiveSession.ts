@@ -19,6 +19,7 @@ import { ActiveBrowseMode } from '@models/browseMode';
 const ACTIVE_MODE_PREFIX = 'browse_mode_active_';
 const LAST_PICKED_AT_PREFIX = 'browse_mode_last_picked_at_';
 const SNOOZE_UNTIL_PREFIX = 'browse_mode_snooze_until_';
+const PROMPT_SHOWN_SLOT_PREFIX = 'browse_mode_prompt_shown_slot_';
 
 /** 15 minutes — anything past this and the auto-prompt fires on next open. */
 export const FRESHNESS_MS = 15 * 60 * 1000;
@@ -99,6 +100,47 @@ export function isSnoozeActive(userId: number): boolean {
   // reads don't re-check expired data.
   clearSnoozeUntil(userId);
   return false;
+}
+
+// ---- Per-day slot tracking for the auto-prompt ---------------------------
+// Cap the auto-prompt at ~3 firings per day, distributed across morning /
+// afternoon / evening slots. Once the prompt has been *shown* in a slot we
+// don't fire again until the next slot, even if the user dismisses without
+// picking. Per-device localStorage — no cross-device sync.
+type PromptSlot = 'morning' | 'afternoon' | 'evening';
+
+function currentSlot(now: Date = new Date()): PromptSlot {
+  const h = now.getHours();
+  if (h < 12) return 'morning';
+  if (h < 18) return 'afternoon';
+  return 'evening';
+}
+
+/** "YYYY-MM-DD_<slot>" — local date so the slot rolls over at midnight. */
+function currentSlotKey(now: Date = new Date()): string {
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}_${currentSlot(now)}`;
+}
+
+function promptShownSlotKey(userId: number): string {
+  return `${PROMPT_SHOWN_SLOT_PREFIX}${userId}`;
+}
+
+/** True iff the auto-prompt has already been shown in the current slot. */
+export function hasShownPromptThisSlot(userId: number): boolean {
+  const stored = localStorage.getItem(promptShownSlotKey(userId));
+  return stored === currentSlotKey();
+}
+
+/** Mark the current slot as "prompt shown" so we don't re-fire within it. */
+export function markPromptShownThisSlot(userId: number): void {
+  try {
+    localStorage.setItem(promptShownSlotKey(userId), currentSlotKey());
+  } catch {
+    /* private mode / quota — best-effort */
+  }
 }
 
 /** True iff the user picked a mode within the last FRESHNESS_MS. */
