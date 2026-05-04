@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Layout } from '@design-system';
+import { VersionType } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { getMe } from '@utils/apis/my';
 
 function SignUp() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_up' });
@@ -13,6 +15,7 @@ function SignUp() {
     setSignUpInfo: state.setSignUpInfo,
   }));
   const { pathname, search } = useLocation();
+  const navigate = useNavigate();
   const initializedRef = useRef(false);
 
   const title = useMemo(() => {
@@ -20,6 +23,21 @@ function SignUp() {
     if (pathname.includes('profile-image')) return t('add_a_profile_image');
     return t('create_an_account');
   }, [pathname, t]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    getMe()
+      .then((user) => {
+        if (!isMounted) return;
+        navigate(user.current_ver === VersionType.VER_Q ? '/feed' : '/friends', { replace: true });
+      })
+      .catch(() => {});
+
+    return () => {
+      isMounted = false;
+    };
+  }, [navigate]);
 
   useEffect(() => {
     if (initializedRef.current) return;
