@@ -20,6 +20,10 @@ interface ArchiveCardProps {
   onPinClick?: (entry: CheckInComponentEntry) => void;
   onMoreClick?: (entry: CheckInComponentEntry) => void;
   onBodyClick?: (entry: CheckInComponentEntry) => void;
+  /** When set on a pinned entry, the visibility chip becomes a tappable
+   *  shortcut to the modify-visibility flow — saves the user from going
+   *  through ⋯ → Modify visibility. Owner-only; omitted on friend cards. */
+  onModifyVisibilityClick?: (entry: CheckInComponentEntry) => void;
   /** When set, renders the private reply section (friend-view only). */
   friendUsername?: string;
   /** When true, renders the private reply section in owner-view mode. */
@@ -45,6 +49,7 @@ function ArchiveCard({
   onPinClick,
   onMoreClick,
   onBodyClick,
+  onModifyVisibilityClick,
   friendUsername,
   ownerMode,
 }: ArchiveCardProps) {
@@ -54,6 +59,8 @@ function ArchiveCard({
   const showPin = Boolean(onPinClick);
   const showMore = Boolean(onMoreClick);
   const showHeaderActions = showPin || showMore;
+  const showVisibility = entry.is_pinned && !!entry.pin_visibility;
+  const visibilityClickable = showVisibility && Boolean(onModifyVisibilityClick);
 
   const handleBody = () => onBodyClick?.(entry);
   const handlePin = (e: MouseEvent) => {
@@ -64,13 +71,35 @@ function ArchiveCard({
     e.stopPropagation();
     onMoreClick?.(entry);
   };
+  const handleVisibility = (e: MouseEvent) => {
+    e.stopPropagation();
+    if (visibilityClickable) onModifyVisibilityClick?.(entry);
+  };
 
   return (
     <S.CardShell id={`entry-${entry.id}`} as="div" role="button" tabIndex={0} onClick={handleBody}>
       <S.CardHeader>
-        <Typo type="label-small" color="MEDIUM_GRAY">
-          {timestamp}
-        </Typo>
+        <Layout.FlexRow alignItems="center" gap={6} style={{ minWidth: 0 }}>
+          <Typo type="label-small" color="MEDIUM_GRAY">
+            {timestamp}
+          </Typo>
+          {showVisibility && (
+            <S.HeaderVisibilityBadge
+              type="button"
+              aria-label={
+                visibilityClickable
+                  ? `Change visibility (currently ${getVisibilityLabel(entry.pin_visibility!)})`
+                  : `Visibility: ${getVisibilityLabel(entry.pin_visibility!)}`
+              }
+              onClick={handleVisibility}
+              disabled={!visibilityClickable}
+            >
+              <Typo type="label-small" color="DARK_GRAY" fontWeight={600}>
+                {getVisibilityLabel(entry.pin_visibility!)}
+              </Typo>
+            </S.HeaderVisibilityBadge>
+          )}
+        </Layout.FlexRow>
         {showHeaderActions && (
           <S.HeaderActions>
             {showPin && (
@@ -91,13 +120,6 @@ function ArchiveCard({
         )}
       </S.CardHeader>
       <S.CardBodyWrapper>{body}</S.CardBodyWrapper>
-      {entry.is_pinned && entry.pin_visibility && (
-        <S.VisibilityBadge>
-          <Typo type="label-small" color="DARK_GRAY" fontWeight={600}>
-            {getVisibilityLabel(entry.pin_visibility)}
-          </Typo>
-        </S.VisibilityBadge>
-      )}
       {friendUsername && <PrivateReplySection entry={entry} friendUsername={friendUsername} />}
       {ownerMode && <PrivateReplySection entry={entry} isOwner />}
     </S.CardShell>

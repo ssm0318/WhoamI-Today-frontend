@@ -9,6 +9,7 @@ interface Props {
   onPinClick?: (entry: CheckInComponentEntry) => void;
   onMoreClick?: (entry: CheckInComponentEntry) => void;
   onBodyClick?: (entry: CheckInComponentEntry) => void;
+  onModifyVisibilityClick?: (entry: CheckInComponentEntry) => void;
   friendUsername?: string;
   ownerMode?: boolean;
 }
@@ -24,6 +25,7 @@ function ArchiveDateSection({
   onPinClick,
   onMoreClick,
   onBodyClick,
+  onModifyVisibilityClick,
   friendUsername,
   ownerMode,
 }: Props) {
@@ -40,6 +42,7 @@ function ArchiveDateSection({
             onPinClick={onPinClick}
             onMoreClick={onMoreClick}
             onBodyClick={onBodyClick}
+            onModifyVisibilityClick={onModifyVisibilityClick}
             friendUsername={friendUsername}
             ownerMode={ownerMode}
           />

@@ -45,8 +45,28 @@ export const CardBodyWrapper = styled(Layout.FlexCol)`
   width: 100%;
   align-items: center;
   justify-content: center;
-  padding-top: 4px;
+  /* Equal top/bottom padding so the body emoji sits visually centered between
+   * the header row and the private-reply footer (the previous 4px-only top
+   * padding pushed content downward). */
+  padding: 4px 0;
   overflow: hidden;
+`;
+
+export const HeaderVisibilityBadge = styled.button`
+  display: inline-flex;
+  align-items: center;
+  background-color: #efefef;
+  border: 0;
+  border-radius: 6px;
+  padding: 2px 6px;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+
+  &:disabled {
+    cursor: default;
+  }
 `;
 
 export const Grid = styled.div`

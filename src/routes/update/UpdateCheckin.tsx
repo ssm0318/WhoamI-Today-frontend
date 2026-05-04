@@ -642,6 +642,7 @@ export default function UpdateCheckin() {
               onBodyClick={(entry) => {
                 if (entry.component === ComponentType.THOUGHT) setThoughtModalEntry(entry);
               }}
+              onModifyVisibilityClick={handleModifyVisibility}
               ownerMode
             />
           ))}
