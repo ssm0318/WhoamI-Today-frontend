@@ -21,7 +21,7 @@ function Info() {
   const [dateOfBirthInput, setDateOfBirthInput] = useState('');
   const [dateOfBirthError, setDateOfBirthError] = useState<string | null>(null);
   const signUpInfo = useBoundStore((state) => state.signUpInfo);
-  const invitedByLink = !!signUpInfo.inviter_username;
+  const invitedByLink = !!signUpInfo.inviter_username || !!signUpInfo.inviter_code;
   const [friendUsernameInput, setFriendUsernameInput] = useState(signUpInfo.inviter_username || '');
   const [friendUsernameError, setFriendUsernameError] = useState<string | null>(null);
   const [privacyPolicyChecked, setPrivacyPolicyChecked] = useState(false);
@@ -82,17 +82,20 @@ function Info() {
     };
 
     const trimmed = friendUsernameInput.trim();
-    if (!trimmed) {
+    const inviteCode = signUpInfo.inviter_code?.trim();
+    if (!trimmed && !inviteCode) {
       setFriendUsernameError(t('friend_username_required_error'));
       trackEvent('signup_validation_error', { step: 'info', error_type: 'missing_friend_code' });
       return;
     }
 
     validateInviterUsername({
-      username: trimmed,
+      username: trimmed || undefined,
+      inviteCode,
       onSuccess: (res) => {
         setSignUpInfo({
-          inviter_username: trimmed,
+          inviter_username: res.username,
+          inviter_code: res.invite_code,
           inviter_id: res.inviter_id,
           current_ver: res.current_ver,
           user_group: res.user_group,
@@ -141,7 +144,7 @@ function Info() {
   };
 
   const nextDisabled =
-    !friendUsernameInput.trim() ||
+    (!friendUsernameInput.trim() && !signUpInfo.inviter_code) ||
     !dateOfBirthInput ||
     !!dateOfBirthError ||
     !privacyPolicyChecked ||

@@ -13,8 +13,8 @@ export default function FriendInvitation() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.invite' });
   const { isMobile } = getMobileDeviceInfo();
   const [showToast, setShowToast] = useState(false);
-  const invitationLink = myProfile?.username
-    ? `whoami://app/signup/email/invited-by/${encodeURIComponent(myProfile.username)}`
+  const invitationLink = myProfile?.invite_code
+    ? `whoami://app/signup/email/invite-code/${encodeURIComponent(myProfile.invite_code)}`
     : INVITATION_LINK;
 
   const handleClickLinkShare = () => {
@@ -23,6 +23,7 @@ export default function FriendInvitation() {
       const message = decodeHTMLEntities(
         t('desktop_message', {
           username: myProfile?.username,
+          invite_code: myProfile?.invite_code,
           invitation_link: invitationLink,
         }),
       );
@@ -37,12 +38,14 @@ export default function FriendInvitation() {
       ? decodeHTMLEntities(
           `${t('mobile_message_title')}\n\n${t('mobile_message', {
             username: myProfile?.username,
+            invite_code: myProfile?.invite_code,
             invitation_link: invitationLink,
           })}`,
         )
       : decodeHTMLEntities(
           t('mobile_message', {
             username: myProfile?.username,
+            invite_code: myProfile?.invite_code,
             invitation_link: invitationLink,
           }),
         );

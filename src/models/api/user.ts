@@ -33,6 +33,7 @@ export interface SignUpParams {
   user_group?: UserGroup;
   inviter_id: number;
   inviter_username?: string;
+  inviter_code?: string;
 }
 
 export const hasMandatorySignUpParams = (
@@ -95,6 +96,7 @@ export interface UsernameError {
 
 export interface InviterUsernameLookupResponse {
   username: string;
+  invite_code: string;
   inviter_id: number;
   user_group: UserGroup;
   current_ver: VersionType;
@@ -155,6 +157,7 @@ export interface MyProfile extends User {
   recent_posts?: (Note | Response)[];
   can_publish?: boolean;
   invite_status?: 'none' | 'pending' | 'accepted';
+  invite_code?: string;
   invited_from_detail?: User | null;
 }
 

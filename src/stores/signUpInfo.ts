@@ -21,6 +21,7 @@ const initialState = {
     user_group: UserGroup.GROUP_Q_FIRST,
     inviter_id: 0,
     inviter_username: '',
+    inviter_code: '',
   },
 };
 

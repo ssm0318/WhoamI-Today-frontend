@@ -221,15 +221,19 @@ export const validateUsername = ({
 
 export const validateInviterUsername = ({
   username,
+  inviteCode,
   onSuccess,
   onError,
 }: {
-  username: string;
+  username?: string;
+  inviteCode?: string;
   onSuccess: (res: InviterUsernameLookupResponse) => void;
   onError: (errorMsg: string) => void;
 }) => {
+  const payload = inviteCode ? { invite_code: inviteCode } : { username };
+
   axiosFormDataInstance
-    .post<InviterUsernameLookupResponse>('/user/signup/inviter-username/', { username })
+    .post<InviterUsernameLookupResponse>('/user/signup/inviter-username/', payload)
     .then((res) => {
       onSuccess(res.data);
     })

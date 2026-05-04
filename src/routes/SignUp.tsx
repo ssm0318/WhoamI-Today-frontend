@@ -27,6 +27,11 @@ function SignUp() {
 
     const params = new URLSearchParams(search);
     const invitedByPathMatch = pathname.match(/\/signup\/email\/invited-by\/([^/?#]+)/);
+    const invitedByCodePathMatch = pathname.match(/\/signup\/email\/invite-code\/([^/?#]+)/);
+    const inviterCode =
+      (invitedByCodePathMatch?.[1] ? decodeURIComponent(invitedByCodePathMatch[1]) : null) ||
+      params.get('invite_code') ||
+      params.get('code');
     const inviterUsername =
       (invitedByPathMatch?.[1] ? decodeURIComponent(invitedByPathMatch[1]) : null) ||
       params.get('inviter_username') ||
@@ -34,6 +39,10 @@ function SignUp() {
       params.get('invited_by');
 
     resetSignUpInfo();
+    if (inviterCode) {
+      setSignUpInfo({ inviter_code: inviterCode.trim() });
+      return;
+    }
     if (inviterUsername) {
       setSignUpInfo({ inviter_username: inviterUsername.trim() });
     }
