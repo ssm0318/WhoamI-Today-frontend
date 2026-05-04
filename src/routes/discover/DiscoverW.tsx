@@ -516,11 +516,7 @@ function DiscoverW() {
                           {t('music_description')}
                         </Typo>
                       </MusicHeader>
-                      <SharedPlaylistSection
-                        tracks={musicTracks}
-                        viewAllMinCount={10}
-                        viewAllColor="WHITE"
-                      />
+                      <SharedPlaylistSection tracks={musicTracks} />
                     </MusicBand>
                   );
                 case 'today-question-card': {

@@ -818,7 +818,7 @@
     }
   },
   "daily_digest": {
-    "banner_title": "Daily Digest는 매일 오전 7시 PT에 어제 올라온 포스트와, 너와 잘 맞을 것 같은 유저들의 이전 포스트로 업데이트돼요. 포스트 순서는 6시간마다 섞여요.",
+    "banner_title": "Digest 페이지에서 새로운 콘텐츠와 사람들을 만나보세요. Daily Digest는 매일 오전 7시 PT에 새로 고쳐져요. 피드가 아니라, 어제 올라온 포스트와 너랑 잘 맞을 것 같은 이전 포스트 몇 개를 모아둔 묶음이에요. 포스트 순서는 가끔씩 섞일 수 있어요.",
     "banner_subtitle": "",
     "mission_title": "어제의 미션",
     "mission_badge": "미션",

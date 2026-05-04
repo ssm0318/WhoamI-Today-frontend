@@ -31,6 +31,12 @@ export interface SharedTrack {
 
 interface SharedPlaylistSectionProps {
   tracks?: SharedTrack[];
+  /**
+   * If set, truncates the inline strip after this many tracks and shows a
+   * "View all" link that opens the full list in a bottom sheet. Omit (the
+   * default) to render every track inline in the horizontal scroll — the
+   * Daily Digest expects the whole batch to be browsable directly.
+   */
   viewAllMinCount?: number;
   viewAllColor?: ColorKeys;
 }
@@ -219,7 +225,7 @@ function TrackCardItem({ track }: TrackCardItemProps) {
 
 function SharedPlaylistSection({
   tracks = [],
-  viewAllMinCount = 1,
+  viewAllMinCount,
   viewAllColor = 'PRIMARY',
 }: SharedPlaylistSectionProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'shared_playlist' });
@@ -238,7 +244,7 @@ function SharedPlaylistSection({
     trackEvent('shared_playlist_view_all_tapped', { track_count: tracks.length });
     setShowPlaylistDetail(true);
   };
-  const showViewAll = tracks.length >= viewAllMinCount;
+  const showViewAll = viewAllMinCount !== undefined && tracks.length >= viewAllMinCount;
   const visibleTracks = showViewAll ? tracks.slice(0, viewAllMinCount) : tracks;
 
   return (
