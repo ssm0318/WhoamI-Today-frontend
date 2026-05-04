@@ -1,6 +1,7 @@
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
+import ArchiveAfter24hToggle from '@components/check-in/archive-toggle/ArchiveAfter24hToggle';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { EMOJI_CATEGORIES } from '@components/emoji-picker/EmojiPicker.constants';
 import { Colors, Layout, Typo } from '@design-system';
@@ -31,11 +32,13 @@ const MoodEmojiHighlight = createGlobalStyle<{ selectedEmojis: string[] }>`
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onShare: (value: string[], visibility: ComponentVisibility) => void;
+  onShare: (value: string[], visibility: ComponentVisibility, archiveAfter24h: boolean) => void;
   value: string[];
   onChange: (value: string[]) => void;
   visibility: ComponentVisibility;
   onVisibilityChange: (v: ComponentVisibility) => void;
+  archiveAfter24h: boolean;
+  onArchiveAfter24hChange: (next: boolean) => void;
 }
 
 export default function MoodEditor({
@@ -46,19 +49,23 @@ export default function MoodEditor({
   onChange,
   visibility,
   onVisibilityChange,
+  archiveAfter24h,
+  onArchiveAfter24hChange,
 }: Props) {
   const [draftValue, setDraftValue] = useState<string[]>(value);
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const [draftVisibility, setDraftVisibility] = useState<ComponentVisibility>(
     () => getLastVisibility(VisibilityMemoryKeys.checkInMood) ?? visibility,
   );
+  const [draftArchive, setDraftArchive] = useState<boolean>(archiveAfter24h);
 
-  // Snapshot of value/visibility at popup open — used to skip the share
+  // Snapshot of value/visibility/archive at popup open — used to skip the share
   // entirely when the user taps Confirm without changing anything.
   const initialValueRef = useRef<string[]>(value);
   const initialVisibilityRef = useRef<ComponentVisibility>(
     getLastVisibility(VisibilityMemoryKeys.checkInMood) ?? visibility,
   );
+  const initialArchiveRef = useRef<boolean>(archiveAfter24h);
 
   const handleVisibilityChange = useCallback((v: ComponentVisibility) => {
     setDraftVisibility(v);
@@ -70,8 +77,10 @@ export default function MoodEditor({
       const initialVis = getLastVisibility(VisibilityMemoryKeys.checkInMood) ?? visibility;
       setDraftValue(value);
       setDraftVisibility(initialVis);
+      setDraftArchive(archiveAfter24h);
       initialValueRef.current = value;
       initialVisibilityRef.current = initialVis;
+      initialArchiveRef.current = archiveAfter24h;
     } else {
       setDraftValue(value);
     }
@@ -106,15 +115,30 @@ export default function MoodEditor({
     const initial = initialValueRef.current;
     const valueUnchanged =
       draftValue.length === initial.length && draftValue.every((v, i) => v === initial[i]);
-    if (valueUnchanged && draftVisibility === initialVisibilityRef.current) {
+    if (
+      valueUnchanged &&
+      draftVisibility === initialVisibilityRef.current &&
+      draftArchive === initialArchiveRef.current
+    ) {
       openToast({ message: 'No changes' });
       onClose();
       return;
     }
     onChange(draftValue);
     onVisibilityChange(draftVisibility);
-    onShare(draftValue, draftVisibility);
-  }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare, onClose, openToast]);
+    onArchiveAfter24hChange(draftArchive);
+    onShare(draftValue, draftVisibility, draftArchive);
+  }, [
+    draftValue,
+    draftVisibility,
+    draftArchive,
+    onChange,
+    onVisibilityChange,
+    onArchiveAfter24hChange,
+    onShare,
+    onClose,
+    openToast,
+  ]);
 
   return (
     <EditorPopup isOpen={isOpen} onClose={onClose} onShare={handleShare} title="Mood">
@@ -182,6 +206,7 @@ export default function MoodEditor({
         </div>
       </Layout.FlexCol>
       <VisibilityToggle value={draftVisibility} onChange={handleVisibilityChange} />
+      <ArchiveAfter24hToggle checked={draftArchive} onChange={setDraftArchive} />
     </EditorPopup>
   );
 }

@@ -1,6 +1,7 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import SearchInput from '@components/_common/search-input/SearchInput';
+import ArchiveAfter24hToggle from '@components/check-in/archive-toggle/ArchiveAfter24hToggle';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import MusicItem from '@components/music/music-search-bottom-sheet/music-item/MusicItem';
 import { Layout, SvgIcon, Typo } from '@design-system';
@@ -18,11 +19,13 @@ import EditorPopup from './EditorPopup';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onShare: (trackId: string, visibility: ComponentVisibility) => void;
+  onShare: (trackId: string, visibility: ComponentVisibility, archiveAfter24h: boolean) => void;
   trackId: string;
   onChange: (trackId: string) => void;
   visibility: ComponentVisibility;
   onVisibilityChange: (v: ComponentVisibility) => void;
+  archiveAfter24h: boolean;
+  onArchiveAfter24hChange: (next: boolean) => void;
 }
 
 export default function SongEditor({
@@ -33,11 +36,14 @@ export default function SongEditor({
   onChange,
   visibility,
   onVisibilityChange,
+  archiveAfter24h,
+  onArchiveAfter24hChange,
 }: Props) {
   const [draftTrackId, setDraftTrackId] = useState<string>(trackId);
   const [draftVisibility, setDraftVisibility] = useState<ComponentVisibility>(
     () => getLastVisibility(VisibilityMemoryKeys.checkInSong) ?? visibility,
   );
+  const [draftArchive, setDraftArchive] = useState<boolean>(archiveAfter24h);
   const [query, setQuery] = useState('');
   const [trackList, setTrackList] = useState<Track[]>([]);
   const [searchError, setSearchError] = useState('');
@@ -45,12 +51,13 @@ export default function SongEditor({
   const spotifyManager = SpotifyManager.getInstance();
   const openToast = useBoundStore((state) => state.openToast);
 
-  // Snapshot of value/visibility at popup open — used to skip the share
+  // Snapshot of value/visibility/archive at popup open — used to skip the share
   // entirely when the user taps Confirm without changing anything.
   const initialTrackIdRef = useRef<string>(trackId);
   const initialVisibilityRef = useRef<ComponentVisibility>(
     getLastVisibility(VisibilityMemoryKeys.checkInSong) ?? visibility,
   );
+  const initialArchiveRef = useRef<boolean>(archiveAfter24h);
 
   const handleVisibilityChange = useCallback((v: ComponentVisibility) => {
     setDraftVisibility(v);
@@ -62,9 +69,11 @@ export default function SongEditor({
       const initialVis = getLastVisibility(VisibilityMemoryKeys.checkInSong) ?? visibility;
       setDraftTrackId(trackId);
       setDraftVisibility(initialVis);
+      setDraftArchive(archiveAfter24h);
       setQuery('');
       initialTrackIdRef.current = trackId;
       initialVisibilityRef.current = initialVis;
+      initialArchiveRef.current = archiveAfter24h;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -105,7 +114,8 @@ export default function SongEditor({
   const handleShare = useCallback(() => {
     if (
       draftTrackId === initialTrackIdRef.current &&
-      draftVisibility === initialVisibilityRef.current
+      draftVisibility === initialVisibilityRef.current &&
+      draftArchive === initialArchiveRef.current
     ) {
       openToast({ message: 'No changes' });
       onClose();
@@ -113,8 +123,19 @@ export default function SongEditor({
     }
     onChange(draftTrackId);
     onVisibilityChange(draftVisibility);
-    onShare(draftTrackId, draftVisibility);
-  }, [draftTrackId, draftVisibility, onChange, onVisibilityChange, onShare, onClose, openToast]);
+    onArchiveAfter24hChange(draftArchive);
+    onShare(draftTrackId, draftVisibility, draftArchive);
+  }, [
+    draftTrackId,
+    draftVisibility,
+    draftArchive,
+    onChange,
+    onVisibilityChange,
+    onArchiveAfter24hChange,
+    onShare,
+    onClose,
+    openToast,
+  ]);
 
   return (
     <EditorPopup isOpen={isOpen} onClose={onClose} onShare={handleShare} title="Song">
@@ -186,6 +207,7 @@ export default function SongEditor({
         )}
       </Layout.FlexCol>
       <VisibilityToggle value={draftVisibility} onChange={handleVisibilityChange} />
+      <ArchiveAfter24hToggle checked={draftArchive} onChange={setDraftArchive} />
     </EditorPopup>
   );
 }

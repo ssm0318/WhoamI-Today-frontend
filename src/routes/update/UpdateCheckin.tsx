@@ -97,6 +97,15 @@ export default function UpdateCheckin() {
   const [songVis, setSongVis] = useState<ComponentVisibility>(DEFAULT_VISIBILITY.song);
   const [thoughtVis, setThoughtVis] = useState<ComponentVisibility>(DEFAULT_VISIBILITY.thought);
 
+  // Per-component "Archive after 24 hours" opt-in. Hydrated from the
+  // server's `*_archive_at` (true iff the timestamp is in the future).
+  // Editor sheets read these and the doSave handler stamps `now() + 24h`
+  // on share when checked, otherwise sends null.
+  const [batteryArchive24h, setBatteryArchive24h] = useState(false);
+  const [moodArchive24h, setMoodArchive24h] = useState(false);
+  const [songArchive24h, setSongArchive24h] = useState(false);
+  const [thoughtArchive24h, setThoughtArchive24h] = useState(false);
+
   const [trackData, setTrackData] = useState<Track | null>(null);
   const spotifyManager = SpotifyManager.getInstance();
 
@@ -122,6 +131,13 @@ export default function UpdateCheckin() {
       if (ci.mood_visibility) setMoodVis(ci.mood_visibility);
       if (ci.song_visibility) setSongVis(ci.song_visibility);
       if (ci.thought_visibility) setThoughtVis(ci.thought_visibility);
+      // Archive opt-in: a future-dated `*_archive_at` means the user has
+      // the 24h-archive checkbox on; a past or null timestamp leaves it off.
+      const isFuture = (ts?: string | null) => !!ts && new Date(ts).getTime() > Date.now();
+      setBatteryArchive24h(isFuture(ci.battery_archive_at));
+      setMoodArchive24h(isFuture(ci.mood_archive_at));
+      setSongArchive24h(isFuture(ci.song_archive_at));
+      setThoughtArchive24h(isFuture(ci.thought_archive_at));
     }
     if (activeSong) {
       setTrackId(activeSong.track_id || '');
@@ -140,6 +156,10 @@ export default function UpdateCheckin() {
     moodVis,
     songVis,
     thoughtVis,
+    batteryArchive24h,
+    moodArchive24h,
+    songArchive24h,
+    thoughtArchive24h,
   });
   stateRef.current = {
     battery,
@@ -151,10 +171,19 @@ export default function UpdateCheckin() {
     moodVis,
     songVis,
     thoughtVis,
+    batteryArchive24h,
+    moodArchive24h,
+    songArchive24h,
+    thoughtArchive24h,
   };
 
   const doSave = useCallback(async () => {
     const s = stateRef.current;
+    // Stamp `now() + 24h` for components flagged for archive, null otherwise.
+    // Backend's `viewer_sees_check_in_component` filters out components past
+    // their archive_at, so a null clears the auto-archive entirely.
+    const archiveTs = (on: boolean) =>
+      on ? new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() : null;
     try {
       const checkInPromise = postCheckIn({
         social_battery: s.battery,
@@ -166,6 +195,10 @@ export default function UpdateCheckin() {
         mood_visibility: s.moodVis,
         song_visibility: s.songVis,
         thought_visibility: s.thoughtVis,
+        battery_archive_at: archiveTs(s.batteryArchive24h),
+        mood_archive_at: archiveTs(s.moodArchive24h),
+        song_archive_at: archiveTs(s.songArchive24h),
+        thought_archive_at: archiveTs(s.thoughtArchive24h),
       });
       const songPromise =
         s.trackId && s.trackId !== initialTrackId ? postSong(s.trackId) : Promise.resolve();
@@ -194,15 +227,17 @@ export default function UpdateCheckin() {
   const handleEditorDismiss = useCallback(() => setActiveEditor(null), []);
 
   const handleThoughtShare = useCallback(
-    (nextThought: string, nextThoughtVis: ComponentVisibility) => {
+    (nextThought: string, nextThoughtVis: ComponentVisibility, nextArchive: boolean) => {
       setThought(nextThought);
       setThoughtVis(nextThoughtVis);
+      setThoughtArchive24h(nextArchive);
       setActiveEditor(null);
       requestAnimationFrame(() => {
         stateRef.current = {
           ...stateRef.current,
           thought: nextThought,
           thoughtVis: nextThoughtVis,
+          thoughtArchive24h: nextArchive,
         };
         doSave();
       });
@@ -211,15 +246,21 @@ export default function UpdateCheckin() {
   );
 
   const handleBatteryShare = useCallback(
-    (nextBattery: SocialBattery | null, nextBatteryVis: ComponentVisibility) => {
+    (
+      nextBattery: SocialBattery | null,
+      nextBatteryVis: ComponentVisibility,
+      nextArchive: boolean,
+    ) => {
       setBattery(nextBattery);
       setBatteryVis(nextBatteryVis);
+      setBatteryArchive24h(nextArchive);
       setActiveEditor(null);
       requestAnimationFrame(() => {
         stateRef.current = {
           ...stateRef.current,
           battery: nextBattery,
           batteryVis: nextBatteryVis,
+          batteryArchive24h: nextArchive,
         };
         doSave();
       });
@@ -228,12 +269,18 @@ export default function UpdateCheckin() {
   );
 
   const handleMoodShare = useCallback(
-    (nextMood: string[], nextMoodVis: ComponentVisibility) => {
+    (nextMood: string[], nextMoodVis: ComponentVisibility, nextArchive: boolean) => {
       setMood(nextMood);
       setMoodVis(nextMoodVis);
+      setMoodArchive24h(nextArchive);
       setActiveEditor(null);
       requestAnimationFrame(() => {
-        stateRef.current = { ...stateRef.current, mood: nextMood, moodVis: nextMoodVis };
+        stateRef.current = {
+          ...stateRef.current,
+          mood: nextMood,
+          moodVis: nextMoodVis,
+          moodArchive24h: nextArchive,
+        };
         doSave();
       });
     },
@@ -241,7 +288,7 @@ export default function UpdateCheckin() {
   );
 
   const handleSongShare = useCallback(
-    async (nextTrackId: string, nextSongVis: ComponentVisibility) => {
+    async (nextTrackId: string, nextSongVis: ComponentVisibility, nextArchive: boolean) => {
       setActiveEditor(null);
       const wasActive = !!stateRef.current.trackId;
       if (!nextTrackId && wasActive) {
@@ -250,7 +297,13 @@ export default function UpdateCheckin() {
           if (active) await deactivateSong(active.id);
           setTrackId('');
           setSongVis(nextSongVis);
-          stateRef.current = { ...stateRef.current, trackId: '', songVis: nextSongVis };
+          setSongArchive24h(nextArchive);
+          stateRef.current = {
+            ...stateRef.current,
+            trackId: '',
+            songVis: nextSongVis,
+            songArchive24h: nextArchive,
+          };
           await fetchCheckIn();
           openToast({ message: 'Removed' });
         } catch {
@@ -260,8 +313,14 @@ export default function UpdateCheckin() {
       }
       setTrackId(nextTrackId);
       setSongVis(nextSongVis);
+      setSongArchive24h(nextArchive);
       requestAnimationFrame(() => {
-        stateRef.current = { ...stateRef.current, trackId: nextTrackId, songVis: nextSongVis };
+        stateRef.current = {
+          ...stateRef.current,
+          trackId: nextTrackId,
+          songVis: nextSongVis,
+          songArchive24h: nextArchive,
+        };
         doSave();
       });
     },
@@ -523,6 +582,8 @@ export default function UpdateCheckin() {
             onChange={setBattery}
             visibility={batteryVis}
             onVisibilityChange={setBatteryVis}
+            archiveAfter24h={batteryArchive24h}
+            onArchiveAfter24hChange={setBatteryArchive24h}
           />
           <MoodEditor
             isOpen={activeEditor === 'mood'}
@@ -532,6 +593,8 @@ export default function UpdateCheckin() {
             onChange={setMood}
             visibility={moodVis}
             onVisibilityChange={setMoodVis}
+            archiveAfter24h={moodArchive24h}
+            onArchiveAfter24hChange={setMoodArchive24h}
           />
           <SongEditor
             isOpen={activeEditor === 'song'}
@@ -541,6 +604,8 @@ export default function UpdateCheckin() {
             onChange={setTrackId}
             visibility={songVis}
             onVisibilityChange={setSongVis}
+            archiveAfter24h={songArchive24h}
+            onArchiveAfter24hChange={setSongArchive24h}
           />
           <ThoughtEditor
             isOpen={activeEditor === 'thought'}
@@ -550,6 +615,8 @@ export default function UpdateCheckin() {
             onChange={setThought}
             visibility={thoughtVis}
             onVisibilityChange={setThoughtVis}
+            archiveAfter24h={thoughtArchive24h}
+            onArchiveAfter24hChange={setThoughtArchive24h}
           />
         </>
       )}

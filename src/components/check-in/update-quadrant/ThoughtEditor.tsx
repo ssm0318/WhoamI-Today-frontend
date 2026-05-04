@@ -1,5 +1,6 @@
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import ArchiveAfter24hToggle from '@components/check-in/archive-toggle/ArchiveAfter24hToggle';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { ComponentVisibility } from '@models/checkIn';
@@ -16,11 +17,13 @@ const MAX_LENGTH = 100;
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onShare: (value: string, visibility: ComponentVisibility) => void;
+  onShare: (value: string, visibility: ComponentVisibility, archiveAfter24h: boolean) => void;
   value: string;
   onChange: (value: string) => void;
   visibility: ComponentVisibility;
   onVisibilityChange: (v: ComponentVisibility) => void;
+  archiveAfter24h: boolean;
+  onArchiveAfter24hChange: (next: boolean) => void;
 }
 
 export default function ThoughtEditor({
@@ -31,19 +34,23 @@ export default function ThoughtEditor({
   onChange,
   visibility,
   onVisibilityChange,
+  archiveAfter24h,
+  onArchiveAfter24hChange,
 }: Props) {
   const [draftValue, setDraftValue] = useState<string>(value);
   const [draftVisibility, setDraftVisibility] = useState<ComponentVisibility>(
     () => getLastVisibility(VisibilityMemoryKeys.checkInThought) ?? visibility,
   );
+  const [draftArchive, setDraftArchive] = useState<boolean>(archiveAfter24h);
   const openToast = useBoundStore((state) => state.openToast);
 
-  // Snapshot of value/visibility at popup open — used to skip the share
+  // Snapshot of value/visibility/archive at popup open — used to skip the share
   // entirely when the user taps Confirm without changing anything.
   const initialValueRef = useRef<string>(value);
   const initialVisibilityRef = useRef<ComponentVisibility>(
     getLastVisibility(VisibilityMemoryKeys.checkInThought) ?? visibility,
   );
+  const initialArchiveRef = useRef<boolean>(archiveAfter24h);
 
   const handleVisibilityChange = useCallback((v: ComponentVisibility) => {
     setDraftVisibility(v);
@@ -55,8 +62,10 @@ export default function ThoughtEditor({
       const initialVis = getLastVisibility(VisibilityMemoryKeys.checkInThought) ?? visibility;
       setDraftValue(value);
       setDraftVisibility(initialVis);
+      setDraftArchive(archiveAfter24h);
       initialValueRef.current = value;
       initialVisibilityRef.current = initialVis;
+      initialArchiveRef.current = archiveAfter24h;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -70,7 +79,8 @@ export default function ThoughtEditor({
   const handleShare = useCallback(() => {
     if (
       draftValue === initialValueRef.current &&
-      draftVisibility === initialVisibilityRef.current
+      draftVisibility === initialVisibilityRef.current &&
+      draftArchive === initialArchiveRef.current
     ) {
       openToast({ message: 'No changes' });
       onClose();
@@ -78,8 +88,19 @@ export default function ThoughtEditor({
     }
     onChange(draftValue);
     onVisibilityChange(draftVisibility);
-    onShare(draftValue, draftVisibility);
-  }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare, onClose, openToast]);
+    onArchiveAfter24hChange(draftArchive);
+    onShare(draftValue, draftVisibility, draftArchive);
+  }, [
+    draftValue,
+    draftVisibility,
+    draftArchive,
+    onChange,
+    onVisibilityChange,
+    onArchiveAfter24hChange,
+    onShare,
+    onClose,
+    openToast,
+  ]);
 
   return (
     <EditorPopup isOpen={isOpen} onClose={onClose} onShare={handleShare} title="Be Random">
@@ -108,6 +129,7 @@ export default function ThoughtEditor({
         </Layout.FlexRow>
       </Layout.FlexCol>
       <VisibilityToggle value={draftVisibility} onChange={handleVisibilityChange} />
+      <ArchiveAfter24hToggle checked={draftArchive} onChange={setDraftArchive} />
     </EditorPopup>
   );
 }

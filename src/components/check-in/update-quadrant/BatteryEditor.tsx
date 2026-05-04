@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import ArchiveAfter24hToggle from '@components/check-in/archive-toggle/ArchiveAfter24hToggle';
 import VisibilityToggle from '@components/check-in/visibility-toggle/VisibilityToggle';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
 import { Colors, Layout, SvgIcon, Typo } from '@design-system';
@@ -15,11 +16,17 @@ import EditorPopup from './EditorPopup';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onShare: (value: SocialBattery | null, visibility: ComponentVisibility) => void;
+  onShare: (
+    value: SocialBattery | null,
+    visibility: ComponentVisibility,
+    archiveAfter24h: boolean,
+  ) => void;
   value: SocialBattery | null;
   onChange: (value: SocialBattery | null) => void;
   visibility: ComponentVisibility;
   onVisibilityChange: (v: ComponentVisibility) => void;
+  archiveAfter24h: boolean;
+  onArchiveAfter24hChange: (next: boolean) => void;
 }
 
 const BATTERY_OPTIONS = Object.values(SocialBattery);
@@ -32,19 +39,23 @@ export default function BatteryEditor({
   onChange,
   visibility,
   onVisibilityChange,
+  archiveAfter24h,
+  onArchiveAfter24hChange,
 }: Props) {
   const [draftValue, setDraftValue] = useState<SocialBattery | null>(value);
   const [draftVisibility, setDraftVisibility] = useState<ComponentVisibility>(
     () => getLastVisibility(VisibilityMemoryKeys.checkInBattery) ?? visibility,
   );
+  const [draftArchive, setDraftArchive] = useState<boolean>(archiveAfter24h);
   const openToast = useBoundStore((state) => state.openToast);
 
-  // Snapshot of value/visibility at popup open — used to skip the share
+  // Snapshot of value/visibility/archive at popup open — used to skip the share
   // entirely when the user taps Confirm without changing anything.
   const initialValueRef = useRef<SocialBattery | null>(value);
   const initialVisibilityRef = useRef<ComponentVisibility>(
     getLastVisibility(VisibilityMemoryKeys.checkInBattery) ?? visibility,
   );
+  const initialArchiveRef = useRef<boolean>(archiveAfter24h);
 
   useEffect(() => {
     if (isOpen) {
@@ -53,8 +64,10 @@ export default function BatteryEditor({
       const initialVis = getLastVisibility(VisibilityMemoryKeys.checkInBattery) ?? visibility;
       setDraftValue(value);
       setDraftVisibility(initialVis);
+      setDraftArchive(archiveAfter24h);
       initialValueRef.current = value;
       initialVisibilityRef.current = initialVis;
+      initialArchiveRef.current = archiveAfter24h;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -67,7 +80,8 @@ export default function BatteryEditor({
   const handleShare = useCallback(() => {
     if (
       draftValue === initialValueRef.current &&
-      draftVisibility === initialVisibilityRef.current
+      draftVisibility === initialVisibilityRef.current &&
+      draftArchive === initialArchiveRef.current
     ) {
       openToast({ message: 'No changes' });
       onClose();
@@ -75,8 +89,19 @@ export default function BatteryEditor({
     }
     onChange(draftValue);
     onVisibilityChange(draftVisibility);
-    onShare(draftValue, draftVisibility);
-  }, [draftValue, draftVisibility, onChange, onVisibilityChange, onShare, onClose, openToast]);
+    onArchiveAfter24hChange(draftArchive);
+    onShare(draftValue, draftVisibility, draftArchive);
+  }, [
+    draftValue,
+    draftVisibility,
+    draftArchive,
+    onChange,
+    onVisibilityChange,
+    onArchiveAfter24hChange,
+    onShare,
+    onClose,
+    openToast,
+  ]);
 
   return (
     <EditorPopup isOpen={isOpen} onClose={onClose} onShare={handleShare} title="Social Battery">
@@ -101,6 +126,7 @@ export default function BatteryEditor({
         </Layout.FlexRow>
       )}
       <VisibilityToggle value={draftVisibility} onChange={handleVisibilityChange} />
+      <ArchiveAfter24hToggle checked={draftArchive} onChange={setDraftArchive} />
     </EditorPopup>
   );
 }

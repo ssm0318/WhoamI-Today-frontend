@@ -39,6 +39,12 @@ export type CheckInBase = {
   mood_updated_at?: string;
   song_updated_at?: string;
   thought_updated_at?: string;
+  /** Optional opt-in auto-archive timestamp per component. Null / absent
+   * means no archive — the component stays visible until the user clears it. */
+  battery_archive_at?: string | null;
+  mood_archive_at?: string | null;
+  song_archive_at?: string | null;
+  thought_archive_at?: string | null;
 };
 
 export type MyCheckIn = CheckInBase & {
