@@ -181,13 +181,33 @@ function Root() {
   const refreshUnreadCount = useCallback(() => {
     getMyProfile().catch(() => {});
   }, []);
+
+  const isViewingChatListUpdateRoom = useCallback(
+    (data: { opponent_id?: number; room_id?: number; is_group?: boolean }) => {
+      const oneOnOneMatch = location.pathname.match(/^\/users\/(\d+)\/chat\/?$/);
+      if (oneOnOneMatch && data.opponent_id === Number(oneOnOneMatch[1])) return true;
+
+      const groupMatch = location.pathname.match(/^\/chats\/group\/(\d+)\/?$/);
+      if (groupMatch && data.is_group && data.room_id === Number(groupMatch[1])) return true;
+
+      return false;
+    },
+    [location.pathname],
+  );
+
   const onChatListSocketUpdate = useCallback(
-    (data: { unread_count?: number }) => {
+    (data: {
+      unread_count?: number;
+      opponent_id?: number;
+      room_id?: number;
+      is_group?: boolean;
+    }) => {
       if (typeof data.unread_count === 'number') {
+        if (isViewingChatListUpdateRoom(data)) return;
         refreshUnreadCount();
       }
     },
-    [refreshUnreadCount],
+    [isViewingChatListUpdateRoom, refreshUnreadCount],
   );
   useChatListSocket(onChatListSocketUpdate);
 
