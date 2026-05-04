@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { MessageReactionSummary, PostChatMessageRes } from '@models/chat';
-import { getCurrentWsOrigin } from '@utils/devServer';
 
 function getWebSocketUrl(userId: number, token: string) {
   if (process.env.NODE_ENV === 'development') {
-    return `${getCurrentWsOrigin()}/ws/chat/${userId}/?token=${token}`;
+    return `ws://localhost:8000/ws/chat/${userId}/?token=${token}`;
   }
   const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
   return `${protocol}://${window.location.host}/ws/chat/${userId}/?token=${token}`;

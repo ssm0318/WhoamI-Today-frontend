@@ -28,14 +28,13 @@ import {
   updateGroupChat,
 } from '@utils/apis/chat';
 import { getMyProfile } from '@utils/apis/my';
-import { getCurrentWsOrigin } from '@utils/devServer';
 import { MainScrollContainer } from '../Root';
 
 const NEAR_BOTTOM_PX = 120;
 
 function getGroupWsUrl(roomId: number, token: string) {
   if (process.env.NODE_ENV === 'development') {
-    return `${getCurrentWsOrigin()}/ws/chat/group/${roomId}/?token=${token}`;
+    return `ws://localhost:8000/ws/chat/group/${roomId}/?token=${token}`;
   }
   const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
   return `${protocol}://${window.location.host}/ws/chat/group/${roomId}/?token=${token}`;
