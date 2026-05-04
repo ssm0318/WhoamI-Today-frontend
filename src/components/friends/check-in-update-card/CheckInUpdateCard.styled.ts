@@ -6,11 +6,21 @@ export const CardContainer = styled(Layout.FlexCol)`
   border-left: 3px solid ${Colors.PRIMARY};
   border-radius: 0 12px 12px 0;
   padding: 10px 12px;
-  cursor: pointer;
   width: 100%;
   box-sizing: border-box;
 `;
 
 export const ComponentContent = styled(Layout.FlexRow)`
   padding: 4px 0;
+`;
+
+export const ClickableArea = styled.div`
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &:focus-visible {
+    outline: 2px solid ${Colors.PRIMARY};
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
 `;
