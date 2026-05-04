@@ -37,9 +37,10 @@ interface CommentItemProps {
   isPostAuthor?: boolean;
   comment: Comment | PrivateComment;
   replyAvailable?: boolean;
-  onClickReplyBtn?: () => void;
+  onClickReplyBtn?: (comment?: Comment | PrivateComment) => void;
   onDeleteComplete: (commentId: number) => void;
   onConfirmReport?: (commentId: number) => void;
+  privateThread?: boolean;
 }
 
 type AlertProps = Pick<
@@ -66,6 +67,7 @@ function CommentItem({
   onDeleteComplete,
   replyAvailable = true,
   onConfirmReport,
+  privateThread = false,
 }: CommentItemProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'comment' });
   const {
@@ -151,7 +153,7 @@ function CommentItem({
   );
 
   const handleReplyInput = () => {
-    onClickReplyBtn?.();
+    onClickReplyBtn?.(comment);
   };
 
   // const handleSendMessage = () => {
@@ -231,19 +233,13 @@ function CommentItem({
             ),
           ]}
         >
-          <Layout.FlexRow
-            w="100%"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            gap={8}
-            ph={16}
-          >
+          <Layout.FlexRow w="100%" alignItems="flex-start" gap={8} ph={16}>
             {/* Author Profile */}
-            <Layout.FlexCol w={30}>
+            <Layout.FlexCol w={30} style={{ flexShrink: 0 }}>
               <ProfileImage imageUrl={profile_image} size={30} onClick={navigateToProfile} />
             </Layout.FlexCol>
             {/* Author name, time, content */}
-            <Layout.FlexCol flex={1} alignItems="center">
+            <Layout.FlexCol style={{ flex: '1 1 0', minWidth: 0 }} alignItems="center">
               <Layout.FlexCol w="100%" gap={4}>
                 <Layout.FlexRow w="100%" alignItems="center">
                   {is_private && <Icon name="private_comment" size={16} />}
@@ -276,9 +272,9 @@ function CommentItem({
                 {/* Reply & Message buttons */}
                 <Layout.FlexRow w="100%" gap={16} alignItems="center">
                   {replyAvailable &&
-                    (!is_private || (is_private && (isCommentAuthor || isPostAuthor))) && (
+                    (!is_private || privateThread || isCommentAuthor || isPostAuthor) && (
                       <button type="button" onClick={handleReplyInput}>
-                        <Typo type="label-medium" color="DARK_GRAY">
+                        <Typo type="label-medium" color="DARK_GRAY" bold>
                           {t('reply')}
                         </Typo>
                       </button>
@@ -294,15 +290,15 @@ function CommentItem({
               </Layout.FlexCol>
             </Layout.FlexCol>
             {/* like / reaction button */}
-            <Layout.FlexCol>
-              {isVerW ? (
+            <Layout.FlexCol style={{ flexShrink: 0, marginLeft: 'auto' }}>
+              {privateThread || isVerW ? (
                 <Layout.FlexRow alignItems="center">
                   {reactionSampleList.length > 0 && (
                     <Layout.FlexRow onClick={() => setIsReactionsModalOpen(true)}>
                       <PostReactionList user_sample_list={reactionSampleList} />
                     </Layout.FlexRow>
                   )}
-                  {(!is_private || isPostAuthor || isCommentAuthor) && (
+                  {(privateThread || !is_private || isPostAuthor || isCommentAuthor) && (
                     <EmojiButton onClick={() => setIsEmojiPickerOpen(true)} />
                   )}
                 </Layout.FlexRow>
@@ -343,6 +339,7 @@ function CommentItem({
               comment={reply}
               onClickReplyBtn={onClickReplyBtn}
               onDeleteComplete={onDeleteComplete}
+              privateThread={privateThread}
             />
           ))}
         </Layout.FlexCol>
@@ -376,7 +373,7 @@ function CommentItem({
           {...showAlert}
         />
       )}
-      {isVerW &&
+      {(privateThread || isVerW) &&
         isEmojiPickerOpen &&
         createPortal(
           <BottomModal

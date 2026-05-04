@@ -1,4 +1,5 @@
 import { MouseEvent, ReactNode } from 'react';
+import PrivateReplySection from '@components/check-in/private-reply/PrivateReplySection';
 import { getVisibilityLabel } from '@components/check-in/visibility-toggle/VisibilityToggle';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { CheckInComponentEntry, ComponentType } from '@models/checkInEntry';
@@ -19,6 +20,10 @@ interface ArchiveCardProps {
   onPinClick?: (entry: CheckInComponentEntry) => void;
   onMoreClick?: (entry: CheckInComponentEntry) => void;
   onBodyClick?: (entry: CheckInComponentEntry) => void;
+  /** When set, renders the private reply section (friend-view only). */
+  friendUsername?: string;
+  /** When true, renders the private reply section in owner-view mode. */
+  ownerMode?: boolean;
 }
 
 /**
@@ -35,7 +40,14 @@ interface ArchiveCardProps {
  * like the thought full-text modal or Spotify bottom sheet). Right-column
  * icons are stop-propagation so they don't fire the body click.
  */
-function ArchiveCard({ entry, onPinClick, onMoreClick, onBodyClick }: ArchiveCardProps) {
+function ArchiveCard({
+  entry,
+  onPinClick,
+  onMoreClick,
+  onBodyClick,
+  friendUsername,
+  ownerMode,
+}: ArchiveCardProps) {
   const timestamp = formatEntryTimestamp(entry.created_at);
 
   const body = renderBody(entry);
@@ -54,7 +66,7 @@ function ArchiveCard({ entry, onPinClick, onMoreClick, onBodyClick }: ArchiveCar
   };
 
   return (
-    <S.CardShell as="div" role="button" tabIndex={0} onClick={handleBody}>
+    <S.CardShell id={`entry-${entry.id}`} as="div" role="button" tabIndex={0} onClick={handleBody}>
       <S.CardHeader>
         <Typo type="label-small" color="MEDIUM_GRAY">
           {timestamp}
@@ -86,6 +98,8 @@ function ArchiveCard({ entry, onPinClick, onMoreClick, onBodyClick }: ArchiveCar
           </Typo>
         </S.VisibilityBadge>
       )}
+      {friendUsername && <PrivateReplySection entry={entry} friendUsername={friendUsername} />}
+      {ownerMode && <PrivateReplySection entry={entry} isOwner />}
     </S.CardShell>
   );
 }

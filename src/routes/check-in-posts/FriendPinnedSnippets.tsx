@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import CheckInPostItem from '@components/check-in-posts/CheckInPostItem/CheckInPostItem';
 import CheckInPostViewer from '@components/check-in-posts/CheckInPostViewer';
@@ -9,11 +9,13 @@ import { Layout, Typo } from '@design-system';
 import { CheckInPostStory } from '@models/checkInPost';
 import { getUserCheckInPosts } from '@utils/apis/checkInPost';
 import { getUserProfile } from '@utils/apis/user';
+import { scrollAndHighlight } from '@utils/scrollHelpers';
 import { MainScrollContainer } from '../Root';
 
 function FriendPinnedSnippets() {
   const [t] = useTranslation('translation', { keyPrefix: 'check_in_post' });
   const { username } = useParams<{ username: string }>();
+  const [searchParams] = useSearchParams();
 
   const [snippets, setSnippets] = useState<CheckInPostStory[]>([]);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -35,6 +37,14 @@ function FriendPinnedSnippets() {
   }, [username]);
 
   const pinned = useMemo(() => snippets.filter((s) => s.is_pinned), [snippets]);
+
+  const highlightId = searchParams.get('highlight');
+  const hasHighlightedRef = useRef(false);
+  useEffect(() => {
+    if (!highlightId || pinned.length === 0 || hasHighlightedRef.current) return;
+    hasHighlightedRef.current = true;
+    requestAnimationFrame(() => scrollAndHighlight(`post-${highlightId}`));
+  }, [pinned, highlightId]);
 
   const handleClickCell = (story: CheckInPostStory) => () => {
     const idx = pinned.findIndex((s) => s.id === story.id);

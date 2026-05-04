@@ -36,6 +36,7 @@ import {
 } from '@utils/apis/archive';
 import { deactivateSong, getActiveSong, postCheckIn, postSong } from '@utils/apis/checkIn';
 import { groupEntriesByDate } from '@utils/archiveHelpers';
+import { scrollAndHighlight } from '@utils/scrollHelpers';
 import { MainScrollContainer } from '../Root';
 import {
   GridContainer,
@@ -60,7 +61,11 @@ export default function UpdateCheckin() {
   const openToast = useBoundStore((state) => state.openToast);
 
   // ── Main tab state ──────────────────────────────────────────────
-  const [mainTab, setMainTab] = useState<MainTab>('current');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [mainTab, setMainTab] = useState<MainTab>(() => {
+    const p = searchParams.get('tab');
+    return p === 'pinned' || p === 'history' ? p : 'current';
+  });
   const { historyCount, pinnedCount } = useArchiveCounts();
 
   // ── Current tab: editor state ───────────────────────────────────
@@ -68,7 +73,6 @@ export default function UpdateCheckin() {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [initialTrackId, setInitialTrackId] = useState('');
 
-  const [searchParams, setSearchParams] = useSearchParams();
   const hasAutoOpenedRef = useRef(false);
   useEffect(() => {
     if (!isDataLoaded || hasAutoOpenedRef.current) return;
@@ -284,6 +288,15 @@ export default function UpdateCheckin() {
     [data],
   );
   const sections = useMemo(() => groupEntriesByDate(flat), [flat]);
+
+  const highlightId = searchParams.get('highlight');
+  const hasHighlightedRef = useRef(false);
+  useEffect(() => {
+    if (!highlightId || mainTab !== 'pinned' || flat.length === 0 || hasHighlightedRef.current)
+      return;
+    hasHighlightedRef.current = true;
+    requestAnimationFrame(() => scrollAndHighlight(`entry-${highlightId}`));
+  }, [flat, highlightId, mainTab]);
 
   const [thoughtModalEntry, setThoughtModalEntry] = useState<CheckInComponentEntry | null>(null);
   const [moreEntry, setMoreEntry] = useState<CheckInComponentEntry | null>(null);
@@ -562,6 +575,7 @@ export default function UpdateCheckin() {
               onBodyClick={(entry) => {
                 if (entry.component === ComponentType.THOUGHT) setThoughtModalEntry(entry);
               }}
+              ownerMode
             />
           ))}
           <div ref={targetRef} />

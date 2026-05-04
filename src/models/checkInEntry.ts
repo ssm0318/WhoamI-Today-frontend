@@ -28,6 +28,11 @@ export interface CheckInComponentEntry {
   pin_visibility: ComponentVisibility | null;
   created_at: string;
   superseded_at: string | null;
+  // present only in friend-pinned view (FriendPinnedEntrySerializer)
+  private_acknowledgment_count?: number;
+  my_acknowledgment?: boolean;
+  private_comment_count?: number;
+  has_my_private_comment?: boolean;
 }
 
 /** Extra fields the history + friend-pinned endpoints add alongside the paginated results. */

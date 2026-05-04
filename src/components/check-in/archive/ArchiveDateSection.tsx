@@ -9,6 +9,8 @@ interface Props {
   onPinClick?: (entry: CheckInComponentEntry) => void;
   onMoreClick?: (entry: CheckInComponentEntry) => void;
   onBodyClick?: (entry: CheckInComponentEntry) => void;
+  friendUsername?: string;
+  ownerMode?: boolean;
 }
 
 /**
@@ -16,7 +18,15 @@ interface Props {
  * ("Today" / "Yesterday" / "Mar 12") followed by a 2-col grid of
  * {@link ArchiveCard}s.
  */
-function ArchiveDateSection({ label, items, onPinClick, onMoreClick, onBodyClick }: Props) {
+function ArchiveDateSection({
+  label,
+  items,
+  onPinClick,
+  onMoreClick,
+  onBodyClick,
+  friendUsername,
+  ownerMode,
+}: Props) {
   return (
     <Layout.FlexCol w="100%" gap={10} mb={20}>
       <Typo type="title-small" color="DARK">
@@ -30,6 +40,8 @@ function ArchiveDateSection({ label, items, onPinClick, onMoreClick, onBodyClick
             onPinClick={onPinClick}
             onMoreClick={onMoreClick}
             onBodyClick={onBodyClick}
+            friendUsername={friendUsername}
+            ownerMode={ownerMode}
           />
         ))}
       </S.Grid>
