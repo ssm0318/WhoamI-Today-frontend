@@ -27,7 +27,7 @@ function MyCheckInCard() {
   }, []);
 
   const { social_battery, track_id, mood, thought } = checkIn || {};
-  const moodArray: string[] = Array.isArray(mood) ? mood : mood ? [mood] : [];
+  const moodArray: string[] = (Array.isArray(mood) ? mood : mood ? [mood] : []).filter(Boolean);
   const hasMood = moodArray.length > 0;
   const hasBattery = !!social_battery && Object.values(SocialBattery).includes(social_battery);
   const bothBatteryAndMoodFilled = hasBattery && hasMood;
