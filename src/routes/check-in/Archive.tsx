@@ -219,6 +219,15 @@ function History() {
             </Typo>
           </Layout.FlexRow>
         )}
+        {tab === 'pinned' && (
+          // Page-level privacy banner — replaces the per-card "Only you see…"
+          // hint that previously crowded each card's footer.
+          <Layout.FlexRow w="100%" mb={12}>
+            <Typo type="body-small" color="DARK_GRAY">
+              🔒 Only you can see reactions and comments on these pinned check-ins.
+            </Typo>
+          </Layout.FlexRow>
+        )}
 
         <Layout.FlexCol w="100%" mb={80}>
           {sections.map((section) => (

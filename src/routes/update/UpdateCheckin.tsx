@@ -631,6 +631,16 @@ export default function UpdateCheckin() {
               </Typo>
             </Layout.FlexRow>
           )}
+          {mainTab === 'pinned' && (
+            // Single banner replaces the per-card "Only you see…" hint that
+            // previously sat above each PrivateReplySection — page-level copy
+            // gives the song-card album art room to render at full size again.
+            <Layout.FlexRow w="100%" mt={16} mb={8}>
+              <Typo type="body-small" color="DARK_GRAY">
+                🔒 Only you can see reactions and comments on these pinned check-ins.
+              </Typo>
+            </Layout.FlexRow>
+          )}
 
           {sections.map((section) => (
             <ArchiveDateSection
