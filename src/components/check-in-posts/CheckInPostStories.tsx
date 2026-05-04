@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -7,6 +7,7 @@ import { Colors, Layout, SvgIcon, Typo } from '@design-system';
 import { CheckInPostStory } from '@models/checkInPost';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getCheckInPostStories, getUserCheckInPosts } from '@utils/apis/checkInPost';
+import { logOnboardingEvent } from '@utils/apis/onboardingEvents';
 import CheckInPostViewer from './CheckInPostViewer';
 import SnippetArchiveLink from './SnippetArchiveLink';
 import OwnSnippetBubble from './SnippetStoryCard/OwnSnippetBubble';
@@ -37,6 +38,14 @@ function CheckInPostStories({
   const myProfile = useBoundStore((state) => state.myProfile);
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  // Audit mirror: surface this user's first encounter with the stories rail.
+  // Fires on render rather than scroll to keep the predicate simple.
+  useEffect(() => {
+    if (!authorUserId) {
+      logOnboardingEvent('checkin_stories_scrolled');
+    }
+  }, [authorUserId]);
 
   const swrKey = authorUserId
     ? `/check_in/posts/by-user/${authorUserId}/`

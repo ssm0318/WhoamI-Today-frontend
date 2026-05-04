@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import NoContents from '@components/_common/no-contents/NoContents';
@@ -11,6 +11,7 @@ import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { Question, QuestionGroup } from '@models/post';
 import { getMe } from '@utils/apis/my';
+import { logOnboardingEvent } from '@utils/apis/onboardingEvents';
 import { getAllQuestions } from '@utils/apis/question';
 import { getFormattedDate } from '@utils/timeHelpers';
 import { AllQuestionsLoader, PromptCardLoader } from 'src/routes/questions/AllQuestionsLoader';
@@ -29,6 +30,10 @@ function AllQuestions() {
   } = useSWRInfiniteScroll<QuestionGroup>({ key: '/qna/questions/' });
 
   const { scrollRef } = useRestoreScrollPosition('questionsPage');
+
+  useEffect(() => {
+    logOnboardingEvent('daily_question_viewed');
+  }, []);
 
   const handleRefresh = useCallback(async () => {
     await Promise.all([getAllQuestions(null), getMe()]);

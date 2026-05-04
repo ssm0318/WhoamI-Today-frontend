@@ -11,6 +11,7 @@ import { useTrackEvent } from '@hooks/useTrackEvent';
 import { ChatRoom } from '@models/chat';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getChatRooms } from '@utils/apis/chat';
+import { logOnboardingEvent } from '@utils/apis/onboardingEvents';
 import { MainScrollContainer } from '../Root';
 import { useChatListSocket } from './_hooks/useChatListSocket';
 
@@ -58,6 +59,7 @@ function ChatList() {
     setCloseFriendsOnly((prev) => {
       const next = !prev;
       trackEvent('chats_filter_close_only_toggled', { value: next ? 'on' : 'off' });
+      logOnboardingEvent('chat_close_friends_filter_toggled', { value: next ? 'on' : 'off' });
       return next;
     });
   };
