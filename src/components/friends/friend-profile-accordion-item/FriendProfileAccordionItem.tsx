@@ -102,7 +102,10 @@ function FriendProfileAccordionItem({
   // --- handlers ---
   const openCheckInDetail = (component: 'battery' | 'mood' | 'thought' | 'song') => {
     if (isMyCard) {
-      navigate('/update');
+      // Deep-link to the matching editor sheet — UpdateCheckin reads the
+      // `editor` query param on mount and pops the sheet open immediately,
+      // saving the user from a second tap once they land on /update.
+      navigate(`/update?editor=${component}`);
       return;
     }
     trackEvent('friend_check_in_component_opened', {
