@@ -378,13 +378,15 @@ function FriendProfileAccordionItem({
         </Layout.FlexRow>
       </Layout.FlexCol>
 
-      {/* Hairline anchors the eye to where [See posts] expands content from. */}
-      <PostsSectionDivider />
+      {/* Hairline only while expanded — collapsed cards have no dead-line under */}
+      {/* the song row. The divider's vertical margins (14px each side) provide */}
+      {/* the breathing room between check-ins and the posts section. */}
+      {isExpanded && <PostsSectionDivider />}
 
       {/* Posts section — only visible content stays in the accordion now. */}
       <ExpandableSection $isExpanded={isExpanded}>
         <ExpandableInner>
-          <ExpandedContent w="100%" gap={4} pt={12}>
+          <ExpandedContent w="100%" gap={4}>
             {hasPosts ? (
               <Layout.FlexCol w="100%" gap={4}>
                 <Layout.FlexRow w="100%" justifyContent="space-between" alignItems="center">
