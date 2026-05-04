@@ -124,7 +124,7 @@ function MissionGroupItem({
               onClick={() => navigate(`/notes/${attempt.id}`)}
             >
               <Typo type="label-medium" color="PRIMARY" bold>
-                ATTEMPT {attempt.mission_attempt_number ?? '-'} / {group.attempts.length}
+                ATTEMPT {attempt.mission_attempt_number ?? '-'} / 3
               </Typo>
               {attempt.content && (
                 <Typo type="body-large" color="BLACK" pre>

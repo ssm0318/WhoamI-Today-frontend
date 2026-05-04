@@ -64,7 +64,7 @@ function NewNoteContent({
   // "Attempt N/5" label. Reads from cache via useMissionToday's SWR key.
   const { mission: missionToday } = useMissionToday();
   const upcomingAttemptNumber = missionMode ? (missionToday?.attempts_used ?? 0) + 1 : null;
-  const attemptsRemaining = missionToday?.attempts_remaining ?? 5;
+  const attemptsRemaining = missionToday?.attempts_remaining ?? 3;
 
   // Draft persistence — autosave on text/visibility change, hydrate on mount.
   // Disabled in edit mode (the existing note IS the source of truth).
@@ -386,7 +386,7 @@ function NewNoteContent({
               <Typo type="label-medium" color="PRIMARY" bold>
                 {`${t('notes.mission_label').toUpperCase()} · ${t('notes.attempt_n_of_m', {
                   n: upcomingAttemptNumber ?? 1,
-                  m: 5,
+                  m: missionToday?.max_attempts ?? 3,
                 })}`}
               </Typo>
               <Typo type="body-medium" color="DARK_GRAY" italic>
