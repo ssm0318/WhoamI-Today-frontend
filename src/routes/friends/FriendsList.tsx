@@ -149,7 +149,11 @@ function FriendsList() {
       unread_chat_count: 0,
       check_in_id: checkIn?.id ?? null,
       track_id: checkIn?.track_id,
-      mood: checkIn?.mood,
+      mood: checkIn?.mood
+        ? Array.isArray(checkIn.mood)
+          ? checkIn.mood.join(',')
+          : checkIn.mood
+        : undefined,
       social_battery: checkIn?.social_battery,
       description: checkIn?.thought ?? '',
       thought: checkIn?.thought ?? '',

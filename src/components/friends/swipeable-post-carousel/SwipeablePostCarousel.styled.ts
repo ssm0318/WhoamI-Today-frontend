@@ -20,8 +20,6 @@ export const CarouselSlide = styled.div`
   flex: 0 0 100%;
   width: 100%;
   min-width: 0;
-  border-radius: 12px;
-  background-color: ${({ theme }) => theme.WHITE};
 `;
 
 export const DotContainer = styled.div`
