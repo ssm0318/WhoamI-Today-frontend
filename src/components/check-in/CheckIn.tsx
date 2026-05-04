@@ -171,9 +171,6 @@ function CheckIn({ user }: CheckInProps) {
                   style={{ minWidth: 0, maxWidth: '100%', cursor: 'pointer' }}
                   onClick={() => handleClickCheckInComponent('thought')}
                 >
-                  <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden>
-                    🤪
-                  </span>
                   <Typo type="label-large" numberOfLines={2}>
                     {thought}
                   </Typo>
