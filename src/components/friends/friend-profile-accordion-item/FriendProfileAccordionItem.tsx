@@ -82,7 +82,7 @@ function FriendProfileAccordionItem({
     (user.unread_post_cnt ?? 0) > 0 ||
     (user.recent_posts ?? []).some((p) => !p.current_user_read);
 
-  const moodArray: string[] = Array.isArray(mood) ? mood : mood ? [mood] : [];
+  const moodArray: string[] = (Array.isArray(mood) ? mood : mood ? [mood] : []).filter(Boolean);
   const hasMood = moodArray.length > 0;
   const hasThought = !!thought;
   const hasBattery = !!social_battery && Object.values(SocialBattery).includes(social_battery);
@@ -92,6 +92,10 @@ function FriendProfileAccordionItem({
 
   // --- handlers ---
   const openCheckInDetail = (component: 'battery' | 'mood' | 'thought' | 'song') => {
+    if (isMyCard) {
+      navigate('/update');
+      return;
+    }
     trackEvent('friend_check_in_component_opened', {
       component,
       friend_id: id,
@@ -124,6 +128,10 @@ function FriendProfileAccordionItem({
     setShowSubscriptionPopup(true);
   };
 
+  const handleClickCollapsedRow = () => {
+    onToggleExpand();
+  };
+
   const handleToggle = (e: MouseEvent) => {
     e.stopPropagation();
     onToggleExpand();
@@ -132,7 +140,12 @@ function FriendProfileAccordionItem({
   return (
     <AccordionContainer $isMyCard={isMyCard} ph={16} pv={12} gap={0} rounded={12}>
       {/* Collapsed Row: always visible */}
-      <CollapsedRow gap={6} justifyContent="space-between">
+      <CollapsedRow
+        gap={6}
+        justifyContent="space-between"
+        onClick={handleClickCollapsedRow}
+        style={{ cursor: 'pointer' }}
+      >
         <Layout.FlexRow alignItems="center" gap={6} style={{ flex: 1, minWidth: 0 }}>
           {/* Profile + Username + Connection badge */}
           <Layout.FlexRow

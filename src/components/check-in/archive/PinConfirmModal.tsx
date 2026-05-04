@@ -1,4 +1,5 @@
 import { CSSProperties, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import BottomModal from '@components/_common/bottom-modal/BottomModal';
 import VisibilityToggle, {
@@ -39,7 +40,7 @@ function PinConfirmModal({ entry, onClose, onConfirm }: Props) {
     onClose();
   };
 
-  return (
+  return createPortal(
     <BottomModal visible={entry !== null} onClose={onClose} draggable>
       <div style={{ width: '100%', backgroundColor: '#FCFCFC', borderBottom: '1px solid #F0F0F0' }}>
         <Layout.FlexRow w="100%" h={44} alignItems="center" justifyContent="center">
@@ -86,7 +87,8 @@ function PinConfirmModal({ entry, onClose, onConfirm }: Props) {
           </button>
         </Layout.FlexRow>
       </Layout.FlexCol>
-    </BottomModal>
+    </BottomModal>,
+    document.getElementById('root-container') || document.body,
   );
 }
 

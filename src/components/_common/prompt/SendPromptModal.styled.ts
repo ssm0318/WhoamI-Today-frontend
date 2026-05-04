@@ -26,7 +26,7 @@ export const SendPromptModalFriendList = styled(Layout.FlexCol)`
   overflow-y: auto;
   flex: 1;
   width: 100%;
-  padding-bottom: 200px;
+  padding-bottom: 80px;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;

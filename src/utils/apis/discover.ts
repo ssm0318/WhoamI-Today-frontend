@@ -1,5 +1,5 @@
 import { PaginationResponse } from '@models/api/common';
-import { DiscoverResultItem } from '@models/discover';
+import { DiscoverResultItem, DiscoverWResponse } from '@models/discover';
 import axios from './axios';
 
 export const getDiscoverFeed = async (page: string | null, apiPrefix = '') => {
@@ -15,5 +15,10 @@ export const getDiscoverFeed = async (page: string | null, apiPrefix = '') => {
     `/${apiPrefix}user/discover/${queryString ? `?${queryString}` : ''}`,
   );
 
+  return data;
+};
+
+export const getDiscoverWFeed = async () => {
+  const { data } = await axios.get<DiscoverWResponse>('/user/discover/');
   return data;
 };

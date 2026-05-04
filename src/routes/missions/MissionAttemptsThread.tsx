@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
 import PromptSummaryCard from '@components/_common/prompt-summary-card/PromptSummaryCard';
@@ -20,13 +20,17 @@ function MissionAttemptsThread() {
   const { missionId } = useParams();
   const isValidMissionId = !!missionId && /^\d+$/.test(missionId);
 
+  const [searchParams] = useSearchParams();
+  const isDiscover = searchParams.get('discover') === 'true';
+  const queryStr = isDiscover ? '?discover=true' : '';
+
   const {
     targetRef,
     data: pages,
     isLoading,
     isLoadingMore,
   } = useSWRInfiniteScroll<Note>({
-    key: isValidMissionId ? `/missions/${missionId}/attempts/` : '',
+    key: isValidMissionId ? `/missions/${missionId}/attempts/${queryStr}` : '',
   });
 
   const firstPage = pages?.[0] as MissionAttemptsPage | undefined;

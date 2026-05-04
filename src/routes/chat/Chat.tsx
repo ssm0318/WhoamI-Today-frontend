@@ -329,13 +329,11 @@ function Chat() {
         setMessages((prev) => insertChronologically(prev, { ...msg, is_read: true }));
         if (userId) {
           clearTimeout(markReadTimerRef.current);
-          markReadTimerRef.current = setTimeout(() => {
-            markMessagesRead(Number(userId)).catch(() => {});
-          }, 300);
+          markReadTimerRef.current = setTimeout(markRead, 300);
         }
       }
     },
-    [currentUser, userId],
+    [currentUser, markRead, userId],
   );
 
   // WebSocket: receive reaction updates

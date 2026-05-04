@@ -1,3 +1,4 @@
+import { SharedTrack } from '@components/friends/shared-playlist/SharedPlaylistSection';
 import { AdminAuthor, MissionGroupItem, Note, Response } from './post';
 import { User } from './user';
 
@@ -133,3 +134,28 @@ export type DiscoverResultItem =
       type: 'UsernameSuggestion';
       body: UsernameSuggestionCardBody;
     };
+
+export interface DigestMissionSection {
+  mission: {
+    id: number;
+    prompt: string;
+    type: string;
+  };
+  posts: Note[];
+}
+
+export interface DigestQuestionSection {
+  question: QuestionCardBody;
+  responses: Response[];
+}
+
+export interface DigestMusicSection {
+  tracks: SharedTrack[]; // SharedTrack is defined in SharedPlaylistSection
+}
+
+export interface DiscoverWResponse {
+  yesterday_mission: DigestMissionSection | null;
+  yesterday_question: DigestQuestionSection | null;
+  yesterday_music: { tracks: DiscoverMusicTrack[] };
+  recommended_posts: (Note | Response)[];
+}

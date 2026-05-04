@@ -47,6 +47,7 @@ function GroupChat() {
   const [prevScrollHeight, setPrevScrollHeight] = useState<number | undefined>();
   const justSentIdsRef = useRef<Set<number>>(new Set());
   const shouldPinToBottomRef = useRef<Set<number>>(new Set());
+  const markReadTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [room, setRoom] = useState<ChatRoom>();
   const [nextUrl, setNextUrl] = useState<string | null>(null);
@@ -87,6 +88,9 @@ function GroupChat() {
   useEffect(() => {
     if (!roomId) return;
     fetchMessages(Number(roomId));
+    return () => {
+      clearTimeout(markReadTimerRef.current);
+    };
   }, [fetchMessages, roomId]);
 
   useEffect(() => {
@@ -208,7 +212,8 @@ function GroupChat() {
         });
         // Mark as read since user is viewing the room
         if (roomId) {
-          markGroupMessagesRead(Number(roomId)).catch(() => {});
+          clearTimeout(markReadTimerRef.current);
+          markReadTimerRef.current = setTimeout(markRead, 300);
         }
       }
     });
@@ -216,7 +221,7 @@ function GroupChat() {
     return () => {
       ws.close();
     };
-  }, [roomId, currentUser]);
+  }, [roomId, currentUser, markRead]);
 
   const sendTyping = useCallback(() => {
     const ws = socketRef.current;

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Layout, Typo } from '@design-system';
 import { useTrackEvent } from '@hooks/useTrackEvent';
@@ -11,6 +12,7 @@ interface ProfileSuggestionCardProps {
 function ProfileSuggestionCard({ suggestion }: ProfileSuggestionCardProps) {
   const navigate = useNavigate();
   const trackEvent = useTrackEvent();
+  const [t] = useTranslation('translation', { keyPrefix: 'profile_suggestion_card' });
 
   const handleEditProfile = () => {
     // CTA conversion: did the suggestion card actually drive users to
@@ -34,10 +36,10 @@ function ProfileSuggestionCard({ suggestion }: ProfileSuggestionCardProps) {
     <S.ProfileSuggestionWrapper>
       <Layout.FlexCol gap={8} w="100%">
         <Typo type="head-line" color="WHITE" bold>
-          Complete your profile
+          {t('title')}
         </Typo>
         <Typo type="body-medium" color="WHITE">
-          Fill in your details so others can get to know you better.
+          {t('description')}
         </Typo>
       </Layout.FlexCol>
 
@@ -56,7 +58,7 @@ function ProfileSuggestionCard({ suggestion }: ProfileSuggestionCardProps) {
       </Layout.FlexRow>
 
       <S.EditButtonWrapper>
-        <Button.Primary text="Edit Profile" onClick={handleEditProfile} status="normal" />
+        <Button.Primary text={t('edit_profile')} onClick={handleEditProfile} status="normal" />
       </S.EditButtonWrapper>
     </S.ProfileSuggestionWrapper>
   );

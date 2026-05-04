@@ -1,5 +1,10 @@
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
-import { Connection, GetUpdatedProfileResponse, UpdatedProfile } from '@models/api/friends';
+import {
+  Connection,
+  FriendType,
+  GetUpdatedProfileResponse,
+  UpdatedProfile,
+} from '@models/api/friends';
 
 interface BreakFriendsParams {
   type: 'break_friends';
@@ -27,7 +32,7 @@ export type UpdateFriendListParams =
   | MarkReadParams;
 
 interface UseInfiniteFetchFriendsParams {
-  type?: 'all' | 'close_friends' | 'hidden';
+  type?: FriendType | 'hidden';
 }
 
 const useInfiniteFetchFriends = ({ type: friendType }: UseInfiniteFetchFriendsParams) => {

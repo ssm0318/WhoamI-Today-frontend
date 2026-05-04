@@ -55,6 +55,7 @@ function EditorPopup({
   };
 
   const handleOverlayClick = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     if (Date.now() < suppressBackdropCloseUntilRef.current) {
       shouldCloseFromBackdropRef.current = false;
       console.log('[EditorPopup] ignore overlay click (suppressed)', { title });
