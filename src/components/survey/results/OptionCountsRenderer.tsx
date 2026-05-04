@@ -52,8 +52,15 @@ interface Props {
 export function OptionCountsRenderer({ distribution }: Props) {
   const max = Math.max(1, ...distribution.options.map((o) => o.count));
   const userChoice = distribution.user_choice;
-  const isUser = (value: number) =>
-    Array.isArray(userChoice) ? userChoice.includes(value) : userChoice === value;
+  // Option / answer values can be number or string (categorical codes like
+  // "yes" / "minor"); compare with strict equality after the array-includes
+  // check, no type narrowing needed.
+  const isUser = (value: number | string) => {
+    if (Array.isArray(userChoice)) {
+      return (userChoice as (number | string)[]).includes(value);
+    }
+    return userChoice === value;
+  };
   return (
     <Col>
       {distribution.options.map((o) => (

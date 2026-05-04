@@ -2,7 +2,16 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { useBoundStore } from '@stores/useBoundStore';
 
-export type DraftAnswers = Record<number, number | number[] | string>;
+// Draft answer values mirror SurveyAnswerInput's value shape: numeric for
+// likert / ordinal, string for categorical / free-text, list for multi-choice.
+// `null` is reserved for the special likert_5_na N/A pick (LIKERT_NA_SENTINEL
+// in the form is encoded as -1 and only converted to null at submit time;
+// the draft type still allows null so other call sites can use it directly).
+// The (number | string)[] variant covers ChoiceChips' multi-select output,
+// where a single multi_choice question's answers are guaranteed to be of one
+// type but the type system can't narrow that statically.
+export type DraftAnswerValue = number | string | (number | string)[] | null;
+export type DraftAnswers = Record<number, DraftAnswerValue>;
 
 interface DraftPayload {
   answers: DraftAnswers;
@@ -48,7 +57,7 @@ export function useSurveyDraft(slug: string | undefined) {
   }, [key]);
 
   const setAnswer = useCallback(
-    (questionId: number, value: number | number[] | string) => {
+    (questionId: number, value: DraftAnswerValue) => {
       setAnswers((prev) => {
         const next = { ...prev, [questionId]: value };
         if (key) writeDraft(key, next);

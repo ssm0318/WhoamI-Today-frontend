@@ -9,22 +9,27 @@ const ChipsRow = styled(Layout.FlexRow)`
   gap: 8px;
 `;
 
+// Option values can be either int (likert / ordinal codes) or string
+// (categorical codes like "yes" / "minor" / "mission_suggest"). The
+// backend stores both as JSON; frontend just propagates the raw type.
+type OptionValue = number | string;
+
 interface ChoiceChipsProps {
-  options: { value: number; label: string }[];
+  options: { value: OptionValue; label: string }[];
   multi: boolean;
-  selected: number | number[] | null;
-  onSelect: (v: number | number[]) => void;
+  selected: OptionValue | OptionValue[] | null;
+  onSelect: (v: OptionValue | OptionValue[]) => void;
 }
 
 export function ChoiceChips({ options, multi, selected, onSelect }: ChoiceChipsProps) {
-  const isSelected = (value: number) => {
-    if (Array.isArray(selected)) return selected.includes(value);
+  const isSelected = (value: OptionValue) => {
+    if (Array.isArray(selected)) return (selected as OptionValue[]).includes(value);
     return selected === value;
   };
 
-  const handleClick = (value: number) => {
+  const handleClick = (value: OptionValue) => {
     if (multi) {
-      const current = Array.isArray(selected) ? selected : [];
+      const current: OptionValue[] = Array.isArray(selected) ? (selected as OptionValue[]) : [];
       const next = current.includes(value)
         ? current.filter((v) => v !== value)
         : [...current, value];
@@ -38,7 +43,7 @@ export function ChoiceChips({ options, multi, selected, onSelect }: ChoiceChipsP
     <ChipsRow>
       {options.map((o) => (
         <Chip
-          key={o.value}
+          key={String(o.value)}
           type="button"
           selected={isSelected(o.value)}
           onClick={() => handleClick(o.value)}
