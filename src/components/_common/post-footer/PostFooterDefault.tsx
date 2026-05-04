@@ -36,10 +36,12 @@ function PostFooterDefault({
     setInputFocus();
   };
 
+  const canOpenCommentsInline = displayType !== 'DETAIL';
+
   return (
     <Layout.FlexRow gap={8} alignItems="center" style={{ flexShrink: 0, marginTop: 'auto' }}>
       <Layout.FlexRow gap={8} alignItems="center">
-        {displayType === 'LIST' && (
+        {canOpenCommentsInline && (
           <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
         )}
       </Layout.FlexRow>
@@ -47,7 +49,7 @@ function PostFooterDefault({
         <Layout.FlexRow>
           <button
             type="button"
-            onClick={displayType === 'LIST' ? handleClickCommentText : undefined}
+            onClick={canOpenCommentsInline ? handleClickCommentText : undefined}
           >
             <Typo type="label-large" color="BLACK" underline>
               {comment_count || 0} {t('comments')}
