@@ -153,7 +153,7 @@
     "your_friend": "친구",
     "message": "{{username}}님이 친구 요청을 수락하면\nWAIT을 이용할 수 있어요.",
     "sub_message": "수락이 완료될 때까지 잠시만 기다려 주세요.",
-    "refresh": "다시 확인",
+    "refresh": "수락됐는지 확인",
     "logout": "로그아웃"
   },
   "sign_up": {

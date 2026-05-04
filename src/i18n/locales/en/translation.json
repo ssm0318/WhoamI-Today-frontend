@@ -153,7 +153,7 @@
         "your_friend": "your friend",
         "message": "You can use WAIT once {{username}}\naccepts your friend request.",
         "sub_message": "Please wait until your invite is accepted.",
-        "refresh": "Check again",
+        "refresh": "I’ve been accepted",
         "logout": "Log out"
     },
     "sign_up": {
