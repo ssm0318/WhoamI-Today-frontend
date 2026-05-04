@@ -193,7 +193,7 @@ function FriendProfileAccordionItem({
             $hasNew={hasNewPosts}
             aria-expanded={isExpanded}
           >
-            Posts
+            See posts
             {hasNewPosts && <NewPill>NEW</NewPill>}
           </PostsButton>
         </Layout.FlexRow>
