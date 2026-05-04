@@ -22,6 +22,7 @@ function MutualFriendsInfo({ mutualFriends = [] }: MutualFriendsInfoProps) {
       firstUserName,
       secondUserName,
       others: restOfFriends.length,
+      count: friendList.length,
     });
   };
 

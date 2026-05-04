@@ -354,12 +354,12 @@
         "are_you_sure_you_want_to_delete_this_friend": "Remove this friend?",
         "mutual_friends_count_one": "{{count}} mutual friend",
         "mutual_friends_count_other": "{{count}} mutual friends",
-        "mutual_traits_count_one": "{{count}} mutual trait",
-        "mutual_traits_count_other": "{{count}} mutual traits",
+        "mutual_traits_count_one": "{{count}} mutual identity",
+        "mutual_traits_count_other": "{{count}} mutual identities",
         "mutual_friends_title": "Mutual Friends",
-        "mutual_traits_title": "Mutual Traits",
+        "mutual_traits_title": "Mutual Identities",
         "empty_mutuals": "No mutual friends",
-        "empty_mutual_traits": "No mutual traits",
+        "empty_mutual_traits": "No mutual identities",
         "more_modal": {
             "menu": {
                 "add_to_close_friends": "Add to Close Friends",
@@ -401,7 +401,17 @@
         "mutual_friends": {
             "one": "1 mutual friend: {{firstUserName}}",
             "two": "2 mutual friends: {{firstUserName}} and {{secondUserName}}",
-            "others": "{{firstUserName}}, {{secondUserName}}, and {{others}} more"
+            "others": "{{count}} mutual friends: {{firstUserName}}, {{secondUserName}}, and {{others}} more"
+        },
+        "mutual_identities": {
+            "prefix_one": "1 mutual identity:",
+            "prefix_other": "{{count}} mutual identities:",
+            "content_two": "{{firstTrait}} and {{secondTrait}}",
+            "content_others": "{{firstTrait}}, {{secondTrait}}, and {{others}} more"
+        },
+        "identities": {
+            "prefix": "Identities:",
+            "content_others": "{{firstTrait}}, {{secondTrait}}, and more"
         },
         "check_in": {
             "new_check_in": "New Check-In",
@@ -444,11 +454,12 @@
         },
         "switch_to_public_toast": "Your account is now public.",
         "switch_to_private_toast": "Your account is now private.",
-        "interests": "Interests",
+        "interests": "Identities",
         "persona": "Persona",
         "see_more_details": "See more details",
+        "see_my_identities": "see my identities",
         "more_about": "More about {{username}}",
-        "shared_traits": "Shared Traits"
+        "shared_traits": "Shared Identities"
     },
     "notes": {
         "notes": "{{name}}'s Posts",
@@ -668,7 +679,7 @@
                 "edit": "Edit"
             },
             "persona_placeholder": "For eg: #Lurker",
-            "interests": "Interests",
+            "interests": "Identities",
             "interests_placeholder": "For eg: #Climbing",
             "update": "Update",
             "response": {
@@ -693,7 +704,7 @@
                     "persona": "Persona"
                 },
                 "interest": {
-                    "add": "Interests"
+                    "add": "Identities"
                 },
                 "social_battery": "My Social Battery Level",
                 "music": "My song",
@@ -1484,7 +1495,7 @@
         },
         "tabs": {
             "friends": "Friends",
-            "update": "Update",
+            "update": "Check-In",
             "share": "Share",
             "discover": "Daily Digest",
             "chats": "Chats",

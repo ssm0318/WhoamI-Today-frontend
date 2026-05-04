@@ -567,7 +567,7 @@ function EditProfile() {
                 setActiveTab('interests');
               }}
             >
-              Interests
+              Identities
             </EditProfileTabButton>
           </EditProfileTabRow>
         )}

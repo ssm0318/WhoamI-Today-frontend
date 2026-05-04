@@ -26,6 +26,7 @@ import { getUserProfile } from '@utils/apis/user';
 import CheckInSection from '../check-in/CheckIn';
 import MoreAboutBottomSheet from './more-about-bottom-sheet/MoreAboutBottomSheet';
 import MutualFriendsInfo from './mutual-friends-info/MutualFriendsInfo';
+import MutualTraitsPreview from './mutual-traits-preview/MutualTraitsPreview';
 import PinnedPostsSection from './pinned-posts-section/PinnedPostsSection';
 import BioPlaceholder from './placeholders/BioPlaceholder';
 import InterestPlaceholder from './placeholders/InterestPlaceholder';
@@ -365,22 +366,23 @@ function Profile({ user }: ProfileProps) {
             isMyPage &&
             (myProfile?.user_interests ?? []).length === 0 && <InterestPlaceholder />}
 
-          {/* See more details */}
-          {!featureFlags?.postsVerQ && featureFlags?.persona && hasInterestsOrPersonas && (
-            <Layout.FlexRow
-              onClick={() => {
-                trackEvent('profile_see_more_details_tapped', {
-                  is_my_page: isMyPage ? 'true' : 'false',
-                });
-                setShowMoreAbout(true);
-              }}
-              style={{ cursor: 'pointer' }}
-            >
-              <Typo type="label-medium" color="PRIMARY">
-                {t('see_more_details')}
-              </Typo>
-            </Layout.FlexRow>
-          )}
+          {/* See my identities (my page only) */}
+          {!featureFlags?.postsVerQ &&
+            featureFlags?.persona &&
+            isMyPage &&
+            hasInterestsOrPersonas && (
+              <Layout.FlexRow
+                onClick={() => {
+                  trackEvent('profile_see_more_details_tapped', { is_my_page: 'true' });
+                  setShowMoreAbout(true);
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                <Typo type="label-medium" color="PRIMARY" underline>
+                  {t('see_my_identities')}
+                </Typo>
+              </Layout.FlexRow>
+            )}
         </Layout.FlexCol>
       </Layout.FlexRow>
 
@@ -405,6 +407,19 @@ function Profile({ user }: ProfileProps) {
               />
               <ChatRequestButton user={user} />
             </Layout.FlexRow>
+          )}
+          {!featureFlags?.postsVerQ && featureFlags?.persona && (
+            <MutualTraitsPreview
+              mutualTraits={[
+                ...((user as UserProfile).mutual_interests ?? []),
+                ...((user as UserProfile).mutual_personas ?? []),
+              ]}
+              userTraits={[...(user.user_interests ?? []), ...(user.user_personas ?? [])]}
+              onClick={() => {
+                trackEvent('profile_see_more_details_tapped', { is_my_page: 'false' });
+                setShowMoreAbout(true);
+              }}
+            />
           )}
           <div ref={mutualFriendsRef} style={{ width: '100%' }}>
             <MutualFriendsInfo mutualFriends={(user as UserProfile).mutuals} />

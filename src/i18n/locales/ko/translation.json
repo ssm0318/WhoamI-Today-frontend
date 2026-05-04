@@ -351,12 +351,12 @@
     "are_you_sure_you_want_to_delete_this_friend": "정말로 이 친구를 삭제하시겠습니까?",
     "mutual_friends_count_one": "공통 친구 {{count}}명",
     "mutual_friends_count_other": "공통 친구 {{count}}명",
-    "mutual_traits_count_one": "공통 trait {{count}}개",
-    "mutual_traits_count_other": "공통 trait {{count}}개",
+    "mutual_traits_count_one": "공통 identity {{count}}개",
+    "mutual_traits_count_other": "공통 identity {{count}}개",
     "mutual_friends_title": "공통 친구",
-    "mutual_traits_title": "공통 Trait",
+    "mutual_traits_title": "공통 Identity",
     "empty_mutuals": "공통 친구가 없습니다",
-    "empty_mutual_traits": "공통 trait가 없습니다",
+    "empty_mutual_traits": "공통 identity가 없습니다",
     "more_modal": {
       "menu": {
         "add_to_close_friends": "친한 친구 추가",
@@ -398,7 +398,17 @@
     "mutual_friends": {
       "one": "1명의 공통 친구({{firstUserName}})",
       "two": "2명의 공통 친구({{firstUserName}}, {{secondUserName}})",
-      "others": "{{firstUserName}}와(과) {{secondUserName}}, 그 외 {{others}}명의 공통친구"
+      "others": "{{count}}명의 공통 친구({{firstUserName}}, {{secondUserName}}, 그 외 {{others}}명)"
+    },
+    "mutual_identities": {
+      "prefix_one": "공통 identity 1개:",
+      "prefix_other": "공통 identity {{count}}개:",
+      "content_two": "{{firstTrait}}, {{secondTrait}}",
+      "content_others": "{{firstTrait}}, {{secondTrait}}, 그 외 {{others}}개"
+    },
+    "identities": {
+      "prefix": "Identity:",
+      "content_others": "{{firstTrait}}, {{secondTrait}}, 외 더 있음"
     },
     "check_in": {
       "new_check_in": "새로운 상태 추가하기",
@@ -441,11 +451,12 @@
     },
     "switch_to_public_toast": "공개 계정으로 전환되었습니다.",
     "switch_to_private_toast": "비공개 계정으로 전환되었습니다.",
-    "interests": "관심사",
+    "interests": "Identity",
     "persona": "페르소나",
     "see_more_details": "자세히 보기",
+    "see_my_identities": "내 identity 보기",
     "more_about": "{{username}} 더 알아보기",
-    "shared_traits": "공유 특성"
+    "shared_traits": "공유 Identity"
   },
   "notes": {
     "notes": "{{name}}의 게시글",
@@ -658,7 +669,7 @@
       "pronouns": "대명사",
       "persona": "페르소나",
       "persona_placeholder": "예: #Lurker",
-      "interests": "관심사",
+      "interests": "Identity",
       "interests_placeholder": "예: #Climbing",
       "persona_edit_bottom_sheet": {
         "title": "후엠아이 페르소나 수정하기",
@@ -690,7 +701,7 @@
           "persona": "페르소나"
         },
         "interest": {
-          "add": "관심사"
+          "add": "Identity"
         },
         "social_battery": "나의 소셜 배터리 수준",
         "music": "내 노래",
@@ -1475,7 +1486,7 @@
     },
     "tabs": {
       "friends": "친구",
-      "update": "업데이트",
+      "update": "체크인",
       "share": "공유",
       "discover": "다이제스트",
       "chats": "채팅",
