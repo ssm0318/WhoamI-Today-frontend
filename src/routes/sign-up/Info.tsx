@@ -22,8 +22,8 @@ function Info() {
   const [dateOfBirthError, setDateOfBirthError] = useState<string | null>(null);
   const signUpInfo = useBoundStore((state) => state.signUpInfo);
   const invitedByLink = !!signUpInfo.inviter_username || !!signUpInfo.inviter_code;
-  const [friendUsernameInput, setFriendUsernameInput] = useState(signUpInfo.inviter_username || '');
-  const [friendUsernameError, setFriendUsernameError] = useState<string | null>(null);
+  const [inviteCodeInput, setInviteCodeInput] = useState(signUpInfo.inviter_code || '');
+  const [inviteCodeError, setInviteCodeError] = useState<string | null>(null);
   const [privacyPolicyChecked, setPrivacyPolicyChecked] = useState(false);
   const [showAgeConfirmDialog, setShowAgeConfirmDialog] = useState(false);
   const [calculatedAge, setCalculatedAge] = useState(0);
@@ -50,9 +50,9 @@ function Info() {
     if (dateOfBirthError) setDateOfBirthError(null);
   };
 
-  const handleChangeFriendUsername = (e: ChangeEvent<HTMLInputElement>) => {
-    setFriendUsernameInput(e.target.value);
-    if (friendUsernameError) setFriendUsernameError(null);
+  const handleChangeInviteCode = (e: ChangeEvent<HTMLInputElement>) => {
+    setInviteCodeInput(e.target.value);
+    if (inviteCodeError) setInviteCodeError(null);
   };
 
   const calculateAge = (birthDate: string) => {
@@ -81,17 +81,17 @@ function Info() {
       setShowAgeConfirmDialog(true);
     };
 
-    const trimmed = friendUsernameInput.trim();
-    const inviteCode = signUpInfo.inviter_code?.trim();
-    if (!trimmed && !inviteCode) {
-      setFriendUsernameError(t('friend_username_required_error'));
+    const inviteCode = signUpInfo.inviter_code?.trim() || inviteCodeInput.trim();
+    const inviterUsername = signUpInfo.inviter_username?.trim();
+    if (!inviteCode && !inviterUsername) {
+      setInviteCodeError(t('invite_code_required_error'));
       trackEvent('signup_validation_error', { step: 'info', error_type: 'missing_friend_code' });
       return;
     }
 
     validateInviterUsername({
-      username: trimmed || undefined,
-      inviteCode,
+      username: inviterUsername || undefined,
+      inviteCode: inviteCode || undefined,
       onSuccess: (res) => {
         setSignUpInfo({
           inviter_username: res.username,
@@ -103,9 +103,9 @@ function Info() {
         proceedToAgeConfirm();
       },
       onError: () => {
-        setFriendUsernameError(t('friend_username_error'));
+        setInviteCodeError(t('invite_code_error'));
         if (invitedByLink) {
-          openToast({ message: t('friend_username_error') });
+          openToast({ message: t('invite_code_error') });
         }
         trackEvent('signup_validation_error', { step: 'info', error_type: 'friend_code' });
       },
@@ -144,24 +144,24 @@ function Info() {
   };
 
   const nextDisabled =
-    (!friendUsernameInput.trim() && !signUpInfo.inviter_code) ||
+    (!inviteCodeInput.trim() && !signUpInfo.inviter_code && !signUpInfo.inviter_username) ||
     !dateOfBirthInput ||
     !!dateOfBirthError ||
     !privacyPolicyChecked ||
-    (!!friendUsernameError && !invitedByLink);
+    (!!inviteCodeError && !invitedByLink);
 
   return (
     <>
       <Layout.FlexCol gap={20} w="100%">
         {!invitedByLink && (
           <ValidatedInput
-            label={t('friend_username')}
-            name="friend_username"
+            label={t('invite_code')}
+            name="invite_code"
             type="text"
-            value={friendUsernameInput}
-            onChange={handleChangeFriendUsername}
-            error={friendUsernameError}
-            guide={t('friend_username_guide')}
+            value={inviteCodeInput}
+            onChange={handleChangeInviteCode}
+            error={inviteCodeError}
+            guide={t('invite_code_guide')}
           />
         )}
         <ValidatedInput
