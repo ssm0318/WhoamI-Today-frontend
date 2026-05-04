@@ -1,7 +1,9 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
+import CheckInDetailBottomSheet from '@components/check-in/check-in-detail-bottom-sheet/CheckInDetailBottomSheet';
 import CheckInUpdateCard from '@components/friends/check-in-update-card/CheckInUpdateCard';
 import MissionGroupItem from '@components/note/mission-group-item/MissionGroupItem';
 import NoteItem from '@components/note/note-item/NoteItem';
@@ -20,6 +22,7 @@ interface Props {
 
 interface CheckInUpdateItem {
   key: string;
+  checkInId: number;
   username: string;
   profileImage: string | null;
   component: 'battery' | 'mood' | 'thought' | 'song';
@@ -31,8 +34,12 @@ interface CheckInUpdateItem {
 
 function FriendsTimelineFeed({ closeFriendsOnly }: Props) {
   const [t] = useTranslation('translation');
+  const navigate = useNavigate();
+  const [selectedCheckInUpdate, setSelectedCheckInUpdate] = useState<CheckInUpdateItem | null>(
+    null,
+  );
 
-  const friendType: FriendType = closeFriendsOnly ? 'close_friends' : 'all';
+  const friendType: FriendType = closeFriendsOnly ? 'close_friends' : 'check_in_updates';
   const { allFriends } = useInfiniteFetchFriends({ type: friendType });
 
   const {
@@ -49,64 +56,70 @@ function FriendsTimelineFeed({ closeFriendsOnly }: Props) {
   const checkInUpdates = useMemo(() => {
     const friends = (allFriends ?? [])
       .flatMap(({ results }) => results ?? [])
-      .filter((u) => !u.is_hidden && !u.current_user_read_check_in);
+      .filter((u) => {
+        if (u.is_hidden) return false;
+        if (!closeFriendsOnly) return true;
+        return u.connection_status === Connection.CLOSE_FRIEND;
+      });
 
     const updates: CheckInUpdateItem[] = [];
-    const now = new Date().toISOString();
-
     friends.forEach((friend) => {
       const updated = new Set(friend.recently_updated_check_in ?? []);
       if (updated.size === 0) return;
 
       const thought = (friend as any).thought ?? '';
 
-      if (updated.has('battery') && friend.social_battery) {
+      if (updated.has('battery') && friend.social_battery && friend.battery_updated_at) {
         updates.push({
           key: `ci-battery-${friend.id}`,
+          checkInId: friend.check_in_id!,
           username: friend.username,
           profileImage: friend.profile_image,
           component: 'battery',
           content: friend.social_battery,
           socialBattery: friend.social_battery,
-          timestamp: friend.battery_updated_at || now,
+          timestamp: friend.battery_updated_at,
         });
       }
-      if (updated.has('mood') && friend.mood) {
+      if (updated.has('mood') && friend.mood && friend.mood_updated_at) {
         const moodStr = Array.isArray(friend.mood) ? friend.mood.join(',') : friend.mood;
         updates.push({
           key: `ci-mood-${friend.id}`,
+          checkInId: friend.check_in_id!,
           username: friend.username,
           profileImage: friend.profile_image,
           component: 'mood',
           content: moodStr,
-          timestamp: friend.mood_updated_at || now,
+          timestamp: friend.mood_updated_at,
         });
       }
-      if (updated.has('thought') && thought) {
+      if (updated.has('thought') && thought && friend.thought_updated_at) {
         updates.push({
           key: `ci-thought-${friend.id}`,
+          checkInId: friend.check_in_id!,
           username: friend.username,
           profileImage: friend.profile_image,
           component: 'thought',
           content: thought,
-          timestamp: friend.thought_updated_at || now,
+          timestamp: friend.thought_updated_at,
         });
       }
-      if (updated.has('song') && friend.track_id) {
+      if (updated.has('song') && friend.track_id && friend.song_updated_at) {
         updates.push({
           key: `ci-song-${friend.id}`,
+          checkInId: friend.check_in_id!,
           username: friend.username,
           profileImage: friend.profile_image,
           component: 'song',
           content: '',
           trackId: friend.track_id,
-          timestamp: friend.song_updated_at || now,
+          timestamp: friend.song_updated_at,
         });
       }
     });
 
     return updates;
-  }, [allFriends]);
+  }, [allFriends, closeFriendsOnly]);
 
   // Filter feed items to close friends when checkbox is on
   const filteredFeedItems = useMemo(() => {
@@ -187,6 +200,10 @@ function FriendsTimelineFeed({ closeFriendsOnly }: Props) {
                   socialBattery={update.socialBattery}
                   trackId={update.trackId}
                   timestamp={update.timestamp}
+                  onProfileClick={() =>
+                    navigate(`/users/${update.username}`, { state: { source: 'friends_feed' } })
+                  }
+                  onComponentClick={() => setSelectedCheckInUpdate(update)}
                 />
               );
             }
@@ -197,6 +214,28 @@ function FriendsTimelineFeed({ closeFriendsOnly }: Props) {
             <Layout.FlexRow w="100%" h={40}>
               <Loader />
             </Layout.FlexRow>
+          )}
+          {selectedCheckInUpdate && (
+            <CheckInDetailBottomSheet
+              visible={!!selectedCheckInUpdate}
+              closeBottomSheet={() => setSelectedCheckInUpdate(null)}
+              focusComponent={selectedCheckInUpdate.component}
+              checkInId={selectedCheckInUpdate.checkInId}
+              username={selectedCheckInUpdate.username}
+              profileImage={selectedCheckInUpdate.profileImage}
+              socialBattery={selectedCheckInUpdate.socialBattery}
+              trackId={selectedCheckInUpdate.trackId}
+              mood={
+                selectedCheckInUpdate.component === 'mood'
+                  ? selectedCheckInUpdate.content.split(',').filter(Boolean)
+                  : undefined
+              }
+              description={
+                selectedCheckInUpdate.component === 'thought'
+                  ? selectedCheckInUpdate.content
+                  : undefined
+              }
+            />
           )}
         </Layout.FlexCol>
       ) : (

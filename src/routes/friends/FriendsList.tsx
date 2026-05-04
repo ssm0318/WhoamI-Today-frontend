@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Divider from '@components/_common/divider/Divider';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
@@ -25,7 +26,9 @@ type TabType = 'people' | 'feed';
 
 function FriendsList() {
   const [t] = useTranslation('translation');
-  const [selectedTab, setSelectedTab] = useState<TabType>('people');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialTab: TabType = searchParams.get('tab') === 'feed' ? 'feed' : 'people';
+  const [selectedTab, setSelectedTab] = useState<TabType>(initialTab);
   const [expandedFriendId, setExpandedFriendId] = useState<number | null>(null);
 
   // Browse mode can prefill the close-friends-only filter when "Just my people" is active.
@@ -38,6 +41,27 @@ function FriendsList() {
     if (browseModeForcesCloseFriends) setCloseFriendsOnly(true);
   }, [browseModeForcesCloseFriends]);
   const trackEvent = useTrackEvent();
+
+  useEffect(() => {
+    const nextTab: TabType = searchParams.get('tab') === 'feed' ? 'feed' : 'people';
+    setSelectedTab(nextTab);
+  }, [searchParams]);
+
+  const handleSelectTab = useCallback(
+    (tab: TabType) => {
+      setSelectedTab(tab);
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.set('tab', tab);
+          return next;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
+  );
+
   const handleToggleCloseFriends = () => {
     setCloseFriendsOnly((prev) => {
       const next = !prev;
@@ -267,7 +291,7 @@ function FriendsList() {
             <Layout.FlexRow gap={16} flex={1}>
               <TabButton
                 $active={selectedTab === 'people'}
-                onClick={() => setSelectedTab('people')}
+                onClick={() => handleSelectTab('people')}
               >
                 <SvgIcon
                   name={selectedTab === 'people' ? 'friends_active' : 'friends_inactive'}
@@ -275,7 +299,7 @@ function FriendsList() {
                 />
                 People
               </TabButton>
-              <TabButton $active={selectedTab === 'feed'} onClick={() => setSelectedTab('feed')}>
+              <TabButton $active={selectedTab === 'feed'} onClick={() => handleSelectTab('feed')}>
                 <SvgIcon
                   name={selectedTab === 'feed' ? 'feed_active' : 'feed_inactive'}
                   size={18}

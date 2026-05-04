@@ -49,4 +49,4 @@ export enum Connection {
   CLOSE_FRIEND = 'close_friend',
 }
 
-export type FriendType = 'all' | 'close_friends';
+export type FriendType = 'all' | 'close_friends' | 'check_in_updates';
