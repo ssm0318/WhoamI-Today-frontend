@@ -1,8 +1,7 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import Loader from '@components/_common/loader/Loader';
-import MainContainer from '@components/_common/main-container/MainContainer';
 import NoContents from '@components/_common/no-contents/NoContents';
 import ArchiveDateSection from '@components/check-in/archive/ArchiveDateSection';
 import SubHeader from '@components/sub-header/SubHeader';
@@ -12,6 +11,8 @@ import { useSWRInfiniteCursor } from '@hooks/useSWRInfiniteCursor';
 import { CheckInComponentEntry } from '@models/checkInEntry';
 import { archiveEntriesFetcher, ArchiveEntriesResponse } from '@utils/apis/archive';
 import { groupEntriesByDate } from '@utils/archiveHelpers';
+import { scrollAndHighlight } from '@utils/scrollHelpers';
+import { MainScrollContainer } from '../Root';
 
 /**
  * Read-only pinned check-in feed for a friend.
@@ -26,7 +27,9 @@ import { groupEntriesByDate } from '@utils/archiveHelpers';
  */
 function FriendPinnedFeed() {
   const [t] = useTranslation('translation', { keyPrefix: 'history' });
+  const [tPr] = useTranslation('translation', { keyPrefix: 'private_reply' });
   const { username } = useParams<{ username: string }>();
+  const [searchParams] = useSearchParams();
 
   const baseKey = username ? `/user/${username}/check_in/pinned/` : null;
 
@@ -45,16 +48,36 @@ function FriendPinnedFeed() {
 
   const sections = useMemo(() => groupEntriesByDate(flat), [flat]);
 
+  const highlightId = searchParams.get('highlight');
+  const hasHighlightedRef = useRef(false);
+  useEffect(() => {
+    if (!highlightId || flat.length === 0 || hasHighlightedRef.current) return;
+    hasHighlightedRef.current = true;
+    requestAnimationFrame(() => scrollAndHighlight(`entry-${highlightId}`));
+  }, [flat, highlightId]);
+
   const title = username
     ? t('friend_feed.title_with_username', { username })
     : t('friend_feed.title');
 
   return (
-    <MainContainer>
+    <MainScrollContainer>
       <SubHeader title={title} />
       <Layout.FlexCol mt={TITLE_HEADER_HEIGHT} w="100%" ph={DEFAULT_MARGIN} mb={80}>
+        {username && (
+          <Layout.FlexRow w="100%" pv={10} mb={4}>
+            <Typo type="label-medium" color="MEDIUM_GRAY">
+              {tPr('friend_page_hint', { username })}
+            </Typo>
+          </Layout.FlexRow>
+        )}
         {sections.map((section) => (
-          <ArchiveDateSection key={section.key} label={section.label} items={section.items} />
+          <ArchiveDateSection
+            key={section.key}
+            label={section.label}
+            items={section.items}
+            friendUsername={username}
+          />
         ))}
         <div ref={targetRef} />
         {(isLoading || isLoadingMore) && (
@@ -71,7 +94,7 @@ function FriendPinnedFeed() {
           </Layout.FlexRow>
         )}
       </Layout.FlexCol>
-    </MainContainer>
+    </MainScrollContainer>
   );
 }
 

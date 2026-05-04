@@ -1521,5 +1521,18 @@
         "header_button": {
             "aria": "Open browsing mode"
         }
+    },
+    "private_reply": {
+        "only_between": "Comments",
+        "owner_title": "Comments",
+        "empty": "No comments yet",
+        "placeholder": "Drop a private comment...",
+        "send": "Send",
+        "high_five_toast": "🙌 High-five!",
+        "high_five_remove_toast": "High-five removed",
+        "acknowledgments_title": "High-fives",
+        "no_acknowledgments": "No high-fives yet",
+        "visibility_hint": "Only {{username}} can see your comment.",
+        "friend_page_hint": "High-five what resonates, or leave a private comment. Only {{username}} will see them."
     }
 }

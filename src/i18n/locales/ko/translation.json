@@ -1512,5 +1512,18 @@
     "header_button": {
       "aria": "브라우징 모드 열기"
     }
+  },
+  "private_reply": {
+    "only_between": "@{{username}}와의 비밀 대화",
+    "owner_title": "비밀 대화",
+    "empty": "가장 먼저 비밀 반응을 남겨봐요 🙌",
+    "placeholder": "비밀 메시지 남기기...",
+    "send": "전송",
+    "high_five_toast": "🙌 하이파이브!",
+    "high_five_remove_toast": "하이파이브 취소됨",
+    "acknowledgments_title": "하이파이브",
+    "no_acknowledgments": "아직 하이파이브가 없어요",
+    "visibility_hint": "나와 @{{username}}만 볼 수 있어요.",
+    "friend_page_hint": "마음에 드는 것에 하이파이브하거나 비밀 댓글을 남겨보세요. @{{username}}만 볼 수 있어요."
   }
 }

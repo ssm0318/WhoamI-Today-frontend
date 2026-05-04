@@ -229,6 +229,7 @@ function History() {
               onPinClick={handlePinClick}
               onMoreClick={handleMoreClick}
               onBodyClick={handleBodyClick}
+              ownerMode
             />
           ))}
           <div ref={targetRef} />

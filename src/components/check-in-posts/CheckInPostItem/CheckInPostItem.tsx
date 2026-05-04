@@ -66,6 +66,7 @@ function CheckInPostItem({
   return (
     <>
       <Layout.FlexCol
+        id={`post-${id}`}
         w="100%"
         p={12}
         pb={16}

@@ -192,16 +192,15 @@ function CommentInputBox({
       <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between">
         {myProfile && <ProfileImage imageUrl={myProfile.profile_image} size={36} />}
         <Layout.FlexCol
-          w="100%"
           ml={4}
           outline="LIGHT_GRAY"
           rounded={15}
-          style={{ padding: '2px 6px 2px 10px' }}
+          style={{ flex: 1, overflow: 'hidden' }}
         >
           {isReply && replyTo && (
             <Layout.FlexRow
               ph={10}
-              pv={5}
+              pv={3}
               bgColor="LIGHT_GRAY"
               alignItems="center"
               w="100%"
@@ -215,7 +214,7 @@ function CommentInputBox({
               <SvgIcon name="close_comment" size={24} onClick={handleClickCloseReply} />
             </Layout.FlexRow>
           )}
-          <Layout.FlexRow w="100%" alignItems="center">
+          <Layout.FlexRow w="100%" alignItems="center" style={{ padding: '2px 6px 2px 10px' }}>
             <S.CommentInput
               ref={commentRef}
               placeholder={placeholder}
