@@ -125,6 +125,8 @@ function PostFooter({ post, displayType = 'LIST', showComments, setInputFocus }:
     setSampleUserList(like_reaction_user_sample);
   }, [like_reaction_user_sample]);
 
+  const canOpenCommentsInline = displayType !== 'DETAIL';
+
   return (
     <Layout.FlexRow
       gap={8}
@@ -138,7 +140,7 @@ function PostFooter({ post, displayType = 'LIST', showComments, setInputFocus }:
     >
       <Layout.FlexRow alignItems="center">
         <EmojiButton onClick={handleClickEmojiButton} />
-        {displayType === 'LIST' && (
+        {canOpenCommentsInline && (
           <Layout.FlexRow w={48} h={48} alignItems="center" justifyContent="center">
             <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
           </Layout.FlexRow>
@@ -153,7 +155,7 @@ function PostFooter({ post, displayType = 'LIST', showComments, setInputFocus }:
         <Layout.FlexRow>
           <button
             type="button"
-            onClick={displayType === 'LIST' ? handleClickCommentText : undefined}
+            onClick={canOpenCommentsInline ? handleClickCommentText : undefined}
           >
             <Typo type="label-large" color="BLACK" underline>
               {comment_count ?? 0} {t('comments')}

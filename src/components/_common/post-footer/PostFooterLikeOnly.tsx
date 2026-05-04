@@ -57,6 +57,7 @@ function PostFooterLikeOnly({
 
   const sampleUsers = like_user_sample ?? [];
   const showLikeMeta = typeof like_count === 'number' ? like_count > 0 : (like_count ?? 0) > 0;
+  const canOpenCommentsInline = displayType !== 'DETAIL';
 
   return (
     <Layout.FlexCol
@@ -122,7 +123,7 @@ function PostFooterLikeOnly({
         </Layout.FlexRow>
 
         <Layout.FlexRow gap={8} alignItems="center">
-          {displayType === 'LIST' && (
+          {canOpenCommentsInline && (
             <Layout.FlexRow w={48} h={48} alignItems="center" justifyContent="center">
               <Icon name="add_comment" size={23} onClick={handleClickCommentIcon} />
             </Layout.FlexRow>
@@ -130,7 +131,7 @@ function PostFooterLikeOnly({
           {!!comment_count && (
             <button
               type="button"
-              onClick={displayType === 'LIST' ? handleClickCommentText : undefined}
+              onClick={canOpenCommentsInline ? handleClickCommentText : undefined}
             >
               <Typo type="label-large" color="BLACK" underline>
                 {comment_count ?? 0} {t('comments')}
