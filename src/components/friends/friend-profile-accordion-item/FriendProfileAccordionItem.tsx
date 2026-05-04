@@ -32,7 +32,6 @@ import {
   ExpandableSection,
   ExpandedContent,
   InlineUpdateBadge,
-  NewPill,
   NoPostsHint,
   PostsButton,
   PostsSectionDivider,
@@ -188,17 +187,18 @@ function FriendProfileAccordionItem({
               onClick={handleClickFriendBadge}
             />
           )}
-          {/* [Posts] / [Posts NEW] — sits inline with the friend badge so the */}
-          {/* primary CTA is reachable without scanning to the row's edge. The */}
-          {/* NEW pill clears on tap (markFriendPostsAsRead in the parent). */}
+          {/* Two-state CTA — full "See posts" when nothing's new, tight "NEW" */}
+          {/* (with purple fill) when there is. Keeps the row compact even on */}
+          {/* long usernames (e.g. mock_user_9) where both labels would wrap. */}
+          {/* Tap clears the new-posts unread state (markFriendPostsAsRead). */}
           <PostsButton
             type="button"
             onClick={handleTogglePosts}
             $hasNew={hasNewPosts}
             aria-expanded={isExpanded}
+            aria-label={hasNewPosts ? 'See new posts' : 'See posts'}
           >
-            See posts
-            {hasNewPosts && <NewPill>NEW</NewPill>}
+            {hasNewPosts ? 'NEW' : 'See posts'}
           </PostsButton>
         </Layout.FlexRow>
 
