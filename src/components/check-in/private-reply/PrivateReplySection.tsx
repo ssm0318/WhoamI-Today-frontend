@@ -52,6 +52,18 @@ function PrivateReplySection({ entry, friendUsername, isOwner = false }: Props) 
   return (
     <>
       <S.Wrapper>
+        {/* Make the privacy guarantee explicit on both sides — viewers shouldn't */}
+        {/* worry the author sees their identity when reacting (they don't, the */}
+        {/* counts are owner-only), and authors shouldn't worry that strangers */}
+        {/* will see who reacted. */}
+        <S.PrivacyHint aria-live="polite">
+          🔒{' '}
+          {isOwner
+            ? 'Only you see these reactions and comments.'
+            : friendUsername
+            ? `Only ${friendUsername} sees this — your reactions and comments are private.`
+            : 'Only the author sees these — your reactions and comments are private.'}
+        </S.PrivacyHint>
         <S.Row>
           <S.AckButton
             $active={!isOwner && acknowledged}

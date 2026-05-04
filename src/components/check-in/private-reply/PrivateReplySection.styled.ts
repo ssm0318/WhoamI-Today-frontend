@@ -8,6 +8,15 @@ export const Wrapper = styled.div`
   background: transparent;
 `;
 
+export const PrivacyHint = styled.div`
+  font-size: 11px;
+  color: #6b6b6b;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
+
 export const Row = styled.div`
   display: flex;
   flex-direction: row;
