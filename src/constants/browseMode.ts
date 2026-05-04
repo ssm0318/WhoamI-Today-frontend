@@ -11,9 +11,9 @@ import { SocialBattery } from '@models/checkIn';
  */
 export const ALL_BROWSE_MODE_TABS: BrowseModeTabKey[] = [
   'friends',
-  'discover',
   'update',
   'share',
+  'discover',
   'chats',
 ];
 
@@ -25,7 +25,7 @@ export const BUILT_IN_BROWSE_MODES: Record<BuiltInBrowseModeId, BuiltInBrowseMod
     emoji: '🤩',
     suggestedBattery: SocialBattery.fully_charged,
     config: {
-      tabs: ['friends', 'discover', 'update', 'share', 'chats'],
+      tabs: ['friends', 'update', 'share', 'discover', 'chats'],
       filters: {},
       sections: {},
     },
@@ -138,7 +138,7 @@ export const CUSTOMIZE_TEMPLATES: CustomizeTemplate[] = [
     i18nKey: 'digital_detox',
     emoji: '🌿',
     config: {
-      tabs: ['friends', 'discover', 'update', 'share', 'chats'],
+      tabs: ['friends', 'update', 'share', 'discover', 'chats'],
       filters: {},
       tab_durations: {
         friends: DIGITAL_DETOX_DEFAULT_MINUTES,

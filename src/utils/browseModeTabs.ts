@@ -34,9 +34,9 @@ export function getVisibleTabs(
 
   if (featureFlags?.friendList) {
     if (allow('friends')) tabs.push({ key: 'friends', path: '/friends' });
-    if (allow('discover')) tabs.push({ key: 'discover', path: '/discover' });
     if (allow('update')) tabs.push({ key: 'update', path: '/update' });
     if (allow('share')) tabs.push({ key: 'share', path: '/share' });
+    if (allow('discover')) tabs.push({ key: 'discover', path: '/discover' });
   } else if (featureFlags?.friendFeed) {
     if (allow('friends')) tabs.push({ key: 'friends', path: '/feed' });
   }

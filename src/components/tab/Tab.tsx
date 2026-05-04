@@ -142,9 +142,9 @@ export default function Tab() {
         {featureFlags?.friendList ? (
           <>
             {isTabAllowed('friends') && <TabItem to="/friends" type="friends" size={28} />}
-            {isTabAllowed('discover') && <TabItem to="/discover" type="digest" size={28} />}
             {isTabAllowed('update') && <TabItem to="/update" type="update" size={28} />}
             {isTabAllowed('share') && <TabItem to="/share" type="share" size={28} />}
+            {isTabAllowed('discover') && <TabItem to="/discover" type="digest" size={28} />}
           </>
         ) : featureFlags?.friendFeed ? (
           isTabAllowed('friends') && <TabItem to="/feed" type="friends" size={28} />
