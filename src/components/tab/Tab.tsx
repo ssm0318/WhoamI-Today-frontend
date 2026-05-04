@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useMatch } from 'react-router-dom';
@@ -7,6 +8,7 @@ import { resetScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { BrowseModeTabKey } from '@models/browseMode';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
+import { getVisibleTabs } from '@utils/browseModeTabs';
 import {
   NavTabItem,
   StyledMessageCount,
@@ -111,15 +113,13 @@ export default function Tab() {
   const activeBrowseMode = useBoundStore((state) => state.activeBrowseMode);
   const isChatPage = !!useMatch('/users/:username/chat');
 
-  // When a browse mode is active, only render tabs whose key is in the mode's allowlist.
-  // `my` and `questions` are intentionally exempt — profile lives in the hamburger menu
-  // and questions is feature-flag-gated, so users always want them when those flags allow.
-  const allowedTabs = activeBrowseMode?.config.tabs;
-  const ALWAYS_SHOWN: BrowseModeTabKey[] = ['my', 'questions'];
-  const isTabAllowed = (key: BrowseModeTabKey) => {
-    if (ALWAYS_SHOWN.includes(key)) return true;
-    return !allowedTabs || allowedTabs.includes(key);
-  };
+  // Single source of truth for tab visibility — shared with route-sync hook
+  // and cold-start restore. See `getVisibleTabs` for the rules.
+  const visibleKeys = useMemo(
+    () => new Set(getVisibleTabs(featureFlags, activeBrowseMode).map((t) => t.key)),
+    [featureFlags, activeBrowseMode],
+  );
+  const isTabAllowed = (key: BrowseModeTabKey) => visibleKeys.has(key);
 
   if (featureFlags?.checkInPosts) {
     return (
