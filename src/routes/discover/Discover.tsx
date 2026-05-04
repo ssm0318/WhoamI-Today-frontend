@@ -38,6 +38,7 @@ import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { getDiscoverFeed } from '@utils/apis/discover';
 import { getMe } from '@utils/apis/my';
+import { logOnboardingEvent } from '@utils/apis/onboardingEvents';
 import { getPastSurveys } from '@utils/apis/survey';
 import { getItemFromSessionStorage, setItemToSessionStorage } from '@utils/sessionStorage';
 import { MainScrollContainer } from 'src/routes/Root';
@@ -76,6 +77,13 @@ function Discover() {
   useEffect(() => {
     setItemToSessionStorage(DISCOVER_FILTER_KEY, selectedFilter);
   }, [selectedFilter]);
+
+  useEffect(() => {
+    logOnboardingEvent('discover_opened');
+    // Ver. W's Discover is the "Daily Digest" tab — log it under that key too
+    // so the audit predicate sees both surfaces.
+    logOnboardingEvent('daily_digest_opened');
+  }, []);
 
   const {
     isSaved: isInterestSaved,

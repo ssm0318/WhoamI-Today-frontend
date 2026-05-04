@@ -13,6 +13,7 @@ import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { getMe, getMyProfile } from '@utils/apis/my';
+import { logOnboardingEvent } from '@utils/apis/onboardingEvents';
 import { userListApiPrefixForViewer } from '@utils/apis/userApiPrefix';
 import { MainScrollContainer } from './Root';
 
@@ -29,6 +30,7 @@ function My() {
   // Refresh profile on mount
   useEffect(() => {
     getMyProfile();
+    logOnboardingEvent('my_tab_opened');
   }, []);
 
   const handleRefresh = useCallback(async () => {

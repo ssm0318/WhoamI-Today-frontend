@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loader from '@components/_common/loader/Loader';
 import NoContents from '@components/_common/no-contents/NoContents';
@@ -15,6 +15,7 @@ import { AllPostFeedItem, POST_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { getMe } from '@utils/apis/my';
+import { logOnboardingEvent } from '@utils/apis/onboardingEvents';
 import { isPostsVerQClient } from '@utils/apis/userApiPrefix';
 import { MainScrollContainer } from 'src/routes/Root';
 
@@ -41,6 +42,10 @@ function FriendsFeed() {
   } = useSWRInfiniteScroll<AllPostFeedItem>({
     key: friendFeedKey,
   });
+
+  useEffect(() => {
+    logOnboardingEvent('q_feed_opened');
+  }, []);
 
   const handleRefresh = useCallback(async () => {
     await Promise.all([refetchFeed(), fetchCheckIn(), getMe()]);

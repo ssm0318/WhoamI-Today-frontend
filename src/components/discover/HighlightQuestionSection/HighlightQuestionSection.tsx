@@ -5,6 +5,7 @@ import SendPromptModal from '@components/_common/prompt/SendPromptModal';
 import { formatFullDate } from '@components/_common/prompt-summary-card/PromptSummaryCard';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { useTrackEvent } from '@hooks/useTrackEvent';
+import { logOnboardingEvent } from '@utils/apis/onboardingEvents';
 import * as S from './HighlightQuestionSection.styled';
 
 type HighlightQuestionSectionProps = {
@@ -32,6 +33,10 @@ function HighlightQuestionSection({
     // Body tap from feed opens the aggregation page. tag captures
     // the highlight category so we can compare engagement across tags.
     trackEvent('highlight_question_detail_tapped', {
+      question_id: questionId,
+      tag,
+    });
+    logOnboardingEvent('highlight_question_detail_tapped', {
       question_id: questionId,
       tag,
     });

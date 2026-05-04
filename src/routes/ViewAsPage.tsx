@@ -9,6 +9,7 @@ import { Layout } from '@design-system';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import { isVisibilityTier, VisibilityTier } from '@models/viewAs';
 import { useBoundStore } from '@stores/useBoundStore';
+import { logOnboardingEvent } from '@utils/apis/onboardingEvents';
 import UserPage from './UserPage';
 
 const DEFAULT_TIER: VisibilityTier = 'public';
@@ -41,6 +42,7 @@ function ViewAsPage() {
 
   const handleOpenPicker = () => {
     trackEvent('view_as_picker_opened');
+    logOnboardingEvent('view_as_picker_opened');
     setPickerVisible(true);
   };
   const handleClosePicker = () => setPickerVisible(false);
