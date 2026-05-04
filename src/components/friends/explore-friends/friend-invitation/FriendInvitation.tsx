@@ -13,6 +13,9 @@ export default function FriendInvitation() {
   const [t] = useTranslation('translation', { keyPrefix: 'friends.explore_friends.invite' });
   const { isMobile } = getMobileDeviceInfo();
   const [showToast, setShowToast] = useState(false);
+  const invitationLink = myProfile?.username
+    ? `whoami://app/signup/email/invited-by/${encodeURIComponent(myProfile.username)}`
+    : INVITATION_LINK;
 
   const handleClickLinkShare = () => {
     // desktop 에서는 클립보드에 복사
@@ -20,7 +23,7 @@ export default function FriendInvitation() {
       const message = decodeHTMLEntities(
         t('desktop_message', {
           username: myProfile?.username,
-          invitation_link: INVITATION_LINK,
+          invitation_link: invitationLink,
         }),
       );
       navigator.clipboard.writeText(message);
@@ -34,13 +37,13 @@ export default function FriendInvitation() {
       ? decodeHTMLEntities(
           `${t('mobile_message_title')}\n\n${t('mobile_message', {
             username: myProfile?.username,
-            invitation_link: INVITATION_LINK,
+            invitation_link: invitationLink,
           })}`,
         )
       : decodeHTMLEntities(
           t('mobile_message', {
             username: myProfile?.username,
-            invitation_link: INVITATION_LINK,
+            invitation_link: invitationLink,
           }),
         );
 
@@ -69,7 +72,7 @@ export default function FriendInvitation() {
             {t('text')}
           </Font.Body>
           <Typo type="body-medium" color="MEDIUM_GRAY">
-            {INVITATION_LINK}
+            {invitationLink}
           </Typo>
         </Layout.FlexCol>
         <SvgIcon name="share_default" size={44} />

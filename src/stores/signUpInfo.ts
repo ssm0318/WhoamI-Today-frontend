@@ -20,6 +20,7 @@ const initialState = {
     current_ver: VersionType.VER_Q,
     user_group: UserGroup.GROUP_Q_FIRST,
     inviter_id: 0,
+    inviter_username: '',
   },
 };
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation } from 'react-router-dom';
 import SubHeader from '@components/sub-header/SubHeader';
@@ -8,10 +8,12 @@ import { useBoundStore } from '@stores/useBoundStore';
 
 function SignUp() {
   const [t] = useTranslation('translation', { keyPrefix: 'sign_up' });
-  const { resetSignUpInfo } = useBoundStore((state) => ({
+  const { resetSignUpInfo, setSignUpInfo } = useBoundStore((state) => ({
     resetSignUpInfo: state.resetSignUpInfo,
+    setSignUpInfo: state.setSignUpInfo,
   }));
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
+  const initializedRef = useRef(false);
 
   const title = useMemo(() => {
     if (pathname.includes('research')) return t('research_participation_consent_form');
@@ -20,8 +22,22 @@ function SignUp() {
   }, [pathname, t]);
 
   useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
+    const params = new URLSearchParams(search);
+    const invitedByPathMatch = pathname.match(/\/signup\/email\/invited-by\/([^/?#]+)/);
+    const inviterUsername =
+      (invitedByPathMatch?.[1] ? decodeURIComponent(invitedByPathMatch[1]) : null) ||
+      params.get('inviter_username') ||
+      params.get('inviter') ||
+      params.get('invited_by');
+
     resetSignUpInfo();
-  }, [resetSignUpInfo]);
+    if (inviterUsername) {
+      setSignUpInfo({ inviter_username: inviterUsername.trim() });
+    }
+  }, [pathname, resetSignUpInfo, search, setSignUpInfo]);
 
   return (
     <>

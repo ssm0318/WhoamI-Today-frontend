@@ -32,6 +32,7 @@ export interface SignUpParams {
   current_ver?: VersionType;
   user_group?: UserGroup;
   inviter_id: number;
+  inviter_username?: string;
 }
 
 export const hasMandatorySignUpParams = (

@@ -20,7 +20,9 @@ function Info() {
   const [t, i18n] = useTranslation('translation', { keyPrefix: 'sign_up' });
   const [dateOfBirthInput, setDateOfBirthInput] = useState('');
   const [dateOfBirthError, setDateOfBirthError] = useState<string | null>(null);
-  const [friendUsernameInput, setFriendUsernameInput] = useState('');
+  const signUpInfo = useBoundStore((state) => state.signUpInfo);
+  const invitedByLink = !!signUpInfo.inviter_username;
+  const [friendUsernameInput, setFriendUsernameInput] = useState(signUpInfo.inviter_username || '');
   const [friendUsernameError, setFriendUsernameError] = useState<string | null>(null);
   const [privacyPolicyChecked, setPrivacyPolicyChecked] = useState(false);
   const [showAgeConfirmDialog, setShowAgeConfirmDialog] = useState(false);
@@ -90,6 +92,7 @@ function Info() {
       username: trimmed,
       onSuccess: (res) => {
         setSignUpInfo({
+          inviter_username: trimmed,
           inviter_id: res.inviter_id,
           current_ver: res.current_ver,
           user_group: res.user_group,
@@ -98,6 +101,9 @@ function Info() {
       },
       onError: () => {
         setFriendUsernameError(t('friend_username_error'));
+        if (invitedByLink) {
+          openToast({ message: t('friend_username_error') });
+        }
         trackEvent('signup_validation_error', { step: 'info', error_type: 'friend_code' });
       },
     });
@@ -139,20 +145,22 @@ function Info() {
     !dateOfBirthInput ||
     !!dateOfBirthError ||
     !privacyPolicyChecked ||
-    !!friendUsernameError;
+    (!!friendUsernameError && !invitedByLink);
 
   return (
     <>
       <Layout.FlexCol gap={20} w="100%">
-        <ValidatedInput
-          label={t('friend_username')}
-          name="friend_username"
-          type="text"
-          value={friendUsernameInput}
-          onChange={handleChangeFriendUsername}
-          error={friendUsernameError}
-          guide={t('friend_username_guide')}
-        />
+        {!invitedByLink && (
+          <ValidatedInput
+            label={t('friend_username')}
+            name="friend_username"
+            type="text"
+            value={friendUsernameInput}
+            onChange={handleChangeFriendUsername}
+            error={friendUsernameError}
+            guide={t('friend_username_guide')}
+          />
+        )}
         <ValidatedInput
           label={t('date_of_birth')}
           name="date_of_birth"
