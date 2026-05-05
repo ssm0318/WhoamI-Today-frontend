@@ -22,6 +22,10 @@ const initialState = {
     inviter_id: 0,
     inviter_username: '',
     inviter_code: '',
+    date_of_birth: '',
+    research_agreement: false,
+    signature: '',
+    date_of_signature: '',
   },
 };
 

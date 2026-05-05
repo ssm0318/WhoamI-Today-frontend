@@ -34,6 +34,10 @@ export interface SignUpParams {
   inviter_id: number;
   inviter_username?: string;
   inviter_code?: string;
+  date_of_birth?: string;
+  research_agreement?: boolean;
+  signature?: string;
+  date_of_signature?: string;
 }
 
 export const hasMandatorySignUpParams = (

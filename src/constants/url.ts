@@ -1,9 +1,12 @@
 export const DETAIL_DATE_PARAM_FORMAT = 'yyyy-MM-dd';
-export const PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_EN =
-  'https://www.notion.so/jinsungoo/Privacy-Policy-Consent-Form-413087ddc0674afe9fc951e703236489';
+export const PRIVACY_POLICY_NOTION_URL =
+  'https://jaewon-kim.notion.site/Privacy-Policy-357f7ff219e580588aafc565360791ad?source=copy_link';
 
-export const PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_KO =
-  'https://jinsungoo.notion.site/fbbbfa2ea098431b86dbe75b320ea1c4';
+export const TERMS_OF_SERVICE_NOTION_URL =
+  'https://jaewon-kim.notion.site/Terms-Of-Service-357f7ff219e5801986e7f93b59560b24?source=copy_link';
+
+export const RESEARCH_CONSENT_NOTION_URL =
+  'https://jaewon-kim.notion.site/Research-Content-Form-357f7ff219e580e5bc95e1495086c180?source=copy_link';
 
 export const LEARN_MORE_ABOUT_WHOAMI_TODAY_NOTION_URL =
   'https://www.notion.so/jinsungoo/What-is-WhoAmI-Today-TBU-7466713e676a42eca7d7d99c3ac341e9';
