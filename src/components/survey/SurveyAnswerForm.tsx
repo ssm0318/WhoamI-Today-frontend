@@ -77,6 +77,16 @@ const isDisplayOnly = (q: SurveyQuestion) => q.type === 'display_only';
 
 type AnswerValue = number | string | (number | string)[] | undefined;
 
+// Whether a value is actually present (non-empty). Used for payload
+// filtering — distinct from `isAnswered`, which gates Next-button
+// navigation and treats optional-empty as "answered enough to advance".
+const hasValue = (value: AnswerValue): boolean => {
+  if (value === undefined || value === null) return false;
+  if (typeof value === 'string') return value.trim().length > 0;
+  if (Array.isArray(value)) return value.length > 0;
+  return true;
+};
+
 const isAnswered = (question: SurveyQuestion, value: AnswerValue) => {
   if (isDisplayOnly(question)) return true;
   if (!question.required) return true;
@@ -235,15 +245,20 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
         duration_ms: lastDwellMs,
       });
     }
-    // Only submit answers for visible non-display-only questions.
+    // Only submit answers for visible non-display-only questions that
+    // ACTUALLY have a value. Optional free-text questions where the user
+    // navigated past without typing anything would otherwise serialize
+    // as `{ question_id, value: undefined }` — which JSON.stringify
+    // strips to just `{ question_id }`, and the backend serializer
+    // rejects with "This field is required" for the missing `value`.
     // display_only carries no value, and conditionally-hidden questions
     // shouldn't pollute the response with stale values from a discarded
     // branch (e.g. user picked "bug" then changed to "feature_request").
     const payload: SurveyAnswerInput[] = questions
-      .filter((q) => !isDisplayOnly(q))
+      .filter((q) => !isDisplayOnly(q) && hasValue(answers[q.id]))
       .map((q) => ({
         question_id: q.id,
-        value: answers[q.id],
+        value: answers[q.id] as number | string | (number | string)[],
       }));
     try {
       await submitSurveyResponse(survey.slug, payload);
