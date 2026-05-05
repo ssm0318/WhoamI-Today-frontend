@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
@@ -49,13 +49,18 @@ const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko :
 function DailyArchive() {
   const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
   const navigate = useNavigate();
+  const location = useLocation();
   const { data } = useSWR('/surveys/past/', getPastSurveys);
 
   const handleClick = (row: PastSurvey) => {
     if (row.user_answered) {
       navigate(`/surveys/${row.survey.slug}/results`);
     } else {
-      navigate(`/surveys/${row.survey.slug}/answer`);
+      // Pass `from` so the post-submit Done page returns the user to
+      // the daily archive list, not the global surveys index.
+      navigate(`/surveys/${row.survey.slug}/answer`, {
+        state: { from: location.pathname + location.search },
+      });
     }
   };
 

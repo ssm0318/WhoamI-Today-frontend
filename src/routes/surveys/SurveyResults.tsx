@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
@@ -101,6 +101,7 @@ function SurveyResults() {
   const { slug } = useParams<{ slug: string }>();
   const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { data, error } = useSWR(
     slug ? `/surveys/${slug}/results/` : null,
@@ -131,7 +132,17 @@ function SurveyResults() {
             {body.detail}
           </Typo>
           {body.needs_submission && (
-            <ActionButton type="button" onClick={() => navigate(`/surveys/${slug}/answer`)}>
+            <ActionButton
+              type="button"
+              onClick={() =>
+                // Pass `from` so the post-submit Done page returns the
+                // user to the results page instead of the global index
+                // (the user is mid-flow on this slug).
+                navigate(`/surveys/${slug}/answer`, {
+                  state: { from: location.pathname + location.search },
+                })
+              }
+            >
               {t('answer_to_view_results')}
             </ActionButton>
           )}

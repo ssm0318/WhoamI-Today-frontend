@@ -1,5 +1,4 @@
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import useSWR, { mutate } from 'swr';
 
@@ -32,9 +31,16 @@ const Card = styled(Layout.FlexCol)`
 
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
+// Forwarded through every entry-point that links to /answer so the post-
+// submit Done page knows where to return the user. SurveyAnswer reads it
+// from location.state and forwards it onward unchanged.
+interface AnswerRouteState {
+  from?: string;
+}
+
 function SurveyAnswer() {
   const { slug } = useParams<{ slug: string }>();
-  const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
+  const location = useLocation();
   const navigate = useNavigate();
   const openToast = useBoundStore((s) => s.openToast);
 
@@ -43,6 +49,8 @@ function SurveyAnswer() {
   );
 
   if (!survey) return null;
+
+  const from = (location.state as AnswerRouteState | null)?.from;
 
   return (
     <>
@@ -57,9 +65,17 @@ function SurveyAnswer() {
           <SurveyAnswerForm
             survey={survey}
             onSubmitted={() => {
+              // Refresh the SOTD card if this submission was today's
+              // daily — fire-and-forget; the user has already left this
+              // page by the time the network request lands.
               mutate(SURVEY_OF_THE_DAY_KEY);
-              openToast({ message: t('toast.submitted') });
-              navigate(`/surveys/${survey.slug}/results`);
+              // Replace /answer with /done in history so a Back tap from
+              // the eventual entry-point page doesn't bounce the user
+              // back into a half-cleared form.
+              navigate(`/surveys/${survey.slug}/done`, {
+                replace: true,
+                state: { from },
+              });
             }}
             onError={(message) => openToast({ message })}
           />

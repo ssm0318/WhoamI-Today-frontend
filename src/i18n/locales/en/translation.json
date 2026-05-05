@@ -1346,6 +1346,12 @@
             "submitted": "Survey submitted!",
             "submit_failed": "Could not submit — please try again."
         },
+        "done_page": {
+            "thanks_title": "Thanks for your response.",
+            "thanks_body_default": "Your answers have been recorded. You can keep going whenever you're ready.",
+            "thanks_body_repeatable": "Your note has been recorded. Drop in again anytime — we read every one.",
+            "thanks_body_editable": "Your answers have been recorded. You can come back and update them until the survey closes."
+        },
         "buckets": {
             "population": "Everyone",
             "friends": "Your friends",

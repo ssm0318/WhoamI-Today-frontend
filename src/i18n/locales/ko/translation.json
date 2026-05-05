@@ -1337,6 +1337,12 @@
       "submitted": "설문이 제출되었어요!",
       "submit_failed": "제출에 실패했어요. 다시 시도해주세요."
     },
+    "done_page": {
+      "thanks_title": "응답해 주셔서 감사합니다.",
+      "thanks_body_default": "응답이 저장되었어요. 준비되시면 다시 들러주세요.",
+      "thanks_body_repeatable": "남겨주신 의견이 저장되었어요. 언제든 다시 들러주세요 — 모두 읽어보고 있어요.",
+      "thanks_body_editable": "응답이 저장되었어요. 설문이 닫히기 전까지 언제든 수정할 수 있어요."
+    },
     "buckets": {
       "population": "전체",
       "friends": "친구",

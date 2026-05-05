@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
@@ -82,6 +82,7 @@ const formatDate = (iso: string): string => {
 function SurveysIndex() {
   const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
   const navigate = useNavigate();
+  const location = useLocation();
   const { data } = useSWR('/surveys/index/', getSurveyIndex);
 
   if (!data) return null;
@@ -90,7 +91,17 @@ function SurveysIndex() {
   const nonDailyCompleted = data.completed.filter((e) => e.cadence !== 'daily');
 
   const renderEntry = (entry: SurveyIndexEntry, bucket: Bucket) => (
-    <RowCard key={entry.id} type="button" onClick={() => navigate(entry.redirect_url)}>
+    <RowCard
+      key={entry.id}
+      type="button"
+      onClick={() =>
+        // Carry `from` so the post-submit Done page returns to the
+        // surveys index instead of forgetting where we came from.
+        navigate(entry.redirect_url, {
+          state: { from: location.pathname + location.search },
+        })
+      }
+    >
       <RowHeader>
         <Typo type="title-medium" color="BLACK">
           {pickLocalized(entry.survey.title_en, entry.survey.title_ko)}

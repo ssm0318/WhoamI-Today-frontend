@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Typo } from '@design-system';
@@ -56,6 +56,7 @@ function SurveyOfTheDay() {
   const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
   const { data, isLoading } = useSurveyOfTheDay();
   const navigate = useNavigate();
+  const location = useLocation();
   const userId = useBoundStore((s) => s.myProfile?.id ?? null);
 
   if (isLoading) return null;
@@ -102,7 +103,15 @@ function SurveyOfTheDay() {
           ? t('responder_count_today', { count: survey.responder_count })
           : t('responder_count_today_zero')}
       </Typo>
-      <ActionButton onClick={() => navigate(`/surveys/${survey.slug}/answer`)}>
+      <ActionButton
+        onClick={() =>
+          // Pass `from` so the post-submit Done page can return the
+          // user here (the Share tab) instead of the surveys index.
+          navigate(`/surveys/${survey.slug}/answer`, {
+            state: { from: location.pathname + location.search },
+          })
+        }
+      >
         <Typo type="label-large" fontWeight={600}>
           {ctaLabel}
         </Typo>

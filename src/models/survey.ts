@@ -80,6 +80,14 @@ export interface Survey {
   description_ko: string;
   interpretation_en: string;
   interpretation_ko: string;
+  // Long-form study flags. `repeatable` allows multiple submissions per
+  // user (anytime_reflection-style); `editable` allows resubmit-as-edit
+  // (one row, latest answers win); `closed` is researcher-set (410 on
+  // submit). These drive submit-page UX (e.g. the post-submit thank-you
+  // screen picks copy based on which mode the survey is in).
+  repeatable: boolean;
+  editable: boolean;
+  closed: boolean;
   questions: SurveyQuestion[];
   user_has_responded: boolean;
   responder_count: number;
