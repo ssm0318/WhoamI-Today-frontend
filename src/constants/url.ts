@@ -8,9 +8,6 @@ export const TERMS_OF_SERVICE_NOTION_URL =
 export const RESEARCH_CONSENT_NOTION_URL =
   'https://jaewon-kim.notion.site/Research-Content-Form-357f7ff219e580e5bc95e1495086c180?source=copy_link';
 
-export const LEARN_MORE_ABOUT_WHOAMI_TODAY_NOTION_URL =
-  'https://www.notion.so/jinsungoo/What-is-WhoAmI-Today-TBU-7466713e676a42eca7d7d99c3ac341e9';
-
 // Ver.W redirection path
 export const FRIEND_DEFAULT_REDIRECTION_PATH = '/friends';
 

@@ -3,10 +3,7 @@ import { ChangeEvent, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
-import {
-  LEARN_MORE_ABOUT_WHOAMI_TODAY_NOTION_URL,
-  RESEARCH_CONSENT_NOTION_URL,
-} from '@constants/url';
+import { RESEARCH_CONSENT_NOTION_URL } from '@constants/url';
 import { Button, CheckBox, Layout, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import { useTrackEvent } from '@hooks/useTrackEvent';
@@ -97,14 +94,6 @@ function ResearchConsent() {
         <Typo type="label-medium" color="BLACK">
           {t('research_optional_guide')}
         </Typo>
-        <button
-          type="button"
-          onClick={() => openExternalLink(LEARN_MORE_ABOUT_WHOAMI_TODAY_NOTION_URL)}
-        >
-          <Typo type="label-medium" color="BLACK" underline>
-            {t('learn_more_about_whoami_today')}
-          </Typo>
-        </button>
         <Layout.FlexRow w="100%">
           <CheckBox
             name="research_agreement"
