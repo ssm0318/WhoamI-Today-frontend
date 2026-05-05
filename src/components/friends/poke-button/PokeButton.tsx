@@ -65,7 +65,10 @@ function PokeButton({ receiverId, componentType, initialPokeId }: Props) {
       setPokeRecord(null);
       openToast({ message: t('ping_removed') });
     } catch {
-      // silently fail
+      // Surface the failure instead of going dark — the user just tapped and
+      // nothing visible happened. Refresh status so the UI reflects truth.
+      openToast({ message: t('ping_remove_failed') });
+      fetchStatus();
     } finally {
       setIsLoading(false);
     }
@@ -86,7 +89,14 @@ function PokeButton({ receiverId, componentType, initialPokeId }: Props) {
       setPokeRecord(newPoke);
       openToast({ message: t('ping_sent') });
     } catch {
-      // silently fail
+      // The most common failure mode here is the dedup 400 ("You already
+      // pinged this component.") — usually because the friends-list cache is
+      // stale and the badge is showing "Ping for X" while the server already
+      // has a pending poke for this triple. Refetch to let the badge correct
+      // itself, and toast so the tap feels acknowledged. Previously this
+      // catch was silent, which read as "the button doesn't press."
+      openToast({ message: t('ping_failed') });
+      fetchStatus();
     } finally {
       setIsLoading(false);
     }

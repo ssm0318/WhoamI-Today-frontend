@@ -94,6 +94,8 @@
         "view_all_updates_this_week": "View all updates this week",
         "ping_sent": "Ping sent!",
         "ping_removed": "Ping removed!",
+        "ping_failed": "Couldn't send the ping. Refreshing…",
+        "ping_remove_failed": "Couldn't remove the ping. Refreshing…",
         "hide_aria": "Hide friend",
         "hide_confirm_title": "Hide this friend from your feed?",
         "hide_confirm_action": "Hide",
