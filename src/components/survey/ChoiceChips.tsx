@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import { Layout } from '@design-system';
+import { SurveyOptionValue } from '@models/survey';
 
 import { Chip } from './Chip.styled';
 
@@ -9,20 +10,23 @@ const ChipsRow = styled(Layout.FlexRow)`
   gap: 8px;
 `;
 
+// Option value can be number (likert / ordinal scores) or string (category
+// codes like "mission_suggest"). Mirrors backend SurveyOption.value
+// JSONField — both shapes are valid per the schema.
 interface ChoiceChipsProps {
-  options: { value: number; label: string }[];
+  options: { value: SurveyOptionValue; label: string }[];
   multi: boolean;
-  selected: number | number[] | null;
-  onSelect: (v: number | number[]) => void;
+  selected: SurveyOptionValue | SurveyOptionValue[] | null;
+  onSelect: (v: SurveyOptionValue | SurveyOptionValue[]) => void;
 }
 
 export function ChoiceChips({ options, multi, selected, onSelect }: ChoiceChipsProps) {
-  const isSelected = (value: number) => {
+  const isSelected = (value: SurveyOptionValue) => {
     if (Array.isArray(selected)) return selected.includes(value);
     return selected === value;
   };
 
-  const handleClick = (value: number) => {
+  const handleClick = (value: SurveyOptionValue) => {
     if (multi) {
       const current = Array.isArray(selected) ? selected : [];
       const next = current.includes(value)
@@ -38,7 +42,7 @@ export function ChoiceChips({ options, multi, selected, onSelect }: ChoiceChipsP
     <ChipsRow>
       {options.map((o) => (
         <Chip
-          key={o.value}
+          key={String(o.value)}
           type="button"
           selected={isSelected(o.value)}
           onClick={() => handleClick(o.value)}

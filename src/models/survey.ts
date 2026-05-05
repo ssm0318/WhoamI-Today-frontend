@@ -1,26 +1,70 @@
 // Question types — defined per-question so a single Survey can mix them.
 // Mirror of surveys/models.py TYPE_CHOICES.
-export type QuestionType = 'likert_5' | 'single_choice' | 'multi_choice' | 'free_text' | 'slider';
+export type QuestionType =
+  | 'likert_3'
+  | 'likert_4'
+  | 'likert_5'
+  | 'likert_5_na'
+  | 'likert_6'
+  | 'likert_7'
+  | 'single_choice'
+  | 'multi_choice'
+  | 'free_text'
+  | 'slider'
+  | 'display_only';
+
+// `value` is union: backend single_choice / multi_choice options use string
+// values like "mission_suggest" alongside numeric likert option values.
+export type SurveyOptionValue = number | string;
 
 export interface SurveyOption {
   id: number;
   order: number;
   label_en: string;
   label_ko: string;
-  value: number;
+  value: SurveyOptionValue;
+}
+
+// Conditional display rule. Backend authors questions with one of four
+// operators; the frontend evaluates whichever is set. `depends_on` is the
+// slug of the controlling question — resolved against the survey's
+// questions[].slug map at render time.
+export interface ConditionalDisplay {
+  depends_on: string;
+  show_when_value?: SurveyOptionValue;
+  show_when_value_not?: SurveyOptionValue;
+  show_when_value_in?: SurveyOptionValue[];
+  show_when_value_includes?: SurveyOptionValue;
 }
 
 export interface SurveyQuestion {
   id: number;
   order: number;
   type: QuestionType;
+  // Stable slug used by `conditional_display.depends_on` to reference
+  // the controlling question. Empty string for legacy / unslugged rows.
+  slug: string;
   prompt_en: string;
   prompt_ko: string;
+  // Long-form helpers — optional descriptive copy under the prompt and
+  // input placeholder for free_text. Empty string when unused.
+  description_en: string;
+  description_ko: string;
+  placeholder_en: string;
+  placeholder_ko: string;
   low_label_en: string;
   low_label_ko: string;
   high_label_en: string;
   high_label_ko: string;
+  // Display-only question content (markdown-light intro / section breaks).
+  // Empty string for non-display_only types.
+  content_en: string;
+  content_ko: string;
+  required: boolean;
+  // Free-text minimum character requirement (0 = unrestricted).
+  min_length: number;
   reverse_scored: boolean;
+  conditional_display: ConditionalDisplay | null;
   // Slider-only inclusive bounds; null for non-slider types. low_label /
   // high_label double as the slider's min/max labels.
   slider_min_value: number | null;
@@ -48,7 +92,12 @@ export interface SurveyOfTheDayResponse {
 
 export interface SurveyAnswerInput {
   question_id: number;
-  value: number | number[] | string;
+  // Mirrors backend SurveyAnswer.value JSONField. likert/ordinal codes are
+  // numeric; categorical choices may carry strings; multi_choice picks are
+  // the array form (widened to allow mixed because variance forbids
+  // accepting `(number | string)[]` into `number[] | string[]`); free_text
+  // is string.
+  value: number | string | (number | string)[];
 }
 
 export type SuppressedReason =

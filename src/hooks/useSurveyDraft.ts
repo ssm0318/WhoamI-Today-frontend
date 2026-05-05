@@ -2,7 +2,16 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { useBoundStore } from '@stores/useBoundStore';
 
-export type DraftAnswers = Record<number, number | number[] | string>;
+// Answer value mirrors backend SurveyAnswer.value (JSONField). single_choice
+// / multi_choice may carry either numbers (likert codes) or strings
+// (category codes like "mission_suggest"); free_text is string; likert
+// is number; multi_choice is the array form. Array form is widened to
+// (number | string)[] because a single multi_choice question may receive
+// SurveyOptionValue[] from ChoiceChips, and array variance forbids
+// `number[] | string[]` from accepting `(number | string)[]`.
+export type DraftAnswerValue = number | string | (number | string)[];
+
+export type DraftAnswers = Record<number, DraftAnswerValue>;
 
 interface DraftPayload {
   answers: DraftAnswers;
@@ -48,7 +57,7 @@ export function useSurveyDraft(slug: string | undefined) {
   }, [key]);
 
   const setAnswer = useCallback(
-    (questionId: number, value: number | number[] | string) => {
+    (questionId: number, value: DraftAnswerValue) => {
       setAnswers((prev) => {
         const next = { ...prev, [questionId]: value };
         if (key) writeDraft(key, next);

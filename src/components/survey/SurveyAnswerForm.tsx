@@ -6,7 +6,13 @@ import { Colors, Layout, Typo } from '@design-system';
 import { useSurveyDraft } from '@hooks/useSurveyDraft';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import i18n from '@i18n/index';
-import { Survey, SurveyAnswerInput } from '@models/survey';
+import {
+  ConditionalDisplay,
+  Survey,
+  SurveyAnswerInput,
+  SurveyOptionValue,
+  SurveyQuestion,
+} from '@models/survey';
 import { submitSurveyResponse } from '@utils/apis/survey';
 
 import { ChoiceChips } from './ChoiceChips';
@@ -65,10 +71,40 @@ interface SurveyAnswerFormProps {
 
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
-const isAnswered = (value: number | number[] | string | undefined) => {
+// display_only carries no answer; treat it as "answered" for navigation
+// purposes so the user can advance past intro / section-break cards.
+const isDisplayOnly = (q: SurveyQuestion) => q.type === 'display_only';
+
+type AnswerValue = number | string | (number | string)[] | undefined;
+
+const isAnswered = (question: SurveyQuestion, value: AnswerValue) => {
+  if (isDisplayOnly(question)) return true;
+  if (!question.required) return true;
   if (value === undefined || value === null) return false;
   if (Array.isArray(value)) return value.length > 0;
   if (typeof value === 'string') return value.trim().length > 0;
+  return true;
+};
+
+// Evaluate a conditional_display rule against the controlling question's
+// current answer. Returns true when the question SHOULD be shown.
+// Unknown / missing dependency slug fails open (visible) — defensive
+// against author typos so the survey never silently skips everything.
+const evaluateCondition = (rule: ConditionalDisplay, controllerValue: AnswerValue): boolean => {
+  if (controllerValue === undefined || controllerValue === null) return false;
+  if (rule.show_when_value !== undefined) {
+    return controllerValue === rule.show_when_value;
+  }
+  if (rule.show_when_value_not !== undefined) {
+    return controllerValue !== rule.show_when_value_not;
+  }
+  if (rule.show_when_value_in !== undefined) {
+    return rule.show_when_value_in.includes(controllerValue as SurveyOptionValue);
+  }
+  if (rule.show_when_value_includes !== undefined) {
+    if (!Array.isArray(controllerValue)) return false;
+    return (controllerValue as SurveyOptionValue[]).includes(rule.show_when_value_includes);
+  }
   return true;
 };
 
@@ -85,16 +121,43 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
   const questionStartedAtRef = useRef<number>(Date.now());
   const previousIndexRef = useRef<number>(0);
 
-  const questions = useMemo(
+  const allQuestions = useMemo(
     () => [...survey.questions].sort((a, b) => a.order - b.order),
     [survey.questions],
   );
+
+  // Filter to currently-visible questions based on conditional_display.
+  // Re-runs whenever a controlling answer changes (e.g. selecting a
+  // category in anytime_reflection swaps which follow-up questions show).
+  // Resolves `depends_on` (slug) to the controlling question's id, then
+  // looks up that id's answer.
+  const questions = useMemo(() => {
+    const bySlug = new Map<string, SurveyQuestion>();
+    allQuestions.forEach((q) => {
+      if (q.slug) bySlug.set(q.slug, q);
+    });
+    return allQuestions.filter((q) => {
+      if (!q.conditional_display) return true;
+      const controller = bySlug.get(q.conditional_display.depends_on);
+      // Missing dependency slug: fail open (show) so author typos don't
+      // silently make the rest of the survey vanish.
+      if (!controller) return true;
+      return evaluateCondition(q.conditional_display, answers[controller.id]);
+    });
+  }, [allQuestions, answers]);
   const total = questions.length;
+
+  // Clamp index when the visible-question list shrinks (e.g. user
+  // changes their category answer, removing later branches).
+  useEffect(() => {
+    if (total === 0) return;
+    if (index > total - 1) setIndex(total - 1);
+  }, [total, index]);
 
   // After hydration, jump to the first unanswered question (or last if all answered)
   useEffect(() => {
     if (!hydrated || total === 0) return;
-    const firstUnanswered = questions.findIndex((q) => !isAnswered(answers[q.id]));
+    const firstUnanswered = questions.findIndex((q) => !isAnswered(q, answers[q.id]));
     setIndex(firstUnanswered === -1 ? total - 1 : firstUnanswered);
     // intentionally only run on first hydration
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -126,8 +189,8 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
 
   const currentQuestion = questions[index];
   const currentValue = answers[currentQuestion.id];
-  const currentAnswered = isAnswered(currentValue);
-  const allAnswered = questions.every((q) => isAnswered(answers[q.id]));
+  const currentAnswered = isAnswered(currentQuestion, currentValue);
+  const allAnswered = questions.every((q) => isAnswered(q, answers[q.id]));
   const isLast = index === total - 1;
 
   const handleNext = () => {
@@ -172,10 +235,16 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
         duration_ms: lastDwellMs,
       });
     }
-    const payload: SurveyAnswerInput[] = questions.map((q) => ({
-      question_id: q.id,
-      value: answers[q.id],
-    }));
+    // Only submit answers for visible non-display-only questions.
+    // display_only carries no value, and conditionally-hidden questions
+    // shouldn't pollute the response with stale values from a discarded
+    // branch (e.g. user picked "bug" then changed to "feature_request").
+    const payload: SurveyAnswerInput[] = questions
+      .filter((q) => !isDisplayOnly(q))
+      .map((q) => ({
+        question_id: q.id,
+        value: answers[q.id],
+      }));
     try {
       await submitSurveyResponse(survey.slug, payload);
       // Backend captures the response, but a typed `survey_submitted`
@@ -207,9 +276,26 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
       </Layout.FlexCol>
 
       <Layout.FlexCol gap={6} w="100%">
-        <Typo type="title-medium" color="BLACK">
-          {pickLocalized(currentQuestion.prompt_en, currentQuestion.prompt_ko)}
-        </Typo>
+        {/* display_only carries content (intro / section break) instead
+            of a prompt + input. Render the content as the body and skip
+            the input controls. The Next button stays enabled because
+            isAnswered() returns true for display_only types. */}
+        {isDisplayOnly(currentQuestion) ? (
+          <Typo type="body-large" color="BLACK">
+            {pickLocalized(currentQuestion.content_en, currentQuestion.content_ko)}
+          </Typo>
+        ) : (
+          <>
+            <Typo type="title-medium" color="BLACK">
+              {pickLocalized(currentQuestion.prompt_en, currentQuestion.prompt_ko)}
+            </Typo>
+            {(currentQuestion.description_en || currentQuestion.description_ko) && (
+              <Typo type="body-medium" color="DARK_GRAY">
+                {pickLocalized(currentQuestion.description_en, currentQuestion.description_ko)}
+              </Typo>
+            )}
+          </>
+        )}
         {currentQuestion.type === 'likert_5' && (
           <LikertChips
             selected={(currentValue as number | undefined) ?? null}
@@ -225,7 +311,7 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
               label: pickLocalized(o.label_en, o.label_ko),
             }))}
             multi={currentQuestion.type === 'multi_choice'}
-            selected={(currentValue as number | number[] | undefined) ?? null}
+            selected={(currentValue as SurveyOptionValue | SurveyOptionValue[] | undefined) ?? null}
             onSelect={(v) => setAnswer(currentQuestion.id, v)}
           />
         )}
@@ -233,7 +319,10 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
           <FreeTextInput
             value={(currentValue as string | undefined) ?? ''}
             onChange={(v) => setAnswer(currentQuestion.id, v)}
-            placeholder={t('free_text_placeholder') ?? undefined}
+            placeholder={
+              pickLocalized(currentQuestion.placeholder_en, currentQuestion.placeholder_ko) ||
+              (t('free_text_placeholder') ?? undefined)
+            }
           />
         )}
         {currentQuestion.type === 'slider' &&
