@@ -9,6 +9,12 @@ export interface Mission {
   id: number;
   prompt: string;
   type: MissionType;
+  // When non-empty, the Share tab "Do it" button bypasses type-based routing
+  // (e.g. /update for song, /questions for question) and goes straight to
+  // /notes/new — keeps chat-based missions (cta_url=/users/wit_bot/chat)
+  // routing to a regular post on the Share path. The cta_url itself is only
+  // surfaced on the next-day discover digest card.
+  cta_url: string;
 }
 
 interface Props {
@@ -55,7 +61,12 @@ function MissionOfTheDay({ onDoMission }: Props) {
       mission_type: mission.type,
       attempt_number: attempts_used + 1,
     });
-    onDoMission({ id: mission.id, prompt: mission.prompt, type: mission.type });
+    onDoMission({
+      id: mission.id,
+      prompt: mission.prompt,
+      type: mission.type,
+      cta_url: mission.cta_url,
+    });
   };
 
   const buttonLabel = allUsed

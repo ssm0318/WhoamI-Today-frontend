@@ -5,6 +5,10 @@ export interface MissionToday {
   id: number;
   prompt: string;
   type: MissionType;
+  // Non-empty cta_url signals a chat-based mission. The Share tab "Do it"
+  // button still routes to /notes/new (see Share.tsx handleDoMission); the
+  // cta_url is surfaced on the next-day discover digest card instead.
+  cta_url: string;
   attempts_used: number;
   attempts_remaining: number;
   max_attempts: number;
