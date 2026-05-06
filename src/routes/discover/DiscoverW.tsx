@@ -461,7 +461,7 @@ function DiscoverW() {
                         }}
                       >
                         {data.yesterday_mission.mission.cta_url
-                          ? t('take_me_to_wit_bot')
+                          ? t('chat_with_wit_bot')
                           : t('view_mission_posts')}
                       </ViewAllButton>
                     </DigestCard>
