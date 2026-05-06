@@ -451,11 +451,18 @@ function DiscoverW() {
                       </MissionPromptBlock>
                       <ViewAllButton
                         $color={Colors.BLACK}
-                        onClick={() =>
-                          navigate(`/missions/${data.yesterday_mission?.mission.id}?discover=true`)
-                        }
+                        onClick={() => {
+                          const ctaUrl = data.yesterday_mission?.mission.cta_url;
+                          if (ctaUrl) {
+                            navigate(ctaUrl);
+                            return;
+                          }
+                          navigate(`/missions/${data.yesterday_mission?.mission.id}?discover=true`);
+                        }}
                       >
-                        {t('view_mission_posts')}
+                        {data.yesterday_mission.mission.cta_url
+                          ? t('take_me_to_wit_bot')
+                          : t('view_mission_posts')}
                       </ViewAllButton>
                     </DigestCard>
                   );
