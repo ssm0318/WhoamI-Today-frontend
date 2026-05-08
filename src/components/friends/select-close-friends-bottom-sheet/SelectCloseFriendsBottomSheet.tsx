@@ -28,7 +28,7 @@ function SelectCloseFriendsBottomSheet({ visible, closeBottomSheet, onFriendAdde
   const { allFriends, isAllFriendsLoading } = useInfiniteFetchFriends({ type: 'all' });
   const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [isUpdatePastPosts, setIsUpdatePastPosts] = useState(false);
+  const [isOnlyFuturePosts, setIsOnlyFuturePosts] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const { featureFlags } = useBoundStore(UserSelector);
@@ -38,7 +38,7 @@ function SelectCloseFriendsBottomSheet({ visible, closeBottomSheet, onFriendAdde
     if (!visible) {
       setSelectedFriendId(null);
       setShowConfirmDialog(false);
-      setIsUpdatePastPosts(false);
+      setIsOnlyFuturePosts(true);
     }
   }, [visible]);
 
@@ -61,7 +61,7 @@ function SelectCloseFriendsBottomSheet({ visible, closeBottomSheet, onFriendAdde
 
   const handleCancelConfirm = () => {
     setShowConfirmDialog(false);
-    setIsUpdatePastPosts(false);
+    setIsOnlyFuturePosts(true);
   };
 
   const handleConfirm = () => {
@@ -70,7 +70,7 @@ function SelectCloseFriendsBottomSheet({ visible, closeBottomSheet, onFriendAdde
     setIsSubmitting(true);
     changeConnection(selectedFriendId, {
       choice: Connection.CLOSE_FRIEND,
-      update_past_posts: featureFlags?.postsVerQ ? true : isUpdatePastPosts,
+      update_past_posts: featureFlags?.postsVerQ ? true : !isOnlyFuturePosts,
     })
       .then(() => {
         setShowConfirmDialog(false);
@@ -173,13 +173,18 @@ function SelectCloseFriendsBottomSheet({ visible, closeBottomSheet, onFriendAdde
                 {t('add_to_close_friends')}
               </Typo>
               {!featureFlags?.postsVerQ && (
-                <Layout.FlexRow mt={10} ml={20}>
+                <Layout.FlexCol mt={10} ml={20} gap={4} w="100%">
                   <CheckBox
-                    name={tDialog('update_past_posts') || ''}
-                    onChange={() => setIsUpdatePastPosts((prev) => !prev)}
-                    checked={isUpdatePastPosts}
+                    name={tDialog('only_future_posts') || ''}
+                    onChange={() => setIsOnlyFuturePosts((prev) => !prev)}
+                    checked={isOnlyFuturePosts}
                   />
-                </Layout.FlexRow>
+                  <Layout.FlexRow pl={30}>
+                    <Typo type="body-small" color="MEDIUM_GRAY">
+                      {tDialog('only_future_posts_subtitle')}
+                    </Typo>
+                  </Layout.FlexRow>
+                </Layout.FlexCol>
               )}
             </Layout.FlexCol>
             <ModalS.ButtonContainer w="100%" justifyContent="space-evenly">

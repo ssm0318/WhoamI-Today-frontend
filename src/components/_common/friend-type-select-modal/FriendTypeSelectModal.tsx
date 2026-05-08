@@ -32,7 +32,7 @@ function FriendTypeSelectModal({
   const { featureFlags } = useBoundStore(UserSelector);
   // default 값은 friend
   const [friendType, setFriendType] = useState<Connection>(Connection.FRIEND);
-  const [isUpdatePastPosts, setIsUpdatePastPosts] = useState(false);
+  const [isOnlyFuturePosts, setIsOnlyFuturePosts] = useState(true);
 
   // Implement usePreventScroll functionality
   useEffect(() => {
@@ -47,7 +47,7 @@ function FriendTypeSelectModal({
   const handleClickConfirm = () => {
     onClickConfirm({
       friendType,
-      updatePastPosts: featureFlags?.postsVerQ ? true : isUpdatePastPosts,
+      updatePastPosts: featureFlags?.postsVerQ ? true : !isOnlyFuturePosts,
     });
     onClickClose();
   };
@@ -59,10 +59,6 @@ function FriendTypeSelectModal({
   const handleClickBackground = (e: MouseEvent) => {
     e.stopPropagation();
     onClickClose();
-  };
-
-  const handleChangeCheckBox = () => {
-    setIsUpdatePastPosts((prev) => !prev);
   };
 
   if (!visible) return null;
@@ -98,14 +94,27 @@ function FriendTypeSelectModal({
             />
           </Layout.FlexCol>
           {!featureFlags?.postsVerQ && (
-            <Layout.FlexRow mt={10} ml={20}>
+            <Layout.FlexCol
+              mt={10}
+              ml={20}
+              gap={4}
+              w="100%"
+              style={{
+                opacity: friendType === Connection.FRIEND ? 0.3 : 1,
+                pointerEvents: friendType === Connection.FRIEND ? 'none' : 'auto',
+              }}
+            >
               <CheckBox
-                name={t('update_past_posts') || ''}
-                onChange={handleChangeCheckBox}
-                checked={isUpdatePastPosts}
-                disabled={friendType === Connection.FRIEND}
+                name={t('only_future_posts') || ''}
+                onChange={() => setIsOnlyFuturePosts((prev) => !prev)}
+                checked={isOnlyFuturePosts}
               />
-            </Layout.FlexRow>
+              <Layout.FlexRow pl={30}>
+                <Typo type="body-small" color="MEDIUM_GRAY">
+                  {t('only_future_posts_subtitle')}
+                </Typo>
+              </Layout.FlexRow>
+            </Layout.FlexCol>
           )}
         </Layout.FlexCol>
         <S.ButtonContainer w="100%" justifyContent="space-evenly">

@@ -1026,7 +1026,8 @@
                     "friend": "Friend",
                     "close_friend": "Close Friend",
                     "fyi": "They won't see the friendship type you choose.",
-                    "update_past_posts": "Apply this setting to past posts",
+                    "only_future_posts": "Only let them see your future Close Friends posts",
+                    "only_future_posts_subtitle": "If selected, past Close Friends posts won't be visible to them",
                     "cancel": "Cancel",
                     "confirm": "Confirm"
                 },

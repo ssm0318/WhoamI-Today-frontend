@@ -1014,7 +1014,8 @@
           "friend": "친구",
           "close_friend": "친한 친구",
           "fyi": "선택한 친구 유형은 친구에게 노출되지 않습니다.",
-          "update_past_posts": "과거 게시물에도 변경사항 반영",
+          "only_future_posts": "지금부터 올리는 친한 친구 게시물만 보여주기",
+          "only_future_posts_subtitle": "선택하면 이전 친한 친구 게시물은 보이지 않아요",
           "cancel": "취소",
           "confirm": "확인"
         },
