@@ -8,22 +8,60 @@ const ChipsRow = styled(Layout.FlexRow)`
   width: 100%;
   justify-content: space-between;
   gap: 8px;
+  flex-wrap: wrap;
 `;
 
+const NaRow = styled(Layout.FlexRow)`
+  width: 100%;
+  justify-content: flex-end;
+  margin-top: 4px;
+`;
+
+// Sentinel for the "N/A" pick on likert_5_na questions. Mirrors backend
+// `NA_SENTINEL = None` — JSON-serializes to `null`, which the backend's
+// aggregation strategies recognize and skip from scoring. Distinct from
+// `undefined` (the user hasn't engaged with the question yet).
+export const LIKERT_NA_VALUE = null;
+
 interface LikertChipsProps {
-  selected: number | null;
-  onSelect: (v: number) => void;
+  // Inclusive bounds. Likert variants:
+  //   likert_3 → 1..3, likert_4 → 1..4, likert_5 → 1..5,
+  //   likert_5_na → 1..5 (+ N/A button), likert_6 → 1..6, likert_7 → 1..7.
+  min: number;
+  max: number;
+  selected: number | null | undefined;
+  onSelect: (v: number | null) => void;
   lowLabel?: string;
   highLabel?: string;
+  // When set (likert_5_na only), renders an N/A button after the numeric
+  // chips. Picking it stores LIKERT_NA_VALUE (null).
+  naLabel?: string;
 }
 
-const VALUES = [1, 2, 3, 4, 5];
+export function LikertChips({
+  min,
+  max,
+  selected,
+  onSelect,
+  lowLabel,
+  highLabel,
+  naLabel,
+}: LikertChipsProps) {
+  // Build an inclusive [min..max] integer scale. Defensive against
+  // inverted bounds: render at least one chip so the form never shows
+  // a question with no input at all.
+  const values: number[] = [];
+  for (let v = min; v <= max; v += 1) values.push(v);
+  if (values.length === 0) values.push(min);
 
-export function LikertChips({ selected, onSelect, lowLabel, highLabel }: LikertChipsProps) {
+  // Distinguish "not engaged" (undefined) from "explicitly N/A" (null) so
+  // the N/A button renders selected only when the user actually picked it.
+  const naSelected = selected === LIKERT_NA_VALUE;
+
   return (
     <Layout.FlexCol gap={4} w="100%">
       <ChipsRow>
-        {VALUES.map((v) => (
+        {values.map((v) => (
           <Chip key={v} type="button" selected={selected === v} onClick={() => onSelect(v)}>
             {v}
           </Chip>
@@ -38,6 +76,13 @@ export function LikertChips({ selected, onSelect, lowLabel, highLabel }: LikertC
             {highLabel}
           </Typo>
         </Layout.FlexRow>
+      )}
+      {naLabel && (
+        <NaRow>
+          <Chip type="button" selected={naSelected} onClick={() => onSelect(LIKERT_NA_VALUE)}>
+            {naLabel}
+          </Chip>
+        </NaRow>
       )}
     </Layout.FlexCol>
   );

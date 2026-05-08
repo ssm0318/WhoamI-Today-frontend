@@ -17,8 +17,21 @@ import { submitSurveyResponse } from '@utils/apis/survey';
 
 import { ChoiceChips } from './ChoiceChips';
 import { FreeTextInput } from './FreeTextInput';
-import { LikertChips } from './LikertChips';
+import { LIKERT_NA_VALUE, LikertChips } from './LikertChips';
 import { SliderInput } from './SliderInput';
+
+// Inclusive (min, max) per likert variant — mirrors backend
+// surveys/models.py LIKERT_RANGES. Adding a new variant: extend both.
+// Anything not in this map renders no input (defensive default), so
+// keep this in lockstep with the backend.
+const LIKERT_RANGES: Record<string, [number, number]> = {
+  likert_3: [1, 3],
+  likert_4: [1, 4],
+  likert_5: [1, 5],
+  likert_5_na: [1, 5],
+  likert_6: [1, 6],
+  likert_7: [1, 7],
+};
 
 const ProgressBarTrack = styled.div`
   width: 100%;
@@ -75,13 +88,14 @@ const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko :
 // purposes so the user can advance past intro / section-break cards.
 const isDisplayOnly = (q: SurveyQuestion) => q.type === 'display_only';
 
-type AnswerValue = number | string | (number | string)[] | undefined;
+type AnswerValue = number | string | null | (number | string)[] | undefined;
 
-// Whether a value is actually present (non-empty). Used for payload
-// filtering — distinct from `isAnswered`, which gates Next-button
-// navigation and treats optional-empty as "answered enough to advance".
+// `null` is a meaningful answer on likert_5_na (the NA_SENTINEL — a
+// recorded "not applicable" pick). `undefined` means the user hasn't
+// engaged with the question yet. Treat these distinctly: hasValue and
+// isAnswered both accept null as present, only undefined is "missing".
 const hasValue = (value: AnswerValue): boolean => {
-  if (value === undefined || value === null) return false;
+  if (value === undefined) return false;
   if (typeof value === 'string') return value.trim().length > 0;
   if (Array.isArray(value)) return value.length > 0;
   return true;
@@ -90,9 +104,9 @@ const hasValue = (value: AnswerValue): boolean => {
 const isAnswered = (question: SurveyQuestion, value: AnswerValue) => {
   if (isDisplayOnly(question)) return true;
   if (!question.required) return true;
-  if (value === undefined || value === null) return false;
-  if (Array.isArray(value)) return value.length > 0;
+  if (value === undefined) return false;
   if (typeof value === 'string') return value.trim().length > 0;
+  if (Array.isArray(value)) return value.length > 0;
   return true;
 };
 
@@ -258,7 +272,7 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
       .filter((q) => !isDisplayOnly(q) && hasValue(answers[q.id]))
       .map((q) => ({
         question_id: q.id,
-        value: answers[q.id] as number | string | (number | string)[],
+        value: answers[q.id] as number | string | null | (number | string)[],
       }));
     try {
       await submitSurveyResponse(survey.slug, payload);
@@ -311,12 +325,22 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
             )}
           </>
         )}
-        {currentQuestion.type === 'likert_5' && (
+        {LIKERT_RANGES[currentQuestion.type] && (
           <LikertChips
-            selected={(currentValue as number | undefined) ?? null}
-            onSelect={(v) => setAnswer(currentQuestion.id, v)}
+            min={LIKERT_RANGES[currentQuestion.type][0]}
+            max={LIKERT_RANGES[currentQuestion.type][1]}
+            selected={currentValue as number | null | undefined}
+            onSelect={(v) => setAnswer(currentQuestion.id, v ?? LIKERT_NA_VALUE)}
             lowLabel={pickLocalized(currentQuestion.low_label_en, currentQuestion.low_label_ko)}
             highLabel={pickLocalized(currentQuestion.high_label_en, currentQuestion.high_label_ko)}
+            naLabel={
+              currentQuestion.type === 'likert_5_na'
+                ? pickLocalized(
+                    currentQuestion.na_option_en || 'N/A',
+                    currentQuestion.na_option_ko || 'N/A',
+                  )
+                : undefined
+            }
           />
         )}
         {(currentQuestion.type === 'single_choice' || currentQuestion.type === 'multi_choice') && (

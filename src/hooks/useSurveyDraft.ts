@@ -5,11 +5,14 @@ import { useBoundStore } from '@stores/useBoundStore';
 // Answer value mirrors backend SurveyAnswer.value (JSONField). single_choice
 // / multi_choice may carry either numbers (likert codes) or strings
 // (category codes like "mission_suggest"); free_text is string; likert
-// is number; multi_choice is the array form. Array form is widened to
-// (number | string)[] because a single multi_choice question may receive
-// SurveyOptionValue[] from ChoiceChips, and array variance forbids
-// `number[] | string[]` from accepting `(number | string)[]`.
-export type DraftAnswerValue = number | string | (number | string)[];
+// is number; multi_choice is the array form. `null` is the NA_SENTINEL
+// on likert_5_na — a valid recorded answer meaning "not applicable",
+// distinct from `undefined` which means "user hasn't engaged with this
+// question yet". Array form widened to (number | string)[] because a
+// single multi_choice question may receive SurveyOptionValue[] from
+// ChoiceChips, and array variance forbids `number[] | string[]` from
+// accepting `(number | string)[]`.
+export type DraftAnswerValue = number | string | null | (number | string)[];
 
 export type DraftAnswers = Record<number, DraftAnswerValue>;
 

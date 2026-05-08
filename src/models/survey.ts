@@ -56,6 +56,10 @@ export interface SurveyQuestion {
   low_label_ko: string;
   high_label_en: string;
   high_label_ko: string;
+  // Label for the "N/A" button on likert_5_na questions ("Not sure",
+  // "Doesn't apply", etc.). Empty for other types.
+  na_option_en: string;
+  na_option_ko: string;
   // Display-only question content (markdown-light intro / section breaks).
   // Empty string for non-display_only types.
   content_en: string;
@@ -104,8 +108,9 @@ export interface SurveyAnswerInput {
   // numeric; categorical choices may carry strings; multi_choice picks are
   // the array form (widened to allow mixed because variance forbids
   // accepting `(number | string)[]` into `number[] | string[]`); free_text
-  // is string.
-  value: number | string | (number | string)[];
+  // is string. `null` is the NA_SENTINEL on likert_5_na questions — a
+  // valid recorded answer meaning "not applicable", excluded from scoring.
+  value: number | string | null | (number | string)[];
 }
 
 export type SuppressedReason =
