@@ -811,7 +811,8 @@
         "about_me_description": "Drop a photo and share whatever represents you!",
         "create_post": "Share a post",
         "qna_title": "Q&A",
-        "quick_share_aria": "Open share composer"
+        "quick_share_aria": "Open share composer",
+        "daily_update_notice": "Mission, Survey, and Question are updated at 7 AM PT each day."
     },
     "discover_banner": {
         "daily_refresh_1": "We're working on the algorithm for this tab at the moment.",

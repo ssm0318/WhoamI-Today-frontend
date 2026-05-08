@@ -17,7 +17,7 @@ import { UserSelector } from '@stores/user';
 import { getMe } from '@utils/apis/my';
 import { getTodayQuestions } from '@utils/apis/question';
 import { MainScrollContainer } from '../Root';
-import { ColorCard, ShareActionButton } from './Share.styled';
+import { ColorCard, NoticeBanner, ShareActionButton } from './Share.styled';
 
 function Share() {
   const [t] = useTranslation('translation');
@@ -37,6 +37,12 @@ function Share() {
       <MainScrollContainer scrollRef={scrollRef}>
         <PullToRefresh onRefresh={handleRefresh}>
           <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} pv={16} gap={16} pb={100}>
+            <NoticeBanner>
+              <Typo type="label-large" color="MEDIUM_GRAY" textAlign="center">
+                {t('share_page.daily_update_notice')}
+              </Typo>
+            </NoticeBanner>
+
             {/* 1. Daily Snippet — ephemeral, 24h */}
             <CheckInPostShareCta />
 
@@ -105,6 +111,12 @@ function Share() {
     <MainScrollContainer scrollRef={scrollRef}>
       <PullToRefresh onRefresh={handleRefresh}>
         <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} pv={16} gap={16} pb={100}>
+          <NoticeBanner>
+            <Typo type="label-large" color="MEDIUM_GRAY" textAlign="center">
+              {t('share_page.daily_update_notice')}
+            </Typo>
+          </NoticeBanner>
+
           {/* Quick share — unstructured ad-hoc post entry */}
           <QuickShareInput />
 

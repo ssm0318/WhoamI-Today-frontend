@@ -1,5 +1,15 @@
 import styled from 'styled-components';
 
+export const NoticeBanner = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2px 0 8px;
+  text-align: center;
+  box-sizing: border-box;
+`;
+
 export const ColorCard = styled.div<{ $bg: string }>`
   width: 100%;
   display: flex;

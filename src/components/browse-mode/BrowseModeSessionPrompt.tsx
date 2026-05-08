@@ -277,6 +277,9 @@ function BrowseModeSessionPrompt({
   // intend to share.
   const syncBatteryToCheckIn = useCallback(
     async (targetBattery: SocialBattery): Promise<SocialBattery | null> => {
+      if (checkIn?.social_battery === targetBattery) {
+        return targetBattery;
+      }
       const targetBatteryVisibility =
         getLastVisibility(VisibilityMemoryKeys.checkInBattery) ?? DEFAULT_VISIBILITY.battery;
       try {
