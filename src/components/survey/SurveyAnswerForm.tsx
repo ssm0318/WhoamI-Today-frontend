@@ -325,45 +325,51 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
             )}
           </>
         )}
-        {/* Likert dispatch:
-            - Has per-option labels in YAML `options:` (e.g. RSQ-Brief's
-              "Very unconcerned"/"Unconcerned"/...) → render as a labeled
-              vertical list via ChoiceChips so participants see what each
-              numeric step actually means. The stored value is still the
-              numeric option.value, so backend aggregation is unchanged.
-            - No per-option labels → render the numeric scale via
-              LikertChips with low/high anchor labels (the standard
-              "Strongly disagree → Strongly agree" layout). likert_5_na
-              keeps its N/A button on this path. */}
-        {LIKERT_RANGES[currentQuestion.type] && currentQuestion.options.length > 0 && (
-          <ChoiceChips
-            options={currentQuestion.options.map((o) => ({
-              value: o.value,
-              label: pickLocalized(o.label_en, o.label_ko),
-            }))}
-            multi={false}
-            selected={(currentValue as SurveyOptionValue | undefined) ?? null}
-            onSelect={(v) => setAnswer(currentQuestion.id, v as number | string)}
-          />
-        )}
-        {LIKERT_RANGES[currentQuestion.type] && currentQuestion.options.length === 0 && (
-          <LikertChips
-            min={LIKERT_RANGES[currentQuestion.type][0]}
-            max={LIKERT_RANGES[currentQuestion.type][1]}
-            selected={currentValue as number | null | undefined}
-            onSelect={(v) => setAnswer(currentQuestion.id, v ?? LIKERT_NA_VALUE)}
-            lowLabel={pickLocalized(currentQuestion.low_label_en, currentQuestion.low_label_ko)}
-            highLabel={pickLocalized(currentQuestion.high_label_en, currentQuestion.high_label_ko)}
-            naLabel={
-              currentQuestion.type === 'likert_5_na'
-                ? pickLocalized(
-                    currentQuestion.na_option_en || 'N/A',
-                    currentQuestion.na_option_ko || 'N/A',
-                  )
-                : undefined
-            }
-          />
-        )}
+        {/* All likert variants render the same way: numeric chips
+            (1..max) with endpoint anchor labels. Keeps the layout
+            uniform across surveys (RSDS, HEXACO, RSQ all look the
+            same to the participant).
+            Anchor labels resolve in this priority:
+              1. Explicit low_label_* / high_label_* on the question
+              2. First / last option.label when YAML provides full
+                 per-option labels (RSQ-Brief style)
+              3. Empty (chips render with no anchor row)
+            likert_5_na keeps its N/A button below the numeric row. */}
+        {LIKERT_RANGES[currentQuestion.type] &&
+          (() => {
+            const opts = [...currentQuestion.options].sort((a, b) => a.order - b.order);
+            const firstOptLabel = opts[0] ? pickLocalized(opts[0].label_en, opts[0].label_ko) : '';
+            const lastOptLabel =
+              opts.length > 0
+                ? pickLocalized(opts[opts.length - 1].label_en, opts[opts.length - 1].label_ko)
+                : '';
+            const explicitLow = pickLocalized(
+              currentQuestion.low_label_en,
+              currentQuestion.low_label_ko,
+            );
+            const explicitHigh = pickLocalized(
+              currentQuestion.high_label_en,
+              currentQuestion.high_label_ko,
+            );
+            return (
+              <LikertChips
+                min={LIKERT_RANGES[currentQuestion.type][0]}
+                max={LIKERT_RANGES[currentQuestion.type][1]}
+                selected={currentValue as number | null | undefined}
+                onSelect={(v) => setAnswer(currentQuestion.id, v ?? LIKERT_NA_VALUE)}
+                lowLabel={explicitLow || firstOptLabel}
+                highLabel={explicitHigh || lastOptLabel}
+                naLabel={
+                  currentQuestion.type === 'likert_5_na'
+                    ? pickLocalized(
+                        currentQuestion.na_option_en || 'N/A',
+                        currentQuestion.na_option_ko || 'N/A',
+                      )
+                    : undefined
+                }
+              />
+            );
+          })()}
         {(currentQuestion.type === 'single_choice' || currentQuestion.type === 'multi_choice') && (
           <ChoiceChips
             options={currentQuestion.options.map((o) => ({
