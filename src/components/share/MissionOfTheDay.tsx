@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Layout, Typo } from '@design-system';
 import { useMissionToday } from '@hooks/useMissionToday';
@@ -9,14 +10,12 @@ export interface Mission {
   id: number;
   prompt: string;
   type: MissionType;
-  // type='none' = action-only mission (no post creation). Share tab "Do it"
-  // navigates directly to cta_url, no /notes/new flow. Used for missions like
-  // "react to friends' posts on the digest" where there's nothing to post.
-  //
-  // For non-'none' types: a non-empty cta_url means a chat-based mission
-  // (e.g. May 5 wit_bot onboarding). Share tab "Do it" still goes to
-  // /notes/new — the cta_url shows up on the next-day discover digest card.
+  // type='none' suppresses the primary "Do it" button (no post creation flow).
   cta_url: string;
+  // Label for the optional secondary action button. The mission card renders
+  // this button whenever cta_url is non-empty; for type='none' missions this
+  // is the only button.
+  cta_label: string;
 }
 
 interface Props {
@@ -26,6 +25,7 @@ interface Props {
 function MissionOfTheDay({ onDoMission }: Props) {
   const { mission, isLoading, error, refresh } = useMissionToday();
   const trackEvent = useTrackEvent();
+  const navigate = useNavigate();
 
   if (isLoading) {
     return (
@@ -54,6 +54,8 @@ function MissionOfTheDay({ onDoMission }: Props) {
 
   const { attempts_used, attempts_remaining } = mission;
   const allUsed = attempts_remaining <= 0;
+  const showDoIt = mission.type !== 'none';
+  const showCta = !!mission.cta_url;
 
   const handleDoIt = () => {
     if (allUsed) return;
@@ -68,10 +70,16 @@ function MissionOfTheDay({ onDoMission }: Props) {
       prompt: mission.prompt,
       type: mission.type,
       cta_url: mission.cta_url,
+      cta_label: mission.cta_label,
     });
   };
 
-  const buttonLabel = allUsed
+  const handleCta = () => {
+    if (!mission.cta_url) return;
+    navigate(mission.cta_url);
+  };
+
+  const doItLabel = allUsed
     ? 'No attempts left today'
     : attempts_used > 0
     ? `Try again (${attempts_remaining} left)`
@@ -82,11 +90,22 @@ function MissionOfTheDay({ onDoMission }: Props) {
       <Typo type="title-medium" color="WHITE">
         {mission.prompt}
       </Typo>
-      <ActionButton onClick={handleDoIt} $isCompleted={allUsed}>
-        <Typo type="label-large" color={allUsed ? 'MEDIUM_GRAY' : 'PRIMARY'} fontWeight={600}>
-          {buttonLabel}
-        </Typo>
-      </ActionButton>
+      <Layout.FlexCol gap={8}>
+        {showDoIt && (
+          <ActionButton onClick={handleDoIt} $isCompleted={allUsed}>
+            <Typo type="label-large" color={allUsed ? 'MEDIUM_GRAY' : 'PRIMARY'} fontWeight={600}>
+              {doItLabel}
+            </Typo>
+          </ActionButton>
+        )}
+        {showCta && (
+          <ActionButton onClick={handleCta} $isCompleted={false}>
+            <Typo type="label-large" color="PRIMARY" fontWeight={600}>
+              {mission.cta_label || 'Go'}
+            </Typo>
+          </ActionButton>
+        )}
+      </Layout.FlexCol>
     </Layout.FlexCol>
   );
 }
