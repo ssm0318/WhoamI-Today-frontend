@@ -39,7 +39,7 @@ function Share() {
           <Layout.FlexCol w="100%" ph={DEFAULT_MARGIN} pv={16} gap={16} pb={100}>
             <NoticeBanner>
               <Typo type="label-large" color="MEDIUM_GRAY" textAlign="center">
-                {t('share_page.daily_update_notice')}
+                {t('share_page.daily_update_notice_q')}
               </Typo>
             </NoticeBanner>
 

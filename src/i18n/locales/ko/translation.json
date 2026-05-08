@@ -801,7 +801,8 @@
     "create_post": "포스트 공유",
     "qna_title": "Q&A",
     "quick_share_aria": "공유 작성 열기",
-    "daily_update_notice": "미션, 서베이, 질문은 매일 오전 7시 (PDT)에 업데이트됩니다."
+    "daily_update_notice": "미션, 설문, 질문은 매일 오전 7시 (PT)에 업데이트됩니다.",
+    "daily_update_notice_q": "설문과 질문은 매일 오전 7시 (PT)에 업데이트됩니다."
   },
   "discover_banner": {
     "daily_refresh_1": "현재 이 탭의 알고리즘을 수정 중이에요.",
