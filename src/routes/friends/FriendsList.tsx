@@ -13,7 +13,7 @@ import { usePersistedExpandedFriendId } from '@hooks/usePersistedExpandedFriendI
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import { Connection, FriendType, UpdatedProfile } from '@models/api/friends';
-import { POST_TYPE } from '@models/post';
+import { Note, POST_TYPE, Response } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { readFriendCheckIn } from '@utils/apis/checkIn';
 import { getMe } from '@utils/apis/my';
@@ -173,11 +173,11 @@ function FriendsList() {
   const markFriendPostsAsRead = useCallback(
     async (friend: UpdatedProfile) => {
       const unreadNoteIds = (friend.recent_posts ?? [])
-        .filter((p) => p.type === POST_TYPE.NOTE && !p.current_user_read)
-        .map((p) => p.id);
+        .filter((p) => p.type === POST_TYPE.NOTE && !('attempts' in p) && !p.current_user_read)
+        .map((p) => (p as Note).id);
       const unreadResponseIds = (friend.recent_posts ?? [])
-        .filter((p) => p.type === POST_TYPE.RESPONSE && !p.current_user_read)
-        .map((p) => p.id);
+        .filter((p) => p.type === POST_TYPE.RESPONSE && !('attempts' in p) && !p.current_user_read)
+        .map((p) => (p as Response).id);
 
       const promises: Promise<unknown>[] = [];
       if (unreadNoteIds.length) promises.push(readNote(unreadNoteIds));

@@ -162,5 +162,5 @@ export interface DiscoverWResponse {
   yesterday_mission: DigestMissionSection | null;
   yesterday_question: DigestQuestionSection | null;
   yesterday_music: { tracks: DiscoverMusicTrack[] };
-  recommended_posts: (Note | Response)[];
+  recommended_posts: (Note | Response | MissionGroupItem)[];
 }

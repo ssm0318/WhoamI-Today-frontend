@@ -296,7 +296,8 @@ function ResponseItem({
       <Layout.FlexRow
         p={WRAPPER_PADDING}
         rounded={12}
-        outline={isCarouselItem && isMyPage ? 'MEDIUM_GRAY' : 'LIGHT'}
+        bgColor="WHITE"
+        outline={isCarouselItem && isMyPage ? undefined : 'LIGHT'}
         w="100%"
         onClick={handleClickDetail}
         style={

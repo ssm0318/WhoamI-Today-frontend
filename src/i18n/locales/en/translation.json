@@ -466,6 +466,8 @@
     "notes": {
         "notes": "{{name}}'s Posts",
         "comments": "Comments",
+        "comments_one": "Comment",
+        "comments_other": "Comments",
         "likes": "Likes",
         "title": "Posts",
         "new_note": "Share",
@@ -525,6 +527,8 @@
     "responses": {
         "title": "Daily Q&As",
         "comments": "Comments",
+        "comments_one": "Comment",
+        "comments_other": "Comments",
         "likes": "Likes",
         "more": "More",
         "new_response": "New Response",
@@ -1079,6 +1083,7 @@
     },
     "error": {
         "temporary_error": "A temporary error occurred. Please try again later.",
+        "network_error": "Please check your network connection.",
         "file_size_exceeded": "File size exceeds the {{size}}MB limit.",
         "friend_request_error_different_group": "Sorry, you can't add this user during the app testing period.",
         "like_duplicate": "You've already liked this post.",

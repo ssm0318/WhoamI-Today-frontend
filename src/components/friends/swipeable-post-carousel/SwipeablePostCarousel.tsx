@@ -1,89 +1,37 @@
-import { TouchEvent, useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import MissionGroupItemComponent from '@components/note/mission-group-item/MissionGroupItem';
 import NoteItem from '@components/note/note-item/NoteItem';
 import ResponseItem from '@components/response/response-item/ResponseItem';
-import { Layout, Typo } from '@design-system';
-import { Note, POST_TYPE, Response } from '@models/post';
+import { Layout, SvgIcon, Typo } from '@design-system';
+import { MissionGroupItem, Note, POST_TYPE, Response } from '@models/post';
 import {
   CarouselContainer,
   CarouselSlide,
   CarouselTrack,
   Dot,
   DotContainer,
+  NavArrow,
+  NavBar,
 } from './SwipeablePostCarousel.styled';
 
-const SWIPE_THRESHOLD = 50;
 const GAP = 12;
 
 interface Props {
-  posts: (Note | Response)[];
+  posts: (Note | Response | MissionGroupItem)[];
   isMyPage?: boolean;
 }
 
 function SwipeablePostCarousel({ posts, isMyPage = false }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [dragOffset, setDragOffset] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  const touchStartXRef = useRef(0);
-  const touchStartYRef = useRef(0);
-  const isDraggingRef = useRef(false);
+  const [pressedArrow, setPressedArrow] = useState<'prev' | 'next' | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const getContainerWidth = useCallback(() => {
     return containerRef.current?.offsetWidth ?? 0;
   }, []);
 
-  const handleTouchStart = (e: TouchEvent) => {
-    const { clientX, clientY } = e.touches[0];
-    touchStartXRef.current = clientX;
-    touchStartYRef.current = clientY;
-    isDraggingRef.current = false;
-    setIsTransitioning(false);
-  };
-
-  const handleTouchMove = (e: TouchEvent) => {
-    const { clientX, clientY } = e.touches[0];
-    const diffX = clientX - touchStartXRef.current;
-    const diffY = Math.abs(clientY - touchStartYRef.current);
-
-    // Vertical scroll takes priority if it's dominant
-    if (!isDraggingRef.current && diffY > Math.abs(diffX)) return;
-
-    isDraggingRef.current = true;
-
-    // Clamp drag at boundaries with resistance
-    const atStart = currentIndex === 0 && diffX > 0;
-    const atEnd = currentIndex === posts.length - 1 && diffX < 0;
-    const resistance = atStart || atEnd ? 0.3 : 1;
-    const clampedOffset = diffX * resistance;
-
-    // Prevent scrolling when swiping horizontally
-    if (Math.abs(diffX) > 10) {
-      e.preventDefault();
-    }
-
-    setDragOffset(clampedOffset);
-  };
-
-  const handleTouchEnd = () => {
-    if (!isDraggingRef.current) {
-      setDragOffset(0);
-      return;
-    }
-
-    setIsTransitioning(true);
-
-    if (Math.abs(dragOffset) > SWIPE_THRESHOLD) {
-      if (dragOffset < 0 && currentIndex < posts.length - 1) {
-        setCurrentIndex((prev) => prev + 1);
-      } else if (dragOffset > 0 && currentIndex > 0) {
-        setCurrentIndex((prev) => prev - 1);
-      }
-    }
-
-    setDragOffset(0);
-    isDraggingRef.current = false;
-  };
+  const handlePrev = () => setCurrentIndex((i) => Math.max(0, i - 1));
+  const handleNext = () => setCurrentIndex((i) => Math.min(posts.length - 1, i + 1));
 
   if (posts.length === 0) {
     return (
@@ -95,20 +43,29 @@ function SwipeablePostCarousel({ posts, isMyPage = false }: Props) {
     );
   }
 
-  const baseOffset = -(currentIndex * (getContainerWidth() + GAP));
+  const offset = -(currentIndex * (getContainerWidth() + GAP));
+
+  const getPostKey = (post: Note | Response | MissionGroupItem) => {
+    if (post.type === POST_TYPE.MISSION_GROUP) {
+      const g = post as MissionGroupItem;
+      return `mission-${g.mission_id ?? g.attempts[0]?.id}`;
+    }
+    return `${post.type}-${(post as Note | Response).id}`;
+  };
 
   return (
     <Layout.FlexCol w="100%" gap={0}>
-      <CarouselContainer
-        ref={containerRef}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        <CarouselTrack $offset={baseOffset + dragOffset} $isTransitioning={isTransitioning}>
+      <CarouselContainer ref={containerRef}>
+        <CarouselTrack $offset={offset}>
           {posts.map((post) => (
-            <CarouselSlide key={`${post.type}-${post.id}`}>
-              {post.type === POST_TYPE.NOTE ? (
+            <CarouselSlide key={getPostKey(post)}>
+              {post.type === POST_TYPE.MISSION_GROUP ? (
+                <MissionGroupItemComponent
+                  group={post as MissionGroupItem}
+                  isMyPage={isMyPage}
+                  displayType="LIST"
+                />
+              ) : post.type === POST_TYPE.NOTE ? (
                 <NoteItem
                   note={post as Note}
                   isMyPage={isMyPage}
@@ -128,11 +85,39 @@ function SwipeablePostCarousel({ posts, isMyPage = false }: Props) {
         </CarouselTrack>
       </CarouselContainer>
       {posts.length > 1 && (
-        <DotContainer>
-          {posts.map((post, idx) => (
-            <Dot key={`dot-${post.type}-${post.id}`} $active={idx === currentIndex} />
-          ))}
-        </DotContainer>
+        <NavBar>
+          <NavArrow
+            type="button"
+            onClick={handlePrev}
+            disabled={currentIndex === 0}
+            $pressed={pressedArrow === 'prev'}
+            onPointerDown={() => setPressedArrow('prev')}
+            onPointerUp={() => setPressedArrow(null)}
+            onPointerLeave={() => setPressedArrow(null)}
+          >
+            <SvgIcon name="arrow_left" size={22} />
+          </NavArrow>
+          <DotContainer>
+            {posts.map((post, idx) => (
+              <Dot
+                key={`dot-${getPostKey(post)}`}
+                $active={idx === currentIndex}
+                onClick={() => setCurrentIndex(idx)}
+              />
+            ))}
+          </DotContainer>
+          <NavArrow
+            type="button"
+            onClick={handleNext}
+            disabled={currentIndex === posts.length - 1}
+            $pressed={pressedArrow === 'next'}
+            onPointerDown={() => setPressedArrow('next')}
+            onPointerUp={() => setPressedArrow(null)}
+            onPointerLeave={() => setPressedArrow(null)}
+          >
+            <SvgIcon name="arrow_right" size={22} />
+          </NavArrow>
+        </NavBar>
       )}
     </Layout.FlexCol>
   );

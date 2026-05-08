@@ -40,7 +40,7 @@ function NoteListItem({ note }: NoteListItemProps) {
         </Layout.FlexRow>
         <Layout.FlexRow>
           <Typo type="label-large" color="BLACK">
-            {comment_count || 0} {t('comments')}
+            {comment_count || 0} {t('comments', { count: comment_count || 0 })}
           </Typo>
         </Layout.FlexRow>
       </Layout.FlexCol>

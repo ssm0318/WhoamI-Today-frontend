@@ -158,7 +158,7 @@ function PostFooter({ post, displayType = 'LIST', showComments, setInputFocus }:
             onClick={canOpenCommentsInline ? handleClickCommentText : undefined}
           >
             <Typo type="label-large" color="BLACK" underline>
-              {comment_count ?? 0} {t('comments')}
+              {comment_count ?? 0} {t('comments', { count: comment_count ?? 0 })}
             </Typo>
           </button>
         </Layout.FlexRow>

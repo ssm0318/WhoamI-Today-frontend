@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CommonError from '@components/_common/common-error/CommonError';
 import NoContents from '@components/_common/no-contents/NoContents';
 import CommentList from '@components/comment-list/CommentList';
+import MissionGroupItemComponent from '@components/note/mission-group-item/MissionGroupItem';
 import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import SubHeader from '@components/sub-header/SubHeader';
@@ -13,12 +14,16 @@ import { Layout } from '@design-system';
 import useAsyncEffect from '@hooks/useAsyncEffect';
 import { useDwellTime } from '@hooks/useDwellTime';
 import { FetchState } from '@models/api/common';
-import { Note } from '@models/post';
+import { MissionGroupItem, Note, ShareType } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
-import { getNoteDetail } from '@utils/apis/note';
+import { getMissionAttempts, getNoteDetail } from '@utils/apis/note';
 import { userListApiPrefixForViewer } from '@utils/apis/userApiPrefix';
 import { MainScrollContainer } from '../Root';
+
+type DetailState =
+  | { kind: 'note'; data: Note }
+  | { kind: 'mission'; data: MissionGroupItem; initialAttemptId: number };
 
 export function NoteDetail() {
   const { noteId } = useParams();
@@ -27,7 +32,7 @@ export function NoteDetail() {
   const navigate = useNavigate();
   const location = useLocation();
   const { featureFlags, myProfile } = useBoundStore(UserSelector);
-  const [noteDetail, setNoteDetail] = useState<FetchState<Note>>({ state: 'loading' });
+  const [detail, setDetail] = useState<FetchState<DetailState>>({ state: 'loading' });
   const [reload, setReload] = useState<boolean>(false);
   const [inputFocus, setInputFocus] = useState(false);
 
@@ -41,17 +46,30 @@ export function NoteDetail() {
     if (!noteId) return;
     const notesPrefix = userListApiPrefixForViewer(featureFlags?.postsVerQ, myProfile?.current_ver);
     try {
-      const data = await getNoteDetail(Number(noteId), notesPrefix);
-      setNoteDetail({ state: 'hasValue', data });
-      if (reload) {
-        setReload(false);
+      const note = await getNoteDetail(Number(noteId), notesPrefix);
+      if (note.share_type === ShareType.MISSION && note.mission_id) {
+        const group = await getMissionAttempts(note.mission_id, note.author_detail?.id);
+        if (group) {
+          setDetail({
+            state: 'hasValue',
+            data: { kind: 'mission', data: group, initialAttemptId: note.id },
+          });
+          if (reload) setReload(false);
+          return;
+        }
       }
+      setDetail({ state: 'hasValue', data: { kind: 'note', data: note } });
+      if (reload) setReload(false);
     } catch (error) {
       if (isAxiosError(error)) {
-        setNoteDetail({ state: 'hasError', error });
+        if (error.response?.status === 404) {
+          navigate('/my');
+          return;
+        }
+        setDetail({ state: 'hasError', error });
         return;
       }
-      setNoteDetail({ state: 'hasError' });
+      setDetail({ state: 'hasError' });
     }
   }, [noteId, reload, featureFlags?.postsVerQ, myProfile?.current_ver]);
 
@@ -66,34 +84,53 @@ export function NoteDetail() {
     }
   };
 
+  const authorUsername =
+    detail.state === 'hasValue'
+      ? detail.data.kind === 'mission'
+        ? detail.data.data.author_detail?.username
+        : detail.data.data.author_detail?.username
+      : undefined;
+
+  // Comments are attributed to the latest attempt for mission groups
+  const footerNote =
+    detail.state === 'hasValue' && detail.data.kind === 'mission'
+      ? detail.data.data.attempts[detail.data.data.attempts.length - 1]
+      : detail.state === 'hasValue' && detail.data.kind === 'note'
+      ? detail.data.data
+      : null;
+
   return (
     <MainScrollContainer>
       <SubHeader
-        title={
-          noteDetail.data
-            ? t('note_detail.title', { username: noteDetail.data.author_detail?.username })
-            : ''
-        }
+        title={authorUsername ? t('note_detail.title', { username: authorUsername }) : ''}
         onGoBack={isNew ? handleGoBack : undefined}
       />
       <Layout.FlexCol w="100%" alignItems="center" mt={12} ph={12}>
-        {noteDetail.state === 'loading' && <NoteLoader />}
-        {noteDetail.state === 'hasValue' && (
-          <NoteItem
-            note={noteDetail.data}
-            isMyPage={noteDetail.data.author_detail?.id === myProfile?.id}
+        {detail.state === 'loading' && <NoteLoader />}
+        {detail.state === 'hasValue' && detail.data.kind === 'mission' && (
+          <MissionGroupItemComponent
+            group={detail.data.data}
+            isMyPage={detail.data.data.author_detail?.id === myProfile?.id}
             displayType="DETAIL"
-            refresh={() => {
-              setReload(true);
-            }}
+            initialAttemptId={detail.data.initialAttemptId}
+            refresh={() => setReload(true)}
+          />
+        )}
+        {detail.state === 'hasValue' && detail.data.kind === 'note' && (
+          <NoteItem
+            note={detail.data.data}
+            isMyPage={detail.data.data.author_detail?.id === myProfile?.id}
+            displayType="DETAIL"
+            showMissionMeta={detail.data.data.share_type === ShareType.MISSION}
+            refresh={() => setReload(true)}
           />
         )}
       </Layout.FlexCol>
-      {noteDetail.state === 'hasValue' && (
+      {detail.state === 'hasValue' && footerNote && (
         <Layout.FlexCol w="100%" flex={1}>
           <CommentList
             postType="Note"
-            post={noteDetail.data}
+            post={footerNote}
             setReload={setReload}
             inputFocus={inputFocus}
             setInputFocus={setInputFocus}
@@ -101,16 +138,16 @@ export function NoteDetail() {
           />
         </Layout.FlexCol>
       )}
-      {noteDetail.state === 'hasError' && (
+      {detail.state === 'hasError' && (
         <>
           <SubHeader title={t('note_detail.error_title', { username: '' })} />
           <Layout.FlexCol w="100%" alignItems="center" mt={TITLE_HEADER_HEIGHT + 12} ph={16}>
-            {!noteDetail.error || noteDetail.error.response?.status === 500 ? (
+            {!detail.error || detail.error.response?.status === 500 ? (
               <CommonError />
             ) : (
               <NoContents
                 title={
-                  noteDetail.error.response?.status === 403
+                  detail.error.response?.status === 403
                     ? t('no_contents.forbidden_post')
                     : t('no_contents.not_found_post')
                 }

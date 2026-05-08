@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 import i18n from '@i18n/index';
+import { useBoundStore } from '@stores/useBoundStore';
 
 // NOTE: PROD_BASE_URL은 실제 배포된 도메인 주소
 export const PROD_BASE_URL = 'https://whoami-test-group.gina-park.site';
@@ -44,13 +45,16 @@ const authInterceptor = (config: InternalAxiosRequestConfig) => {
 axiosJsonInstance.interceptors.request.use(authInterceptor);
 axiosFormDataInstance.interceptors.request.use(authInterceptor);
 
-// 서버 다운(502/503) 시 maintenance 페이지로 이동
+// 서버 다운(502/503) 시 maintenance 페이지로, 네트워크 에러는 토스트로 처리
 const maintenanceInterceptor = (error: unknown) => {
   if (axios.isAxiosError(error)) {
     const status = error.response?.status;
-    if (status === 502 || status === 503 || !error.response) {
+    if (status === 502 || status === 503) {
       window.location.replace('/maintenance.html');
       return new Promise(() => {}); // 이후 체인 중단
+    }
+    if (!error.response) {
+      useBoundStore.getState().openToast({ message: i18n.t('error.network_error') });
     }
   }
   return Promise.reject(error);

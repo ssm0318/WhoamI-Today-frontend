@@ -135,7 +135,7 @@ function RecentPostFooter({ isMyPage, post, showComments, setInputFocus }: Recen
         <Layout.FlexRow>
           <button type="button" onClick={handleClickCommentText}>
             <Typo type="label-large" color="BLACK" underline>
-              {comment_count ?? 0} {t('comments')}
+              {comment_count ?? 0} {t('comments', { count: comment_count ?? 0 })}
             </Typo>
           </button>
         </Layout.FlexRow>

@@ -12,6 +12,7 @@ import ProfileSuggestionCard from '@components/discover/ProfileSuggestionCard/Pr
 import SharedPlaylistSection, {
   SharedTrack,
 } from '@components/friends/shared-playlist/SharedPlaylistSection';
+import MissionGroupItemComponent from '@components/note/mission-group-item/MissionGroupItem';
 import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
@@ -24,7 +25,13 @@ import {
   ProfileSuggestionCardBody,
   ProfileSuggestionField,
 } from '@models/discover';
-import { DailyQuestion, Note, Response } from '@models/post';
+import {
+  DailyQuestion,
+  MissionGroupItem as MissionGroupItemModel,
+  Note,
+  POST_TYPE,
+  Response,
+} from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getDiscoverWFeed } from '@utils/apis/discover';
 import { getMe } from '@utils/apis/my';
@@ -144,7 +151,7 @@ type DigestFeedItem =
   | { type: 'music-card' }
   | { type: 'today-question-card'; question: DailyQuestion }
   | { type: 'profile-suggestion-card'; suggestion: ProfileSuggestionCardBody }
-  | { type: 'post'; post: Note | Response };
+  | { type: 'post'; post: Note | Response | MissionGroupItemModel };
 
 const hashString = (value: string) => {
   let hash = 5381;
@@ -548,6 +555,16 @@ function DiscoverW() {
                     />
                   );
                 case 'post':
+                  if (item.post.type === POST_TYPE.MISSION_GROUP) {
+                    const group = item.post as MissionGroupItemModel;
+                    return (
+                      <MissionGroupItemComponent
+                        key={`rec-mission-${group.mission_id ?? group.attempts[0]?.id}`}
+                        group={group}
+                        displayType="LIST"
+                      />
+                    );
+                  }
                   if ('question' in item.post) {
                     return (
                       <ResponseItem
@@ -561,8 +578,8 @@ function DiscoverW() {
                   }
                   return (
                     <NoteItem
-                      key={`rec-note-${item.post.id}`}
-                      note={item.post as any}
+                      key={`rec-note-${(item.post as Note).id}`}
+                      note={item.post as Note}
                       isMyPage={false}
                       hideTimestamp
                       showMutualCounts

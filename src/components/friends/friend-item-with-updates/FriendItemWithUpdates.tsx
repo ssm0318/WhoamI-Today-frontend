@@ -11,6 +11,7 @@ import CheckInDetailBottomSheet from '@components/check-in/check-in-detail-botto
 import PokeButton from '@components/friends/poke-button/PokeButton';
 import SubscriptionPopup from '@components/friends/subscription-popup/SubscriptionPopup';
 import SpotifyMusic from '@components/music/spotify-music/SpotifyMusic';
+import MissionGroupItemComponent from '@components/note/mission-group-item/MissionGroupItem';
 import NoteItem from '@components/note/note-item/NoteItem';
 import EditConnectionsBottomSheet from '@components/profile/edit-connections/EditConnectionsBottomSheet';
 import SocialBatteryChip from '@components/profile/social-batter-chip/SocialBatteryChip';
@@ -20,7 +21,7 @@ import { Layout, SvgIcon, Typo } from '@design-system';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import { Connection, UpdatedProfile } from '@models/api/friends';
 import { SocialBattery } from '@models/checkIn';
-import { Note, POST_TYPE, Response } from '@models/post';
+import { MissionGroupItem, Note, POST_TYPE, Response } from '@models/post';
 import { UserProfile } from '@models/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
@@ -398,8 +399,21 @@ function FriendItemWithUpdates({
           {postsToShow.length > 0 ? (
             <PostsScrollContainer gap={8}>
               {postsToShow.map((post) => (
-                <PostsScrollItem key={`${post.type}-${post.id}`}>
-                  {post.type === POST_TYPE.NOTE ? (
+                <PostsScrollItem
+                  key={
+                    post.type === POST_TYPE.MISSION_GROUP
+                      ? `mission-${post.mission_id ?? post.attempts[0]?.id}`
+                      : `${post.type}-${(post as Note | Response).id}`
+                  }
+                >
+                  {post.type === POST_TYPE.MISSION_GROUP ? (
+                    <MissionGroupItemComponent
+                      group={post as MissionGroupItem}
+                      isMyPage={false}
+                      displayType="LIST"
+                      isCarouselItem
+                    />
+                  ) : post.type === POST_TYPE.NOTE ? (
                     <NoteItem
                       note={post as Note}
                       isMyPage={false}

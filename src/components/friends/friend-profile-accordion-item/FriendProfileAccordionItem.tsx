@@ -87,7 +87,9 @@ function FriendProfileAccordionItem({
   // independently dismissable: Posts → tap, check-in → leave the tab.
   const hasCheckInUpdate = !user.current_user_read_check_in && hasCheckInContent;
   const hasNewPosts =
-    (user.unread_post_cnt ?? 0) > 0 || (user.recent_posts ?? []).some((p) => !p.current_user_read);
+    !isMyCard &&
+    ((user.unread_post_cnt ?? 0) > 0 ||
+      (user.recent_posts ?? []).some((p) => !('current_user_read' in p) || !p.current_user_read));
 
   const moodArray: string[] = (Array.isArray(mood) ? mood : mood ? [mood] : []).filter(Boolean);
   const hasMood = moodArray.length > 0;

@@ -11,7 +11,9 @@ import PostFooter from '@components/_common/post-footer/PostFooter';
 import PostFooterDefault from '@components/_common/post-footer/PostFooterDefault';
 import PostFooterLikeOnly from '@components/_common/post-footer/PostFooterLikeOnly';
 import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
+import PostTypeTag from '@components/_common/post-type-tag/PostTypeTag';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import PromptSummaryCard from '@components/_common/prompt-summary-card/PromptSummaryCard';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import { Layout, SvgIcon, Typo } from '@design-system';
 import { Note, POST_DP_TYPE, ShareType } from '@models/post';
@@ -34,6 +36,7 @@ interface NoteItemProps {
   isCarouselItem?: boolean;
   hideTimestamp?: boolean;
   showMutualCounts?: boolean;
+  showMissionMeta?: boolean;
 }
 
 function NoteItem({
@@ -47,6 +50,7 @@ function NoteItem({
   isCarouselItem = false,
   hideTimestamp = false,
   showMutualCounts = false,
+  showMissionMeta = false,
 }: NoteItemProps) {
   const {
     content,
@@ -249,8 +253,33 @@ function NoteItem({
 
   const missionPromptJsx =
     isMissionPost && mission_prompt && !hideMissionPrompt ? (
-      <Typo type="label-medium" color="MEDIUM_GRAY" italic>
-        ↳ {`"${mission_prompt}"`}
+      showMissionMeta ? (
+        <PromptSummaryCard
+          content={mission_prompt}
+          date={created_at}
+          trailing={
+            <>
+              <Typo type="label-medium" color="MEDIUM_GRAY">
+                ·
+              </Typo>
+              <PostTypeTag variant="mission" />
+            </>
+          }
+          onClick={() => {
+            if (note.mission_id) navigate(`/missions/${note.mission_id}`);
+          }}
+        />
+      ) : (
+        <Typo type="label-medium" color="MEDIUM_GRAY" italic>
+          ↳ {`"${mission_prompt}"`}
+        </Typo>
+      )
+    ) : null;
+
+  const missionAttemptLabelJsx =
+    isMissionPost && showMissionMeta && note.mission_attempt_number ? (
+      <Typo type="label-medium" color="PRIMARY" bold>
+        ATTEMPT {note.mission_attempt_number} / 3
       </Typo>
     ) : null;
 
@@ -272,6 +301,7 @@ function NoteItem({
         </>
       ) : (
         <>
+          {missionAttemptLabelJsx}
           {displayType === 'DETAIL' ? (
             <ContentTranslation content={content} translateContent={!isMyPage} />
           ) : (
@@ -344,7 +374,8 @@ function NoteItem({
         w="100%"
         p={12}
         gap={8}
-        outline={isCarouselItem && isMyPage ? 'MEDIUM_GRAY' : 'LIGHT'}
+        bgColor="WHITE"
+        outline={isCarouselItem && isMyPage ? undefined : 'LIGHT'}
         rounded={12}
         onClick={featureFlags?.friendList ? handleClickNote : handleClickNoteDefault}
         style={

@@ -1,6 +1,16 @@
 import { PaginationResponse } from '@models/api/common';
-import { Comment, Like, NewNoteForm, Note, NoteFeedItem, PostReaction } from '@models/post';
+import {
+  Comment,
+  Like,
+  MissionGroupItem,
+  NewNoteForm,
+  Note,
+  NoteFeedItem,
+  POST_TYPE,
+  PostReaction,
+} from '@models/post';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
+import { compareMissionAttemptOrder } from '@utils/missionHelpers';
 import { objectFormDataSerializer } from '@utils/validateHelpers';
 
 export const getNoteList = async (page: string | null) => {
@@ -123,4 +133,36 @@ export const getNoteDetailLikes = async (noteId: number, page: string | null) =>
     `/notes/${noteId}/likes/${!requestPage ? '' : `?page=${requestPage}`}`,
   );
   return data;
+};
+
+type MissionAttemptsResponse = PaginationResponse<Note[]> & {
+  id: number;
+  prompt: string;
+  type: string;
+};
+
+export const getMissionAttempts = async (
+  missionId: number,
+  authorId?: number,
+): Promise<MissionGroupItem | null> => {
+  const query = authorId ? `?author=${authorId}` : '';
+  const { data } = await axios.get<MissionAttemptsResponse>(
+    `missions/${missionId}/attempts/${query}`,
+  );
+  const notes = data?.results ?? [];
+  if (notes.length === 0) return null;
+  const sorted = [...notes].sort(compareMissionAttemptOrder);
+  const latest = [...notes].sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+  )[0];
+  return {
+    type: POST_TYPE.MISSION_GROUP,
+    mission_id: missionId,
+    mission_prompt: latest.mission_prompt ?? null,
+    author: latest.author,
+    author_detail: latest.author_detail,
+    created_at: latest.created_at,
+    updated_at: latest.updated_at,
+    attempts: sorted,
+  };
 };

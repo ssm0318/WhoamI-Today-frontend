@@ -32,6 +32,7 @@ interface NoteInformationProps {
   missionMode?: boolean;
   mission?: Mission;
   isEditing?: boolean;
+  editAttemptNumber?: number | null;
 }
 
 const DRAFT_DEBOUNCE_MS = 500;
@@ -44,6 +45,7 @@ function NewNoteContent({
   missionMode,
   mission,
   isEditing,
+  editAttemptNumber,
 }: NoteInformationProps) {
   const [t] = useTranslation('translation');
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
@@ -385,7 +387,7 @@ function NewNoteContent({
             <MissionPromptBlock>
               <Typo type="label-medium" color="PRIMARY" bold>
                 {`${t('notes.mission_label').toUpperCase()} · ${t('notes.attempt_n_of_m', {
-                  n: upcomingAttemptNumber ?? 1,
+                  n: editAttemptNumber ?? upcomingAttemptNumber ?? 1,
                   m: missionToday?.max_attempts ?? 3,
                 })}`}
               </Typo>
@@ -410,7 +412,7 @@ function NewNoteContent({
               marginBottom: 20,
               overflow: 'auto',
             }}
-            disabled={missionMode && attemptsRemaining <= 0}
+            disabled={missionMode && !isEditing && attemptsRemaining <= 0}
           />
 
           {/* Media button and visibility options */}

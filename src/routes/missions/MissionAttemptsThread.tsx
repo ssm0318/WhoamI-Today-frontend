@@ -8,6 +8,7 @@ import { Layout, Typo } from '@design-system';
 import { useSWRInfiniteScroll } from '@hooks/useSWRInfiniteScroll';
 import { PaginationResponse } from '@models/api/common';
 import { MissionGroupItem as MissionGroupItemModel, Note, POST_TYPE } from '@models/post';
+import { compareMissionAttemptOrder } from '@utils/missionHelpers';
 import { MainScrollContainer } from '../Root';
 
 type MissionAttemptsPage = PaginationResponse<Note[]> & {
@@ -118,13 +119,6 @@ function groupMissionAttempts(
       };
     })
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-}
-
-function compareMissionAttemptOrder(a: Note, b: Note) {
-  const aAttempt = a.mission_attempt_number ?? Number.MAX_SAFE_INTEGER;
-  const bAttempt = b.mission_attempt_number ?? Number.MAX_SAFE_INTEGER;
-  if (aAttempt !== bAttempt) return aAttempt - bAttempt;
-  return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
 }
 
 function compareCreatedDesc(a: Note, b: Note) {

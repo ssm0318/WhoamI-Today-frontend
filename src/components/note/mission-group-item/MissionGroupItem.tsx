@@ -1,16 +1,18 @@
-import { MouseEvent, useRef, useState } from 'react';
+import { KeyboardEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import Icon from '@components/_common/icon/Icon';
 import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import PostFooter from '@components/_common/post-footer/PostFooter';
 import PostFooterDefault from '@components/_common/post-footer/PostFooterDefault';
 import PostFooterLikeOnly from '@components/_common/post-footer/PostFooterLikeOnly';
+import PostMoreModal from '@components/_common/post-more-modal/PostMoreModal';
 import PostTypeTag from '@components/_common/post-type-tag/PostTypeTag';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import PromptSummaryCard from '@components/_common/prompt-summary-card/PromptSummaryCard';
 import CommentBottomSheet from '@components/comments/comment-bottom-sheet/CommentBottomSheet';
 import { Layout, Typo } from '@design-system';
-import { MissionGroupItem as MissionGroupItemModel, POST_DP_TYPE } from '@models/post';
+import { MissionGroupItem as MissionGroupItemModel, Note, POST_DP_TYPE } from '@models/post';
 import { useBoundStore } from '@stores/useBoundStore';
 import { UserSelector } from '@stores/user';
 import { classifyPathnameAsSource } from '@utils/navSource';
@@ -21,6 +23,9 @@ interface MissionGroupItemProps {
   displayType?: POST_DP_TYPE;
   refresh?: () => void;
   hidePromptCard?: boolean;
+  isCarouselItem?: boolean;
+  isMyPage?: boolean;
+  initialAttemptId?: number;
 }
 
 function MissionGroupItem({
@@ -28,13 +33,34 @@ function MissionGroupItem({
   displayType = 'LIST',
   refresh,
   hidePromptCard = false,
+  isCarouselItem = false,
+  isMyPage = false,
+  initialAttemptId,
 }: MissionGroupItemProps) {
   const navigate = useNavigate();
-  const { featureFlags } = useBoundStore(UserSelector);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const { featureFlags, myProfile } = useBoundStore(UserSelector);
+  const initialIndex = initialAttemptId
+    ? Math.max(
+        0,
+        group.attempts.findIndex((a) => a.id === initialAttemptId),
+      )
+    : 0;
+  const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [bottomSheet, setBottomSheet] = useState(false);
   const [inputFocus, setInputFocus] = useState(false);
+  const [openMoreId, setOpenMoreId] = useState<number | null>(null);
   const scrollerRef = useRef<HTMLDivElement | null>(null);
+
+  // Scroll to the initial attempt without animation on mount
+  useEffect(() => {
+    if (initialIndex === 0) return;
+    const node = scrollerRef.current;
+    if (!node) return;
+    const card = node.querySelector('[data-mission-attempt-card="true"]') as HTMLElement | null;
+    const step = card ? card.offsetWidth + 8 : node.clientWidth;
+    node.scrollLeft = step * initialIndex;
+  }, [initialIndex]);
+
   const latestAttempt = group.attempts[group.attempts.length - 1];
   const { username, profile_image } = group.author_detail ?? {};
 
@@ -66,6 +92,41 @@ function MissionGroupItem({
     setActiveIndex(index);
   };
 
+  const makeMoreVisible =
+    (id: number) =>
+    (v: boolean | ((prev: boolean) => boolean)): void => {
+      const newVal = typeof v === 'function' ? v(openMoreId === id) : v;
+      setOpenMoreId(newVal ? id : null);
+    };
+
+  const renderKebab = (attempt: Note) => {
+    const isOwn = attempt.author_detail?.id === myProfile?.id;
+    return (
+      <>
+        <KebabButton
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpenMoreId(attempt.id);
+          }}
+          aria-label="More options"
+        >
+          <Icon name="dots_menu" size={24} />
+        </KebabButton>
+        <PostMoreModal
+          isVisible={openMoreId === attempt.id}
+          setIsVisible={makeMoreVisible(attempt.id)}
+          post={attempt}
+          isMyPage={isOwn}
+          onConfirmReport={() => {
+            setOpenMoreId(null);
+            refresh?.();
+          }}
+        />
+      </>
+    );
+  };
+
   const footerJsx = featureFlags?.postsVerQ ? (
     <PostFooterLikeOnly
       post={latestAttempt}
@@ -92,7 +153,14 @@ function MissionGroupItem({
 
   return (
     <>
-      <Layout.FlexCol w="100%" p={12} gap={8} outline="LIGHT" rounded={12}>
+      <Layout.FlexCol
+        w="100%"
+        p={12}
+        gap={8}
+        bgColor="WHITE"
+        outline={isCarouselItem && isMyPage ? undefined : 'LIGHT'}
+        rounded={12}
+      >
         <Layout.FlexRow w="100%" alignItems="center" justifyContent="space-between" h={44}>
           <Layout.FlexRow w="100%" alignItems="center" gap={8}>
             <ProfileImage
@@ -116,41 +184,71 @@ function MissionGroupItem({
           </Layout.FlexRow>
         </Layout.FlexRow>
 
-        <Scroller ref={scrollerRef} onScroll={handleScroll}>
-          {group.attempts.map((attempt) => (
-            <AttemptCard
-              key={attempt.id}
-              data-mission-attempt-card="true"
-              onClick={() => navigate(`/notes/${attempt.id}`)}
-            >
-              <Typo type="label-medium" color="PRIMARY" bold>
-                ATTEMPT {attempt.mission_attempt_number ?? '-'} / 3
+        {isCarouselItem ? (
+          <FlatAttemptContent
+            role="button"
+            tabIndex={0}
+            onClick={() => navigate(`/notes/${latestAttempt.id}`)}
+            onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
+              if (e.key === 'Enter' || e.key === ' ') navigate(`/notes/${latestAttempt.id}`);
+            }}
+          >
+            <Typo type="label-medium" color="PRIMARY" bold>
+              ATTEMPT {latestAttempt.mission_attempt_number ?? '-'} / 3
+            </Typo>
+            {latestAttempt.content && (
+              <Typo type="body-large" color="BLACK" pre>
+                <LinkifiedText>{latestAttempt.content}</LinkifiedText>
               </Typo>
-              {attempt.content && (
-                <Typo type="body-large" color="BLACK" pre>
-                  <LinkifiedText>{attempt.content}</LinkifiedText>
-                </Typo>
-              )}
-              {attempt.images?.[0] && <AttemptImage src={attempt.images[0]} alt="" />}
-            </AttemptCard>
-          ))}
-        </Scroller>
+            )}
+            {latestAttempt.images?.[0] && <AttemptImage src={latestAttempt.images[0]} alt="" />}
+            {renderKebab(latestAttempt)}
+          </FlatAttemptContent>
+        ) : (
+          <>
+            <Scroller ref={scrollerRef} onScroll={handleScroll}>
+              {group.attempts.map((attempt) => (
+                <AttemptCard
+                  key={attempt.id}
+                  role="button"
+                  tabIndex={0}
+                  data-mission-attempt-card="true"
+                  onClick={() => navigate(`/notes/${attempt.id}`)}
+                  onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
+                    if (e.key === 'Enter' || e.key === ' ') navigate(`/notes/${attempt.id}`);
+                  }}
+                >
+                  <Typo type="label-medium" color="PRIMARY" bold>
+                    ATTEMPT {attempt.mission_attempt_number ?? '-'} / 3
+                  </Typo>
+                  {attempt.content && (
+                    <Typo type="body-large" color="BLACK" pre>
+                      <LinkifiedText>{attempt.content}</LinkifiedText>
+                    </Typo>
+                  )}
+                  {attempt.images?.[0] && <AttemptImage src={attempt.images[0]} alt="" />}
+                  {renderKebab(attempt)}
+                </AttemptCard>
+              ))}
+            </Scroller>
 
-        {group.attempts.length > 1 && (
-          <Dots>
-            {group.attempts.map((attempt, index) => (
-              <Dot
-                key={attempt.id}
-                type="button"
-                aria-label={`Show attempt ${index + 1}`}
-                $active={index === activeIndex}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  scrollToAttempt(index);
-                }}
-              />
-            ))}
-          </Dots>
+            {group.attempts.length > 1 && (
+              <Dots>
+                {group.attempts.map((attempt, index) => (
+                  <Dot
+                    key={attempt.id}
+                    type="button"
+                    aria-label={`Show attempt ${index + 1}`}
+                    $active={index === activeIndex}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      scrollToAttempt(index);
+                    }}
+                  />
+                ))}
+              </Dots>
+            )}
+          </>
         )}
 
         {group.mission_prompt && !hidePromptCard && (
@@ -171,7 +269,7 @@ function MissionGroupItem({
           />
         )}
 
-        {/* Likes and comments are temporarily attributed to the latest attempt. */}
+        {/* Likes and comments are attributed to the latest attempt so all attempts share one thread. */}
         {footerJsx}
       </Layout.FlexCol>
       {bottomSheet && (
@@ -194,6 +292,21 @@ function MissionGroupItem({
 
 export default MissionGroupItem;
 
+const FlatAttemptContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  min-height: 104px;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+`;
+
 const Scroller = styled.div`
   display: flex;
   gap: 8px;
@@ -208,7 +321,7 @@ const Scroller = styled.div`
   }
 `;
 
-const AttemptCard = styled.button`
+const AttemptCard = styled.div`
   flex: 0 0 100%;
   scroll-snap-align: start;
   display: flex;
@@ -221,6 +334,20 @@ const AttemptCard = styled.button`
   border-radius: 8px;
   background: ${({ theme }) => theme.WHITE};
   text-align: left;
+  cursor: pointer;
+  position: relative;
+`;
+
+const KebabButton = styled.button`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+  z-index: 1;
 `;
 
 const AttemptImage = styled.img`

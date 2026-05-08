@@ -12,8 +12,11 @@ interface StyledNoteImageProps {
 }
 
 export const NoteImage = styled.img<StyledNoteImageProps>`
-  max-width: ${({ isEditMode }) =>
-    isEditMode ? NOTE_IMAGE_DISPLAY_WIDTH_EDIT_MODE : NOTE_IMAGE_DISPLAY_WIDTH}px;
+  max-width: min(
+    ${({ isEditMode }) =>
+      isEditMode ? NOTE_IMAGE_DISPLAY_WIDTH_EDIT_MODE : NOTE_IMAGE_DISPLAY_WIDTH}px,
+    100%
+  );
   max-height: ${({ isEditMode }) =>
     isEditMode ? NOTE_IMAGE_DISPLAY_HEIGHT_EDIT_MODE : NOTE_IMAGE_DISPLAY_HEIGHT}px;
   object-fit: contain;
