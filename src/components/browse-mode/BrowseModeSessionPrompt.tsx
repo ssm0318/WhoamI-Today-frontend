@@ -43,7 +43,7 @@ interface BrowseModeSessionPromptProps {
 
 function readSyncPref(): boolean {
   const stored = localStorage.getItem(SYNC_PREF_KEY);
-  if (stored === null) return true; // default ON
+  if (stored === null) return false; // default OFF
   return stored === 'true';
 }
 
