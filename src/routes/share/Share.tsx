@@ -84,6 +84,13 @@ function Share() {
   };
 
   const handleDoMission = (mission: Mission) => {
+    // Action-only missions (type='none') skip the post flow entirely and
+    // open the cta_url directly — e.g. May 10's "react to friends' posts"
+    // sends users to /discover.
+    if (mission.type === 'none') {
+      if (mission.cta_url) navigate(mission.cta_url);
+      return;
+    }
     // Chat-based missions (e.g. May 5's "Talk to wit_bot to finish onboarding")
     // expose a cta_url that drives the next-day digest card. From the Share
     // tab, "Do it" still posts a note — bypass the type-based routing.

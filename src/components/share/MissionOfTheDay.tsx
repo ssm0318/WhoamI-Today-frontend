@@ -3,17 +3,19 @@ import { Layout, Typo } from '@design-system';
 import { useMissionToday } from '@hooks/useMissionToday';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 
-export type MissionType = 'song' | 'question' | 'text' | 'compliment';
+export type MissionType = 'song' | 'question' | 'text' | 'compliment' | 'none';
 
 export interface Mission {
   id: number;
   prompt: string;
   type: MissionType;
-  // When non-empty, the Share tab "Do it" button bypasses type-based routing
-  // (e.g. /update for song, /questions for question) and goes straight to
-  // /notes/new — keeps chat-based missions (cta_url=/users/wit_bot/chat)
-  // routing to a regular post on the Share path. The cta_url itself is only
-  // surfaced on the next-day discover digest card.
+  // type='none' = action-only mission (no post creation). Share tab "Do it"
+  // navigates directly to cta_url, no /notes/new flow. Used for missions like
+  // "react to friends' posts on the digest" where there's nothing to post.
+  //
+  // For non-'none' types: a non-empty cta_url means a chat-based mission
+  // (e.g. May 5 wit_bot onboarding). Share tab "Do it" still goes to
+  // /notes/new — the cta_url shows up on the next-day discover digest card.
   cta_url: string;
 }
 

@@ -140,9 +140,11 @@ export interface DigestMissionSection {
     id: number;
     prompt: string;
     type: string;
-    // When non-empty, the digest card surfaces a custom link (e.g.
-    // /users/wit_bot/chat) instead of the default "View mission posts".
+    // When non-empty, the digest card swaps "View mission posts" for
+    // mission.cta_label and navigates to cta_url verbatim instead of the
+    // /missions/<id>?discover=true default.
     cta_url: string;
+    cta_label: string;
   };
   posts: Note[];
 }

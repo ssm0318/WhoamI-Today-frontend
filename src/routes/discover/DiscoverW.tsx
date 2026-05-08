@@ -460,9 +460,7 @@ function DiscoverW() {
                           navigate(`/missions/${data.yesterday_mission?.mission.id}?discover=true`);
                         }}
                       >
-                        {data.yesterday_mission.mission.cta_url
-                          ? t('chat_with_wit_bot')
-                          : t('view_mission_posts')}
+                        {data.yesterday_mission.mission.cta_label || t('view_mission_posts')}
                       </ViewAllButton>
                     </DigestCard>
                   );
