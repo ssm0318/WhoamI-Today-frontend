@@ -325,7 +325,28 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
             )}
           </>
         )}
-        {LIKERT_RANGES[currentQuestion.type] && (
+        {/* Likert dispatch:
+            - Has per-option labels in YAML `options:` (e.g. RSQ-Brief's
+              "Very unconcerned"/"Unconcerned"/...) → render as a labeled
+              vertical list via ChoiceChips so participants see what each
+              numeric step actually means. The stored value is still the
+              numeric option.value, so backend aggregation is unchanged.
+            - No per-option labels → render the numeric scale via
+              LikertChips with low/high anchor labels (the standard
+              "Strongly disagree → Strongly agree" layout). likert_5_na
+              keeps its N/A button on this path. */}
+        {LIKERT_RANGES[currentQuestion.type] && currentQuestion.options.length > 0 && (
+          <ChoiceChips
+            options={currentQuestion.options.map((o) => ({
+              value: o.value,
+              label: pickLocalized(o.label_en, o.label_ko),
+            }))}
+            multi={false}
+            selected={(currentValue as SurveyOptionValue | undefined) ?? null}
+            onSelect={(v) => setAnswer(currentQuestion.id, v as number | string)}
+          />
+        )}
+        {LIKERT_RANGES[currentQuestion.type] && currentQuestion.options.length === 0 && (
           <LikertChips
             min={LIKERT_RANGES[currentQuestion.type][0]}
             max={LIKERT_RANGES[currentQuestion.type][1]}
