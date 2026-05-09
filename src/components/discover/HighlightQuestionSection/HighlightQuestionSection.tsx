@@ -40,7 +40,7 @@ function HighlightQuestionSection({
       question_id: questionId,
       tag,
     });
-    navigate(`/questions/${questionId}`);
+    navigate(`/questions/${questionId}?discover=true`);
   };
 
   const handleClickSend = (e: MouseEvent<HTMLButtonElement>) => {
