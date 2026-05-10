@@ -81,11 +81,16 @@ function FriendProfileAccordionItem({
   >(null);
 
   // --- derived state ---
-  const hasCheckInContent = !!(track_id || mood || social_battery || thought);
-  // `[UP]` red badge — fires only on unread *check-in* changes. New-posts state
-  // is surfaced separately on the [Posts] button so the two signals are
-  // independently dismissable: Posts → tap, check-in → leave the tab.
-  const hasCheckInUpdate = !user.current_user_read_check_in && hasCheckInContent;
+  // Per-component [UP] flags. Backend computes each from
+  // `viewer.CheckInRead.read_at >= component.<field>_updated_at`. The badge
+  // shows on a chip only when (a) the chip has actual content to show and
+  // (b) the viewer hasn't seen the latest version of THAT component. Editing
+  // mood-only no longer pulses [UP] on battery / song / thought. New-posts
+  // state lives on the [Posts] button as its own signal.
+  const hasUpdateBattery = !isMyCard && !user.current_user_read_battery && !!social_battery;
+  const hasUpdateMood = !isMyCard && !user.current_user_read_mood && !!mood;
+  const hasUpdateThought = !isMyCard && !user.current_user_read_thought && !!thought;
+  const hasUpdateSong = !isMyCard && !user.current_user_read_song && !!track_id;
   const hasNewPosts =
     !isMyCard &&
     ((user.unread_post_cnt ?? 0) > 0 ||
@@ -273,9 +278,7 @@ function FriendProfileAccordionItem({
             <SocialBatteryChip
               socialBattery={social_battery}
               onClick={() => openCheckInDetail('battery')}
-              rightSlot={
-                !isMyCard && hasCheckInUpdate ? <InlineUpdateBadge>UP</InlineUpdateBadge> : null
-              }
+              rightSlot={hasUpdateBattery ? <InlineUpdateBadge>UP</InlineUpdateBadge> : null}
             />
           ) : isMyCard ? (
             <SocialBatteryPlaceholder />
@@ -312,7 +315,7 @@ function FriendProfileAccordionItem({
                   </StackedEmoji>
                 );
               })}
-              {!isMyCard && hasCheckInUpdate && <InlineUpdateBadge>UP</InlineUpdateBadge>}
+              {hasUpdateMood && <InlineUpdateBadge>UP</InlineUpdateBadge>}
             </Layout.FlexRow>
           ) : isMyCard ? (
             <MoodPlaceholder />
@@ -345,7 +348,7 @@ function FriendProfileAccordionItem({
               <Typo type="label-large" numberOfLines={1}>
                 {thought}
               </Typo>
-              {!isMyCard && hasCheckInUpdate && <InlineUpdateBadge>UP</InlineUpdateBadge>}
+              {hasUpdateThought && <InlineUpdateBadge>UP</InlineUpdateBadge>}
             </Layout.FlexRow>
           ) : isMyCard ? (
             <ThoughtPlaceholder />
@@ -367,9 +370,7 @@ function FriendProfileAccordionItem({
               fontType="label-large"
               useAlbumImg
               onClick={() => openCheckInDetail('song')}
-              rightSlot={
-                !isMyCard && hasCheckInUpdate ? <InlineUpdateBadge>UP</InlineUpdateBadge> : null
-              }
+              rightSlot={hasUpdateSong ? <InlineUpdateBadge>UP</InlineUpdateBadge> : null}
             />
           ) : isMyCard ? (
             <MusicPlaceholder />

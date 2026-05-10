@@ -21,6 +21,18 @@ export interface UpdatedProfile extends User {
   is_hidden: boolean;
   current_user_read: boolean;
   current_user_read_check_in: boolean;
+  // Per-component read flags that drive the per-component [UP] badge on each
+  // chip (battery / mood / song / thought). Computed on the backend by
+  // comparing the viewer's CheckInRead.read_at against each component's
+  // *_updated_at. True = the viewer has seen the latest version of that
+  // component (no [UP] needed); False = the owner edited the component
+  // after the viewer last marked the check-in as read (show [UP] on that
+  // chip only). Intentionally per-component so editing one chip doesn't
+  // make all four pulse [UP].
+  current_user_read_battery: boolean;
+  current_user_read_mood: boolean;
+  current_user_read_song: boolean;
+  current_user_read_thought: boolean;
   unread_cnt: number;
   check_in_id?: number | null;
   track_id?: string;

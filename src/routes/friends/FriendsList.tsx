@@ -154,6 +154,13 @@ function FriendsList() {
       is_hidden: false,
       current_user_read: true,
       current_user_read_check_in: true,
+      // Owner viewing their own card: nothing is unread to themselves, so
+      // every per-component flag is true and no [UP] badges show on My card
+      // regardless of when they last edited.
+      current_user_read_battery: true,
+      current_user_read_mood: true,
+      current_user_read_song: true,
+      current_user_read_thought: true,
       unread_cnt: 0,
       unread_chat_count: 0,
       check_in_id: checkIn?.id ?? null,
