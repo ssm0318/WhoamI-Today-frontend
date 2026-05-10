@@ -2,6 +2,7 @@ import { Emoji } from 'emoji-picker-react';
 import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { useSWRConfig } from 'swr';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import { Typo } from '@design-system';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -31,6 +32,7 @@ const POKED_LABELS: Record<PokeComponentType, { text: string; emoji: string }> =
 function PokeButton({ receiverId, componentType, initialPokeId }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'friend' });
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
+  const { mutate: globalMutate } = useSWRConfig();
   const [pokeRecord, setPokeRecord] = useState<Poke | null>(
     initialPokeId
       ? ({ id: initialPokeId, component_type: componentType, receiver: receiverId } as Poke)
@@ -40,6 +42,23 @@ function PokeButton({ receiverId, componentType, initialPokeId }: Props) {
   const [showConfirm, setShowConfirm] = useState(false);
 
   const isPoked = pokeRecord !== null;
+
+  /**
+   * Invalidate every friends-list page so sibling PokeButtons (which
+   * short-circuit their per-button GET when `initialPokeId !== undefined`)
+   * pick up the new pending-pokes map on next render. Without this, a user
+   * who pings A's battery and then mounts a fresh button for A's mood sees
+   * stale data: the bulk endpoint's `sent_pokes` map didn't include the
+   * brand-new poke, so the mood button still says "Ping for mood" while
+   * the server already has a pending row — and the dedup 400 ("You already
+   * pinged this component.") that follows the second tap is precisely the
+   * symptom production logs reported.
+   */
+  const invalidateFriendsCache = useCallback(() => {
+    globalMutate((key) => typeof key === 'string' && key.includes('/user/friends/'), undefined, {
+      revalidate: true,
+    });
+  }, [globalMutate]);
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -64,6 +83,7 @@ function PokeButton({ receiverId, componentType, initialPokeId }: Props) {
       await deletePoke(pokeRecord.id);
       setPokeRecord(null);
       openToast({ message: t('ping_removed') });
+      invalidateFriendsCache();
     } catch {
       // Surface the failure instead of going dark — the user just tapped and
       // nothing visible happened. Refresh status so the UI reflects truth.
@@ -88,6 +108,7 @@ function PokeButton({ receiverId, componentType, initialPokeId }: Props) {
       const newPoke = await sendPoke(receiverId, componentType);
       setPokeRecord(newPoke);
       openToast({ message: t('ping_sent') });
+      invalidateFriendsCache();
     } catch {
       // The most common failure mode here is the dedup 400 ("You already
       // pinged this component.") — usually because the friends-list cache is
