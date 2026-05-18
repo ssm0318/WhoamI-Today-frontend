@@ -946,6 +946,9 @@
       "invite": {
         "text": "친구 초대",
         "copy": "초대 링크를 클립보드에 복사했습니다.",
+        "copy_code_text": "초대 코드 복사",
+        "copy_code_copied": "초대 코드를 클립보드에 복사했습니다.",
+        "code_disclaimer": "WIT 커뮤니티가 건전하게 유지되도록, 정말 신뢰하는 사람에게만 초대 코드를 공유해 주세요.",
         "desktop_message": "저와 함께 WhoAmI Today (WIT) 베타 테스트에 참여하세요. WIT는 워싱턴 대학교 연구팀이 청소년을 위해 개발한 소셜 미디어 플랫폼입니다.\n\n앱에서 초대 링크를 열면 제 초대 코드가 자동으로 입력돼요.\n\n초대 링크: {{invitation_link}}\n\n초대 코드: {{invite_code}}\n제 username: {{username}}",
         "mobile_message_title": "WhoAmI Today (WIT)에서 만나요.",
         "mobile_message": "앱에서 초대 링크를 열면 제 초대 코드가 자동으로 입력돼요.\n\n초대 링크: {{invitation_link}}\n\n초대 코드: {{invite_code}}\n제 username: {{username}}"
@@ -1337,6 +1340,20 @@
     },
     "n_responders": "n = {{n}}",
     "your_percentile": "응답자 중 상위 {{p}}%예요.",
+    "per_friend": {
+      "baseline_label": "처음 추가했을 때:",
+      "baseline_closeness_value": "{{value}}/5",
+      "relationship_type": {
+        "school_friend": "학교 친구",
+        "coworker": "직장 동료",
+        "family": "가족",
+        "online_friend": "온라인 친구",
+        "club_community": "동아리/커뮤니티",
+        "not_yet": "아직 잘 모름",
+        "other": "기타"
+      },
+      "empty_state": "친구 목록이 비어 있어요. 친구를 먼저 추가한 뒤 다시 와 주세요."
+    },
     "toast": {
       "submitted": "설문이 제출되었어요!",
       "submit_failed": "제출에 실패했어요. 다시 시도해주세요."

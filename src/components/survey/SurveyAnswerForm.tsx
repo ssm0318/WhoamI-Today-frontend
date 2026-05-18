@@ -3,11 +3,12 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { Colors, Layout, Typo } from '@design-system';
-import { useSurveyDraft } from '@hooks/useSurveyDraft';
+import { isPerFriendAnswerMap, useSurveyDraft } from '@hooks/useSurveyDraft';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import i18n from '@i18n/index';
 import {
   ConditionalDisplay,
+  PER_FRIEND_QUESTION_TYPES,
   Survey,
   SurveyAnswerInput,
   SurveyOptionValue,
@@ -18,6 +19,7 @@ import { submitSurveyResponse } from '@utils/apis/survey';
 import { ChoiceChips } from './ChoiceChips';
 import { FreeTextInput } from './FreeTextInput';
 import { LIKERT_NA_VALUE, LikertChips } from './LikertChips';
+import { isPerFriendBlockComplete, PerFriendBlock } from './per-friend/PerFriendBlock';
 import { SliderInput } from './SliderInput';
 
 // Inclusive (min, max) per likert variant — mirrors backend
@@ -88,7 +90,42 @@ const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko :
 // purposes so the user can advance past intro / section-break cards.
 const isDisplayOnly = (q: SurveyQuestion) => q.type === 'display_only';
 
-type AnswerValue = number | string | null | (number | string)[] | undefined;
+type AnswerValue =
+  | number
+  | string
+  | null
+  | (number | string)[]
+  | Record<string, number | string | null | (number | string)[]>
+  | undefined;
+
+// One renderable page: either a single question (the existing behavior)
+// or a block of consecutive per_friend_* questions. Per-friend blocks
+// render all friends on one scrollable page, with one PerFriendCard
+// per friend grouping the friend's inputs together.
+type Page =
+  | { kind: 'single'; question: SurveyQuestion }
+  | { kind: 'per_friend_block'; questions: SurveyQuestion[] };
+
+function groupQuestionsIntoPages(questions: SurveyQuestion[]): Page[] {
+  const pages: Page[] = [];
+  let buffer: SurveyQuestion[] = [];
+  const flush = () => {
+    if (buffer.length > 0) {
+      pages.push({ kind: 'per_friend_block', questions: buffer });
+      buffer = [];
+    }
+  };
+  questions.forEach((q) => {
+    if (PER_FRIEND_QUESTION_TYPES.has(q.type)) {
+      buffer.push(q);
+    } else {
+      flush();
+      pages.push({ kind: 'single', question: q });
+    }
+  });
+  flush();
+  return pages;
+}
 
 // `null` is a meaningful answer on likert_5_na (the NA_SENTINEL — a
 // recorded "not applicable" pick). `undefined` means the user hasn't
@@ -134,7 +171,7 @@ const evaluateCondition = (rule: ConditionalDisplay, controllerValue: AnswerValu
 
 export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerFormProps) {
   const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
-  const { answers, setAnswer, clear, hydrated } = useSurveyDraft(survey.slug);
+  const { answers, setAnswer, setPerFriendAnswer, clear, hydrated } = useSurveyDraft(survey.slug);
   const [index, setIndex] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const trackEvent = useTrackEvent();
@@ -169,7 +206,17 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
       return evaluateCondition(q.conditional_display, answers[controller.id]);
     });
   }, [allQuestions, answers]);
-  const total = questions.length;
+
+  // Per-friend question types render N friends on one page. Pages are the
+  // unit `index` actually iterates over so a single Back/Next press moves
+  // past the entire per-friend block at once.
+  const pages = useMemo(() => groupQuestionsIntoPages(questions), [questions]);
+  const total = pages.length;
+
+  const isPageAnswered = (page: Page): boolean => {
+    if (page.kind === 'single') return isAnswered(page.question, answers[page.question.id]);
+    return isPerFriendBlockComplete(page.questions, answers);
+  };
 
   // Clamp index when the visible-question list shrinks (e.g. user
   // changes their category answer, removing later branches).
@@ -178,47 +225,59 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
     if (index > total - 1) setIndex(total - 1);
   }, [total, index]);
 
-  // After hydration, jump to the first unanswered question (or last if all answered)
+  // After hydration, jump to the first unanswered PAGE (or last if all answered).
+  // We jump on pages, not questions, so a half-filled per-friend block lands
+  // the user back on that block instead of one specific friend's row.
   useEffect(() => {
     if (!hydrated || total === 0) return;
-    const firstUnanswered = questions.findIndex((q) => !isAnswered(q, answers[q.id]));
+    const firstUnanswered = pages.findIndex((p) => !isPageAnswered(p));
     setIndex(firstUnanswered === -1 ? total - 1 : firstUnanswered);
     // intentionally only run on first hydration
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated]);
 
-  // Time-per-question: emit dwell on every index change. Captures the
-  // ACTUAL viewing time of the previous question, which the back/next
-  // handlers below can't report on their own (they don't know how long
-  // the question was visible vs answered earlier). Backend only sees
-  // the final batched submit — per-question timing is invisible there.
+  // Time-per-page: emit dwell on every page change. For single-question
+  // pages this preserves the per-question dwell signal; per_friend block
+  // pages report a single dwell event for the whole block (we don't try
+  // to subdivide a multi-friend scrolling page).
   useEffect(() => {
     if (index === previousIndexRef.current) return;
     const dwellMs = Date.now() - questionStartedAtRef.current;
-    if (dwellMs >= 200 && previousIndexRef.current < questions.length) {
-      const prevQ = questions[previousIndexRef.current];
-      trackEvent('survey_question_dwell', {
-        survey_slug: survey.slug,
-        question_id: prevQ.id,
-        question_index: previousIndexRef.current,
-        question_type: prevQ.type,
-        duration_ms: dwellMs,
-      });
+    if (dwellMs >= 200 && previousIndexRef.current < pages.length) {
+      const prevPage = pages[previousIndexRef.current];
+      if (prevPage.kind === 'single') {
+        trackEvent('survey_question_dwell', {
+          survey_slug: survey.slug,
+          question_id: prevPage.question.id,
+          question_index: previousIndexRef.current,
+          question_type: prevPage.question.type,
+          duration_ms: dwellMs,
+        });
+      } else {
+        trackEvent('survey_question_dwell', {
+          survey_slug: survey.slug,
+          question_id: prevPage.questions[0]?.id ?? 0,
+          question_index: previousIndexRef.current,
+          question_type: 'per_friend_block',
+          duration_ms: dwellMs,
+        });
+      }
     }
     previousIndexRef.current = index;
     questionStartedAtRef.current = Date.now();
-  }, [index, questions, survey.slug, trackEvent]);
+  }, [index, pages, survey.slug, trackEvent]);
 
   if (total === 0) return null;
 
-  const currentQuestion = questions[index];
-  const currentValue = answers[currentQuestion.id];
-  const currentAnswered = isAnswered(currentQuestion, currentValue);
-  const allAnswered = questions.every((q) => isAnswered(q, answers[q.id]));
+  const currentPage = pages[index];
+  const currentPageAnswered = isPageAnswered(currentPage);
+  const allAnswered = pages.every(isPageAnswered);
   const isLast = index === total - 1;
+  const currentQuestion = currentPage.kind === 'single' ? currentPage.question : null;
+  const currentValue = currentQuestion ? answers[currentQuestion.id] : undefined;
 
   const handleNext = () => {
-    if (!currentAnswered) return;
+    if (!currentPageAnswered) return;
     if (!isLast) {
       trackEvent('survey_navigated', {
         survey_slug: survey.slug,
@@ -246,34 +305,57 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
   const handleSubmit = async () => {
     if (!allAnswered || submitting) return;
     setSubmitting(true);
-    // Final-question dwell flush: the index-change effect above won't
-    // fire on submit (we don't change index), so we have to manually log
-    // the time spent on the last question.
+    // Final-page dwell flush: the index-change effect above won't fire on
+    // submit (we don't change index), so we manually log the time spent
+    // on the last page.
     const lastDwellMs = Date.now() - questionStartedAtRef.current;
-    if (lastDwellMs >= 200 && currentQuestion) {
-      trackEvent('survey_question_dwell', {
-        survey_slug: survey.slug,
-        question_id: currentQuestion.id,
-        question_index: index,
-        question_type: currentQuestion.type,
-        duration_ms: lastDwellMs,
-      });
+    if (lastDwellMs >= 200) {
+      if (currentPage.kind === 'single') {
+        trackEvent('survey_question_dwell', {
+          survey_slug: survey.slug,
+          question_id: currentPage.question.id,
+          question_index: index,
+          question_type: currentPage.question.type,
+          duration_ms: lastDwellMs,
+        });
+      } else {
+        trackEvent('survey_question_dwell', {
+          survey_slug: survey.slug,
+          question_id: currentPage.questions[0]?.id ?? 0,
+          question_index: index,
+          question_type: 'per_friend_block',
+          duration_ms: lastDwellMs,
+        });
+      }
     }
-    // Only submit answers for visible non-display-only questions that
-    // ACTUALLY have a value. Optional free-text questions where the user
-    // navigated past without typing anything would otherwise serialize
-    // as `{ question_id, value: undefined }` — which JSON.stringify
-    // strips to just `{ question_id }`, and the backend serializer
-    // rejects with "This field is required" for the missing `value`.
-    // display_only carries no value, and conditionally-hidden questions
-    // shouldn't pollute the response with stale values from a discarded
-    // branch (e.g. user picked "bug" then changed to "feature_request").
-    const payload: SurveyAnswerInput[] = questions
-      .filter((q) => !isDisplayOnly(q) && hasValue(answers[q.id]))
-      .map((q) => ({
+    // Build submission payload, fanning out per-friend questions into
+    // one row per (question_id, target_user_id, value). Skip display_only,
+    // skip conditionally-hidden questions, skip cells with no value.
+    const payload: SurveyAnswerInput[] = [];
+    questions.forEach((q) => {
+      if (isDisplayOnly(q)) return;
+      if (PER_FRIEND_QUESTION_TYPES.has(q.type)) {
+        const cell = answers[q.id];
+        if (!isPerFriendAnswerMap(cell)) return;
+        Object.entries(cell).forEach(([tidStr, value]) => {
+          if (value === undefined) return;
+          if (typeof value === 'string' && value.trim().length === 0) return;
+          if (Array.isArray(value) && value.length === 0) return;
+          payload.push({
+            question_id: q.id,
+            target_user_id: Number(tidStr),
+            value: value as number | string | null | (number | string)[],
+          });
+        });
+        return;
+      }
+      const value = answers[q.id];
+      if (!hasValue(value as AnswerValue)) return;
+      payload.push({
         question_id: q.id,
-        value: answers[q.id] as number | string | null | (number | string)[],
-      }));
+        value: value as number | string | null | (number | string)[],
+      });
+    });
     try {
       await submitSurveyResponse(survey.slug, payload);
       // Backend captures the response, but a typed `survey_submitted`
@@ -305,24 +387,34 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
       </Layout.FlexCol>
 
       <Layout.FlexCol gap={6} w="100%">
-        {/* display_only carries content (intro / section break) instead
-            of a prompt + input. Render the content as the body and skip
-            the input controls. The Next button stays enabled because
-            isAnswered() returns true for display_only types. */}
-        {isDisplayOnly(currentQuestion) ? (
-          <Typo type="body-large" color="BLACK">
-            {pickLocalized(currentQuestion.content_en, currentQuestion.content_ko)}
-          </Typo>
+        {currentPage.kind === 'per_friend_block' ? (
+          <PerFriendBlock
+            questions={currentPage.questions}
+            answers={answers}
+            setPerFriendAnswer={setPerFriendAnswer}
+          />
         ) : (
           <>
-            <Typo type="title-medium" color="BLACK">
-              {pickLocalized(currentQuestion.prompt_en, currentQuestion.prompt_ko)}
-            </Typo>
-            {(currentQuestion.description_en || currentQuestion.description_ko) && (
-              <Typo type="body-medium" color="DARK_GRAY">
-                {pickLocalized(currentQuestion.description_en, currentQuestion.description_ko)}
+            {/* display_only carries content (intro / section break) instead
+                of a prompt + input. Render the content as the body and skip
+                the input controls. The Next button stays enabled because
+                isAnswered() returns true for display_only types. */}
+            {currentQuestion && isDisplayOnly(currentQuestion) ? (
+              <Typo type="body-large" color="BLACK">
+                {pickLocalized(currentQuestion.content_en, currentQuestion.content_ko)}
               </Typo>
-            )}
+            ) : currentQuestion ? (
+              <>
+                <Typo type="title-medium" color="BLACK">
+                  {pickLocalized(currentQuestion.prompt_en, currentQuestion.prompt_ko)}
+                </Typo>
+                {(currentQuestion.description_en || currentQuestion.description_ko) && (
+                  <Typo type="body-medium" color="DARK_GRAY">
+                    {pickLocalized(currentQuestion.description_en, currentQuestion.description_ko)}
+                  </Typo>
+                )}
+              </>
+            ) : null}
           </>
         )}
         {/* All likert variants render the same way: numeric chips
@@ -335,7 +427,8 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
                  per-option labels (RSQ-Brief style)
               3. Empty (chips render with no anchor row)
             likert_5_na keeps its N/A button below the numeric row. */}
-        {LIKERT_RANGES[currentQuestion.type] &&
+        {currentQuestion &&
+          LIKERT_RANGES[currentQuestion.type] &&
           (() => {
             const opts = [...currentQuestion.options].sort((a, b) => a.order - b.order);
             const firstOptLabel = opts[0] ? pickLocalized(opts[0].label_en, opts[0].label_ko) : '';
@@ -370,18 +463,21 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
               />
             );
           })()}
-        {(currentQuestion.type === 'single_choice' || currentQuestion.type === 'multi_choice') && (
-          <ChoiceChips
-            options={currentQuestion.options.map((o) => ({
-              value: o.value,
-              label: pickLocalized(o.label_en, o.label_ko),
-            }))}
-            multi={currentQuestion.type === 'multi_choice'}
-            selected={(currentValue as SurveyOptionValue | SurveyOptionValue[] | undefined) ?? null}
-            onSelect={(v) => setAnswer(currentQuestion.id, v)}
-          />
-        )}
-        {currentQuestion.type === 'free_text' && (
+        {currentQuestion &&
+          (currentQuestion.type === 'single_choice' || currentQuestion.type === 'multi_choice') && (
+            <ChoiceChips
+              options={currentQuestion.options.map((o) => ({
+                value: o.value,
+                label: pickLocalized(o.label_en, o.label_ko),
+              }))}
+              multi={currentQuestion.type === 'multi_choice'}
+              selected={
+                (currentValue as SurveyOptionValue | SurveyOptionValue[] | undefined) ?? null
+              }
+              onSelect={(v) => setAnswer(currentQuestion.id, v)}
+            />
+          )}
+        {currentQuestion && currentQuestion.type === 'free_text' && (
           <FreeTextInput
             value={(currentValue as string | undefined) ?? ''}
             onChange={(v) => setAnswer(currentQuestion.id, v)}
@@ -391,7 +487,8 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
             }
           />
         )}
-        {currentQuestion.type === 'slider' &&
+        {currentQuestion &&
+          currentQuestion.type === 'slider' &&
           currentQuestion.slider_min_value !== null &&
           currentQuestion.slider_max_value !== null && (
             <SliderInput
@@ -422,7 +519,7 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
             {t('submit')}
           </NavButton>
         ) : (
-          <NavButton type="button" primary onClick={handleNext} disabled={!currentAnswered}>
+          <NavButton type="button" primary onClick={handleNext} disabled={!currentPageAnswered}>
             {t('next')}
           </NavButton>
         )}

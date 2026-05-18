@@ -958,6 +958,9 @@
             "invite": {
                 "text": "Invite Friends",
                 "copy": "Invitation link copied to clipboard.",
+                "copy_code_text": "Copy invite code",
+                "copy_code_copied": "Invite code copied to clipboard.",
+                "code_disclaimer": "Help keep WIT a clean community — only share your invite code with people you really trust.",
                 "desktop_message": "Join me in beta testing WhoAmI Today (WIT) — a social media platform for youth designed by researchers at the University of Washington.\n\nOpen this invite link in the app to sign up with my invite code filled in.\n\nInvitation link: {{invitation_link}}\n\nInvite code: {{invite_code}}\nMy username: {{username}}",
                 "mobile_message_title": "Join me on WhoAmI Today (WIT).",
                 "mobile_message": "Open this invite link in the app to sign up with my invite code filled in.\n\nInvitation link: {{invitation_link}}\n\nInvite code: {{invite_code}}\nMy username: {{username}}"
@@ -1350,6 +1353,20 @@
         },
         "n_responders": "n = {{n}}",
         "your_percentile": "You scored higher than {{p}}% of responders.",
+        "per_friend": {
+            "baseline_label": "When you added them:",
+            "baseline_closeness_value": "{{value}}/5",
+            "relationship_type": {
+                "school_friend": "School friend",
+                "coworker": "Coworker",
+                "family": "Family",
+                "online_friend": "Online friend",
+                "club_community": "Club/Community",
+                "not_yet": "Not yet met",
+                "other": "Other"
+            },
+            "empty_state": "No friends on your list yet — there's nothing to rate here. Add friends first, then come back."
+        },
         "toast": {
             "submitted": "Survey submitted!",
             "submit_failed": "Could not submit — please try again."
