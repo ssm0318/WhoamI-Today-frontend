@@ -110,7 +110,7 @@ export interface SharedContentPreview {
   image_url?: string;
 }
 
-export type ChatEventType = '' | 'member_added' | 'member_left';
+export type ChatEventType = '' | 'member_added' | 'member_left' | 'wit_welcome_card';
 
 export interface ChatMessage extends Omit<InputChatMessage, 'parent'> {
   id: number;
