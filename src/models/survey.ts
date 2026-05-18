@@ -250,6 +250,7 @@ export interface SurveyIndexEntry {
   sequence_index: number;
   window_start: string; // ISO date
   window_end: string | null; // null = open-ended (anytime, endpoint)
+  allow_late: boolean;
   survey: { slug: string; title_en: string; title_ko: string };
   bucket: Bucket;
   user_answered: boolean;

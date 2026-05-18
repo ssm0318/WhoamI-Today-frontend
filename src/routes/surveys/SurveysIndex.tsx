@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import useSWR from 'swr';
 
 import SubHeader from '@components/sub-header/SubHeader';
+import { DeadlineBadge } from '@components/survey/DeadlineBadge';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import {
   isSurveysPaused,
@@ -129,6 +130,13 @@ function SurveysIndex() {
           {pickLocalized(entry.survey.title_en, entry.survey.title_ko)}
         </Typo>
         <CadenceChip>{t(`cadence.${entry.cadence}`)}</CadenceChip>
+        {bucket === 'available_now' && (
+          <DeadlineBadge
+            windowEnd={entry.window_end}
+            cadence={entry.cadence}
+            allowLate={entry.allow_late}
+          />
+        )}
       </RowHeader>
       {bucket === 'late_but_accepted' && entry.window_end && (
         <Typo type="label-large" color="DARK_GRAY">

@@ -1305,6 +1305,12 @@
       "step4": "위젯을 홈 화면으로\n드래그해주세요"
     }
   },
+  "deadline_badge": {
+    "hours_left": "{{hours}}시간 남음",
+    "closes_weekday": "{{weekday}} 마감",
+    "sidebar_count_one": "{{count}}건",
+    "sidebar_count_other": "{{count}}건 마감"
+  },
   "surveys": {
     "section_title": "오늘의 설문",
     "section_results_released": "설문 결과",

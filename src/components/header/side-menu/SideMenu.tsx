@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import useSWR from 'swr';
 
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
+import { Chip as DeadlineChip } from '@components/survey/DeadlineBadge.styled';
 import { FeatureFlagKey } from '@constants/featureFlag';
 import { Z_INDEX } from '@constants/layout';
 import { ONBOARDING_VIDEO_URL } from '@constants/url';
@@ -14,6 +15,7 @@ import { usePostAppMessage } from '@hooks/useAppMessage';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import { VersionType } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { getSurveyIndex } from '@utils/apis/survey';
 import { getMyPendingVersionSwitchRequest } from '@utils/apis/user';
 import { classifyPathnameAsSource } from '@utils/navSource';
 
@@ -46,16 +48,20 @@ interface Props {
 // TODO: Add entrance/exit animations
 function SideMenu({ closeSideMenu }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'home.header.side_menu' });
+  const [tDeadline] = useTranslation('translation', { keyPrefix: 'deadline_badge' });
   const navigate = useNavigate();
   const postMessage = usePostAppMessage();
   const featureFlags = useBoundStore((state) => state.featureFlags);
 
   const myProfile = useBoundStore((state) => state.myProfile);
+  const { data: surveyIndex } = useSWR('/surveys/index/', getSurveyIndex);
   const { data: pendingResp } = useSWR(
     '/user/version-switch-request/me/',
     getMyPendingVersionSwitchRequest,
   );
   const isPending = !!pendingResp?.pending;
+  const dueSurveyCount =
+    surveyIndex?.available_now.filter((entry) => !entry.allow_late).length ?? 0;
 
   const visibleItems = SIDE_MENU_LIST.filter((menu) => !menu.flag || featureFlags?.[menu.flag]);
 
@@ -127,17 +133,28 @@ function SideMenu({ closeSideMenu }: Props) {
               </Layout.FlexCol>
             )}
             {visibleItems.map((menu) => (
-              <button type="button" key={menu.key} onClick={handleClickMenu(menu)}>
-                <Layout.FlexRow gap={6} alignItems="center">
-                  <EmojiItem
-                    emojiString={menu.emoji}
-                    size={20}
-                    bgColor="TRANSPARENT"
-                    outline="TRANSPARENT"
-                  />
-                  <Typo type="head-line">{t(menu.key)}</Typo>
-                </Layout.FlexRow>
-              </button>
+              <MenuButton type="button" key={menu.key} onClick={handleClickMenu(menu)}>
+                <MenuRow gap={6} alignItems="center">
+                  <Layout.FlexRow gap={6} alignItems="center">
+                    <EmojiItem
+                      emojiString={menu.emoji}
+                      size={20}
+                      bgColor="TRANSPARENT"
+                      outline="TRANSPARENT"
+                    />
+                    <Typo type="head-line">{t(menu.key)}</Typo>
+                  </Layout.FlexRow>
+                  {menu.key === 'surveys' && dueSurveyCount > 0 && (
+                    <DeadlineChip>
+                      ⏰{' '}
+                      {tDeadline(
+                        dueSurveyCount === 1 ? 'sidebar_count_one' : 'sidebar_count_other',
+                        { count: dueSurveyCount },
+                      )}
+                    </DeadlineChip>
+                  )}
+                </MenuRow>
+              </MenuButton>
             ))}
             <Layout.FlexCol mt={52}>
               <a
@@ -177,6 +194,16 @@ const VersionCode = styled.code`
   color: ${({ theme }) => theme.BLACK};
   padding: 2px 6px;
   border-radius: 4px;
+`;
+
+const MenuButton = styled.button`
+  width: 100%;
+  text-align: left;
+`;
+
+const MenuRow = styled(Layout.FlexRow)`
+  justify-content: space-between;
+  width: 100%;
 `;
 
 export default SideMenu;
