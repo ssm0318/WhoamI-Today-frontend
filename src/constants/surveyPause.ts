@@ -1,16 +1,8 @@
 /**
- * Temporary "surveys paused for maintenance" window. Computed against
- * the viewer's local clock vs an absolute UTC timestamp, so the gate
- * fires consistently regardless of the user's timezone.
- *
- * Today (2026-05-18) 4pm PT (PDT, UTC-7) = 2026-05-18T23:00:00Z. Once
- * `Date.now()` passes that instant, `isSurveysPaused()` returns false
- * and the UI returns to its normal state automatically — no second
- * deploy needed to lift the pause.
- *
- * Delete this module (and its imports) once the surveys are stable.
+ * Temporary survey pause switch. Keep the cutoff in the past unless surveys
+ * explicitly need to be hidden for maintenance again.
  */
-export const SURVEYS_PAUSED_UNTIL = new Date('2026-05-18T23:00:00Z');
+export const SURVEYS_PAUSED_UNTIL = new Date(0);
 
 export function isSurveysPaused(now: Date = new Date()): boolean {
   return now < SURVEYS_PAUSED_UNTIL;
