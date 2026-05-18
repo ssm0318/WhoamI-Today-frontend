@@ -67,30 +67,24 @@ function SurveyOfTheDay() {
   const userId = useBoundStore((s) => s.myProfile?.id ?? null);
 
   if (isLoading) return null;
-  const survey = data?.survey;
-  if (!survey) return null;
 
   const sectionTitle = (
     <Typo type="head-line" color="WHITE" bold>
       {t('section_title')}
     </Typo>
   );
-  const surveyTitle = (
-    <Typo type="title-medium" color="WHITE">
-      {pickLocalized(survey.title_en, survey.title_ko)}
-    </Typo>
-  );
 
-  // Temporary maintenance gate — keep the card visible (so users know
-  // there IS a Survey of the Day today) but show the fix-in-progress
-  // message and disable the action button so taps can't navigate into
-  // the half-broken answer flow. Auto-lifts once SURVEYS_PAUSED_UNTIL
-  // passes (no second deploy needed).
+  // Temporary maintenance gate — render the card even when the backend
+  // hasn't returned a survey for today (e.g. because the prereq-token gate
+  // is hiding the broken survey-of-the-day). The whole point of the paused
+  // card is to keep the SOTD slot visible so participants don't assume
+  // there's nothing to do; that breaks if we depend on the API returning
+  // a survey to render anything at all. Auto-lifts once
+  // SURVEYS_PAUSED_UNTIL passes — no second deploy needed.
   if (isSurveysPaused()) {
     return (
       <ColorCard>
         {sectionTitle}
-        {surveyTitle}
         <Typo type="title-medium" color="WHITE">
           {pickLocalized(SURVEYS_PAUSED_MESSAGE_EN, SURVEYS_PAUSED_MESSAGE_KO)}
         </Typo>
@@ -102,6 +96,15 @@ function SurveyOfTheDay() {
       </ColorCard>
     );
   }
+
+  const survey = data?.survey;
+  if (!survey) return null;
+
+  const surveyTitle = (
+    <Typo type="title-medium" color="WHITE">
+      {pickLocalized(survey.title_en, survey.title_ko)}
+    </Typo>
+  );
 
   if (survey.user_has_responded) {
     return (
