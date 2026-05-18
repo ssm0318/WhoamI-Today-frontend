@@ -139,11 +139,17 @@ function SurveysIndex() {
     </RowCard>
   );
 
-  const hasAvailable = data.available_now.length > 0;
+  const paused = isSurveysPaused();
+
+  // While paused, the entire "Available now" bucket is hidden — both the
+  // section header and its rows — so users can't tap into the half-broken
+  // answer flow from this page. Late-but-accepted and Completed buckets
+  // are read-only / past-tense so they stay visible. The banner at the
+  // top of the page surfaces the reason.
+  const availableEntries = paused ? [] : data.available_now;
+  const hasAvailable = availableEntries.length > 0;
   const hasLate = data.late_but_accepted.length > 0;
   const hasCompleted = dailyCompletedCount > 0 || nonDailyCompleted.length > 0;
-
-  const paused = isSurveysPaused();
 
   return (
     <MainScrollContainer>
@@ -168,7 +174,7 @@ function SurveysIndex() {
               {t('bucket_available_now')}
             </Typo>
             <SectionRows>
-              {data.available_now.map((entry) => renderEntry(entry, 'available_now'))}
+              {availableEntries.map((entry) => renderEntry(entry, 'available_now'))}
             </SectionRows>
           </Section>
         )}
