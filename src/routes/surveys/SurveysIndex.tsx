@@ -5,7 +5,6 @@ import useSWR from 'swr';
 
 import SubHeader from '@components/sub-header/SubHeader';
 import { DeadlineBadge } from '@components/survey/DeadlineBadge';
-import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import {
   isSurveysPaused,
   SURVEYS_PAUSED_MESSAGE_EN,
@@ -17,18 +16,10 @@ import { Bucket, SurveyIndexEntry } from '@models/survey';
 import { getSurveyIndex } from '@utils/apis/survey';
 
 import { MainScrollContainer } from '../Root';
+import { SurveyPageShell } from './SurveyPageLayout';
 
-const Page = styled(Layout.FlexCol)`
-  width: 100%;
-  padding: 16px;
-  padding-top: ${TITLE_HEADER_HEIGHT + 16}px;
-  /* Extra breathing room below the last entry so the bottom-nav doesn't
-     visually crowd the final card; matches the spacing pattern used on
-     other mobile-bottom-nav pages. */
-  padding-bottom: 80px;
+const Page = styled(SurveyPageShell)`
   gap: 16px;
-  background: ${Colors.LIGHT};
-  min-height: 100%;
 `;
 
 const Section = styled(Layout.FlexCol)`

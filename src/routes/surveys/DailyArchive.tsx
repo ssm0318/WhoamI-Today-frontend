@@ -4,21 +4,16 @@ import styled from 'styled-components';
 import useSWR from 'swr';
 
 import SubHeader from '@components/sub-header/SubHeader';
-import { TITLE_HEADER_HEIGHT } from '@constants/layout';
-import { Colors, Layout, Typo } from '@design-system';
+import { Colors, Typo } from '@design-system';
 import i18n from '@i18n/index';
 import { PastSurvey } from '@models/survey';
 import { getPastSurveys } from '@utils/apis/survey';
 
 import { MainScrollContainer } from '../Root';
+import { SurveyPageShell } from './SurveyPageLayout';
 
-const Page = styled(Layout.FlexCol)`
-  width: 100%;
-  padding: 16px;
-  padding-top: ${TITLE_HEADER_HEIGHT + 16}px;
+const Page = styled(SurveyPageShell)`
   gap: 12px;
-  background: ${Colors.LIGHT};
-  min-height: 100%;
 `;
 
 const RowCard = styled.button`

@@ -4,7 +4,6 @@ import useSWR, { mutate } from 'swr';
 
 import SubHeader from '@components/sub-header/SubHeader';
 import { SurveyAnswerForm } from '@components/survey/SurveyAnswerForm';
-import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import { SURVEY_OF_THE_DAY_KEY } from '@hooks/useSurveyOfTheDay';
 import i18n from '@i18n/index';
@@ -12,17 +11,11 @@ import { SurveyIndexEntry } from '@models/survey';
 import { useBoundStore } from '@stores/useBoundStore';
 import { getSurveyDetail, getSurveyIndex } from '@utils/apis/survey';
 
-const Page = styled(Layout.FlexCol)`
-  width: 100%;
-  padding: 16px;
-  padding-top: ${TITLE_HEADER_HEIGHT + 16}px;
-  padding-bottom: ${BOTTOM_TABBAR_HEIGHT + 16}px;
+import { MainScrollContainer } from '../Root';
+import { SurveyPageShell } from './SurveyPageLayout';
+
+const Page = styled(SurveyPageShell)`
   gap: 12px;
-  background: ${Colors.LIGHT};
-  height: 100%;
-  min-height: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
 `;
 
 const Card = styled(Layout.FlexCol)`
@@ -32,6 +25,10 @@ const Card = styled(Layout.FlexCol)`
   background: ${Colors.WHITE};
   padding: 16px;
   gap: 12px;
+
+  @media (max-width: 360px) {
+    padding: 12px;
+  }
 `;
 
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
@@ -86,7 +83,7 @@ function SurveyAnswer() {
   const from = (location.state as AnswerRouteState | null)?.from;
 
   return (
-    <>
+    <MainScrollContainer>
       <SubHeader title={pickLocalized(survey.title_en, survey.title_ko)} />
       <Page>
         <Card>
@@ -138,7 +135,7 @@ function SurveyAnswer() {
           />
         </Card>
       </Page>
-    </>
+    </MainScrollContainer>
   );
 }
 

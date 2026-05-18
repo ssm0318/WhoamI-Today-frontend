@@ -4,18 +4,15 @@ import styled from 'styled-components';
 import useSWR from 'swr';
 
 import SubHeader from '@components/sub-header/SubHeader';
-import { TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import i18n from '@i18n/index';
 import { getSurveyDetail } from '@utils/apis/survey';
 
-const Page = styled(Layout.FlexCol)`
-  width: 100%;
-  padding: 16px;
-  padding-top: ${TITLE_HEADER_HEIGHT + 24}px;
+import { MainScrollContainer } from '../Root';
+import { SurveyPageShell } from './SurveyPageLayout';
+
+const Page = styled(SurveyPageShell)`
   gap: 16px;
-  background: ${Colors.LIGHT};
-  min-height: 100vh;
   align-items: center;
 `;
 
@@ -89,7 +86,7 @@ function SurveyDone() {
   })();
 
   return (
-    <>
+    <MainScrollContainer>
       <SubHeader
         title={survey ? pickLocalized(survey.title_en, survey.title_ko) : ''}
         // Hide the default left back-arrow — the user already submitted,
@@ -112,7 +109,7 @@ function SurveyDone() {
           </Typo>
         </Card>
       </Page>
-    </>
+    </MainScrollContainer>
   );
 }
 
