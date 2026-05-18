@@ -15,3 +15,9 @@ export const Chip = styled.span`
   line-height: 1;
   white-space: nowrap;
 `;
+
+export const NoLateChip = styled(Chip)`
+  background: #ffe7e7;
+  color: #b42318;
+  border-color: #ffb3b3;
+`;

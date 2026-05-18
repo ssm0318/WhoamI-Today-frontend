@@ -1321,6 +1321,9 @@
     "deadline_badge": {
         "hours_left": "{{hours}}h left",
         "closes_weekday": "Closes {{weekday}}",
+        "due_today": "Due today",
+        "due_weekday": "Due {{weekday}}",
+        "no_late_accepted": "No late accepted",
         "sidebar_count_one": "{{count}}",
         "sidebar_count_other": "{{count}} due"
     },
@@ -1364,7 +1367,7 @@
         "per_friend": {
             "baseline_label": "When you added them:",
             "baseline_closeness_value": "{{value}}/5",
-            "baseline_change_hint": "Keep this earlier rating unless it was a genuine mistake. Correcting a mistake is okay and is not penalized.",
+            "baseline_change_hint": "Your earlier rating was {{value}}/5. Keep that rating unless it was a genuine mistake. Correcting a mistake is okay and is not penalized.",
             "baseline_change_button": "Yeah, I should modify that",
             "baseline_correction_prompt": "What should the earlier rating have been?",
             "relationship_type": {

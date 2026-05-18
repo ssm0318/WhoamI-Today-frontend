@@ -9,29 +9,44 @@ interface FormatRemainingDeadlineOptions {
   locale?: string;
   formatHoursLeft?: (hours: number) => string;
   formatClosesWeekday?: (weekday: string) => string;
+  formatDueToday?: () => string;
+  formatDueWeekday?: (weekday: string) => string;
 }
 
 export function formatRemainingDeadline(
   windowEnd: string | null,
   cadence: Cadence,
-  allowLate: boolean,
+  _allowLate: boolean,
   options: FormatRemainingDeadlineOptions = {},
 ): string | null {
-  if (allowLate || !windowEnd) return null;
-  if (cadence !== 'daily' && cadence !== 'weekly') return null;
+  if (!windowEnd) return null;
 
   const now = options.now ?? new Date();
   const endDate = parseIsoDate(windowEnd);
   const closeAt = getSurveyCloseAt(windowEnd);
   if (!endDate || !closeAt || closeAt.getTime() <= now.getTime()) return null;
 
-  if (cadence === 'weekly') {
+  if (cadence !== 'daily') {
+    if (formatDateInZone(now, DEADLINE_TIME_ZONE) === windowEnd) {
+      return options.formatDueToday?.() ?? 'Due today';
+    }
     const weekday = formatWeekday(endDate, options.locale ?? 'en-US');
-    return options.formatClosesWeekday?.(weekday) ?? `Closes ${weekday}`;
+    return (
+      options.formatDueWeekday?.(weekday) ??
+      options.formatClosesWeekday?.(weekday) ??
+      `Due ${weekday}`
+    );
   }
 
   const hoursLeft = Math.max(1, Math.ceil((closeAt.getTime() - now.getTime()) / MS_PER_HOUR));
   return options.formatHoursLeft?.(hoursLeft) ?? `${hoursLeft}h left`;
+}
+
+export function shouldShowNoLateAcceptedBadge(
+  windowEnd: string | null,
+  allowLate: boolean,
+): boolean {
+  return Boolean(windowEnd && !allowLate);
 }
 
 function parseIsoDate(value: string): Date | null {
@@ -98,4 +113,15 @@ function formatWeekday(date: Date, locale: string): string {
     weekday: 'short',
     timeZone: DEADLINE_TIME_ZONE,
   }).format(date);
+}
+
+function formatDateInZone(date: Date, timeZone: string): string {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(date);
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
 }

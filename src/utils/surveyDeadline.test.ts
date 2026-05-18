@@ -1,14 +1,14 @@
 /* eslint-env jest */
 
-import { formatRemainingDeadline } from './surveyDeadline';
+import { formatRemainingDeadline, shouldShowNoLateAcceptedBadge } from './surveyDeadline';
 
 describe('formatRemainingDeadline', () => {
-  it('returns null when late submissions are accepted', () => {
+  it('still shows the deadline when late submissions are accepted', () => {
     expect(
-      formatRemainingDeadline('2026-05-18', 'daily', true, {
-        now: new Date('2026-05-19T05:10:00Z'),
+      formatRemainingDeadline('2026-05-18', 'endpoint', true, {
+        now: new Date('2026-05-18T20:10:00Z'),
       }),
-    ).toBeNull();
+    ).toBe('Due today');
   });
 
   it('returns null when no close date exists', () => {
@@ -19,12 +19,12 @@ describe('formatRemainingDeadline', () => {
     ).toBeNull();
   });
 
-  it('returns null for cadences that do not get deadline badges', () => {
+  it('shows deadline badges for non-daily surveys with a close date', () => {
     const now = new Date('2026-05-19T05:10:00Z');
 
-    expect(formatRemainingDeadline('2026-05-20', 'biweekly', false, { now })).toBeNull();
-    expect(formatRemainingDeadline('2026-05-20', 'anytime', false, { now })).toBeNull();
-    expect(formatRemainingDeadline('2026-05-20', 'endpoint', false, { now })).toBeNull();
+    expect(formatRemainingDeadline('2026-05-20', 'biweekly', false, { now })).toBe('Due Wed');
+    expect(formatRemainingDeadline('2026-05-20', 'anytime', false, { now })).toBe('Due Wed');
+    expect(formatRemainingDeadline('2026-05-20', 'endpoint', false, { now })).toBe('Due Wed');
   });
 
   it('rounds daily partial hours up against the 7am PT close', () => {
@@ -51,22 +51,30 @@ describe('formatRemainingDeadline', () => {
     ).toBeNull();
   });
 
-  it('formats weekly close labels with the short weekday', () => {
+  it('formats weekly deadline labels with the short weekday', () => {
     expect(
       formatRemainingDeadline('2026-05-24', 'weekly', false, {
         now: new Date('2026-05-19T05:10:00Z'),
         locale: 'en-US',
       }),
-    ).toBe('Closes Sun');
+    ).toBe('Due Sun');
   });
 
-  it('allows the caller to localize weekly close labels', () => {
+  it('allows the caller to localize non-daily deadline labels', () => {
     expect(
       formatRemainingDeadline('2026-05-24', 'weekly', false, {
         now: new Date('2026-05-19T05:10:00Z'),
         locale: 'ko-KR',
-        formatClosesWeekday: (weekday) => `${weekday} 마감`,
+        formatDueWeekday: (weekday) => `${weekday} 마감`,
       }),
     ).toBe('일 마감');
+  });
+});
+
+describe('shouldShowNoLateAcceptedBadge', () => {
+  it('shows only when a survey has a close date and late submissions are not accepted', () => {
+    expect(shouldShowNoLateAcceptedBadge('2026-05-18', false)).toBe(true);
+    expect(shouldShowNoLateAcceptedBadge('2026-05-18', true)).toBe(false);
+    expect(shouldShowNoLateAcceptedBadge(null, false)).toBe(false);
   });
 });

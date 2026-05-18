@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 
-import { Cadence } from '@models/survey';
-import { formatRemainingDeadline } from '@utils/surveyDeadline';
+import type { Cadence } from '@models/survey';
+import { formatRemainingDeadline, shouldShowNoLateAcceptedBadge } from '@utils/surveyDeadline';
 
-import { Chip } from './DeadlineBadge.styled';
+import { Chip, NoLateChip } from './DeadlineBadge.styled';
 
 interface Props {
   windowEnd: string | null;
@@ -17,9 +17,17 @@ export function DeadlineBadge({ windowEnd, cadence, allowLate }: Props) {
     locale: i18n.language === 'ko' ? 'ko-KR' : 'en-US',
     formatHoursLeft: (hours) => t('hours_left', { hours }),
     formatClosesWeekday: (weekday) => t('closes_weekday', { weekday }),
+    formatDueToday: () => t('due_today'),
+    formatDueWeekday: (weekday) => t('due_weekday', { weekday }),
   });
+  const showNoLateAccepted = shouldShowNoLateAcceptedBadge(windowEnd, allowLate);
 
-  if (!label) return null;
+  if (!label && !showNoLateAccepted) return null;
 
-  return <Chip>⏰ {label}</Chip>;
+  return (
+    <>
+      {label && <Chip>⏰ {label}</Chip>}
+      {showNoLateAccepted && <NoLateChip>{t('no_late_accepted')}</NoLateChip>}
+    </>
+  );
 }

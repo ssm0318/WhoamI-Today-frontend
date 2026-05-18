@@ -37,7 +37,12 @@ jest.mock(
 jest.mock(
   '@components/survey/DeadlineBadge',
   () => ({
-    DeadlineBadge: () => null,
+    DeadlineBadge: ({ windowEnd, allowLate }: { windowEnd: string | null; allowLate: boolean }) => (
+      <>
+        {windowEnd && <span>Due today</span>}
+        {windowEnd && !allowLate && <span>No late accepted</span>}
+      </>
+    ),
   }),
   { virtual: true },
 );
@@ -168,5 +173,46 @@ describe('SurveysIndex', () => {
     expect(screen.getByText('Phase 1 reflection: Part 2')).toBeInTheDocument();
     expect(screen.queryByText('biweekly')).not.toBeInTheDocument();
     expect(screen.queryByText('endpoint')).not.toBeInTheDocument();
+  });
+
+  it('shows deadline badges and no-late badges for open surveys', () => {
+    const data: SurveyIndexResponse = {
+      available_now: [
+        entry({
+          id: 1,
+          cadence: 'biweekly',
+          bucket: 'available_now',
+          allow_late: true,
+          survey: {
+            slug: 'mid_study_w',
+            title_en: 'Phase 1 reflection: Part 1',
+            title_ko: 'Phase 1 reflection: Part 1',
+          },
+        }),
+        entry({
+          id: 2,
+          cadence: 'daily',
+          bucket: 'available_now',
+          allow_late: false,
+          survey: {
+            slug: 'sotd_d15_shi',
+            title_en: 'Survey of the Day',
+            title_ko: 'Survey of the Day',
+          },
+        }),
+      ],
+      late_but_accepted: [],
+      completed: [],
+    };
+    mockedUseSWR.mockReturnValue({ data });
+
+    render(
+      <MemoryRouter>
+        <SurveysIndex />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getAllByText('Due today')).toHaveLength(2);
+    expect(screen.getByText('No late accepted')).toBeInTheDocument();
   });
 });
