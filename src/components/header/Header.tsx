@@ -42,6 +42,8 @@ function Header() {
       return <CommonHeader title="Check-In" />;
     case '/share':
       return <CommonHeader title={t('header.share')} />;
+    case '/reimbursement':
+      return <CommonHeader title={t('header.reimbursement')} />;
     case '/questions':
       return <SubHeader title={t('header.questions')} />;
     case '/my/pings':
