@@ -5,6 +5,11 @@ import useSWR from 'swr';
 
 import SubHeader from '@components/sub-header/SubHeader';
 import { TITLE_HEADER_HEIGHT } from '@constants/layout';
+import {
+  isSurveysPaused,
+  SURVEYS_PAUSED_MESSAGE_EN,
+  SURVEYS_PAUSED_MESSAGE_KO,
+} from '@constants/surveyPause';
 import { Colors, Layout, Typo } from '@design-system';
 import i18n from '@i18n/index';
 import { Bucket, SurveyIndexEntry } from '@models/survey';
@@ -61,6 +66,19 @@ const CadenceChip = styled.span`
   border: 1px solid ${Colors.LIGHT_GRAY};
   background: ${Colors.WHITE};
   color: ${Colors.DARK_GRAY};
+`;
+
+// Banner shown across the top of the surveys index while the maintenance
+// window is active. Uses a soft purple bg so it reads as informational
+// (not an error), and lives above all bucket sections so users see it
+// before scanning their available list. Auto-hides when the pause lifts.
+const PauseBanner = styled(Layout.FlexRow)`
+  width: 100%;
+  background: #f3e8ff;
+  border: 1px solid #8700ff;
+  border-radius: 12px;
+  padding: 12px 16px;
+  gap: 8px;
 `;
 
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
@@ -125,10 +143,19 @@ function SurveysIndex() {
   const hasLate = data.late_but_accepted.length > 0;
   const hasCompleted = dailyCompletedCount > 0 || nonDailyCompleted.length > 0;
 
+  const paused = isSurveysPaused();
+
   return (
     <MainScrollContainer>
       <SubHeader title={t('index_title')} />
       <Page>
+        {paused && (
+          <PauseBanner>
+            <Typo type="body-medium" color="PRIMARY">
+              🛠️ {pickLocalized(SURVEYS_PAUSED_MESSAGE_EN, SURVEYS_PAUSED_MESSAGE_KO)}
+            </Typo>
+          </PauseBanner>
+        )}
         {!hasAvailable && !hasLate && !hasCompleted && (
           <Typo type="body-medium" color="DARK_GRAY">
             {t('empty_index')}

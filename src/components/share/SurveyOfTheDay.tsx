@@ -2,6 +2,11 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
+import {
+  isSurveysPaused,
+  SURVEYS_PAUSED_MESSAGE_EN,
+  SURVEYS_PAUSED_MESSAGE_KO,
+} from '@constants/surveyPause';
 import { Typo } from '@design-system';
 import { useSurveyOfTheDay } from '@hooks/useSurveyOfTheDay';
 import i18n from '@i18n/index';
@@ -20,19 +25,21 @@ const ColorCard = styled.div`
   text-align: left;
 `;
 
-const ActionButton = styled.div`
+const ActionButton = styled.div<{ $disabled?: boolean }>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 10px 24px;
   border-radius: 12px;
   background-color: rgba(255, 255, 255, 0.95);
-  cursor: pointer;
+  cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ $disabled }) => ($disabled ? 0.5 : 1)};
+  pointer-events: ${({ $disabled }) => ($disabled ? 'none' : 'auto')};
   align-self: flex-start;
   -webkit-tap-highlight-color: transparent;
 
   &:active {
-    opacity: 0.8;
+    opacity: ${({ $disabled }) => ($disabled ? 0.5 : 0.8)};
   }
 `;
 
@@ -73,6 +80,28 @@ function SurveyOfTheDay() {
       {pickLocalized(survey.title_en, survey.title_ko)}
     </Typo>
   );
+
+  // Temporary maintenance gate — keep the card visible (so users know
+  // there IS a Survey of the Day today) but show the fix-in-progress
+  // message and disable the action button so taps can't navigate into
+  // the half-broken answer flow. Auto-lifts once SURVEYS_PAUSED_UNTIL
+  // passes (no second deploy needed).
+  if (isSurveysPaused()) {
+    return (
+      <ColorCard>
+        {sectionTitle}
+        {surveyTitle}
+        <Typo type="title-medium" color="WHITE">
+          {pickLocalized(SURVEYS_PAUSED_MESSAGE_EN, SURVEYS_PAUSED_MESSAGE_KO)}
+        </Typo>
+        <ActionButton $disabled aria-disabled="true">
+          <Typo type="label-large" fontWeight={600}>
+            {t('start_survey')}
+          </Typo>
+        </ActionButton>
+      </ColorCard>
+    );
+  }
 
   if (survey.user_has_responded) {
     return (
