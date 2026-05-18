@@ -64,15 +64,6 @@ const RowHeader = styled.div`
   width: 100%;
 `;
 
-const CadenceChip = styled.span`
-  border-radius: 8px;
-  padding: 4px 8px;
-  font-size: 14px;
-  border: 1px solid ${Colors.LIGHT_GRAY};
-  background: ${Colors.WHITE};
-  color: ${Colors.DARK_GRAY};
-`;
-
 // Banner shown across the top of the surveys index while the maintenance
 // window is active. Uses a soft purple bg so it reads as informational
 // (not an error), and lives above all bucket sections so users see it
@@ -129,7 +120,6 @@ function SurveysIndex() {
         <Typo type="title-medium" color="BLACK">
           {pickLocalized(entry.survey.title_en, entry.survey.title_ko)}
         </Typo>
-        <CadenceChip>{t(`cadence.${entry.cadence}`)}</CadenceChip>
         {bucket === 'available_now' && (
           <DeadlineBadge
             windowEnd={entry.window_end}
