@@ -6,7 +6,6 @@ import React, {
   useCallback,
   useEffect,
   useRef,
-  useState,
 } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { SWRConfig } from 'swr';
@@ -83,16 +82,14 @@ function Root() {
   const closeBrowseModePicker = useBoundStore((state) => state.closeBrowseModePicker);
   const location = useLocation();
   const navigate = useNavigate();
-  const [browseModeCustomizePending, setBrowseModeCustomizePending] = useState(false);
 
   useEffect(() => {
     if (location.pathname !== '/discover') return;
     const params = new URLSearchParams(location.search);
-    if (params.get('browse_mode') !== 'customize') return;
+    if (params.get('browse_mode') !== 'picker') return;
     if (myProfile?.current_ver !== VersionType.VER_W) return;
 
     openBrowseModePicker();
-    setBrowseModeCustomizePending(true);
     params.delete('browse_mode');
     const search = params.toString();
     navigate(
@@ -111,10 +108,6 @@ function Root() {
     navigate,
     openBrowseModePicker,
   ]);
-
-  const handleBrowseModeCustomizeOpened = useCallback(() => {
-    setBrowseModeCustomizePending(false);
-  }, []);
 
   useEffect(() => {
     console.debug('featureFlags', featureFlags);
@@ -304,8 +297,6 @@ function Root() {
           <BrowseModeSessionPrompt
             visible={browseModePrompt.shouldShow || isBrowseModePickerOpen}
             fullScreen={browseModePrompt.shouldShow}
-            initialCustomizeSource={browseModeCustomizePending ? 'new' : null}
-            onInitialCustomizeOpened={handleBrowseModeCustomizeOpened}
             onDismiss={
               browseModePrompt.shouldShow ? browseModePrompt.dismiss : closeBrowseModePicker
             }

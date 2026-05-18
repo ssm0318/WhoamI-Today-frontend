@@ -11,7 +11,7 @@ interface Props {
   onUploadSubmit?: (file: File, context?: string) => void;
 }
 
-const PRIMARY_PAYLOADS = new Set(['admin', 'start_onboarding', 'resume_onboarding']);
+const PRIMARY_PAYLOADS = new Set(['start_onboarding', 'resume_onboarding']);
 
 export function BotCard({
   payload,

@@ -37,6 +37,21 @@ import { useChatSocketProvider } from './_hooks/useChatSocketProvider';
 import { getWitBotReplyRevealDelay } from './_utils/witBotReplyPacing';
 
 const NEAR_BOTTOM_PX = 120;
+const WIT_BOT_USERNAME = 'wit_bot';
+const ADMIN_ESCALATION_TEXTS = new Set([
+  'admin',
+  'call admin',
+  'call_admin',
+  'call in admin',
+  'help admin',
+  'human',
+  'operator',
+  '어드민',
+  '어드민 호출',
+  '관리자',
+  '사람',
+  '운영자',
+]);
 
 // Insert a message into the list at its chronological position. Both REST
 // (postChatMessage response) and WebSocket (incoming) paths use this so a
@@ -273,23 +288,34 @@ function Chat() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
-  const handleMessageSent = (newMsg: PostChatMessageRes) => {
-    const botReplies = newMsg.bot_replies ?? [];
-    justSentIdsRef.current.add(newMsg.id);
-    setPrevScrollHeight(scrollRef.current?.clientHeight);
-    setMessages((prev) => {
-      return insertChronologically(prev, newMsg);
-    });
-    if (botReplies.length) {
-      setPendingBotReplies((prev) => [
-        ...prev,
-        ...botReplies.map((reply, index) => ({
-          message: { ...reply, is_read: true },
-          revealIndex: index,
-        })),
-      ]);
-    }
-  };
+  const handleMessageSent = useCallback(
+    (newMsg: PostChatMessageRes) => {
+      const botReplies = newMsg.bot_replies ?? [];
+      justSentIdsRef.current.add(newMsg.id);
+      setPrevScrollHeight(scrollRef.current?.clientHeight);
+      setMessages((prev) => {
+        return insertChronologically(prev, newMsg);
+      });
+      const isWitBotThread = username === WIT_BOT_USERNAME;
+      const isMyAdminRequest =
+        newMsg.sender.id === currentUser?.id &&
+        ADMIN_ESCALATION_TEXTS.has((newMsg.content || '').trim().toLowerCase());
+      if (isWitBotThread && isMyAdminRequest && newMsg.chat_room_id) {
+        navigate(`/chats/group/${newMsg.chat_room_id}`, { replace: true });
+        return;
+      }
+      if (botReplies.length) {
+        setPendingBotReplies((prev) => [
+          ...prev,
+          ...botReplies.map((reply, index) => ({
+            message: { ...reply, is_read: true },
+            revealIndex: index,
+          })),
+        ]);
+      }
+    },
+    [currentUser?.id, navigate, username],
+  );
 
   useEffect(() => {
     if (!pendingBotReplies.length) {
@@ -340,7 +366,7 @@ function Chat() {
         }
       }
     },
-    [navigate, userId],
+    [handleMessageSent, navigate, userId],
   );
 
   const handleBotMultiSelectSubmit = useCallback(
@@ -357,7 +383,7 @@ function Chat() {
         // Silent.
       }
     },
-    [userId],
+    [handleMessageSent, userId],
   );
 
   const handleBotUploadSubmit = useCallback(
@@ -378,7 +404,7 @@ function Chat() {
         // Silent.
       }
     },
-    [userId],
+    [handleMessageSent, userId],
   );
 
   const handleImageLoaded = (messageId: number) => {
