@@ -21,6 +21,10 @@ const Page = styled(Layout.FlexCol)`
   width: 100%;
   padding: 16px;
   padding-top: ${TITLE_HEADER_HEIGHT + 16}px;
+  /* Extra breathing room below the last entry so the bottom-nav doesn't
+     visually crowd the final card; matches the spacing pattern used on
+     other mobile-bottom-nav pages. */
+  padding-bottom: 80px;
   gap: 16px;
   background: ${Colors.LIGHT};
   min-height: 100%;
