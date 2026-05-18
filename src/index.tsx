@@ -59,6 +59,7 @@ import PinnedPosts from './routes/pinned-posts/PinnedPosts';
 import QuestionResponsesThread from './routes/questions/QuestionResponsesThread';
 import Reactions from './routes/Reactions';
 import ReceivedPrompts from './routes/ReceivedPrompts';
+import Reimbursement from './routes/reimbursement/Reimbursement';
 import ResearchIntro from './routes/ResearchIntro';
 import AllResponses from './routes/responses/AllResponses';
 import NewResponse from './routes/responses/NewResponse';
@@ -232,6 +233,10 @@ const router = createBrowserRouter([
           { path: ':slug/answer', element: <SurveyAnswer /> },
           { path: ':slug/done', element: <SurveyDone /> },
         ],
+      },
+      {
+        path: 'reimbursement',
+        element: <Reimbursement />,
       },
       {
         path: 'update',

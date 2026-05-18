@@ -30,6 +30,7 @@ interface SideMenuItem {
 const SIDE_MENU_LIST: SideMenuItem[] = [
   { key: 'my_profile', emoji: '👤', path: '/my' },
   { key: 'surveys', emoji: '📊', path: '/surveys' },
+  { key: 'reimbursement', emoji: '💰', path: '/reimbursement' },
   { key: 'settings', emoji: '⚙️', path: '/settings' },
 ];
 
