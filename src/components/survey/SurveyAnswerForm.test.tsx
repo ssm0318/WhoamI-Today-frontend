@@ -1,5 +1,9 @@
 /* eslint-env jest */
 
+import { render, screen } from '@testing-library/react';
+import type { ReactNode } from 'react';
+import { MemoryRouter } from 'react-router-dom';
+
 import type { DraftAnswers } from '../../hooks/useSurveyDraft';
 import type { SurveyQuestion } from '../../models/survey';
 
@@ -7,8 +11,69 @@ import {
   isBaselineCorrectionQuestion,
   shouldShowBaselineCorrectionInput,
 } from './per-friend/baselineCorrection';
+import { PerFriendCard } from './per-friend/PerFriendCard';
 import { getInitialSurveyPageIndex } from './surveyPageResume';
 import { buildSurveyAnswerPayload } from './surveySubmitPayload';
+
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string, options?: { value?: number } | string) => {
+      if (key === 'baseline_label') return 'When you added them:';
+      if (key === 'baseline_closeness_value') return `${(options as { value?: number }).value}/5`;
+      if (key === 'baseline_change_button') return 'Yeah, I should modify that';
+      if (key === 'baseline_change_hint') {
+        return 'Keep this earlier rating unless it was a genuine mistake.';
+      }
+      if (key === 'baseline_correction_prompt') return 'What should the earlier rating have been?';
+      if (typeof options === 'string') return options;
+      return key;
+    },
+  }),
+}));
+
+jest.mock(
+  '@design-system',
+  () => {
+    const React = jest.requireActual<typeof import('react')>('react');
+    function MockLayout({ children, ...props }: { children?: ReactNode }) {
+      const domProps = { ...(props as Record<string, unknown>) };
+      ['alignItems', 'bgColor', 'flex', 'gap', 'justifyContent', 'ph', 'pv', 'w'].forEach((key) => {
+        delete domProps[key];
+      });
+      return React.createElement('div', domProps, children);
+    }
+    function MockTypo({ children }: { children?: ReactNode }) {
+      return React.createElement('span', null, children);
+    }
+
+    return {
+      Colors: {
+        BLACK: '#000',
+        DARK_GRAY: '#555',
+        LIGHT: '#f8f8f8',
+        LIGHT_GRAY: '#ddd',
+        MEDIUM_GRAY: '#999',
+        PRIMARY: '#8700ff',
+        WHITE: '#fff',
+      },
+      Layout: {
+        FlexCol: MockLayout,
+        FlexRow: MockLayout,
+      },
+      Typo: MockTypo,
+    };
+  },
+  { virtual: true },
+);
+
+jest.mock(
+  '@i18n/index',
+  () => ({
+    __esModule: true,
+    default: { language: 'en' },
+  }),
+  { virtual: true },
+);
 
 const question = (
   overrides: Partial<SurveyQuestion> & Pick<SurveyQuestion, 'id' | 'order' | 'type'>,
@@ -117,6 +182,40 @@ describe('buildSurveyAnswerPayload', () => {
 });
 
 describe('baseline correction gate', () => {
+  it('does not render the standalone baseline summary row', () => {
+    const currentQuestion = question({
+      id: 11,
+      order: 2,
+      type: 'per_friend_likert_5',
+      slug: 'phase1_friend_closeness_current',
+      prompt_en: 'How close do you feel right now?',
+    });
+    const correctionQuestion = question({
+      id: 12,
+      order: 3,
+      type: 'per_friend_likert_5',
+      slug: 'phase1_friend_closeness_corrected_baseline',
+    });
+
+    render(
+      <MemoryRouter>
+        <PerFriendCard
+          friendId={101}
+          friendUsername="adoor_2"
+          baselineCloseness={1}
+          questions={[currentQuestion, correctionQuestion]}
+          getValue={() => undefined}
+          setValue={() => undefined}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.queryByText('When you added them:')).not.toBeInTheDocument();
+    expect(screen.queryByText('1/5')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Other/)).not.toBeInTheDocument();
+    expect(screen.getByText('Yeah, I should modify that')).toBeInTheDocument();
+  });
+
   it('hides the correction picker until the user explicitly opts in', () => {
     const correctionQuestion = question({
       id: 12,

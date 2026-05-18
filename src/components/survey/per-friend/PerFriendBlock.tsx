@@ -34,7 +34,6 @@ type FriendGroup = {
   friendId: number;
   friendUsername: string;
   baselineCloseness: number | null;
-  baselineRelationshipType: string | null;
   questions: SurveyQuestion[];
 };
 
@@ -52,7 +51,6 @@ function groupByFriend(questions: SurveyQuestion[]): FriendGroup[] {
         friendId: tid,
         friendUsername: q.target_user_username ?? '',
         baselineCloseness: q.baseline_closeness ?? null,
-        baselineRelationshipType: q.baseline_relationship_type ?? null,
         questions: [],
       });
     }
@@ -92,7 +90,6 @@ export function PerFriendBlock({ questions, answers, setPerFriendAnswer }: PerFr
           friendId={g.friendId}
           friendUsername={g.friendUsername}
           baselineCloseness={g.baselineCloseness}
-          baselineRelationshipType={g.baselineRelationshipType}
           questions={g.questions}
           getValue={(qid) => getValue(qid, g.friendId)}
           setValue={(qid, value) => setPerFriendAnswer(qid, g.friendId, value)}

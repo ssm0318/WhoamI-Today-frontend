@@ -34,14 +34,6 @@ const FriendLink = styled(Link)`
   }
 `;
 
-const BaselineRow = styled(Layout.FlexRow)`
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 8px 10px;
-  background: ${Colors.LIGHT};
-  border-radius: 8px;
-`;
-
 const QuestionBlock = styled(Layout.FlexCol)`
   gap: 6px;
 `;
@@ -73,7 +65,6 @@ export interface PerFriendCardProps {
   friendId: number;
   friendUsername: string;
   baselineCloseness: number | null;
-  baselineRelationshipType: string | null;
   // Questions for THIS friend, in source order. Each one is a virtual
   // expansion of a PER_FRIEND_QUESTION_TYPES source row.
   questions: SurveyQuestion[];
@@ -90,7 +81,6 @@ export function PerFriendCard({
   friendId,
   friendUsername,
   baselineCloseness,
-  baselineRelationshipType,
   questions,
   getValue,
   setValue,
@@ -106,22 +96,6 @@ export function PerFriendCard({
           <FriendLink to={`/users/${friendUsername}`}>@{friendUsername}</FriendLink>
         </Typo>
       </Layout.FlexRow>
-
-      {hasBaseline && (
-        <BaselineRow>
-          <Typo type="label-medium" color="DARK_GRAY">
-            {t('baseline_label')}
-          </Typo>
-          <Typo type="label-medium" color="BLACK">
-            {t('baseline_closeness_value', { value: baselineCloseness })}
-          </Typo>
-          {baselineRelationshipType && (
-            <Typo type="label-medium" color="DARK_GRAY">
-              · {t(`relationship_type.${baselineRelationshipType}`, baselineRelationshipType)}
-            </Typo>
-          )}
-        </BaselineRow>
-      )}
 
       {questions.map((q) => {
         // Hide the corrected_baseline question if there's no baseline to
