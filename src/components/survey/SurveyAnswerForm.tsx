@@ -19,8 +19,16 @@ import { submitSurveyResponse } from '@utils/apis/survey';
 import { ChoiceChips } from './ChoiceChips';
 import { FreeTextInput } from './FreeTextInput';
 import { LIKERT_NA_VALUE, LikertChips } from './LikertChips';
-import { isPerFriendBlockComplete, PerFriendBlock } from './per-friend/PerFriendBlock';
+import { PerFriendBlock } from './per-friend/PerFriendBlock';
 import { SliderInput } from './SliderInput';
+import {
+  getInitialSurveyPageIndex,
+  groupQuestionsIntoPages,
+  hasValue,
+  isDisplayOnly,
+  isSurveyPageAnswered,
+} from './surveyPageResume';
+import type { SurveyAnswerValue, SurveyPage } from './surveyPageResume';
 
 // Inclusive (min, max) per likert variant — mirrors backend
 // surveys/models.py LIKERT_RANGES. Adding a new variant: extend both.
@@ -86,72 +94,14 @@ interface SurveyAnswerFormProps {
 
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
-// display_only carries no answer; treat it as "answered" for navigation
-// purposes so the user can advance past intro / section-break cards.
-const isDisplayOnly = (q: SurveyQuestion) => q.type === 'display_only';
-
-type AnswerValue =
-  | number
-  | string
-  | null
-  | (number | string)[]
-  | Record<string, number | string | null | (number | string)[]>
-  | undefined;
-
-// One renderable page: either a single question (the existing behavior)
-// or a block of consecutive per_friend_* questions. Per-friend blocks
-// render all friends on one scrollable page, with one PerFriendCard
-// per friend grouping the friend's inputs together.
-type Page =
-  | { kind: 'single'; question: SurveyQuestion }
-  | { kind: 'per_friend_block'; questions: SurveyQuestion[] };
-
-function groupQuestionsIntoPages(questions: SurveyQuestion[]): Page[] {
-  const pages: Page[] = [];
-  let buffer: SurveyQuestion[] = [];
-  const flush = () => {
-    if (buffer.length > 0) {
-      pages.push({ kind: 'per_friend_block', questions: buffer });
-      buffer = [];
-    }
-  };
-  questions.forEach((q) => {
-    if (PER_FRIEND_QUESTION_TYPES.has(q.type)) {
-      buffer.push(q);
-    } else {
-      flush();
-      pages.push({ kind: 'single', question: q });
-    }
-  });
-  flush();
-  return pages;
-}
-
-// `null` is a meaningful answer on likert_5_na (the NA_SENTINEL — a
-// recorded "not applicable" pick). `undefined` means the user hasn't
-// engaged with the question yet. Treat these distinctly: hasValue and
-// isAnswered both accept null as present, only undefined is "missing".
-const hasValue = (value: AnswerValue): boolean => {
-  if (value === undefined) return false;
-  if (typeof value === 'string') return value.trim().length > 0;
-  if (Array.isArray(value)) return value.length > 0;
-  return true;
-};
-
-const isAnswered = (question: SurveyQuestion, value: AnswerValue) => {
-  if (isDisplayOnly(question)) return true;
-  if (!question.required) return true;
-  if (value === undefined) return false;
-  if (typeof value === 'string') return value.trim().length > 0;
-  if (Array.isArray(value)) return value.length > 0;
-  return true;
-};
-
 // Evaluate a conditional_display rule against the controlling question's
 // current answer. Returns true when the question SHOULD be shown.
 // Unknown / missing dependency slug fails open (visible) — defensive
 // against author typos so the survey never silently skips everything.
-const evaluateCondition = (rule: ConditionalDisplay, controllerValue: AnswerValue): boolean => {
+const evaluateCondition = (
+  rule: ConditionalDisplay,
+  controllerValue: SurveyAnswerValue,
+): boolean => {
   if (controllerValue === undefined || controllerValue === null) return false;
   if (rule.show_when_value !== undefined) {
     return controllerValue === rule.show_when_value;
@@ -213,10 +163,7 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
   const pages = useMemo(() => groupQuestionsIntoPages(questions), [questions]);
   const total = pages.length;
 
-  const isPageAnswered = (page: Page): boolean => {
-    if (page.kind === 'single') return isAnswered(page.question, answers[page.question.id]);
-    return isPerFriendBlockComplete(page.questions, answers);
-  };
+  const isPageAnswered = (page: SurveyPage): boolean => isSurveyPageAnswered(page, answers);
 
   // Clamp index when the visible-question list shrinks (e.g. user
   // changes their category answer, removing later branches).
@@ -225,13 +172,12 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
     if (index > total - 1) setIndex(total - 1);
   }, [total, index]);
 
-  // After hydration, jump to the first unanswered PAGE (or last if all answered).
-  // We jump on pages, not questions, so a half-filled per-friend block lands
-  // the user back on that block instead of one specific friend's row.
+  // After hydration, resume only when a real draft answer exists. A fresh
+  // survey must start at page 1 even when that page is display_only intro
+  // copy, because the intro is part of the participant-facing flow.
   useEffect(() => {
     if (!hydrated || total === 0) return;
-    const firstUnanswered = pages.findIndex((p) => !isPageAnswered(p));
-    setIndex(firstUnanswered === -1 ? total - 1 : firstUnanswered);
+    setIndex(getInitialSurveyPageIndex(questions, answers));
     // intentionally only run on first hydration
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated]);
@@ -350,7 +296,7 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
         return;
       }
       const value = answers[q.id];
-      if (!hasValue(value as AnswerValue)) return;
+      if (!hasValue(value)) return;
       payload.push({
         question_id: q.id,
         value: value as number | string | null | (number | string)[],
