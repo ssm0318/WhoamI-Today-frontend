@@ -8,6 +8,7 @@ import HighlightQuestionSection from '@components/discover/HighlightQuestionSect
 import ProfileSuggestionCard from '@components/discover/ProfileSuggestionCard/ProfileSuggestionCard';
 import SelectInterestSection from '@components/discover/SelectInterestSection/SelectInterestSection';
 import SelectPersonaSection from '@components/discover/SelectPersonaSection/SelectPersonaSection';
+import SurveyPausedCard from '@components/discover/SurveyPausedCard/SurveyPausedCard';
 import SurveyResultsCard from '@components/discover/SurveyResultsCard/SurveyResultsCard';
 import UsernameSuggestionCard from '@components/discover/UsernameSuggestionCard/UsernameSuggestionCard';
 import SharedPlaylistSection, {
@@ -19,6 +20,7 @@ import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
 import { DEFAULT_MARGIN } from '@constants/layout';
+import { isSurveysPaused } from '@constants/surveyPause';
 import { Layout, Typo } from '@design-system';
 import { useChipCategories } from '@hooks/useChipCategories';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
@@ -212,6 +214,16 @@ function Discover() {
     };
   }, [pastSurveysData]);
 
+  // Surface the "surveys are paused, back at 4pm PT today" card on the
+  // digest. Participants who only ever open this tab would otherwise
+  // silently assume no survey is due today and skip the commitment.
+  // Re-evaluates each render so once `isSurveysPaused()` flips back, the
+  // card disappears without a refresh.
+  const surveyPausedCard: DiscoverResultItem | null = useMemo(
+    () => (isSurveysPaused() ? { type: 'SurveyPaused' as const } : null),
+    [],
+  );
+
   // Inject synthetic cards at specific positions in the flattened feed
   const feedWithInjections = useMemo(() => {
     if (!discoverData) return [];
@@ -225,7 +237,7 @@ function Discover() {
     // disappear on their own once the user fills the corresponding fields, so
     // rotating them across days hides actionable nudges instead of helping.
     const selectedCards = (
-      [surveyResultsCard, profileSuggestionCard, usernameSuggestionCard] as const
+      [surveyPausedCard, surveyResultsCard, profileSuggestionCard, usernameSuggestionCard] as const
     ).filter((c) => c !== null) as DiscoverResultItem[];
 
     const result: DiscoverResultItem[] = [...flatItems];
@@ -239,7 +251,13 @@ function Discover() {
       });
 
     return result;
-  }, [discoverData, profileSuggestionCard, surveyResultsCard, usernameSuggestionCard]);
+  }, [
+    discoverData,
+    profileSuggestionCard,
+    surveyResultsCard,
+    surveyPausedCard,
+    usernameSuggestionCard,
+  ]);
 
   // If the active browse mode says to hide synthetic digest cards, drop them here.
   const hideSyntheticCards = !!activeBrowseMode?.config.sections.hide_synthetic_digest_cards;
@@ -251,6 +269,7 @@ function Discover() {
       if (
         item.type === 'ProfileSuggestion' ||
         item.type === 'SurveyResults' ||
+        item.type === 'SurveyPaused' ||
         item.type === 'UsernameSuggestion'
       ) {
         return !hideSyntheticCards;
@@ -335,6 +354,8 @@ function Discover() {
           );
         case 'SurveyResults':
           return <SurveyResultsCard key={`survey-results-${index}`} card={item.body} />;
+        case 'SurveyPaused':
+          return <SurveyPausedCard key={`survey-paused-${index}`} />;
         case 'UsernameSuggestion':
           return (
             <UsernameSuggestionCard key={`username-suggestion-${index}`} suggestion={item.body} />

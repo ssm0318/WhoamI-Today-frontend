@@ -133,6 +133,11 @@ export type DiscoverResultItem =
   | {
       type: 'UsernameSuggestion';
       body: UsernameSuggestionCardBody;
+    }
+  // Synthetic card injected only while surveys are paused for maintenance.
+  // No body — the card pulls its copy from constants/surveyPause.
+  | {
+      type: 'SurveyPaused';
     };
 
 export interface DigestMissionSection {

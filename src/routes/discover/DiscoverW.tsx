@@ -9,6 +9,7 @@ import { formatFullDate } from '@components/_common/prompt-summary-card/PromptSu
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
 import HighlightQuestionSection from '@components/discover/HighlightQuestionSection/HighlightQuestionSection';
 import ProfileSuggestionCard from '@components/discover/ProfileSuggestionCard/ProfileSuggestionCard';
+import SurveyPausedCard from '@components/discover/SurveyPausedCard/SurveyPausedCard';
 import SharedPlaylistSection, {
   SharedTrack,
 } from '@components/friends/shared-playlist/SharedPlaylistSection';
@@ -17,6 +18,7 @@ import NoteItem from '@components/note/note-item/NoteItem';
 import NoteLoader from '@components/note/note-loader/NoteLoader';
 import ResponseItem from '@components/response/response-item/ResponseItem';
 import { DEFAULT_MARGIN } from '@constants/layout';
+import { isSurveysPaused } from '@constants/surveyPause';
 import { Colors, Layout, Typo } from '@design-system';
 import { useChipCategories } from '@hooks/useChipCategories';
 import { useRestoreScrollPosition } from '@hooks/useRestoreScrollPosition';
@@ -151,6 +153,7 @@ type DigestFeedItem =
   | { type: 'music-card' }
   | { type: 'today-question-card'; question: DailyQuestion }
   | { type: 'profile-suggestion-card'; suggestion: ProfileSuggestionCardBody }
+  | { type: 'survey-paused-card' }
   | { type: 'post'; post: Note | Response | MissionGroupItemModel };
 
 const hashString = (value: string) => {
@@ -308,13 +311,19 @@ function DiscoverW() {
     ];
     const windowSeed = hashString(windowKeyParts.join('|'));
 
-    // prepare legacy cards (today question, profile suggestion)
+    // prepare legacy cards (today question, profile suggestion, paused-survey notice)
     const legacyCards: DigestFeedItem[] = [];
     if (todayQuestion) {
       legacyCards.push({ type: 'today-question-card', question: todayQuestion });
     }
     if (profileSuggestionCard) {
       legacyCards.push({ type: 'profile-suggestion-card', suggestion: profileSuggestionCard });
+    }
+    // Surface the "surveys are being fixed, back at 4pm PT today" card on the
+    // digest. Participants who only ever open this tab would otherwise
+    // silently assume no survey is due today and skip the commitment.
+    if (isSurveysPaused()) {
+      legacyCards.push({ type: 'survey-paused-card' });
     }
 
     // combine daily + legacy into one shuffled cards pool so their internal order is randomized
@@ -554,6 +563,8 @@ function DiscoverW() {
                       suggestion={item.suggestion}
                     />
                   );
+                case 'survey-paused-card':
+                  return <SurveyPausedCard key="survey-paused" />;
                 case 'post':
                   if (item.post.type === POST_TYPE.MISSION_GROUP) {
                     const group = item.post as MissionGroupItemModel;
