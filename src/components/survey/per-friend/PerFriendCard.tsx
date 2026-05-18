@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -8,6 +9,10 @@ import { SurveyOptionValue, SurveyQuestion } from '@models/survey';
 
 import { ChoiceChips } from '../ChoiceChips';
 import { LikertChips } from '../LikertChips';
+import {
+  isBaselineCorrectionQuestion,
+  shouldShowBaselineCorrectionInput,
+} from './baselineCorrection';
 
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
@@ -39,6 +44,24 @@ const BaselineRow = styled(Layout.FlexRow)`
 
 const QuestionBlock = styled(Layout.FlexCol)`
   gap: 6px;
+`;
+
+const CorrectionGate = styled(Layout.FlexCol)`
+  gap: 8px;
+  padding: 10px;
+  background: ${Colors.LIGHT};
+  border-radius: 8px;
+`;
+
+const CorrectionButton = styled.button`
+  align-self: flex-start;
+  border: 1px solid ${Colors.PRIMARY};
+  border-radius: 999px;
+  padding: 7px 12px;
+  background: ${Colors.WHITE};
+  color: ${Colors.PRIMARY};
+  font-size: 13px;
+  font-weight: 600;
 `;
 
 const QuestionPrompt = styled(Typo)`
@@ -74,6 +97,7 @@ export function PerFriendCard({
 }: PerFriendCardProps) {
   const { t } = useTranslation('translation', { keyPrefix: 'surveys.per_friend' });
   const hasBaseline = baselineCloseness !== null;
+  const [requestedCorrections, setRequestedCorrections] = useState<Record<number, boolean>>({});
 
   return (
     <Card data-friend-id={friendId}>
@@ -106,10 +130,33 @@ export function PerFriendCard({
         const isBaselineCorrection = q.slug.endsWith('_corrected_baseline');
         if (isBaselineCorrection && !hasBaseline) return null;
         const value = getValue(q.id);
+        const showCorrectionInput = shouldShowBaselineCorrectionInput({
+          question: q,
+          hasBaseline,
+          correctionRequested: !!requestedCorrections[q.id],
+          existingValue: value,
+        });
+        if (isBaselineCorrectionQuestion(q) && !showCorrectionInput) {
+          return (
+            <CorrectionGate key={q.id}>
+              <Typo type="body-medium" color="DARK_GRAY">
+                {t('baseline_change_hint')}
+              </Typo>
+              <CorrectionButton
+                type="button"
+                onClick={() => setRequestedCorrections((prev) => ({ ...prev, [q.id]: true }))}
+              >
+                {t('baseline_change_button')}
+              </CorrectionButton>
+            </CorrectionGate>
+          );
+        }
         return (
           <QuestionBlock key={q.id}>
             <QuestionPrompt type="body-medium" color="BLACK">
-              {pickLocalized(q.prompt_en, q.prompt_ko)}
+              {isBaselineCorrection
+                ? t('baseline_correction_prompt')
+                : pickLocalized(q.prompt_en, q.prompt_ko)}
             </QuestionPrompt>
             {q.type === 'per_friend_likert_5' && (
               <LikertChips

@@ -1351,6 +1351,9 @@
     "per_friend": {
       "baseline_label": "처음 추가했을 때:",
       "baseline_closeness_value": "{{value}}/5",
+      "baseline_change_hint": "이전 답변이 실제 실수였던 경우에만 수정해 주세요. 실수를 바로잡는 것은 괜찮고 불이익은 없습니다.",
+      "baseline_change_button": "네, 수정해야 해요",
+      "baseline_correction_prompt": "그때의 평가는 몇 점이었어야 하나요?",
       "relationship_type": {
         "school_friend": "학교 친구",
         "coworker": "직장 동료",

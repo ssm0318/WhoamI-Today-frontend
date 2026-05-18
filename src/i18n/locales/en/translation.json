@@ -1364,6 +1364,9 @@
         "per_friend": {
             "baseline_label": "When you added them:",
             "baseline_closeness_value": "{{value}}/5",
+            "baseline_change_hint": "Keep this earlier rating unless it was a genuine mistake. Correcting a mistake is okay and is not penalized.",
+            "baseline_change_button": "Yeah, I should modify that",
+            "baseline_correction_prompt": "What should the earlier rating have been?",
             "relationship_type": {
                 "school_friend": "School friend",
                 "coworker": "Coworker",

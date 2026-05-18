@@ -3,6 +3,10 @@
 import type { DraftAnswers } from '../../hooks/useSurveyDraft';
 import type { SurveyQuestion } from '../../models/survey';
 
+import {
+  isBaselineCorrectionQuestion,
+  shouldShowBaselineCorrectionInput,
+} from './per-friend/baselineCorrection';
 import { getInitialSurveyPageIndex } from './surveyPageResume';
 import { buildSurveyAnswerPayload } from './surveySubmitPayload';
 
@@ -109,5 +113,34 @@ describe('buildSurveyAnswerPayload', () => {
       { question_id: 11, target_user_id: 101, value: 4 },
       { question_id: 11, target_user_id: 102, value: 2 },
     ]);
+  });
+});
+
+describe('baseline correction gate', () => {
+  it('hides the correction picker until the user explicitly opts in', () => {
+    const correctionQuestion = question({
+      id: 12,
+      order: 3,
+      type: 'per_friend_likert_5',
+      slug: 'phase1_friend_closeness_corrected_baseline',
+    });
+
+    expect(isBaselineCorrectionQuestion(correctionQuestion)).toBe(true);
+    expect(
+      shouldShowBaselineCorrectionInput({
+        question: correctionQuestion,
+        hasBaseline: true,
+        correctionRequested: false,
+        existingValue: undefined,
+      }),
+    ).toBe(false);
+    expect(
+      shouldShowBaselineCorrectionInput({
+        question: correctionQuestion,
+        hasBaseline: true,
+        correctionRequested: true,
+        existingValue: undefined,
+      }),
+    ).toBe(true);
   });
 });

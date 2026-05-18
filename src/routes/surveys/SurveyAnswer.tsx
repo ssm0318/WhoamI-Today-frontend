@@ -4,7 +4,7 @@ import useSWR, { mutate } from 'swr';
 
 import SubHeader from '@components/sub-header/SubHeader';
 import { SurveyAnswerForm } from '@components/survey/SurveyAnswerForm';
-import { TITLE_HEADER_HEIGHT } from '@constants/layout';
+import { BOTTOM_TABBAR_HEIGHT, TITLE_HEADER_HEIGHT } from '@constants/layout';
 import { Colors, Layout, Typo } from '@design-system';
 import { SURVEY_OF_THE_DAY_KEY } from '@hooks/useSurveyOfTheDay';
 import i18n from '@i18n/index';
@@ -16,9 +16,13 @@ const Page = styled(Layout.FlexCol)`
   width: 100%;
   padding: 16px;
   padding-top: ${TITLE_HEADER_HEIGHT + 16}px;
+  padding-bottom: ${BOTTOM_TABBAR_HEIGHT + 16}px;
   gap: 12px;
   background: ${Colors.LIGHT};
-  min-height: 100vh;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 `;
 
 const Card = styled(Layout.FlexCol)`
