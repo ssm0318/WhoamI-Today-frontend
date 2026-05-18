@@ -76,3 +76,43 @@ export const SystemMessageRow = styled(Layout.FlexRow).attrs({
   ph: 17,
   pv: 4,
 })``;
+
+export const TypingBubble = styled(Layout.FlexRow).attrs({
+  gap: 3,
+  alignItems: 'center',
+  pv: 9,
+  ph: 12,
+})`
+  width: 48px;
+  border-radius: 13px 13px 13px 0px;
+  background: ${({ theme }) => theme.LIGHT};
+`;
+
+export const TypingDot = styled.span`
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: ${({ theme }) => theme.MEDIUM_GRAY};
+  animation: wit-bot-typing-dot 1s ease-in-out infinite;
+
+  &:nth-child(2) {
+    animation-delay: 0.14s;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 0.28s;
+  }
+
+  @keyframes wit-bot-typing-dot {
+    0%,
+    80%,
+    100% {
+      opacity: 0.35;
+      transform: translateY(0);
+    }
+    40% {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+  }
+`;

@@ -5,9 +5,16 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Icon from '@components/_common/icon/Icon';
 import { Loader } from '@components/_common/loader/Loader.styled';
+import ProfileImage from '@components/_common/profile-image/ProfileImage';
 import { SwipeToReply } from '@components/_common/swipe-to-reply/SwipeToReply';
 import ChatMessageInput from '@components/chat/chat-message-input/ChatMessageInput';
 import ChatMessageItem from '@components/chat/chat-message-item/ChatMessageItem';
+import {
+  LeftMessageWrapper,
+  SenderAvatarSlot,
+  TypingBubble,
+  TypingDot,
+} from '@components/chat/chat-message-item/ChatMessageItem.styled';
 import ChatRequestBar from '@components/chat/chat-request-bar/ChatRequestBar';
 import SideMenu from '@components/header/side-menu/SideMenu';
 import SubHeader from '@components/sub-header/SubHeader';
@@ -27,6 +34,7 @@ import { getMyProfile } from '@utils/apis/my';
 import { getUserProfile } from '@utils/apis/user';
 import { MainScrollContainer } from '../Root';
 import { useChatSocketProvider } from './_hooks/useChatSocketProvider';
+import { getWitBotReplyRevealDelay } from './_utils/witBotReplyPacing';
 
 const NEAR_BOTTOM_PX = 120;
 
@@ -44,6 +52,28 @@ function insertChronologically<T extends { id: number; created_at: string }>(
   while (i > 0 && new Date(list[i - 1].created_at).getTime() > ts) i -= 1;
   if (i === list.length) return [...list, msg];
   return [...list.slice(0, i), msg, ...list.slice(i)];
+}
+
+interface PendingBotReply {
+  message: ChatMessage;
+  revealIndex: number;
+}
+
+function WitBotTypingIndicator({ sender }: { sender: ChatMessage['sender'] }) {
+  return (
+    <LeftMessageWrapper aria-label={`${sender.username} is typing`}>
+      <SenderAvatarSlot>
+        <ProfileImage size={32} imageUrl={sender.profile_image} username={sender.username} />
+      </SenderAvatarSlot>
+      <Layout.FlexCol ml={6}>
+        <TypingBubble>
+          <TypingDot />
+          <TypingDot />
+          <TypingDot />
+        </TypingBubble>
+      </Layout.FlexCol>
+    </LeftMessageWrapper>
+  );
 }
 
 function Chat() {
@@ -72,6 +102,8 @@ function Chat() {
   const [firstLoad, setFirstLoad] = useState(true);
   const [replyTarget, setReplyTarget] = useState<ChatMessage | null>(null);
   const [showSideMenu, setShowSideMenu] = useState(false);
+  const [pendingBotReplies, setPendingBotReplies] = useState<PendingBotReply[]>([]);
+  const [typingBotSender, setTypingBotSender] = useState<ChatMessage['sender'] | null>(null);
 
   const [areFriends, setAreFriends] = useState<boolean | null>(null);
   const [sentChatRequest, setSentChatRequest] = useState(false);
@@ -242,19 +274,45 @@ function Chat() {
   }, [messages]);
 
   const handleMessageSent = (newMsg: PostChatMessageRes) => {
+    const botReplies = newMsg.bot_replies ?? [];
     justSentIdsRef.current.add(newMsg.id);
     setPrevScrollHeight(scrollRef.current?.clientHeight);
     setMessages((prev) => {
-      let next = insertChronologically(prev, newMsg);
-      // wit_bot fast path: bot replies ride back inline so we render them
-      // immediately instead of waiting for a WS round-trip.
-      newMsg.bot_replies?.forEach((reply) => {
-        next = insertChronologically(next, { ...reply, is_read: true });
-        justSentIdsRef.current.add(reply.id);
-      });
-      return next;
+      return insertChronologically(prev, newMsg);
     });
+    if (botReplies.length) {
+      setPendingBotReplies((prev) => [
+        ...prev,
+        ...botReplies.map((reply, index) => ({
+          message: { ...reply, is_read: true },
+          revealIndex: index,
+        })),
+      ]);
+    }
   };
+
+  useEffect(() => {
+    if (!pendingBotReplies.length) {
+      setTypingBotSender(null);
+      return undefined;
+    }
+
+    const nextReply = pendingBotReplies[0];
+    setTypingBotSender(nextReply.message.sender);
+    const timerId = setTimeout(() => {
+      justSentIdsRef.current.add(nextReply.message.id);
+      setPrevScrollHeight(scrollRef.current?.clientHeight);
+      setMessages((prev) => insertChronologically(prev, nextReply.message));
+      setPendingBotReplies((prev) => prev.slice(1));
+    }, getWitBotReplyRevealDelay(nextReply.message, nextReply.revealIndex));
+
+    return () => clearTimeout(timerId);
+  }, [pendingBotReplies]);
+
+  useEffect(() => {
+    if (!typingBotSender || !scrollRef.current) return;
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [typingBotSender, pendingBotReplies.length]);
 
   const handleBotButtonClick = useCallback(
     async (button: BotButton) => {
@@ -441,6 +499,9 @@ function Chat() {
                 />
               </SwipeToReply>
             ))}
+            {pendingBotReplies.length > 0 && typingBotSender && (
+              <WitBotTypingIndicator sender={typingBotSender} />
+            )}
           </Layout.FlexCol>
         )}
         {!firstLoad && refinedMessages.length === 0 && (

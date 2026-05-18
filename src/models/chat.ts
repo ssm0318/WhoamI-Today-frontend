@@ -133,7 +133,7 @@ export interface PostChatMessageRes extends ChatMessage {
   /**
    * For wit_bot 1-on-1 rooms only: the bot's reply messages created
    * synchronously by the engine inside the same POST. Backend ships them
-   * inline so the client doesn't have to wait for a WebSocket hop.
+   * inline so the client can reveal them without waiting for a WebSocket hop.
    */
   bot_replies?: ChatMessage[];
 }
