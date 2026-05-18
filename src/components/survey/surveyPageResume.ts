@@ -114,6 +114,17 @@ const hasSavedAnswer = (question: SurveyQuestion, value: SurveyAnswerValue): boo
   return hasValue(value);
 };
 
+const isDisplayOnlyPage = (page: SurveyPage): boolean =>
+  page.kind === 'single' && isDisplayOnly(page.question);
+
+const includeAttachedDisplayOnlyPages = (pages: SurveyPage[], index: number): number => {
+  let nextIndex = index;
+  while (nextIndex > 0 && isDisplayOnlyPage(pages[nextIndex - 1])) {
+    nextIndex -= 1;
+  }
+  return nextIndex;
+};
+
 export function getInitialSurveyPageIndex(questions: SurveyQuestion[], answers: DraftAnswers) {
   const pages = groupQuestionsIntoPages(questions);
   if (pages.length === 0) return 0;
@@ -122,5 +133,6 @@ export function getInitialSurveyPageIndex(questions: SurveyQuestion[], answers: 
   if (!hasAnySavedAnswer) return 0;
 
   const firstUnanswered = pages.findIndex((p) => !isSurveyPageAnswered(p, answers));
-  return firstUnanswered === -1 ? pages.length - 1 : firstUnanswered;
+  const targetIndex = firstUnanswered === -1 ? pages.length - 1 : firstUnanswered;
+  return includeAttachedDisplayOnlyPages(pages, targetIndex);
 }

@@ -54,4 +54,25 @@ describe('getInitialSurveyPageIndex', () => {
 
     expect(getInitialSurveyPageIndex(questions, answers)).toBe(2);
   });
+
+  it('backs up to attached display-only instructions when the target answer has a draft', () => {
+    const questions = [
+      question({ id: 1, order: 1, type: 'display_only', content_en: 'Read this first.' }),
+      question({ id: 2, order: 2, type: 'single_choice' }),
+    ];
+    const answers: DraftAnswers = { 2: 'instagram' };
+
+    expect(getInitialSurveyPageIndex(questions, answers)).toBe(0);
+  });
+
+  it('backs up to section instructions before the first unanswered question', () => {
+    const questions = [
+      question({ id: 1, order: 1, type: 'single_choice' }),
+      question({ id: 2, order: 2, type: 'display_only', content_en: 'Next section.' }),
+      question({ id: 3, order: 3, type: 'single_choice' }),
+    ];
+    const answers: DraftAnswers = { 1: 'answered' };
+
+    expect(getInitialSurveyPageIndex(questions, answers)).toBe(1);
+  });
 });
