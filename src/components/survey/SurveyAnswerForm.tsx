@@ -3,17 +3,10 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { Colors, Layout, Typo } from '@design-system';
-import { isPerFriendAnswerMap, useSurveyDraft } from '@hooks/useSurveyDraft';
+import { useSurveyDraft } from '@hooks/useSurveyDraft';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import i18n from '@i18n/index';
-import {
-  ConditionalDisplay,
-  PER_FRIEND_QUESTION_TYPES,
-  Survey,
-  SurveyAnswerInput,
-  SurveyOptionValue,
-  SurveyQuestion,
-} from '@models/survey';
+import { ConditionalDisplay, Survey, SurveyOptionValue, SurveyQuestion } from '@models/survey';
 import { submitSurveyResponse } from '@utils/apis/survey';
 
 import { ChoiceChips } from './ChoiceChips';
@@ -24,11 +17,11 @@ import { SliderInput } from './SliderInput';
 import {
   getInitialSurveyPageIndex,
   groupQuestionsIntoPages,
-  hasValue,
   isDisplayOnly,
   isSurveyPageAnswered,
 } from './surveyPageResume';
 import type { SurveyAnswerValue, SurveyPage } from './surveyPageResume';
+import { buildSurveyAnswerPayload } from './surveySubmitPayload';
 
 // Inclusive (min, max) per likert variant — mirrors backend
 // surveys/models.py LIKERT_RANGES. Adding a new variant: extend both.
@@ -274,34 +267,7 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
         });
       }
     }
-    // Build submission payload, fanning out per-friend questions into
-    // one row per (question_id, target_user_id, value). Skip display_only,
-    // skip conditionally-hidden questions, skip cells with no value.
-    const payload: SurveyAnswerInput[] = [];
-    questions.forEach((q) => {
-      if (isDisplayOnly(q)) return;
-      if (PER_FRIEND_QUESTION_TYPES.has(q.type)) {
-        const cell = answers[q.id];
-        if (!isPerFriendAnswerMap(cell)) return;
-        Object.entries(cell).forEach(([tidStr, value]) => {
-          if (value === undefined) return;
-          if (typeof value === 'string' && value.trim().length === 0) return;
-          if (Array.isArray(value) && value.length === 0) return;
-          payload.push({
-            question_id: q.id,
-            target_user_id: Number(tidStr),
-            value: value as number | string | null | (number | string)[],
-          });
-        });
-        return;
-      }
-      const value = answers[q.id];
-      if (!hasValue(value)) return;
-      payload.push({
-        question_id: q.id,
-        value: value as number | string | null | (number | string)[],
-      });
-    });
+    const payload = buildSurveyAnswerPayload(questions, answers);
     try {
       await submitSurveyResponse(survey.slug, payload);
       // Backend captures the response, but a typed `survey_submitted`

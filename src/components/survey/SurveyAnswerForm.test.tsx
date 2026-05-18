@@ -4,6 +4,7 @@ import type { DraftAnswers } from '../../hooks/useSurveyDraft';
 import type { SurveyQuestion } from '../../models/survey';
 
 import { getInitialSurveyPageIndex } from './surveyPageResume';
+import { buildSurveyAnswerPayload } from './surveySubmitPayload';
 
 const question = (
   overrides: Partial<SurveyQuestion> & Pick<SurveyQuestion, 'id' | 'order' | 'type'>,
@@ -74,5 +75,39 @@ describe('getInitialSurveyPageIndex', () => {
     const answers: DraftAnswers = { 1: 'answered' };
 
     expect(getInitialSurveyPageIndex(questions, answers)).toBe(1);
+  });
+});
+
+describe('buildSurveyAnswerPayload', () => {
+  it('submits each per-friend answer once per target user', () => {
+    const perFriendQuestion = question({
+      id: 11,
+      order: 2,
+      type: 'per_friend_likert_5',
+      slug: 'phase1_friend_closeness_current',
+      prompt_en: 'How close do you feel right now?',
+      low_label_en: 'Not close',
+      high_label_en: 'Very close',
+    });
+    const questions: SurveyQuestion[] = [
+      {
+        ...perFriendQuestion,
+        target_user_id: 101,
+        target_user_username: 'alice',
+        baseline_closeness: 3,
+      },
+      {
+        ...perFriendQuestion,
+        target_user_id: 102,
+        target_user_username: 'bob',
+        baseline_closeness: 4,
+      },
+    ];
+    const answers: DraftAnswers = { 11: { 101: 4, 102: 2 } };
+
+    expect(buildSurveyAnswerPayload(questions, answers)).toEqual([
+      { question_id: 11, target_user_id: 101, value: 4 },
+      { question_id: 11, target_user_id: 102, value: 2 },
+    ]);
   });
 });
