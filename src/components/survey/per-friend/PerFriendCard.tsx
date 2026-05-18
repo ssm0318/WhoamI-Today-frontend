@@ -114,7 +114,7 @@ export function PerFriendCard({
           return (
             <CorrectionGate key={q.id}>
               <Typo type="body-medium" color="DARK_GRAY">
-                {t('baseline_change_hint')}
+                {t('baseline_change_hint', { value: baselineCloseness })}
               </Typo>
               <CorrectionButton
                 type="button"

@@ -22,7 +22,9 @@ jest.mock('react-i18next', () => ({
       if (key === 'baseline_closeness_value') return `${(options as { value?: number }).value}/5`;
       if (key === 'baseline_change_button') return 'Yeah, I should modify that';
       if (key === 'baseline_change_hint') {
-        return 'Keep this earlier rating unless it was a genuine mistake.';
+        return `Your earlier rating was ${
+          (options as { value?: number }).value
+        }/5. Only fix genuine mistakes; this won't be treated as bad faith or penalized.`;
       }
       if (key === 'baseline_correction_prompt') return 'What should the earlier rating have been?';
       if (typeof options === 'string') return options;
@@ -213,6 +215,11 @@ describe('baseline correction gate', () => {
     expect(screen.queryByText('When you added them:')).not.toBeInTheDocument();
     expect(screen.queryByText('1/5')).not.toBeInTheDocument();
     expect(screen.queryByText(/Other/)).not.toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Your earlier rating was 1/5. Only fix genuine mistakes; this won't be treated as bad faith or penalized.",
+      ),
+    ).toBeInTheDocument();
     expect(screen.getByText('Yeah, I should modify that')).toBeInTheDocument();
   });
 
