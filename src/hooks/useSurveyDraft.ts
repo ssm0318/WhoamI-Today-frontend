@@ -12,9 +12,22 @@ import { useBoundStore } from '@stores/useBoundStore';
 // single multi_choice question may receive SurveyOptionValue[] from
 // ChoiceChips, and array variance forbids `number[] | string[]` from
 // accepting `(number | string)[]`.
-export type DraftAnswerValue = number | string | null | (number | string)[];
+export type ScalarAnswerValue = number | string | null | (number | string)[];
+
+// For PER_FRIEND_QUESTION_TYPES: one map from target_user_id → scalar
+// answer. A single SurveyQuestion.id then covers N rows in the submit
+// payload (one per friend). Keys are stringified user IDs so the whole
+// shape JSON-serializes for localStorage round-trip.
+export type PerFriendAnswerMap = Record<string, ScalarAnswerValue>;
+
+export type DraftAnswerValue = ScalarAnswerValue | PerFriendAnswerMap;
 
 export type DraftAnswers = Record<number, DraftAnswerValue>;
+
+export const isPerFriendAnswerMap = (
+  value: DraftAnswerValue | undefined,
+): value is PerFriendAnswerMap =>
+  value !== null && value !== undefined && typeof value === 'object' && !Array.isArray(value);
 
 interface DraftPayload {
   answers: DraftAnswers;
@@ -70,6 +83,24 @@ export function useSurveyDraft(slug: string | undefined) {
     [key],
   );
 
+  // Merge-update a single (questionId, targetUserId) cell without rebuilding
+  // the whole per-friend map. Used by per_friend_* question renderers where
+  // each row mutates one friend's answer independently. Auto-saves to the
+  // same draft localStorage entry as setAnswer.
+  const setPerFriendAnswer = useCallback(
+    (questionId: number, targetUserId: number, value: ScalarAnswerValue) => {
+      setAnswers((prev) => {
+        const existing = prev[questionId];
+        const baseMap: PerFriendAnswerMap = isPerFriendAnswerMap(existing) ? existing : {};
+        const merged: PerFriendAnswerMap = { ...baseMap, [String(targetUserId)]: value };
+        const next = { ...prev, [questionId]: merged };
+        if (key) writeDraft(key, next);
+        return next;
+      });
+    },
+    [key],
+  );
+
   const clear = useCallback(() => {
     if (key) {
       try {
@@ -81,5 +112,5 @@ export function useSurveyDraft(slug: string | undefined) {
     setAnswers({});
   }, [key]);
 
-  return { answers, setAnswer, clear, hydrated };
+  return { answers, setAnswer, setPerFriendAnswer, clear, hydrated };
 }

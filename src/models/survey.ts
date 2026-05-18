@@ -11,7 +11,19 @@ export type QuestionType =
   | 'multi_choice'
   | 'free_text'
   | 'slider'
-  | 'display_only';
+  | 'display_only'
+  | 'per_friend_likert_5'
+  | 'per_friend_single_choice';
+
+// Per-friend types render once per friend the viewer currently has. The
+// backend expands each per_friend_* source row into N virtual SurveyQuestion
+// rows (one per friend) at GET time, each carrying target_user_* and
+// baseline_* metadata. Frontend re-groups consecutive per_friend rows by
+// target_user_id and renders all of one friend's inputs on a single card.
+export const PER_FRIEND_QUESTION_TYPES = new Set<QuestionType>([
+  'per_friend_likert_5',
+  'per_friend_single_choice',
+]);
 
 // `value` is union: backend single_choice / multi_choice options use string
 // values like "mission_suggest" alongside numeric likert option values.
@@ -74,6 +86,16 @@ export interface SurveyQuestion {
   slider_min_value: number | null;
   slider_max_value: number | null;
   options: SurveyOption[];
+  // Per-friend virtual-question metadata. Populated by the backend on
+  // expanded rows for PER_FRIEND_QUESTION_TYPES; null/undefined on every
+  // other question. `target_user_id` identifies which friend this virtual
+  // row is about; baseline_* surfaces the FriendEvaluation row written
+  // when the user added that friend (NULL when no baseline exists, e.g.
+  // friend was added before the evaluation flow shipped).
+  target_user_id?: number | null;
+  target_user_username?: string | null;
+  baseline_closeness?: number | null;
+  baseline_relationship_type?: string | null;
 }
 
 export interface Survey {
@@ -111,6 +133,10 @@ export interface SurveyAnswerInput {
   // is string. `null` is the NA_SENTINEL on likert_5_na questions — a
   // valid recorded answer meaning "not applicable", excluded from scoring.
   value: number | string | null | (number | string)[];
+  // Required for PER_FRIEND_QUESTION_TYPES; absent on every other type.
+  // Identifies which friend the answer is about. Backend rejects submits
+  // whose target_user_id isn't on the submitter's friend list.
+  target_user_id?: number;
 }
 
 export type SuppressedReason =
