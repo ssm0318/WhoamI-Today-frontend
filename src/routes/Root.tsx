@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useEffect,
   useRef,
+  useState,
 } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { SWRConfig } from 'swr';
@@ -28,6 +29,7 @@ import { useBrowseModeTabDurations } from '@hooks/useBrowseModeTabDurations';
 import { useCheckInFreshnessPrompt } from '@hooks/useCheckInFreshnessPrompt';
 import useFcm from '@hooks/useFcm';
 import { useLastVisitedTabPersistence } from '@hooks/useLastVisitedTabPersistence';
+import { VersionType } from '@models/api/user';
 import { SetAppStateData } from '@models/app';
 import { useBoundStore } from '@stores/useBoundStore';
 import { MainWrapper, RootContainer } from '@styles/wrappers';
@@ -77,9 +79,42 @@ function Root() {
   // Mirror the user's current tab to localStorage for cold-start restore.
   useLastVisitedTabPersistence();
   const isBrowseModePickerOpen = useBoundStore((state) => state.isBrowseModePickerOpen);
+  const openBrowseModePicker = useBoundStore((state) => state.openBrowseModePicker);
   const closeBrowseModePicker = useBoundStore((state) => state.closeBrowseModePicker);
   const location = useLocation();
   const navigate = useNavigate();
+  const [browseModeCustomizePending, setBrowseModeCustomizePending] = useState(false);
+
+  useEffect(() => {
+    if (location.pathname !== '/discover') return;
+    const params = new URLSearchParams(location.search);
+    if (params.get('browse_mode') !== 'customize') return;
+    if (myProfile?.current_ver !== VersionType.VER_W) return;
+
+    openBrowseModePicker();
+    setBrowseModeCustomizePending(true);
+    params.delete('browse_mode');
+    const search = params.toString();
+    navigate(
+      {
+        pathname: location.pathname,
+        search: search ? `?${search}` : '',
+        hash: location.hash,
+      },
+      { replace: true },
+    );
+  }, [
+    location.hash,
+    location.pathname,
+    location.search,
+    myProfile?.current_ver,
+    navigate,
+    openBrowseModePicker,
+  ]);
+
+  const handleBrowseModeCustomizeOpened = useCallback(() => {
+    setBrowseModeCustomizePending(false);
+  }, []);
 
   useEffect(() => {
     console.debug('featureFlags', featureFlags);
@@ -269,6 +304,8 @@ function Root() {
           <BrowseModeSessionPrompt
             visible={browseModePrompt.shouldShow || isBrowseModePickerOpen}
             fullScreen={browseModePrompt.shouldShow}
+            initialCustomizeSource={browseModeCustomizePending ? 'new' : null}
+            onInitialCustomizeOpened={handleBrowseModeCustomizeOpened}
             onDismiss={
               browseModePrompt.shouldShow ? browseModePrompt.dismiss : closeBrowseModePicker
             }

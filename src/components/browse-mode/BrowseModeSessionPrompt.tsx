@@ -19,6 +19,7 @@ import { ComponentVisibility, DEFAULT_VISIBILITY, SocialBattery } from '@models/
 import { useBoundStore } from '@stores/useBoundStore';
 import { logBrowseModePick } from '@utils/apis/browseMode';
 import { postCheckIn } from '@utils/apis/checkIn';
+import { logOnboardingEvent } from '@utils/apis/onboardingEvents';
 import { writeLastPickedAt, writeSnoozeUntilEndOfDay } from '@utils/browseModeActiveSession';
 import { HiddenModeKey, readHiddenModes, writeHiddenModes } from '@utils/browseModeHiddenModes';
 import { saveLastPickedMode } from '@utils/browseModeLastPick';
@@ -29,10 +30,14 @@ import BrowseModeWishlistSheet from './BrowseModeWishlistSheet';
 
 const SYNC_PREF_KEY = 'browse_mode_sync_battery_pref';
 
+type CustomizeOpenSource = 'new' | 'edit' | 'clone_built_in' | 'restore_snapshot';
+
 interface BrowseModeSessionPromptProps {
   visible: boolean;
   onDismiss: () => void;
   onFinish: () => void;
+  initialCustomizeSource?: CustomizeOpenSource | null;
+  onInitialCustomizeOpened?: () => void;
   /**
    * When true, render as a full-screen takeover (opaque, blocks all underlying UI)
    * instead of the bottom-sheet style. Used for the auto-prompt at session start so
@@ -55,6 +60,8 @@ function BrowseModeSessionPrompt({
   visible,
   onDismiss,
   onFinish,
+  initialCustomizeSource = null,
+  onInitialCustomizeOpened,
   fullScreen = false,
 }: BrowseModeSessionPromptProps) {
   const [t] = useTranslation('translation', { keyPrefix: 'browse_mode' });
@@ -181,13 +188,20 @@ function BrowseModeSessionPrompt({
   // closeCustomize starts fresh per entry.
   // Defined ahead of the customize-restore useEffect that depends on it.
   const openCustomize = useCallback(
-    (source: 'new' | 'edit' | 'clone_built_in' | 'restore_snapshot') => {
+    (source: CustomizeOpenSource) => {
       customizeOutcomeRef.current = 'pending';
       setCustomizeOpen(true);
       trackEvent('browse_mode_customize_opened', { source });
+      logOnboardingEvent('browse_mode_customize_opened', { source });
     },
     [trackEvent],
   );
+
+  useEffect(() => {
+    if (!visible || !initialCustomizeSource) return;
+    openCustomize(initialCustomizeSource);
+    onInitialCustomizeOpened?.();
+  }, [visible, initialCustomizeSource, onInitialCustomizeOpened, openCustomize]);
 
   // When the picker opens with a customize-restore snapshot in the store
   // (the preview bar's exit-X path), re-enter the customize sheet with the
