@@ -19,17 +19,28 @@ const REASON_TO_KEY: Record<NonNullable<SuppressedReason>, string> = {
   view_friend_disabled: 'reasons.view_friend_disabled',
 };
 
+type ResultsAudience = 'population' | 'friends' | 'close_friends';
+
+const RESPONDER_REASON_TO_KEY: Record<ResultsAudience, string> = {
+  population: 'reasons.too_few_responders_population',
+  friends: 'reasons.too_few_responders_friends',
+  close_friends: 'reasons.too_few_responders_close_friends',
+};
+
 interface Props {
   reason: SuppressedReason;
+  audience?: ResultsAudience;
 }
 
-export function SuppressedBucketPlaceholder({ reason }: Props) {
+export function SuppressedBucketPlaceholder({ reason, audience = 'population' }: Props) {
   const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
   if (!reason) return null;
+  const reasonKey =
+    reason === 'too_few_responders' ? RESPONDER_REASON_TO_KEY[audience] : REASON_TO_KEY[reason];
   return (
     <Wrapper>
       <Typo type="body-medium" color="DARK_GRAY">
-        {t(REASON_TO_KEY[reason])}
+        {t(reasonKey)}
       </Typo>
     </Wrapper>
   );

@@ -1342,6 +1342,7 @@
     "bucket_late_but_accepted": "기한 지났지만 답변 가능",
     "bucket_completed": "완료",
     "daily_archive_row": "일일 체크인 ({{count}}개 완료)",
+    "high_priority": "중요",
     "draft_progress": "{{progress}}% 완료",
     "was_due": "마감일 {{date}}",
     "submitted_on": "제출일 {{date}}",
@@ -1389,12 +1390,18 @@
     "reasons": {
       "too_few_friends": "친구가 5명 이상일 때 공개돼요.",
       "too_few_responders": "친구 5명 이상이 응답하면 공개돼요.",
+      "too_few_responders_population": "WIT 사용자 5명 이상이 응답하면 공개돼요.",
+      "too_few_responders_friends": "친구 5명 이상이 응답하면 공개돼요.",
+      "too_few_responders_close_friends": "친한 친구 5명 이상이 응답하면 공개돼요.",
       "too_few_close_friends": "친한 친구가 5명 이상일 때 공개돼요.",
       "delta_too_small": "친구가 친한 친구보다 5명 이상 많아야 공개돼요.",
       "view_friend_disabled": "개인정보 보호를 위해 이 결과는 친구별 보기를 제공하지 않아요."
     },
     "panel_kinds": {
       "aggregated_likert": "점수 분포",
+      "scale_score_histogram": "종합 점수 분포",
+      "slider_histogram": "응답 분포",
+      "slider_histogram_paired": "응답 지도",
       "option_counts": "선택 분포",
       "wordcloud": "자유 응답"
     },

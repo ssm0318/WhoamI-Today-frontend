@@ -1355,6 +1355,7 @@
         "bucket_late_but_accepted": "Late but accepted",
         "bucket_completed": "Completed",
         "daily_archive_row": "Daily check-ins ({{count}} completed)",
+        "high_priority": "High priority",
         "draft_progress": "{{progress}}% done",
         "was_due": "Was due {{date}}",
         "submitted_on": "Submitted {{date}}",
@@ -1402,12 +1403,18 @@
         "reasons": {
             "too_few_friends": "Available once you have 5 friends.",
             "too_few_responders": "Available once 5 of your friends have responded.",
+            "too_few_responders_population": "Available once 5 WIT users have responded.",
+            "too_few_responders_friends": "Available once 5 of your friends have responded.",
+            "too_few_responders_close_friends": "Available once 5 of your close friends have responded.",
             "too_few_close_friends": "Available once you have 5 close friends.",
             "delta_too_small": "Available once you have at least 5 more friends than close friends.",
             "view_friend_disabled": "Friend-level breakdown is disabled for this view to protect individual responses."
         },
         "panel_kinds": {
             "aggregated_likert": "Score distribution",
+            "scale_score_histogram": "Overall score distribution",
+            "slider_histogram": "Response distribution",
+            "slider_histogram_paired": "Response map",
             "option_counts": "Choices",
             "wordcloud": "Reflections"
         },

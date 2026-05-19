@@ -22,9 +22,17 @@ interface Props {
   reason: SuppressedReason;
   bucket: BucketResult | null;
   interpretation?: string;
+  audience?: 'population' | 'friends' | 'close_friends';
 }
 
-export function SurveyResultsBucket({ title, available, reason, bucket, interpretation }: Props) {
+export function SurveyResultsBucket({
+  title,
+  available,
+  reason,
+  bucket,
+  interpretation,
+  audience = 'population',
+}: Props) {
   const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
   return (
     <Section>
@@ -49,7 +57,7 @@ export function SurveyResultsBucket({ title, available, reason, bucket, interpre
           )}
         </>
       ) : (
-        <SuppressedBucketPlaceholder reason={reason} />
+        <SuppressedBucketPlaceholder reason={reason} audience={audience} />
       )}
     </Section>
   );

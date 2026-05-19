@@ -84,6 +84,21 @@ const TodoStatusBadge = styled.span`
   white-space: nowrap;
 `;
 
+const HighPriorityBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  border: 1px solid #fecdd3;
+  border-radius: 8px;
+  background: #fff1f2;
+  color: #be123c;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+`;
+
 // Banner shown across the top of the surveys index while the maintenance
 // window is active. Uses a soft purple bg so it reads as informational
 // (not an error), and lives above all bucket sections so users see it
@@ -98,6 +113,33 @@ const PauseBanner = styled(Layout.FlexRow)`
 `;
 
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
+
+const HIGH_PRIORITY_SURVEY_SLUGS = new Set([
+  'feature_eval_w',
+  'mid_study_w',
+  'mid_study_q',
+  'goal_comparison_p1',
+]);
+
+const isHighPrioritySurvey = (entry: SurveyIndexEntry): boolean =>
+  HIGH_PRIORITY_SURVEY_SLUGS.has(entry.survey.slug);
+
+const isDailyOrSotd = (entry: SurveyIndexEntry): boolean =>
+  entry.cadence === 'daily' ||
+  entry.survey.slug === 'habit_platform' ||
+  entry.survey.slug.startsWith('sotd_');
+
+const todoPriorityRank = (entry: SurveyIndexEntry): number => {
+  if (isHighPrioritySurvey(entry)) return 0;
+  if (isDailyOrSotd(entry)) return 2;
+  return 1;
+};
+
+const sortTodoEntries = (entries: SurveyIndexEntry[]): SurveyIndexEntry[] =>
+  entries
+    .map((entry, index) => ({ entry, index }))
+    .sort((a, b) => todoPriorityRank(a.entry) - todoPriorityRank(b.entry) || a.index - b.index)
+    .map(({ entry }) => entry);
 
 const formatDate = (iso: string): string => {
   // Reuse the user's locale; falls back to ISO if Intl can't parse.
@@ -137,6 +179,9 @@ function SurveysIndex() {
         <Typo type="title-medium" color="BLACK">
           {pickLocalized(entry.survey.title_en, entry.survey.title_ko)}
         </Typo>
+        {bucket !== 'completed' && isHighPrioritySurvey(entry) && (
+          <HighPriorityBadge>{t('high_priority')}</HighPriorityBadge>
+        )}
         {bucket === 'available_now' && (
           <DeadlineBadge
             windowEnd={entry.window_end}
@@ -172,7 +217,7 @@ function SurveysIndex() {
   // half-broken answer flow from this page. Late-but-accepted and Completed
   // entries are past-tense / already-open states so they stay visible.
   const availableEntries = paused ? [] : data.available_now;
-  const todoEntries = [...availableEntries, ...data.late_but_accepted];
+  const todoEntries = sortTodoEntries([...availableEntries, ...data.late_but_accepted]);
   const hasTodo = todoEntries.length > 0;
   const hasCompleted = data.completed.length > 0;
 

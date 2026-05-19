@@ -19,6 +19,7 @@ jest.mock('react-i18next', () => ({
       if (key === 'bucket_late_but_accepted') return 'Late but accepted';
       if (key === 'bucket_completed') return 'Completed';
       if (key === 'daily_archive_row') return 'Daily check-ins collapsed';
+      if (key === 'high_priority') return 'High priority';
       return key;
     },
   }),
@@ -42,12 +43,8 @@ jest.mock(
 jest.mock(
   '@components/survey/DeadlineBadge',
   () => ({
-    DeadlineBadge: ({ windowEnd, allowLate }: { windowEnd: string | null; allowLate: boolean }) => (
-      <>
-        {windowEnd && <span>Due today</span>}
-        {windowEnd && !allowLate && <span>Today only</span>}
-      </>
-    ),
+    DeadlineBadge: ({ windowEnd }: { windowEnd: string | null }) =>
+      windowEnd ? <span>Due today</span> : null,
   }),
   { virtual: true },
 );
@@ -186,13 +183,13 @@ describe('SurveysIndex', () => {
       available_now: [
         entry({
           id: 1,
-          cadence: 'biweekly',
+          cadence: 'daily',
           bucket: 'available_now',
-          allow_late: true,
+          allow_late: false,
           survey: {
-            slug: 'mid_study_w',
-            title_en: 'Phase 1 reflection: Part 1',
-            title_ko: 'Phase 1 reflection: Part 1',
+            slug: 'habit_platform',
+            title_en: 'Habitual platform',
+            title_ko: 'Habitual platform',
           },
         }),
         entry({
@@ -206,10 +203,42 @@ describe('SurveysIndex', () => {
             title_ko: 'Survey of the Day',
           },
         }),
+        entry({
+          id: 3,
+          cadence: 'biweekly',
+          bucket: 'available_now',
+          allow_late: true,
+          survey: {
+            slug: 'feature_eval_w',
+            title_en: 'Ver. W features',
+            title_ko: 'Ver. W features',
+          },
+        }),
+        entry({
+          id: 4,
+          cadence: 'biweekly',
+          bucket: 'available_now',
+          allow_late: true,
+          survey: {
+            slug: 'mid_study_w',
+            title_en: 'Phase 1 reflection: Part 1',
+            title_ko: 'Phase 1 reflection: Part 1',
+          },
+        }),
       ],
       late_but_accepted: [
         entry({
-          id: 3,
+          id: 5,
+          cadence: 'endpoint',
+          bucket: 'late_but_accepted',
+          survey: {
+            slug: 'goal_comparison_p1',
+            title_en: 'Phase 1 reflection: Part 2',
+            title_ko: 'Phase 1 reflection: Part 2',
+          },
+        }),
+        entry({
+          id: 6,
           cadence: 'weekly',
           bucket: 'late_but_accepted',
           survey: {
@@ -230,15 +259,35 @@ describe('SurveysIndex', () => {
     );
 
     expect(screen.getByText('To-do')).toBeInTheDocument();
+    expect(screen.getByText('Ver. W features')).toBeInTheDocument();
     expect(screen.getByText('Phase 1 reflection: Part 1')).toBeInTheDocument();
+    expect(screen.getByText('Phase 1 reflection: Part 2')).toBeInTheDocument();
+    expect(screen.getByText('Habitual platform')).toBeInTheDocument();
     expect(screen.getByText('Survey of the Day')).toBeInTheDocument();
     expect(screen.getByText('Week 2 reflection')).toBeInTheDocument();
-    expect(screen.getByText(/Was due/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Was due/)).toHaveLength(2);
     expect(screen.queryByText('bucket_available_now')).not.toBeInTheDocument();
     expect(screen.queryByText('bucket_late_but_accepted')).not.toBeInTheDocument();
-    expect(screen.getAllByText('Due today')).toHaveLength(2);
-    expect(screen.getByText('Today only')).toBeInTheDocument();
-    expect(screen.getByText('Late but accepted')).toBeInTheDocument();
+    expect(screen.getAllByText('Due today')).toHaveLength(4);
+    expect(screen.queryByText('Today only')).not.toBeInTheDocument();
+    expect(screen.getAllByText('High priority')).toHaveLength(3);
+    expect(screen.getAllByText('Late but accepted')).toHaveLength(2);
+
+    const bodyText = document.body.textContent ?? '';
+    const featureIndex = bodyText.indexOf('Ver. W features');
+    const phase1Index = bodyText.indexOf('Phase 1 reflection: Part 1');
+    const phase2Index = bodyText.indexOf('Phase 1 reflection: Part 2');
+    const habitIndex = bodyText.indexOf('Habitual platform');
+    const sotdIndex = bodyText.indexOf('Survey of the Day');
+    expect(featureIndex).toBeGreaterThanOrEqual(0);
+    expect(phase1Index).toBeGreaterThanOrEqual(0);
+    expect(phase2Index).toBeGreaterThanOrEqual(0);
+    expect(featureIndex).toBeLessThan(habitIndex);
+    expect(phase1Index).toBeLessThan(habitIndex);
+    expect(phase2Index).toBeLessThan(habitIndex);
+    expect(featureIndex).toBeLessThan(sotdIndex);
+    expect(phase1Index).toBeLessThan(sotdIndex);
+    expect(phase2Index).toBeLessThan(sotdIndex);
   });
 
   it('lists completed daily surveys individually instead of collapsing them into an archive row', () => {

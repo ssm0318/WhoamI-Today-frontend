@@ -75,18 +75,21 @@ function PanelView({ panel, interpretation }: { panel: ResultPanel; interpretati
         reason={panel.population_suppressed_reason}
         bucket={panel.population}
         interpretation={interpretation}
+        audience="population"
       />
       <SurveyResultsBucket
         title={t('buckets.friends')}
         available={panel.friends_available}
         reason={panel.friends_suppressed_reason}
         bucket={panel.friends}
+        audience="friends"
       />
       <SurveyResultsBucket
         title={t('buckets.close_friends')}
         available={panel.close_friends_available}
         reason={panel.close_friends_suppressed_reason}
         bucket={panel.close_friends}
+        audience="close_friends"
       />
     </PanelGroup>
   );
