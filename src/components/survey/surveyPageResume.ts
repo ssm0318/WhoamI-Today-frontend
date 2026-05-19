@@ -9,9 +9,13 @@ export type SurveyAnswerValue = DraftAnswerValue | undefined;
 
 export type SurveyPage =
   | { kind: 'single'; question: SurveyQuestion }
-  | { kind: 'per_friend_block'; questions: SurveyQuestion[] };
+  | { kind: 'per_friend_block'; questions: SurveyQuestion[] }
+  | { kind: 'feature_block'; questions: SurveyQuestion[] };
 
 export const isDisplayOnly = (q: SurveyQuestion) => q.type === 'display_only';
+
+const isFeatureRatingQuestion = (q: SurveyQuestion) =>
+  /^goal\d+_feat_/.test(q.slug) && !q.slug.endsWith('_enjoy') && !q.slug.endsWith('_dislike');
 
 export function groupQuestionsIntoPages(questions: SurveyQuestion[]): SurveyPage[] {
   const pages: SurveyPage[] = [];
@@ -22,14 +26,27 @@ export function groupQuestionsIntoPages(questions: SurveyQuestion[]): SurveyPage
       buffer = [];
     }
   };
-  questions.forEach((q) => {
+  for (let i = 0; i < questions.length; i += 1) {
+    const q = questions[i];
     if (PER_FRIEND_QUESTION_TYPES.has(q.type)) {
       buffer.push(q);
     } else {
       flush();
-      pages.push({ kind: 'single', question: q });
+      let groupedFeatureBlock = false;
+      if (isFeatureRatingQuestion(q)) {
+        const enjoy = questions[i + 1];
+        const dislike = questions[i + 2];
+        if (enjoy?.slug === `${q.slug}_enjoy` && dislike?.slug === `${q.slug}_dislike`) {
+          pages.push({ kind: 'feature_block', questions: [q, enjoy, dislike] });
+          i += 2;
+          groupedFeatureBlock = true;
+        }
+      }
+      if (!groupedFeatureBlock) {
+        pages.push({ kind: 'single', question: q });
+      }
     }
-  });
+  }
   flush();
   return pages;
 }
@@ -102,6 +119,9 @@ const isPerFriendBlockComplete = (questions: SurveyQuestion[], answers: DraftAns
 
 export const isSurveyPageAnswered = (page: SurveyPage, answers: DraftAnswers): boolean => {
   if (page.kind === 'single') return isQuestionAnswered(page.question, answers[page.question.id]);
+  if (page.kind === 'feature_block') {
+    return page.questions.every((q) => isQuestionAnswered(q, answers[q.id]));
+  }
   return isPerFriendBlockComplete(page.questions, answers);
 };
 

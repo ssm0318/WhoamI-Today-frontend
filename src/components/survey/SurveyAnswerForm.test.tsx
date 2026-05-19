@@ -12,7 +12,8 @@ import {
   shouldShowBaselineCorrectionInput,
 } from './per-friend/baselineCorrection';
 import { PerFriendCard } from './per-friend/PerFriendCard';
-import { getInitialSurveyPageIndex } from './surveyPageResume';
+import { getInitialSurveyPageIndex, groupQuestionsIntoPages } from './surveyPageResume';
+import { getVisibleSurveyQuestions } from './surveyQuestionVisibility';
 import { buildSurveyAnswerPayload } from './surveySubmitPayload';
 
 jest.mock('react-i18next', () => ({
@@ -146,6 +147,75 @@ describe('getInitialSurveyPageIndex', () => {
     const answers: DraftAnswers = { 1: 'answered' };
 
     expect(getInitialSurveyPageIndex(questions, answers)).toBe(1);
+  });
+});
+
+describe('groupQuestionsIntoPages', () => {
+  it('keeps feature rating and enjoy/dislike follow-ups on one page', () => {
+    const questions = [
+      question({
+        id: 1,
+        order: 1,
+        type: 'likert_5',
+        slug: 'goal3_feat_emoji',
+      }),
+      question({
+        id: 2,
+        order: 2,
+        type: 'free_text',
+        slug: 'goal3_feat_emoji_enjoy',
+      }),
+      question({
+        id: 3,
+        order: 3,
+        type: 'free_text',
+        slug: 'goal3_feat_emoji_dislike',
+      }),
+      question({ id: 4, order: 4, type: 'likert_5', slug: 'satisfaction' }),
+    ];
+
+    const pages = groupQuestionsIntoPages(questions);
+
+    expect(pages).toHaveLength(2);
+    expect((pages[0] as { kind: string }).kind).toBe('feature_block');
+    expect((pages[0] as { questions: SurveyQuestion[] }).questions.map((q) => q.slug)).toEqual([
+      'goal3_feat_emoji',
+      'goal3_feat_emoji_enjoy',
+      'goal3_feat_emoji_dislike',
+    ]);
+    expect((pages[1] as { kind: string }).kind).toBe('single');
+  });
+});
+
+describe('getVisibleSurveyQuestions', () => {
+  it('hides questions with the deprecated never-shown sentinel', () => {
+    const questions = [
+      question({ id: 1, order: 1, type: 'likert_5', slug: 'goal2_feat_browse' }),
+      question({
+        id: 2,
+        order: 2,
+        type: 'likert_5',
+        slug: 'goal2_feat_chatstatus',
+        conditional_display: {
+          depends_on: '__deprecated_feature_never_shown__',
+          show_when_value: '__show__',
+        },
+      }),
+      question({
+        id: 3,
+        order: 3,
+        type: 'free_text',
+        slug: 'goal2_feat_chatstatus_enjoy',
+        conditional_display: {
+          depends_on: '__deprecated_feature_never_shown__',
+          show_when_value: '__show__',
+        },
+      }),
+    ];
+
+    expect(getVisibleSurveyQuestions(questions, {}).map((q) => q.slug)).toEqual([
+      'goal2_feat_browse',
+    ]);
   });
 });
 

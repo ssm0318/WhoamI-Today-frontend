@@ -6,16 +6,11 @@ import { Colors, Layout, Typo } from '@design-system';
 import { useSurveyDraft } from '@hooks/useSurveyDraft';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import i18n from '@i18n/index';
-import {
-  ConditionalDisplay,
-  Survey,
-  SurveyOptionValue,
-  SurveyQuestion,
-  SurveySubmitResponse,
-} from '@models/survey';
+import { Survey, SurveyOptionValue, SurveyQuestion, SurveySubmitResponse } from '@models/survey';
 import { deleteSurveyDraft, submitSurveyResponse } from '@utils/apis/survey';
 
 import { ChoiceChips } from './ChoiceChips';
+import { SurveyFeatureText } from './feature-reference/SurveyFeatureText';
 import { FreeTextInput } from './FreeTextInput';
 import { LIKERT_NA_VALUE, LikertChips } from './LikertChips';
 import { PerFriendBlock } from './per-friend/PerFriendBlock';
@@ -26,7 +21,8 @@ import {
   isDisplayOnly,
   isSurveyPageAnswered,
 } from './surveyPageResume';
-import type { SurveyAnswerValue, SurveyPage } from './surveyPageResume';
+import type { SurveyPage } from './surveyPageResume';
+import { getVisibleSurveyQuestions } from './surveyQuestionVisibility';
 import { buildSurveyAnswerPayload } from './surveySubmitPayload';
 
 // Inclusive (min, max) per likert variant — mirrors backend
@@ -93,30 +89,11 @@ interface SurveyAnswerFormProps {
 
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
-// Evaluate a conditional_display rule against the controlling question's
-// current answer. Returns true when the question SHOULD be shown.
-// Unknown / missing dependency slug fails open (visible) — defensive
-// against author typos so the survey never silently skips everything.
-const evaluateCondition = (
-  rule: ConditionalDisplay,
-  controllerValue: SurveyAnswerValue,
-): boolean => {
-  if (controllerValue === undefined || controllerValue === null) return false;
-  if (rule.show_when_value !== undefined) {
-    return controllerValue === rule.show_when_value;
-  }
-  if (rule.show_when_value_not !== undefined) {
-    return controllerValue !== rule.show_when_value_not;
-  }
-  if (rule.show_when_value_in !== undefined) {
-    return rule.show_when_value_in.includes(controllerValue as SurveyOptionValue);
-  }
-  if (rule.show_when_value_includes !== undefined) {
-    if (!Array.isArray(controllerValue)) return false;
-    return (controllerValue as SurveyOptionValue[]).includes(rule.show_when_value_includes);
-  }
-  return true;
-};
+const getPageTrackingQuestionId = (page: SurveyPage) =>
+  page.kind === 'single' ? page.question.id : page.questions[0]?.id ?? 0;
+
+const getPageTrackingQuestionType = (page: SurveyPage) =>
+  page.kind === 'single' ? page.question.type : page.kind;
 
 export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerFormProps) {
   const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
@@ -150,18 +127,7 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
   // Resolves `depends_on` (slug) to the controlling question's id, then
   // looks up that id's answer.
   const questions = useMemo(() => {
-    const bySlug = new Map<string, SurveyQuestion>();
-    allQuestions.forEach((q) => {
-      if (q.slug) bySlug.set(q.slug, q);
-    });
-    return allQuestions.filter((q) => {
-      if (!q.conditional_display) return true;
-      const controller = bySlug.get(q.conditional_display.depends_on);
-      // Missing dependency slug: fail open (show) so author typos don't
-      // silently make the rest of the survey vanish.
-      if (!controller) return true;
-      return evaluateCondition(q.conditional_display, answers[controller.id]);
-    });
+    return getVisibleSurveyQuestions(allQuestions, answers);
   }, [allQuestions, answers]);
 
   // Per-friend question types render N friends on one page. Pages are the
@@ -220,23 +186,13 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
     const dwellMs = Date.now() - questionStartedAtRef.current;
     if (dwellMs >= 200 && previousIndexRef.current < pages.length) {
       const prevPage = pages[previousIndexRef.current];
-      if (prevPage.kind === 'single') {
-        trackEvent('survey_question_dwell', {
-          survey_slug: survey.slug,
-          question_id: prevPage.question.id,
-          question_index: previousIndexRef.current,
-          question_type: prevPage.question.type,
-          duration_ms: dwellMs,
-        });
-      } else {
-        trackEvent('survey_question_dwell', {
-          survey_slug: survey.slug,
-          question_id: prevPage.questions[0]?.id ?? 0,
-          question_index: previousIndexRef.current,
-          question_type: 'per_friend_block',
-          duration_ms: dwellMs,
-        });
-      }
+      trackEvent('survey_question_dwell', {
+        survey_slug: survey.slug,
+        question_id: getPageTrackingQuestionId(prevPage),
+        question_index: previousIndexRef.current,
+        question_type: getPageTrackingQuestionType(prevPage),
+        duration_ms: dwellMs,
+      });
     }
     previousIndexRef.current = index;
     questionStartedAtRef.current = Date.now();
@@ -249,7 +205,116 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
   const allAnswered = pages.every(isPageAnswered);
   const isLast = index === total - 1;
   const currentQuestion = currentPage.kind === 'single' ? currentPage.question : null;
-  const currentValue = currentQuestion ? answers[currentQuestion.id] : undefined;
+
+  const renderQuestionFields = (question: SurveyQuestion) => {
+    const value = answers[question.id];
+    return (
+      <Layout.FlexCol key={question.id} gap={6} w="100%">
+        {/* display_only carries content (intro / section break) instead
+            of a prompt + input. Render the content as the body and skip
+            the input controls. The Next button stays enabled because
+            isAnswered() returns true for display_only types. */}
+        {isDisplayOnly(question) ? (
+          <SurveyFeatureText
+            text={pickLocalized(question.content_en, question.content_ko)}
+            surveySlug={survey.slug}
+            questionSlug={question.slug}
+            type="body-large"
+            color="BLACK"
+          />
+        ) : (
+          <>
+            <SurveyFeatureText
+              text={pickLocalized(question.prompt_en, question.prompt_ko)}
+              surveySlug={survey.slug}
+              questionSlug={question.slug}
+              type="title-medium"
+              color="BLACK"
+            />
+            {(question.description_en || question.description_ko) && (
+              <SurveyFeatureText
+                text={pickLocalized(question.description_en, question.description_ko)}
+                surveySlug={survey.slug}
+                questionSlug={question.slug}
+                type="body-medium"
+                color="DARK_GRAY"
+              />
+            )}
+          </>
+        )}
+
+        {/* All likert variants render the same way: numeric chips
+            (1..max) with endpoint anchor labels. Keeps the layout
+            uniform across surveys (RSDS, HEXACO, RSQ all look the
+            same to the participant).
+            Anchor labels resolve in this priority:
+              1. Explicit low_label_* / high_label_* on the question
+              2. First / last option.label when YAML provides full
+                 per-option labels (RSQ-Brief style)
+              3. Empty (chips render with no anchor row)
+            likert_5_na keeps its N/A button below the numeric row. */}
+        {LIKERT_RANGES[question.type] &&
+          (() => {
+            const opts = [...question.options].sort((a, b) => a.order - b.order);
+            const firstOptLabel = opts[0] ? pickLocalized(opts[0].label_en, opts[0].label_ko) : '';
+            const lastOptLabel =
+              opts.length > 0
+                ? pickLocalized(opts[opts.length - 1].label_en, opts[opts.length - 1].label_ko)
+                : '';
+            const explicitLow = pickLocalized(question.low_label_en, question.low_label_ko);
+            const explicitHigh = pickLocalized(question.high_label_en, question.high_label_ko);
+            return (
+              <LikertChips
+                min={LIKERT_RANGES[question.type][0]}
+                max={LIKERT_RANGES[question.type][1]}
+                selected={value as number | null | undefined}
+                onSelect={(v) => setAnswer(question.id, v ?? LIKERT_NA_VALUE)}
+                lowLabel={explicitLow || firstOptLabel}
+                highLabel={explicitHigh || lastOptLabel}
+                naLabel={
+                  question.type === 'likert_5_na'
+                    ? pickLocalized(question.na_option_en || 'N/A', question.na_option_ko || 'N/A')
+                    : undefined
+                }
+              />
+            );
+          })()}
+        {(question.type === 'single_choice' || question.type === 'multi_choice') && (
+          <ChoiceChips
+            options={question.options.map((o) => ({
+              value: o.value,
+              label: pickLocalized(o.label_en, o.label_ko),
+            }))}
+            multi={question.type === 'multi_choice'}
+            selected={(value as SurveyOptionValue | SurveyOptionValue[] | undefined) ?? null}
+            onSelect={(v) => setAnswer(question.id, v)}
+          />
+        )}
+        {question.type === 'free_text' && (
+          <FreeTextInput
+            value={(value as string | undefined) ?? ''}
+            onChange={(v) => setAnswer(question.id, v)}
+            placeholder={
+              pickLocalized(question.placeholder_en, question.placeholder_ko) ||
+              (t('free_text_placeholder') ?? undefined)
+            }
+          />
+        )}
+        {question.type === 'slider' &&
+          question.slider_min_value !== null &&
+          question.slider_max_value !== null && (
+            <SliderInput
+              min={question.slider_min_value}
+              max={question.slider_max_value}
+              value={value as number | undefined}
+              onChange={(v) => setAnswer(question.id, v)}
+              lowLabel={pickLocalized(question.low_label_en, question.low_label_ko)}
+              highLabel={pickLocalized(question.high_label_en, question.high_label_ko)}
+            />
+          )}
+      </Layout.FlexCol>
+    );
+  };
 
   const handleNext = () => {
     if (!currentPageAnswered) return;
@@ -285,23 +350,13 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
     // on the last page.
     const lastDwellMs = Date.now() - questionStartedAtRef.current;
     if (lastDwellMs >= 200) {
-      if (currentPage.kind === 'single') {
-        trackEvent('survey_question_dwell', {
-          survey_slug: survey.slug,
-          question_id: currentPage.question.id,
-          question_index: index,
-          question_type: currentPage.question.type,
-          duration_ms: lastDwellMs,
-        });
-      } else {
-        trackEvent('survey_question_dwell', {
-          survey_slug: survey.slug,
-          question_id: currentPage.questions[0]?.id ?? 0,
-          question_index: index,
-          question_type: 'per_friend_block',
-          duration_ms: lastDwellMs,
-        });
-      }
+      trackEvent('survey_question_dwell', {
+        survey_slug: survey.slug,
+        question_id: getPageTrackingQuestionId(currentPage),
+        question_index: index,
+        question_type: getPageTrackingQuestionType(currentPage),
+        duration_ms: lastDwellMs,
+      });
     }
     const payload = buildSurveyAnswerPayload(questions, answers);
     try {
@@ -342,116 +397,11 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
             answers={answers}
             setPerFriendAnswer={setPerFriendAnswer}
           />
+        ) : currentPage.kind === 'feature_block' ? (
+          currentPage.questions.map(renderQuestionFields)
         ) : (
-          <>
-            {/* display_only carries content (intro / section break) instead
-                of a prompt + input. Render the content as the body and skip
-                the input controls. The Next button stays enabled because
-                isAnswered() returns true for display_only types. */}
-            {currentQuestion && isDisplayOnly(currentQuestion) ? (
-              <Typo type="body-large" color="BLACK">
-                {pickLocalized(currentQuestion.content_en, currentQuestion.content_ko)}
-              </Typo>
-            ) : currentQuestion ? (
-              <>
-                <Typo type="title-medium" color="BLACK">
-                  {pickLocalized(currentQuestion.prompt_en, currentQuestion.prompt_ko)}
-                </Typo>
-                {(currentQuestion.description_en || currentQuestion.description_ko) && (
-                  <Typo type="body-medium" color="DARK_GRAY">
-                    {pickLocalized(currentQuestion.description_en, currentQuestion.description_ko)}
-                  </Typo>
-                )}
-              </>
-            ) : null}
-          </>
+          currentQuestion && renderQuestionFields(currentQuestion)
         )}
-        {/* All likert variants render the same way: numeric chips
-            (1..max) with endpoint anchor labels. Keeps the layout
-            uniform across surveys (RSDS, HEXACO, RSQ all look the
-            same to the participant).
-            Anchor labels resolve in this priority:
-              1. Explicit low_label_* / high_label_* on the question
-              2. First / last option.label when YAML provides full
-                 per-option labels (RSQ-Brief style)
-              3. Empty (chips render with no anchor row)
-            likert_5_na keeps its N/A button below the numeric row. */}
-        {currentQuestion &&
-          LIKERT_RANGES[currentQuestion.type] &&
-          (() => {
-            const opts = [...currentQuestion.options].sort((a, b) => a.order - b.order);
-            const firstOptLabel = opts[0] ? pickLocalized(opts[0].label_en, opts[0].label_ko) : '';
-            const lastOptLabel =
-              opts.length > 0
-                ? pickLocalized(opts[opts.length - 1].label_en, opts[opts.length - 1].label_ko)
-                : '';
-            const explicitLow = pickLocalized(
-              currentQuestion.low_label_en,
-              currentQuestion.low_label_ko,
-            );
-            const explicitHigh = pickLocalized(
-              currentQuestion.high_label_en,
-              currentQuestion.high_label_ko,
-            );
-            return (
-              <LikertChips
-                min={LIKERT_RANGES[currentQuestion.type][0]}
-                max={LIKERT_RANGES[currentQuestion.type][1]}
-                selected={currentValue as number | null | undefined}
-                onSelect={(v) => setAnswer(currentQuestion.id, v ?? LIKERT_NA_VALUE)}
-                lowLabel={explicitLow || firstOptLabel}
-                highLabel={explicitHigh || lastOptLabel}
-                naLabel={
-                  currentQuestion.type === 'likert_5_na'
-                    ? pickLocalized(
-                        currentQuestion.na_option_en || 'N/A',
-                        currentQuestion.na_option_ko || 'N/A',
-                      )
-                    : undefined
-                }
-              />
-            );
-          })()}
-        {currentQuestion &&
-          (currentQuestion.type === 'single_choice' || currentQuestion.type === 'multi_choice') && (
-            <ChoiceChips
-              options={currentQuestion.options.map((o) => ({
-                value: o.value,
-                label: pickLocalized(o.label_en, o.label_ko),
-              }))}
-              multi={currentQuestion.type === 'multi_choice'}
-              selected={
-                (currentValue as SurveyOptionValue | SurveyOptionValue[] | undefined) ?? null
-              }
-              onSelect={(v) => setAnswer(currentQuestion.id, v)}
-            />
-          )}
-        {currentQuestion && currentQuestion.type === 'free_text' && (
-          <FreeTextInput
-            value={(currentValue as string | undefined) ?? ''}
-            onChange={(v) => setAnswer(currentQuestion.id, v)}
-            placeholder={
-              pickLocalized(currentQuestion.placeholder_en, currentQuestion.placeholder_ko) ||
-              (t('free_text_placeholder') ?? undefined)
-            }
-          />
-        )}
-        {currentQuestion &&
-          currentQuestion.type === 'slider' &&
-          currentQuestion.slider_min_value !== null &&
-          currentQuestion.slider_max_value !== null && (
-            <SliderInput
-              min={currentQuestion.slider_min_value}
-              max={currentQuestion.slider_max_value}
-              value={currentValue as number | undefined}
-              onChange={(v) => setAnswer(currentQuestion.id, v)}
-              lowLabel={pickLocalized(currentQuestion.low_label_en, currentQuestion.low_label_ko)}
-              highLabel={pickLocalized(
-                currentQuestion.high_label_en,
-                currentQuestion.high_label_ko,
-              )}
-            />
-          )}
       </Layout.FlexCol>
 
       <NavRow>
