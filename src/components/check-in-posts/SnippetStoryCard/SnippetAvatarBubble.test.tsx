@@ -52,7 +52,7 @@ const makeStory = (
 });
 
 describe('SnippetAvatarBubble', () => {
-  it('labels friend and close-friend snapshots differently in the rail', () => {
+  it('keeps visibility icons off profile photos and only labels close-friend privacy', () => {
     render(
       <>
         <SnippetAvatarBubble story={makeStory(1, 'friends', 'friend_author')} onClick={jest.fn()} />
@@ -60,12 +60,19 @@ describe('SnippetAvatarBubble', () => {
           story={makeStory(2, 'close_friends', 'close_author')}
           onClick={jest.fn()}
         />
+        <SnippetAvatarBubble story={makeStory(3, 'public', 'public_author')} onClick={jest.fn()} />
       </>,
     );
 
-    expect(screen.getByRole('img', { name: 'Friends snapshot' })).toBeInTheDocument();
-    expect(screen.getByRole('img', { name: 'Close friends snapshot' })).toBeInTheDocument();
-    expect(screen.getByTestId('icon-default_friend')).toBeInTheDocument();
-    expect(screen.getByTestId('icon-close_friend')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'close_author close friends snapshot' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'public_author daily snapshot' }),
+    ).toBeInTheDocument();
+    expect(screen.queryByTestId('icon-default_friend')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('icon-close_friend')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('icon-eye')).not.toBeInTheDocument();
+    expect(screen.queryByRole('img', { name: 'Public snapshot' })).not.toBeInTheDocument();
   });
 });

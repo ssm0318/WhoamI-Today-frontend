@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
-import { IconNames, SvgIcon, Typo } from '@design-system';
+import { Typo } from '@design-system';
 import { CheckInPostStory } from '@models/checkInPost';
 import * as S from './SnippetAvatarBubble.styled';
 
@@ -9,21 +9,11 @@ interface SnippetAvatarBubbleProps {
   onClick: () => void;
 }
 
-type VisibilityMeta = {
-  icon: IconNames;
-  label: string;
-};
-
-const VISIBILITY_META: Record<CheckInPostStory['visibility'], VisibilityMeta> = {
-  friends: { icon: 'default_friend', label: 'Friends snapshot' },
-  close_friends: { icon: 'close_friend', label: 'Close friends snapshot' },
-  public: { icon: 'eye', label: 'Public snapshot' },
-};
-
 function SnippetAvatarBubble({ story, onClick }: SnippetAvatarBubbleProps) {
   const { author_detail, has_unread } = story;
   const allRead = has_unread === false;
-  const visibilityMeta = VISIBILITY_META[story.visibility];
+  const snapshotLabel =
+    story.visibility === 'close_friends' ? 'close friends snapshot' : 'daily snapshot';
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
@@ -31,7 +21,7 @@ function SnippetAvatarBubble({ story, onClick }: SnippetAvatarBubbleProps) {
   };
 
   return (
-    <S.Bubble onClick={handleClick}>
+    <S.Bubble onClick={handleClick} aria-label={`${author_detail.username} ${snapshotLabel}`}>
       <S.RingWrapper>
         <S.Ring $read={allRead} $visibility={story.visibility}>
           <ProfileImage
@@ -40,13 +30,6 @@ function SnippetAvatarBubble({ story, onClick }: SnippetAvatarBubbleProps) {
             size={60}
           />
         </S.Ring>
-        <S.VisibilityBadge
-          $visibility={story.visibility}
-          role="img"
-          aria-label={visibilityMeta.label}
-        >
-          <SvgIcon name={visibilityMeta.icon} size={12} color="WHITE" fill="WHITE" />
-        </S.VisibilityBadge>
       </S.RingWrapper>
       <Typo type="label-small" color="BLACK" numberOfLines={1}>
         {author_detail.username}
