@@ -3,7 +3,7 @@ import { Colors } from '@design-system';
 import { CheckInPostVisibility } from '@models/checkInPost';
 
 const getVisibilityColor = (visibility: CheckInPostVisibility, read?: boolean) => {
-  if (visibility === 'close_friends') return Colors.TERTIARY_PINK;
+  if (visibility === 'close_friends') return Colors.SECONDARY;
   if (read) return Colors.LIGHT_GRAY;
   return Colors.PRIMARY;
 };
