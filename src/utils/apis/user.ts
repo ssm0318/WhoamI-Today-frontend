@@ -372,7 +372,6 @@ export interface EvaluationParams {
   evaluation_closeness?: number;
   evaluation_relationship_type?: string;
   evaluation_relationship_type_detail?: string;
-  evaluation_skipped?: boolean;
 }
 
 export const requestFriend = async ({

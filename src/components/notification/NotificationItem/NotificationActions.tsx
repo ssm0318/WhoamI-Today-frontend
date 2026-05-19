@@ -49,16 +49,13 @@ function NotificationActions({ item, onActioned }: Props) {
 
   const handleEvaluationSubmit = async (data: EvaluationData) => {
     if (!evaluationState) return;
-    const evaluation: EvaluationParams = data.skipped
-      ? { evaluation_skipped: true }
-      : {
-          evaluation_closeness: data.closeness,
-          evaluation_relationship_type: data.relationshipType,
-          ...(data.relationshipTypeDetail && {
-            evaluation_relationship_type_detail: data.relationshipTypeDetail,
-          }),
-          evaluation_skipped: false,
-        };
+    const evaluation: EvaluationParams = {
+      evaluation_closeness: data.closeness,
+      evaluation_relationship_type: data.relationshipType,
+      ...(data.relationshipTypeDetail && {
+        evaluation_relationship_type_detail: data.relationshipTypeDetail,
+      }),
+    };
     let succeeded = false;
     await acceptFriendRequest({
       userId: actor.id,

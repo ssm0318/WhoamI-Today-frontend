@@ -133,16 +133,13 @@ function FriendStatus({
   const handleEvaluationSubmit = async (evaluationData: EvaluationData) => {
     if (!evaluationModalState) return;
 
-    const evaluation: EvaluationParams = evaluationData.skipped
-      ? { evaluation_skipped: true }
-      : {
-          evaluation_closeness: evaluationData.closeness,
-          evaluation_relationship_type: evaluationData.relationshipType,
-          ...(evaluationData.relationshipTypeDetail && {
-            evaluation_relationship_type_detail: evaluationData.relationshipTypeDetail,
-          }),
-          evaluation_skipped: false,
-        };
+    const evaluation: EvaluationParams = {
+      evaluation_closeness: evaluationData.closeness,
+      evaluation_relationship_type: evaluationData.relationshipType,
+      ...(evaluationData.relationshipTypeDetail && {
+        evaluation_relationship_type_detail: evaluationData.relationshipTypeDetail,
+      }),
+    };
 
     let succeeded = false;
     let errorMsg = '';

@@ -5,10 +5,9 @@ import { Layout, RadioButton, Typo } from '@design-system';
 import * as S from './FriendEvaluationModal.styled';
 
 export interface EvaluationData {
-  closeness?: number;
-  relationshipType?: string;
+  closeness: number;
+  relationshipType: string;
   relationshipTypeDetail?: string;
-  skipped: boolean;
 }
 
 interface FriendEvaluationModalProps {
@@ -75,7 +74,6 @@ function FriendEvaluationModal({
       relationshipType,
       relationshipTypeDetail:
         relationshipType === 'other' ? relationshipTypeDetail.trim() : undefined,
-      skipped: false,
     };
     setPendingData(data);
     setShowConfirmation(true);
