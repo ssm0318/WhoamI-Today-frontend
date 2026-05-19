@@ -1336,10 +1336,12 @@
     "archive_empty": "아직 일일 체크인 기록이 없어요.",
     "index_title": "설문",
     "empty_index": "아직 표시할 설문이 없어요.",
+    "bucket_todo": "할 일",
     "bucket_available_now": "지금 가능",
     "bucket_late_but_accepted": "기한 지났지만 답변 가능",
     "bucket_completed": "완료",
     "daily_archive_row": "일일 체크인 ({{count}}개 완료)",
+    "draft_progress": "{{progress}}% 완료",
     "was_due": "마감일 {{date}}",
     "submitted_on": "제출일 {{date}}",
     "cadence": {

@@ -11,9 +11,14 @@ import SurveysIndex from './SurveysIndex';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string, options?: { date?: string }) => {
+    t: (key: string, options?: { date?: string; progress?: number }) => {
       if (key.startsWith('cadence.')) return key.replace('cadence.', '');
       if (key === 'was_due') return `Was due ${options?.date}`;
+      if (key === 'draft_progress') return `${options?.progress}% done`;
+      if (key === 'bucket_todo') return 'To-do';
+      if (key === 'bucket_late_but_accepted') return 'Late but accepted';
+      if (key === 'bucket_completed') return 'Completed';
+      if (key === 'daily_archive_row') return 'Daily check-ins collapsed';
       return key;
     },
   }),
@@ -40,7 +45,7 @@ jest.mock(
     DeadlineBadge: ({ windowEnd, allowLate }: { windowEnd: string | null; allowLate: boolean }) => (
       <>
         {windowEnd && <span>Due today</span>}
-        {windowEnd && !allowLate && <span>No late accepted</span>}
+        {windowEnd && !allowLate && <span>Today only</span>}
       </>
     ),
   }),
@@ -125,6 +130,7 @@ const entry = (
   user_answered: false,
   submitted_at: null,
   redirect_url: `/surveys/${overrides.survey.slug}`,
+  draft: null,
   ...overrides,
 });
 
@@ -175,7 +181,7 @@ describe('SurveysIndex', () => {
     expect(screen.queryByText('endpoint')).not.toBeInTheDocument();
   });
 
-  it('shows deadline badges and no-late badges for open surveys', () => {
+  it('combines available and late surveys into a single to-do section with row status badges', () => {
     const data: SurveyIndexResponse = {
       available_now: [
         entry({
@@ -201,6 +207,103 @@ describe('SurveysIndex', () => {
           },
         }),
       ],
+      late_but_accepted: [
+        entry({
+          id: 3,
+          cadence: 'weekly',
+          bucket: 'late_but_accepted',
+          survey: {
+            slug: 'week2_reflection',
+            title_en: 'Week 2 reflection',
+            title_ko: 'Week 2 reflection',
+          },
+        }),
+      ],
+      completed: [],
+    };
+    mockedUseSWR.mockReturnValue({ data });
+
+    render(
+      <MemoryRouter>
+        <SurveysIndex />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('To-do')).toBeInTheDocument();
+    expect(screen.getByText('Phase 1 reflection: Part 1')).toBeInTheDocument();
+    expect(screen.getByText('Survey of the Day')).toBeInTheDocument();
+    expect(screen.getByText('Week 2 reflection')).toBeInTheDocument();
+    expect(screen.getByText(/Was due/)).toBeInTheDocument();
+    expect(screen.queryByText('bucket_available_now')).not.toBeInTheDocument();
+    expect(screen.queryByText('bucket_late_but_accepted')).not.toBeInTheDocument();
+    expect(screen.getAllByText('Due today')).toHaveLength(2);
+    expect(screen.getByText('Today only')).toBeInTheDocument();
+    expect(screen.getByText('Late but accepted')).toBeInTheDocument();
+  });
+
+  it('lists completed daily surveys individually instead of collapsing them into an archive row', () => {
+    const data: SurveyIndexResponse = {
+      available_now: [],
+      late_but_accepted: [],
+      completed: [
+        entry({
+          id: 1,
+          cadence: 'daily',
+          bucket: 'completed',
+          submitted_at: '2026-05-18T12:00:00Z',
+          survey: {
+            slug: 'sotd_d15_shi',
+            title_en: 'Daily habit survey',
+            title_ko: 'Daily habit survey',
+          },
+        }),
+        entry({
+          id: 2,
+          cadence: 'biweekly',
+          bucket: 'completed',
+          submitted_at: '2026-05-18T12:00:00Z',
+          survey: {
+            slug: 'mid_study_w',
+            title_en: 'Phase 1 reflection',
+            title_ko: 'Phase 1 reflection',
+          },
+        }),
+      ],
+    };
+    mockedUseSWR.mockReturnValue({ data });
+
+    render(
+      <MemoryRouter>
+        <SurveysIndex />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('Completed')).toBeInTheDocument();
+    expect(screen.getByText('Daily habit survey')).toBeInTheDocument();
+    expect(screen.getByText('Phase 1 reflection')).toBeInTheDocument();
+    expect(screen.queryByText('Daily check-ins collapsed')).not.toBeInTheDocument();
+  });
+
+  it('shows draft progress for in-progress available surveys', () => {
+    const data: SurveyIndexResponse = {
+      available_now: [
+        entry({
+          id: 1,
+          cadence: 'daily',
+          bucket: 'available_now',
+          survey: {
+            slug: 'daily_base',
+            title_en: 'Daily check-in',
+            title_ko: 'Daily check-in',
+          },
+          draft: {
+            progress_pct: 50,
+            answered_pages: 1,
+            total_pages: 2,
+            saved_at: '2026-05-18T10:00:00.000Z',
+          },
+        }),
+      ],
       late_but_accepted: [],
       completed: [],
     };
@@ -212,7 +315,6 @@ describe('SurveysIndex', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getAllByText('Due today')).toHaveLength(2);
-    expect(screen.getByText('No late accepted')).toBeInTheDocument();
+    expect(screen.getByText('50% done')).toBeInTheDocument();
   });
 });

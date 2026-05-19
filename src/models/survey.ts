@@ -98,6 +98,22 @@ export interface SurveyQuestion {
   baseline_relationship_type?: string | null;
 }
 
+export interface SurveyDraft {
+  answers: Record<string, unknown>;
+  current_page_index: number;
+  total_pages: number;
+  answered_pages: number;
+  progress_pct: number;
+  saved_at: string;
+}
+
+export interface SurveyDraftSummary {
+  progress_pct: number;
+  answered_pages: number;
+  total_pages: number;
+  saved_at: string;
+}
+
 export interface Survey {
   slug: string;
   title_en: string;
@@ -117,6 +133,7 @@ export interface Survey {
   questions: SurveyQuestion[];
   user_has_responded: boolean;
   responder_count: number;
+  draft: SurveyDraft | null;
 }
 
 export interface SurveyOfTheDayResponse {
@@ -256,6 +273,7 @@ export interface SurveyIndexEntry {
   user_answered: boolean;
   submitted_at: string | null;
   redirect_url: string;
+  draft: SurveyDraftSummary | null;
 }
 
 export interface SurveyIndexResponse {

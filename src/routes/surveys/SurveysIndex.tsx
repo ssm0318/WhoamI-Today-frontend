@@ -55,6 +55,35 @@ const RowHeader = styled.div`
   width: 100%;
 `;
 
+const DraftProgressBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  border: 1px solid #b8d7c6;
+  border-radius: 8px;
+  background: #eaf4ef;
+  color: #2f6b4f;
+  padding: 3px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+`;
+
+const TodoStatusBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  border: 1px solid #d8c3ff;
+  border-radius: 8px;
+  background: #f3e8ff;
+  color: ${Colors.PRIMARY};
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+`;
+
 // Banner shown across the top of the surveys index while the maintenance
 // window is active. Uses a soft purple bg so it reads as informational
 // (not an error), and lives above all bucket sections so users see it
@@ -92,9 +121,6 @@ function SurveysIndex() {
 
   if (!data) return null;
 
-  const dailyCompletedCount = data.completed.filter((e) => e.cadence === 'daily').length;
-  const nonDailyCompleted = data.completed.filter((e) => e.cadence !== 'daily');
-
   const renderEntry = (entry: SurveyIndexEntry, bucket: Bucket) => (
     <RowCard
       key={entry.id}
@@ -118,6 +144,14 @@ function SurveysIndex() {
             allowLate={entry.allow_late}
           />
         )}
+        {bucket === 'late_but_accepted' && (
+          <TodoStatusBadge>{t('bucket_late_but_accepted')}</TodoStatusBadge>
+        )}
+        {bucket !== 'completed' && entry.draft && entry.draft.progress_pct > 0 && (
+          <DraftProgressBadge>
+            {t('draft_progress', { progress: entry.draft.progress_pct })}
+          </DraftProgressBadge>
+        )}
       </RowHeader>
       {bucket === 'late_but_accepted' && entry.window_end && (
         <Typo type="label-large" color="DARK_GRAY">
@@ -134,15 +168,13 @@ function SurveysIndex() {
 
   const paused = isSurveysPaused();
 
-  // While paused, the entire "Available now" bucket is hidden — both the
-  // section header and its rows — so users can't tap into the half-broken
-  // answer flow from this page. Late-but-accepted and Completed buckets
-  // are read-only / past-tense so they stay visible. The banner at the
-  // top of the page surfaces the reason.
+  // While paused, hide currently open surveys so users can't tap into the
+  // half-broken answer flow from this page. Late-but-accepted and Completed
+  // entries are past-tense / already-open states so they stay visible.
   const availableEntries = paused ? [] : data.available_now;
-  const hasAvailable = availableEntries.length > 0;
-  const hasLate = data.late_but_accepted.length > 0;
-  const hasCompleted = dailyCompletedCount > 0 || nonDailyCompleted.length > 0;
+  const todoEntries = [...availableEntries, ...data.late_but_accepted];
+  const hasTodo = todoEntries.length > 0;
+  const hasCompleted = data.completed.length > 0;
 
   return (
     <MainScrollContainer>
@@ -155,30 +187,19 @@ function SurveysIndex() {
             </Typo>
           </PauseBanner>
         )}
-        {!hasAvailable && !hasLate && !hasCompleted && (
+        {!hasTodo && !hasCompleted && (
           <Typo type="body-medium" color="DARK_GRAY">
             {t('empty_index')}
           </Typo>
         )}
 
-        {hasAvailable && (
+        {hasTodo && (
           <Section>
             <Typo type="title-large" color="BLACK">
-              {t('bucket_available_now')}
+              {t('bucket_todo')}
             </Typo>
             <SectionRows>
-              {availableEntries.map((entry) => renderEntry(entry, 'available_now'))}
-            </SectionRows>
-          </Section>
-        )}
-
-        {hasLate && (
-          <Section>
-            <Typo type="title-large" color="BLACK">
-              {t('bucket_late_but_accepted')}
-            </Typo>
-            <SectionRows>
-              {data.late_but_accepted.map((entry) => renderEntry(entry, 'late_but_accepted'))}
+              {todoEntries.map((entry) => renderEntry(entry, entry.bucket))}
             </SectionRows>
           </Section>
         )}
@@ -189,18 +210,7 @@ function SurveysIndex() {
               {t('bucket_completed')}
             </Typo>
             <SectionRows>
-              {dailyCompletedCount > 0 && (
-                <RowCard
-                  key="daily-archive-row"
-                  type="button"
-                  onClick={() => navigate('/surveys/daily-archive')}
-                >
-                  <Typo type="title-medium" color="BLACK">
-                    {t('daily_archive_row', { count: dailyCompletedCount })}
-                  </Typo>
-                </RowCard>
-              )}
-              {nonDailyCompleted.map((entry) => renderEntry(entry, 'completed'))}
+              {data.completed.map((entry) => renderEntry(entry, 'completed'))}
             </SectionRows>
           </Section>
         )}

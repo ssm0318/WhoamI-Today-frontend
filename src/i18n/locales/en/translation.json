@@ -1349,10 +1349,12 @@
         "archive_empty": "No daily check-ins yet.",
         "index_title": "Surveys",
         "empty_index": "Nothing here yet.",
+        "bucket_todo": "To-do",
         "bucket_available_now": "Available now",
         "bucket_late_but_accepted": "Late but accepted",
         "bucket_completed": "Completed",
         "daily_archive_row": "Daily check-ins ({{count}} completed)",
+        "draft_progress": "{{progress}}% done",
         "was_due": "Was due {{date}}",
         "submitted_on": "Submitted {{date}}",
         "cadence": {

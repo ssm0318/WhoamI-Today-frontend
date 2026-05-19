@@ -7,7 +7,7 @@ import { useSurveyDraft } from '@hooks/useSurveyDraft';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import i18n from '@i18n/index';
 import { ConditionalDisplay, Survey, SurveyOptionValue, SurveyQuestion } from '@models/survey';
-import { submitSurveyResponse } from '@utils/apis/survey';
+import { deleteSurveyDraft, submitSurveyResponse } from '@utils/apis/survey';
 
 import { ChoiceChips } from './ChoiceChips';
 import { FreeTextInput } from './FreeTextInput';
@@ -114,7 +114,15 @@ const evaluateCondition = (
 
 export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerFormProps) {
   const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
-  const { answers, setAnswer, setPerFriendAnswer, clear, hydrated } = useSurveyDraft(survey.slug);
+  const {
+    answers,
+    metadata,
+    setAnswer,
+    setPerFriendAnswer,
+    updateProgressMetadata,
+    clear,
+    hydrated,
+  } = useSurveyDraft(survey.slug, survey.draft);
   const [index, setIndex] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const trackEvent = useTrackEvent();
@@ -157,6 +165,11 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
   const total = pages.length;
 
   const isPageAnswered = (page: SurveyPage): boolean => isSurveyPageAnswered(page, answers);
+  const answeredPages = useMemo(
+    () => pages.filter((page) => isSurveyPageAnswered(page, answers)).length,
+    [answers, pages],
+  );
+  const answerProgressPct = total > 0 ? Math.round((answeredPages / total) * 100) : 0;
 
   // Clamp index when the visible-question list shrinks (e.g. user
   // changes their category answer, removing later branches).
@@ -170,10 +183,27 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
   // copy, because the intro is part of the participant-facing flow.
   useEffect(() => {
     if (!hydrated || total === 0) return;
-    setIndex(getInitialSurveyPageIndex(questions, answers));
+    const canUseSavedPage =
+      metadata.totalPages === total &&
+      metadata.currentPageIndex >= 0 &&
+      metadata.currentPageIndex < total &&
+      Object.keys(answers).length > 0;
+    setIndex(
+      canUseSavedPage ? metadata.currentPageIndex : getInitialSurveyPageIndex(questions, answers),
+    );
     // intentionally only run on first hydration
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated]);
+
+  useEffect(() => {
+    if (!hydrated || total === 0) return;
+    updateProgressMetadata({
+      currentPageIndex: index,
+      totalPages: total,
+      answeredPages,
+      progressPct: answerProgressPct,
+    });
+  }, [answerProgressPct, answeredPages, hydrated, index, total, updateProgressMetadata]);
 
   // Time-per-page: emit dwell on every page change. For single-question
   // pages this preserves the per-question dwell signal; per_friend block
@@ -277,6 +307,7 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
         question_count: questions.length,
       });
       clear();
+      deleteSurveyDraft(survey.slug).catch(() => undefined);
       onSubmitted();
     } catch {
       if (onError) onError(t('toast.submit_failed'));
