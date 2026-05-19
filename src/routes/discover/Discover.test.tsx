@@ -283,6 +283,15 @@ jest.mock(
 );
 
 jest.mock(
+  '@components/check-in-posts/CheckInPostStories',
+  () =>
+    function MockCheckInPostStories({ visibility }: { visibility?: string }) {
+      return <section data-testid="daily-snapshots">daily snapshots: {visibility}</section>;
+    },
+  { virtual: true },
+);
+
+jest.mock(
   '@components/discover/HighlightQuestionSection/HighlightQuestionSection',
   () =>
     function MockHighlightQuestionSection({ question }: { question: string }) {
@@ -439,5 +448,6 @@ describe('Discover', () => {
       'response: Middle public response',
       'note: Middle public note',
     ]);
+    expect(screen.getByTestId('daily-snapshots')).toHaveTextContent('daily snapshots: public');
   });
 });

@@ -4,6 +4,7 @@ import { Navigate } from 'react-router-dom';
 import useSWR from 'swr';
 import FilterChip from '@components/_common/filter-chip/FilterChip';
 import PullToRefresh from '@components/_common/pull-to-refresh/PullToRefresh';
+import CheckInPostStories from '@components/check-in-posts/CheckInPostStories';
 import HighlightQuestionSection from '@components/discover/HighlightQuestionSection/HighlightQuestionSection';
 import ProfileSuggestionCard from '@components/discover/ProfileSuggestionCard/ProfileSuggestionCard';
 import SelectInterestSection from '@components/discover/SelectInterestSection/SelectInterestSection';
@@ -449,6 +450,8 @@ function Discover() {
           {!isVerQ && !isLoading && musicTracks.length > 0 && (
             <SharedPlaylistSection tracks={musicTracks} />
           )}
+
+          {isVerQ && !isLoading && <CheckInPostStories visibility="public" />}
 
           {!isVerQ && !isLoading && hasVisibleItems && (
             <Layout.FlexCol w="100%" ph={16} pv={8} mb={8} alignItems="center">

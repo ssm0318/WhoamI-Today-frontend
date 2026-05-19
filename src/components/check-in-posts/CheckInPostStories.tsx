@@ -20,6 +20,8 @@ interface CheckInPostStoriesProps {
    *  which returns one latest post per friend. */
   authorUserId?: number;
   authorUsername?: string;
+  /** Discover uses the same strip UI with the public snapshot source. */
+  visibility?: 'public';
   /** Own profile (My page): merge highlights and recent into a single
    *  "My Daily Snippets" strip, hide redundant author username, and lift the
    *  3-day cutoff so every snippet is reachable from the strip. */
@@ -30,6 +32,7 @@ interface CheckInPostStoriesProps {
 function CheckInPostStories({
   authorUserId,
   authorUsername,
+  visibility,
   isOwnProfile = false,
   showCompose = false,
 }: CheckInPostStoriesProps) {
@@ -47,12 +50,15 @@ function CheckInPostStories({
     }
   }, [authorUserId]);
 
-  const swrKey = authorUserId
-    ? `/check_in/posts/by-user/${authorUserId}/`
-    : '/check_in/posts/stories/';
+  let swrKey = '/check_in/posts/stories/';
+  if (authorUserId) {
+    swrKey = `/check_in/posts/by-user/${authorUserId}/`;
+  } else if (visibility === 'public') {
+    swrKey = '/check_in/posts/stories/?visibility=public';
+  }
 
   const { data, mutate } = useSWR(swrKey, () =>
-    authorUserId ? getUserCheckInPosts(authorUserId) : getCheckInPostStories(),
+    authorUserId ? getUserCheckInPosts(authorUserId) : getCheckInPostStories(visibility),
   );
 
   const { myStory, friendStories } = useMemo(() => {

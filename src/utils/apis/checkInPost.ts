@@ -16,9 +16,12 @@ export const getCheckInPostFeed = async (page: string | null) => {
   return data;
 };
 
-export const getCheckInPostStories = async () => {
+export const getCheckInPostStories = async (
+  visibility?: Extract<CheckInPostVisibility, 'public'>,
+) => {
   const { data } = await axios.get<PaginationResponse<CheckInPostStory[]>>(
     '/check_in/posts/stories/',
+    visibility ? { params: { visibility } } : undefined,
   );
   return data;
 };
