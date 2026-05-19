@@ -44,7 +44,7 @@ jest.mock(
   '@components/survey/DeadlineBadge',
   () => ({
     DeadlineBadge: ({ windowEnd }: { windowEnd: string | null }) =>
-      windowEnd ? <span>Due today</span> : null,
+      windowEnd ? <span>{windowEnd === '2026-05-24' ? 'Due Sun' : 'Due today'}</span> : null,
   }),
   { virtual: true },
 );
@@ -182,6 +182,27 @@ describe('SurveysIndex', () => {
     const data: SurveyIndexResponse = {
       available_now: [
         entry({
+          id: 0,
+          cadence: 'biweekly',
+          bucket: 'available_now',
+          allow_late: true,
+          survey: {
+            slug: 'phase1_friend_closeness',
+            title_en: 'Rate your closeness with each friend (Phase 1)',
+            title_ko: 'Rate your closeness with each friend (Phase 1)',
+          },
+        }),
+        entry({
+          id: 5,
+          cadence: 'endpoint',
+          bucket: 'available_now',
+          survey: {
+            slug: 'goal_comparison_p1',
+            title_en: 'Phase 1 reflection: Part 1',
+            title_ko: 'Phase 1 reflection: Part 1',
+          },
+        }),
+        entry({
           id: 1,
           cadence: 'daily',
           bucket: 'available_now',
@@ -213,6 +234,7 @@ describe('SurveysIndex', () => {
             title_en: 'Ver. W features',
             title_ko: 'Ver. W features',
           },
+          window_end: '2026-05-24',
         }),
         entry({
           id: 4,
@@ -221,22 +243,23 @@ describe('SurveysIndex', () => {
           allow_late: true,
           survey: {
             slug: 'mid_study_w',
-            title_en: 'Phase 1 reflection: Part 1',
-            title_ko: 'Phase 1 reflection: Part 1',
-          },
-        }),
-      ],
-      late_but_accepted: [
-        entry({
-          id: 5,
-          cadence: 'endpoint',
-          bucket: 'late_but_accepted',
-          survey: {
-            slug: 'goal_comparison_p1',
             title_en: 'Phase 1 reflection: Part 2',
             title_ko: 'Phase 1 reflection: Part 2',
           },
         }),
+        entry({
+          id: 7,
+          cadence: 'anytime',
+          bucket: 'available_now',
+          window_end: null,
+          survey: {
+            slug: 'anytime_reflection',
+            title_en: 'Drop us a note',
+            title_ko: 'Drop us a note',
+          },
+        }),
+      ],
+      late_but_accepted: [
         entry({
           id: 6,
           cadence: 'weekly',
@@ -259,35 +282,48 @@ describe('SurveysIndex', () => {
     );
 
     expect(screen.getByText('To-do')).toBeInTheDocument();
-    expect(screen.getByText('Ver. W features')).toBeInTheDocument();
+    expect(screen.getByText('Rate your closeness with each friend (Phase 1)')).toBeInTheDocument();
     expect(screen.getByText('Phase 1 reflection: Part 1')).toBeInTheDocument();
     expect(screen.getByText('Phase 1 reflection: Part 2')).toBeInTheDocument();
+    expect(screen.getByText('Ver. W features')).toBeInTheDocument();
     expect(screen.getByText('Habitual platform')).toBeInTheDocument();
     expect(screen.getByText('Survey of the Day')).toBeInTheDocument();
+    expect(screen.getByText('Drop us a note')).toBeInTheDocument();
     expect(screen.getByText('Week 2 reflection')).toBeInTheDocument();
-    expect(screen.getAllByText(/Was due/)).toHaveLength(2);
+    expect(screen.getAllByText(/Was due/)).toHaveLength(1);
     expect(screen.queryByText('bucket_available_now')).not.toBeInTheDocument();
     expect(screen.queryByText('bucket_late_but_accepted')).not.toBeInTheDocument();
-    expect(screen.getAllByText('Due today')).toHaveLength(4);
+    expect(screen.getAllByText('Due today')).toHaveLength(5);
+    expect(screen.getByText('Due Sun')).toBeInTheDocument();
     expect(screen.queryByText('Today only')).not.toBeInTheDocument();
-    expect(screen.getAllByText('High priority')).toHaveLength(3);
-    expect(screen.getAllByText('Late but accepted')).toHaveLength(2);
+    expect(screen.getAllByText('High priority')).toHaveLength(4);
+    expect(screen.getAllByText('Late but accepted')).toHaveLength(1);
 
     const bodyText = document.body.textContent ?? '';
-    const featureIndex = bodyText.indexOf('Ver. W features');
+    const closenessIndex = bodyText.indexOf('Rate your closeness with each friend (Phase 1)');
     const phase1Index = bodyText.indexOf('Phase 1 reflection: Part 1');
     const phase2Index = bodyText.indexOf('Phase 1 reflection: Part 2');
+    const featureIndex = bodyText.indexOf('Ver. W features');
     const habitIndex = bodyText.indexOf('Habitual platform');
     const sotdIndex = bodyText.indexOf('Survey of the Day');
-    expect(featureIndex).toBeGreaterThanOrEqual(0);
+    const anytimeIndex = bodyText.indexOf('Drop us a note');
+    expect(closenessIndex).toBeGreaterThanOrEqual(0);
     expect(phase1Index).toBeGreaterThanOrEqual(0);
     expect(phase2Index).toBeGreaterThanOrEqual(0);
+    expect(featureIndex).toBeGreaterThanOrEqual(0);
+    expect(closenessIndex).toBeLessThan(phase1Index);
+    expect(phase1Index).toBeLessThan(phase2Index);
+    expect(phase2Index).toBeLessThan(featureIndex);
     expect(featureIndex).toBeLessThan(habitIndex);
     expect(phase1Index).toBeLessThan(habitIndex);
     expect(phase2Index).toBeLessThan(habitIndex);
     expect(featureIndex).toBeLessThan(sotdIndex);
     expect(phase1Index).toBeLessThan(sotdIndex);
     expect(phase2Index).toBeLessThan(sotdIndex);
+    expect(anytimeIndex).toBeGreaterThan(sotdIndex);
+
+    const noteRow = screen.getByRole('button', { name: 'Drop us a note' });
+    expect(noteRow).not.toHaveTextContent('Due today');
   });
 
   it('lists completed daily surveys individually instead of collapsing them into an archive row', () => {

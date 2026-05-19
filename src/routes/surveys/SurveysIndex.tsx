@@ -114,11 +114,28 @@ const PauseBanner = styled(Layout.FlexRow)`
 
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
+const HIGH_PRIORITY_SURVEY_ORDER = new Map([
+  ['phase1_friend_closeness', 0],
+  ['phase2_friend_closeness', 0],
+  ['goal_comparison_p1', 1],
+  ['goal_comparison_p2', 1],
+  ['mid_study_w', 2],
+  ['mid_study_q', 2],
+  ['post_study_w', 2],
+  ['post_study_q', 2],
+  ['feature_eval_w', 3],
+]);
+
 const HIGH_PRIORITY_SURVEY_SLUGS = new Set([
+  'phase1_friend_closeness',
+  'phase2_friend_closeness',
   'feature_eval_w',
   'mid_study_w',
   'mid_study_q',
+  'post_study_w',
+  'post_study_q',
   'goal_comparison_p1',
+  'goal_comparison_p2',
 ]);
 
 const isHighPrioritySurvey = (entry: SurveyIndexEntry): boolean =>
@@ -129,16 +146,28 @@ const isDailyOrSotd = (entry: SurveyIndexEntry): boolean =>
   entry.survey.slug === 'habit_platform' ||
   entry.survey.slug.startsWith('sotd_');
 
+const isNoDeadlineDropIn = (entry: SurveyIndexEntry): boolean =>
+  entry.cadence === 'anytime' && !entry.window_end;
+
 const todoPriorityRank = (entry: SurveyIndexEntry): number => {
   if (isHighPrioritySurvey(entry)) return 0;
   if (isDailyOrSotd(entry)) return 2;
+  if (isNoDeadlineDropIn(entry)) return 3;
   return 1;
 };
+
+const highPrioritySurveyOrder = (entry: SurveyIndexEntry): number =>
+  HIGH_PRIORITY_SURVEY_ORDER.get(entry.survey.slug) ?? Number.MAX_SAFE_INTEGER;
 
 const sortTodoEntries = (entries: SurveyIndexEntry[]): SurveyIndexEntry[] =>
   entries
     .map((entry, index) => ({ entry, index }))
-    .sort((a, b) => todoPriorityRank(a.entry) - todoPriorityRank(b.entry) || a.index - b.index)
+    .sort(
+      (a, b) =>
+        todoPriorityRank(a.entry) - todoPriorityRank(b.entry) ||
+        highPrioritySurveyOrder(a.entry) - highPrioritySurveyOrder(b.entry) ||
+        a.index - b.index,
+    )
     .map(({ entry }) => entry);
 
 const formatDate = (iso: string): string => {
