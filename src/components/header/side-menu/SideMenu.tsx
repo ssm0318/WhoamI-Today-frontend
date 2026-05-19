@@ -15,6 +15,7 @@ import { usePostAppMessage } from '@hooks/useAppMessage';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import { VersionType } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { logOnboardingEvent } from '@utils/apis/onboardingEvents';
 import { getSurveyIndex } from '@utils/apis/survey';
 import { getMyPendingVersionSwitchRequest } from '@utils/apis/user';
 import { classifyPathnameAsSource } from '@utils/navSource';
@@ -81,6 +82,9 @@ function SideMenu({ closeSideMenu }: Props) {
 
   const handleClickMenu = (menu: SideMenuItem) => () => {
     trackEvent('side_menu_item_tapped', { item_key: menu.key });
+    if (menu.key === 'surveys') {
+      logOnboardingEvent('survey_sidebar_nav_tapped', { from: fromSource }).catch(() => undefined);
+    }
     navigate(menu.path);
     closeSideMenu();
   };
