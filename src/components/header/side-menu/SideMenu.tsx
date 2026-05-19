@@ -16,6 +16,7 @@ import { useTrackEvent } from '@hooks/useTrackEvent';
 import { VersionType } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { logOnboardingEvent } from '@utils/apis/onboardingEvents';
+import { getReimbursementState, REIMBURSEMENT_KEY } from '@utils/apis/reimbursement';
 import { getSurveyIndex } from '@utils/apis/survey';
 import { getMyPendingVersionSwitchRequest } from '@utils/apis/user';
 import { classifyPathnameAsSource } from '@utils/navSource';
@@ -56,6 +57,7 @@ function SideMenu({ closeSideMenu }: Props) {
 
   const myProfile = useBoundStore((state) => state.myProfile);
   const { data: surveyIndex } = useSWR('/surveys/index/', getSurveyIndex);
+  const { data: reimbursement } = useSWR(REIMBURSEMENT_KEY, getReimbursementState);
   const { data: pendingResp } = useSWR(
     '/user/version-switch-request/me/',
     getMyPendingVersionSwitchRequest,
@@ -157,6 +159,11 @@ function SideMenu({ closeSideMenu }: Props) {
                       )}
                     </DeadlineChip>
                   )}
+                  {menu.key === 'reimbursement' &&
+                    reimbursement &&
+                    reimbursement.adjusted_total > 0 && (
+                      <PointTotalChip>{reimbursement.adjusted_total} pts</PointTotalChip>
+                    )}
                 </MenuRow>
               </MenuButton>
             ))}
@@ -208,6 +215,20 @@ const MenuButton = styled.button`
 const MenuRow = styled(Layout.FlexRow)`
   justify-content: space-between;
   width: 100%;
+`;
+
+const PointTotalChip = styled.span`
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #d8c3ff;
+  border-radius: 8px;
+  background: #f3e8ff;
+  color: #8700ff;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
 `;
 
 export default SideMenu;

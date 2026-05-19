@@ -6,6 +6,7 @@ import useSWR from 'swr';
 import SubHeader from '@components/sub-header/SubHeader';
 import { Colors, Layout, Typo } from '@design-system';
 import i18n from '@i18n/index';
+import { PointAwardSummary } from '@models/reimbursement';
 import { getSurveyDetail } from '@utils/apis/survey';
 
 import { MainScrollContainer } from '../Root';
@@ -38,6 +39,13 @@ const DoneButton = styled.button`
   -webkit-tap-highlight-color: transparent;
 `;
 
+const PointLine = styled.div`
+  width: 100%;
+  border-radius: 8px;
+  background: #f3e8ff;
+  padding: 10px 12px;
+`;
+
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
 // Fallback when no entry-point was passed via route state — covers
@@ -51,6 +59,7 @@ interface DoneRouteState {
   // DailyArchive row, SurveyResults edit button) and forwarded through
   // the answer page. Falls back to /surveys for direct/refresh entries.
   from?: string;
+  point_award?: PointAwardSummary | null;
 }
 
 function SurveyDone() {
@@ -67,6 +76,7 @@ function SurveyDone() {
   );
 
   const from = (location.state as DoneRouteState | null)?.from ?? FALLBACK_FROM;
+  const pointAward = (location.state as DoneRouteState | null)?.point_award ?? null;
 
   const handleDone = () => {
     // `replace: true` so a Back tap from the entry-point page doesn't
@@ -107,6 +117,18 @@ function SurveyDone() {
           <Typo type="body-medium" color="DARK_GRAY">
             {t(bodyKey)}
           </Typo>
+          {pointAward && (
+            <PointLine>
+              <Typo
+                type="label-large"
+                color={pointAward.effective_points > 0 ? 'PRIMARY' : 'DARK_GRAY'}
+              >
+                {pointAward.effective_points > 0
+                  ? t('done_points_awarded', { points: pointAward.effective_points })
+                  : t('done_points_locked', { note: pointAward.note })}
+              </Typo>
+            </PointLine>
+          )}
         </Card>
       </Page>
     </MainScrollContainer>

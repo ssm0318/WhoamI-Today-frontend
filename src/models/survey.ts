@@ -1,3 +1,5 @@
+import { PointAwardSummary } from './reimbursement';
+
 // Question types — defined per-question so a single Survey can mix them.
 // Mirror of surveys/models.py TYPE_CHOICES.
 export type QuestionType =
@@ -134,6 +136,12 @@ export interface Survey {
   user_has_responded: boolean;
   responder_count: number;
   draft: SurveyDraft | null;
+  point_value: number;
+  point_prereq_slug: string;
+  point_locked_by_prereq_slug: string | null;
+  point_locked_by_prereq_title_en: string | null;
+  point_locked_by_prereq_title_ko: string | null;
+  point_award: PointAwardSummary | null;
 }
 
 export interface SurveyOfTheDayResponse {
@@ -248,6 +256,7 @@ export interface SurveyResultsError {
 }
 
 export interface PastSurvey {
+  id: number;
   date: string;
   survey: Survey;
   user_answered: boolean;
@@ -283,10 +292,20 @@ export interface SurveyIndexEntry {
   redirect_url: string;
   results_unlocked: boolean;
   draft: SurveyDraftSummary | null;
+  point_value: number;
+  point_locked_by_prereq_slug: string | null;
+  point_locked_by_prereq_title_en: string | null;
+  point_locked_by_prereq_title_ko: string | null;
+  point_award: PointAwardSummary | null;
 }
 
 export interface SurveyIndexResponse {
   available_now: SurveyIndexEntry[];
   late_but_accepted: SurveyIndexEntry[];
   completed: SurveyIndexEntry[];
+}
+
+export interface SurveySubmitResponse {
+  id: number;
+  point_award: PointAwardSummary | null;
 }

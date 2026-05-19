@@ -9,6 +9,7 @@ import { SURVEY_OF_THE_DAY_KEY } from '@hooks/useSurveyOfTheDay';
 import i18n from '@i18n/index';
 import { SurveyIndexEntry } from '@models/survey';
 import { useBoundStore } from '@stores/useBoundStore';
+import { REIMBURSEMENT_KEY } from '@utils/apis/reimbursement';
 import { getSurveyDetail, getSurveyIndex } from '@utils/apis/survey';
 
 import { MainScrollContainer } from '../Root';
@@ -94,11 +95,13 @@ function SurveyAnswer() {
           )}
           <SurveyAnswerForm
             survey={survey}
-            onSubmitted={async () => {
+            onSubmitted={async (result) => {
               // Refresh the SOTD card if this submission was today's
               // daily — fire-and-forget; the user has already left this
               // page by the time the network request lands.
               mutate(SURVEY_OF_THE_DAY_KEY);
+              mutate(REIMBURSEMENT_KEY);
+              mutate('/surveys/index/');
 
               // SOTD chaining: when more than one SOTD is scheduled for
               // today (e.g. May 5 co-schedules d01_honeymoon + d02_rsds
@@ -128,7 +131,7 @@ function SurveyAnswer() {
               // back into a half-cleared form.
               navigate(`/surveys/${survey.slug}/done`, {
                 replace: true,
-                state: { from },
+                state: { from, point_award: result.point_award },
               });
             }}
             onError={(message) => openToast({ message })}

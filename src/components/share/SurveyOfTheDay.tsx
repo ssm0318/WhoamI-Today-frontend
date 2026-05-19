@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
+import LockedBadgeModal from '@components/survey/LockedBadgeModal';
+import PointsBadge from '@components/survey/PointsBadge';
 import {
   isSurveysPaused,
   SURVEYS_PAUSED_MESSAGE_EN,
@@ -43,6 +46,13 @@ const ActionButton = styled.div<{ $disabled?: boolean }>`
   }
 `;
 
+const TitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+`;
+
 const DRAFT_KEY_PREFIX = 'whoami_survey_draft_';
 
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
@@ -65,6 +75,7 @@ function SurveyOfTheDay() {
   const navigate = useNavigate();
   const location = useLocation();
   const userId = useBoundStore((s) => s.myProfile?.id ?? null);
+  const [lockedModalOpen, setLockedModalOpen] = useState(false);
 
   if (isLoading) return null;
 
@@ -101,25 +112,57 @@ function SurveyOfTheDay() {
   if (!survey) return null;
 
   const surveyTitle = (
-    <Typo type="title-medium" color="WHITE">
-      {pickLocalized(survey.title_en, survey.title_ko)}
-    </Typo>
+    <TitleRow>
+      <Typo type="title-medium" color="WHITE">
+        {pickLocalized(survey.title_en, survey.title_ko)}
+      </Typo>
+      <PointsBadge
+        pointValue={survey.point_value}
+        pointAward={survey.point_award}
+        locked={!!survey.point_locked_by_prereq_slug}
+        onLockedClick={
+          survey.point_locked_by_prereq_slug ? () => setLockedModalOpen(true) : undefined
+        }
+      />
+    </TitleRow>
   );
+
+  const lockedModal = survey.point_locked_by_prereq_slug ? (
+    <LockedBadgeModal
+      visible={lockedModalOpen}
+      pointValue={survey.point_value}
+      prereqTitle={pickLocalized(
+        survey.point_locked_by_prereq_title_en ?? survey.point_locked_by_prereq_slug,
+        survey.point_locked_by_prereq_title_ko ?? survey.point_locked_by_prereq_slug,
+      )}
+      surveyTitle={pickLocalized(survey.title_en, survey.title_ko)}
+      onClose={() => setLockedModalOpen(false)}
+      onDoPrereq={() => {
+        setLockedModalOpen(false);
+        navigate(`/surveys/${survey.point_locked_by_prereq_slug}/answer`, {
+          state: { from: location.pathname + location.search },
+        });
+      }}
+    />
+  ) : null;
 
   if (survey.user_has_responded) {
     return (
-      <ColorCard>
-        {sectionTitle}
-        {surveyTitle}
-        <Typo type="title-medium" color="WHITE">
-          {t('thanks_results_tomorrow')}
-        </Typo>
-        <ActionButton onClick={() => navigate(`/surveys/${survey.slug}/results`)}>
-          <Typo type="label-large" fontWeight={600}>
-            {t('view_results')}
+      <>
+        <ColorCard>
+          {sectionTitle}
+          {surveyTitle}
+          <Typo type="title-medium" color="WHITE">
+            {t('thanks_results_tomorrow')}
           </Typo>
-        </ActionButton>
-      </ColorCard>
+          <ActionButton onClick={() => navigate(`/surveys/${survey.slug}/results`)}>
+            <Typo type="label-large" fontWeight={600}>
+              {t('view_results')}
+            </Typo>
+          </ActionButton>
+        </ColorCard>
+        {lockedModal}
+      </>
     );
   }
 
@@ -127,28 +170,31 @@ function SurveyOfTheDay() {
   const ctaLabel = hasDraft ? t('continue_survey') : t('start_survey');
 
   return (
-    <ColorCard>
-      {sectionTitle}
-      {surveyTitle}
-      <Typo type="label-medium" color="WHITE">
-        {survey.responder_count > 0
-          ? t('responder_count_today', { count: survey.responder_count })
-          : t('responder_count_today_zero')}
-      </Typo>
-      <ActionButton
-        onClick={() =>
-          // Pass `from` so the post-submit Done page can return the
-          // user here (the Share tab) instead of the surveys index.
-          navigate(`/surveys/${survey.slug}/answer`, {
-            state: { from: location.pathname + location.search },
-          })
-        }
-      >
-        <Typo type="label-large" fontWeight={600}>
-          {ctaLabel}
+    <>
+      <ColorCard>
+        {sectionTitle}
+        {surveyTitle}
+        <Typo type="label-medium" color="WHITE">
+          {survey.responder_count > 0
+            ? t('responder_count_today', { count: survey.responder_count })
+            : t('responder_count_today_zero')}
         </Typo>
-      </ActionButton>
-    </ColorCard>
+        <ActionButton
+          onClick={() =>
+            // Pass `from` so the post-submit Done page can return the
+            // user here (the Share tab) instead of the surveys index.
+            navigate(`/surveys/${survey.slug}/answer`, {
+              state: { from: location.pathname + location.search },
+            })
+          }
+        >
+          <Typo type="label-large" fontWeight={600}>
+            {ctaLabel}
+          </Typo>
+        </ActionButton>
+      </ColorCard>
+      {lockedModal}
+    </>
   );
 }
 

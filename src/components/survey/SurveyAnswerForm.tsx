@@ -6,7 +6,13 @@ import { Colors, Layout, Typo } from '@design-system';
 import { useSurveyDraft } from '@hooks/useSurveyDraft';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import i18n from '@i18n/index';
-import { ConditionalDisplay, Survey, SurveyOptionValue, SurveyQuestion } from '@models/survey';
+import {
+  ConditionalDisplay,
+  Survey,
+  SurveyOptionValue,
+  SurveyQuestion,
+  SurveySubmitResponse,
+} from '@models/survey';
 import { deleteSurveyDraft, submitSurveyResponse } from '@utils/apis/survey';
 
 import { ChoiceChips } from './ChoiceChips';
@@ -81,7 +87,7 @@ const NavButton = styled.button<{ disabled: boolean; primary?: boolean }>`
 
 interface SurveyAnswerFormProps {
   survey: Survey;
-  onSubmitted: () => void;
+  onSubmitted: (result: SurveySubmitResponse) => void;
   onError?: (message: string) => void;
 }
 
@@ -299,7 +305,7 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
     }
     const payload = buildSurveyAnswerPayload(questions, answers);
     try {
-      await submitSurveyResponse(survey.slug, payload);
+      const result = await submitSurveyResponse(survey.slug, payload);
       // Backend captures the response, but a typed `survey_submitted`
       // event keeps Firebase funnels symmetric with `survey_navigated`.
       trackEvent('survey_submitted', {
@@ -308,7 +314,7 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
       });
       clear();
       deleteSurveyDraft(survey.slug).catch(() => undefined);
-      onSubmitted();
+      onSubmitted(result);
     } catch {
       if (onError) onError(t('toast.submit_failed'));
     } finally {

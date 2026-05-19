@@ -1,3 +1,4 @@
+import { KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -5,6 +6,8 @@ import useSWR from 'swr';
 
 import SubHeader from '@components/sub-header/SubHeader';
 import { DeadlineBadge } from '@components/survey/DeadlineBadge';
+import LockedBadgeModal from '@components/survey/LockedBadgeModal';
+import PointsBadge from '@components/survey/PointsBadge';
 import {
   isSurveysPaused,
   SURVEYS_PAUSED_MESSAGE_EN,
@@ -13,6 +16,7 @@ import {
 import { Colors, Layout, Typo } from '@design-system';
 import i18n from '@i18n/index';
 import { Bucket, SurveyIndexEntry } from '@models/survey';
+import { getReimbursementState, REIMBURSEMENT_KEY } from '@utils/apis/reimbursement';
 import { getSurveyIndex } from '@utils/apis/survey';
 
 import { MainScrollContainer } from '../Root';
@@ -32,7 +36,7 @@ const SectionRows = styled(Layout.FlexCol)`
   width: 100%;
 `;
 
-const RowCard = styled.button`
+const RowCard = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -137,6 +141,30 @@ const PauseBanner = styled(Layout.FlexRow)`
   gap: 8px;
 `;
 
+const PointsSummaryBand = styled(Layout.FlexCol)`
+  width: 100%;
+  gap: 6px;
+  border: 1px solid #d8c3ff;
+  border-radius: 12px;
+  background: #fbf8ff;
+  padding: 12px 14px;
+`;
+
+const PointsSummaryLine = styled(Layout.FlexRow)`
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+`;
+
+const PointsSummaryLink = styled.button`
+  flex: 0 0 auto;
+  color: ${Colors.PRIMARY};
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+`;
+
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
 const HIGH_PRIORITY_SURVEY_ORDER = new Map([
@@ -215,9 +243,12 @@ const formatDate = (iso: string): string => {
 
 function SurveysIndex() {
   const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
+  const { t: tReimbursement } = useTranslation('translation', { keyPrefix: 'reimbursement' });
   const navigate = useNavigate();
   const location = useLocation();
+  const [lockedEntry, setLockedEntry] = useState<SurveyIndexEntry | null>(null);
   const { data } = useSWR('/surveys/index/', getSurveyIndex);
+  const { data: reimbursement } = useSWR(REIMBURSEMENT_KEY, getReimbursementState);
 
   if (!data) return null;
 
@@ -228,13 +259,27 @@ function SurveysIndex() {
       state: { from: location.pathname + location.search },
     });
 
+  const handleEntryKeyDown = (event: KeyboardEvent<HTMLDivElement>, entry: SurveyIndexEntry) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    navigateToEntry(entry);
+  };
+
   const renderEntryContent = (entry: SurveyIndexEntry, bucket: Bucket) => (
     <>
       <RowHeader>
         <Typo type="title-medium" color="BLACK">
           {pickLocalized(entry.survey.title_en, entry.survey.title_ko)}
         </Typo>
-        {bucket !== 'completed' && isHighPrioritySurvey(entry) && (
+        <PointsBadge
+          pointValue={entry.point_value}
+          pointAward={entry.point_award}
+          locked={!!entry.point_locked_by_prereq_slug}
+          onLockedClick={
+            entry.point_locked_by_prereq_slug ? () => setLockedEntry(entry) : undefined
+          }
+        />
+        {bucket !== 'completed' && entry.point_value <= 0 && isHighPrioritySurvey(entry) && (
           <HighPriorityBadge>{t('high_priority')}</HighPriorityBadge>
         )}
         {bucket === 'available_now' && (
@@ -281,7 +326,13 @@ function SurveysIndex() {
     }
 
     return (
-      <RowCard key={entry.id} type="button" onClick={() => navigateToEntry(entry)}>
+      <RowCard
+        key={entry.id}
+        role="button"
+        tabIndex={0}
+        onClick={() => navigateToEntry(entry)}
+        onKeyDown={(event) => handleEntryKeyDown(event, entry)}
+      >
         {renderEntryContent(entry, bucket)}
       </RowCard>
     );
@@ -307,6 +358,21 @@ function SurveysIndex() {
               🛠️ {pickLocalized(SURVEYS_PAUSED_MESSAGE_EN, SURVEYS_PAUSED_MESSAGE_KO)}
             </Typo>
           </PauseBanner>
+        )}
+        {reimbursement && (
+          <PointsSummaryBand>
+            <PointsSummaryLine>
+              <Typo type="body-medium" color="BLACK">
+                {tReimbursement('provisional_total_label')}: {reimbursement.adjusted_total} pts
+              </Typo>
+              <PointsSummaryLink type="button" onClick={() => navigate('/reimbursement')}>
+                {tReimbursement('see_how_works')}
+              </PointsSummaryLink>
+            </PointsSummaryLine>
+            <Typo type="label-medium" color="DARK_GRAY">
+              {tReimbursement('audit_disclaimer_short')}
+            </Typo>
+          </PointsSummaryBand>
         )}
         {!hasTodo && !hasCompleted && (
           <Typo type="body-medium" color="DARK_GRAY">
@@ -334,6 +400,31 @@ function SurveysIndex() {
               {data.completed.map((entry) => renderEntry(entry, 'completed'))}
             </SectionRows>
           </Section>
+        )}
+        {lockedEntry && (
+          <LockedBadgeModal
+            visible
+            pointValue={lockedEntry.point_value}
+            prereqTitle={pickLocalized(
+              lockedEntry.point_locked_by_prereq_title_en ??
+                lockedEntry.point_locked_by_prereq_slug ??
+                '',
+              lockedEntry.point_locked_by_prereq_title_ko ??
+                lockedEntry.point_locked_by_prereq_slug ??
+                '',
+            )}
+            surveyTitle={pickLocalized(lockedEntry.survey.title_en, lockedEntry.survey.title_ko)}
+            onClose={() => setLockedEntry(null)}
+            onDoPrereq={() => {
+              const prereqSlug = lockedEntry.point_locked_by_prereq_slug;
+              setLockedEntry(null);
+              if (prereqSlug) {
+                navigate(`/surveys/${prereqSlug}/answer`, {
+                  state: { from: location.pathname + location.search },
+                });
+              }
+            }}
+          />
         )}
       </Page>
     </MainScrollContainer>

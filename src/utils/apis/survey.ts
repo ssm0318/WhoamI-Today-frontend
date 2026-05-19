@@ -7,6 +7,7 @@ import {
   SurveyIndexResponse,
   SurveyOfTheDayResponse,
   SurveyResults,
+  SurveySubmitResponse,
 } from '@models/survey';
 
 import axios, { API_BASE_URL } from './axios';
@@ -37,8 +38,10 @@ export const getSurveyDetail = async (slug: string): Promise<Survey> => {
 export const submitSurveyResponse = async (
   slug: string,
   answers: SurveyAnswerInput[],
-): Promise<{ id: number }> => {
-  const { data } = await axios.post<{ id: number }>(`/surveys/${slug}/responses/`, { answers });
+): Promise<SurveySubmitResponse> => {
+  const { data } = await axios.post<SurveySubmitResponse>(`/surveys/${slug}/responses/`, {
+    answers,
+  });
   return data;
 };
 

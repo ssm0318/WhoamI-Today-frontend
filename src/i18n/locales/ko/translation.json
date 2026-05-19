@@ -1382,8 +1382,12 @@
       "thanks_title": "응답해 주셔서 감사합니다.",
       "thanks_body_default": "응답이 저장되었어요. 준비되시면 다시 들러주세요.",
       "thanks_body_repeatable": "남겨주신 의견이 저장되었어요. 언제든 다시 들러주세요 — 모두 읽어보고 있어요.",
-      "thanks_body_editable": "응답이 저장되었어요. 설문이 닫히기 전까지 언제든 수정할 수 있어요."
+      "thanks_body_editable": "응답이 저장되었어요. 설문이 닫히기 전까지 언제든 수정할 수 있어요.",
+      "done_points_awarded": "+{{points}}점이 임시로 적립되었어요.",
+      "done_points_locked": "0점으로 기록되었어요. {{note}}"
     },
+    "edit_response": "응답 수정",
+    "editable_points_note": "수정은 응답 내용만 업데이트하며 추가 포인트를 만들지 않아요.",
     "buckets": {
       "population": "전체",
       "friends": "친구",
@@ -1413,6 +1417,28 @@
       "empty": "아직 충분한 응답이 모이지 않았어요.",
       "suppressed": "{{min}}명 미만이 답한 단어 {{count}}개는 개인정보 보호를 위해 숨겼어요."
     }
+  },
+  "reimbursement": {
+    "summary_title": "내 연구 포인트",
+    "provisional_total_label": "현재 임시 포인트",
+    "dollar_estimate_label": "예상 리워드 약 ${{amount}}",
+    "audit_disclaimer_short": "포인트는 임시 값이며 데이터 품질 검토 후 달라질 수 있어요.",
+    "audit_disclaimer_long": "포인트는 임시 값입니다. 최종 리워드는 연구 종료 후 데이터 품질 검토에 따라 결정돼요. 성의 없이 작성된 응답은 감액될 수 있어요.",
+    "see_how_works": "자세히 보기 ›",
+    "what_earns_title": "포인트 적립 항목",
+    "what_earns_body": "설문, Wit_bot 감사, 인터뷰 신청이 포인트로 인정될 수 있어요. 종료 설문, 기능 평가, 단계별 회고 설문은 더 높은 포인트가 걸려 있어요.",
+    "conversion_rate": "{{points}}점 = $1",
+    "locked_badge_modal_title": "먼저 필요한 설문을 완료해 주세요",
+    "locked_badge_modal_body": "{{prereqTitle}}을 먼저 완료하면 {{surveyTitle}}에서 {{points}}점을 받을 수 있어요.\n\n지금 이 설문을 제출하면 0점으로 기록돼요.",
+    "locked_badge_do_prereq_button": "먼저 하러 가기",
+    "locked_badge_close_button": "닫기",
+    "section_surveys": "설문",
+    "section_other_activities": "기타 활동",
+    "section_pending": "대기 중",
+    "wit_bot_audit_label": "Wit_bot 감사 통과",
+    "interview_signup_label": "인터뷰 신청",
+    "downgraded_label": "검토 후 조정됨",
+    "pending_prereq_copy": "{{title}} 먼저 완료"
   },
   "version_switch": {
     "title": "버전 변경 신청",

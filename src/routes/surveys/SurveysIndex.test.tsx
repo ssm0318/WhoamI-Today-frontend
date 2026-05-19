@@ -59,6 +59,51 @@ jest.mock(
 );
 
 jest.mock(
+  '@components/survey/PointsBadge',
+  () => ({
+    __esModule: true,
+    default: ({
+      pointValue,
+      pointAward,
+      locked,
+    }: {
+      pointValue: number;
+      pointAward?: {
+        awarded_points: number;
+        effective_points: number;
+        adjusted_points: number | null;
+      } | null;
+      locked?: boolean;
+    }) => {
+      if (pointAward?.adjusted_points !== null && pointAward?.adjusted_points !== undefined) {
+        return (
+          <span>
+            +{pointAward.effective_points} pts <s>{pointAward.awarded_points} pts</s>
+          </span>
+        );
+      }
+      if (pointAward) return <span>✓ +{pointAward.effective_points} pts</span>;
+      if (pointValue <= 0) return null;
+      return (
+        <span>
+          {locked ? '🔒 ' : ''}+{pointValue} pts
+        </span>
+      );
+    },
+  }),
+  { virtual: true },
+);
+
+jest.mock(
+  '@components/survey/LockedBadgeModal',
+  () => ({
+    __esModule: true,
+    default: () => null,
+  }),
+  { virtual: true },
+);
+
+jest.mock(
   '@constants/layout',
   () => ({
     TITLE_HEADER_HEIGHT: 0,
@@ -123,6 +168,15 @@ jest.mock(
   { virtual: true },
 );
 
+jest.mock(
+  '@utils/apis/reimbursement',
+  () => ({
+    getReimbursementState: jest.fn(),
+    REIMBURSEMENT_KEY: '/surveys/reimbursement/',
+  }),
+  { virtual: true },
+);
+
 const mockedUseSWR = useSWR as unknown as jest.Mock;
 
 const entry = (
@@ -139,6 +193,11 @@ const entry = (
   redirect_url: `/surveys/${overrides.survey.slug}`,
   results_unlocked: false,
   draft: null,
+  point_value: 0,
+  point_locked_by_prereq_slug: null,
+  point_locked_by_prereq_title_en: null,
+  point_locked_by_prereq_title_ko: null,
+  point_award: null,
   ...overrides,
 });
 
@@ -421,5 +480,71 @@ describe('SurveysIndex', () => {
     );
 
     expect(screen.getByText('50% done')).toBeInTheDocument();
+  });
+
+  it('renders point badges and suppresses high-priority badges for rewarded rows', () => {
+    const data: SurveyIndexResponse = {
+      available_now: [
+        entry({
+          id: 1,
+          cadence: 'biweekly',
+          bucket: 'available_now',
+          point_value: 40,
+          survey: {
+            slug: 'goal_comparison_p1',
+            title_en: 'Phase 1 reflection',
+            title_ko: 'Phase 1 reflection',
+          },
+        }),
+        entry({
+          id: 2,
+          cadence: 'daily',
+          bucket: 'available_now',
+          point_value: 10,
+          point_locked_by_prereq_slug: 'habit_platform',
+          point_locked_by_prereq_title_en: 'Habitual platform',
+          point_locked_by_prereq_title_ko: 'Habitual platform',
+          survey: {
+            slug: 'sotd_d15_shi',
+            title_en: 'Habit survey',
+            title_ko: 'Habit survey',
+          },
+        }),
+      ],
+      late_but_accepted: [],
+      completed: [
+        entry({
+          id: 3,
+          cadence: 'daily',
+          bucket: 'completed',
+          point_value: 3,
+          point_award: {
+            awarded_points: 3,
+            adjusted_points: 1,
+            effective_points: 1,
+            note: 'Adjusted after review.',
+          },
+          submitted_at: '2026-05-18T12:00:00Z',
+          survey: {
+            slug: 'daily_base',
+            title_en: 'Today on WIT',
+            title_ko: 'Today on WIT',
+          },
+        }),
+      ],
+    };
+    mockedUseSWR.mockReturnValue({ data });
+
+    render(
+      <MemoryRouter>
+        <SurveysIndex />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('+40 pts')).toBeInTheDocument();
+    expect(screen.getByText('🔒 +10 pts')).toBeInTheDocument();
+    expect(screen.getByText('+1 pts')).toBeInTheDocument();
+    expect(screen.getByText('3 pts')).toBeInTheDocument();
+    expect(screen.queryByText('High priority')).not.toBeInTheDocument();
   });
 });

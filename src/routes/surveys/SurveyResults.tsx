@@ -38,6 +38,15 @@ const ActionButton = styled.button`
   cursor: pointer;
 `;
 
+const EditCallout = styled(Layout.FlexCol)`
+  width: 100%;
+  gap: 8px;
+  border: 1px solid #d8c3ff;
+  border-radius: 8px;
+  background: #fbf8ff;
+  padding: 14px;
+`;
+
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
 interface AxiosError {
@@ -157,6 +166,23 @@ function SurveyResults() {
     <MainScrollContainer>
       <SubHeader title={headerTitle} RightComponent={headerRight} />
       <Page>
+        {survey.editable && (
+          <EditCallout>
+            <Typo type="body-medium" color="DARK_GRAY">
+              {t('editable_points_note')}
+            </Typo>
+            <ActionButton
+              type="button"
+              onClick={() =>
+                navigate(`/surveys/${slug}/answer`, {
+                  state: { from: location.pathname + location.search },
+                })
+              }
+            >
+              {t('edit_response')}
+            </ActionButton>
+          </EditCallout>
+        )}
         {data.panels.map((panel, idx) => (
           <PanelView
             key={panel.group_key}
