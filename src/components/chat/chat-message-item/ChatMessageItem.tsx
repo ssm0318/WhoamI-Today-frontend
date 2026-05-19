@@ -3,8 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import LinkifiedText from '@components/_common/linkified-text/LinkifiedText';
 import ProfileImage from '@components/_common/profile-image/ProfileImage';
+import RichMessageText from '@components/_common/rich-message-text/RichMessageText';
 import { BotCard } from '@components/chat/bot-card';
 import SharedContentCard from '@components/chat/shared-content-card/SharedContentCard';
 import { Layout, Typo } from '@design-system';
@@ -243,7 +243,7 @@ function ChatMessageItem({
           // `white-space: normal` by default, which would collapse \n into
           // a single space and turn multi-line messages into one blurb.
           <Typo type="body-large" color="BLACK" pre>
-            <LinkifiedText>{content}</LinkifiedText>
+            <RichMessageText>{content}</RichMessageText>
           </Typo>
         )}
       </Layout.FlexRow>
