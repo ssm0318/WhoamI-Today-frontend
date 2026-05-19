@@ -313,12 +313,13 @@ function SurveysIndex() {
 
   const renderEntry = (entry: SurveyIndexEntry, bucket: Bucket) => {
     if (bucket === 'completed') {
+      const canEditResponse = !!entry.survey.editable && !entry.survey.closed;
       return (
         <CompletedRowCard key={entry.id}>
           {renderEntryContent(entry, bucket)}
-          {entry.results_unlocked && (
+          {(canEditResponse || entry.results_unlocked) && (
             <ResultsButton type="button" onClick={() => navigateToEntry(entry)}>
-              {t('check_results')}
+              {canEditResponse ? t('edit_response') : t('check_results')}
             </ResultsButton>
           )}
         </CompletedRowCard>

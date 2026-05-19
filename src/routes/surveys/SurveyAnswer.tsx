@@ -101,7 +101,6 @@ function SurveyAnswer() {
               // page by the time the network request lands.
               mutate(SURVEY_OF_THE_DAY_KEY);
               mutate(REIMBURSEMENT_KEY);
-              mutate('/surveys/index/');
 
               // SOTD chaining: when more than one SOTD is scheduled for
               // today (e.g. May 5 co-schedules d01_honeymoon + d02_rsds
@@ -113,6 +112,7 @@ function SurveyAnswer() {
               // queued, fall through to /done.
               try {
                 const idx = await getSurveyIndex();
+                mutate('/surveys/index/', idx, { revalidate: false });
                 const next = findNextSotdToday(idx.available_now, survey.slug);
                 if (next) {
                   navigate(`/surveys/${next.survey.slug}/answer`, {
@@ -124,6 +124,7 @@ function SurveyAnswer() {
               } catch {
                 // Index fetch failure shouldn't block the user — drop
                 // to /done so they at least see the acknowledgement.
+                mutate('/surveys/index/');
               }
 
               // Replace /answer with /done in history so a Back tap from

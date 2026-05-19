@@ -21,6 +21,7 @@ jest.mock('react-i18next', () => ({
       if (key === 'daily_archive_row') return 'Daily check-ins collapsed';
       if (key === 'high_priority') return 'High priority';
       if (key === 'check_results') return 'Check Results';
+      if (key === 'edit_response') return 'Edit response';
       return key;
     },
   }),
@@ -446,6 +447,41 @@ describe('SurveysIndex', () => {
     expect(screen.getByText('Phase 1 reflection')).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: 'Check Results' })).toHaveLength(1);
     expect(screen.queryByText('Daily check-ins collapsed')).not.toBeInTheDocument();
+  });
+
+  it('shows edit response for completed editable surveys', () => {
+    const data: SurveyIndexResponse = {
+      available_now: [],
+      late_but_accepted: [],
+      completed: [
+        entry({
+          id: 1,
+          cadence: 'endpoint',
+          bucket: 'completed',
+          submitted_at: '2026-05-18T12:00:00Z',
+          results_unlocked: false,
+          redirect_url: '/surveys/goal_comparison_p1/answer',
+          survey: {
+            slug: 'goal_comparison_p1',
+            title_en: 'Phase 1 reflection: Part 1',
+            title_ko: 'Phase 1 reflection: Part 1',
+            editable: true,
+            closed: false,
+          },
+        }),
+      ],
+    };
+    mockedUseSWR.mockReturnValue({ data });
+
+    render(
+      <MemoryRouter>
+        <SurveysIndex />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('Phase 1 reflection: Part 1')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Edit response' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Check Results' })).not.toBeInTheDocument();
   });
 
   it('shows draft progress for in-progress available surveys', () => {
