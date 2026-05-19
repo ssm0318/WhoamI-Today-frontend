@@ -19,16 +19,16 @@ import { MainScrollContainer } from '../Root';
 import { SurveyPageShell } from './SurveyPageLayout';
 
 const Page = styled(SurveyPageShell)`
-  gap: 16px;
+  gap: 24px;
 `;
 
 const Section = styled(Layout.FlexCol)`
-  gap: 8px;
+  gap: 12px;
   width: 100%;
 `;
 
 const SectionRows = styled(Layout.FlexCol)`
-  gap: 8px;
+  gap: 12px;
   width: 100%;
 `;
 
@@ -41,7 +41,7 @@ const RowCard = styled.button`
   border: 1px solid ${Colors.LIGHT_GRAY};
   border-radius: 12px;
   background: ${Colors.WHITE};
-  padding: 12px 16px;
+  padding: 16px;
   text-align: left;
   cursor: pointer;
 `;

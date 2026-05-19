@@ -21,8 +21,8 @@ const Card = styled(Layout.FlexCol)`
   border: 1px solid ${Colors.LIGHT_GRAY};
   border-radius: 12px;
   background: ${Colors.WHITE};
-  padding: 32px 20px;
-  gap: 12px;
+  padding: 36px 24px;
+  gap: 16px;
   align-items: center;
   text-align: center;
 `;

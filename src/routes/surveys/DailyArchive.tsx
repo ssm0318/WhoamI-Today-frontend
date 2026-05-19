@@ -13,7 +13,7 @@ import { MainScrollContainer } from '../Root';
 import { SurveyPageShell } from './SurveyPageLayout';
 
 const Page = styled(SurveyPageShell)`
-  gap: 12px;
+  gap: 14px;
 `;
 
 const RowCard = styled.button`
@@ -25,7 +25,7 @@ const RowCard = styled.button`
   border: 1px solid ${Colors.LIGHT_GRAY};
   border-radius: 12px;
   background: ${Colors.WHITE};
-  padding: 12px 16px;
+  padding: 16px;
   text-align: left;
   cursor: pointer;
 `;

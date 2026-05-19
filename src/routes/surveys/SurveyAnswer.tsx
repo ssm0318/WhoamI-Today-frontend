@@ -15,7 +15,7 @@ import { MainScrollContainer } from '../Root';
 import { SurveyPageShell } from './SurveyPageLayout';
 
 const Page = styled(SurveyPageShell)`
-  gap: 12px;
+  gap: 16px;
 `;
 
 const Card = styled(Layout.FlexCol)`
@@ -23,11 +23,11 @@ const Card = styled(Layout.FlexCol)`
   border: 1px solid ${Colors.LIGHT_GRAY};
   border-radius: 12px;
   background: ${Colors.WHITE};
-  padding: 16px;
-  gap: 12px;
+  padding: 20px;
+  gap: 16px;
 
   @media (max-width: 360px) {
-    padding: 12px;
+    padding: 16px;
   }
 `;
 

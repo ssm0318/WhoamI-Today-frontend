@@ -14,12 +14,12 @@ import { MainScrollContainer } from '../Root';
 import { SurveyPageShell } from './SurveyPageLayout';
 
 const Page = styled(SurveyPageShell)`
-  gap: 24px;
+  gap: 28px;
 `;
 
 const PanelGroup = styled(Layout.FlexCol)`
   width: 100%;
-  gap: 12px;
+  gap: 16px;
 `;
 
 const PanelHeader = styled(Layout.FlexCol)`
