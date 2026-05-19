@@ -18,6 +18,7 @@ export function DeadlineBadge({ windowEnd, cadence, allowLate }: Props) {
     formatHoursLeft: (hours) => t('hours_left', { hours }),
     formatClosesWeekday: (weekday) => t('closes_weekday', { weekday }),
     formatDueToday: () => t('due_today'),
+    formatDueTomorrow: () => t('due_tomorrow'),
     formatDueWeekday: (weekday) => t('due_weekday', { weekday }),
   });
 

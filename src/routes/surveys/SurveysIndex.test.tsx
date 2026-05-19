@@ -20,6 +20,7 @@ jest.mock('react-i18next', () => ({
       if (key === 'bucket_completed') return 'Completed';
       if (key === 'daily_archive_row') return 'Daily check-ins collapsed';
       if (key === 'high_priority') return 'High priority';
+      if (key === 'check_results') return 'Check Results';
       return key;
     },
   }),
@@ -44,7 +45,15 @@ jest.mock(
   '@components/survey/DeadlineBadge',
   () => ({
     DeadlineBadge: ({ windowEnd }: { windowEnd: string | null }) =>
-      windowEnd ? <span>{windowEnd === '2026-05-24' ? 'Due Sun' : 'Due today'}</span> : null,
+      windowEnd ? (
+        <span>
+          {windowEnd === '2026-05-24'
+            ? 'Due Sun'
+            : windowEnd === '2026-05-19'
+            ? 'Due tomorrow'
+            : 'Due today'}
+        </span>
+      ) : null,
   }),
   { virtual: true },
 );
@@ -121,12 +130,14 @@ const entry = (
     Pick<SurveyIndexEntry, 'id' | 'cadence' | 'survey' | 'bucket'>,
 ): SurveyIndexEntry => ({
   sequence_index: overrides.id,
+  sidebar_order: null,
   window_start: '2026-05-18',
   window_end: '2026-05-18',
   allow_late: true,
   user_answered: false,
   submitted_at: null,
   redirect_url: `/surveys/${overrides.survey.slug}`,
+  results_unlocked: false,
   draft: null,
   ...overrides,
 });
@@ -186,6 +197,7 @@ describe('SurveysIndex', () => {
           cadence: 'biweekly',
           bucket: 'available_now',
           allow_late: true,
+          sidebar_order: 1,
           survey: {
             slug: 'phase1_friend_closeness',
             title_en: 'Rate your closeness with each friend (Phase 1)',
@@ -196,6 +208,7 @@ describe('SurveysIndex', () => {
           id: 5,
           cadence: 'endpoint',
           bucket: 'available_now',
+          sidebar_order: 2,
           survey: {
             slug: 'goal_comparison_p1',
             title_en: 'Phase 1 reflection: Part 1',
@@ -229,6 +242,7 @@ describe('SurveysIndex', () => {
           cadence: 'biweekly',
           bucket: 'available_now',
           allow_late: true,
+          sidebar_order: 4,
           survey: {
             slug: 'feature_eval_w',
             title_en: 'Ver. W features',
@@ -241,6 +255,8 @@ describe('SurveysIndex', () => {
           cadence: 'biweekly',
           bucket: 'available_now',
           allow_late: true,
+          sidebar_order: 3,
+          window_end: '2026-05-19',
           survey: {
             slug: 'mid_study_w',
             title_en: 'Phase 1 reflection: Part 2',
@@ -293,7 +309,8 @@ describe('SurveysIndex', () => {
     expect(screen.getAllByText(/Was due/)).toHaveLength(1);
     expect(screen.queryByText('bucket_available_now')).not.toBeInTheDocument();
     expect(screen.queryByText('bucket_late_but_accepted')).not.toBeInTheDocument();
-    expect(screen.getAllByText('Due today')).toHaveLength(5);
+    expect(screen.getAllByText('Due today')).toHaveLength(4);
+    expect(screen.getByText('Due tomorrow')).toBeInTheDocument();
     expect(screen.getByText('Due Sun')).toBeInTheDocument();
     expect(screen.queryByText('Today only')).not.toBeInTheDocument();
     expect(screen.getAllByText('High priority')).toHaveLength(4);
@@ -336,6 +353,7 @@ describe('SurveysIndex', () => {
           cadence: 'daily',
           bucket: 'completed',
           submitted_at: '2026-05-18T12:00:00Z',
+          results_unlocked: false,
           survey: {
             slug: 'sotd_d15_shi',
             title_en: 'Daily habit survey',
@@ -347,6 +365,7 @@ describe('SurveysIndex', () => {
           cadence: 'biweekly',
           bucket: 'completed',
           submitted_at: '2026-05-18T12:00:00Z',
+          results_unlocked: true,
           survey: {
             slug: 'mid_study_w',
             title_en: 'Phase 1 reflection',
@@ -366,6 +385,7 @@ describe('SurveysIndex', () => {
     expect(screen.getByText('Completed')).toBeInTheDocument();
     expect(screen.getByText('Daily habit survey')).toBeInTheDocument();
     expect(screen.getByText('Phase 1 reflection')).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Check Results' })).toHaveLength(1);
     expect(screen.queryByText('Daily check-ins collapsed')).not.toBeInTheDocument();
   });
 

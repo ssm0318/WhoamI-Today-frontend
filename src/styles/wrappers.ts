@@ -18,9 +18,11 @@ export const RootContainer = styled(Layout.FlexCol)`
 `;
 
 export const MainWrapper = styled(Layout.FlexCol)`
-  height: calc(100% - ${TOP_NAVIGATION_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px);
+  height: calc(
+    100% - ${TOP_NAVIGATION_HEIGHT}px - ${BOTTOM_TABBAR_HEIGHT}px - env(safe-area-inset-bottom, 0px)
+  );
   margin-top: ${TOP_NAVIGATION_HEIGHT}px;
-  margin-bottom: ${BOTTOM_TABBAR_HEIGHT}px;
+  margin-bottom: calc(${BOTTOM_TABBAR_HEIGHT}px + env(safe-area-inset-bottom, 0px));
   width: 100%;
   overflow-y: auto;
   overflow-x: visible;

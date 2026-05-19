@@ -60,6 +60,14 @@ describe('formatRemainingDeadline', () => {
     ).toBe('Due Sun');
   });
 
+  it('uses a tomorrow label for non-daily surveys due the next local day', () => {
+    expect(
+      formatRemainingDeadline('2026-05-19', 'biweekly', true, {
+        now: new Date('2026-05-18T20:00:00Z'),
+      }),
+    ).toBe('Due tomorrow');
+  });
+
   it('allows the caller to localize non-daily deadline labels', () => {
     expect(
       formatRemainingDeadline('2026-05-24', 'weekly', false, {

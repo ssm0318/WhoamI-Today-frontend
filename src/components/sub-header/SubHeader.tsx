@@ -2,7 +2,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DEFAULT_MARGIN, SCREEN_WIDTH } from '@constants/layout';
-import { Layout, SvgIcon, Typo } from '@design-system';
+import { SvgIcon, Typo } from '@design-system';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import { classifyPathnameAsSource } from '@utils/navSource';
 import { FontType } from 'src/design-system/Font/Font.types';
@@ -60,51 +60,46 @@ function SubHeader({
     typeof document !== 'undefined'
       ? document.getElementById('root-container') ?? document.body
       : null;
+  const titleMaxWidth = Math.max(120, SCREEN_WIDTH - 2 * DEFAULT_MARGIN - 96);
 
   const headerNode = (
     <SubHeaderWrapper>
-      <Layout.FlexRow
-        justifyContent="space-between"
-        w="100%"
-        alignItems="center"
-        ph="default"
-        pv={4}
-      >
-        {LeftComponent || (
-          <Layout.LayoutBase w={36} h={36}>
+      <div className="sub-header-inner">
+        <div className="sub-header-side">
+          {LeftComponent || (
             <button type="button" onClick={handleGoBack}>
               <SvgIcon name="arrow_left" size={36} color="BLACK" />
             </button>
-          </Layout.LayoutBase>
-        )}
-        {title &&
-          (onClickTitle ? (
-            <button
-              type="button"
-              onClick={onClickTitle}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-            >
+          )}
+        </div>
+        <div className="sub-header-title">
+          {title &&
+            (onClickTitle ? (
+              <button
+                type="button"
+                onClick={onClickTitle}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+              >
+                <Typo
+                  type={typo}
+                  textAlign="center"
+                  ellipsis={{ enabled: true, maxWidth: titleMaxWidth }}
+                >
+                  {title}
+                </Typo>
+              </button>
+            ) : (
               <Typo
                 type={typo}
                 textAlign="center"
-                ellipsis={{ enabled: true, maxWidth: SCREEN_WIDTH - 2 * DEFAULT_MARGIN }}
+                ellipsis={{ enabled: true, maxWidth: titleMaxWidth }}
               >
                 {title}
               </Typo>
-            </button>
-          ) : (
-            <Typo
-              type={typo}
-              textAlign="center"
-              ellipsis={{ enabled: true, maxWidth: SCREEN_WIDTH - 2 * DEFAULT_MARGIN }}
-            >
-              {title}
-            </Typo>
-          ))}
-        <Layout.LayoutBase w={title && !RightComponent ? 36 : undefined}>
-          {RightComponent && RightComponent}
-        </Layout.LayoutBase>
-      </Layout.FlexRow>
+            ))}
+        </div>
+        <div className="sub-header-side">{RightComponent && RightComponent}</div>
+      </div>
     </SubHeaderWrapper>
   );
 

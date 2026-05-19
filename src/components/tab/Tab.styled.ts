@@ -11,7 +11,8 @@ export const TabWrapper = styled.nav<{ $noShadow?: boolean }>`
   max-width: ${MAX_WINDOW_WIDTH}px;
   margin: 0 auto;
   background-color: white;
-  height: ${BOTTOM_TABBAR_HEIGHT}px;
+  height: calc(${BOTTOM_TABBAR_HEIGHT}px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   box-shadow: ${({ $noShadow }) => ($noShadow ? 'none' : '0px -4px 12px 0px rgba(0, 0, 0, 0.16)')};
   z-index: ${Z_INDEX.BOTTOM_TAB};
 `;

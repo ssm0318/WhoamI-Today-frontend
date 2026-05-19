@@ -10,6 +10,7 @@ interface FormatRemainingDeadlineOptions {
   formatHoursLeft?: (hours: number) => string;
   formatClosesWeekday?: (weekday: string) => string;
   formatDueToday?: () => string;
+  formatDueTomorrow?: () => string;
   formatDueWeekday?: (weekday: string) => string;
 }
 
@@ -27,8 +28,12 @@ export function formatRemainingDeadline(
   if (!endDate || !closeAt || closeAt.getTime() <= now.getTime()) return null;
 
   if (cadence !== 'daily') {
-    if (formatDateInZone(now, DEADLINE_TIME_ZONE) === windowEnd) {
+    const today = formatDateInZone(now, DEADLINE_TIME_ZONE);
+    if (today === windowEnd) {
       return options.formatDueToday?.() ?? 'Due today';
+    }
+    if (addDaysToIsoDate(today, 1) === windowEnd) {
+      return options.formatDueTomorrow?.() ?? 'Due tomorrow';
     }
     const weekday = formatWeekday(endDate, options.locale ?? 'en-US');
     return (
@@ -124,4 +129,15 @@ function formatDateInZone(date: Date, timeZone: string): string {
   }).formatToParts(date);
   const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
   return `${values.year}-${values.month}-${values.day}`;
+}
+
+function addDaysToIsoDate(value: string, days: number): string | null {
+  const date = parseIsoDate(value);
+  if (!date) return null;
+
+  date.setUTCDate(date.getUTCDate() + days);
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }

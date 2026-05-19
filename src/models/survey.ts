@@ -265,14 +265,23 @@ export interface SurveyIndexEntry {
   id: number;
   cadence: Cadence;
   sequence_index: number;
+  sidebar_order: number | null;
   window_start: string; // ISO date
   window_end: string | null; // null = open-ended (anytime, endpoint)
   allow_late: boolean;
-  survey: { slug: string; title_en: string; title_ko: string };
+  survey: {
+    slug: string;
+    title_en: string;
+    title_ko: string;
+    priority?: number;
+    editable?: boolean;
+    closed?: boolean;
+  };
   bucket: Bucket;
   user_answered: boolean;
   submitted_at: string | null;
   redirect_url: string;
+  results_unlocked: boolean;
   draft: SurveyDraftSummary | null;
 }
 

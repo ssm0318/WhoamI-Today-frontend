@@ -46,6 +46,19 @@ const RowCard = styled.button`
   cursor: pointer;
 `;
 
+const CompletedRowCard = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid ${Colors.LIGHT_GRAY};
+  border-radius: 12px;
+  background: ${Colors.WHITE};
+  padding: 16px;
+  text-align: left;
+`;
+
 const RowHeader = styled.div`
   display: flex;
   flex-direction: row;
@@ -97,6 +110,18 @@ const HighPriorityBadge = styled.span`
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
+`;
+
+const ResultsButton = styled.button`
+  align-self: flex-start;
+  border: 1px solid ${Colors.PRIMARY};
+  border-radius: 8px;
+  background: ${Colors.PRIMARY};
+  color: ${Colors.WHITE};
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
 `;
 
 // Banner shown across the top of the surveys index while the maintenance
@@ -159,11 +184,15 @@ const todoPriorityRank = (entry: SurveyIndexEntry): number => {
 const highPrioritySurveyOrder = (entry: SurveyIndexEntry): number =>
   HIGH_PRIORITY_SURVEY_ORDER.get(entry.survey.slug) ?? Number.MAX_SAFE_INTEGER;
 
+const sidebarOrder = (entry: SurveyIndexEntry): number =>
+  entry.sidebar_order ?? Number.MAX_SAFE_INTEGER;
+
 const sortTodoEntries = (entries: SurveyIndexEntry[]): SurveyIndexEntry[] =>
   entries
     .map((entry, index) => ({ entry, index }))
     .sort(
       (a, b) =>
+        sidebarOrder(a.entry) - sidebarOrder(b.entry) ||
         todoPriorityRank(a.entry) - todoPriorityRank(b.entry) ||
         highPrioritySurveyOrder(a.entry) - highPrioritySurveyOrder(b.entry) ||
         a.index - b.index,
@@ -192,18 +221,15 @@ function SurveysIndex() {
 
   if (!data) return null;
 
-  const renderEntry = (entry: SurveyIndexEntry, bucket: Bucket) => (
-    <RowCard
-      key={entry.id}
-      type="button"
-      onClick={() =>
-        // Carry `from` so the post-submit Done page returns to the
-        // surveys index instead of forgetting where we came from.
-        navigate(entry.redirect_url, {
-          state: { from: location.pathname + location.search },
-        })
-      }
-    >
+  const navigateToEntry = (entry: SurveyIndexEntry) =>
+    // Carry `from` so the post-submit Done page returns to the
+    // surveys index instead of forgetting where we came from.
+    navigate(entry.redirect_url, {
+      state: { from: location.pathname + location.search },
+    });
+
+  const renderEntryContent = (entry: SurveyIndexEntry, bucket: Bucket) => (
+    <>
       <RowHeader>
         <Typo type="title-medium" color="BLACK">
           {pickLocalized(entry.survey.title_en, entry.survey.title_ko)}
@@ -237,8 +263,29 @@ function SurveysIndex() {
           {t('submitted_on', { date: formatDate(entry.submitted_at) })}
         </Typo>
       )}
-    </RowCard>
+    </>
   );
+
+  const renderEntry = (entry: SurveyIndexEntry, bucket: Bucket) => {
+    if (bucket === 'completed') {
+      return (
+        <CompletedRowCard key={entry.id}>
+          {renderEntryContent(entry, bucket)}
+          {entry.results_unlocked && (
+            <ResultsButton type="button" onClick={() => navigateToEntry(entry)}>
+              {t('check_results')}
+            </ResultsButton>
+          )}
+        </CompletedRowCard>
+      );
+    }
+
+    return (
+      <RowCard key={entry.id} type="button" onClick={() => navigateToEntry(entry)}>
+        {renderEntryContent(entry, bucket)}
+      </RowCard>
+    );
+  };
 
   const paused = isSurveysPaused();
 
