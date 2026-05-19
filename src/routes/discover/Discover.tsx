@@ -250,9 +250,17 @@ function Discover() {
         result.splice(insertAt, 0, card);
       });
 
+    if (isVerQ) {
+      const publicHighlights = result.filter((item) => item.type === 'Question');
+      if (publicHighlights.length > 0) {
+        return [...publicHighlights, ...result.filter((item) => item.type !== 'Question')];
+      }
+    }
+
     return result;
   }, [
     discoverData,
+    isVerQ,
     profileSuggestionCard,
     surveyResultsCard,
     surveyPausedCard,
@@ -292,8 +300,8 @@ function Discover() {
 
   const renderDiscoverItem = useCallback(
     (item: DiscoverResultItem, index: number) => {
-      // VER_Q: only show Note/Response items, drop all injection cards
-      if (isVerQ && item.type !== 'Note' && item.type !== 'Response') {
+      // VER_Q: show public highlights first, regular posts after, and drop injection cards.
+      if (isVerQ && item.type !== 'Question' && item.type !== 'Note' && item.type !== 'Response') {
         return null;
       }
       switch (item.type) {
