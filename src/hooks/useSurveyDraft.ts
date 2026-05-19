@@ -248,14 +248,26 @@ export function useSurveyDraft(slug: string | undefined, backendDraft?: SurveyDr
   // each row mutates one friend's answer independently. Auto-saves to the
   // same draft localStorage entry as setAnswer.
   const setPerFriendAnswer = useCallback(
-    (questionId: number, targetUserId: number, value: ScalarAnswerValue) => {
+    (questionId: number, targetUserId: number, value: ScalarAnswerValue | undefined) => {
       const { current } = latestDraftRef;
       const existing = current.answers[questionId];
       const baseMap: PerFriendAnswerMap = isPerFriendAnswerMap(existing) ? existing : {};
-      const merged: PerFriendAnswerMap = { ...baseMap, [String(targetUserId)]: value };
+      const targetKey = String(targetUserId);
+      const merged: PerFriendAnswerMap = { ...baseMap };
+      if (value === undefined) {
+        delete merged[targetKey];
+      } else {
+        merged[targetKey] = value;
+      }
+      const nextAnswers = { ...current.answers };
+      if (Object.keys(merged).length > 0) {
+        nextAnswers[questionId] = merged;
+      } else {
+        delete nextAnswers[questionId];
+      }
       const next = {
         ...current,
-        answers: { ...current.answers, [questionId]: merged },
+        answers: nextAnswers,
         savedAt: new Date().toISOString(),
       };
       persist(next);

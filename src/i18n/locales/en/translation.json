@@ -1376,6 +1376,8 @@
             "baseline_change_hint": "Your earlier rating was {{value}}/5. If that was a genuine mistake, you can fix it here. It won't count against your participation.",
             "baseline_change_button": "Yeah, I should modify that",
             "baseline_correction_prompt": "What should the earlier rating have been?",
+            "missing_baseline_prompt": "If you remember how you would have rated them when you added them on WIT, choose it here. Only answer if you have a clear memory anchor, like exactly how you felt then or knowing you didn’t know them yet.",
+            "missing_baseline_not_sure": "I'm not sure",
             "relationship_type": {
                 "school_friend": "School friend",
                 "coworker": "Coworker",

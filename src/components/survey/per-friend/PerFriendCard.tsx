@@ -16,6 +16,9 @@ import {
 
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
+const PRIOR_RATING_BG = '#F4F5F7';
+const PRIOR_RATING_BORDER = '#E2E5EA';
+
 const Card = styled(Layout.FlexCol)`
   width: 100%;
   padding: 12px;
@@ -38,11 +41,19 @@ const QuestionBlock = styled(Layout.FlexCol)`
   gap: 6px;
 `;
 
+const PriorRatingQuestionBlock = styled(QuestionBlock)`
+  padding: 10px;
+  border: 1px solid ${PRIOR_RATING_BORDER};
+  border-radius: 8px;
+  background: ${PRIOR_RATING_BG};
+`;
+
 const CorrectionGate = styled(Layout.FlexCol)`
   gap: 8px;
   padding: 10px;
-  background: ${Colors.LIGHT};
+  border: 1px solid ${PRIOR_RATING_BORDER};
   border-radius: 8px;
+  background: ${PRIOR_RATING_BG};
 `;
 
 const CorrectionButton = styled.button`
@@ -52,6 +63,17 @@ const CorrectionButton = styled.button`
   padding: 7px 12px;
   background: ${Colors.WHITE};
   color: ${Colors.PRIMARY};
+  font-size: 13px;
+  font-weight: 600;
+`;
+
+const NotSureButton = styled.button<{ $selected: boolean }>`
+  align-self: flex-start;
+  border: 1px solid ${({ $selected }) => ($selected ? Colors.PRIMARY : Colors.LIGHT_GRAY)};
+  border-radius: 999px;
+  padding: 7px 12px;
+  background: ${({ $selected }) => ($selected ? Colors.LIGHT : Colors.WHITE)};
+  color: ${({ $selected }) => ($selected ? Colors.PRIMARY : Colors.DARK_GRAY)};
   font-size: 13px;
   font-weight: 600;
 `;
@@ -70,7 +92,7 @@ export interface PerFriendCardProps {
   questions: SurveyQuestion[];
   // Current value for (questionId, friendId). Returns undefined if untouched.
   getValue: (questionId: number) => SurveyOptionValue | null | undefined;
-  setValue: (questionId: number, value: SurveyOptionValue | null) => void;
+  setValue: (questionId: number, value: SurveyOptionValue | null | undefined) => void;
 }
 
 const LIKERT_RANGES: Record<string, [number, number]> = {
@@ -98,11 +120,7 @@ export function PerFriendCard({
       </Layout.FlexRow>
 
       {questions.map((q) => {
-        // Hide the corrected_baseline question if there's no baseline to
-        // correct — its prompt references {{baseline_closeness}} which is
-        // meaningless otherwise.
         const isBaselineCorrection = q.slug.endsWith('_corrected_baseline');
-        if (isBaselineCorrection && !hasBaseline) return null;
         const value = getValue(q.id);
         const showCorrectionInput = shouldShowBaselineCorrectionInput({
           question: q,
@@ -110,6 +128,12 @@ export function PerFriendCard({
           correctionRequested: !!requestedCorrections[q.id],
           existingValue: value,
         });
+        let prompt = pickLocalized(q.prompt_en, q.prompt_ko);
+        if (isBaselineCorrection && !hasBaseline) {
+          prompt = t('missing_baseline_prompt');
+        } else if (isBaselineCorrection) {
+          prompt = t('baseline_correction_prompt');
+        }
         if (isBaselineCorrectionQuestion(q) && !showCorrectionInput) {
           return (
             <CorrectionGate key={q.id}>
@@ -125,22 +149,31 @@ export function PerFriendCard({
             </CorrectionGate>
           );
         }
+        const Block = isBaselineCorrection ? PriorRatingQuestionBlock : QuestionBlock;
         return (
-          <QuestionBlock key={q.id}>
+          <Block key={q.id}>
             <QuestionPrompt type="body-medium" color="BLACK">
-              {isBaselineCorrection
-                ? t('baseline_correction_prompt')
-                : pickLocalized(q.prompt_en, q.prompt_ko)}
+              {prompt}
             </QuestionPrompt>
             {q.type === 'per_friend_likert_5' && (
               <LikertChips
                 min={LIKERT_RANGES.per_friend_likert_5[0]}
                 max={LIKERT_RANGES.per_friend_likert_5[1]}
                 selected={value as number | null | undefined}
-                onSelect={(v) => setValue(q.id, v ?? null)}
+                onSelect={(v) => setValue(q.id, v ?? undefined)}
                 lowLabel={pickLocalized(q.low_label_en, q.low_label_ko)}
                 highLabel={pickLocalized(q.high_label_en, q.high_label_ko)}
               />
+            )}
+            {isBaselineCorrection && !hasBaseline && (
+              <NotSureButton
+                type="button"
+                $selected={value === undefined}
+                aria-pressed={value === undefined}
+                onClick={() => setValue(q.id, undefined)}
+              >
+                {t('missing_baseline_not_sure')}
+              </NotSureButton>
             )}
             {q.type === 'per_friend_single_choice' && (
               <ChoiceChips
@@ -153,7 +186,7 @@ export function PerFriendCard({
                 onSelect={(v) => setValue(q.id, v as SurveyOptionValue)}
               />
             )}
-          </QuestionBlock>
+          </Block>
         );
       })}
     </Card>

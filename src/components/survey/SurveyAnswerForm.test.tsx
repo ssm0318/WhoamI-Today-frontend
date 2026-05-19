@@ -1,6 +1,6 @@
 /* eslint-env jest */
 
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -22,6 +22,10 @@ jest.mock('react-i18next', () => ({
       if (key === 'baseline_label') return 'When you added them:';
       if (key === 'baseline_closeness_value') return `${(options as { value?: number }).value}/5`;
       if (key === 'baseline_change_button') return 'Yeah, I should modify that';
+      if (key === 'missing_baseline_prompt') {
+        return 'If you remember how you would have rated them when you added them on WIT, choose it here. Only answer if you have a clear memory anchor, like exactly how you felt then or knowing you didn’t know them yet.';
+      }
+      if (key === 'missing_baseline_not_sure') return "I'm not sure";
       if (key === 'baseline_change_hint') {
         return `Your earlier rating was ${
           (options as { value?: number }).value
@@ -315,6 +319,61 @@ describe('baseline correction gate', () => {
         question: correctionQuestion,
         hasBaseline: true,
         correctionRequested: true,
+        existingValue: undefined,
+      }),
+    ).toBe(true);
+  });
+
+  it('shows an optional retrospective baseline picker when no prior evaluation exists', () => {
+    const correctionQuestion = question({
+      id: 12,
+      order: 3,
+      type: 'per_friend_likert_5',
+      slug: 'phase1_friend_closeness_corrected_baseline',
+      low_label_en: 'Not close',
+      high_label_en: 'Very close',
+    });
+    const setValue = jest.fn();
+
+    render(
+      <MemoryRouter>
+        <PerFriendCard
+          friendId={101}
+          friendUsername="adoor_2"
+          baselineCloseness={null}
+          questions={[correctionQuestion]}
+          getValue={() => undefined}
+          setValue={setValue}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.queryByText('Yeah, I should modify that')).not.toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'If you remember how you would have rated them when you added them on WIT, choose it here. Only answer if you have a clear memory anchor, like exactly how you felt then or knowing you didn’t know them yet.',
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText("I'm not sure")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("I'm not sure"));
+
+    expect(setValue).toHaveBeenCalledWith(12, undefined);
+  });
+
+  it('shows missing-baseline correction questions without the modify gate', () => {
+    const correctionQuestion = question({
+      id: 12,
+      order: 3,
+      type: 'per_friend_likert_5',
+      slug: 'phase1_friend_closeness_corrected_baseline',
+    });
+
+    expect(
+      shouldShowBaselineCorrectionInput({
+        question: correctionQuestion,
+        hasBaseline: false,
+        correctionRequested: false,
         existingValue: undefined,
       }),
     ).toBe(true);

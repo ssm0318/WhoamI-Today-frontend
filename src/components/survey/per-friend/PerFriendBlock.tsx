@@ -22,7 +22,11 @@ export interface PerFriendBlockProps {
   // The parent's full answer state for the survey. Keyed by question.id;
   // per-friend entries are nested maps from target_user_id → value.
   answers: DraftAnswers;
-  setPerFriendAnswer: (questionId: number, targetUserId: number, value: ScalarAnswerValue) => void;
+  setPerFriendAnswer: (
+    questionId: number,
+    targetUserId: number,
+    value: ScalarAnswerValue | undefined,
+  ) => void;
 }
 
 // Group the expanded per_friend questions by their target_user_id while
@@ -101,8 +105,8 @@ export function PerFriendBlock({ questions, answers, setPerFriendAnswer }: PerFr
 
 // Predicate exported so SurveyAnswerForm can decide page-completion
 // readiness. A block is complete when every required question for every
-// friend has a value (or, for the corrected_baseline question on a
-// friend with no baseline, that question is hidden and thus auto-complete).
+// friend has a value. The corrected_baseline question is optional when no
+// baseline exists, so an absent value means "I'm not sure".
 // Single-pair complete check. Pulled out as a top-level helper so the
 // nested .every() below stays readable (and ESLint stops complaining
 // about `continue` in for…of).

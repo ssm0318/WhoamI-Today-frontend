@@ -15,6 +15,6 @@ export const shouldShowBaselineCorrectionInput = ({
   existingValue: SurveyOptionValue | null | undefined;
 }): boolean => {
   if (!isBaselineCorrectionQuestion(question)) return true;
-  if (!hasBaseline) return false;
+  if (!hasBaseline) return true;
   return correctionRequested || existingValue !== undefined;
 };

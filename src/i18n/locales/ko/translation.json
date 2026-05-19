@@ -1363,6 +1363,8 @@
       "baseline_change_hint": "이전 평가는 {{value}}/5였어요. 진짜 실수였다면 여기서 고쳐도 괜찮아요. 참여에 불이익은 없습니다.",
       "baseline_change_button": "네, 수정해야 해요",
       "baseline_correction_prompt": "그때의 평가는 몇 점이었어야 하나요?",
+      "missing_baseline_prompt": "WIT에서 이 친구를 추가했을 때 어떤 평가를 했을지 정확히 기억할 수 있다면 여기서 선택해 주세요. 그때의 감정이 떠오르거나, 그 날짜 전에는 서로 잘 몰랐다는 식의 구체적인 기억 근거가 있을 때만 답해 주세요.",
+      "missing_baseline_not_sure": "잘 모르겠어요",
       "relationship_type": {
         "school_friend": "학교 친구",
         "coworker": "직장 동료",
