@@ -2,6 +2,8 @@ import styled, { css } from 'styled-components';
 
 import { PointAwardSummary } from '@models/reimbursement';
 
+import { REIMBURSEMENT_POINTS_TBU } from '../../utils/reimbursementAvailability';
+
 type PointsBadgeState = 'earnable' | 'locked' | 'earned' | 'adjusted';
 
 interface PointsBadgeProps {
@@ -39,6 +41,8 @@ function PointsBadge({
   onLockedClick,
   className,
 }: PointsBadgeProps) {
+  if (REIMBURSEMENT_POINTS_TBU) return null;
+
   const state = resolveState(pointValue, pointAward, locked);
   if (!state) return null;
 

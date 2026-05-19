@@ -9,6 +9,7 @@ import i18n from '@i18n/index';
 import { PointAwardSummary } from '@models/reimbursement';
 import { getSurveyDetail } from '@utils/apis/survey';
 
+import { REIMBURSEMENT_POINTS_TBU } from '../../utils/reimbursementAvailability';
 import { MainScrollContainer } from '../Root';
 import { SurveyPageShell } from './SurveyPageLayout';
 
@@ -117,7 +118,7 @@ function SurveyDone() {
           <Typo type="body-medium" color="DARK_GRAY">
             {t(bodyKey)}
           </Typo>
-          {pointAward && (
+          {!REIMBURSEMENT_POINTS_TBU && pointAward && (
             <PointLine>
               <Typo
                 type="label-large"

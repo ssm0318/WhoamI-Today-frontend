@@ -8,6 +8,7 @@ import i18n from '@i18n/index';
 import { ReimbursementAward } from '@models/reimbursement';
 import { getReimbursementState, REIMBURSEMENT_KEY } from '@utils/apis/reimbursement';
 
+import { REIMBURSEMENT_POINTS_TBU } from '../../utils/reimbursementAvailability';
 import { MainScrollContainer } from '../Root';
 
 const Page = styled.main`
@@ -30,6 +31,25 @@ const SummaryCard = styled.section`
   border-radius: 8px;
   background: #fbf8ff;
   padding: 18px;
+`;
+
+const TbuCard = styled.section`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #d8c3ff;
+  border-radius: 8px;
+  background: #fbf8ff;
+  padding: 20px;
+`;
+
+const TbuTitle = styled.h1`
+  margin: 4px 0;
+  color: #1f1f1f;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.2;
 `;
 
 const SummaryNumber = styled.h1`
@@ -145,7 +165,29 @@ function AwardGroup({ title, awards }: { title: string; awards: ReimbursementAwa
 
 function Reimbursement() {
   const { t } = useTranslation('translation', { keyPrefix: 'reimbursement' });
-  const { data } = useSWR(REIMBURSEMENT_KEY, getReimbursementState);
+  const { data } = useSWR(
+    REIMBURSEMENT_POINTS_TBU ? null : REIMBURSEMENT_KEY,
+    getReimbursementState,
+  );
+
+  if (REIMBURSEMENT_POINTS_TBU) {
+    return (
+      <MainScrollContainer>
+        <SubHeader title={i18n.t('header.reimbursement')} />
+        <Page aria-labelledby="reimbursement-title">
+          <TbuCard>
+            <Typo type="label-large" color="PRIMARY">
+              {t('tbu_eyebrow')}
+            </Typo>
+            <TbuTitle id="reimbursement-title">{t('tbu_title')}</TbuTitle>
+            <Typo type="body-medium" color="DARK_GRAY">
+              {t('tbu_body')}
+            </Typo>
+          </TbuCard>
+        </Page>
+      </MainScrollContainer>
+    );
+  }
 
   if (!data) return null;
 

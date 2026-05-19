@@ -1420,6 +1420,9 @@
   },
   "reimbursement": {
     "summary_title": "내 연구 포인트",
+    "tbu_eyebrow": "추후 업데이트 예정",
+    "tbu_title": "리워드 안내를 정리 중이에요",
+    "tbu_body": "아직 포인트 배정이 확정되지 않았어요. 연구 안내에 따라 설문과 활동을 계속 진행해 주세요. 포인트 값이 준비되면 연구팀이 리워드 안내를 공유할 예정이에요.",
     "provisional_total_label": "현재 임시 포인트",
     "dollar_estimate_label": "예상 리워드 약 ${{amount}}",
     "audit_disclaimer_short": "포인트는 임시 값이며 데이터 품질 검토 후 달라질 수 있어요.",

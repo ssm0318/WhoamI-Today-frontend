@@ -1433,6 +1433,9 @@
     },
     "reimbursement": {
         "summary_title": "Your study points",
+        "tbu_eyebrow": "To be updated",
+        "tbu_title": "Reimbursement details are being finalized",
+        "tbu_body": "Point allocation has not been finalized yet. Please keep completing study activities as instructed. The research team will share reimbursement details once the point values are ready.",
         "provisional_total_label": "Provisional points so far",
         "dollar_estimate_label": "~${{amount}} estimated reimbursement",
         "audit_disclaimer_short": "Points are provisional and may change after a data-quality review.",

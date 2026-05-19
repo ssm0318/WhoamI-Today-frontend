@@ -23,6 +23,11 @@ jest.mock('react-i18next', () => ({
       if (key === 'section_pending') return 'Pending';
       if (key === 'downgraded_label') return 'Adjusted after audit';
       if (key === 'pending_prereq_copy') return `Complete ${options?.title} first`;
+      if (key === 'tbu_eyebrow') return 'To be updated';
+      if (key === 'tbu_title') return 'Reimbursement details are being finalized';
+      if (key === 'tbu_body') {
+        return 'Point allocation has not been finalized yet. Please keep completing study activities.';
+      }
       return key;
     },
   }),
@@ -98,7 +103,7 @@ describe('Reimbursement', () => {
     mockedUseSWR.mockReset();
   });
 
-  it('shows totals, grouped awards, adjusted values, and pending prereqs', () => {
+  it('shows a TBU notice instead of public point totals while allocation is unfinished', () => {
     mockedUseSWR.mockReturnValue({
       data: {
         provisional_total: 60,
@@ -155,14 +160,15 @@ describe('Reimbursement', () => {
 
     render(<Reimbursement />);
 
-    expect(screen.getByText('45 / 100 pts')).toBeInTheDocument();
-    expect(screen.getByText('~$5.63 estimated')).toBeInTheDocument();
-    expect(screen.getByText('Phase 1 reflection')).toBeInTheDocument();
-    expect(screen.getByText('35 pts')).toBeInTheDocument();
-    expect(screen.getByText('50 pts')).toBeInTheDocument();
-    expect(screen.getByText('Adjusted after audit')).toBeInTheDocument();
-    expect(screen.getByText('Wit_bot audit pass')).toBeInTheDocument();
-    expect(screen.getByText('+10 pts available')).toBeInTheDocument();
-    expect(screen.getByText('Complete Habitual platform first')).toBeInTheDocument();
+    expect(screen.getByText('To be updated')).toBeInTheDocument();
+    expect(screen.getByText('Reimbursement details are being finalized')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Point allocation has not been finalized yet. Please keep completing study activities.',
+      ),
+    ).toBeInTheDocument();
+    expect(screen.queryByText('45 / 100 pts')).not.toBeInTheDocument();
+    expect(screen.queryByText('~$5.63 estimated')).not.toBeInTheDocument();
+    expect(screen.queryByText('Phase 1 reflection')).not.toBeInTheDocument();
   });
 });
