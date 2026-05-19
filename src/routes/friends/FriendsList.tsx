@@ -22,6 +22,10 @@ import { readResponse } from '@utils/apis/responses';
 import { MainScrollContainer } from 'src/routes/Root';
 import useInfiniteFetchFriends from '../../hooks/useInfiniteFetchFriends';
 import { AllFriendItemLoader, AllFriendListLoader } from './FriendsLoader';
+import {
+  cancelPendingFriendCheckInRead,
+  scheduleFriendCheckInsRead,
+} from './readFriendCheckInsOnLeave';
 
 type TabType = 'people' | 'feed';
 
@@ -200,22 +204,18 @@ function FriendsList() {
     [updateFriendList, closeFriendsHook],
   );
 
-  // [UP] check-in badge resets on leave-and-return: as the friends route
-  // unmounts we POST a read mark for every friend whose check-in is still
-  // unread, so the next mount sees them all clean. Use a ref so the cleanup
+  // [UP] check-in badges reset on leave-and-return: as the friends route
+  // unmounts we POST a read mark for every friend with any unread check-in
+  // component, so the next mount sees them clean. Use a ref so the cleanup
   // closure always has the latest list without re-running on every change.
   const friendsForReadRef = useRef<UpdatedProfile[]>([]);
   useEffect(() => {
     friendsForReadRef.current = filteredFriends;
   }, [filteredFriends]);
   useEffect(() => {
+    cancelPendingFriendCheckInRead();
     return () => {
-      const unread = friendsForReadRef.current.filter(
-        (f) => f.check_in_id && !f.current_user_read_check_in,
-      );
-      unread.forEach((f) => {
-        if (f.check_in_id) readFriendCheckIn(f.check_in_id);
-      });
+      scheduleFriendCheckInsRead(friendsForReadRef.current, readFriendCheckIn);
     };
   }, []);
 
