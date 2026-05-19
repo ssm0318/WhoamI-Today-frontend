@@ -959,6 +959,7 @@
             },
             "invite": {
                 "text": "Invite Friends",
+                "link_note": "This invite link already includes your code.",
                 "copy": "Invitation link copied to clipboard.",
                 "copy_code_text": "Copy invite code",
                 "copy_code_copied": "Invite code copied to clipboard.",

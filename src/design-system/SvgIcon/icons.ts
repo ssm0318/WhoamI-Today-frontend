@@ -60,6 +60,7 @@ const chat_filled = 'chat_filled';
 const edit_filled = 'edit_filled';
 const edit_filled_white = 'edit_filled_white';
 const share_default = 'share_default';
+const copy_default = 'copy_default';
 const private_comment_inactive = 'private_comment_inactive';
 const private_comment_active = 'private_comment_active';
 const private_comment = 'private_comment';
@@ -224,6 +225,7 @@ export {
   comment,
   comment_message,
   comment_reply,
+  copy_default,
   default_friend,
   default_profile,
   delete_button,

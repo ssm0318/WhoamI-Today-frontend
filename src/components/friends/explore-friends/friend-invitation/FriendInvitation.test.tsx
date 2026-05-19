@@ -1,6 +1,6 @@
 /* eslint-env jest */
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import FriendInvitation from './FriendInvitation';
 
@@ -16,6 +16,7 @@ jest.mock('react-i18next', () => ({
     (key: string, options?: Record<string, string>) => {
       const translations: Record<string, string> = {
         text: 'Invite Friends',
+        link_note: 'This invite link already includes your code.',
         copy: 'Invitation link copied to clipboard.',
         copy_code_text: 'Copy invite code',
         copy_code_copied: 'Invite code copied to clipboard.',
@@ -65,10 +66,24 @@ jest.mock(
       return React.createElement(as, null, children);
     }
     function MockIcon({ name }: { name: string }) {
-      return <span aria-hidden="true">{name}</span>;
+      return <span aria-hidden="true" data-testid={`icon-${name}`} />;
     }
-    function MockText({ children }: { children?: ReactNode }) {
-      return <span>{children}</span>;
+    function MockText({
+      children,
+      color,
+      fontSize,
+      type,
+    }: {
+      children?: ReactNode;
+      color?: string;
+      fontSize?: number;
+      type?: string;
+    }) {
+      return (
+        <span data-color={color} data-font-size={fontSize} data-type={type}>
+          {children}
+        </span>
+      );
     }
 
     return {
@@ -129,7 +144,11 @@ describe('FriendInvitation', () => {
   it('copies the full invitation message from the invite action', () => {
     render(<FriendInvitation />);
 
-    fireEvent.click(screen.getByRole('button', { name: /invite friends/i }));
+    const inviteButton = screen.getByRole('button', { name: /invite friends/i });
+    expect(inviteButton).toHaveTextContent('This invite link already includes your code.');
+    expect(within(inviteButton).getByTestId('icon-share_default')).toBeInTheDocument();
+
+    fireEvent.click(inviteButton);
 
     expect(writeText).toHaveBeenCalledWith(
       expect.stringContaining('whoami://app/signup/email/invite-code/ABC123'),
@@ -141,10 +160,24 @@ describe('FriendInvitation', () => {
   it('copies only the invite code from the code action', () => {
     render(<FriendInvitation />);
 
-    fireEvent.click(screen.getByRole('button', { name: /copy invite code abc123/i }));
+    const copyCodeButton = screen.getByRole('button', { name: /copy invite code abc123/i });
+    expect(within(copyCodeButton).getByTestId('icon-copy_default')).toBeInTheDocument();
+
+    fireEvent.click(copyCodeButton);
 
     expect(writeText).toHaveBeenCalledWith('ABC123');
     expect(screen.getByRole('status')).toHaveTextContent('Invite code copied to clipboard.');
+  });
+
+  it('emphasizes the invite-code trust warning', () => {
+    render(<FriendInvitation />);
+
+    const disclaimer = screen.getByText(
+      'Only share your invite code with people you really trust.',
+    );
+
+    expect(disclaimer).toHaveAttribute('data-color', 'PRIMARY');
+    expect(disclaimer).toHaveAttribute('data-type', 'body-small');
   });
 
   it('hides the code-only action when no invite code exists', () => {

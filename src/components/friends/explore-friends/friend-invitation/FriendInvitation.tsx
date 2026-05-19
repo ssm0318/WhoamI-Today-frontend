@@ -97,6 +97,9 @@ export default function FriendInvitation() {
             <Typo type="body-medium" color="MEDIUM_GRAY">
               {invitationLink}
             </Typo>
+            <Typo type="body-small" color="MEDIUM_GRAY">
+              {t('link_note')}
+            </Typo>
           </Layout.FlexCol>
           <SvgIcon name="share_default" size={44} />
         </ActionRow>
@@ -112,9 +115,9 @@ export default function FriendInvitation() {
                   {inviteCode}
                 </Typo>
               </Layout.FlexCol>
-              <SvgIcon name="share_default" size={44} />
+              <SvgIcon name="copy_default" size={44} />
             </ActionRow>
-            <Typo type="label-small" color="MEDIUM_GRAY">
+            <Typo type="body-small" color="PRIMARY">
               {t('code_disclaimer')}
             </Typo>
           </>
