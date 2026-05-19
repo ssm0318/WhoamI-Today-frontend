@@ -43,6 +43,9 @@ function Share() {
               </Typo>
             </NoticeBanner>
 
+            {/* Quick share — unstructured ad-hoc post entry */}
+            <QuickShareInput />
+
             {/* 1. Daily Snippet — ephemeral, 24h */}
             <CheckInPostShareCta />
 
