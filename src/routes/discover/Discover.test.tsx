@@ -436,8 +436,8 @@ describe('Discover', () => {
     expect(screen.getAllByRole('article').map((item) => item.textContent)).toEqual([
       'highlight: First public highlight',
       'highlight: Second public highlight',
-      'note: Middle public note',
       'response: Middle public response',
+      'note: Middle public note',
     ]);
   });
 });

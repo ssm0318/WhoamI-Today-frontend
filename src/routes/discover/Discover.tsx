@@ -251,10 +251,14 @@ function Discover() {
       });
 
     if (isVerQ) {
-      const publicHighlights = result.filter((item) => item.type === 'Question');
-      if (publicHighlights.length > 0) {
-        return [...publicHighlights, ...result.filter((item) => item.type !== 'Question')];
-      }
+      return [
+        ...result.filter((item) => item.type === 'Question'),
+        ...result.filter((item) => item.type === 'Response'),
+        ...result.filter((item) => item.type === 'Note'),
+        ...result.filter(
+          (item) => item.type !== 'Question' && item.type !== 'Response' && item.type !== 'Note',
+        ),
+      ];
     }
 
     return result;
