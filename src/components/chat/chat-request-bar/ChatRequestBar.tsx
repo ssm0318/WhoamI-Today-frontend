@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import { useBottomTabOffset } from '@hooks/useBottomTabOffset';
 import { cancelChatRequest, respondToChatRequest, sendChatRequest } from '@utils/apis/chat';
 
 interface Props {
@@ -26,6 +26,7 @@ function ChatRequestBar({
   const [t] = useTranslation('translation', { keyPrefix: 'chat.request' });
   const [busy, setBusy] = useState(false);
   const [localSent, setLocalSent] = useState(sentRequest);
+  const bottomTabOffset = useBottomTabOffset();
 
   const handleSendRequest = async () => {
     if (busy || localSent) return;
@@ -183,7 +184,7 @@ function ChatRequestBar({
 
   return (
     <Layout.Fixed
-      b={BOTTOM_TABBAR_HEIGHT}
+      b={bottomTabOffset}
       z={10}
       style={{
         left: '50%',

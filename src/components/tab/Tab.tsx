@@ -123,7 +123,7 @@ export default function Tab() {
 
   if (featureFlags?.checkInPosts) {
     return (
-      <TabWrapper data-preview-exempt $noShadow={isChatPage}>
+      <TabWrapper data-preview-exempt data-bottom-tab $noShadow={isChatPage}>
         <Layout.FlexRow w="100%" justifyContent="space-evenly" alignItems="center" pt={4}>
           {/* Ver. Q's first tab maps to the friends slot — uses friends icon/label, route stays /feed. */}
           {isTabAllowed('friends') && <TabItem to="/feed" type="friends" size={28} />}
@@ -137,7 +137,7 @@ export default function Tab() {
   }
 
   return (
-    <TabWrapper data-preview-exempt $noShadow={isChatPage}>
+    <TabWrapper data-preview-exempt data-bottom-tab $noShadow={isChatPage}>
       <Layout.FlexRow w="100%" h="100%" justifyContent="space-evenly" alignItems="center">
         {featureFlags?.friendList ? (
           <>

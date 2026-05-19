@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import Icon from '@components/_common/icon/Icon';
-import { BOTTOM_TABBAR_HEIGHT } from '@constants/layout';
 import { Layout, Typo } from '@design-system';
+import { useBottomTabOffset } from '@hooks/useBottomTabOffset';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import {
   ChatEmojiDict,
@@ -115,6 +115,7 @@ function ChatMessageInput({
   const { openToast } = useBoundStore((state) => ({ openToast: state.openToast }));
   const [t] = useTranslation('translation', { keyPrefix: 'chat' });
   const trackEvent = useTrackEvent();
+  const bottomTabOffset = useBottomTabOffset();
   // Engagement signal: did the user start composing in this room? Set when
   // first character or image is added; reset after a successful send so
   // multi-message sessions don't double-count abandonment. Used by the
@@ -266,7 +267,7 @@ function ChatMessageInput({
 
   return (
     <Layout.Fixed
-      b={BOTTOM_TABBAR_HEIGHT}
+      b={bottomTabOffset}
       z={10}
       style={{
         left: '50%',
