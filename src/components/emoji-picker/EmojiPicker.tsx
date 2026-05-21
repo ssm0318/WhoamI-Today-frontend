@@ -1,4 +1,4 @@
-import ReactEmojiPicker, { EmojiClickData } from 'emoji-picker-react';
+import ReactEmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
 import { useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { DEFAULT_MARGIN, EMOJI_PICKER_HEIGHT, Z_INDEX } from '@constants/layout';
@@ -74,6 +74,7 @@ function EmojiPicker({
           {selectedEmojis && <EmojiPickerCustomStyle unifiedList={unifiedEmojiList} />}
           <ReactEmojiPicker
             height={height}
+            emojiStyle={EmojiStyle.NATIVE}
             onEmojiClick={handleSelectEmoji}
             autoFocusSearch={false}
             skinTonesDisabled

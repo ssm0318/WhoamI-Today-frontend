@@ -1,4 +1,4 @@
-import ReactEmojiPicker, { EmojiClickData } from 'emoji-picker-react';
+import ReactEmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
 import { CSSProperties, MouseEvent, useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
@@ -176,6 +176,7 @@ function PostFooter({ post, displayType = 'LIST', showComments, setInputFocus }:
               <ReactEmojiPicker
                 width="100%"
                 height="100%"
+                emojiStyle={EmojiStyle.NATIVE}
                 onEmojiClick={handleEmojiClick}
                 autoFocusSearch={false}
                 skinTonesDisabled

@@ -1,4 +1,4 @@
-import { Emoji } from 'emoji-picker-react';
+import { Emoji, EmojiStyle } from 'emoji-picker-react';
 import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -136,7 +136,7 @@ function PokeButton({ receiverId, componentType, initialPokeId }: Props) {
             {label.text}
           </Typo>
         </span>
-        <Emoji unified={getUnifiedEmoji(label.emoji)} size={14} lazyLoad />
+        <Emoji unified={getUnifiedEmoji(label.emoji)} size={14} emojiStyle={EmojiStyle.NATIVE} />
       </PokeContainer>
       <CommonDialog
         visible={showConfirm}

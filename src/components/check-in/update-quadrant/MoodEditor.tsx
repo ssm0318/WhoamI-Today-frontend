@@ -1,4 +1,4 @@
-import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
+import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
 import { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import ArchiveAfter24hToggle from '@components/check-in/archive-toggle/ArchiveAfter24hToggle';
@@ -187,6 +187,7 @@ export default function MoodEditor({
             onEmojiClick={handleEmojiClick}
             width="100%"
             height={350}
+            emojiStyle={EmojiStyle.NATIVE}
             skinTonesDisabled
             autoFocusSearch={false}
             searchPlaceHolder="Search emoji"

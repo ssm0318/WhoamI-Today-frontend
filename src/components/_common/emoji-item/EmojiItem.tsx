@@ -1,4 +1,4 @@
-import { Emoji } from 'emoji-picker-react';
+import { Emoji, EmojiStyle } from 'emoji-picker-react';
 import { ColorKeys, Layout } from '@design-system';
 import { getUnifiedEmoji } from '@utils/emojiHelpers';
 
@@ -31,7 +31,7 @@ function EmojiItem({
       p={2}
       bgColor={bgColor}
     >
-      <Emoji unified={getUnifiedEmoji(emojiString)} size={size} lazyLoad />
+      <Emoji unified={getUnifiedEmoji(emojiString)} size={size} emojiStyle={EmojiStyle.NATIVE} />
     </Layout.FlexRow>
   );
 }

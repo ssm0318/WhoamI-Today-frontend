@@ -1,4 +1,4 @@
-import { Emoji } from 'emoji-picker-react';
+import { Emoji, EmojiStyle } from 'emoji-picker-react';
 import { useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
@@ -56,7 +56,12 @@ function CheckInFreshnessPrompt({ visible, onDismiss, checkIn }: CheckInFreshnes
               ph={8}
             >
               {checkIn?.mood.map((emoji) => (
-                <Emoji key={emoji} unified={getUnifiedEmoji(emoji)} size={18} lazyLoad />
+                <Emoji
+                  key={emoji}
+                  unified={getUnifiedEmoji(emoji)}
+                  size={18}
+                  emojiStyle={EmojiStyle.NATIVE}
+                />
               ))}
             </Layout.FlexRow>
           )}
