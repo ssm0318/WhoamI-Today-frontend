@@ -1415,6 +1415,10 @@
     },
     "panel_questions_count": "총 {{count}}문항 집계",
     "free_text_placeholder": "답변을 입력해주세요…",
+    "choice_custom_add": "선택지 추가",
+    "choice_custom_placeholder": "선택지를 입력해주세요",
+    "choice_custom_submit": "추가",
+    "choice_custom_cancel": "취소",
     "wordcloud": {
       "empty": "아직 충분한 응답이 모이지 않았어요.",
       "suppressed": "{{min}}명 미만이 답한 단어 {{count}}개는 개인정보 보호를 위해 숨겼어요."

@@ -99,6 +99,9 @@ const LIKERT_RANGES: Record<string, [number, number]> = {
   per_friend_likert_5: [1, 5],
 };
 
+const hasStringValuedOptions = (question: SurveyQuestion) =>
+  question.options.some((option) => typeof option.value === 'string');
+
 export function PerFriendCard({
   friendId,
   friendUsername,
@@ -108,6 +111,7 @@ export function PerFriendCard({
   setValue,
 }: PerFriendCardProps) {
   const { t } = useTranslation('translation', { keyPrefix: 'surveys.per_friend' });
+  const { t: tSurvey } = useTranslation('translation', { keyPrefix: 'surveys' });
   const hasBaseline = baselineCloseness !== null;
   const [requestedCorrections, setRequestedCorrections] = useState<Record<number, boolean>>({});
 
@@ -184,6 +188,13 @@ export function PerFriendCard({
                 multi={false}
                 selected={(value as SurveyOptionValue | null | undefined) ?? null}
                 onSelect={(v) => setValue(q.id, v as SurveyOptionValue)}
+                allowCustom={hasStringValuedOptions(q)}
+                customLabels={{
+                  addOption: String(tSurvey('choice_custom_add')),
+                  placeholder: String(tSurvey('choice_custom_placeholder')),
+                  add: String(tSurvey('choice_custom_submit')),
+                  cancel: String(tSurvey('choice_custom_cancel')),
+                }}
               />
             )}
           </Block>

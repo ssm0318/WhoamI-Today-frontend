@@ -38,6 +38,9 @@ const LIKERT_RANGES: Record<string, [number, number]> = {
   likert_7: [1, 7],
 };
 
+const hasStringValuedOptions = (question: SurveyQuestion) =>
+  question.options.some((option) => typeof option.value === 'string');
+
 const ProgressBarTrack = styled.div`
   width: 100%;
   height: 4px;
@@ -288,6 +291,13 @@ export function SurveyAnswerForm({ survey, onSubmitted, onError }: SurveyAnswerF
             multi={question.type === 'multi_choice'}
             selected={(value as SurveyOptionValue | SurveyOptionValue[] | undefined) ?? null}
             onSelect={(v) => setAnswer(question.id, v)}
+            allowCustom={hasStringValuedOptions(question)}
+            customLabels={{
+              addOption: String(t('choice_custom_add')),
+              placeholder: String(t('choice_custom_placeholder')),
+              add: String(t('choice_custom_submit')),
+              cancel: String(t('choice_custom_cancel')),
+            }}
           />
         )}
         {question.type === 'free_text' && (

@@ -7,6 +7,7 @@ import { MemoryRouter } from 'react-router-dom';
 import type { DraftAnswers } from '../../hooks/useSurveyDraft';
 import type { SurveyQuestion } from '../../models/survey';
 
+import { ChoiceChips } from './ChoiceChips';
 import {
   isBaselineCorrectionQuestion,
   shouldShowBaselineCorrectionInput,
@@ -254,6 +255,84 @@ describe('buildSurveyAnswerPayload', () => {
       { question_id: 11, target_user_id: 101, value: 4 },
       { question_id: 11, target_user_id: 102, value: 2 },
     ]);
+  });
+});
+
+describe('ChoiceChips custom options', () => {
+  const customLabels = {
+    addOption: 'Add option',
+    placeholder: 'Type an option',
+    add: 'Add',
+    cancel: 'Cancel',
+  };
+
+  it('selects a newly-added option for single-choice questions', () => {
+    const onSelect = jest.fn();
+
+    render(
+      <ChoiceChips
+        options={[{ value: 'refreshing', label: 'Refreshing' }]}
+        multi={false}
+        selected={null}
+        onSelect={onSelect}
+        allowCustom
+        customLabels={customLabels}
+      />,
+    );
+
+    fireEvent.click(screen.getByText('Add option'));
+    fireEvent.change(screen.getByPlaceholderText('Type an option'), {
+      target: { value: 'Chaotic' },
+    });
+    fireEvent.click(screen.getByText('Add'));
+
+    expect(onSelect).toHaveBeenCalledWith('Chaotic');
+  });
+
+  it('appends a newly-added option for multi-choice questions', () => {
+    const onSelect = jest.fn();
+
+    render(
+      <ChoiceChips
+        options={[{ value: 'calm', label: 'Calm' }]}
+        multi
+        selected={['calm']}
+        onSelect={onSelect}
+        allowCustom
+        customLabels={customLabels}
+      />,
+    );
+
+    fireEvent.click(screen.getByText('Add option'));
+    fireEvent.change(screen.getByPlaceholderText('Type an option'), {
+      target: { value: 'Meaningful chaos' },
+    });
+    fireEvent.click(screen.getByText('Add'));
+
+    expect(onSelect).toHaveBeenCalledWith(['calm', 'Meaningful chaos']);
+  });
+
+  it('reuses an existing option when the custom text matches its label', () => {
+    const onSelect = jest.fn();
+
+    render(
+      <ChoiceChips
+        options={[{ value: 'refreshing', label: 'Refreshing' }]}
+        multi={false}
+        selected={null}
+        onSelect={onSelect}
+        allowCustom
+        customLabels={customLabels}
+      />,
+    );
+
+    fireEvent.click(screen.getByText('Add option'));
+    fireEvent.change(screen.getByPlaceholderText('Type an option'), {
+      target: { value: ' refreshing ' },
+    });
+    fireEvent.click(screen.getByText('Add'));
+
+    expect(onSelect).toHaveBeenCalledWith('refreshing');
   });
 });
 
