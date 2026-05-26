@@ -13,6 +13,7 @@ const mockNavigate = jest.fn();
 const mockCloseSideMenu = jest.fn();
 const mockTrackEvent = jest.fn();
 const mockPostAppMessage = jest.fn();
+const mockShouldUseLocalAllocationPreview = jest.fn();
 
 jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
@@ -78,6 +79,9 @@ jest.mock(
   '@utils/apis/reimbursement',
   () => ({
     getReimbursementState: jest.fn(),
+    getLocalAllocationPreview: jest.fn(),
+    shouldUseLocalAllocationPreview: () => mockShouldUseLocalAllocationPreview(),
+    LOCAL_ALLOCATION_PREVIEW_KEY: 'local-reimbursement-allocation-preview',
     REIMBURSEMENT_KEY: '/surveys/reimbursement/',
   }),
   { virtual: true },
@@ -106,7 +110,7 @@ jest.mock(
     useBoundStore: (selector: (state: unknown) => unknown) =>
       selector({
         featureFlags: {},
-        myProfile: { current_ver: 'version_w' },
+        myProfile: { id: 8, current_ver: 'version_w' },
       }),
   }),
   { virtual: true },
@@ -206,10 +210,14 @@ const mockedLogOnboardingEvent = logOnboardingEvent as jest.Mock;
 describe('SideMenu', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockShouldUseLocalAllocationPreview.mockReturnValue(false);
     mockedLogOnboardingEvent.mockResolvedValue(undefined);
-    mockedUseSWR.mockImplementation((key: string) => {
+    mockedUseSWR.mockImplementation((key: string | readonly [string, number | null] | null) => {
       if (key === '/surveys/index/') return { data: { available_now: [] } };
       if (key === '/surveys/reimbursement/') return { data: null };
+      if (Array.isArray(key) && key[0] === 'local-reimbursement-allocation-preview') {
+        return { data: null };
+      }
       if (key === '/user/version-switch-request/me/') return { data: { pending: false } };
       return { data: null };
     });
@@ -229,5 +237,26 @@ describe('SideMenu', () => {
     expect(mockedLogOnboardingEvent).toHaveBeenCalledWith('survey_sidebar_nav_tapped', {
       from: 'friends',
     });
+  });
+
+  it('shows local reimbursement preview points on localhost when public totals are unavailable', () => {
+    mockShouldUseLocalAllocationPreview.mockReturnValue(true);
+    mockedUseSWR.mockImplementation((key: string | readonly [string, number | null] | null) => {
+      if (key === '/surveys/index/') return { data: { available_now: [] } };
+      if (key === '/surveys/reimbursement/') return { data: null };
+      if (Array.isArray(key) && key[0] === 'local-reimbursement-allocation-preview') {
+        return { data: { earnedPoints: 70 } };
+      }
+      if (key === '/user/version-switch-request/me/') return { data: { pending: false } };
+      return { data: null };
+    });
+
+    render(
+      <MemoryRouter initialEntries={['/surveys']}>
+        <SideMenu closeSideMenu={mockCloseSideMenu} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('70 pts')).toBeInTheDocument();
   });
 });

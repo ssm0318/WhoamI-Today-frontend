@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import useSWR from 'swr';
@@ -5,15 +6,18 @@ import useSWR from 'swr';
 import SubHeader from '@components/sub-header/SubHeader';
 import { Colors, Layout, Typo } from '@design-system';
 import i18n from '@i18n/index';
-import { ReimbursementAward } from '@models/reimbursement';
-import { useBoundStore } from '@stores/useBoundStore';
-import { getReimbursementState, REIMBURSEMENT_KEY } from '@utils/apis/reimbursement';
+import { LocalAllocationPreview, LocalPreviewRow, ReimbursementAward } from '@models/reimbursement';
+import {
+  getLocalAllocationPreview,
+  getReimbursementState,
+  LOCAL_ALLOCATION_PREVIEW_KEY,
+  REIMBURSEMENT_KEY,
+  shouldUseLocalAllocationPreview,
+} from '@utils/apis/reimbursement';
 
 import { REIMBURSEMENT_POINTS_TBU } from '../../utils/reimbursementAvailability';
 import { MainScrollContainer } from '../Root';
 
-const LOCAL_ALLOCATION_PREVIEW_KEY = 'local-reimbursement-allocation-preview';
-const LOCAL_REIMBURSEMENT_PREVIEW_URL = 'http://127.0.0.1:4177/api/reimbursement-preview';
 const PREVIEW_POINTS_PER_DOLLAR = 10;
 
 const Page = styled.main`
@@ -187,116 +191,6 @@ const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko :
 
 const formatCurrency = (cents: number): string => (cents / 100).toFixed(2);
 
-interface LocalPreviewRow {
-  key: string;
-  kind: 'survey' | 'manual';
-  slug: string;
-  title: string;
-  category: string;
-  points: number;
-  rawPoints: number;
-  possiblePoints: number;
-  currentPossiblePoints?: number;
-  completedCount: number;
-  appUrl: string;
-  canEarn: boolean;
-  availability: 'available' | 'late' | 'future' | 'deadline' | 'no_action';
-  capGroup: string;
-  capPoints: number | null;
-  gateSlug: string;
-  latePercent: number;
-  priorityRating: number;
-  status: 'earned' | 'pending' | 'locked';
-  note: string;
-}
-
-interface LocalPreviewRule {
-  group: string;
-  capPoints: number | null;
-  sourceCount: number;
-  availablePoints: number;
-  earnedPoints: number;
-}
-
-interface LocalPreviewUser {
-  id: number | null;
-  username: string;
-  responseTotal: number;
-}
-
-interface LocalPreviewDb {
-  name: string;
-  participantCount: number;
-}
-
-interface LocalAllocationPreview {
-  db: LocalPreviewDb;
-  selectedUser: LocalPreviewUser;
-  pointsPerDollar: number;
-  availableMax: number;
-  earnedPoints: number;
-  estimatedDollars: string;
-  sourceCount: number;
-  rows: LocalPreviewRow[];
-  capRules: LocalPreviewRule[];
-  gateRules: LocalPreviewRow[];
-  lateRules: LocalPreviewRow[];
-}
-
-const shouldUseLocalAllocationPreview = (): boolean =>
-  REIMBURSEMENT_POINTS_TBU &&
-  process.env.NODE_ENV !== 'production' &&
-  typeof window !== 'undefined' &&
-  ['localhost', '127.0.0.1'].includes(window.location.hostname);
-
-const getLocalAllocationPreview = async ([, userId]: readonly [
-  string,
-  number | null,
-]): Promise<LocalAllocationPreview | null> => {
-  const url = new URL(LOCAL_REIMBURSEMENT_PREVIEW_URL);
-  if (userId !== null) url.searchParams.set('user_id', String(userId));
-  return new Promise((resolve) => {
-    if (typeof XMLHttpRequest !== 'undefined') {
-      const request = new XMLHttpRequest();
-      request.open('GET', url.toString());
-      request.onload = () => {
-        if (request.status < 200 || request.status >= 300) {
-          resolve(null);
-          return;
-        }
-        resolve(JSON.parse(request.responseText) as LocalAllocationPreview);
-      };
-      request.onerror = () => resolve(null);
-      request.send();
-      return;
-    }
-
-    const callbackName = `__whoamiReimbursementPreview${Date.now()}`;
-    url.searchParams.set('callback', callbackName);
-    const script = document.createElement('script');
-    let settled = false;
-    const cleanup = () => {
-      delete (window as unknown as Record<string, unknown>)[callbackName];
-      script.remove();
-    };
-    (window as unknown as Record<string, unknown>)[callbackName] = (
-      payload: LocalAllocationPreview,
-    ) => {
-      settled = true;
-      cleanup();
-      resolve(payload);
-    };
-    script.onerror = () => {
-      if (!settled) {
-        cleanup();
-        resolve(null);
-      }
-    };
-    script.src = url.toString();
-    document.body.appendChild(script);
-  });
-};
-
 function AwardPoints({ award }: { award: ReimbursementAward }) {
   const { t } = useTranslation('translation', { keyPrefix: 'reimbursement' });
   const adjusted = award.adjusted_points !== null && award.adjusted_points !== award.awarded_points;
@@ -367,13 +261,17 @@ function currentPossiblePoints(row: LocalPreviewRow): number {
   return row.currentPossiblePoints ?? row.possiblePoints;
 }
 
+function shouldShowCategoryBadge(category: string): boolean {
+  return category.trim().toLowerCase() !== 'recovery';
+}
+
 function PreviewRowBadges({ row }: { row: LocalPreviewRow }) {
   const { t } = useTranslation('translation', { keyPrefix: 'deadline_badge' });
   const displayPoints = currentPossiblePoints(row);
 
   return (
     <RowMeta>
-      <MetaChip>{row.category}</MetaChip>
+      {shouldShowCategoryBadge(row.category) && <MetaChip>{row.category}</MetaChip>}
       <PointsMetaChip>+{displayPoints} pts</PointsMetaChip>
       {row.priorityRating === 1 && (
         <PriorityMetaChip $level="must">Prerequisite/Must Complete</PriorityMetaChip>
@@ -575,21 +473,59 @@ function LocalAllocationPreviewPage({ preview }: { preview: LocalAllocationPrevi
   );
 }
 
+function LocalAllocationPreviewLoadingPage() {
+  return (
+    <MainScrollContainer>
+      <SubHeader title={i18n.t('header.reimbursement')} />
+      <Page aria-labelledby="reimbursement-title">
+        <NoticeCard>
+          <Typo type="label-large" color="PRIMARY">
+            Reimbursement preview
+          </Typo>
+          <Typo type="body-medium" color="DARK_GRAY">
+            Loading your point allocation preview...
+          </Typo>
+        </NoticeCard>
+      </Page>
+    </MainScrollContainer>
+  );
+}
+
 function Reimbursement() {
   const { t } = useTranslation('translation', { keyPrefix: 'reimbursement' });
-  const previewUserId = useBoundStore((state) => state.myProfile?.id ?? null);
+  const [localPreviewFallback, setLocalPreviewFallback] = useState<LocalAllocationPreview | null>(
+    null,
+  );
+  const useLocalPreview = shouldUseLocalAllocationPreview();
   const { data } = useSWR(
-    REIMBURSEMENT_POINTS_TBU ? null : REIMBURSEMENT_KEY,
+    REIMBURSEMENT_POINTS_TBU || useLocalPreview ? null : REIMBURSEMENT_KEY,
     getReimbursementState,
   );
   const { data: localPreview } = useSWR(
-    shouldUseLocalAllocationPreview() ? [LOCAL_ALLOCATION_PREVIEW_KEY, previewUserId] : null,
+    useLocalPreview ? [LOCAL_ALLOCATION_PREVIEW_KEY, null] : null,
     getLocalAllocationPreview,
   );
+  const resolvedLocalPreview = localPreview ?? localPreviewFallback;
+
+  useEffect(() => {
+    if (!useLocalPreview) return undefined;
+
+    let isMounted = true;
+    Promise.resolve(getLocalAllocationPreview([LOCAL_ALLOCATION_PREVIEW_KEY, null])).then(
+      (preview) => {
+        if (isMounted) setLocalPreviewFallback(preview);
+      },
+    );
+
+    return () => {
+      isMounted = false;
+    };
+  }, [useLocalPreview]);
+
+  if (resolvedLocalPreview) return <LocalAllocationPreviewPage preview={resolvedLocalPreview} />;
+  if (useLocalPreview) return <LocalAllocationPreviewLoadingPage />;
 
   if (REIMBURSEMENT_POINTS_TBU) {
-    if (localPreview) return <LocalAllocationPreviewPage preview={localPreview} />;
-
     return (
       <MainScrollContainer>
         <SubHeader title={i18n.t('header.reimbursement')} />

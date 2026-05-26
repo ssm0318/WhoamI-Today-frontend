@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -16,7 +16,12 @@ import { useTrackEvent } from '@hooks/useTrackEvent';
 import { VersionType } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
 import { logOnboardingEvent } from '@utils/apis/onboardingEvents';
-import { getReimbursementState, REIMBURSEMENT_KEY } from '@utils/apis/reimbursement';
+import {
+  getLocalAllocationPreview,
+  getReimbursementState,
+  LOCAL_ALLOCATION_PREVIEW_KEY,
+  REIMBURSEMENT_KEY,
+} from '@utils/apis/reimbursement';
 import { getSurveyIndex } from '@utils/apis/survey';
 import { getMyPendingVersionSwitchRequest } from '@utils/apis/user';
 import { classifyPathnameAsSource } from '@utils/navSource';
@@ -54,10 +59,19 @@ function SideMenu({ closeSideMenu }: Props) {
   const navigate = useNavigate();
   const postMessage = usePostAppMessage();
   const featureFlags = useBoundStore((state) => state.featureFlags);
+  const [localPreviewPoints, setLocalPreviewPoints] = useState<number | null>(null);
+  const canUseLocalAllocationPreview =
+    process.env.NODE_ENV !== 'production' &&
+    typeof window !== 'undefined' &&
+    ['localhost', '127.0.0.1'].includes(window.location.hostname);
 
   const myProfile = useBoundStore((state) => state.myProfile);
   const { data: surveyIndex } = useSWR('/surveys/index/', getSurveyIndex);
   const { data: reimbursement } = useSWR(REIMBURSEMENT_KEY, getReimbursementState);
+  const { data: localPreview } = useSWR(
+    canUseLocalAllocationPreview ? [LOCAL_ALLOCATION_PREVIEW_KEY, null] : null,
+    getLocalAllocationPreview,
+  );
   const { data: pendingResp } = useSWR(
     '/user/version-switch-request/me/',
     getMyPendingVersionSwitchRequest,
@@ -67,6 +81,8 @@ function SideMenu({ closeSideMenu }: Props) {
     surveyIndex?.available_now.filter((entry) => !entry.allow_late).length ?? 0;
 
   const visibleItems = SIDE_MENU_LIST.filter((menu) => !menu.flag || featureFlags?.[menu.flag]);
+  const reimbursementPoints =
+    reimbursement?.adjusted_total ?? localPreview?.earnedPoints ?? localPreviewPoints ?? 0;
 
   const trackEvent = useTrackEvent();
   const location = useLocation();
@@ -81,6 +97,21 @@ function SideMenu({ closeSideMenu }: Props) {
     trackEvent('side_menu_opened', { from: fromSource });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!canUseLocalAllocationPreview) return undefined;
+
+    let isMounted = true;
+    Promise.resolve(getLocalAllocationPreview([LOCAL_ALLOCATION_PREVIEW_KEY, null])).then(
+      (preview) => {
+        if (isMounted) setLocalPreviewPoints(preview?.earnedPoints ?? null);
+      },
+    );
+
+    return () => {
+      isMounted = false;
+    };
+  }, [canUseLocalAllocationPreview]);
 
   const handleClickMenu = (menu: SideMenuItem) => () => {
     trackEvent('side_menu_item_tapped', { item_key: menu.key });
@@ -118,8 +149,8 @@ function SideMenu({ closeSideMenu }: Props) {
   return createPortal(
     <Layout.Absolute t={0} l={0} r={0} b={0} z={Z_INDEX.MODAL_CONTAINER}>
       <Layout.Absolute w="100%" h="100%" bgColor="DIM" onClick={handleClickDimmed} />
-      <Layout.Absolute r={0} w={250} h="100%" bgColor="WHITE">
-        <Layout.FlexCol pt={20} pl={24}>
+      <Layout.Absolute r={0} w={290} h="100%" bgColor="WHITE">
+        <Layout.FlexCol pt={20} pl={24} pr={16}>
           <SvgIcon name="close" color="BLACK" size={24} onClick={handleClickDimmed} />
           <Layout.FlexCol gap={12} pt={30}>
             {myProfile && (
@@ -140,7 +171,7 @@ function SideMenu({ closeSideMenu }: Props) {
             )}
             {visibleItems.map((menu) => (
               <MenuButton type="button" key={menu.key} onClick={handleClickMenu(menu)}>
-                <MenuRow gap={6} alignItems="center">
+                <MenuRow gap={8} alignItems="center">
                   <Layout.FlexRow gap={6} alignItems="center">
                     <EmojiItem
                       emojiString={menu.emoji}
@@ -159,11 +190,9 @@ function SideMenu({ closeSideMenu }: Props) {
                       )}
                     </DeadlineChip>
                   )}
-                  {menu.key === 'reimbursement' &&
-                    reimbursement &&
-                    reimbursement.adjusted_total > 0 && (
-                      <PointTotalChip>{reimbursement.adjusted_total} pts</PointTotalChip>
-                    )}
+                  {menu.key === 'reimbursement' && reimbursementPoints > 0 && (
+                    <PointTotalChip>{reimbursementPoints} pts</PointTotalChip>
+                  )}
                 </MenuRow>
               </MenuButton>
             ))}

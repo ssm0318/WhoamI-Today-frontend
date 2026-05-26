@@ -1,4 +1,4 @@
-export type PointSourceKind = 'survey' | 'wit_bot_audit' | 'interview_signup';
+export type PointSourceKind = 'survey' | 'wit_bot_audit' | 'interview_signup' | 'app_usage';
 
 export interface PointAwardSummary {
   awarded_points: number;
@@ -38,4 +38,60 @@ export interface ReimbursementState {
   points_per_dollar: number;
   awards: ReimbursementAward[];
   pending_prereqs: PendingPointPrereq[];
+}
+
+export interface LocalPreviewRow {
+  key: string;
+  kind: 'survey' | 'manual';
+  slug: string;
+  title: string;
+  category: string;
+  points: number;
+  rawPoints: number;
+  possiblePoints: number;
+  currentPossiblePoints?: number;
+  completedCount: number;
+  appUrl: string;
+  canEarn: boolean;
+  availability: 'available' | 'late' | 'future' | 'deadline' | 'no_action';
+  capGroup: string;
+  capPoints: number | null;
+  gateSlug: string;
+  latePercent: number;
+  priorityRating: number;
+  status: 'earned' | 'pending' | 'locked';
+  note: string;
+}
+
+export interface LocalPreviewRule {
+  group: string;
+  capPoints: number | null;
+  sourceCount: number;
+  availablePoints: number;
+  earnedPoints: number;
+}
+
+export interface LocalPreviewUser {
+  id: number | null;
+  username: string;
+  responseTotal: number;
+}
+
+export interface LocalPreviewDb {
+  name: string;
+  participantCount: number;
+}
+
+export interface LocalAllocationPreview {
+  db: LocalPreviewDb;
+  selectedUser: LocalPreviewUser;
+  pointsPerDollar: number;
+  availableMax: number;
+  earnedPoints: number;
+  estimatedDollars: string;
+  sourceCount: number;
+  rows: LocalPreviewRow[];
+  capRules: LocalPreviewRule[];
+  gateRules: LocalPreviewRow[];
+  lateRules: LocalPreviewRow[];
 }

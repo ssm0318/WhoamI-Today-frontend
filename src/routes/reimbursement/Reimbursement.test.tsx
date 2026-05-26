@@ -8,6 +8,8 @@ import Reimbursement from './Reimbursement';
 
 jest.mock('swr');
 
+const mockShouldUseLocalAllocationPreview = jest.fn();
+
 jest.mock(
   '@stores/useBoundStore',
   () => ({
@@ -104,6 +106,9 @@ jest.mock(
   '@utils/apis/reimbursement',
   () => ({
     getReimbursementState: jest.fn(),
+    getLocalAllocationPreview: jest.fn(),
+    shouldUseLocalAllocationPreview: () => mockShouldUseLocalAllocationPreview(),
+    LOCAL_ALLOCATION_PREVIEW_KEY: 'local-reimbursement-allocation-preview',
     REIMBURSEMENT_KEY: '/surveys/reimbursement/',
   }),
   { virtual: true },
@@ -118,28 +123,13 @@ const mockedUseSWR = useSWR as unknown as jest.Mock;
 describe('Reimbursement', () => {
   beforeEach(() => {
     mockedUseSWR.mockReset();
+    mockShouldUseLocalAllocationPreview.mockReturnValue(false);
   });
 
-  it('shows a TBU notice instead of public point totals while allocation is unfinished', () => {
-    mockedUseSWR.mockReturnValue({ data: null });
-
-    render(<Reimbursement />);
-
-    expect(screen.getByText('To be updated')).toBeInTheDocument();
-    expect(screen.getByText('Reimbursement details are being finalized')).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        'Point allocation has not been finalized yet. Please keep completing study activities.',
-      ),
-    ).toBeInTheDocument();
-    expect(screen.queryByText('45 / 100 pts')).not.toBeInTheDocument();
-    expect(screen.queryByText('~$5.63 estimated')).not.toBeInTheDocument();
-    expect(screen.queryByText('Phase 1 reflection')).not.toBeInTheDocument();
-  });
-
-  it('renders a local allocation preview while public reimbursement is still TBU', () => {
+  it('prefers the rich local allocation preview on localhost', () => {
+    mockShouldUseLocalAllocationPreview.mockReturnValue(true);
     mockedUseSWR.mockImplementation((key: string | readonly [string, number | null] | null) => {
-      if (Array.isArray(key) && key[0] === 'local-reimbursement-allocation-preview') {
+      if (Array.isArray(key)) {
         return {
           data: {
             db: { name: 'whoamitoday_merged', participantCount: 80 },
@@ -150,27 +140,6 @@ describe('Reimbursement', () => {
             estimatedDollars: '5.00',
             sourceCount: 3,
             rows: [
-              {
-                key: 'survey:daily_base',
-                kind: 'survey',
-                slug: 'daily_base',
-                title: 'Today on WIT',
-                category: 'Daily diary',
-                points: 30,
-                rawPoints: 36,
-                possiblePoints: 3,
-                completedCount: 12,
-                appUrl: '/surveys/daily_base/answer',
-                canEarn: false,
-                availability: 'deadline',
-                capGroup: 'daily_diary',
-                capPoints: 30,
-                gateSlug: '',
-                latePercent: 100,
-                priorityRating: 0,
-                status: 'earned',
-                note: 'Capped by daily_diary at 30 pts.',
-              },
               {
                 key: 'survey:open_survey',
                 kind: 'survey',
@@ -194,33 +163,11 @@ describe('Reimbursement', () => {
                 note: '',
               },
               {
-                key: 'survey:expired_survey',
-                kind: 'survey',
-                slug: 'expired_survey',
-                title: 'Expired survey',
-                category: 'Survey',
-                points: 0,
-                rawPoints: 0,
-                possiblePoints: 12,
-                currentPossiblePoints: 12,
-                completedCount: 0,
-                appUrl: '/surveys/expired_survey/answer',
-                canEarn: false,
-                availability: 'deadline',
-                capGroup: '',
-                capPoints: null,
-                gateSlug: '',
-                latePercent: 100,
-                priorityRating: 0,
-                status: 'pending',
-                note: 'The deadline for this activity has passed.',
-              },
-              {
                 key: 'survey:feature_eval_w',
                 kind: 'survey',
                 slug: 'feature_eval_w',
                 title: 'Ver. W features',
-                category: 'Survey',
+                category: 'Recovery',
                 points: 0,
                 rawPoints: 0,
                 possiblePoints: 20,
@@ -243,12 +190,12 @@ describe('Reimbursement', () => {
                 slug: 'wit_bot_audit_phase_1',
                 title: 'Wit_bot audit pass - Phase 1',
                 category: 'Manual activities',
-                points: 20,
-                rawPoints: 20,
-                possiblePoints: 20,
-                currentPossiblePoints: 20,
+                points: 40,
+                rawPoints: 40,
+                possiblePoints: 40,
+                currentPossiblePoints: 40,
                 completedCount: 1,
-                appUrl: '/chats',
+                appUrl: '/users/7/chat',
                 canEarn: false,
                 availability: 'available',
                 capGroup: '',
@@ -259,83 +206,23 @@ describe('Reimbursement', () => {
                 status: 'earned',
                 note: '',
               },
-              {
-                key: 'manual:wit_bot_audit_phase_2',
-                kind: 'manual',
-                slug: 'wit_bot_audit_phase_2',
-                title: 'Wit_bot audit pass - Phase 2',
-                category: 'Manual activities',
-                points: 0,
-                rawPoints: 0,
-                possiblePoints: 20,
-                currentPossiblePoints: 20,
-                completedCount: 0,
-                appUrl: '/users/7/chat',
-                canEarn: true,
-                availability: 'available',
-                capGroup: '',
-                capPoints: null,
-                gateSlug: '',
-                latePercent: 100,
-                status: 'pending',
-                note: '',
-              },
-              {
-                key: 'manual:interview_signup',
-                kind: 'manual',
-                slug: 'interview_signup',
-                title: 'Interview signup',
-                category: 'Manual activities',
-                points: 0,
-                rawPoints: 0,
-                possiblePoints: 150,
-                currentPossiblePoints: 150,
-                completedCount: 0,
-                appUrl: '/chats',
-                canEarn: false,
-                availability: 'future',
-                capGroup: '',
-                capPoints: null,
-                gateSlug: '',
-                latePercent: 100,
-                priorityRating: 0,
-                status: 'pending',
-                note: 'This activity is not available yet.',
-              },
-              {
-                key: 'manual:friend_invite',
-                kind: 'manual',
-                slug: 'friend_invite',
-                title: 'Friend invite reimbursement',
-                category: 'Manual activities',
-                points: 0,
-                rawPoints: 0,
-                possiblePoints: 500,
-                currentPossiblePoints: 500,
-                completedCount: 0,
-                appUrl: '/friends/explore',
-                canEarn: false,
-                availability: 'deadline',
-                capGroup: '',
-                capPoints: null,
-                gateSlug: '',
-                latePercent: 100,
-                priorityRating: 0,
-                status: 'pending',
-                note: 'The deadline for this activity has passed.',
-              },
             ],
-            capRules: [
-              {
-                group: 'daily_diary',
-                capPoints: 30,
-                sourceCount: 1,
-                availablePoints: 30,
-                earnedPoints: 30,
-              },
-            ],
+            capRules: [],
             gateRules: [],
             lateRules: [],
+          },
+        };
+      }
+      if (key === '/surveys/reimbursement/') {
+        return {
+          data: {
+            provisional_total: 1,
+            adjusted_total: 1,
+            available_max: 1,
+            dollar_estimate_cents: 13,
+            points_per_dollar: 8,
+            awards: [],
+            pending_prereqs: [],
           },
         };
       }
@@ -345,58 +232,90 @@ describe('Reimbursement', () => {
     render(<Reimbursement />);
 
     expect(screen.getByText('Reimbursement preview')).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        'The study was described as up to $60 for participation, including interview participation, plus up to $50 for friend invitations. The current draft allocates up to $90 for participation, which is intentional while reimbursement is being finalized.',
-      ),
-    ).toBeInTheDocument();
     expect(screen.getByText('50 pts')).toBeInTheDocument();
-    expect(screen.getByText('~$5.00 estimated reimbursement')).toBeInTheDocument();
-    expect(screen.getByText(/10 pts = \$1/)).toBeInTheDocument();
     expect(screen.getByText('Earn more points')).toBeInTheDocument();
-    expect(screen.getByText('Available later')).toBeInTheDocument();
-    expect(screen.getByText('Points you earned')).toBeInTheDocument();
-    expect(screen.getByText('Need help with missed points?')).toBeInTheDocument();
+    expect(screen.getByText('Late credit')).toBeInTheDocument();
+    expect(screen.getByText('Prerequisite/Must Complete')).toBeInTheDocument();
     expect(screen.getAllByRole('link', { name: 'Take survey' })[0]).toHaveAttribute(
       'href',
       '/surveys/open_survey/answer',
     );
-    expect(screen.getAllByRole('link', { name: 'Take survey' })[1]).toHaveAttribute(
-      'href',
-      '/surveys/feature_eval_w/answer',
-    );
-    expect(screen.getByRole('link', { name: 'Open WIT chat' })).toHaveAttribute(
-      'href',
-      '/users/7/chat',
-    );
-    expect(screen.getByRole('link', { name: 'Ask admin' })).toHaveAttribute('href', '/chats');
-    expect(screen.getByText('Today on WIT')).toBeInTheDocument();
-    expect(screen.getByText('Open survey')).toBeInTheDocument();
+    expect(screen.queryByText('1 / 1 pts')).not.toBeInTheDocument();
+    expect(screen.queryByText('Recovery')).not.toBeInTheDocument();
+  });
+
+  it('renders public reimbursement totals when allocation is open', () => {
+    mockedUseSWR.mockImplementation((key: string | readonly [string, number | null] | null) => {
+      if (key === '/surveys/reimbursement/') {
+        return {
+          data: {
+            provisional_total: 48,
+            adjusted_total: 45,
+            available_max: 100,
+            dollar_estimate_cents: 563,
+            points_per_dollar: 8,
+            awards: [
+              {
+                source_kind: 'survey',
+                source_slug: 'phase_1_reflection',
+                scheduled_survey_id: 12,
+                title_en: 'Phase 1 reflection',
+                title_ko: 'Phase 1 reflection',
+                cadence: 'endpoint',
+                window_start: '2026-05-17',
+                window_end: '2026-05-18',
+                awarded_points: 30,
+                adjusted_points: null,
+                effective_points: 30,
+                note: '',
+                submitted_at: '2026-05-18T12:00:00Z',
+              },
+              {
+                source_kind: 'app_usage',
+                source_slug: 'app_usage_phase_1',
+                scheduled_survey_id: null,
+                title_en: 'App usage - Phase 1',
+                title_ko: 'App usage - Phase 1',
+                cadence: null,
+                window_start: null,
+                window_end: null,
+                awarded_points: 18,
+                adjusted_points: 15,
+                effective_points: 15,
+                note: 'Adjusted after review.',
+                submitted_at: '2026-05-18T12:00:00Z',
+              },
+            ],
+            pending_prereqs: [
+              {
+                survey_slug: 'feature_eval_w',
+                scheduled_survey_id: 44,
+                title_en: 'Ver. W features',
+                title_ko: 'Ver. W features',
+                potential_points: 20,
+                prereq_slug: 'phase_1_reflection',
+                prereq_title_en: 'Phase 1 reflection',
+                prereq_title_ko: 'Phase 1 reflection',
+              },
+            ],
+          },
+        };
+      }
+      return { data: null };
+    });
+
+    render(<Reimbursement />);
+
+    expect(screen.queryByText('To be updated')).not.toBeInTheDocument();
+    expect(screen.queryByText('Reimbursement details are being finalized')).not.toBeInTheDocument();
+    expect(screen.getByText('45 / 100 pts')).toBeInTheDocument();
+    expect(screen.getByText('~$5.63 estimated reimbursement')).toBeInTheDocument();
+    expect(screen.getByText('Phase 1 reflection')).toBeInTheDocument();
+    expect(screen.getByText('App usage - Phase 1')).toBeInTheDocument();
+    expect(screen.getByText('Adjusted after review.')).toBeInTheDocument();
+    expect(screen.getByText('15 pts')).toBeInTheDocument();
+    expect(screen.getByText('18 pts')).toBeInTheDocument();
     expect(screen.getByText('Ver. W features')).toBeInTheDocument();
-    expect(screen.getByText('Expired survey')).toBeInTheDocument();
-    expect(screen.getByText('Interview signup')).toBeInTheDocument();
-    expect(screen.getByText('Friend invite reimbursement')).toBeInTheDocument();
-    expect(screen.getByText('Will be updated')).toBeInTheDocument();
-    expect(
-      screen.getByText('Friend invite reimbursement details will be updated.'),
-    ).toBeInTheDocument();
-    expect(screen.getByText('Wit_bot audit pass - Phase 1')).toBeInTheDocument();
-    expect(
-      screen.getByText('This activity is not open yet. Check back later.'),
-    ).toBeInTheDocument();
-    expect(screen.getByText('Late credit')).toBeInTheDocument();
-    expect(
-      screen.getByText('Late submissions are still accepted. Current draft credit is 10 pts.'),
-    ).toBeInTheDocument();
-    expect(screen.getByText('+3 pts')).toBeInTheDocument();
-    expect(screen.getByText('High Priority')).toBeInTheDocument();
-    expect(screen.getAllByText(/Deadline passed/)).toHaveLength(3);
-    expect(screen.getAllByRole('link', { name: 'Ask admin' })).toHaveLength(1);
-    expect(screen.queryByText('Completed 12 times')).not.toBeInTheDocument();
-    expect(screen.queryByText('Completed')).not.toBeInTheDocument();
-    expect(screen.queryByText('Allocation rules')).not.toBeInTheDocument();
-    expect(screen.queryByText('Earning rules')).not.toBeInTheDocument();
-    expect(screen.queryByText('Caps / gates / late')).not.toBeInTheDocument();
-    expect(screen.queryByText(/daily_diary cap/)).not.toBeInTheDocument();
+    expect(screen.getByText('+20 pts available')).toBeInTheDocument();
   });
 });
