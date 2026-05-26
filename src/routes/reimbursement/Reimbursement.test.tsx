@@ -131,6 +131,7 @@ const mockedUseSWR = useSWR as unknown as jest.Mock;
 describe('Reimbursement', () => {
   beforeEach(() => {
     mockedUseSWR.mockReset();
+    window.localStorage.clear();
     mockShouldUseLocalAllocationPreview.mockReturnValue(false);
   });
 
@@ -250,6 +251,33 @@ describe('Reimbursement', () => {
     );
     expect(screen.queryByText('1 / 1 pts')).not.toBeInTheDocument();
     expect(screen.queryByText('Recovery')).not.toBeInTheDocument();
+  });
+
+  it('renders the cached local allocation preview while refreshing in the background', () => {
+    mockShouldUseLocalAllocationPreview.mockReturnValue(true);
+    window.localStorage.setItem(
+      'local-reimbursement-allocation-preview:browser-cache:v1',
+      JSON.stringify({
+        db: { name: 'whoamitoday_merged', participantCount: 80 },
+        selectedUser: { id: 8, username: 'cached_participant', responseTotal: 4 },
+        pointsPerDollar: 10,
+        availableMax: 110,
+        earnedPoints: 25,
+        estimatedDollars: '2.50',
+        sourceCount: 0,
+        rows: [],
+        capRules: [],
+        gateRules: [],
+        lateRules: [],
+      }),
+    );
+    mockedUseSWR.mockReturnValue({ data: null });
+
+    render(<Reimbursement />);
+
+    expect(screen.queryByText('Loading your point allocation preview...')).not.toBeInTheDocument();
+    expect(screen.getByText('25 pts')).toBeInTheDocument();
+    expect(screen.getByText('~$2.50 estimated reimbursement')).toBeInTheDocument();
   });
 
   it('renders public reimbursement totals when allocation is open', () => {

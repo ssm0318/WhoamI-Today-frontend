@@ -22,6 +22,7 @@ import { MainScrollContainer } from '../Root';
 
 const PREVIEW_POINTS_PER_DOLLAR = 10;
 const INTERVIEW_SIGNUP_POINTS = 10;
+const LOCAL_ALLOCATION_PREVIEW_BROWSER_CACHE_KEY = `${LOCAL_ALLOCATION_PREVIEW_KEY}:browser-cache:v1`;
 
 const Page = styled.main`
   min-height: 100%;
@@ -191,6 +192,30 @@ const EmptySectionCard = styled.div`
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
 const formatCurrency = (cents: number): string => (cents / 100).toFixed(2);
+
+function readCachedLocalAllocationPreview(): LocalAllocationPreview | null {
+  if (typeof window === 'undefined') return null;
+
+  try {
+    const cached = window.localStorage.getItem(LOCAL_ALLOCATION_PREVIEW_BROWSER_CACHE_KEY);
+    return cached ? (JSON.parse(cached) as LocalAllocationPreview) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeCachedLocalAllocationPreview(preview: LocalAllocationPreview): void {
+  if (typeof window === 'undefined') return;
+
+  try {
+    window.localStorage.setItem(
+      LOCAL_ALLOCATION_PREVIEW_BROWSER_CACHE_KEY,
+      JSON.stringify(preview),
+    );
+  } catch {
+    // Browser storage is best-effort only; the live preview can still render.
+  }
+}
 
 function actionText(row: LocalPreviewRow): string {
   if (row.status === 'locked' && row.gateSlug) return 'Do prereq';
@@ -667,10 +692,10 @@ function ReimbursementLoadingPage({ message }: { message: string }) {
 
 function Reimbursement() {
   const { t } = useTranslation('translation', { keyPrefix: 'reimbursement' });
-  const [localPreviewFallback, setLocalPreviewFallback] = useState<LocalAllocationPreview | null>(
-    null,
-  );
   const useLocalPreview = shouldUseLocalAllocationPreview();
+  const [localPreviewFallback] = useState<LocalAllocationPreview | null>(() =>
+    useLocalPreview ? readCachedLocalAllocationPreview() : null,
+  );
   const { data } = useSWR(
     REIMBURSEMENT_POINTS_TBU || useLocalPreview ? null : REIMBURSEMENT_KEY,
     getReimbursementState,
@@ -686,19 +711,10 @@ function Reimbursement() {
   const resolvedLocalPreview = localPreview ?? localPreviewFallback;
 
   useEffect(() => {
-    if (!useLocalPreview) return undefined;
+    if (!useLocalPreview || !localPreview) return;
 
-    let isMounted = true;
-    Promise.resolve(getLocalAllocationPreview([LOCAL_ALLOCATION_PREVIEW_KEY, null])).then(
-      (preview) => {
-        if (isMounted) setLocalPreviewFallback(preview);
-      },
-    );
-
-    return () => {
-      isMounted = false;
-    };
-  }, [useLocalPreview]);
+    writeCachedLocalAllocationPreview(localPreview);
+  }, [localPreview, useLocalPreview]);
 
   if (resolvedLocalPreview) return <LocalAllocationPreviewPage preview={resolvedLocalPreview} />;
   if (useLocalPreview) {
