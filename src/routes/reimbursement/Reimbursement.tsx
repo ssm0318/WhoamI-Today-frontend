@@ -7,6 +7,7 @@ import SubHeader from '@components/sub-header/SubHeader';
 import { Colors, Layout, Typo } from '@design-system';
 import i18n from '@i18n/index';
 import { LocalAllocationPreview, LocalPreviewRow, ReimbursementAward } from '@models/reimbursement';
+import { SurveyIndexEntry, SurveyIndexResponse } from '@models/survey';
 import {
   getLocalAllocationPreview,
   getReimbursementState,
@@ -14,11 +15,13 @@ import {
   REIMBURSEMENT_KEY,
   shouldUseLocalAllocationPreview,
 } from '@utils/apis/reimbursement';
+import { getSurveyIndex } from '@utils/apis/survey';
 
 import { REIMBURSEMENT_POINTS_TBU } from '../../utils/reimbursementAvailability';
 import { MainScrollContainer } from '../Root';
 
 const PREVIEW_POINTS_PER_DOLLAR = 10;
+const INTERVIEW_SIGNUP_POINTS = 10;
 
 const Page = styled.main`
   min-height: 100%;
@@ -177,69 +180,20 @@ const OriginalPoints = styled.s`
   font-weight: 600;
 `;
 
-const PendingRow = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  border: 1px dashed #b8b8c2;
+const EmptySectionCard = styled.div`
+  width: 100%;
+  border: 1px solid ${Colors.LIGHT_GRAY};
   border-radius: 8px;
-  padding: 12px 14px;
   background: #fafafa;
+  padding: 12px 14px;
 `;
 
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
 const formatCurrency = (cents: number): string => (cents / 100).toFixed(2);
 
-function AwardPoints({ award }: { award: ReimbursementAward }) {
-  const { t } = useTranslation('translation', { keyPrefix: 'reimbursement' });
-  const adjusted = award.adjusted_points !== null && award.adjusted_points !== award.awarded_points;
-
-  return (
-    <PointsCell>
-      <Typo type="title-medium" color="BLACK">
-        {award.effective_points} pts
-      </Typo>
-      {adjusted && <OriginalPoints>{award.awarded_points} pts</OriginalPoints>}
-      {adjusted && (
-        <Typo type="label-medium" color="DARK_GRAY">
-          {t('downgraded_label')}
-        </Typo>
-      )}
-    </PointsCell>
-  );
-}
-
-function AwardGroup({ title, awards }: { title: string; awards: ReimbursementAward[] }) {
-  if (awards.length === 0) return null;
-
-  return (
-    <Section>
-      <Typo type="title-medium" color="BLACK">
-        {title}
-      </Typo>
-      <AwardList>
-        {awards.map((award) => (
-          <AwardRow key={`${award.source_kind}:${award.source_slug}:${award.scheduled_survey_id}`}>
-            <Layout.FlexCol gap={4}>
-              <Typo type="body-medium" color="BLACK">
-                {pickLocalized(award.title_en, award.title_ko)}
-              </Typo>
-              {award.note && (
-                <Typo type="label-medium" color="DARK_GRAY">
-                  {award.note}
-                </Typo>
-              )}
-            </Layout.FlexCol>
-            <AwardPoints award={award} />
-          </AwardRow>
-        ))}
-      </AwardList>
-    </Section>
-  );
-}
-
 function actionText(row: LocalPreviewRow): string {
+  if (row.status === 'locked' && row.gateSlug) return 'Do prereq';
   if (row.kind === 'survey') return 'Take survey';
   if (row.slug.startsWith('wit_bot_audit')) return 'Open WIT chat';
   if (row.slug === 'interview_signup') return 'Ask admin';
@@ -301,11 +255,17 @@ function EarnedRows({ rows }: { rows: LocalPreviewRow[] }) {
                 {row.title}
               </Typo>
               <PreviewRowBadges row={row} />
+              {row.note && (
+                <Typo type="label-medium" color="DARK_GRAY">
+                  {row.note}
+                </Typo>
+              )}
             </Layout.FlexCol>
             <PointsCell>
               <Typo type="title-medium" color="BLACK">
                 {row.points} pts
               </Typo>
+              {row.rawPoints !== row.points && <OriginalPoints>{row.rawPoints} pts</OriginalPoints>}
             </PointsCell>
           </AwardRow>
         ))}
@@ -331,7 +291,9 @@ function ActionRows({ title, rows }: { title: string; rows: LocalPreviewRow[] })
               </Typo>
               <PreviewRowBadges row={row} />
               <Typo type="label-medium" color="DARK_GRAY">
-                {row.availability === 'late'
+                {row.status === 'locked' && row.gateSlug
+                  ? row.note
+                  : row.availability === 'late'
                   ? row.note ||
                     `Late submissions are still accepted. Current draft credit is ${currentPossiblePoints(
                       row,
@@ -423,6 +385,218 @@ function UpcomingRows({ rows }: { rows: LocalPreviewRow[] }) {
   );
 }
 
+function EmptyActionSection() {
+  return (
+    <Section>
+      <Typo type="title-medium" color="BLACK">
+        Earn more points
+      </Typo>
+      <EmptySectionCard>
+        <Typo type="body-medium" color="DARK_GRAY">
+          No point-earning activities are open right now. Check the Surveys page for updates.
+        </Typo>
+      </EmptySectionCard>
+    </Section>
+  );
+}
+
+function categoryForSurvey(entry: SurveyIndexEntry): string {
+  if (entry.cadence === 'daily') return 'Daily diary';
+  if (entry.cadence === 'weekly' || entry.cadence === 'anytime') return 'Weekly / anytime';
+  if (entry.cadence === 'endpoint' || entry.cadence === 'biweekly') {
+    return 'Phase / feature surveys';
+  }
+  return 'Survey';
+}
+
+function priorityRatingForSlug(slug: string): number {
+  if (slug === 'feature_eval_w' || slug === 'feature_eval_w_part2') return 1;
+  if (
+    [
+      'phase1_friend_closeness',
+      'phase2_friend_closeness',
+      'goal_comparison_p1',
+      'goal_comparison_p2',
+      'mid_study_w',
+      'mid_study_q',
+      'post_study_w',
+      'post_study_q',
+    ].includes(slug)
+  ) {
+    return 2;
+  }
+  return 0;
+}
+
+function surveyEntryToPreviewRow(
+  entry: SurveyIndexEntry,
+  openSurveySlugs: Set<string>,
+): LocalPreviewRow | null {
+  if (entry.point_value <= 0 || entry.point_award) return null;
+
+  const prereqSlug = entry.point_locked_by_prereq_slug || '';
+  if (prereqSlug && !openSurveySlugs.has(prereqSlug)) return null;
+
+  const lockedByAvailablePrereq = !!prereqSlug;
+  const appUrl = lockedByAvailablePrereq
+    ? `/surveys/${encodeURIComponent(prereqSlug)}/answer`
+    : entry.redirect_url;
+
+  return {
+    key: `survey:${entry.id}`,
+    kind: 'survey',
+    slug: entry.survey.slug,
+    title: pickLocalized(entry.survey.title_en, entry.survey.title_ko),
+    category: categoryForSurvey(entry),
+    points: 0,
+    rawPoints: 0,
+    possiblePoints: entry.point_value,
+    currentPossiblePoints: entry.point_value,
+    completedCount: 0,
+    appUrl,
+    canEarn: true,
+    availability: entry.bucket === 'late_but_accepted' ? 'late' : 'available',
+    capGroup: '',
+    capPoints: null,
+    gateSlug: prereqSlug,
+    latePercent: 100,
+    priorityRating: priorityRatingForSlug(entry.survey.slug),
+    status: lockedByAvailablePrereq ? 'locked' : 'pending',
+    note: lockedByAvailablePrereq
+      ? `Complete ${pickLocalized(
+          entry.point_locked_by_prereq_title_en || prereqSlug,
+          entry.point_locked_by_prereq_title_ko || prereqSlug,
+        )} first so this survey can count for points.`
+      : '',
+  };
+}
+
+function awardToPreviewRow(award: ReimbursementAward): LocalPreviewRow {
+  const adjusted = award.adjusted_points !== null && award.adjusted_points !== award.awarded_points;
+  const category =
+    award.source_kind === 'survey'
+      ? 'Surveys'
+      : award.source_kind === 'app_usage'
+      ? 'App usage'
+      : 'Other activities';
+
+  return {
+    key: `${award.source_kind}:${award.source_slug}:${award.scheduled_survey_id || 'manual'}`,
+    kind: award.source_kind === 'survey' ? 'survey' : 'manual',
+    slug: award.source_slug,
+    title: pickLocalized(award.title_en, award.title_ko),
+    category,
+    points: award.effective_points,
+    rawPoints: adjusted ? award.awarded_points : award.effective_points,
+    possiblePoints: Math.max(award.awarded_points, award.effective_points),
+    currentPossiblePoints: award.effective_points,
+    completedCount: 1,
+    appUrl: '',
+    canEarn: false,
+    availability: 'no_action',
+    capGroup: '',
+    capPoints: null,
+    gateSlug: '',
+    latePercent: 100,
+    priorityRating: 0,
+    status: 'earned',
+    note: award.note,
+  };
+}
+
+function interviewSignupUpcomingRow(hasInterviewAward: boolean): LocalPreviewRow[] {
+  if (hasInterviewAward) return [];
+  return [
+    {
+      key: 'manual:interview_signup',
+      kind: 'manual',
+      slug: 'interview_signup',
+      title: 'Interview signup',
+      category: 'Other activities',
+      points: 0,
+      rawPoints: 0,
+      possiblePoints: INTERVIEW_SIGNUP_POINTS,
+      currentPossiblePoints: INTERVIEW_SIGNUP_POINTS,
+      completedCount: 0,
+      appUrl: '',
+      canEarn: false,
+      availability: 'future',
+      capGroup: '',
+      capPoints: null,
+      gateSlug: '',
+      latePercent: 100,
+      priorityRating: 0,
+      status: 'pending',
+      note: 'Interview signup is not open yet.',
+    },
+  ];
+}
+
+function ProductionReimbursementPage({
+  data,
+  surveyIndex,
+}: {
+  data: NonNullable<Awaited<ReturnType<typeof getReimbursementState>>>;
+  surveyIndex: SurveyIndexResponse | undefined;
+}) {
+  const { t } = useTranslation('translation', { keyPrefix: 'reimbursement' });
+  const openSurveyEntries = [
+    ...(surveyIndex?.available_now || []),
+    ...(surveyIndex?.late_but_accepted || []),
+  ];
+  const openSurveySlugs = new Set(openSurveyEntries.map((entry) => entry.survey.slug));
+  const earnMoreRows = openSurveyEntries
+    .map((entry) => surveyEntryToPreviewRow(entry, openSurveySlugs))
+    .filter((row): row is LocalPreviewRow => row !== null);
+  const earnedRows = data.awards.map(awardToPreviewRow);
+  const upcomingRows = interviewSignupUpcomingRow(
+    data.awards.some((award) => award.source_slug === 'interview_signup'),
+  );
+  const hasSurveyIndex = !!surveyIndex;
+
+  return (
+    <MainScrollContainer>
+      <SubHeader title={i18n.t('header.reimbursement')} />
+      <Page aria-labelledby="reimbursement-title">
+        <NoticeCard>
+          <Typo type="label-large" color="PRIMARY">
+            {t('local_preview_notice_title')}
+          </Typo>
+          <Typo type="body-medium" color="DARK_GRAY">
+            {t('local_preview_notice_body')}
+          </Typo>
+        </NoticeCard>
+
+        <SummaryCard>
+          <Typo type="label-large" color="PRIMARY">
+            {t('summary_title')}
+          </Typo>
+          <SummaryNumber id="reimbursement-title">{data.adjusted_total} pts</SummaryNumber>
+          <Typo type="title-medium" color="BLACK">
+            {t('dollar_estimate_label', {
+              amount: formatCurrency(data.dollar_estimate_cents),
+            })}
+          </Typo>
+          <Typo type="body-medium" color="DARK_GRAY">
+            {data.points_per_dollar} pts = $1. Final reimbursement may change after study review.
+          </Typo>
+          <Typo type="label-medium" color="DARK_GRAY">
+            {t('study_max_note_body')}
+          </Typo>
+        </SummaryCard>
+
+        {hasSurveyIndex && earnMoreRows.length === 0 ? (
+          <EmptyActionSection />
+        ) : (
+          <ActionRows title="Earn more points" rows={earnMoreRows} />
+        )}
+        <UpcomingRows rows={upcomingRows} />
+        <EarnedRows rows={earnedRows} />
+      </Page>
+    </MainScrollContainer>
+  );
+}
+
 function LocalAllocationPreviewPage({ preview }: { preview: LocalAllocationPreview }) {
   const { t } = useTranslation('translation', { keyPrefix: 'reimbursement' });
   const earnedRows = preview.rows.filter((row) => row.points > 0);
@@ -501,6 +675,10 @@ function Reimbursement() {
     REIMBURSEMENT_POINTS_TBU || useLocalPreview ? null : REIMBURSEMENT_KEY,
     getReimbursementState,
   );
+  const { data: surveyIndex } = useSWR(
+    REIMBURSEMENT_POINTS_TBU || useLocalPreview ? null : '/surveys/index/',
+    getSurveyIndex,
+  );
   const { data: localPreview } = useSWR(
     useLocalPreview ? [LOCAL_ALLOCATION_PREVIEW_KEY, null] : null,
     getLocalAllocationPreview,
@@ -545,71 +723,7 @@ function Reimbursement() {
   }
 
   if (!data) return null;
-
-  const surveyAwards = data.awards.filter((award) => award.source_kind === 'survey');
-  const otherAwards = data.awards.filter((award) => award.source_kind !== 'survey');
-
-  return (
-    <MainScrollContainer>
-      <SubHeader title={i18n.t('header.reimbursement')} />
-      <Page aria-labelledby="reimbursement-title">
-        <SummaryCard>
-          <Typo type="label-large" color="PRIMARY">
-            {t('summary_title')}
-          </Typo>
-          <SummaryNumber id="reimbursement-title">
-            {data.adjusted_total} / {data.available_max} pts
-          </SummaryNumber>
-          <Typo type="title-medium" color="BLACK">
-            {t('dollar_estimate_label', {
-              amount: formatCurrency(data.dollar_estimate_cents),
-            })}
-          </Typo>
-          <Typo type="body-medium" color="DARK_GRAY">
-            {t('audit_disclaimer_long')}
-          </Typo>
-        </SummaryCard>
-
-        <Section>
-          <Typo type="title-medium" color="BLACK">
-            {t('what_earns_title')}
-          </Typo>
-          <Typo type="body-medium" color="DARK_GRAY">
-            {t('what_earns_body')}
-          </Typo>
-          <Typo type="label-large" color="PRIMARY">
-            {t('conversion_rate', { points: data.points_per_dollar })}
-          </Typo>
-        </Section>
-
-        <AwardGroup title={t('section_surveys')} awards={surveyAwards} />
-        <AwardGroup title={t('section_other_activities')} awards={otherAwards} />
-
-        {data.pending_prereqs.length > 0 && (
-          <Section>
-            <Typo type="title-medium" color="BLACK">
-              {t('section_pending')}
-            </Typo>
-            {data.pending_prereqs.map((pending) => (
-              <PendingRow key={`${pending.survey_slug}:${pending.scheduled_survey_id}`}>
-                <Typo type="body-medium" color="BLACK">
-                  {pickLocalized(pending.title_en, pending.title_ko)}
-                </Typo>
-                <Typo type="label-large" color="PRIMARY">
-                  +{pending.potential_points} pts available
-                </Typo>
-                <Typo type="label-medium" color="DARK_GRAY">
-                  {t('pending_prereq_copy', {
-                    title: pickLocalized(pending.prereq_title_en, pending.prereq_title_ko),
-                  })}
-                </Typo>
-              </PendingRow>
-            ))}
-          </Section>
-        )}
-      </Page>
-    </MainScrollContainer>
-  );
+  return <ProductionReimbursementPage data={data} surveyIndex={surveyIndex} />;
 }
 
 export default Reimbursement;

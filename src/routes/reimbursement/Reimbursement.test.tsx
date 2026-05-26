@@ -114,6 +114,14 @@ jest.mock(
   { virtual: true },
 );
 
+jest.mock(
+  '@utils/apis/survey',
+  () => ({
+    getSurveyIndex: jest.fn(),
+  }),
+  { virtual: true },
+);
+
 jest.mock('../Root', () => ({
   MainScrollContainer: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
 }));
@@ -252,8 +260,8 @@ describe('Reimbursement', () => {
             provisional_total: 48,
             adjusted_total: 45,
             available_max: 100,
-            dollar_estimate_cents: 563,
-            points_per_dollar: 8,
+            dollar_estimate_cents: 450,
+            points_per_dollar: 10,
             awards: [
               {
                 source_kind: 'survey',
@@ -290,14 +298,80 @@ describe('Reimbursement', () => {
               {
                 survey_slug: 'feature_eval_w',
                 scheduled_survey_id: 44,
-                title_en: 'Ver. W features',
-                title_ko: 'Ver. W features',
+                title_en: 'How automatic is {{habit_platform_label}} for you?',
+                title_ko: 'How automatic is {{habit_platform_label}} for you?',
                 potential_points: 20,
-                prereq_slug: 'phase_1_reflection',
-                prereq_title_en: 'Phase 1 reflection',
-                prereq_title_ko: 'Phase 1 reflection',
+                prereq_slug: 'habit_platform',
+                prereq_title_en: 'Habitual platform',
+                prereq_title_ko: 'Habitual platform',
               },
             ],
+          },
+        };
+      }
+      if (key === '/surveys/index/') {
+        return {
+          data: {
+            available_now: [
+              {
+                id: 101,
+                cadence: 'endpoint',
+                sequence_index: 1,
+                sidebar_order: 1,
+                window_start: '2026-05-25',
+                window_end: '2026-05-30',
+                allow_late: true,
+                survey: {
+                  slug: 'open_survey',
+                  title_en: 'Open survey',
+                  title_ko: 'Open survey',
+                  priority: 20,
+                  editable: false,
+                  closed: false,
+                },
+                bucket: 'available_now',
+                user_answered: false,
+                submitted_at: null,
+                redirect_url: '/surveys/open_survey/answer',
+                results_unlocked: false,
+                draft: null,
+                point_value: 10,
+                point_locked_by_prereq_slug: null,
+                point_locked_by_prereq_title_en: null,
+                point_locked_by_prereq_title_ko: null,
+                point_award: null,
+              },
+              {
+                id: 102,
+                cadence: 'daily',
+                sequence_index: 2,
+                sidebar_order: 2,
+                window_start: '2026-05-25',
+                window_end: '2026-05-25',
+                allow_late: true,
+                survey: {
+                  slug: 'sotd_locked',
+                  title_en: 'How automatic is {{habit_platform_label}} for you?',
+                  title_ko: 'How automatic is {{habit_platform_label}} for you?',
+                  priority: 20,
+                  editable: false,
+                  closed: false,
+                },
+                bucket: 'available_now',
+                user_answered: false,
+                submitted_at: null,
+                redirect_url: '/surveys/sotd_locked/answer',
+                results_unlocked: false,
+                draft: null,
+                point_value: 10,
+                point_locked_by_prereq_slug: 'habit_platform',
+                point_locked_by_prereq_title_en: 'Habitual platform',
+                point_locked_by_prereq_title_ko: 'Habitual platform',
+                point_award: null,
+              },
+            ],
+            late_but_accepted: [],
+            completed: [],
           },
         };
       }
@@ -308,14 +382,28 @@ describe('Reimbursement', () => {
 
     expect(screen.queryByText('To be updated')).not.toBeInTheDocument();
     expect(screen.queryByText('Reimbursement details are being finalized')).not.toBeInTheDocument();
-    expect(screen.getByText('45 / 100 pts')).toBeInTheDocument();
-    expect(screen.getByText('~$5.63 estimated reimbursement')).toBeInTheDocument();
+    expect(screen.queryByText('What earns points')).not.toBeInTheDocument();
+    expect(screen.getByText('45 pts')).toBeInTheDocument();
+    expect(screen.getByText('~$4.50 estimated reimbursement')).toBeInTheDocument();
+    expect(
+      screen.getByText('10 pts = $1. Final reimbursement may change after study review.'),
+    ).toBeInTheDocument();
+    expect(screen.getByText('Earn more points')).toBeInTheDocument();
+    expect(screen.getByText('Open survey')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Take survey' })).toHaveAttribute(
+      'href',
+      '/surveys/open_survey/answer',
+    );
+    expect(screen.getByText('Available later')).toBeInTheDocument();
+    expect(screen.getByText('Interview signup')).toBeInTheDocument();
+    expect(screen.getByText('Points you earned')).toBeInTheDocument();
     expect(screen.getByText('Phase 1 reflection')).toBeInTheDocument();
     expect(screen.getByText('App usage - Phase 1')).toBeInTheDocument();
     expect(screen.getByText('Adjusted after review.')).toBeInTheDocument();
     expect(screen.getByText('15 pts')).toBeInTheDocument();
     expect(screen.getByText('18 pts')).toBeInTheDocument();
-    expect(screen.getByText('Ver. W features')).toBeInTheDocument();
-    expect(screen.getByText('+20 pts available')).toBeInTheDocument();
+    expect(
+      screen.queryByText('How automatic is {{habit_platform_label}} for you?'),
+    ).not.toBeInTheDocument();
   });
 });
