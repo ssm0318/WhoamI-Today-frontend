@@ -21,7 +21,7 @@ import { REIMBURSEMENT_POINTS_TBU } from '../../utils/reimbursementAvailability'
 import { MainScrollContainer } from '../Root';
 
 const PREVIEW_POINTS_PER_DOLLAR = 10;
-const INTERVIEW_SIGNUP_POINTS = 10;
+const INTERVIEW_SIGNUP_POINTS = 200;
 const LOCAL_ALLOCATION_PREVIEW_BROWSER_CACHE_KEY = `${LOCAL_ALLOCATION_PREVIEW_KEY}:browser-cache:v1`;
 
 const Page = styled.main`
