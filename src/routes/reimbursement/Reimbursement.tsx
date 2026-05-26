@@ -647,7 +647,7 @@ function LocalAllocationPreviewPage({ preview }: { preview: LocalAllocationPrevi
   );
 }
 
-function LocalAllocationPreviewLoadingPage() {
+function ReimbursementLoadingPage({ message }: { message: string }) {
   return (
     <MainScrollContainer>
       <SubHeader title={i18n.t('header.reimbursement')} />
@@ -657,7 +657,7 @@ function LocalAllocationPreviewLoadingPage() {
             Reimbursement preview
           </Typo>
           <Typo type="body-medium" color="DARK_GRAY">
-            Loading your point allocation preview...
+            {message}
           </Typo>
         </NoticeCard>
       </Page>
@@ -701,7 +701,9 @@ function Reimbursement() {
   }, [useLocalPreview]);
 
   if (resolvedLocalPreview) return <LocalAllocationPreviewPage preview={resolvedLocalPreview} />;
-  if (useLocalPreview) return <LocalAllocationPreviewLoadingPage />;
+  if (useLocalPreview) {
+    return <ReimbursementLoadingPage message="Loading your point allocation preview..." />;
+  }
 
   if (REIMBURSEMENT_POINTS_TBU) {
     return (
@@ -722,7 +724,7 @@ function Reimbursement() {
     );
   }
 
-  if (!data) return null;
+  if (!data) return <ReimbursementLoadingPage message="Loading reimbursement details..." />;
   return <ProductionReimbursementPage data={data} surveyIndex={surveyIndex} />;
 }
 

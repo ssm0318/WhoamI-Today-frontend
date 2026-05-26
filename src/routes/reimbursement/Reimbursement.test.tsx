@@ -406,4 +406,13 @@ describe('Reimbursement', () => {
       screen.queryByText('How automatic is {{habit_platform_label}} for you?'),
     ).not.toBeInTheDocument();
   });
+
+  it('shows a production loading state instead of a blank page while totals load', () => {
+    mockedUseSWR.mockReturnValue({ data: null });
+
+    render(<Reimbursement />);
+
+    expect(screen.getByText('Reimbursement preview')).toBeInTheDocument();
+    expect(screen.getByText('Loading reimbursement details...')).toBeInTheDocument();
+  });
 });
