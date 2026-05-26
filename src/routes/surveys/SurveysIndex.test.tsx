@@ -312,6 +312,18 @@ describe('SurveysIndex', () => {
           window_end: '2026-05-24',
         }),
         entry({
+          id: 8,
+          cadence: 'endpoint',
+          bucket: 'available_now',
+          allow_late: true,
+          survey: {
+            slug: 'feature_eval_w_part2',
+            title_en: 'Ver.W features: Part 2',
+            title_ko: 'Ver.W features: Part 2',
+          },
+          window_end: '2026-05-24',
+        }),
+        entry({
           id: 4,
           cadence: 'biweekly',
           bucket: 'available_now',
@@ -363,6 +375,7 @@ describe('SurveysIndex', () => {
     expect(screen.getByText('Phase 1 reflection: Part 1')).toBeInTheDocument();
     expect(screen.getByText('Phase 1 reflection: Part 2')).toBeInTheDocument();
     expect(screen.getByText('Ver. W features')).toBeInTheDocument();
+    expect(screen.getByText('Ver.W features: Part 2')).toBeInTheDocument();
     expect(screen.getByText('Habitual platform')).toBeInTheDocument();
     expect(screen.getByText('Survey of the Day')).toBeInTheDocument();
     expect(screen.getByText('Drop us a note')).toBeInTheDocument();
@@ -372,9 +385,9 @@ describe('SurveysIndex', () => {
     expect(screen.queryByText('bucket_late_but_accepted')).not.toBeInTheDocument();
     expect(screen.getAllByText('Due today')).toHaveLength(4);
     expect(screen.getByText('Due tomorrow')).toBeInTheDocument();
-    expect(screen.getByText('Due Sun')).toBeInTheDocument();
+    expect(screen.getAllByText('Due Sun')).toHaveLength(2);
     expect(screen.queryByText('Today only')).not.toBeInTheDocument();
-    expect(screen.getAllByText('High priority')).toHaveLength(4);
+    expect(screen.getAllByText('High priority')).toHaveLength(5);
     expect(screen.getAllByText('Late but accepted')).toHaveLength(1);
 
     const bodyText = document.body.textContent ?? '';
@@ -382,6 +395,7 @@ describe('SurveysIndex', () => {
     const phase1Index = bodyText.indexOf('Phase 1 reflection: Part 1');
     const phase2Index = bodyText.indexOf('Phase 1 reflection: Part 2');
     const featureIndex = bodyText.indexOf('Ver. W features');
+    const featurePart2Index = bodyText.indexOf('Ver.W features: Part 2');
     const habitIndex = bodyText.indexOf('Habitual platform');
     const sotdIndex = bodyText.indexOf('Survey of the Day');
     const anytimeIndex = bodyText.indexOf('Drop us a note');
@@ -389,9 +403,11 @@ describe('SurveysIndex', () => {
     expect(phase1Index).toBeGreaterThanOrEqual(0);
     expect(phase2Index).toBeGreaterThanOrEqual(0);
     expect(featureIndex).toBeGreaterThanOrEqual(0);
+    expect(featurePart2Index).toBeGreaterThanOrEqual(0);
+    expect(featureIndex).toBeLessThan(featurePart2Index);
+    expect(featurePart2Index).toBeLessThan(closenessIndex);
     expect(closenessIndex).toBeLessThan(phase1Index);
     expect(phase1Index).toBeLessThan(phase2Index);
-    expect(phase2Index).toBeLessThan(featureIndex);
     expect(featureIndex).toBeLessThan(habitIndex);
     expect(phase1Index).toBeLessThan(habitIndex);
     expect(phase2Index).toBeLessThan(habitIndex);

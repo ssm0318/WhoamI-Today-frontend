@@ -184,21 +184,23 @@ const PointsSummaryLink = styled.button`
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
 const HIGH_PRIORITY_SURVEY_ORDER = new Map([
-  ['phase1_friend_closeness', 0],
-  ['phase2_friend_closeness', 0],
-  ['goal_comparison_p1', 1],
-  ['goal_comparison_p2', 1],
-  ['mid_study_w', 2],
-  ['mid_study_q', 2],
-  ['post_study_w', 2],
-  ['post_study_q', 2],
-  ['feature_eval_w', 3],
+  ['feature_eval_w', 0],
+  ['feature_eval_w_part2', 0],
+  ['phase1_friend_closeness', 1],
+  ['phase2_friend_closeness', 1],
+  ['goal_comparison_p1', 2],
+  ['goal_comparison_p2', 2],
+  ['mid_study_w', 3],
+  ['mid_study_q', 3],
+  ['post_study_w', 3],
+  ['post_study_q', 3],
 ]);
 
 const HIGH_PRIORITY_SURVEY_SLUGS = new Set([
+  'feature_eval_w',
+  'feature_eval_w_part2',
   'phase1_friend_closeness',
   'phase2_friend_closeness',
-  'feature_eval_w',
   'mid_study_w',
   'mid_study_q',
   'post_study_w',
@@ -267,9 +269,9 @@ const sortTodoEntries = (entries: SurveyIndexEntry[]): SurveyIndexEntry[] =>
     .map((entry, index) => ({ entry, index }))
     .sort(
       (a, b) =>
-        sidebarOrder(a.entry) - sidebarOrder(b.entry) ||
         todoPriorityRank(a.entry) - todoPriorityRank(b.entry) ||
         highPrioritySurveyOrder(a.entry) - highPrioritySurveyOrder(b.entry) ||
+        sidebarOrder(a.entry) - sidebarOrder(b.entry) ||
         a.index - b.index,
     )
     .map(({ entry }) => entry);
