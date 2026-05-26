@@ -342,9 +342,7 @@ function SurveysIndex() {
             entry.point_locked_by_prereq_slug ? () => setLockedEntry(entry) : undefined
           }
         />
-        {entry.point_value <= 0 && isHighPrioritySurvey(entry) && (
-          <HighPriorityBadge>{t('high_priority')}</HighPriorityBadge>
-        )}
+        {isHighPrioritySurvey(entry) && <HighPriorityBadge>{t('high_priority')}</HighPriorityBadge>}
         {renderDeadlineBadge(entry, bucket)}
         {bucket === 'late_but_accepted' && (
           <TodoStatusBadge>{t('bucket_late_but_accepted')}</TodoStatusBadge>

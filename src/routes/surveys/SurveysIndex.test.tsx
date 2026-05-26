@@ -533,7 +533,7 @@ describe('SurveysIndex', () => {
     expect(screen.getByText('50% done')).toBeInTheDocument();
   });
 
-  it('renders point badges and suppresses high-priority badges for rewarded rows', () => {
+  it('renders point badges without suppressing priority badges', () => {
     const data: SurveyIndexResponse = {
       available_now: [
         entry({
@@ -597,7 +597,7 @@ describe('SurveysIndex', () => {
     expect(screen.getByText('+1 pts')).toBeInTheDocument();
     expect(screen.getByText('3 pts')).toBeInTheDocument();
     expect(screen.getByText(/Deadline passed/)).toBeInTheDocument();
-    expect(screen.queryByText('High priority')).not.toBeInTheDocument();
+    expect(screen.getByText('High priority')).toBeInTheDocument();
   });
 
   it('keeps original priority and deadline badges after a survey is completed', () => {
@@ -609,7 +609,7 @@ describe('SurveysIndex', () => {
           id: 1,
           cadence: 'endpoint',
           bucket: 'completed',
-          point_value: 0,
+          point_value: 40,
           window_end: '2026-05-18',
           submitted_at: '2026-05-18T12:00:00Z',
           survey: {
