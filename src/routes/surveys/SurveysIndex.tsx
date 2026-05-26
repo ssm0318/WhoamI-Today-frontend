@@ -116,6 +116,22 @@ const HighPriorityBadge = styled.span`
   white-space: nowrap;
 `;
 
+const DeadlineStatusBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 4px;
+  background: #ffe8d5;
+  color: #c76a1f;
+  border: 1px solid #ffcba0;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+`;
+
 const ResultsButton = styled.button`
   align-self: flex-start;
   border: 1px solid ${Colors.PRIMARY};
@@ -194,6 +210,37 @@ const HIGH_PRIORITY_SURVEY_SLUGS = new Set([
 const isHighPrioritySurvey = (entry: SurveyIndexEntry): boolean =>
   HIGH_PRIORITY_SURVEY_SLUGS.has(entry.survey.slug);
 
+type DisplaySurveyIndexEntry = SurveyIndexEntry & {
+  completed_count?: number;
+};
+
+const isDailyBaseEntry = (entry: SurveyIndexEntry): boolean =>
+  entry.cadence === 'daily' && entry.survey.slug === 'daily_base';
+
+const groupCompletedEntries = (entries: SurveyIndexEntry[]): DisplaySurveyIndexEntry[] => {
+  const dailyBaseEntries = entries.filter(isDailyBaseEntry);
+  if (dailyBaseEntries.length <= 1) return entries;
+
+  const latestDailyBase = [...dailyBaseEntries].sort((a, b) =>
+    b.window_start.localeCompare(a.window_start),
+  )[0];
+  let insertedDailyBaseGroup = false;
+
+  return entries.flatMap((entry) => {
+    if (!isDailyBaseEntry(entry)) return [entry];
+    if (insertedDailyBaseGroup) return [];
+    insertedDailyBaseGroup = true;
+    return [
+      {
+        ...latestDailyBase,
+        completed_count: dailyBaseEntries.length,
+        redirect_url: '/surveys/daily-archive',
+        results_unlocked: dailyBaseEntries.some((candidate) => candidate.results_unlocked),
+      },
+    ];
+  });
+};
+
 const isDailyOrSotd = (entry: SurveyIndexEntry): boolean =>
   entry.cadence === 'daily' ||
   entry.survey.slug === 'habit_platform' ||
@@ -243,6 +290,7 @@ const formatDate = (iso: string): string => {
 
 function SurveysIndex() {
   const { t } = useTranslation('translation', { keyPrefix: 'surveys' });
+  const { t: tDeadline } = useTranslation('translation', { keyPrefix: 'deadline_badge' });
   const { t: tReimbursement } = useTranslation('translation', { keyPrefix: 'reimbursement' });
   const navigate = useNavigate();
   const location = useLocation();
@@ -252,7 +300,7 @@ function SurveysIndex() {
 
   if (!data) return null;
 
-  const navigateToEntry = (entry: SurveyIndexEntry) =>
+  const navigateToEntry = (entry: DisplaySurveyIndexEntry) =>
     // Carry `from` so the post-submit Done page returns to the
     // surveys index instead of forgetting where we came from.
     navigate(entry.redirect_url, {
@@ -265,7 +313,22 @@ function SurveysIndex() {
     navigateToEntry(entry);
   };
 
-  const renderEntryContent = (entry: SurveyIndexEntry, bucket: Bucket) => (
+  const renderDeadlineBadge = (entry: DisplaySurveyIndexEntry, bucket: Bucket) => {
+    if (bucket === 'available_now') {
+      return (
+        <DeadlineBadge
+          windowEnd={entry.window_end}
+          cadence={entry.cadence}
+          allowLate={entry.allow_late}
+        />
+      );
+    }
+    if (bucket !== 'completed' || !entry.window_end) return null;
+
+    return <DeadlineStatusBadge>⏰ {tDeadline('deadline_passed')}</DeadlineStatusBadge>;
+  };
+
+  const renderEntryContent = (entry: DisplaySurveyIndexEntry, bucket: Bucket) => (
     <>
       <RowHeader>
         <Typo type="title-medium" color="BLACK">
@@ -279,16 +342,10 @@ function SurveysIndex() {
             entry.point_locked_by_prereq_slug ? () => setLockedEntry(entry) : undefined
           }
         />
-        {bucket !== 'completed' && entry.point_value <= 0 && isHighPrioritySurvey(entry) && (
+        {entry.point_value <= 0 && isHighPrioritySurvey(entry) && (
           <HighPriorityBadge>{t('high_priority')}</HighPriorityBadge>
         )}
-        {bucket === 'available_now' && (
-          <DeadlineBadge
-            windowEnd={entry.window_end}
-            cadence={entry.cadence}
-            allowLate={entry.allow_late}
-          />
-        )}
+        {renderDeadlineBadge(entry, bucket)}
         {bucket === 'late_but_accepted' && (
           <TodoStatusBadge>{t('bucket_late_but_accepted')}</TodoStatusBadge>
         )}
@@ -305,13 +362,15 @@ function SurveysIndex() {
       )}
       {bucket === 'completed' && entry.submitted_at && (
         <Typo type="label-large" color="DARK_GRAY">
-          {t('submitted_on', { date: formatDate(entry.submitted_at) })}
+          {entry.completed_count
+            ? t('completed_days_count', { count: entry.completed_count })
+            : t('submitted_on', { date: formatDate(entry.submitted_at) })}
         </Typo>
       )}
     </>
   );
 
-  const renderEntry = (entry: SurveyIndexEntry, bucket: Bucket) => {
+  const renderEntry = (entry: DisplaySurveyIndexEntry, bucket: Bucket) => {
     if (bucket === 'completed') {
       const canEditResponse = !!entry.survey.editable && !entry.survey.closed;
       return (
@@ -346,8 +405,9 @@ function SurveysIndex() {
   // entries are past-tense / already-open states so they stay visible.
   const availableEntries = paused ? [] : data.available_now;
   const todoEntries = sortTodoEntries([...availableEntries, ...data.late_but_accepted]);
+  const completedEntries = groupCompletedEntries(data.completed);
   const hasTodo = todoEntries.length > 0;
-  const hasCompleted = data.completed.length > 0;
+  const hasCompleted = completedEntries.length > 0;
 
   return (
     <MainScrollContainer>
@@ -398,7 +458,7 @@ function SurveysIndex() {
               {t('bucket_completed')}
             </Typo>
             <SectionRows>
-              {data.completed.map((entry) => renderEntry(entry, 'completed'))}
+              {completedEntries.map((entry) => renderEntry(entry, 'completed'))}
             </SectionRows>
           </Section>
         )}

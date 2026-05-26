@@ -1312,6 +1312,7 @@
     "due_today": "오늘 마감",
     "due_tomorrow": "내일 마감",
     "due_weekday": "{{weekday}} 마감",
+    "deadline_passed": "마감됨",
     "no_late_accepted": "기한 후 응답 불가",
     "sidebar_count_one": "{{count}}건",
     "sidebar_count_other": "{{count}}건 마감"
@@ -1344,6 +1345,7 @@
     "bucket_late_but_accepted": "기한 지났지만 답변 가능",
     "bucket_completed": "완료",
     "daily_archive_row": "일일 체크인 ({{count}}개 완료)",
+    "completed_days_count": "{{count}}일 완료",
     "high_priority": "중요",
     "draft_progress": "{{progress}}% 완료",
     "was_due": "마감일 {{date}}",

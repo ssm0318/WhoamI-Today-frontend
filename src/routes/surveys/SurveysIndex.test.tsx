@@ -11,15 +11,16 @@ import SurveysIndex from './SurveysIndex';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string, options?: { date?: string; progress?: number }) => {
+    t: (key: string, options?: { count?: number; date?: string; progress?: number }) => {
       if (key.startsWith('cadence.')) return key.replace('cadence.', '');
       if (key === 'was_due') return `Was due ${options?.date}`;
       if (key === 'draft_progress') return `${options?.progress}% done`;
       if (key === 'bucket_todo') return 'To-do';
       if (key === 'bucket_late_but_accepted') return 'Late but accepted';
       if (key === 'bucket_completed') return 'Completed';
-      if (key === 'daily_archive_row') return 'Daily check-ins collapsed';
+      if (key === 'completed_days_count') return `Completed ${options?.count} days`;
       if (key === 'high_priority') return 'High priority';
+      if (key === 'deadline_passed') return 'Deadline passed';
       if (key === 'check_results') return 'Check Results';
       if (key === 'edit_response') return 'Edit response';
       return key;
@@ -403,7 +404,7 @@ describe('SurveysIndex', () => {
     expect(noteRow).not.toHaveTextContent('Due today');
   });
 
-  it('lists completed daily surveys individually instead of collapsing them into an archive row', () => {
+  it('groups completed Today on WIT rows into one date-based archive row', () => {
     const data: SurveyIndexResponse = {
       available_now: [],
       late_but_accepted: [],
@@ -413,11 +414,25 @@ describe('SurveysIndex', () => {
           cadence: 'daily',
           bucket: 'completed',
           submitted_at: '2026-05-18T12:00:00Z',
-          results_unlocked: false,
+          results_unlocked: true,
           survey: {
-            slug: 'sotd_d15_shi',
-            title_en: 'Daily habit survey',
-            title_ko: 'Daily habit survey',
+            slug: 'daily_base',
+            title_en: 'Today on WIT',
+            title_ko: 'Today on WIT',
+          },
+        }),
+        entry({
+          id: 7,
+          cadence: 'daily',
+          bucket: 'completed',
+          submitted_at: '2026-05-19T12:00:00Z',
+          results_unlocked: true,
+          window_start: '2026-05-19',
+          window_end: '2026-05-19',
+          survey: {
+            slug: 'daily_base',
+            title_en: 'Today on WIT',
+            title_ko: 'Today on WIT',
           },
         }),
         entry({
@@ -443,10 +458,10 @@ describe('SurveysIndex', () => {
     );
 
     expect(screen.getByText('Completed')).toBeInTheDocument();
-    expect(screen.getByText('Daily habit survey')).toBeInTheDocument();
+    expect(screen.getAllByText('Today on WIT')).toHaveLength(1);
+    expect(screen.getByText('Completed 2 days')).toBeInTheDocument();
     expect(screen.getByText('Phase 1 reflection')).toBeInTheDocument();
-    expect(screen.getAllByRole('button', { name: 'Check Results' })).toHaveLength(1);
-    expect(screen.queryByText('Daily check-ins collapsed')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Check Results' })).toHaveLength(2);
   });
 
   it('shows edit response for completed editable surveys', () => {
@@ -581,6 +596,40 @@ describe('SurveysIndex', () => {
     expect(screen.getByText('🔒 +10 pts')).toBeInTheDocument();
     expect(screen.getByText('+1 pts')).toBeInTheDocument();
     expect(screen.getByText('3 pts')).toBeInTheDocument();
+    expect(screen.getByText(/Deadline passed/)).toBeInTheDocument();
     expect(screen.queryByText('High priority')).not.toBeInTheDocument();
+  });
+
+  it('keeps original priority and deadline badges after a survey is completed', () => {
+    const data: SurveyIndexResponse = {
+      available_now: [],
+      late_but_accepted: [],
+      completed: [
+        entry({
+          id: 1,
+          cadence: 'endpoint',
+          bucket: 'completed',
+          point_value: 0,
+          window_end: '2026-05-18',
+          submitted_at: '2026-05-18T12:00:00Z',
+          survey: {
+            slug: 'goal_comparison_p1',
+            title_en: 'Phase 1 reflection: Part 1',
+            title_ko: 'Phase 1 reflection: Part 1',
+          },
+        }),
+      ],
+    };
+    mockedUseSWR.mockReturnValue({ data });
+
+    render(
+      <MemoryRouter>
+        <SurveysIndex />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('Phase 1 reflection: Part 1')).toBeInTheDocument();
+    expect(screen.getByText('High priority')).toBeInTheDocument();
+    expect(screen.getByText(/Deadline passed/)).toBeInTheDocument();
   });
 });

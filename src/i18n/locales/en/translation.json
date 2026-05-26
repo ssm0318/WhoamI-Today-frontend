@@ -1325,6 +1325,7 @@
         "due_today": "Due today",
         "due_tomorrow": "Due tomorrow",
         "due_weekday": "Due {{weekday}}",
+        "deadline_passed": "Deadline passed",
         "no_late_accepted": "No late accepted",
         "sidebar_count_one": "{{count}}",
         "sidebar_count_other": "{{count}} due"
@@ -1357,6 +1358,7 @@
         "bucket_late_but_accepted": "Late but accepted",
         "bucket_completed": "Completed",
         "daily_archive_row": "Daily check-ins ({{count}} completed)",
+        "completed_days_count": "Completed {{count}} days",
         "high_priority": "High priority",
         "draft_progress": "{{progress}}% done",
         "was_due": "Was due {{date}}",
