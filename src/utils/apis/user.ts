@@ -150,7 +150,10 @@ export const validateEmail = ({
   onError: (errorMsg: string) => void;
 }) => {
   axiosFormDataInstance
-    .post('/user/signup/email/', { email })
+    // Lowercase before submit so case-insensitive duplicate detection on the
+    // backend keys off the canonical form, and so what we send matches what
+    // the backend will persist.
+    .post('/user/signup/email/', { email: email.toLowerCase() })
     .then(() => {
       onSuccess();
     })
@@ -203,7 +206,8 @@ export const validateUsername = ({
   onError: (errorMsg: string) => void;
 }) => {
   axiosFormDataInstance
-    .post('/user/signup/username/', { username })
+    // Same lowercasing rationale as the email precheck.
+    .post('/user/signup/username/', { username: username.toLowerCase() })
     .then(() => {
       onSuccess();
     })
@@ -256,8 +260,11 @@ export const signUp = ({
 
   const { email, password, username, noti_time, inviter_id } = signUpInfo;
 
-  formData.append('email', email);
-  formData.append('username', username);
+  // Lowercase email + username at submit so the stored value matches what we
+  // ran the precheck against, and so the backend's case-insensitive uniqueness
+  // check on /signup/ keys off the canonical form.
+  formData.append('email', email.toLowerCase());
+  formData.append('username', username.toLowerCase());
   formData.append('password', password);
 
   if (noti_time) formData.append('noti_time', noti_time);
