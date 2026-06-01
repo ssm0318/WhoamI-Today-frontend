@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import useSWR from 'swr';
@@ -8,6 +8,8 @@ import { Colors, Layout, Typo } from '@design-system';
 import i18n from '@i18n/index';
 import { LocalAllocationPreview, LocalPreviewRow, ReimbursementAward } from '@models/reimbursement';
 import { SurveyIndexEntry, SurveyIndexResponse } from '@models/survey';
+import { useBoundStore } from '@stores/useBoundStore';
+import { getMe } from '@utils/apis/my';
 import {
   getLocalAllocationPreview,
   getReimbursementState,
@@ -23,7 +25,7 @@ import { MainScrollContainer } from '../Root';
 const PREVIEW_POINTS_PER_DOLLAR = 10;
 const INTERVIEW_SIGNUP_POINTS = 200;
 const INTERVIEW_SIGNUP_URL = 'https://calendly.com/jaewonkim/60min';
-const LOCAL_ALLOCATION_PREVIEW_BROWSER_CACHE_KEY = `${LOCAL_ALLOCATION_PREVIEW_KEY}:browser-cache:v1`;
+const LOCAL_ALLOCATION_PREVIEW_BROWSER_CACHE_VERSION = 'v2';
 const VER_W_MUST_COMPLETE_PATTERN = /^feature_eval_w(?:_part\d+)?$/;
 
 const Page = styled.main`
@@ -212,23 +214,39 @@ const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko :
 
 const formatCurrency = (cents: number): string => (cents / 100).toFixed(2);
 
-function readCachedLocalAllocationPreview(): LocalAllocationPreview | null {
+const localAllocationPreviewBrowserCacheKey = (userId: number | null) =>
+  `${LOCAL_ALLOCATION_PREVIEW_KEY}:browser-cache:${LOCAL_ALLOCATION_PREVIEW_BROWSER_CACHE_VERSION}:${
+    userId ?? 'default'
+  }`;
+
+function hasAccessTokenCookie(): boolean {
+  if (typeof document === 'undefined') return false;
+  return /(?:^|;\s*)access_token=/.test(document.cookie);
+}
+
+function readCachedLocalAllocationPreview(userId: number | null): LocalAllocationPreview | null {
   if (typeof window === 'undefined') return null;
 
   try {
-    const cached = window.localStorage.getItem(LOCAL_ALLOCATION_PREVIEW_BROWSER_CACHE_KEY);
-    return cached ? (JSON.parse(cached) as LocalAllocationPreview) : null;
+    const cached = window.localStorage.getItem(localAllocationPreviewBrowserCacheKey(userId));
+    if (!cached) return null;
+
+    const preview = JSON.parse(cached) as LocalAllocationPreview;
+    return userId === null || preview.selectedUser?.id === userId ? preview : null;
   } catch {
     return null;
   }
 }
 
-function writeCachedLocalAllocationPreview(preview: LocalAllocationPreview): void {
+function writeCachedLocalAllocationPreview(
+  preview: LocalAllocationPreview,
+  requestedUserId: number | null,
+): void {
   if (typeof window === 'undefined') return;
 
   try {
     window.localStorage.setItem(
-      LOCAL_ALLOCATION_PREVIEW_BROWSER_CACHE_KEY,
+      localAllocationPreviewBrowserCacheKey(requestedUserId),
       JSON.stringify(preview),
     );
   } catch {
@@ -789,9 +807,22 @@ function ReimbursementLoadingPage({ message }: { message: string }) {
 
 function Reimbursement() {
   const { t } = useTranslation('translation', { keyPrefix: 'reimbursement' });
+  const myProfile = useBoundStore((state) => state.myProfile);
+  const localPreviewUserId = myProfile?.id ?? null;
   const useLocalPreview = shouldUseLocalAllocationPreview();
-  const [localPreviewFallback] = useState<LocalAllocationPreview | null>(() =>
-    useLocalPreview ? readCachedLocalAllocationPreview() : null,
+  const [localPreviewProfileLoadFailed, setLocalPreviewProfileLoadFailed] = useState(false);
+  const hasAccessToken = hasAccessTokenCookie();
+  const shouldWaitForLocalPreviewProfile =
+    useLocalPreview &&
+    localPreviewUserId === null &&
+    hasAccessToken &&
+    !localPreviewProfileLoadFailed;
+  const localPreviewFallback = useMemo(
+    () =>
+      useLocalPreview && !shouldWaitForLocalPreviewProfile
+        ? readCachedLocalAllocationPreview(localPreviewUserId)
+        : null,
+    [localPreviewUserId, shouldWaitForLocalPreviewProfile, useLocalPreview],
   );
   const { data } = useSWR(
     REIMBURSEMENT_POINTS_TBU || useLocalPreview ? null : REIMBURSEMENT_KEY,
@@ -802,16 +833,32 @@ function Reimbursement() {
     getSurveyIndex,
   );
   const { data: localPreview } = useSWR(
-    useLocalPreview ? [LOCAL_ALLOCATION_PREVIEW_KEY, null] : null,
+    useLocalPreview && !shouldWaitForLocalPreviewProfile
+      ? [LOCAL_ALLOCATION_PREVIEW_KEY, localPreviewUserId]
+      : null,
     getLocalAllocationPreview,
   );
   const resolvedLocalPreview = localPreview ?? localPreviewFallback;
 
   useEffect(() => {
+    if (!useLocalPreview || localPreviewUserId !== null || !hasAccessToken) return;
+    if (localPreviewProfileLoadFailed) return;
+
+    let cancelled = false;
+    getMe().catch(() => {
+      if (!cancelled) setLocalPreviewProfileLoadFailed(true);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [hasAccessToken, localPreviewProfileLoadFailed, localPreviewUserId, useLocalPreview]);
+
+  useEffect(() => {
     if (!useLocalPreview || !localPreview) return;
 
-    writeCachedLocalAllocationPreview(localPreview);
-  }, [localPreview, useLocalPreview]);
+    writeCachedLocalAllocationPreview(localPreview, localPreviewUserId);
+  }, [localPreview, localPreviewUserId, useLocalPreview]);
 
   if (resolvedLocalPreview) return <LocalAllocationPreviewPage preview={resolvedLocalPreview} />;
   if (useLocalPreview) {

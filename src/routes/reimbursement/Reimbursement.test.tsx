@@ -1,6 +1,6 @@
 /* eslint-env jest */
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import useSWR from 'swr';
 
@@ -9,12 +9,13 @@ import Reimbursement from './Reimbursement';
 jest.mock('swr');
 
 const mockShouldUseLocalAllocationPreview = jest.fn();
+let mockMyProfile: { id: number } | null = { id: 8 };
 
 jest.mock(
   '@stores/useBoundStore',
   () => ({
-    useBoundStore: (selector: (state: { myProfile: { id: number } }) => unknown) =>
-      selector({ myProfile: { id: 8 } }),
+    useBoundStore: (selector: (state: { myProfile: { id: number } | null }) => unknown) =>
+      selector({ myProfile: mockMyProfile }),
   }),
   { virtual: true },
 );
@@ -127,11 +128,23 @@ jest.mock('../Root', () => ({
 }));
 
 const mockedUseSWR = useSWR as unknown as jest.Mock;
+const mockGetMe = jest.fn();
+
+jest.mock(
+  '@utils/apis/my',
+  () => ({
+    getMe: () => mockGetMe(),
+  }),
+  { virtual: true },
+);
 
 describe('Reimbursement', () => {
   beforeEach(() => {
     mockedUseSWR.mockReset();
+    mockGetMe.mockReset();
     window.localStorage.clear();
+    document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    mockMyProfile = { id: 8 };
     mockShouldUseLocalAllocationPreview.mockReturnValue(false);
   });
 
@@ -311,6 +324,10 @@ describe('Reimbursement', () => {
     expect(screen.getByText('Need help with missed points?')).toBeInTheDocument();
     expect(screen.queryByText('Wit_bot audit pass - Phase 1')).not.toBeInTheDocument();
     expect(screen.queryByText('Missed survey')).not.toBeInTheDocument();
+    expect(mockedUseSWR).toHaveBeenCalledWith(
+      ['local-reimbursement-allocation-preview', 8],
+      expect.any(Function),
+    );
     const showButtons = screen.getAllByRole('button', { name: 'Show' });
     expect(showButtons).toHaveLength(2);
     fireEvent.click(showButtons[0]);
@@ -322,7 +339,7 @@ describe('Reimbursement', () => {
   it('renders the cached local allocation preview while refreshing in the background', () => {
     mockShouldUseLocalAllocationPreview.mockReturnValue(true);
     window.localStorage.setItem(
-      'local-reimbursement-allocation-preview:browser-cache:v1',
+      'local-reimbursement-allocation-preview:browser-cache:v2:8',
       JSON.stringify({
         db: { name: 'whoamitoday_merged', participantCount: 80 },
         selectedUser: { id: 8, username: 'cached_participant', responseTotal: 4 },
@@ -522,6 +539,86 @@ describe('Reimbursement', () => {
     expect(
       screen.queryByText('How automatic is {{habit_platform_label}} for you?'),
     ).not.toBeInTheDocument();
+  });
+
+  it('does not render another participant cached local preview', () => {
+    mockShouldUseLocalAllocationPreview.mockReturnValue(true);
+    window.localStorage.setItem(
+      'local-reimbursement-allocation-preview:browser-cache:v2:75',
+      JSON.stringify({
+        db: { name: 'whoamitoday_merged', participantCount: 80 },
+        selectedUser: { id: 75, username: 'wrong_participant', responseTotal: 27 },
+        pointsPerDollar: 10,
+        availableMax: 100,
+        earnedPoints: 296,
+        estimatedDollars: '29.60',
+        sourceCount: 0,
+        rows: [],
+        capRules: [],
+        gateRules: [],
+        lateRules: [],
+      }),
+    );
+    mockedUseSWR.mockImplementation(() => ({ data: null }));
+
+    render(<Reimbursement />);
+
+    expect(screen.getByText('Loading your point allocation preview...')).toBeInTheDocument();
+    expect(screen.queryByText('296 pts')).not.toBeInTheDocument();
+    expect(mockedUseSWR).toHaveBeenCalledWith(
+      ['local-reimbursement-allocation-preview', 8],
+      expect.any(Function),
+    );
+  });
+
+  it('uses the default local allocation preview cache when no profile is loaded on localhost', () => {
+    mockMyProfile = null;
+    mockShouldUseLocalAllocationPreview.mockReturnValue(true);
+    window.localStorage.setItem(
+      'local-reimbursement-allocation-preview:browser-cache:v2:default',
+      JSON.stringify({
+        db: { name: 'whoamitoday_merged', participantCount: 80 },
+        selectedUser: { id: 8, username: 'default_participant', responseTotal: 4 },
+        pointsPerDollar: 10,
+        availableMax: 110,
+        earnedPoints: 25,
+        estimatedDollars: '2.50',
+        sourceCount: 0,
+        rows: [],
+        capRules: [],
+        gateRules: [],
+        lateRules: [],
+      }),
+    );
+    mockedUseSWR.mockReturnValue({ data: null });
+
+    render(<Reimbursement />);
+
+    expect(screen.queryByText('Loading your point allocation preview...')).not.toBeInTheDocument();
+    expect(screen.getByText('25 pts')).toBeInTheDocument();
+    expect(mockedUseSWR).toHaveBeenCalledWith(
+      ['local-reimbursement-allocation-preview', null],
+      expect.any(Function),
+    );
+  });
+
+  it('fetches the profile before using the default local preview when an auth cookie exists', async () => {
+    mockMyProfile = null;
+    mockShouldUseLocalAllocationPreview.mockReturnValue(true);
+    mockGetMe.mockRejectedValue(new Error('offline'));
+    mockedUseSWR.mockReturnValue({ data: null });
+    document.cookie = 'access_token=test-token; path=/;';
+
+    render(<Reimbursement />);
+
+    expect(screen.getByText('Loading your point allocation preview...')).toBeInTheDocument();
+    await waitFor(() => expect(mockGetMe).toHaveBeenCalledTimes(1));
+    await waitFor(() =>
+      expect(mockedUseSWR).toHaveBeenCalledWith(
+        ['local-reimbursement-allocation-preview', null],
+        expect.any(Function),
+      ),
+    );
   });
 
   it('shows a production loading state instead of a blank page while totals load', () => {
