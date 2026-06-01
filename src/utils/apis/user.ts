@@ -1,5 +1,5 @@
 import { AxiosError, isAxiosError } from 'axios';
-import { LoaderFunctionArgs, redirect } from 'react-router-dom';
+import { redirect } from 'react-router-dom';
 import { SESSION_STORAGE_KEY } from '@constants/sessionStorageKey';
 import { ScrollPositionStore } from '@hooks/useRestoreScrollPosition';
 import i18n from '@i18n/index';
@@ -27,7 +27,6 @@ import { resetBoundStores } from '@stores/resetSlices';
 import { useBoundStore } from '@stores/useBoundStore';
 import axios, { axiosFormDataInstance } from '@utils/apis/axios';
 import { setItemToSessionStorage } from '@utils/sessionStorage';
-import { getSafeSignInNext } from '@utils/signInRedirect';
 import { getMe, syncTimeZone } from './my';
 import { withViewAs } from './withViewAs';
 
@@ -60,7 +59,7 @@ export const signIn = ({
     });
 };
 
-export const checkIfSignIn = async (args?: LoaderFunctionArgs) => {
+export const checkIfSignIn = async () => {
   try {
     const user = await getMe();
     const currentTimezone = await syncTimeZone(user?.timezone);
@@ -86,12 +85,7 @@ export const checkIfSignIn = async (args?: LoaderFunctionArgs) => {
 
     // FIXME Change to existing /signin path when research is finished (uncomment below)
     // return redirect('/research-intro');
-    const requestUrl = args?.request ? new URL(args.request.url) : null;
-    const next = requestUrl ? `${requestUrl.pathname}${requestUrl.search}` : null;
-    const safeNext = getSafeSignInNext(next);
-    return redirect(
-      safeNext && safeNext !== '/' ? `/signin?next=${encodeURIComponent(safeNext)}` : '/signin',
-    );
+    return redirect('/signin');
   }
 };
 

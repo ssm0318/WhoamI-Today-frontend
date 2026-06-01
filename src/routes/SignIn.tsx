@@ -1,6 +1,6 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
 import ValidatedPasswordInput from '@components/_common/validated-input/ValidatedPasswordInput';
@@ -14,7 +14,6 @@ import { SignInParams, VersionType } from '@models/api/user';
 import { getMe } from '@utils/apis/my';
 import { signIn } from '@utils/apis/user';
 import { shouldRedirectToEditProfile } from '@utils/editProfilePrompt';
-import { getSafeSignInNext } from '@utils/signInRedirect';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 function SignIn() {
@@ -22,7 +21,6 @@ function SignIn() {
 
   const [signInInfo, setSignInInfo] = useState<SignInParams>({ username: '', password: '' });
   const [signInError, setSignInError] = useState<string>();
-  const [searchParams] = useSearchParams();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (signInError) {
@@ -36,11 +34,18 @@ function SignIn() {
   const navigate = useNavigate();
 
   const onSubmit = () => {
-    const nextPath = getSafeSignInNext(searchParams.get('next'));
     signIn({
       signInInfo,
       onSuccess: () => {
         getMe().then((me) => {
+          // 로그인하자마자 버전 확인하여 버전에 따라 리다이렉션
+          const currVersion = me.current_ver;
+          navigate(
+            currVersion === VersionType.VER_W
+              ? FRIEND_DEFAULT_REDIRECTION_PATH
+              : FRIENDS_Q_DEFAULT_REDIRECTION_PATH,
+          );
+
           if (!me.has_changed_pw) {
             navigate('/settings/reset-password?first_login=true');
             return;
@@ -48,17 +53,7 @@ function SignIn() {
 
           if (shouldRedirectToEditProfile(me)) {
             navigate('/settings/edit-profile?from_login_setup=true');
-            return;
           }
-
-          // 로그인하자마자 버전 확인하여 버전에 따라 리다이렉션
-          const currVersion = me.current_ver;
-          navigate(
-            nextPath ??
-              (currVersion === VersionType.VER_W
-                ? FRIEND_DEFAULT_REDIRECTION_PATH
-                : FRIENDS_Q_DEFAULT_REDIRECTION_PATH),
-          );
         });
       },
       onError: (e) => setSignInError(e),

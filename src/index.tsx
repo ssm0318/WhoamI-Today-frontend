@@ -80,7 +80,6 @@ import Password from './routes/sign-up/Password';
 import Username from './routes/sign-up/Username';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
-import StudyPortal from './routes/study/StudyPortal';
 import SuggestQuestions from './routes/SuggestQuestions';
 import DailyArchive from './routes/surveys/DailyArchive';
 import SurveyAnswer from './routes/surveys/SurveyAnswer';
@@ -102,11 +101,6 @@ const router = createBrowserRouter([
   { path: 'test/widget-install-guide', element: <WidgetInstallGuidePreview /> },
   // question suggestion
   { path: 'suggest-questions', element: <SuggestQuestions /> },
-  {
-    path: 'study',
-    element: <StudyPortal />,
-    loader: checkIfSignIn,
-  },
   {
     // authorized routes
     path: '/',
