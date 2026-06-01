@@ -30,7 +30,7 @@ const VER_W_MUST_COMPLETE_PATTERN = /^feature_eval_w(?:_part\d+)?$/;
 
 const Page = styled.main`
   min-height: 100%;
-  padding: 12px 20px 88px;
+  padding: 12px 20px 140px;
   display: flex;
   flex-direction: column;
   gap: 22px;
