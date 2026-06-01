@@ -116,6 +116,12 @@ const HighPriorityBadge = styled.span`
   white-space: nowrap;
 `;
 
+const MustCompleteBadge = styled(HighPriorityBadge)`
+  border-color: #fecaca;
+  background: #fee2e2;
+  color: #991b1b;
+`;
+
 const DeadlineStatusBadge = styled.span`
   display: inline-flex;
   align-items: center;
@@ -183,22 +189,20 @@ const PointsSummaryLink = styled.button`
 
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
+const VER_W_MUST_COMPLETE_PATTERN = /^feature_eval_w(?:_part(\d+))?$/;
+
 const HIGH_PRIORITY_SURVEY_ORDER = new Map([
-  ['feature_eval_w', 0],
-  ['feature_eval_w_part2', 0],
-  ['phase1_friend_closeness', 1],
-  ['phase2_friend_closeness', 1],
-  ['goal_comparison_p1', 2],
-  ['goal_comparison_p2', 2],
-  ['mid_study_w', 3],
-  ['mid_study_q', 3],
-  ['post_study_w', 3],
-  ['post_study_q', 3],
+  ['phase1_friend_closeness', 0],
+  ['phase2_friend_closeness', 0],
+  ['goal_comparison_p1', 1],
+  ['goal_comparison_p2', 1],
+  ['mid_study_w', 2],
+  ['mid_study_q', 2],
+  ['post_study_w', 2],
+  ['post_study_q', 2],
 ]);
 
 const HIGH_PRIORITY_SURVEY_SLUGS = new Set([
-  'feature_eval_w',
-  'feature_eval_w_part2',
   'phase1_friend_closeness',
   'phase2_friend_closeness',
   'mid_study_w',
@@ -208,6 +212,11 @@ const HIGH_PRIORITY_SURVEY_SLUGS = new Set([
   'goal_comparison_p1',
   'goal_comparison_p2',
 ]);
+
+const isMustCompleteSurveySlug = (slug: string): boolean => VER_W_MUST_COMPLETE_PATTERN.test(slug);
+
+const isMustCompleteSurvey = (entry: SurveyIndexEntry): boolean =>
+  isMustCompleteSurveySlug(entry.survey.slug);
 
 const isHighPrioritySurvey = (entry: SurveyIndexEntry): boolean =>
   HIGH_PRIORITY_SURVEY_SLUGS.has(entry.survey.slug);
@@ -252,10 +261,17 @@ const isNoDeadlineDropIn = (entry: SurveyIndexEntry): boolean =>
   entry.cadence === 'anytime' && !entry.window_end;
 
 const todoPriorityRank = (entry: SurveyIndexEntry): number => {
+  if (isMustCompleteSurvey(entry)) return 0;
   if (isHighPrioritySurvey(entry)) return 0;
-  if (isDailyOrSotd(entry)) return 2;
-  if (isNoDeadlineDropIn(entry)) return 3;
-  return 1;
+  if (isDailyOrSotd(entry)) return 3;
+  if (isNoDeadlineDropIn(entry)) return 4;
+  return 2;
+};
+
+const mustCompleteSurveyOrder = (entry: SurveyIndexEntry): number => {
+  const match = entry.survey.slug.match(VER_W_MUST_COMPLETE_PATTERN);
+  if (!match) return Number.MAX_SAFE_INTEGER;
+  return match[1] ? Number(match[1]) : 1;
 };
 
 const highPrioritySurveyOrder = (entry: SurveyIndexEntry): number =>
@@ -270,6 +286,7 @@ const sortTodoEntries = (entries: SurveyIndexEntry[]): SurveyIndexEntry[] =>
     .sort(
       (a, b) =>
         todoPriorityRank(a.entry) - todoPriorityRank(b.entry) ||
+        mustCompleteSurveyOrder(a.entry) - mustCompleteSurveyOrder(b.entry) ||
         highPrioritySurveyOrder(a.entry) - highPrioritySurveyOrder(b.entry) ||
         sidebarOrder(a.entry) - sidebarOrder(b.entry) ||
         a.index - b.index,
@@ -344,6 +361,7 @@ function SurveysIndex() {
             entry.point_locked_by_prereq_slug ? () => setLockedEntry(entry) : undefined
           }
         />
+        {isMustCompleteSurvey(entry) && <MustCompleteBadge>{t('must_complete')}</MustCompleteBadge>}
         {isHighPrioritySurvey(entry) && <HighPriorityBadge>{t('high_priority')}</HighPriorityBadge>}
         {renderDeadlineBadge(entry, bucket)}
         {bucket === 'late_but_accepted' && (

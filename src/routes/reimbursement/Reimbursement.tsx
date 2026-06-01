@@ -24,6 +24,7 @@ const PREVIEW_POINTS_PER_DOLLAR = 10;
 const INTERVIEW_SIGNUP_POINTS = 200;
 const INTERVIEW_SIGNUP_URL = 'https://calendly.com/jaewonkim/60min';
 const LOCAL_ALLOCATION_PREVIEW_BROWSER_CACHE_KEY = `${LOCAL_ALLOCATION_PREVIEW_KEY}:browser-cache:v1`;
+const VER_W_MUST_COMPLETE_PATTERN = /^feature_eval_w(?:_part\d+)?$/;
 
 const Page = styled.main`
   min-height: 100%;
@@ -92,6 +93,23 @@ const Section = styled.section`
   &:last-child {
     margin-bottom: 28px;
   }
+`;
+
+const SectionHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+`;
+
+const ToggleButton = styled.button`
+  border: 1px solid ${Colors.LIGHT_GRAY};
+  border-radius: 999px;
+  background: ${Colors.WHITE};
+  color: ${Colors.BLACK};
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
 `;
 
 const HelpSection = styled(Section)`
@@ -241,6 +259,38 @@ function currentPossiblePoints(row: LocalPreviewRow): number {
   return row.currentPossiblePoints ?? row.possiblePoints;
 }
 
+function actionRowPriorityRank(row: LocalPreviewRow): number {
+  if (row.priorityRating === 1) return 0;
+  if (row.priorityRating === 2) return 1;
+  return 2;
+}
+
+function sortActionRows(rows: LocalPreviewRow[]): LocalPreviewRow[] {
+  return rows
+    .map((row, index) => ({ row, index }))
+    .sort(
+      (a, b) =>
+        actionRowPriorityRank(a.row) - actionRowPriorityRank(b.row) ||
+        currentPossiblePoints(b.row) - currentPossiblePoints(a.row) ||
+        a.index - b.index,
+    )
+    .map(({ row }) => row);
+}
+
+function isHighPriorityActionRow(row: LocalPreviewRow): boolean {
+  return row.priorityRating === 1 || row.priorityRating === 2;
+}
+
+function splitActionRows(rows: LocalPreviewRow[]): {
+  highPriorityRows: LocalPreviewRow[];
+  regularRows: LocalPreviewRow[];
+} {
+  return {
+    highPriorityRows: rows.filter(isHighPriorityActionRow),
+    regularRows: rows.filter((row) => !isHighPriorityActionRow(row)),
+  };
+}
+
 function shouldShowCategoryBadge(category: string): boolean {
   return category.trim().toLowerCase() !== 'recovery';
 }
@@ -266,36 +316,51 @@ function PreviewRowBadges({ row }: { row: LocalPreviewRow }) {
 }
 
 function EarnedRows({ rows }: { rows: LocalPreviewRow[] }) {
+  const [isHidden, setIsHidden] = useState(true);
+
   if (rows.length === 0) return null;
 
   return (
     <Section>
-      <Typo type="title-medium" color="BLACK">
-        Points you earned
-      </Typo>
-      <AwardList>
-        {rows.map((row) => (
-          <AwardRow key={row.key}>
-            <Layout.FlexCol gap={3}>
-              <Typo type="body-medium" color="BLACK">
-                {row.title}
-              </Typo>
-              <PreviewRowBadges row={row} />
-              {row.note && (
-                <Typo type="label-medium" color="DARK_GRAY">
-                  {row.note}
+      <SectionHeader>
+        <Typo type="title-medium" color="BLACK">
+          Points you earned
+        </Typo>
+        <ToggleButton
+          type="button"
+          aria-expanded={!isHidden}
+          onClick={() => setIsHidden((current) => !current)}
+        >
+          {isHidden ? 'Show' : 'Hide'}
+        </ToggleButton>
+      </SectionHeader>
+      {!isHidden && (
+        <AwardList>
+          {rows.map((row) => (
+            <AwardRow key={row.key}>
+              <Layout.FlexCol gap={3}>
+                <Typo type="body-medium" color="BLACK">
+                  {row.title}
                 </Typo>
-              )}
-            </Layout.FlexCol>
-            <PointsCell>
-              <Typo type="title-medium" color="BLACK">
-                {row.points} pts
-              </Typo>
-              {row.rawPoints !== row.points && <OriginalPoints>{row.rawPoints} pts</OriginalPoints>}
-            </PointsCell>
-          </AwardRow>
-        ))}
-      </AwardList>
+                <PreviewRowBadges row={row} />
+                {row.note && (
+                  <Typo type="label-medium" color="DARK_GRAY">
+                    {row.note}
+                  </Typo>
+                )}
+              </Layout.FlexCol>
+              <PointsCell>
+                <Typo type="title-medium" color="BLACK">
+                  {row.points} pts
+                </Typo>
+                {row.rawPoints !== row.points && (
+                  <OriginalPoints>{row.rawPoints} pts</OriginalPoints>
+                )}
+              </PointsCell>
+            </AwardRow>
+          ))}
+        </AwardList>
+      )}
     </Section>
   );
 }
@@ -341,40 +406,53 @@ function ActionRows({ title, rows }: { title: string; rows: LocalPreviewRow[] })
 }
 
 function HelpRows({ rows }: { rows: LocalPreviewRow[] }) {
+  const [isHidden, setIsHidden] = useState(true);
+
   if (rows.length === 0) return null;
 
   return (
     <HelpSection>
-      <Typo type="title-medium" color="BLACK">
-        Need help with missed points?
-      </Typo>
-      <AwardList>
-        {rows.map((row) => (
-          <AwardRow key={row.key}>
-            <Layout.FlexCol gap={4}>
-              <Typo type="body-medium" color="BLACK">
-                {row.title}
-              </Typo>
-              <PreviewRowBadges row={row} />
-              <Typo type="label-medium" color="DARK_GRAY">
-                {missedCopy(row)}
-              </Typo>
-            </Layout.FlexCol>
-            <PointsCell>
-              <Typo type="title-medium" color="BLACK">
-                {row.possiblePoints} pts
-              </Typo>
-              {row.slug === 'friend_invite' ? (
-                <Typo type="label-medium" color="DARK_GRAY">
-                  Will be updated
+      <SectionHeader>
+        <Typo type="title-medium" color="BLACK">
+          Need help with missed points?
+        </Typo>
+        <ToggleButton
+          type="button"
+          aria-expanded={!isHidden}
+          onClick={() => setIsHidden((current) => !current)}
+        >
+          {isHidden ? 'Show' : 'Hide'}
+        </ToggleButton>
+      </SectionHeader>
+      {!isHidden && (
+        <AwardList>
+          {rows.map((row) => (
+            <AwardRow key={row.key}>
+              <Layout.FlexCol gap={4}>
+                <Typo type="body-medium" color="BLACK">
+                  {row.title}
                 </Typo>
-              ) : (
-                <ActionLink href="/chats">Ask admin</ActionLink>
-              )}
-            </PointsCell>
-          </AwardRow>
-        ))}
-      </AwardList>
+                <PreviewRowBadges row={row} />
+                <Typo type="label-medium" color="DARK_GRAY">
+                  {missedCopy(row)}
+                </Typo>
+              </Layout.FlexCol>
+              <PointsCell>
+                <Typo type="title-medium" color="BLACK">
+                  {row.possiblePoints} pts
+                </Typo>
+                {row.slug === 'friend_invite' ? (
+                  <Typo type="label-medium" color="DARK_GRAY">
+                    Will be updated
+                  </Typo>
+                ) : (
+                  <ActionLink href="/chats">Ask admin</ActionLink>
+                )}
+              </PointsCell>
+            </AwardRow>
+          ))}
+        </AwardList>
+      )}
     </HelpSection>
   );
 }
@@ -436,7 +514,7 @@ function categoryForSurvey(entry: SurveyIndexEntry): string {
 }
 
 function priorityRatingForSlug(slug: string): number {
-  if (slug === 'feature_eval_w' || slug === 'feature_eval_w_part2') return 1;
+  if (VER_W_MUST_COMPLETE_PATTERN.test(slug)) return 1;
   if (
     [
       'phase1_friend_closeness',
@@ -510,7 +588,10 @@ function awardToPreviewRow(award: ReimbursementAward): LocalPreviewRow {
     key: `${award.source_kind}:${award.source_slug}:${award.scheduled_survey_id || 'manual'}`,
     kind: award.source_kind === 'survey' ? 'survey' : 'manual',
     slug: award.source_slug,
-    title: pickLocalized(award.title_en, award.title_ko),
+    title:
+      award.source_slug === 'interview_signup'
+        ? 'Interview'
+        : pickLocalized(award.title_en, award.title_ko),
     category,
     points: award.effective_points,
     rawPoints: adjusted ? award.awarded_points : award.effective_points,
@@ -530,6 +611,15 @@ function awardToPreviewRow(award: ReimbursementAward): LocalPreviewRow {
   };
 }
 
+function normalizePreviewRow(row: LocalPreviewRow): LocalPreviewRow {
+  if (row.slug !== 'interview_signup') return row;
+  return {
+    ...row,
+    title: 'Interview',
+    priorityRating: 2,
+  };
+}
+
 function interviewSignupActionRow(hasInterviewAward: boolean): LocalPreviewRow[] {
   if (hasInterviewAward) return [];
   return [
@@ -537,7 +627,7 @@ function interviewSignupActionRow(hasInterviewAward: boolean): LocalPreviewRow[]
       key: 'manual:interview_signup',
       kind: 'manual',
       slug: 'interview_signup',
-      title: 'Interview signup',
+      title: 'Interview',
       category: 'Other activities',
       points: 0,
       rawPoints: 0,
@@ -551,7 +641,7 @@ function interviewSignupActionRow(hasInterviewAward: boolean): LocalPreviewRow[]
       capPoints: null,
       gateSlug: '',
       latePercent: 100,
-      priorityRating: 0,
+      priorityRating: 2,
       status: 'pending',
       note: 'Sign up for a study interview to earn 200 pts.',
     },
@@ -577,6 +667,8 @@ function ProductionReimbursementPage({
   const earnedRows = data.awards.map(awardToPreviewRow);
   const hasInterviewAward = data.awards.some((award) => award.source_slug === 'interview_signup');
   earnMoreRows.push(...interviewSignupActionRow(hasInterviewAward));
+  const sortedEarnMoreRows = sortActionRows(earnMoreRows);
+  const { highPriorityRows, regularRows } = splitActionRows(sortedEarnMoreRows);
   const upcomingRows: LocalPreviewRow[] = [];
   const hasSurveyIndex = !!surveyIndex;
 
@@ -611,10 +703,13 @@ function ProductionReimbursementPage({
           </Typo>
         </SummaryCard>
 
-        {hasSurveyIndex && earnMoreRows.length === 0 ? (
+        {hasSurveyIndex && sortedEarnMoreRows.length === 0 ? (
           <EmptyActionSection />
         ) : (
-          <ActionRows title="Earn more points" rows={earnMoreRows} />
+          <>
+            <ActionRows title="High Priority Surveys" rows={highPriorityRows} />
+            <ActionRows title="Earn more points" rows={regularRows} />
+          </>
         )}
         <UpcomingRows rows={upcomingRows} />
         <EarnedRows rows={earnedRows} />
@@ -625,12 +720,12 @@ function ProductionReimbursementPage({
 
 function LocalAllocationPreviewPage({ preview }: { preview: LocalAllocationPreview }) {
   const { t } = useTranslation('translation', { keyPrefix: 'reimbursement' });
-  const earnedRows = preview.rows.filter((row) => row.points > 0);
-  const earnMoreRows = preview.rows.filter((row) => row.points === 0 && row.canEarn);
-  const upcomingRows = preview.rows.filter(
-    (row) => row.points === 0 && row.availability === 'future',
-  );
-  const helpRows = preview.rows.filter(
+  const rows = preview.rows.map(normalizePreviewRow);
+  const earnedRows = rows.filter((row) => row.points > 0);
+  const earnMoreRows = sortActionRows(rows.filter((row) => row.points === 0 && row.canEarn));
+  const { highPriorityRows, regularRows } = splitActionRows(earnMoreRows);
+  const upcomingRows = rows.filter((row) => row.points === 0 && row.availability === 'future');
+  const helpRows = rows.filter(
     (row) => row.points === 0 && !row.canEarn && row.availability !== 'future',
   );
   const pointsPerDollar = preview.pointsPerDollar || PREVIEW_POINTS_PER_DOLLAR;
@@ -664,7 +759,8 @@ function LocalAllocationPreviewPage({ preview }: { preview: LocalAllocationPrevi
           </Typo>
         </SummaryCard>
 
-        <ActionRows title="Earn more points" rows={earnMoreRows} />
+        <ActionRows title="High Priority Surveys" rows={highPriorityRows} />
+        <ActionRows title="Earn more points" rows={regularRows} />
         <UpcomingRows rows={upcomingRows} />
         <EarnedRows rows={earnedRows} />
         <HelpRows rows={helpRows} />

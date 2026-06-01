@@ -1,6 +1,6 @@
 /* eslint-env jest */
 
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import useSWR from 'swr';
 
@@ -147,7 +147,7 @@ describe('Reimbursement', () => {
             availableMax: 110,
             earnedPoints: 50,
             estimatedDollars: '5.00',
-            sourceCount: 3,
+            sourceCount: 4,
             rows: [
               {
                 key: 'survey:open_survey',
@@ -194,6 +194,28 @@ describe('Reimbursement', () => {
                 note: 'Late submissions are still accepted. Current draft credit is 10 pts.',
               },
               {
+                key: 'manual:interview_signup',
+                kind: 'manual',
+                slug: 'interview_signup',
+                title: 'Interview signup',
+                category: 'Manual activities',
+                points: 0,
+                rawPoints: 0,
+                possiblePoints: 200,
+                currentPossiblePoints: 200,
+                completedCount: 0,
+                appUrl: 'https://calendly.com/jaewonkim/60min',
+                canEarn: true,
+                availability: 'available',
+                capGroup: '',
+                capPoints: null,
+                gateSlug: '',
+                latePercent: 100,
+                priorityRating: 0,
+                status: 'pending',
+                note: '',
+              },
+              {
                 key: 'manual:wit_bot_audit_phase_1',
                 kind: 'manual',
                 slug: 'wit_bot_audit_phase_1',
@@ -214,6 +236,28 @@ describe('Reimbursement', () => {
                 priorityRating: 2,
                 status: 'earned',
                 note: '',
+              },
+              {
+                key: 'survey:missed_survey',
+                kind: 'survey',
+                slug: 'missed_survey',
+                title: 'Missed survey',
+                category: 'Survey',
+                points: 0,
+                rawPoints: 0,
+                possiblePoints: 5,
+                currentPossiblePoints: 5,
+                completedCount: 0,
+                appUrl: '/surveys/missed_survey/answer',
+                canEarn: false,
+                availability: 'deadline',
+                capGroup: '',
+                capPoints: null,
+                gateSlug: '',
+                latePercent: 0,
+                priorityRating: 0,
+                status: 'missed',
+                note: 'The deadline has passed.',
               },
             ],
             capRules: [],
@@ -242,15 +286,37 @@ describe('Reimbursement', () => {
 
     expect(screen.getByText('Reimbursement preview')).toBeInTheDocument();
     expect(screen.getByText('50 pts')).toBeInTheDocument();
+    expect(screen.getByText('High Priority Surveys')).toBeInTheDocument();
     expect(screen.getByText('Earn more points')).toBeInTheDocument();
     expect(screen.getByText('Late credit')).toBeInTheDocument();
     expect(screen.getByText('Prerequisite/Must Complete')).toBeInTheDocument();
-    expect(screen.getAllByRole('link', { name: 'Take survey' })[0]).toHaveAttribute(
-      'href',
-      '/surveys/open_survey/answer',
+    expect(screen.getByText('Interview')).toBeInTheDocument();
+    expect(screen.queryByText('Interview signup')).not.toBeInTheDocument();
+    expect(screen.getAllByText('High Priority').length).toBeGreaterThan(0);
+    expect(
+      screen
+        .getAllByRole('link', { name: 'Take survey' })
+        .some((link) => link.getAttribute('href') === '/surveys/open_survey/answer'),
+    ).toBe(true);
+    const bodyText = document.body.textContent ?? '';
+    expect(bodyText.indexOf('High Priority Surveys')).toBeLessThan(
+      bodyText.indexOf('Earn more points'),
     );
+    expect(bodyText.indexOf('Ver. W features')).toBeLessThan(bodyText.indexOf('Earn more points'));
+    expect(bodyText.indexOf('Interview')).toBeLessThan(bodyText.indexOf('Earn more points'));
+    expect(bodyText.indexOf('Open survey')).toBeGreaterThan(bodyText.indexOf('Earn more points'));
     expect(screen.queryByText('1 / 1 pts')).not.toBeInTheDocument();
     expect(screen.queryByText('Recovery')).not.toBeInTheDocument();
+    expect(screen.getByText('Points you earned')).toBeInTheDocument();
+    expect(screen.getByText('Need help with missed points?')).toBeInTheDocument();
+    expect(screen.queryByText('Wit_bot audit pass - Phase 1')).not.toBeInTheDocument();
+    expect(screen.queryByText('Missed survey')).not.toBeInTheDocument();
+    const showButtons = screen.getAllByRole('button', { name: 'Show' });
+    expect(showButtons).toHaveLength(2);
+    fireEvent.click(showButtons[0]);
+    expect(screen.getByText('Wit_bot audit pass - Phase 1')).toBeInTheDocument();
+    fireEvent.click(showButtons[1]);
+    expect(screen.getByText('Missed survey')).toBeInTheDocument();
   });
 
   it('renders the cached local allocation preview while refreshing in the background', () => {
@@ -418,17 +484,36 @@ describe('Reimbursement', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('Earn more points')).toBeInTheDocument();
     expect(screen.getByText('Open survey')).toBeInTheDocument();
+    expect(screen.getByText('High Priority Surveys')).toBeInTheDocument();
+    expect((document.body.textContent ?? '').indexOf('High Priority Surveys')).toBeLessThan(
+      (document.body.textContent ?? '').indexOf('Earn more points'),
+    );
+    expect((document.body.textContent ?? '').indexOf('Interview')).toBeLessThan(
+      (document.body.textContent ?? '').indexOf('Earn more points'),
+    );
+    expect((document.body.textContent ?? '').indexOf('Open survey')).toBeGreaterThan(
+      (document.body.textContent ?? '').indexOf('Earn more points'),
+    );
+    expect((document.body.textContent ?? '').indexOf('Interview')).toBeLessThan(
+      (document.body.textContent ?? '').indexOf('Open survey'),
+    );
     expect(screen.getByRole('link', { name: 'Take survey' })).toHaveAttribute(
       'href',
       '/surveys/open_survey/answer',
     );
     expect(screen.queryByText('Available later')).not.toBeInTheDocument();
-    expect(screen.getByText('Interview signup')).toBeInTheDocument();
+    expect(screen.getByText('Interview')).toBeInTheDocument();
+    expect(screen.queryByText('Interview signup')).not.toBeInTheDocument();
+    expect(screen.getByText('High Priority')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Sign up' })).toHaveAttribute(
       'href',
       'https://calendly.com/jaewonkim/60min',
     );
     expect(screen.getByText('Points you earned')).toBeInTheDocument();
+    expect(screen.queryByText('Phase 1 reflection')).not.toBeInTheDocument();
+    expect(screen.queryByText('App usage - Phase 1')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Show' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Show' }));
     expect(screen.getByText('Phase 1 reflection')).toBeInTheDocument();
     expect(screen.getByText('App usage - Phase 1')).toBeInTheDocument();
     expect(screen.getByText('Adjusted after review.')).toBeInTheDocument();
