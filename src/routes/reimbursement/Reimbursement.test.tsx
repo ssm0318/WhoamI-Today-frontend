@@ -422,8 +422,12 @@ describe('Reimbursement', () => {
       'href',
       '/surveys/open_survey/answer',
     );
-    expect(screen.getByText('Available later')).toBeInTheDocument();
+    expect(screen.queryByText('Available later')).not.toBeInTheDocument();
     expect(screen.getByText('Interview signup')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Sign up' })).toHaveAttribute(
+      'href',
+      'https://calendly.com/jaewonkim/60min',
+    );
     expect(screen.getByText('Points you earned')).toBeInTheDocument();
     expect(screen.getByText('Phase 1 reflection')).toBeInTheDocument();
     expect(screen.getByText('App usage - Phase 1')).toBeInTheDocument();

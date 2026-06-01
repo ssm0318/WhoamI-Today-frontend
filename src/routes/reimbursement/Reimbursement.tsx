@@ -22,6 +22,7 @@ import { MainScrollContainer } from '../Root';
 
 const PREVIEW_POINTS_PER_DOLLAR = 10;
 const INTERVIEW_SIGNUP_POINTS = 200;
+const INTERVIEW_SIGNUP_URL = 'https://calendly.com/jaewonkim/60min';
 const LOCAL_ALLOCATION_PREVIEW_BROWSER_CACHE_KEY = `${LOCAL_ALLOCATION_PREVIEW_KEY}:browser-cache:v1`;
 
 const Page = styled.main`
@@ -221,7 +222,7 @@ function actionText(row: LocalPreviewRow): string {
   if (row.status === 'locked' && row.gateSlug) return 'Do prereq';
   if (row.kind === 'survey') return 'Take survey';
   if (row.slug.startsWith('wit_bot_audit')) return 'Open WIT chat';
-  if (row.slug === 'interview_signup') return 'Ask admin';
+  if (row.slug === 'interview_signup') return 'Sign up';
   if (row.slug === 'friend_invite') return 'Invite friends';
   return 'Open';
 }
@@ -529,7 +530,7 @@ function awardToPreviewRow(award: ReimbursementAward): LocalPreviewRow {
   };
 }
 
-function interviewSignupUpcomingRow(hasInterviewAward: boolean): LocalPreviewRow[] {
+function interviewSignupActionRow(hasInterviewAward: boolean): LocalPreviewRow[] {
   if (hasInterviewAward) return [];
   return [
     {
@@ -543,16 +544,16 @@ function interviewSignupUpcomingRow(hasInterviewAward: boolean): LocalPreviewRow
       possiblePoints: INTERVIEW_SIGNUP_POINTS,
       currentPossiblePoints: INTERVIEW_SIGNUP_POINTS,
       completedCount: 0,
-      appUrl: '',
-      canEarn: false,
-      availability: 'future',
+      appUrl: INTERVIEW_SIGNUP_URL,
+      canEarn: true,
+      availability: 'available',
       capGroup: '',
       capPoints: null,
       gateSlug: '',
       latePercent: 100,
       priorityRating: 0,
       status: 'pending',
-      note: 'Interview signup is not open yet.',
+      note: 'Sign up for a study interview to earn 200 pts.',
     },
   ];
 }
@@ -574,9 +575,9 @@ function ProductionReimbursementPage({
     .map((entry) => surveyEntryToPreviewRow(entry, openSurveySlugs))
     .filter((row): row is LocalPreviewRow => row !== null);
   const earnedRows = data.awards.map(awardToPreviewRow);
-  const upcomingRows = interviewSignupUpcomingRow(
-    data.awards.some((award) => award.source_slug === 'interview_signup'),
-  );
+  const hasInterviewAward = data.awards.some((award) => award.source_slug === 'interview_signup');
+  earnMoreRows.push(...interviewSignupActionRow(hasInterviewAward));
+  const upcomingRows: LocalPreviewRow[] = [];
   const hasSurveyIndex = !!surveyIndex;
 
   return (
