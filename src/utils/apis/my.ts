@@ -9,6 +9,7 @@ export const getMe = async () => {
   const { data } = await axios.get<MyProfile>('/user/me/');
 
   useBoundStore.getState().setMyProfile({ ...data, unread_noti_cnt: data.unread_noti_cnt ?? 0 });
+  useBoundStore.getState().setFeatureFlags();
 
   return data;
 };
