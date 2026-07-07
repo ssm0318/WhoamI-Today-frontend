@@ -40,6 +40,8 @@ export const editProfile = ({
       | 'pronouns'
       | 'noti_time'
       | 'noti_period_days'
+      | 'push_enabled'
+      | 'daily_prompt_push_enabled'
       | 'user_personas'
       | 'user_interests'
       | 'is_public'

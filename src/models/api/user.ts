@@ -141,6 +141,8 @@ export interface MyProfile extends User {
   url: string;
   noti_time: string;
   noti_period_days: DayOfWeek[];
+  push_enabled: boolean;
+  daily_prompt_push_enabled: boolean;
   unread_noti: boolean;
   timezone?: string;
   check_in?: MyCheckIn;

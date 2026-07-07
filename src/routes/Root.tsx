@@ -194,7 +194,7 @@ function Root() {
       age_range: ageRange,
       signup_date: profile.date_joined?.split('T')[0] || 'unknown',
       friend_count_tier: friendTier,
-      notification_enabled: profile.noti_time ? 'true' : 'false',
+      notification_enabled: profile.push_enabled ? 'true' : 'false',
     });
   }, [myProfile, postMessage]);
 

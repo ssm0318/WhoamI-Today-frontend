@@ -1,8 +1,12 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { ToggleSwitch } from '@components/_common/toggle-switch/ToggleSwitch';
 import { Font, Layout } from '@design-system';
 import useNotiPermission from '@hooks/useNotiPermission';
+import { MyProfile } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
+import { editProfile } from '@utils/apis/my';
 import { requestPermission } from '@utils/firebaseHelpers';
 import { isApp } from '@utils/getUserAgent';
 import { PushNotiSettingButton, SettingsToggleButton } from '../SettingsButtons';
@@ -13,14 +17,28 @@ function PushNotiSetting() {
 
   const { getSettingDescription, notiPermission, setNotiPermission } = useNotiPermission();
 
-  const { dailyNotiTime, dailyNotiPeriod, appNotiPermission } = useBoundStore((state) => ({
+  const {
+    dailyNotiTime,
+    dailyNotiPeriod,
+    appNotiPermission,
+    myProfile,
+    updateMyProfile,
+    openToast,
+  } = useBoundStore((state) => ({
     appNotiPermission: state.appNotiPermission,
+    myProfile: state.myProfile,
     dailyNotiTime: state.myProfile?.noti_time,
     dailyNotiPeriod: state.myProfile?.noti_period_days,
+    updateMyProfile: state.updateMyProfile,
+    openToast: state.openToast,
   }));
   const navigate = useNavigate();
+  const [isSaving, setIsSaving] = useState(false);
 
   const permissionAllowed = isApp ? appNotiPermission : notiPermission === 'granted' || false;
+  const pushEnabled = myProfile?.push_enabled ?? true;
+  const dailyPromptPushEnabled = myProfile?.daily_prompt_push_enabled ?? true;
+  const canEditPushPreferences = permissionAllowed && !!myProfile;
 
   const descriptions = getSettingDescription(notiPermission);
 
@@ -31,6 +49,33 @@ function PushNotiSetting() {
   };
 
   const handleClickChangeDailyNotiSetting = () => navigate('/settings/daily-noti-setting');
+
+  const handleUpdatePushPreference = (
+    profile: Pick<Partial<MyProfile>, 'push_enabled' | 'daily_prompt_push_enabled'>,
+  ) => {
+    if (!myProfile || isSaving) return;
+    setIsSaving(true);
+    editProfile({
+      profile,
+      onSuccess: (data: MyProfile) => {
+        updateMyProfile({ ...data });
+        openToast({ message: t('daily_noti_setting.success') });
+        setIsSaving(false);
+      },
+      onError: () => {
+        openToast({ message: t('daily_noti_setting.error') });
+        setIsSaving(false);
+      },
+    });
+  };
+
+  const handleTogglePushEnabled = () => {
+    handleUpdatePushPreference({ push_enabled: !pushEnabled });
+  };
+
+  const handleToggleDailyPromptPushEnabled = () => {
+    handleUpdatePushPreference({ daily_prompt_push_enabled: !dailyPromptPushEnabled });
+  };
 
   return (
     <>
@@ -66,12 +111,47 @@ function PushNotiSetting() {
           </Layout.FlexCol>
         )}
       </Layout.FlexRow>
-      {permissionAllowed && (dailyNotiPeriod || dailyNotiTime) && (
-        <PushNotiSettingButton
-          text={t('daily_noti_setting.title')}
-          onClick={handleClickChangeDailyNotiSetting}
-        />
+      {canEditPushPreferences && (
+        <S.PreferenceList>
+          <S.PreferenceRow>
+            <S.PreferenceCopy>
+              <Font.Body type="16_semibold">{t('all_push_notifications')}</Font.Body>
+              <S.PreferenceDescription>{t('all_push_notifications_desc')}</S.PreferenceDescription>
+            </S.PreferenceCopy>
+            <ToggleSwitch
+              ariaLabel={String(t('all_push_notifications'))}
+              checked={pushEnabled}
+              disabled={isSaving}
+              onChange={handleTogglePushEnabled}
+              type="large"
+            />
+          </S.PreferenceRow>
+          <S.PreferenceRow disabled={!pushEnabled}>
+            <S.PreferenceCopy>
+              <Font.Body type="16_semibold">{t('daily_prompt_notifications')}</Font.Body>
+              <S.PreferenceDescription>
+                {t('daily_prompt_notifications_desc')}
+              </S.PreferenceDescription>
+            </S.PreferenceCopy>
+            <ToggleSwitch
+              ariaLabel={String(t('daily_prompt_notifications'))}
+              checked={dailyPromptPushEnabled}
+              disabled={isSaving || !pushEnabled}
+              onChange={handleToggleDailyPromptPushEnabled}
+              type="large"
+            />
+          </S.PreferenceRow>
+        </S.PreferenceList>
       )}
+      {canEditPushPreferences &&
+        pushEnabled &&
+        dailyPromptPushEnabled &&
+        (dailyNotiPeriod || dailyNotiTime) && (
+          <PushNotiSettingButton
+            text={t('daily_noti_setting.title')}
+            onClick={handleClickChangeDailyNotiSetting}
+          />
+        )}
     </>
   );
 }
