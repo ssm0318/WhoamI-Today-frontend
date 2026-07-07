@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 interface Props {
   type: ToggleSwitchSize;
+  disabled?: boolean;
 }
 
 export type ToggleSwitchSize = 'large' | 'small';
@@ -36,6 +37,7 @@ export const StyledToggleButton = styled.label<Props>`
   display: inline-block;
   width: ${({ type }) => `${WIDTH[type]}px`};
   height: ${({ type }) => `${HEIGHT[type]}px`};
+  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
 
   input {
     opacity: 0;
@@ -45,7 +47,7 @@ export const StyledToggleButton = styled.label<Props>`
 
   .slider {
     position: absolute;
-    cursor: pointer;
+    cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
     top: 0;
     left: 0;
     right: 0;
@@ -71,6 +73,10 @@ export const StyledToggleButton = styled.label<Props>`
 
   input:checked + .slider {
     background-color: ${({ theme }) => theme.BLACK};
+  }
+
+  input:disabled + .slider {
+    opacity: 0.45;
   }
 
   input:checked + .slider:before {
