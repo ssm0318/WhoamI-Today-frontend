@@ -7,6 +7,7 @@ import { MemoryRouter } from 'react-router-dom';
 const mockEditProfile = jest.fn();
 const mockUpdateMyProfile = jest.fn();
 const mockOpenToast = jest.fn();
+let mockNotiPermission = 'granted';
 
 const mockProfile = {
   noti_time: '16:00',
@@ -42,7 +43,7 @@ jest.mock(
   '@hooks/useNotiPermission',
   () => () => ({
     getSettingDescription: () => [],
-    notiPermission: 'granted',
+    notiPermission: mockNotiPermission,
     setNotiPermission: jest.fn(),
   }),
   { virtual: true },
@@ -133,7 +134,7 @@ jest.mock('react-i18next', () => ({
         push_notifications: 'Push notifications',
         all_push_notifications: 'All push notifications',
         all_push_notifications_desc: 'Receive every push notification from WhoAmI Today.',
-        daily_prompt_notifications: 'Daily reminders',
+        daily_prompt_notifications: 'Daily prompts',
         daily_prompt_notifications_desc: 'Reminders to share or complete the daily survey.',
         'daily_noti_setting.title': 'Notification timing',
         'daily_noti_setting.success': 'Changes updated successfully',
@@ -179,6 +180,7 @@ const PushNotiSetting = require('./PushNotiSetting').default;
 
 describe('PushNotiSetting', () => {
   beforeEach(() => {
+    mockNotiPermission = 'granted';
     mockEditProfile.mockClear();
     mockUpdateMyProfile.mockClear();
     mockOpenToast.mockClear();
@@ -202,14 +204,34 @@ describe('PushNotiSetting', () => {
     );
   });
 
-  it('lets users turn off only daily reminder pushes', () => {
+  it('lets users turn off only daily prompt pushes', () => {
     render(
       <MemoryRouter>
         <PushNotiSetting />
       </MemoryRouter>,
     );
 
-    fireEvent.click(screen.getByRole('checkbox', { name: 'Daily reminders' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Daily prompts' }));
+
+    expect(mockEditProfile).toHaveBeenCalledWith(
+      expect.objectContaining({
+        profile: { daily_prompt_push_enabled: false },
+        onSuccess: expect.any(Function),
+        onError: expect.any(Function),
+      }),
+    );
+  });
+
+  it('lets users save daily prompt push preferences when system permission is denied', () => {
+    mockNotiPermission = 'denied';
+
+    render(
+      <MemoryRouter>
+        <PushNotiSetting />
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Daily prompts' }));
 
     expect(mockEditProfile).toHaveBeenCalledWith(
       expect.objectContaining({

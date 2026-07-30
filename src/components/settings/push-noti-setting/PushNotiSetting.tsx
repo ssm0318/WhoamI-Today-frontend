@@ -38,7 +38,7 @@ function PushNotiSetting() {
   const permissionAllowed = isApp ? appNotiPermission : notiPermission === 'granted' || false;
   const pushEnabled = myProfile?.push_enabled ?? true;
   const dailyPromptPushEnabled = myProfile?.daily_prompt_push_enabled ?? true;
-  const canEditPushPreferences = permissionAllowed && !!myProfile;
+  const canEditPushPreferences = !!myProfile;
 
   const descriptions = getSettingDescription(notiPermission);
 
