@@ -30,8 +30,7 @@ jest.mock('react-i18next', () => ({
         interview_deadline: 'Interview signup is available through August 31, 2026.',
         interview_action: 'Sign up for interview',
         dropout_title: 'Dropout survey',
-        dropout_body:
-          'Tell us why your participation changed. This optional survey does not affect reimbursement.',
+        dropout_body: `Complete the dropout survey to earn ${options?.points} pts (+$${options?.dollars}).`,
         dropout_action: 'Take dropout survey',
         dropout_completed: 'Dropout survey completed',
         empty_credited: 'No credited items are recorded.',
@@ -159,6 +158,8 @@ const finalState = {
   dropout_survey: {
     completed: false,
     url: 'https://jaewonkim.me/whoami-dropout/',
+    potential_points: 50,
+    potential_dollar_cents: 500,
   },
 };
 
@@ -196,9 +197,16 @@ describe('Reimbursement', () => {
     ).toBeInTheDocument();
     const interviewHeading = screen.getByText('Study interview');
     const dropoutHeading = screen.getByText('Dropout survey');
+    const pointsHeading = screen.getByText('Points you earned');
     expect(interviewHeading.compareDocumentPosition(dropoutHeading)).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING,
     );
+    expect(dropoutHeading.compareDocumentPosition(pointsHeading)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+    expect(
+      screen.getByText('Complete the dropout survey to earn 50 pts (+$5).'),
+    ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Take dropout survey' })).toHaveAttribute(
       'href',
       'https://jaewonkim.me/whoami-dropout/',
@@ -231,7 +239,15 @@ describe('Reimbursement', () => {
 
   it('shows completed dropout status without another submission link', () => {
     mockedUseSWR.mockReturnValue({
-      data: { ...finalState, dropout_survey: { completed: true, url: null } },
+      data: {
+        ...finalState,
+        dropout_survey: {
+          completed: true,
+          url: null,
+          potential_points: 50,
+          potential_dollar_cents: 500,
+        },
+      },
     });
 
     render(<Reimbursement />);
@@ -248,6 +264,11 @@ describe('Reimbursement', () => {
     expect(en.reimbursement.final_eyebrow).toBe('Final reimbursement');
     expect(en.reimbursement.policy_notice).toBe(
       'Surveys determined not to have been answered in good faith were not credited, even when the survey was completed.',
+    );
+    expect(en.reimbursement.dropout_body).toBe(
+      ['Complete the dropout survey to earn ', '{{points}}', ' pts (+$', '{{dollars}}', ').'].join(
+        '',
+      ),
     );
     expect(Object.values(en.reimbursement).join(' ')).not.toMatch(/preview|provisional/i);
   });

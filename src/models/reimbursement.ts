@@ -55,6 +55,8 @@ export interface ReimbursementState {
   dropout_survey: {
     completed: boolean;
     url: string | null;
+    potential_points: number;
+    potential_dollar_cents: number;
   };
   policy_notice_en: string;
 }

@@ -351,22 +351,6 @@ function FinalReimbursementPage({ data }: { data: ReimbursementState }) {
 
         <PolicyCard>{t('policy_notice')}</PolicyCard>
 
-        <Section>
-          <SectionTitle>{t('credited_title')}</SectionTitle>
-          {credited.length > 0 ? (
-            <AwardRows awards={credited} />
-          ) : (
-            <EmptyCard>{t('empty_credited')}</EmptyCard>
-          )}
-        </Section>
-
-        {notCredited.length > 0 && (
-          <Section>
-            <SectionTitle>{t('not_credited_title')}</SectionTitle>
-            <AwardRows awards={notCredited} />
-          </Section>
-        )}
-
         {interview && !interview.completed && interview.signup_url && (
           <InterviewCard>
             <div>
@@ -386,7 +370,12 @@ function FinalReimbursementPage({ data }: { data: ReimbursementState }) {
           <DropoutCard>
             <div>
               <DropoutTitle>{t('dropout_title')}</DropoutTitle>
-              <DropoutBody>{t('dropout_body')}</DropoutBody>
+              <DropoutBody>
+                {t('dropout_body', {
+                  points: data.dropout_survey.potential_points,
+                  dollars: data.dropout_survey.potential_dollar_cents / 100,
+                })}
+              </DropoutBody>
             </div>
             {data.dropout_survey.completed || !data.dropout_survey.url ? (
               <DropoutCompleted>{t('dropout_completed')}</DropoutCompleted>
@@ -396,6 +385,22 @@ function FinalReimbursementPage({ data }: { data: ReimbursementState }) {
               </DropoutLink>
             )}
           </DropoutCard>
+        )}
+
+        <Section>
+          <SectionTitle>{t('credited_title')}</SectionTitle>
+          {credited.length > 0 ? (
+            <AwardRows awards={credited} />
+          ) : (
+            <EmptyCard>{t('empty_credited')}</EmptyCard>
+          )}
+        </Section>
+
+        {notCredited.length > 0 && (
+          <Section>
+            <SectionTitle>{t('not_credited_title')}</SectionTitle>
+            <AwardRows awards={notCredited} />
+          </Section>
         )}
       </Page>
     </MainScrollContainer>
