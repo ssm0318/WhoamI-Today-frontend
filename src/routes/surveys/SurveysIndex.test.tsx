@@ -760,13 +760,10 @@ describe('SurveysIndex', () => {
     expect(missedHeading.closest('details')).not.toHaveAttribute('open');
     expect(screen.getByText('Survey not taken').closest('[role="button"]')).toBeNull();
     expect(screen.queryByText('To-do')).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Take dropout survey' })).toHaveAttribute(
-      'href',
-      'https://jaewonkim.me/whoami-dropout/',
-    );
+    expect(screen.queryByRole('link', { name: 'Take dropout survey' })).not.toBeInTheDocument();
   });
 
-  it('marks the dropout survey complete instead of offering another submission', () => {
+  it('keeps the dropout survey off the historical surveys page', () => {
     const data: SurveyIndexResponse = {
       available_now: [],
       late_but_accepted: [],
@@ -785,7 +782,7 @@ describe('SurveysIndex', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText('Dropout survey completed')).toBeInTheDocument();
+    expect(screen.queryByText('Dropout survey completed')).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Take dropout survey' })).not.toBeInTheDocument();
   });
 });

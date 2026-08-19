@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import useSWR from 'swr';
 
 import EmojiItem from '@components/_common/emoji-item/EmojiItem';
-import { Chip as DeadlineChip } from '@components/survey/DeadlineBadge.styled';
 import { FeatureFlagKey } from '@constants/featureFlag';
 import { Z_INDEX } from '@constants/layout';
 import { ONBOARDING_VIDEO_URL } from '@constants/url';
@@ -15,14 +14,12 @@ import { usePostAppMessage } from '@hooks/useAppMessage';
 import { useTrackEvent } from '@hooks/useTrackEvent';
 import { VersionType } from '@models/api/user';
 import { useBoundStore } from '@stores/useBoundStore';
-import { logOnboardingEvent } from '@utils/apis/onboardingEvents';
 import {
   getLocalAllocationPreview,
   getReimbursementState,
   LOCAL_ALLOCATION_PREVIEW_KEY,
   REIMBURSEMENT_KEY,
 } from '@utils/apis/reimbursement';
-import { getSurveyIndex } from '@utils/apis/survey';
 import { getMyPendingVersionSwitchRequest } from '@utils/apis/user';
 import { classifyPathnameAsSource } from '@utils/navSource';
 
@@ -38,7 +35,6 @@ interface SideMenuItem {
 // pages users navigate to less often.
 const SIDE_MENU_LIST: SideMenuItem[] = [
   { key: 'my_profile', emoji: '👤', path: '/my' },
-  { key: 'surveys', emoji: '📊', path: '/surveys' },
   { key: 'reimbursement', emoji: '💰', path: '/reimbursement' },
   { key: 'settings', emoji: '⚙️', path: '/settings' },
 ];
@@ -55,7 +51,6 @@ interface Props {
 // TODO: Add entrance/exit animations
 function SideMenu({ closeSideMenu }: Props) {
   const [t] = useTranslation('translation', { keyPrefix: 'home.header.side_menu' });
-  const [tDeadline] = useTranslation('translation', { keyPrefix: 'deadline_badge' });
   const navigate = useNavigate();
   const postMessage = usePostAppMessage();
   const featureFlags = useBoundStore((state) => state.featureFlags);
@@ -66,7 +61,6 @@ function SideMenu({ closeSideMenu }: Props) {
     ['localhost', '127.0.0.1'].includes(window.location.hostname);
 
   const myProfile = useBoundStore((state) => state.myProfile);
-  const { data: surveyIndex } = useSWR('/surveys/index/', getSurveyIndex);
   const { data: reimbursement } = useSWR(REIMBURSEMENT_KEY, getReimbursementState);
   const { data: localPreview } = useSWR(
     canUseLocalAllocationPreview ? [LOCAL_ALLOCATION_PREVIEW_KEY, null] : null,
@@ -77,8 +71,6 @@ function SideMenu({ closeSideMenu }: Props) {
     getMyPendingVersionSwitchRequest,
   );
   const isPending = !!pendingResp?.pending;
-  const dueSurveyCount =
-    surveyIndex?.available_now.filter((entry) => !entry.allow_late).length ?? 0;
 
   const visibleItems = SIDE_MENU_LIST.filter((menu) => !menu.flag || featureFlags?.[menu.flag]);
   const reimbursementPoints =
@@ -115,9 +107,6 @@ function SideMenu({ closeSideMenu }: Props) {
 
   const handleClickMenu = (menu: SideMenuItem) => () => {
     trackEvent('side_menu_item_tapped', { item_key: menu.key });
-    if (menu.key === 'surveys') {
-      logOnboardingEvent('survey_sidebar_nav_tapped', { from: fromSource }).catch(() => undefined);
-    }
     navigate(menu.path);
     closeSideMenu();
   };
@@ -181,15 +170,6 @@ function SideMenu({ closeSideMenu }: Props) {
                     />
                     <Typo type="head-line">{t(menu.key)}</Typo>
                   </Layout.FlexRow>
-                  {menu.key === 'surveys' && dueSurveyCount > 0 && (
-                    <DeadlineChip>
-                      ⏰{' '}
-                      {tDeadline(
-                        dueSurveyCount === 1 ? 'sidebar_count_one' : 'sidebar_count_other',
-                        { count: dueSurveyCount },
-                      )}
-                    </DeadlineChip>
-                  )}
                   {menu.key === 'reimbursement' && reimbursementPoints > 0 && (
                     <PointTotalChip>{reimbursementPoints} pts</PointTotalChip>
                   )}

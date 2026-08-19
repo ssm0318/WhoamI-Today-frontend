@@ -1,11 +1,9 @@
 /* eslint-env jest */
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import type { CSSProperties, ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import useSWR from 'swr';
-
-import { logOnboardingEvent } from '@utils/apis/onboardingEvents';
 
 import SideMenu from './SideMenu';
 
@@ -205,13 +203,10 @@ jest.mock(
 );
 
 const mockedUseSWR = useSWR as unknown as jest.Mock;
-const mockedLogOnboardingEvent = logOnboardingEvent as jest.Mock;
-
 describe('SideMenu', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockShouldUseLocalAllocationPreview.mockReturnValue(false);
-    mockedLogOnboardingEvent.mockResolvedValue(undefined);
     mockedUseSWR.mockImplementation((key: string | readonly [string, number | null] | null) => {
       if (key === '/surveys/index/') return { data: { available_now: [] } };
       if (key === '/surveys/reimbursement/') return { data: null };
@@ -223,20 +218,15 @@ describe('SideMenu', () => {
     });
   });
 
-  it('mirrors the Surveys sidebar tap to the WIT bot onboarding event API', () => {
+  it('does not show the retired Surveys sidebar item', () => {
     render(
       <MemoryRouter initialEntries={['/friends']}>
         <SideMenu closeSideMenu={mockCloseSideMenu} />
       </MemoryRouter>,
     );
 
-    fireEvent.click(screen.getByText('Surveys'));
-
-    expect(mockNavigate).toHaveBeenCalledWith('/surveys');
-    expect(mockCloseSideMenu).toHaveBeenCalled();
-    expect(mockedLogOnboardingEvent).toHaveBeenCalledWith('survey_sidebar_nav_tapped', {
-      from: 'friends',
-    });
+    expect(screen.queryByText('Surveys')).not.toBeInTheDocument();
+    expect(mockNavigate).not.toHaveBeenCalledWith('/surveys');
   });
 
   it('shows local reimbursement preview points on localhost when public totals are unavailable', () => {

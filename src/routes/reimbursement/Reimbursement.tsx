@@ -243,6 +243,46 @@ const InterviewLink = styled.a`
   }
 `;
 
+const DropoutCard = styled.section`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid #ded0ee;
+  border-radius: 12px;
+  background: #faf7fd;
+  padding: 16px;
+
+  @media (max-width: 340px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const DropoutTitle = styled.h2`
+  margin: 0;
+  color: #30253a;
+  font-size: 16px;
+  font-weight: 800;
+`;
+
+const DropoutBody = styled.p`
+  margin: 5px 0 0;
+  color: #62566d;
+  font-size: 12px;
+  line-height: 1.45;
+`;
+
+const DropoutLink = styled(InterviewLink)`
+  background: #5c5264;
+`;
+
+const DropoutCompleted = styled.span`
+  color: #2f6b4f;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+`;
+
 const LoadingCard = styled.div`
   border: 1px solid ${Colors.LIGHT_GRAY};
   border-radius: 10px;
@@ -340,6 +380,22 @@ function FinalReimbursementPage({ data }: { data: ReimbursementState }) {
               {t('interview_action')}
             </InterviewLink>
           </InterviewCard>
+        )}
+
+        {data.dropout_survey && (
+          <DropoutCard>
+            <div>
+              <DropoutTitle>{t('dropout_title')}</DropoutTitle>
+              <DropoutBody>{t('dropout_body')}</DropoutBody>
+            </div>
+            {data.dropout_survey.completed || !data.dropout_survey.url ? (
+              <DropoutCompleted>{t('dropout_completed')}</DropoutCompleted>
+            ) : (
+              <DropoutLink href={data.dropout_survey.url} target="_blank" rel="noreferrer">
+                {t('dropout_action')}
+              </DropoutLink>
+            )}
+          </DropoutCard>
         )}
       </Page>
     </MainScrollContainer>

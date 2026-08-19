@@ -171,40 +171,6 @@ const PointsSummaryLink = styled.button`
   line-height: 1.2;
 `;
 
-const DropoutCard = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  border: 1px solid #b8d7c6;
-  border-radius: 12px;
-  background: #f3faf6;
-  padding: 16px;
-`;
-
-const DropoutCopy = styled(Layout.FlexCol)`
-  gap: 4px;
-`;
-
-const DropoutLink = styled.a`
-  flex: 0 0 auto;
-  border-radius: 8px;
-  background: ${Colors.PRIMARY};
-  color: ${Colors.WHITE};
-  padding: 9px 12px;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1;
-`;
-
-const CompletedStatus = styled.span`
-  flex: 0 0 auto;
-  color: #2f6b4f;
-  font-size: 14px;
-  font-weight: 700;
-`;
-
 const MissedDetails = styled.details`
   width: 100%;
   border: 1px solid ${Colors.LIGHT_GRAY};
@@ -486,25 +452,6 @@ function SurveysIndex() {
               {completedEntries.map((entry) => renderEntry(entry, 'completed'))}
             </SectionRows>
           </Section>
-        )}
-        {reimbursement?.dropout_survey && (
-          <DropoutCard>
-            <DropoutCopy>
-              <Typo type="title-medium" color="BLACK">
-                {t('dropout_title')}
-              </Typo>
-              <Typo type="label-medium" color="DARK_GRAY">
-                {t('dropout_body')}
-              </Typo>
-            </DropoutCopy>
-            {reimbursement.dropout_survey.completed || !reimbursement.dropout_survey.url ? (
-              <CompletedStatus>{t('dropout_completed')}</CompletedStatus>
-            ) : (
-              <DropoutLink href={reimbursement.dropout_survey.url} target="_blank" rel="noreferrer">
-                {t('dropout_action')}
-              </DropoutLink>
-            )}
-          </DropoutCard>
         )}
         {hasTodo && (
           <MissedDetails>

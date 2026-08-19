@@ -29,6 +29,11 @@ jest.mock('react-i18next', () => ({
         interview_body: `Complete the interview to earn ${options?.points} pts.`,
         interview_deadline: 'Interview signup is available through August 31, 2026.',
         interview_action: 'Sign up for interview',
+        dropout_title: 'Dropout survey',
+        dropout_body:
+          'Tell us why your participation changed. This optional survey does not affect reimbursement.',
+        dropout_action: 'Take dropout survey',
+        dropout_completed: 'Dropout survey completed',
         empty_credited: 'No credited items are recorded.',
         loading: 'Loading reimbursement details…',
       };
@@ -160,7 +165,7 @@ const finalState = {
 describe('Reimbursement', () => {
   beforeEach(() => mockedUseSWR.mockReset());
 
-  it('renders a final frozen ledger and only the interview action', () => {
+  it('renders the dropout survey immediately after interview signup', () => {
     mockedUseSWR.mockReturnValue({ data: finalState });
 
     render(<Reimbursement />);
@@ -189,9 +194,18 @@ describe('Reimbursement', () => {
     expect(
       screen.getByText('Interview signup is available through August 31, 2026.'),
     ).toBeInTheDocument();
+    const interviewHeading = screen.getByText('Study interview');
+    const dropoutHeading = screen.getByText('Dropout survey');
+    expect(interviewHeading.compareDocumentPosition(dropoutHeading)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+    expect(screen.getByRole('link', { name: 'Take dropout survey' })).toHaveAttribute(
+      'href',
+      'https://jaewonkim.me/whoami-dropout/',
+    );
     expect(screen.queryByText(/preview/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/provisional/i)).not.toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: /take survey/i })).not.toBeInTheDocument();
+    expect(screen.getAllByRole('link')).toHaveLength(2);
     expect(mockedUseSWR).toHaveBeenCalledTimes(1);
     expect(mockedUseSWR).toHaveBeenCalledWith('/surveys/reimbursement/', expect.any(Function));
   });
@@ -212,6 +226,18 @@ describe('Reimbursement', () => {
     render(<Reimbursement />);
 
     expect(screen.queryByRole('link', { name: 'Sign up for interview' })).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Take dropout survey' })).toBeInTheDocument();
+  });
+
+  it('shows completed dropout status without another submission link', () => {
+    mockedUseSWR.mockReturnValue({
+      data: { ...finalState, dropout_survey: { completed: true, url: null } },
+    });
+
+    render(<Reimbursement />);
+
+    expect(screen.getByText('Dropout survey completed')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Take dropout survey' })).not.toBeInTheDocument();
   });
 
   it('uses final language in both translation files with matching keys', () => {
