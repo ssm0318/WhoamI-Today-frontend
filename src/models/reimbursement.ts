@@ -1,4 +1,10 @@
-export type PointSourceKind = 'survey' | 'wit_bot_audit' | 'interview_signup' | 'app_usage';
+export type PointSourceKind =
+  | 'survey'
+  | 'wit_bot_audit'
+  | 'interview_signup'
+  | 'app_usage'
+  | 'friend_invite'
+  | 'researcher_adjustment';
 
 export interface PointAwardSummary {
   awarded_points: number;
@@ -31,6 +37,7 @@ export interface PendingPointPrereq {
 }
 
 export interface ReimbursementState {
+  is_final: boolean;
   provisional_total: number;
   adjusted_total: number;
   available_max: number;
@@ -38,6 +45,12 @@ export interface ReimbursementState {
   points_per_dollar: number;
   awards: ReimbursementAward[];
   pending_prereqs: PendingPointPrereq[];
+  interview_opportunity: {
+    completed: boolean;
+    potential_points: number;
+    signup_url: string | null;
+  };
+  policy_notice_en: string;
 }
 
 export interface LocalPreviewRow {

@@ -1,54 +1,36 @@
 /* eslint-env jest */
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import useSWR from 'swr';
+
+import en from '../../i18n/locales/en/translation.json';
+import ko from '../../i18n/locales/ko/translation.json';
 
 import Reimbursement from './Reimbursement';
 
 jest.mock('swr');
 
-const mockShouldUseLocalAllocationPreview = jest.fn();
-let mockMyProfile: { id: number } | null = { id: 8 };
-
-jest.mock(
-  '@stores/useBoundStore',
-  () => ({
-    useBoundStore: (selector: (state: { myProfile: { id: number } | null }) => unknown) =>
-      selector({ myProfile: mockMyProfile }),
-  }),
-  { virtual: true },
-);
-
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, options?: Record<string, number | string>) => {
-      if (key === 'summary_title') return 'Your study points';
-      if (key === 'provisional_total_label') return 'Provisional points';
-      if (key === 'dollar_estimate_label') return `~$${options?.amount} estimated reimbursement`;
-      if (key === 'audit_disclaimer_long') return 'Points are provisional after audit.';
-      if (key === 'what_earns_title') return 'What earns points';
-      if (key === 'what_earns_body') return 'Important surveys and activities earn points.';
-      if (key === 'conversion_rate') return `${options?.points} pts = $1`;
-      if (key === 'section_surveys') return 'Surveys';
-      if (key === 'section_other_activities') return 'Other activities';
-      if (key === 'section_pending') return 'Pending';
-      if (key === 'downgraded_label') return 'Adjusted after audit';
-      if (key === 'pending_prereq_copy') return `Complete ${options?.title} first`;
-      if (key === 'tbu_eyebrow') return 'To be updated';
-      if (key === 'tbu_title') return 'Reimbursement details are being finalized';
-      if (key === 'tbu_body') {
-        return 'Point allocation has not been finalized yet. Please keep completing study activities.';
-      }
-      if (key === 'local_preview_notice_title') return 'Reimbursement preview';
-      if (key === 'local_preview_notice_body') {
-        return 'We are still balancing reimbursement amounts. This preview uses the current draft allocation.';
-      }
-      if (key === 'study_max_note_body') {
-        return 'The study was described as up to $60 for participation, including interview participation, plus up to $50 for friend invitations. The current draft allocates up to $90 for participation, which is intentional while reimbursement is being finalized.';
-      }
-      if (key === 'deadline_passed') return 'Deadline passed';
-      return key;
+      const copy: Record<string, string> = {
+        final_eyebrow: 'Final reimbursement',
+        final_points_label: 'Your final study points',
+        dollar_total_label: `$${options?.amount} reimbursement`,
+        conversion_rate: `${options?.points} pts = $1`,
+        policy_notice:
+          'Surveys determined not to have been answered in good faith were not credited, even when the survey was completed.',
+        credited_title: 'Points you earned',
+        not_credited_title: 'Not credited',
+        adjusted_label: 'Reviewed',
+        interview_title: 'Study interview',
+        interview_body: `Complete the interview to earn ${options?.points} pts.`,
+        interview_action: 'Sign up for interview',
+        empty_credited: 'No credited items are recorded.',
+        loading: 'Loading reimbursement details…',
+      };
+      return copy[key] ?? key;
     },
   }),
 }));
@@ -64,30 +46,15 @@ jest.mock(
 
 jest.mock(
   '@design-system',
-  () => {
-    const React = jest.requireActual<typeof import('react')>('react');
-    function MockLayout({ children, ...props }: { children?: ReactNode }) {
-      return React.createElement('div', props, children);
-    }
-    function MockTypo({ children }: { children?: ReactNode }) {
-      return React.createElement('span', null, children);
-    }
-
-    return {
-      Colors: {
-        BLACK: '#000',
-        DARK_GRAY: '#555',
-        LIGHT_GRAY: '#ddd',
-        PRIMARY: '#8700ff',
-        WHITE: '#fff',
-      },
-      Layout: {
-        FlexCol: MockLayout,
-        FlexRow: MockLayout,
-      },
-      Typo: MockTypo,
-    };
-  },
+  () => ({
+    Colors: {
+      BLACK: '#000',
+      DARK_GRAY: '#555',
+      LIGHT_GRAY: '#ddd',
+      PRIMARY: '#8700ff',
+      WHITE: '#fff',
+    },
+  }),
   { virtual: true },
 );
 
@@ -107,18 +74,7 @@ jest.mock(
   '@utils/apis/reimbursement',
   () => ({
     getReimbursementState: jest.fn(),
-    getLocalAllocationPreview: jest.fn(),
-    shouldUseLocalAllocationPreview: () => mockShouldUseLocalAllocationPreview(),
-    LOCAL_ALLOCATION_PREVIEW_KEY: 'local-reimbursement-allocation-preview',
     REIMBURSEMENT_KEY: '/surveys/reimbursement/',
-  }),
-  { virtual: true },
-);
-
-jest.mock(
-  '@utils/apis/survey',
-  () => ({
-    getSurveyIndex: jest.fn(),
   }),
   { virtual: true },
 );
@@ -128,505 +84,135 @@ jest.mock('../Root', () => ({
 }));
 
 const mockedUseSWR = useSWR as unknown as jest.Mock;
-const mockGetMe = jest.fn();
 
-jest.mock(
-  '@utils/apis/my',
-  () => ({
-    getMe: () => mockGetMe(),
-  }),
-  { virtual: true },
-);
+const finalState = {
+  is_final: true,
+  provisional_total: 350,
+  adjusted_total: 350,
+  available_max: 800,
+  dollar_estimate_cents: 3500,
+  points_per_dollar: 10,
+  policy_notice_en:
+    'Surveys determined not to have been answered in good faith were not credited, even when the survey was completed.',
+  awards: [
+    {
+      source_kind: 'wit_bot_audit',
+      source_slug: 'wit_bot_audit_phase_1',
+      scheduled_survey_id: null,
+      title_en: 'WIT bot and boss quiz - Phase 1 (Ver.Q)',
+      title_ko: 'WIT 봇 및 보스 퀴즈 - 1단계 (Ver.Q)',
+      cadence: null,
+      window_start: null,
+      window_end: null,
+      awarded_points: 50,
+      adjusted_points: null,
+      effective_points: 50,
+      note: 'Boss quiz best score=0.900000; audit engaged=9; audit missing=1.',
+      submitted_at: '2026-08-19T12:00:00Z',
+    },
+    {
+      source_kind: 'friend_invite',
+      source_slug: 'friend_invite',
+      scheduled_survey_id: null,
+      title_en: 'Friend invitations',
+      title_ko: '친구 초대',
+      cadence: null,
+      window_start: null,
+      window_end: null,
+      awarded_points: 300,
+      adjusted_points: null,
+      effective_points: 300,
+      note: 'Eligible invites=3; credited invites=3.',
+      submitted_at: '2026-08-19T12:00:00Z',
+    },
+    {
+      source_kind: 'survey',
+      source_slug: 'post_study_q',
+      scheduled_survey_id: 44,
+      title_en: 'Post-study survey',
+      title_ko: '연구 종료 설문',
+      cadence: 'endpoint',
+      window_start: '2026-05-30',
+      window_end: '2026-06-01',
+      awarded_points: 50,
+      adjusted_points: 0,
+      effective_points: 0,
+      note: 'Good-faith survey audit exclusion.',
+      submitted_at: '2026-06-01T12:00:00Z',
+    },
+  ],
+  pending_prereqs: [],
+  interview_opportunity: {
+    completed: false,
+    potential_points: 100,
+    signup_url: 'https://calendly.com/jaewonkim/60min',
+  },
+};
 
 describe('Reimbursement', () => {
-  beforeEach(() => {
-    mockedUseSWR.mockReset();
-    mockGetMe.mockReset();
-    window.localStorage.clear();
-    document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    mockMyProfile = { id: 8 };
-    mockShouldUseLocalAllocationPreview.mockReturnValue(false);
-  });
+  beforeEach(() => mockedUseSWR.mockReset());
 
-  it('prefers the rich local allocation preview on localhost', () => {
-    mockShouldUseLocalAllocationPreview.mockReturnValue(true);
-    mockedUseSWR.mockImplementation((key: string | readonly [string, number | null] | null) => {
-      if (Array.isArray(key)) {
-        return {
-          data: {
-            db: { name: 'whoamitoday_merged', participantCount: 80 },
-            selectedUser: { id: 8, username: 'participant_8', responseTotal: 12 },
-            pointsPerDollar: 10,
-            availableMax: 110,
-            earnedPoints: 50,
-            estimatedDollars: '5.00',
-            sourceCount: 4,
-            rows: [
-              {
-                key: 'survey:open_survey',
-                kind: 'survey',
-                slug: 'open_survey',
-                title: 'Open survey',
-                category: 'Survey',
-                points: 0,
-                rawPoints: 0,
-                possiblePoints: 10,
-                currentPossiblePoints: 10,
-                completedCount: 0,
-                appUrl: '/surveys/open_survey/answer',
-                canEarn: true,
-                availability: 'available',
-                capGroup: '',
-                capPoints: null,
-                gateSlug: '',
-                latePercent: 100,
-                priorityRating: 0,
-                status: 'pending',
-                note: '',
-              },
-              {
-                key: 'survey:feature_eval_w',
-                kind: 'survey',
-                slug: 'feature_eval_w',
-                title: 'Ver. W features',
-                category: 'Recovery',
-                points: 0,
-                rawPoints: 0,
-                possiblePoints: 20,
-                currentPossiblePoints: 10,
-                completedCount: 0,
-                appUrl: '/surveys/feature_eval_w/answer',
-                canEarn: true,
-                availability: 'late',
-                capGroup: '',
-                capPoints: null,
-                gateSlug: '',
-                latePercent: 50,
-                priorityRating: 1,
-                status: 'pending',
-                note: 'Late submissions are still accepted. Current draft credit is 10 pts.',
-              },
-              {
-                key: 'manual:interview_signup',
-                kind: 'manual',
-                slug: 'interview_signup',
-                title: 'Interview signup',
-                category: 'Manual activities',
-                points: 0,
-                rawPoints: 0,
-                possiblePoints: 200,
-                currentPossiblePoints: 200,
-                completedCount: 0,
-                appUrl: 'https://calendly.com/jaewonkim/60min',
-                canEarn: true,
-                availability: 'available',
-                capGroup: '',
-                capPoints: null,
-                gateSlug: '',
-                latePercent: 100,
-                priorityRating: 0,
-                status: 'pending',
-                note: '',
-              },
-              {
-                key: 'manual:wit_bot_audit_phase_1',
-                kind: 'manual',
-                slug: 'wit_bot_audit_phase_1',
-                title: 'Wit_bot audit pass - Phase 1',
-                category: 'Manual activities',
-                points: 40,
-                rawPoints: 40,
-                possiblePoints: 40,
-                currentPossiblePoints: 40,
-                completedCount: 1,
-                appUrl: '/users/7/chat',
-                canEarn: false,
-                availability: 'available',
-                capGroup: '',
-                capPoints: null,
-                gateSlug: '',
-                latePercent: 100,
-                priorityRating: 2,
-                status: 'earned',
-                note: '',
-              },
-              {
-                key: 'survey:missed_survey',
-                kind: 'survey',
-                slug: 'missed_survey',
-                title: 'Missed survey',
-                category: 'Survey',
-                points: 0,
-                rawPoints: 0,
-                possiblePoints: 5,
-                currentPossiblePoints: 5,
-                completedCount: 0,
-                appUrl: '/surveys/missed_survey/answer',
-                canEarn: false,
-                availability: 'deadline',
-                capGroup: '',
-                capPoints: null,
-                gateSlug: '',
-                latePercent: 0,
-                priorityRating: 0,
-                status: 'missed',
-                note: 'The deadline has passed.',
-              },
-            ],
-            capRules: [],
-            gateRules: [],
-            lateRules: [],
-          },
-        };
-      }
-      if (key === '/surveys/reimbursement/') {
-        return {
-          data: {
-            provisional_total: 1,
-            adjusted_total: 1,
-            available_max: 1,
-            dollar_estimate_cents: 13,
-            points_per_dollar: 8,
-            awards: [],
-            pending_prereqs: [],
-          },
-        };
-      }
-      return { data: null };
-    });
+  it('renders a final frozen ledger and only the interview action', () => {
+    mockedUseSWR.mockReturnValue({ data: finalState });
 
     render(<Reimbursement />);
 
-    expect(screen.getByText('Reimbursement preview')).toBeInTheDocument();
-    expect(screen.getByText('50 pts')).toBeInTheDocument();
-    expect(screen.getByText('High Priority Surveys')).toBeInTheDocument();
-    expect(screen.getByText('Earn more points')).toBeInTheDocument();
-    expect(screen.getByText('Late credit')).toBeInTheDocument();
-    expect(screen.getByText('Prerequisite/Must Complete')).toBeInTheDocument();
-    expect(screen.getByText('Interview')).toBeInTheDocument();
-    expect(screen.queryByText('Interview signup')).not.toBeInTheDocument();
-    expect(screen.getAllByText('High Priority').length).toBeGreaterThan(0);
+    expect(screen.getByText('Final reimbursement')).toBeInTheDocument();
+    expect(screen.getByTestId('final-summary')).toHaveStyle({ flexShrink: '0' });
+    expect(screen.getByText('350 pts')).toBeInTheDocument();
+    expect(screen.getByText('$35.00 reimbursement')).toBeInTheDocument();
+    expect(screen.getByText('WIT bot and boss quiz - Phase 1 (Ver.Q)')).toBeInTheDocument();
+    expect(screen.getByText('Friend invitations')).toBeInTheDocument();
+    expect(screen.getByText('Not credited')).toBeInTheDocument();
+    expect(screen.getByText('Post-study survey')).toBeInTheDocument();
+    expect(screen.getByText('Good-faith survey audit exclusion.')).toBeInTheDocument();
     expect(
-      screen
-        .getAllByRole('link', { name: 'Take survey' })
-        .some((link) => link.getAttribute('href') === '/surveys/open_survey/answer'),
-    ).toBe(true);
-    const bodyText = document.body.textContent ?? '';
-    expect(bodyText.indexOf('High Priority Surveys')).toBeLessThan(
-      bodyText.indexOf('Earn more points'),
-    );
-    expect(bodyText.indexOf('Ver. W features')).toBeLessThan(bodyText.indexOf('Earn more points'));
-    expect(bodyText.indexOf('Interview')).toBeLessThan(bodyText.indexOf('Earn more points'));
-    expect(bodyText.indexOf('Open survey')).toBeGreaterThan(bodyText.indexOf('Earn more points'));
-    expect(screen.queryByText('1 / 1 pts')).not.toBeInTheDocument();
-    expect(screen.queryByText('Recovery')).not.toBeInTheDocument();
-    expect(screen.getByText('Points you earned')).toBeInTheDocument();
-    expect(screen.getByText('Need help with missed points?')).toBeInTheDocument();
-    expect(screen.queryByText('Wit_bot audit pass - Phase 1')).not.toBeInTheDocument();
-    expect(screen.queryByText('Missed survey')).not.toBeInTheDocument();
-    expect(mockedUseSWR).toHaveBeenCalledWith(
-      ['local-reimbursement-allocation-preview', 8],
-      expect.any(Function),
-    );
-    const showButtons = screen.getAllByRole('button', { name: 'Show' });
-    expect(showButtons).toHaveLength(2);
-    fireEvent.click(showButtons[0]);
-    expect(screen.getByText('Wit_bot audit pass - Phase 1')).toBeInTheDocument();
-    fireEvent.click(showButtons[1]);
-    expect(screen.getByText('Missed survey')).toBeInTheDocument();
-  });
-
-  it('renders the cached local allocation preview while refreshing in the background', () => {
-    mockShouldUseLocalAllocationPreview.mockReturnValue(true);
-    window.localStorage.setItem(
-      'local-reimbursement-allocation-preview:browser-cache:v2:8',
-      JSON.stringify({
-        db: { name: 'whoamitoday_merged', participantCount: 80 },
-        selectedUser: { id: 8, username: 'cached_participant', responseTotal: 4 },
-        pointsPerDollar: 10,
-        availableMax: 110,
-        earnedPoints: 25,
-        estimatedDollars: '2.50',
-        sourceCount: 0,
-        rows: [],
-        capRules: [],
-        gateRules: [],
-        lateRules: [],
-      }),
-    );
-    mockedUseSWR.mockReturnValue({ data: null });
-
-    render(<Reimbursement />);
-
-    expect(screen.queryByText('Loading your point allocation preview...')).not.toBeInTheDocument();
-    expect(screen.getByText('25 pts')).toBeInTheDocument();
-    expect(screen.getByText('~$2.50 estimated reimbursement')).toBeInTheDocument();
-  });
-
-  it('renders public reimbursement totals when allocation is open', () => {
-    mockedUseSWR.mockImplementation((key: string | readonly [string, number | null] | null) => {
-      if (key === '/surveys/reimbursement/') {
-        return {
-          data: {
-            provisional_total: 48,
-            adjusted_total: 45,
-            available_max: 100,
-            dollar_estimate_cents: 450,
-            points_per_dollar: 10,
-            awards: [
-              {
-                source_kind: 'survey',
-                source_slug: 'phase_1_reflection',
-                scheduled_survey_id: 12,
-                title_en: 'Phase 1 reflection',
-                title_ko: 'Phase 1 reflection',
-                cadence: 'endpoint',
-                window_start: '2026-05-17',
-                window_end: '2026-05-18',
-                awarded_points: 30,
-                adjusted_points: null,
-                effective_points: 30,
-                note: '',
-                submitted_at: '2026-05-18T12:00:00Z',
-              },
-              {
-                source_kind: 'app_usage',
-                source_slug: 'app_usage_phase_1',
-                scheduled_survey_id: null,
-                title_en: 'App usage - Phase 1',
-                title_ko: 'App usage - Phase 1',
-                cadence: null,
-                window_start: null,
-                window_end: null,
-                awarded_points: 18,
-                adjusted_points: 15,
-                effective_points: 15,
-                note: 'Adjusted after review.',
-                submitted_at: '2026-05-18T12:00:00Z',
-              },
-            ],
-            pending_prereqs: [
-              {
-                survey_slug: 'feature_eval_w',
-                scheduled_survey_id: 44,
-                title_en: 'How automatic is {{habit_platform_label}} for you?',
-                title_ko: 'How automatic is {{habit_platform_label}} for you?',
-                potential_points: 20,
-                prereq_slug: 'habit_platform',
-                prereq_title_en: 'Habitual platform',
-                prereq_title_ko: 'Habitual platform',
-              },
-            ],
-          },
-        };
-      }
-      if (key === '/surveys/index/') {
-        return {
-          data: {
-            available_now: [
-              {
-                id: 101,
-                cadence: 'endpoint',
-                sequence_index: 1,
-                sidebar_order: 1,
-                window_start: '2026-05-25',
-                window_end: '2026-05-30',
-                allow_late: true,
-                survey: {
-                  slug: 'open_survey',
-                  title_en: 'Open survey',
-                  title_ko: 'Open survey',
-                  priority: 20,
-                  editable: false,
-                  closed: false,
-                },
-                bucket: 'available_now',
-                user_answered: false,
-                submitted_at: null,
-                redirect_url: '/surveys/open_survey/answer',
-                results_unlocked: false,
-                draft: null,
-                point_value: 10,
-                point_locked_by_prereq_slug: null,
-                point_locked_by_prereq_title_en: null,
-                point_locked_by_prereq_title_ko: null,
-                point_award: null,
-              },
-              {
-                id: 102,
-                cadence: 'daily',
-                sequence_index: 2,
-                sidebar_order: 2,
-                window_start: '2026-05-25',
-                window_end: '2026-05-25',
-                allow_late: true,
-                survey: {
-                  slug: 'sotd_locked',
-                  title_en: 'How automatic is {{habit_platform_label}} for you?',
-                  title_ko: 'How automatic is {{habit_platform_label}} for you?',
-                  priority: 20,
-                  editable: false,
-                  closed: false,
-                },
-                bucket: 'available_now',
-                user_answered: false,
-                submitted_at: null,
-                redirect_url: '/surveys/sotd_locked/answer',
-                results_unlocked: false,
-                draft: null,
-                point_value: 10,
-                point_locked_by_prereq_slug: 'habit_platform',
-                point_locked_by_prereq_title_en: 'Habitual platform',
-                point_locked_by_prereq_title_ko: 'Habitual platform',
-                point_award: null,
-              },
-            ],
-            late_but_accepted: [],
-            completed: [],
-          },
-        };
-      }
-      return { data: null };
-    });
-
-    render(<Reimbursement />);
-
-    expect(screen.queryByText('To be updated')).not.toBeInTheDocument();
-    expect(screen.queryByText('Reimbursement details are being finalized')).not.toBeInTheDocument();
-    expect(screen.queryByText('What earns points')).not.toBeInTheDocument();
-    expect(screen.getByText('45 pts')).toBeInTheDocument();
-    expect(screen.getByText('~$4.50 estimated reimbursement')).toBeInTheDocument();
-    expect(
-      screen.getByText('10 pts = $1. Final reimbursement may change after study review.'),
+      screen.getByText(
+        'Surveys determined not to have been answered in good faith were not credited, even when the survey was completed.',
+      ),
     ).toBeInTheDocument();
-    expect(screen.getByText('Earn more points')).toBeInTheDocument();
-    expect(screen.getByText('Open survey')).toBeInTheDocument();
-    expect(screen.getByText('High Priority Surveys')).toBeInTheDocument();
-    expect((document.body.textContent ?? '').indexOf('High Priority Surveys')).toBeLessThan(
-      (document.body.textContent ?? '').indexOf('Earn more points'),
-    );
-    expect((document.body.textContent ?? '').indexOf('Interview')).toBeLessThan(
-      (document.body.textContent ?? '').indexOf('Earn more points'),
-    );
-    expect((document.body.textContent ?? '').indexOf('Open survey')).toBeGreaterThan(
-      (document.body.textContent ?? '').indexOf('Earn more points'),
-    );
-    expect((document.body.textContent ?? '').indexOf('Interview')).toBeLessThan(
-      (document.body.textContent ?? '').indexOf('Open survey'),
-    );
-    expect(screen.getByRole('link', { name: 'Take survey' })).toHaveAttribute(
-      'href',
-      '/surveys/open_survey/answer',
-    );
-    expect(screen.queryByText('Available later')).not.toBeInTheDocument();
-    expect(screen.getByText('Interview')).toBeInTheDocument();
-    expect(screen.queryByText('Interview signup')).not.toBeInTheDocument();
-    expect(screen.getByText('High Priority')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Sign up' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Sign up for interview' })).toHaveAttribute(
       'href',
       'https://calendly.com/jaewonkim/60min',
     );
-    expect(screen.getByText('Points you earned')).toBeInTheDocument();
-    expect(screen.queryByText('Phase 1 reflection')).not.toBeInTheDocument();
-    expect(screen.queryByText('App usage - Phase 1')).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Show' })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Show' }));
-    expect(screen.getByText('Phase 1 reflection')).toBeInTheDocument();
-    expect(screen.getByText('App usage - Phase 1')).toBeInTheDocument();
-    expect(screen.getByText('Adjusted after review.')).toBeInTheDocument();
-    expect(screen.getByText('15 pts')).toBeInTheDocument();
-    expect(screen.getByText('18 pts')).toBeInTheDocument();
-    expect(
-      screen.queryByText('How automatic is {{habit_platform_label}} for you?'),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/preview/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/provisional/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /take survey/i })).not.toBeInTheDocument();
+    expect(mockedUseSWR).toHaveBeenCalledTimes(1);
+    expect(mockedUseSWR).toHaveBeenCalledWith('/surveys/reimbursement/', expect.any(Function));
   });
 
-  it('does not render another participant cached local preview', () => {
-    mockShouldUseLocalAllocationPreview.mockReturnValue(true);
-    window.localStorage.setItem(
-      'local-reimbursement-allocation-preview:browser-cache:v2:75',
-      JSON.stringify({
-        db: { name: 'whoamitoday_merged', participantCount: 80 },
-        selectedUser: { id: 75, username: 'wrong_participant', responseTotal: 27 },
-        pointsPerDollar: 10,
-        availableMax: 100,
-        earnedPoints: 296,
-        estimatedDollars: '29.60',
-        sourceCount: 0,
-        rows: [],
-        capRules: [],
-        gateRules: [],
-        lateRules: [],
-      }),
-    );
-    mockedUseSWR.mockImplementation(() => ({ data: null }));
+  it('does not show interview signup after interview credit is recorded', () => {
+    mockedUseSWR.mockReturnValue({
+      data: {
+        ...finalState,
+        interview_opportunity: { completed: true, potential_points: 100, signup_url: null },
+      },
+    });
 
     render(<Reimbursement />);
 
-    expect(screen.getByText('Loading your point allocation preview...')).toBeInTheDocument();
-    expect(screen.queryByText('296 pts')).not.toBeInTheDocument();
-    expect(mockedUseSWR).toHaveBeenCalledWith(
-      ['local-reimbursement-allocation-preview', 8],
-      expect.any(Function),
-    );
+    expect(screen.queryByRole('link', { name: 'Sign up for interview' })).not.toBeInTheDocument();
   });
 
-  it('uses the default local allocation preview cache when no profile is loaded on localhost', () => {
-    mockMyProfile = null;
-    mockShouldUseLocalAllocationPreview.mockReturnValue(true);
-    window.localStorage.setItem(
-      'local-reimbursement-allocation-preview:browser-cache:v2:default',
-      JSON.stringify({
-        db: { name: 'whoamitoday_merged', participantCount: 80 },
-        selectedUser: { id: 8, username: 'default_participant', responseTotal: 4 },
-        pointsPerDollar: 10,
-        availableMax: 110,
-        earnedPoints: 25,
-        estimatedDollars: '2.50',
-        sourceCount: 0,
-        rows: [],
-        capRules: [],
-        gateRules: [],
-        lateRules: [],
-      }),
+  it('uses final language in both translation files with matching keys', () => {
+    const enKeys = Object.keys(en.reimbursement).sort();
+    const koKeys = Object.keys(ko.reimbursement).sort();
+
+    expect(koKeys).toEqual(enKeys);
+    expect(en.reimbursement.final_eyebrow).toBe('Final reimbursement');
+    expect(en.reimbursement.policy_notice).toBe(
+      'Surveys determined not to have been answered in good faith were not credited, even when the survey was completed.',
     );
-    mockedUseSWR.mockReturnValue({ data: null });
+    expect(Object.values(en.reimbursement).join(' ')).not.toMatch(/preview|provisional/i);
+  });
+
+  it('uses final language in the loading state', () => {
+    mockedUseSWR.mockReturnValue({ data: undefined });
 
     render(<Reimbursement />);
 
-    expect(screen.queryByText('Loading your point allocation preview...')).not.toBeInTheDocument();
-    expect(screen.getByText('25 pts')).toBeInTheDocument();
-    expect(mockedUseSWR).toHaveBeenCalledWith(
-      ['local-reimbursement-allocation-preview', null],
-      expect.any(Function),
-    );
-  });
-
-  it('fetches the profile before using the default local preview when an auth cookie exists', async () => {
-    mockMyProfile = null;
-    mockShouldUseLocalAllocationPreview.mockReturnValue(true);
-    mockGetMe.mockRejectedValue(new Error('offline'));
-    mockedUseSWR.mockReturnValue({ data: null });
-    document.cookie = 'access_token=test-token; path=/;';
-
-    render(<Reimbursement />);
-
-    expect(screen.getByText('Loading your point allocation preview...')).toBeInTheDocument();
-    await waitFor(() => expect(mockGetMe).toHaveBeenCalledTimes(1));
-    await waitFor(() =>
-      expect(mockedUseSWR).toHaveBeenCalledWith(
-        ['local-reimbursement-allocation-preview', null],
-        expect.any(Function),
-      ),
-    );
-  });
-
-  it('shows a production loading state instead of a blank page while totals load', () => {
-    mockedUseSWR.mockReturnValue({ data: null });
-
-    render(<Reimbursement />);
-
-    expect(screen.getByText('Reimbursement preview')).toBeInTheDocument();
-    expect(screen.getByText('Loading reimbursement details...')).toBeInTheDocument();
+    expect(screen.getByText('Loading reimbursement details…')).toBeInTheDocument();
+    expect(screen.queryByText(/preview/i)).not.toBeInTheDocument();
   });
 });

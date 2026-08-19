@@ -1,179 +1,147 @@
-import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
 import SubHeader from '@components/sub-header/SubHeader';
-import { Colors, Layout, Typo } from '@design-system';
+import { Colors } from '@design-system';
 import i18n from '@i18n/index';
-import { LocalAllocationPreview, LocalPreviewRow, ReimbursementAward } from '@models/reimbursement';
-import { SurveyIndexEntry, SurveyIndexResponse } from '@models/survey';
-import { useBoundStore } from '@stores/useBoundStore';
-import { getMe } from '@utils/apis/my';
-import {
-  getLocalAllocationPreview,
-  getReimbursementState,
-  LOCAL_ALLOCATION_PREVIEW_KEY,
-  REIMBURSEMENT_KEY,
-  shouldUseLocalAllocationPreview,
-} from '@utils/apis/reimbursement';
-import { getSurveyIndex } from '@utils/apis/survey';
+import { ReimbursementAward, ReimbursementState } from '@models/reimbursement';
+import { getReimbursementState, REIMBURSEMENT_KEY } from '@utils/apis/reimbursement';
 
-import { REIMBURSEMENT_POINTS_TBU } from '../../utils/reimbursementAvailability';
 import { MainScrollContainer } from '../Root';
-
-const PREVIEW_POINTS_PER_DOLLAR = 10;
-const INTERVIEW_SIGNUP_POINTS = 200;
-const INTERVIEW_SIGNUP_URL = 'https://calendly.com/jaewonkim/60min';
-const LOCAL_ALLOCATION_PREVIEW_BROWSER_CACHE_VERSION = 'v2';
-const VER_W_MUST_COMPLETE_PATTERN = /^feature_eval_w(?:_part\d+)?$/;
 
 const Page = styled.main`
   min-height: 100%;
-  padding: 12px 20px 140px;
+  padding: 16px 20px 140px;
   display: flex;
   flex-direction: column;
-  gap: 22px;
-  background: #fff;
-`;
+  gap: 24px;
+  background: ${Colors.WHITE};
 
-const SummaryCard = styled.section`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  border: 1px solid #d8c3ff;
-  border-radius: 8px;
-  background: #fbf8ff;
-  padding: 18px;
-`;
+  > * {
+    flex-shrink: 0;
+  }
 
-const TbuCard = styled.section`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  border: 1px solid #d8c3ff;
-  border-radius: 8px;
-  background: #fbf8ff;
-  padding: 20px;
-`;
-
-const NoticeCard = styled.section`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  border: 1px solid #ead48f;
-  border-radius: 8px;
-  background: #fff9e7;
-  padding: 14px 16px;
-`;
-
-const TbuTitle = styled.h1`
-  margin: 4px 0;
-  color: #1f1f1f;
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 1.2;
-`;
-
-const SummaryNumber = styled.h1`
-  margin: 8px 0 4px;
-  color: #1f1f1f;
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 1.1;
-`;
-
-const Section = styled.section`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  &:last-child {
-    margin-bottom: 28px;
+  @media (max-width: 340px) {
+    padding-inline: 14px;
   }
 `;
 
-const SectionHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+const FinalCard = styled.section`
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #d8c3ff;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #fbf8ff 0%, #f4ecff 100%);
+  padding: 22px 20px 20px;
 `;
 
-const ToggleButton = styled.button`
-  border: 1px solid ${Colors.LIGHT_GRAY};
+const FinalStamp = styled.span`
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border: 1px solid #8700ff;
   border-radius: 999px;
-  background: ${Colors.WHITE};
-  color: ${Colors.BLACK};
-  padding: 6px 12px;
-  font-size: 12px;
+  color: #6c00ca;
+  padding: 4px 9px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+`;
+
+const SummaryLabel = styled.p`
+  margin: 18px 0 0;
+  color: #5b5363;
+  font-size: 13px;
   font-weight: 700;
 `;
 
-const HelpSection = styled(Section)`
-  gap: 16px;
-  padding-bottom: 48px;
+const PointTotal = styled.h1`
+  margin: 4px 0 0;
+  color: #201927;
+  font-size: clamp(38px, 12vw, 52px);
+  font-weight: 850;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 `;
 
-const AwardList = styled.div`
-  width: 100%;
-  border: 1px solid ${Colors.LIGHT_GRAY};
-  border-radius: 8px;
+const DollarTotal = styled.p`
+  margin: 10px 0 0;
+  color: #201927;
+  font-size: 18px;
+  font-weight: 750;
+`;
+
+const Conversion = styled.p`
+  margin: 4px 0 0;
+  color: #6f6676;
+  font-size: 12px;
+  font-weight: 600;
+`;
+
+const PolicyCard = styled.aside`
+  border-left: 4px solid #d49a00;
+  border-radius: 4px 10px 10px 4px;
+  background: #fff8e2;
+  color: #4f411d;
+  padding: 13px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+`;
+
+const Section = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const SectionTitle = styled.h2`
+  margin: 0;
+  color: #201927;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+`;
+
+const Ledger = styled.div`
   overflow: hidden;
+  border: 1px solid ${Colors.LIGHT_GRAY};
+  border-radius: 10px;
+  background: ${Colors.WHITE};
 `;
 
-const AwardRow = styled.div`
-  width: 100%;
+const LedgerRow = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 12px;
-  padding: 12px 14px;
-  background: ${Colors.WHITE};
+  padding: 14px;
 
   & + & {
     border-top: 1px solid ${Colors.LIGHT_GRAY};
   }
 `;
 
-const RowMeta = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
+const AwardTitle = styled.h3`
+  margin: 0;
+  color: #201927;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.35;
 `;
 
-const MetaChip = styled.span`
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  background: #f3e8ff;
-  color: #8700ff;
-  padding: 3px 7px;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1.2;
+const AwardNote = styled.p`
+  margin: 5px 0 0;
+  color: ${Colors.DARK_GRAY};
+  font-size: 12px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
 `;
 
-const PointsMetaChip = styled(MetaChip)`
-  background: #eaf4ef;
-  color: #2f6b4f;
-`;
-
-const PriorityMetaChip = styled(MetaChip)<{ $level: 'must' | 'high' }>`
-  background: ${({ $level }) => ($level === 'must' ? '#fee2e2' : '#fff1f2')};
-  color: ${({ $level }) => ($level === 'must' ? '#991b1b' : '#be123c')};
-`;
-
-const DeadlineMetaChip = styled(MetaChip)`
-  background: #ffe8d5;
-  color: #c76a1f;
-`;
-
-const PointsCell = styled.div`
+const PointStack = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -181,625 +149,180 @@ const PointsCell = styled.div`
   white-space: nowrap;
 `;
 
-const ActionLink = styled.a`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 34px;
-  border-radius: 8px;
-  background: #8700ff;
-  color: #fff;
-  padding: 8px 12px;
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
-  white-space: nowrap;
+const AwardPoints = styled.strong<{ $zero?: boolean }>`
+  color: ${({ $zero }) => ($zero ? '#6f6676' : '#2f6b4f')};
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
 `;
 
 const OriginalPoints = styled.s`
-  color: #6f6f78;
-  font-size: 12px;
-  font-weight: 600;
+  color: #8a818f;
+  font-size: 11px;
+  font-weight: 650;
 `;
 
-const EmptySectionCard = styled.div`
-  width: 100%;
+const ReviewedLabel = styled.span`
+  color: #8b6100;
+  font-size: 10px;
+  font-weight: 750;
+`;
+
+const EmptyCard = styled.div`
   border: 1px solid ${Colors.LIGHT_GRAY};
-  border-radius: 8px;
+  border-radius: 10px;
   background: #fafafa;
-  padding: 12px 14px;
+  color: ${Colors.DARK_GRAY};
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.45;
 `;
 
-const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
+const InterviewCard = styled.section`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid #c8e1d4;
+  border-radius: 12px;
+  background: #f2faf6;
+  padding: 16px;
 
-const formatCurrency = (cents: number): string => (cents / 100).toFixed(2);
-
-const localAllocationPreviewBrowserCacheKey = (userId: number | null) =>
-  `${LOCAL_ALLOCATION_PREVIEW_KEY}:browser-cache:${LOCAL_ALLOCATION_PREVIEW_BROWSER_CACHE_VERSION}:${
-    userId ?? 'default'
-  }`;
-
-function hasAccessTokenCookie(): boolean {
-  if (typeof document === 'undefined') return false;
-  return /(?:^|;\s*)access_token=/.test(document.cookie);
-}
-
-function readCachedLocalAllocationPreview(userId: number | null): LocalAllocationPreview | null {
-  if (typeof window === 'undefined') return null;
-
-  try {
-    const cached = window.localStorage.getItem(localAllocationPreviewBrowserCacheKey(userId));
-    if (!cached) return null;
-
-    const preview = JSON.parse(cached) as LocalAllocationPreview;
-    return userId === null || preview.selectedUser?.id === userId ? preview : null;
-  } catch {
-    return null;
+  @media (max-width: 340px) {
+    grid-template-columns: 1fr;
   }
-}
+`;
 
-function writeCachedLocalAllocationPreview(
-  preview: LocalAllocationPreview,
-  requestedUserId: number | null,
-): void {
-  if (typeof window === 'undefined') return;
+const InterviewTitle = styled.h2`
+  margin: 0;
+  color: #193b2b;
+  font-size: 16px;
+  font-weight: 800;
+`;
 
-  try {
-    window.localStorage.setItem(
-      localAllocationPreviewBrowserCacheKey(requestedUserId),
-      JSON.stringify(preview),
-    );
-  } catch {
-    // Browser storage is best-effort only; the live preview can still render.
+const InterviewBody = styled.p`
+  margin: 5px 0 0;
+  color: #355c49;
+  font-size: 12px;
+  line-height: 1.45;
+`;
+
+const InterviewLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  border-radius: 8px;
+  background: #6f00d2;
+  color: ${Colors.WHITE};
+  padding: 9px 13px;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:focus-visible {
+    outline: 3px solid #d8c3ff;
+    outline-offset: 2px;
   }
-}
+`;
 
-function actionText(row: LocalPreviewRow): string {
-  if (row.status === 'locked' && row.gateSlug) return 'Do prereq';
-  if (row.kind === 'survey') return 'Take survey';
-  if (row.slug.startsWith('wit_bot_audit')) return 'Open WIT chat';
-  if (row.slug === 'interview_signup') return 'Sign up';
-  if (row.slug === 'friend_invite') return 'Invite friends';
-  return 'Open';
-}
+const LoadingCard = styled.div`
+  border: 1px solid ${Colors.LIGHT_GRAY};
+  border-radius: 10px;
+  color: ${Colors.DARK_GRAY};
+  padding: 18px;
+  font-size: 14px;
+`;
 
-function missedCopy(row: LocalPreviewRow): string {
-  if (row.slug === 'friend_invite') {
-    return 'Friend invite reimbursement details will be updated.';
-  }
-  if (row.note.toLowerCase().includes('deadline')) {
-    return 'The deadline has passed. Ask an admin if you think this should still count.';
-  }
-  return 'This may need admin review before points can count.';
-}
+const pickLocalized = (award: ReimbursementAward) =>
+  i18n.language === 'ko' ? award.title_ko : award.title_en;
 
-function currentPossiblePoints(row: LocalPreviewRow): number {
-  return row.currentPossiblePoints ?? row.possiblePoints;
-}
+const formatCurrency = (cents: number) => (cents / 100).toFixed(2);
 
-function actionRowPriorityRank(row: LocalPreviewRow): number {
-  if (row.priorityRating === 1) return 0;
-  if (row.priorityRating === 2) return 1;
-  return 2;
-}
-
-function sortActionRows(rows: LocalPreviewRow[]): LocalPreviewRow[] {
-  return rows
-    .map((row, index) => ({ row, index }))
-    .sort(
-      (a, b) =>
-        actionRowPriorityRank(a.row) - actionRowPriorityRank(b.row) ||
-        currentPossiblePoints(b.row) - currentPossiblePoints(a.row) ||
-        a.index - b.index,
-    )
-    .map(({ row }) => row);
-}
-
-function isHighPriorityActionRow(row: LocalPreviewRow): boolean {
-  return row.priorityRating === 1 || row.priorityRating === 2;
-}
-
-function splitActionRows(rows: LocalPreviewRow[]): {
-  highPriorityRows: LocalPreviewRow[];
-  regularRows: LocalPreviewRow[];
-} {
-  return {
-    highPriorityRows: rows.filter(isHighPriorityActionRow),
-    regularRows: rows.filter((row) => !isHighPriorityActionRow(row)),
-  };
-}
-
-function shouldShowCategoryBadge(category: string): boolean {
-  return category.trim().toLowerCase() !== 'recovery';
-}
-
-function PreviewRowBadges({ row }: { row: LocalPreviewRow }) {
-  const { t } = useTranslation('translation', { keyPrefix: 'deadline_badge' });
-  const displayPoints = currentPossiblePoints(row);
-
-  return (
-    <RowMeta>
-      {shouldShowCategoryBadge(row.category) && <MetaChip>{row.category}</MetaChip>}
-      <PointsMetaChip>+{displayPoints} pts</PointsMetaChip>
-      {row.priorityRating === 1 && (
-        <PriorityMetaChip $level="must">Prerequisite/Must Complete</PriorityMetaChip>
-      )}
-      {row.priorityRating === 2 && <PriorityMetaChip $level="high">High Priority</PriorityMetaChip>}
-      {row.availability === 'late' && <DeadlineMetaChip>Late credit</DeadlineMetaChip>}
-      {row.availability === 'deadline' && (
-        <DeadlineMetaChip>⏰ {t('deadline_passed')}</DeadlineMetaChip>
-      )}
-    </RowMeta>
-  );
-}
-
-function EarnedRows({ rows }: { rows: LocalPreviewRow[] }) {
-  const [isHidden, setIsHidden] = useState(true);
-
-  if (rows.length === 0) return null;
-
-  return (
-    <Section>
-      <SectionHeader>
-        <Typo type="title-medium" color="BLACK">
-          Points you earned
-        </Typo>
-        <ToggleButton
-          type="button"
-          aria-expanded={!isHidden}
-          onClick={() => setIsHidden((current) => !current)}
-        >
-          {isHidden ? 'Show' : 'Hide'}
-        </ToggleButton>
-      </SectionHeader>
-      {!isHidden && (
-        <AwardList>
-          {rows.map((row) => (
-            <AwardRow key={row.key}>
-              <Layout.FlexCol gap={3}>
-                <Typo type="body-medium" color="BLACK">
-                  {row.title}
-                </Typo>
-                <PreviewRowBadges row={row} />
-                {row.note && (
-                  <Typo type="label-medium" color="DARK_GRAY">
-                    {row.note}
-                  </Typo>
-                )}
-              </Layout.FlexCol>
-              <PointsCell>
-                <Typo type="title-medium" color="BLACK">
-                  {row.points} pts
-                </Typo>
-                {row.rawPoints !== row.points && (
-                  <OriginalPoints>{row.rawPoints} pts</OriginalPoints>
-                )}
-              </PointsCell>
-            </AwardRow>
-          ))}
-        </AwardList>
-      )}
-    </Section>
-  );
-}
-
-function ActionRows({ title, rows }: { title: string; rows: LocalPreviewRow[] }) {
-  if (rows.length === 0) return null;
-
-  return (
-    <Section>
-      <Typo type="title-medium" color="BLACK">
-        {title}
-      </Typo>
-      <AwardList>
-        {rows.map((row) => (
-          <AwardRow key={row.key}>
-            <Layout.FlexCol gap={4}>
-              <Typo type="body-medium" color="BLACK">
-                {row.title}
-              </Typo>
-              <PreviewRowBadges row={row} />
-              <Typo type="label-medium" color="DARK_GRAY">
-                {row.status === 'locked' && row.gateSlug
-                  ? row.note
-                  : row.availability === 'late'
-                  ? row.note ||
-                    `Late submissions are still accepted. Current draft credit is ${currentPossiblePoints(
-                      row,
-                    )} pts.`
-                  : `Complete this to earn ${currentPossiblePoints(row)} pts.`}
-              </Typo>
-            </Layout.FlexCol>
-            <PointsCell>
-              <Typo type="title-medium" color="BLACK">
-                +{currentPossiblePoints(row)} pts
-              </Typo>
-              {row.appUrl && <ActionLink href={row.appUrl}>{actionText(row)}</ActionLink>}
-            </PointsCell>
-          </AwardRow>
-        ))}
-      </AwardList>
-    </Section>
-  );
-}
-
-function HelpRows({ rows }: { rows: LocalPreviewRow[] }) {
-  const [isHidden, setIsHidden] = useState(true);
-
-  if (rows.length === 0) return null;
-
-  return (
-    <HelpSection>
-      <SectionHeader>
-        <Typo type="title-medium" color="BLACK">
-          Need help with missed points?
-        </Typo>
-        <ToggleButton
-          type="button"
-          aria-expanded={!isHidden}
-          onClick={() => setIsHidden((current) => !current)}
-        >
-          {isHidden ? 'Show' : 'Hide'}
-        </ToggleButton>
-      </SectionHeader>
-      {!isHidden && (
-        <AwardList>
-          {rows.map((row) => (
-            <AwardRow key={row.key}>
-              <Layout.FlexCol gap={4}>
-                <Typo type="body-medium" color="BLACK">
-                  {row.title}
-                </Typo>
-                <PreviewRowBadges row={row} />
-                <Typo type="label-medium" color="DARK_GRAY">
-                  {missedCopy(row)}
-                </Typo>
-              </Layout.FlexCol>
-              <PointsCell>
-                <Typo type="title-medium" color="BLACK">
-                  {row.possiblePoints} pts
-                </Typo>
-                {row.slug === 'friend_invite' ? (
-                  <Typo type="label-medium" color="DARK_GRAY">
-                    Will be updated
-                  </Typo>
-                ) : (
-                  <ActionLink href="/chats">Ask admin</ActionLink>
-                )}
-              </PointsCell>
-            </AwardRow>
-          ))}
-        </AwardList>
-      )}
-    </HelpSection>
-  );
-}
-
-function UpcomingRows({ rows }: { rows: LocalPreviewRow[] }) {
-  if (rows.length === 0) return null;
-
-  return (
-    <Section>
-      <Typo type="title-medium" color="BLACK">
-        Available later
-      </Typo>
-      <AwardList>
-        {rows.map((row) => (
-          <AwardRow key={row.key}>
-            <Layout.FlexCol gap={4}>
-              <Typo type="body-medium" color="BLACK">
-                {row.title}
-              </Typo>
-              <PreviewRowBadges row={row} />
-              <Typo type="label-medium" color="DARK_GRAY">
-                This activity is not open yet. Check back later.
-              </Typo>
-            </Layout.FlexCol>
-            <PointsCell>
-              <Typo type="title-medium" color="BLACK">
-                {row.possiblePoints} pts
-              </Typo>
-            </PointsCell>
-          </AwardRow>
-        ))}
-      </AwardList>
-    </Section>
-  );
-}
-
-function EmptyActionSection() {
-  return (
-    <Section>
-      <Typo type="title-medium" color="BLACK">
-        Earn more points
-      </Typo>
-      <EmptySectionCard>
-        <Typo type="body-medium" color="DARK_GRAY">
-          No point-earning activities are open right now. Check the Surveys page for updates.
-        </Typo>
-      </EmptySectionCard>
-    </Section>
-  );
-}
-
-function categoryForSurvey(entry: SurveyIndexEntry): string {
-  if (entry.cadence === 'daily') return 'Daily diary';
-  if (entry.cadence === 'weekly' || entry.cadence === 'anytime') return 'Weekly / anytime';
-  if (entry.cadence === 'endpoint' || entry.cadence === 'biweekly') {
-    return 'Phase / feature surveys';
-  }
-  return 'Survey';
-}
-
-function priorityRatingForSlug(slug: string): number {
-  if (VER_W_MUST_COMPLETE_PATTERN.test(slug)) return 1;
-  if (
-    [
-      'phase1_friend_closeness',
-      'phase2_friend_closeness',
-      'goal_comparison_p1',
-      'goal_comparison_p2',
-      'mid_study_w',
-      'mid_study_q',
-      'post_study_w',
-      'post_study_q',
-    ].includes(slug)
-  ) {
-    return 2;
-  }
-  return 0;
-}
-
-function surveyEntryToPreviewRow(
-  entry: SurveyIndexEntry,
-  openSurveySlugs: Set<string>,
-): LocalPreviewRow | null {
-  if (entry.point_value <= 0 || entry.point_award) return null;
-
-  const prereqSlug = entry.point_locked_by_prereq_slug || '';
-  if (prereqSlug && !openSurveySlugs.has(prereqSlug)) return null;
-
-  const lockedByAvailablePrereq = !!prereqSlug;
-  const appUrl = lockedByAvailablePrereq
-    ? `/surveys/${encodeURIComponent(prereqSlug)}/answer`
-    : entry.redirect_url;
-
-  return {
-    key: `survey:${entry.id}`,
-    kind: 'survey',
-    slug: entry.survey.slug,
-    title: pickLocalized(entry.survey.title_en, entry.survey.title_ko),
-    category: categoryForSurvey(entry),
-    points: 0,
-    rawPoints: 0,
-    possiblePoints: entry.point_value,
-    currentPossiblePoints: entry.point_value,
-    completedCount: 0,
-    appUrl,
-    canEarn: true,
-    availability: entry.bucket === 'late_but_accepted' ? 'late' : 'available',
-    capGroup: '',
-    capPoints: null,
-    gateSlug: prereqSlug,
-    latePercent: 100,
-    priorityRating: priorityRatingForSlug(entry.survey.slug),
-    status: lockedByAvailablePrereq ? 'locked' : 'pending',
-    note: lockedByAvailablePrereq
-      ? `Complete ${pickLocalized(
-          entry.point_locked_by_prereq_title_en || prereqSlug,
-          entry.point_locked_by_prereq_title_ko || prereqSlug,
-        )} first so this survey can count for points.`
-      : '',
-  };
-}
-
-function awardToPreviewRow(award: ReimbursementAward): LocalPreviewRow {
-  const adjusted = award.adjusted_points !== null && award.adjusted_points !== award.awarded_points;
-  const category =
-    award.source_kind === 'survey'
-      ? 'Surveys'
-      : award.source_kind === 'app_usage'
-      ? 'App usage'
-      : 'Other activities';
-
-  return {
-    key: `${award.source_kind}:${award.source_slug}:${award.scheduled_survey_id || 'manual'}`,
-    kind: award.source_kind === 'survey' ? 'survey' : 'manual',
-    slug: award.source_slug,
-    title:
-      award.source_slug === 'interview_signup'
-        ? 'Interview'
-        : pickLocalized(award.title_en, award.title_ko),
-    category,
-    points: award.effective_points,
-    rawPoints: adjusted ? award.awarded_points : award.effective_points,
-    possiblePoints: Math.max(award.awarded_points, award.effective_points),
-    currentPossiblePoints: award.effective_points,
-    completedCount: 1,
-    appUrl: '',
-    canEarn: false,
-    availability: 'no_action',
-    capGroup: '',
-    capPoints: null,
-    gateSlug: '',
-    latePercent: 100,
-    priorityRating: 0,
-    status: 'earned',
-    note: award.note,
-  };
-}
-
-function normalizePreviewRow(row: LocalPreviewRow): LocalPreviewRow {
-  if (row.slug !== 'interview_signup') return row;
-  return {
-    ...row,
-    title: 'Interview',
-    priorityRating: 2,
-  };
-}
-
-function interviewSignupActionRow(hasInterviewAward: boolean): LocalPreviewRow[] {
-  if (hasInterviewAward) return [];
-  return [
-    {
-      key: 'manual:interview_signup',
-      kind: 'manual',
-      slug: 'interview_signup',
-      title: 'Interview',
-      category: 'Other activities',
-      points: 0,
-      rawPoints: 0,
-      possiblePoints: INTERVIEW_SIGNUP_POINTS,
-      currentPossiblePoints: INTERVIEW_SIGNUP_POINTS,
-      completedCount: 0,
-      appUrl: INTERVIEW_SIGNUP_URL,
-      canEarn: true,
-      availability: 'available',
-      capGroup: '',
-      capPoints: null,
-      gateSlug: '',
-      latePercent: 100,
-      priorityRating: 2,
-      status: 'pending',
-      note: 'Sign up for a study interview to earn 200 pts.',
-    },
-  ];
-}
-
-function ProductionReimbursementPage({
-  data,
-  surveyIndex,
-}: {
-  data: NonNullable<Awaited<ReturnType<typeof getReimbursementState>>>;
-  surveyIndex: SurveyIndexResponse | undefined;
-}) {
+function AwardRows({ awards }: { awards: ReimbursementAward[] }) {
   const { t } = useTranslation('translation', { keyPrefix: 'reimbursement' });
-  const openSurveyEntries = [
-    ...(surveyIndex?.available_now || []),
-    ...(surveyIndex?.late_but_accepted || []),
-  ];
-  const openSurveySlugs = new Set(openSurveyEntries.map((entry) => entry.survey.slug));
-  const earnMoreRows = openSurveyEntries
-    .map((entry) => surveyEntryToPreviewRow(entry, openSurveySlugs))
-    .filter((row): row is LocalPreviewRow => row !== null);
-  const earnedRows = data.awards.map(awardToPreviewRow);
-  const hasInterviewAward = data.awards.some((award) => award.source_slug === 'interview_signup');
-  earnMoreRows.push(...interviewSignupActionRow(hasInterviewAward));
-  const sortedEarnMoreRows = sortActionRows(earnMoreRows);
-  const { highPriorityRows, regularRows } = splitActionRows(sortedEarnMoreRows);
-  const upcomingRows: LocalPreviewRow[] = [];
-  const hasSurveyIndex = !!surveyIndex;
+
+  return (
+    <Ledger>
+      {awards.map((award) => {
+        const adjusted =
+          award.adjusted_points !== null && award.adjusted_points !== award.awarded_points;
+        return (
+          <LedgerRow
+            key={`${award.source_kind}:${award.source_slug}:${
+              award.scheduled_survey_id ?? award.submitted_at
+            }`}
+          >
+            <div>
+              <AwardTitle>{pickLocalized(award)}</AwardTitle>
+              {award.note && <AwardNote>{award.note}</AwardNote>}
+            </div>
+            <PointStack>
+              <AwardPoints $zero={award.effective_points === 0}>
+                {award.effective_points} pts
+              </AwardPoints>
+              {adjusted && <OriginalPoints>{award.awarded_points} pts</OriginalPoints>}
+              {adjusted && <ReviewedLabel>{t('adjusted_label')}</ReviewedLabel>}
+            </PointStack>
+          </LedgerRow>
+        );
+      })}
+    </Ledger>
+  );
+}
+
+function FinalReimbursementPage({ data }: { data: ReimbursementState }) {
+  const { t } = useTranslation('translation', { keyPrefix: 'reimbursement' });
+  const credited = data.awards.filter((award) => award.effective_points > 0);
+  const notCredited = data.awards.filter((award) => award.effective_points === 0);
+  const interview = data.interview_opportunity;
 
   return (
     <MainScrollContainer>
       <SubHeader title={i18n.t('header.reimbursement')} />
       <Page aria-labelledby="reimbursement-title">
-        <NoticeCard>
-          <Typo type="label-large" color="PRIMARY">
-            {t('local_preview_notice_title')}
-          </Typo>
-          <Typo type="body-medium" color="DARK_GRAY">
-            {t('local_preview_notice_body')}
-          </Typo>
-        </NoticeCard>
+        <FinalCard data-testid="final-summary">
+          <FinalStamp>{t('final_eyebrow')}</FinalStamp>
+          <SummaryLabel>{t('final_points_label')}</SummaryLabel>
+          <PointTotal id="reimbursement-title">{data.adjusted_total} pts</PointTotal>
+          <DollarTotal>
+            {t('dollar_total_label', { amount: formatCurrency(data.dollar_estimate_cents) })}
+          </DollarTotal>
+          <Conversion>{t('conversion_rate', { points: data.points_per_dollar })}</Conversion>
+        </FinalCard>
 
-        <SummaryCard>
-          <Typo type="label-large" color="PRIMARY">
-            {t('summary_title')}
-          </Typo>
-          <SummaryNumber id="reimbursement-title">{data.adjusted_total} pts</SummaryNumber>
-          <Typo type="title-medium" color="BLACK">
-            {t('dollar_estimate_label', {
-              amount: formatCurrency(data.dollar_estimate_cents),
-            })}
-          </Typo>
-          <Typo type="body-medium" color="DARK_GRAY">
-            {data.points_per_dollar} pts = $1. Final reimbursement may change after study review.
-          </Typo>
-          <Typo type="label-medium" color="DARK_GRAY">
-            {t('study_max_note_body')}
-          </Typo>
-        </SummaryCard>
+        <PolicyCard>{t('policy_notice')}</PolicyCard>
 
-        {hasSurveyIndex && sortedEarnMoreRows.length === 0 ? (
-          <EmptyActionSection />
-        ) : (
-          <>
-            <ActionRows title="High Priority Surveys" rows={highPriorityRows} />
-            <ActionRows title="Earn more points" rows={regularRows} />
-          </>
+        {interview && !interview.completed && interview.signup_url && (
+          <InterviewCard>
+            <div>
+              <InterviewTitle>{t('interview_title')}</InterviewTitle>
+              <InterviewBody>
+                {t('interview_body', { points: interview.potential_points })}
+              </InterviewBody>
+            </div>
+            <InterviewLink href={interview.signup_url} target="_blank" rel="noreferrer">
+              {t('interview_action')}
+            </InterviewLink>
+          </InterviewCard>
         )}
-        <UpcomingRows rows={upcomingRows} />
-        <EarnedRows rows={earnedRows} />
-      </Page>
-    </MainScrollContainer>
-  );
-}
 
-function LocalAllocationPreviewPage({ preview }: { preview: LocalAllocationPreview }) {
-  const { t } = useTranslation('translation', { keyPrefix: 'reimbursement' });
-  const rows = preview.rows.map(normalizePreviewRow);
-  const earnedRows = rows.filter((row) => row.points > 0);
-  const earnMoreRows = sortActionRows(rows.filter((row) => row.points === 0 && row.canEarn));
-  const { highPriorityRows, regularRows } = splitActionRows(earnMoreRows);
-  const upcomingRows = rows.filter((row) => row.points === 0 && row.availability === 'future');
-  const helpRows = rows.filter(
-    (row) => row.points === 0 && !row.canEarn && row.availability !== 'future',
-  );
-  const pointsPerDollar = preview.pointsPerDollar || PREVIEW_POINTS_PER_DOLLAR;
+        <Section>
+          <SectionTitle>{t('credited_title')}</SectionTitle>
+          {credited.length > 0 ? (
+            <AwardRows awards={credited} />
+          ) : (
+            <EmptyCard>{t('empty_credited')}</EmptyCard>
+          )}
+        </Section>
 
-  return (
-    <MainScrollContainer>
-      <SubHeader title={i18n.t('header.reimbursement')} />
-      <Page aria-labelledby="reimbursement-title">
-        <NoticeCard>
-          <Typo type="label-large" color="PRIMARY">
-            {t('local_preview_notice_title')}
-          </Typo>
-          <Typo type="body-medium" color="DARK_GRAY">
-            {t('local_preview_notice_body')}
-          </Typo>
-        </NoticeCard>
-
-        <SummaryCard>
-          <Typo type="label-large" color="PRIMARY">
-            {t('summary_title')}
-          </Typo>
-          <SummaryNumber id="reimbursement-title">{preview.earnedPoints} pts</SummaryNumber>
-          <Typo type="title-medium" color="BLACK">
-            {t('dollar_estimate_label', { amount: preview.estimatedDollars })}
-          </Typo>
-          <Typo type="body-medium" color="DARK_GRAY">
-            {pointsPerDollar} pts = $1. Final reimbursement may change after study review.
-          </Typo>
-          <Typo type="label-medium" color="DARK_GRAY">
-            {t('study_max_note_body')}
-          </Typo>
-        </SummaryCard>
-
-        <ActionRows title="High Priority Surveys" rows={highPriorityRows} />
-        <ActionRows title="Earn more points" rows={regularRows} />
-        <UpcomingRows rows={upcomingRows} />
-        <EarnedRows rows={earnedRows} />
-        <HelpRows rows={helpRows} />
-      </Page>
-    </MainScrollContainer>
-  );
-}
-
-function ReimbursementLoadingPage({ message }: { message: string }) {
-  return (
-    <MainScrollContainer>
-      <SubHeader title={i18n.t('header.reimbursement')} />
-      <Page aria-labelledby="reimbursement-title">
-        <NoticeCard>
-          <Typo type="label-large" color="PRIMARY">
-            Reimbursement preview
-          </Typo>
-          <Typo type="body-medium" color="DARK_GRAY">
-            {message}
-          </Typo>
-        </NoticeCard>
+        {notCredited.length > 0 && (
+          <Section>
+            <SectionTitle>{t('not_credited_title')}</SectionTitle>
+            <AwardRows awards={notCredited} />
+          </Section>
+        )}
       </Page>
     </MainScrollContainer>
   );
@@ -807,85 +330,20 @@ function ReimbursementLoadingPage({ message }: { message: string }) {
 
 function Reimbursement() {
   const { t } = useTranslation('translation', { keyPrefix: 'reimbursement' });
-  const myProfile = useBoundStore((state) => state.myProfile);
-  const localPreviewUserId = myProfile?.id ?? null;
-  const useLocalPreview = shouldUseLocalAllocationPreview();
-  const [localPreviewProfileLoadFailed, setLocalPreviewProfileLoadFailed] = useState(false);
-  const hasAccessToken = hasAccessTokenCookie();
-  const shouldWaitForLocalPreviewProfile =
-    useLocalPreview &&
-    localPreviewUserId === null &&
-    hasAccessToken &&
-    !localPreviewProfileLoadFailed;
-  const localPreviewFallback = useMemo(
-    () =>
-      useLocalPreview && !shouldWaitForLocalPreviewProfile
-        ? readCachedLocalAllocationPreview(localPreviewUserId)
-        : null,
-    [localPreviewUserId, shouldWaitForLocalPreviewProfile, useLocalPreview],
-  );
-  const { data } = useSWR(
-    REIMBURSEMENT_POINTS_TBU || useLocalPreview ? null : REIMBURSEMENT_KEY,
-    getReimbursementState,
-  );
-  const { data: surveyIndex } = useSWR(
-    REIMBURSEMENT_POINTS_TBU || useLocalPreview ? null : '/surveys/index/',
-    getSurveyIndex,
-  );
-  const { data: localPreview } = useSWR(
-    useLocalPreview && !shouldWaitForLocalPreviewProfile
-      ? [LOCAL_ALLOCATION_PREVIEW_KEY, localPreviewUserId]
-      : null,
-    getLocalAllocationPreview,
-  );
-  const resolvedLocalPreview = localPreview ?? localPreviewFallback;
+  const { data } = useSWR(REIMBURSEMENT_KEY, getReimbursementState);
 
-  useEffect(() => {
-    if (!useLocalPreview || localPreviewUserId !== null || !hasAccessToken) return;
-    if (localPreviewProfileLoadFailed) return;
-
-    let cancelled = false;
-    getMe().catch(() => {
-      if (!cancelled) setLocalPreviewProfileLoadFailed(true);
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [hasAccessToken, localPreviewProfileLoadFailed, localPreviewUserId, useLocalPreview]);
-
-  useEffect(() => {
-    if (!useLocalPreview || !localPreview) return;
-
-    writeCachedLocalAllocationPreview(localPreview, localPreviewUserId);
-  }, [localPreview, localPreviewUserId, useLocalPreview]);
-
-  if (resolvedLocalPreview) return <LocalAllocationPreviewPage preview={resolvedLocalPreview} />;
-  if (useLocalPreview) {
-    return <ReimbursementLoadingPage message="Loading your point allocation preview..." />;
-  }
-
-  if (REIMBURSEMENT_POINTS_TBU) {
+  if (!data) {
     return (
       <MainScrollContainer>
         <SubHeader title={i18n.t('header.reimbursement')} />
         <Page aria-labelledby="reimbursement-title">
-          <TbuCard>
-            <Typo type="label-large" color="PRIMARY">
-              {t('tbu_eyebrow')}
-            </Typo>
-            <TbuTitle id="reimbursement-title">{t('tbu_title')}</TbuTitle>
-            <Typo type="body-medium" color="DARK_GRAY">
-              {t('tbu_body')}
-            </Typo>
-          </TbuCard>
+          <LoadingCard id="reimbursement-title">{t('loading')}</LoadingCard>
         </Page>
       </MainScrollContainer>
     );
   }
 
-  if (!data) return <ReimbursementLoadingPage message="Loading reimbursement details..." />;
-  return <ProductionReimbursementPage data={data} surveyIndex={surveyIndex} />;
+  return <FinalReimbursementPage data={data} />;
 }
 
 export default Reimbursement;

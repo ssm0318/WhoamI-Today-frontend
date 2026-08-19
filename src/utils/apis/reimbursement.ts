@@ -1,6 +1,5 @@
 import { LocalAllocationPreview, ReimbursementState } from '@models/reimbursement';
 
-import { REIMBURSEMENT_POINTS_TBU } from '../reimbursementAvailability';
 import axios from './axios';
 
 export const REIMBURSEMENT_KEY = '/surveys/reimbursement/';
@@ -12,9 +11,7 @@ export const shouldUseLocalAllocationPreview = (): boolean =>
   typeof window !== 'undefined' &&
   ['localhost', '127.0.0.1'].includes(window.location.hostname);
 
-export const getReimbursementState = async (): Promise<ReimbursementState | null> => {
-  if (REIMBURSEMENT_POINTS_TBU) return null;
-
+export const getReimbursementState = async (): Promise<ReimbursementState> => {
   const { data } = await axios.get<ReimbursementState>(REIMBURSEMENT_KEY);
   return data;
 };
