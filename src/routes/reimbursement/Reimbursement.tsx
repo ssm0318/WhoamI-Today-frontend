@@ -356,7 +356,10 @@ function FinalReimbursementPage({ data }: { data: ReimbursementState }) {
             <div>
               <InterviewTitle>{t('interview_title')}</InterviewTitle>
               <InterviewBody>
-                {t('interview_body', { points: interview.potential_points })}
+                {t('interview_body', {
+                  points: interview.potential_points,
+                  dollars: interview.potential_dollar_cents / 100,
+                })}
               </InterviewBody>
               <InterviewDeadline>{t('interview_deadline')}</InterviewDeadline>
             </div>

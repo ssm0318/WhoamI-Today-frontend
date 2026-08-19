@@ -26,7 +26,7 @@ jest.mock('react-i18next', () => ({
         not_credited_title: 'Not credited',
         adjusted_label: 'Reviewed',
         interview_title: 'Study interview',
-        interview_body: `Complete the interview to earn ${options?.points} pts.`,
+        interview_body: `Complete the interview to earn ${options?.points} pts (+$${options?.dollars}).`,
         interview_deadline: 'Interview signup is available through August 31, 2026.',
         interview_action: 'Sign up for interview',
         dropout_title: 'Dropout survey',
@@ -151,7 +151,8 @@ const finalState = {
   pending_prereqs: [],
   interview_opportunity: {
     completed: false,
-    potential_points: 100,
+    potential_points: 200,
+    potential_dollar_cents: 2000,
     signup_url: 'https://calendly.com/jaewonkim/60min',
     signup_deadline: '2026-08-31',
   },
@@ -195,6 +196,7 @@ describe('Reimbursement', () => {
     expect(
       screen.getByText('Interview signup is available through August 31, 2026.'),
     ).toBeInTheDocument();
+    expect(screen.getByText('Complete the interview to earn 200 pts (+$20).')).toBeInTheDocument();
     const interviewHeading = screen.getByText('Study interview');
     const dropoutHeading = screen.getByText('Dropout survey');
     const pointsHeading = screen.getByText('Points you earned');
@@ -224,7 +226,8 @@ describe('Reimbursement', () => {
         ...finalState,
         interview_opportunity: {
           completed: true,
-          potential_points: 100,
+          potential_points: 200,
+          potential_dollar_cents: 2000,
           signup_url: null,
           signup_deadline: '2026-08-31',
         },
@@ -269,6 +272,9 @@ describe('Reimbursement', () => {
       ['Complete the dropout survey to earn ', '{{points}}', ' pts (+$', '{{dollars}}', ').'].join(
         '',
       ),
+    );
+    expect(en.reimbursement.interview_body).toBe(
+      ['Complete the interview to earn ', '{{points}}', ' pts (+$', '{{dollars}}', ').'].join(''),
     );
     expect(Object.values(en.reimbursement).join(' ')).not.toMatch(/preview|provisional/i);
   });

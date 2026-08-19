@@ -1460,7 +1460,7 @@
         "not_credited_title": "Not credited",
         "adjusted_label": "Reviewed",
         "interview_title": "Study interview",
-        "interview_body": "Complete the interview to earn {{points}} pts.",
+        "interview_body": "Complete the interview to earn {{points}} pts (+${{dollars}}).",
         "interview_deadline": "Interview signup is available through August 31, 2026.",
         "interview_action": "Sign up for interview",
         "dropout_title": "Dropout survey",

@@ -49,6 +49,7 @@ export interface ReimbursementState {
   interview_opportunity: {
     completed: boolean;
     potential_points: number;
+    potential_dollar_cents: number;
     signup_url: string | null;
     signup_deadline: string;
   };
