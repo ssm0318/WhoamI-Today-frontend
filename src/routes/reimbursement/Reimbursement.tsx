@@ -82,6 +82,14 @@ const Conversion = styled.p`
   font-weight: 600;
 `;
 
+const RoundingNotice = styled.p`
+  margin: 7px 0 0;
+  color: #7d7484;
+  font-size: 10px;
+  font-weight: 550;
+  line-height: 1.4;
+`;
+
 const PolicyCard = styled.aside`
   border-left: 4px solid #d49a00;
   border-radius: 4px 10px 10px 4px;
@@ -206,6 +214,14 @@ const InterviewBody = styled.p`
   line-height: 1.45;
 `;
 
+const InterviewDeadline = styled.p`
+  margin: 4px 0 0;
+  color: #355c49;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.45;
+`;
+
 const InterviewLink = styled.a`
   display: inline-flex;
   align-items: center;
@@ -290,23 +306,10 @@ function FinalReimbursementPage({ data }: { data: ReimbursementState }) {
             {t('dollar_total_label', { amount: formatCurrency(data.dollar_estimate_cents) })}
           </DollarTotal>
           <Conversion>{t('conversion_rate', { points: data.points_per_dollar })}</Conversion>
+          <RoundingNotice>{t('rounding_notice')}</RoundingNotice>
         </FinalCard>
 
         <PolicyCard>{t('policy_notice')}</PolicyCard>
-
-        {interview && !interview.completed && interview.signup_url && (
-          <InterviewCard>
-            <div>
-              <InterviewTitle>{t('interview_title')}</InterviewTitle>
-              <InterviewBody>
-                {t('interview_body', { points: interview.potential_points })}
-              </InterviewBody>
-            </div>
-            <InterviewLink href={interview.signup_url} target="_blank" rel="noreferrer">
-              {t('interview_action')}
-            </InterviewLink>
-          </InterviewCard>
-        )}
 
         <Section>
           <SectionTitle>{t('credited_title')}</SectionTitle>
@@ -322,6 +325,21 @@ function FinalReimbursementPage({ data }: { data: ReimbursementState }) {
             <SectionTitle>{t('not_credited_title')}</SectionTitle>
             <AwardRows awards={notCredited} />
           </Section>
+        )}
+
+        {interview && !interview.completed && interview.signup_url && (
+          <InterviewCard>
+            <div>
+              <InterviewTitle>{t('interview_title')}</InterviewTitle>
+              <InterviewBody>
+                {t('interview_body', { points: interview.potential_points })}
+              </InterviewBody>
+              <InterviewDeadline>{t('interview_deadline')}</InterviewDeadline>
+            </div>
+            <InterviewLink href={interview.signup_url} target="_blank" rel="noreferrer">
+              {t('interview_action')}
+            </InterviewLink>
+          </InterviewCard>
         )}
       </Page>
     </MainScrollContainer>

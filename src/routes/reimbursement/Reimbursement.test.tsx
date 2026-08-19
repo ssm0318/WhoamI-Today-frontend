@@ -19,6 +19,7 @@ jest.mock('react-i18next', () => ({
         final_points_label: 'Your final study points',
         dollar_total_label: `$${options?.amount} reimbursement`,
         conversion_rate: `${options?.points} pts = $1`,
+        rounding_notice: 'Reimbursement amounts are rounded up to the next $5 increment.',
         policy_notice:
           'Surveys determined not to have been answered in good faith were not credited, even when the survey was completed.',
         credited_title: 'Points you earned',
@@ -26,6 +27,7 @@ jest.mock('react-i18next', () => ({
         adjusted_label: 'Reviewed',
         interview_title: 'Study interview',
         interview_body: `Complete the interview to earn ${options?.points} pts.`,
+        interview_deadline: 'Interview signup is available through August 31, 2026.',
         interview_action: 'Sign up for interview',
         empty_credited: 'No credited items are recorded.',
         loading: 'Loading reimbursement details…',
@@ -92,6 +94,7 @@ const finalState = {
   available_max: 800,
   dollar_estimate_cents: 3500,
   points_per_dollar: 10,
+  rounding_notice_en: 'Reimbursement amounts are rounded up to the next $5 increment.',
   policy_notice_en:
     'Surveys determined not to have been answered in good faith were not credited, even when the survey was completed.',
   awards: [
@@ -146,6 +149,11 @@ const finalState = {
     completed: false,
     potential_points: 100,
     signup_url: 'https://calendly.com/jaewonkim/60min',
+    signup_deadline: '2026-08-31',
+  },
+  dropout_survey: {
+    completed: false,
+    url: 'https://jaewonkim.me/whoami-dropout/',
   },
 };
 
@@ -161,6 +169,9 @@ describe('Reimbursement', () => {
     expect(screen.getByTestId('final-summary')).toHaveStyle({ flexShrink: '0' });
     expect(screen.getByText('350 pts')).toBeInTheDocument();
     expect(screen.getByText('$35.00 reimbursement')).toBeInTheDocument();
+    expect(
+      screen.getByText('Reimbursement amounts are rounded up to the next $5 increment.'),
+    ).toBeInTheDocument();
     expect(screen.getByText('WIT bot and boss quiz - Phase 1 (Ver.Q)')).toBeInTheDocument();
     expect(screen.getByText('Friend invitations')).toBeInTheDocument();
     expect(screen.getByText('Not credited')).toBeInTheDocument();
@@ -175,6 +186,9 @@ describe('Reimbursement', () => {
       'href',
       'https://calendly.com/jaewonkim/60min',
     );
+    expect(
+      screen.getByText('Interview signup is available through August 31, 2026.'),
+    ).toBeInTheDocument();
     expect(screen.queryByText(/preview/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/provisional/i)).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /take survey/i })).not.toBeInTheDocument();
@@ -186,7 +200,12 @@ describe('Reimbursement', () => {
     mockedUseSWR.mockReturnValue({
       data: {
         ...finalState,
-        interview_opportunity: { completed: true, potential_points: 100, signup_url: null },
+        interview_opportunity: {
+          completed: true,
+          potential_points: 100,
+          signup_url: null,
+          signup_deadline: '2026-08-31',
+        },
       },
     });
 

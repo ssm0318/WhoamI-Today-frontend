@@ -18,6 +18,12 @@ jest.mock('react-i18next', () => ({
       if (key === 'bucket_todo') return 'To-do';
       if (key === 'bucket_late_but_accepted') return 'Late but accepted';
       if (key === 'bucket_completed') return 'Completed';
+      if (key === 'bucket_not_completed') return 'Surveys not completed';
+      if (key === 'dropout_title') return 'Dropout survey';
+      if (key === 'dropout_body')
+        return 'Tell us why participation changed. No points are awarded.';
+      if (key === 'dropout_action') return 'Take dropout survey';
+      if (key === 'dropout_completed') return 'Dropout survey completed';
       if (key === 'completed_days_count') return `Completed ${options?.count} days`;
       if (key === 'must_complete') return 'Prerequisite/Must Complete';
       if (key === 'high_priority') return 'High priority';
@@ -251,7 +257,7 @@ describe('SurveysIndex', () => {
     expect(screen.queryByText('endpoint')).not.toBeInTheDocument();
   });
 
-  it('combines available and late surveys into a single to-do section with row status badges', () => {
+  it('folds available and late surveys into one read-only not-completed section', () => {
     const data: SurveyIndexResponse = {
       available_now: [
         entry({
@@ -383,7 +389,10 @@ describe('SurveysIndex', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText('To-do')).toBeInTheDocument();
+    expect(screen.getByText(/Surveys not completed/).closest('details')).not.toHaveAttribute(
+      'open',
+    );
+    expect(screen.queryByText('To-do')).not.toBeInTheDocument();
     expect(screen.getByText('Rate your closeness with each friend (Phase 1)')).toBeInTheDocument();
     expect(screen.getByText('Phase 1 reflection: Part 1')).toBeInTheDocument();
     expect(screen.getByText('Phase 1 reflection: Part 2')).toBeInTheDocument();
@@ -434,7 +443,7 @@ describe('SurveysIndex', () => {
     expect(phase2Index).toBeLessThan(sotdIndex);
     expect(anytimeIndex).toBeGreaterThan(sotdIndex);
 
-    const noteRow = screen.getByRole('button', { name: 'Drop us a note' });
+    const noteRow = screen.getByText('Drop us a note').closest('div');
     expect(noteRow).not.toHaveTextContent('Due today');
   });
 
@@ -498,7 +507,7 @@ describe('SurveysIndex', () => {
     expect(screen.getAllByRole('button', { name: 'Check Results' })).toHaveLength(2);
   });
 
-  it('shows edit response for completed editable surveys', () => {
+  it('does not offer editing after reimbursement is frozen', () => {
     const data: SurveyIndexResponse = {
       available_now: [],
       late_but_accepted: [],
@@ -529,7 +538,7 @@ describe('SurveysIndex', () => {
     );
 
     expect(screen.getByText('Phase 1 reflection: Part 1')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Edit response' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Edit response' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Check Results' })).not.toBeInTheDocument();
   });
 
@@ -695,5 +704,88 @@ describe('SurveysIndex', () => {
     expect(screen.getByText('Phase 1 reflection: Part 1')).toBeInTheDocument();
     expect(screen.getByText('High priority')).toBeInTheDocument();
     expect(screen.getByText(/Deadline passed/)).toBeInTheDocument();
+  });
+
+  it('shows completed surveys before a folded read-only list of surveys not completed', () => {
+    const data: SurveyIndexResponse = {
+      available_now: [
+        entry({
+          id: 1,
+          cadence: 'endpoint',
+          bucket: 'available_now',
+          survey: {
+            slug: 'missed_survey',
+            title_en: 'Survey not taken',
+            title_ko: 'Survey not taken',
+          },
+        }),
+      ],
+      late_but_accepted: [],
+      completed: [
+        entry({
+          id: 2,
+          cadence: 'endpoint',
+          bucket: 'completed',
+          submitted_at: '2026-05-18T12:00:00Z',
+          survey: {
+            slug: 'earned_survey',
+            title_en: 'Survey completed',
+            title_ko: 'Survey completed',
+          },
+        }),
+      ],
+    };
+    const reimbursement = {
+      adjusted_total: 113,
+      dropout_survey: {
+        completed: false,
+        url: 'https://jaewonkim.me/whoami-dropout/',
+      },
+    };
+    mockedUseSWR.mockImplementation((key: string) => ({
+      data: key === '/surveys/index/' ? data : reimbursement,
+    }));
+
+    render(
+      <MemoryRouter>
+        <SurveysIndex />
+      </MemoryRouter>,
+    );
+
+    const completedHeading = screen.getByText('Completed');
+    const missedHeading = screen.getByText(/Surveys not completed/);
+    expect(completedHeading.compareDocumentPosition(missedHeading)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+    expect(missedHeading.closest('details')).not.toHaveAttribute('open');
+    expect(screen.getByText('Survey not taken').closest('[role="button"]')).toBeNull();
+    expect(screen.queryByText('To-do')).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Take dropout survey' })).toHaveAttribute(
+      'href',
+      'https://jaewonkim.me/whoami-dropout/',
+    );
+  });
+
+  it('marks the dropout survey complete instead of offering another submission', () => {
+    const data: SurveyIndexResponse = {
+      available_now: [],
+      late_but_accepted: [],
+      completed: [],
+    };
+    mockedUseSWR.mockImplementation((key: string) => ({
+      data:
+        key === '/surveys/index/'
+          ? data
+          : { adjusted_total: 113, dropout_survey: { completed: true, url: null } },
+    }));
+
+    render(
+      <MemoryRouter>
+        <SurveysIndex />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('Dropout survey completed')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Take dropout survey' })).not.toBeInTheDocument();
   });
 });

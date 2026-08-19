@@ -1,4 +1,3 @@
-import { KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -6,7 +5,6 @@ import useSWR from 'swr';
 
 import SubHeader from '@components/sub-header/SubHeader';
 import { DeadlineBadge } from '@components/survey/DeadlineBadge';
-import LockedBadgeModal from '@components/survey/LockedBadgeModal';
 import PointsBadge from '@components/survey/PointsBadge';
 import {
   isSurveysPaused,
@@ -34,20 +32,6 @@ const Section = styled(Layout.FlexCol)`
 const SectionRows = styled(Layout.FlexCol)`
   gap: 12px;
   width: 100%;
-`;
-
-const RowCard = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-  border: 1px solid ${Colors.LIGHT_GRAY};
-  border-radius: 12px;
-  background: ${Colors.WHITE};
-  padding: 16px;
-  text-align: left;
-  cursor: pointer;
 `;
 
 const CompletedRowCard = styled.div`
@@ -187,6 +171,61 @@ const PointsSummaryLink = styled.button`
   line-height: 1.2;
 `;
 
+const DropoutCard = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid #b8d7c6;
+  border-radius: 12px;
+  background: #f3faf6;
+  padding: 16px;
+`;
+
+const DropoutCopy = styled(Layout.FlexCol)`
+  gap: 4px;
+`;
+
+const DropoutLink = styled.a`
+  flex: 0 0 auto;
+  border-radius: 8px;
+  background: ${Colors.PRIMARY};
+  color: ${Colors.WHITE};
+  padding: 9px 12px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+`;
+
+const CompletedStatus = styled.span`
+  flex: 0 0 auto;
+  color: #2f6b4f;
+  font-size: 14px;
+  font-weight: 700;
+`;
+
+const MissedDetails = styled.details`
+  width: 100%;
+  border: 1px solid ${Colors.LIGHT_GRAY};
+  border-radius: 12px;
+  background: ${Colors.WHITE};
+  overflow: hidden;
+`;
+
+const MissedSummary = styled.summary`
+  cursor: pointer;
+  padding: 16px;
+  color: ${Colors.DARK_GRAY};
+  font-size: 16px;
+  font-weight: 700;
+`;
+
+const MissedRows = styled(SectionRows)`
+  border-top: 1px solid ${Colors.LIGHT_GRAY};
+  padding: 12px;
+`;
+
 const pickLocalized = (en: string, ko: string) => (i18n.language === 'ko' ? ko : en);
 
 const VER_W_MUST_COMPLETE_PATTERN = /^feature_eval_w(?:_part(\d+))?$/;
@@ -313,7 +352,6 @@ function SurveysIndex() {
   const { t: tReimbursement } = useTranslation('translation', { keyPrefix: 'reimbursement' });
   const navigate = useNavigate();
   const location = useLocation();
-  const [lockedEntry, setLockedEntry] = useState<SurveyIndexEntry | null>(null);
   const { data } = useSWR('/surveys/index/', getSurveyIndex);
   const { data: reimbursement } = useSWR(REIMBURSEMENT_KEY, getReimbursementState);
 
@@ -325,12 +363,6 @@ function SurveysIndex() {
     navigate(entry.redirect_url, {
       state: { from: location.pathname + location.search },
     });
-
-  const handleEntryKeyDown = (event: KeyboardEvent<HTMLDivElement>, entry: SurveyIndexEntry) => {
-    if (event.key !== 'Enter' && event.key !== ' ') return;
-    event.preventDefault();
-    navigateToEntry(entry);
-  };
 
   const renderDeadlineBadge = (entry: DisplaySurveyIndexEntry, bucket: Bucket) => {
     if (bucket === 'available_now') {
@@ -357,9 +389,6 @@ function SurveysIndex() {
           pointValue={entry.point_value}
           pointAward={entry.point_award}
           locked={!!entry.point_locked_by_prereq_slug}
-          onLockedClick={
-            entry.point_locked_by_prereq_slug ? () => setLockedEntry(entry) : undefined
-          }
         />
         {isMustCompleteSurvey(entry) && <MustCompleteBadge>{t('must_complete')}</MustCompleteBadge>}
         {isHighPrioritySurvey(entry) && <HighPriorityBadge>{t('high_priority')}</HighPriorityBadge>}
@@ -390,30 +419,19 @@ function SurveysIndex() {
 
   const renderEntry = (entry: DisplaySurveyIndexEntry, bucket: Bucket) => {
     if (bucket === 'completed') {
-      const canEditResponse = !!entry.survey.editable && !entry.survey.closed;
       return (
         <CompletedRowCard key={entry.id}>
           {renderEntryContent(entry, bucket)}
-          {(canEditResponse || entry.results_unlocked) && (
+          {entry.results_unlocked && (
             <ResultsButton type="button" onClick={() => navigateToEntry(entry)}>
-              {canEditResponse ? t('edit_response') : t('check_results')}
+              {t('check_results')}
             </ResultsButton>
           )}
         </CompletedRowCard>
       );
     }
 
-    return (
-      <RowCard
-        key={entry.id}
-        role="button"
-        tabIndex={0}
-        onClick={() => navigateToEntry(entry)}
-        onKeyDown={(event) => handleEntryKeyDown(event, entry)}
-      >
-        {renderEntryContent(entry, bucket)}
-      </RowCard>
-    );
+    return <CompletedRowCard key={entry.id}>{renderEntryContent(entry, bucket)}</CompletedRowCard>;
   };
 
   const paused = isSurveysPaused();
@@ -442,14 +460,14 @@ function SurveysIndex() {
           <PointsSummaryBand>
             <PointsSummaryLine>
               <Typo type="body-medium" color="BLACK">
-                {tReimbursement('provisional_total_label')}: {reimbursement.adjusted_total} pts
+                {tReimbursement('final_eyebrow')}: {reimbursement.adjusted_total} pts
               </Typo>
               <PointsSummaryLink type="button" onClick={() => navigate('/reimbursement')}>
                 {tReimbursement('see_how_works')}
               </PointsSummaryLink>
             </PointsSummaryLine>
             <Typo type="label-medium" color="DARK_GRAY">
-              {tReimbursement('audit_disclaimer_short')}
+              {tReimbursement('policy_notice')}
             </Typo>
           </PointsSummaryBand>
         )}
@@ -457,17 +475,6 @@ function SurveysIndex() {
           <Typo type="body-medium" color="DARK_GRAY">
             {t('empty_index')}
           </Typo>
-        )}
-
-        {hasTodo && (
-          <Section>
-            <Typo type="title-large" color="BLACK">
-              {t('bucket_todo')}
-            </Typo>
-            <SectionRows>
-              {todoEntries.map((entry) => renderEntry(entry, entry.bucket))}
-            </SectionRows>
-          </Section>
         )}
 
         {hasCompleted && (
@@ -480,30 +487,32 @@ function SurveysIndex() {
             </SectionRows>
           </Section>
         )}
-        {lockedEntry && (
-          <LockedBadgeModal
-            visible
-            pointValue={lockedEntry.point_value}
-            prereqTitle={pickLocalized(
-              lockedEntry.point_locked_by_prereq_title_en ??
-                lockedEntry.point_locked_by_prereq_slug ??
-                '',
-              lockedEntry.point_locked_by_prereq_title_ko ??
-                lockedEntry.point_locked_by_prereq_slug ??
-                '',
+        {reimbursement?.dropout_survey && (
+          <DropoutCard>
+            <DropoutCopy>
+              <Typo type="title-medium" color="BLACK">
+                {t('dropout_title')}
+              </Typo>
+              <Typo type="label-medium" color="DARK_GRAY">
+                {t('dropout_body')}
+              </Typo>
+            </DropoutCopy>
+            {reimbursement.dropout_survey.completed || !reimbursement.dropout_survey.url ? (
+              <CompletedStatus>{t('dropout_completed')}</CompletedStatus>
+            ) : (
+              <DropoutLink href={reimbursement.dropout_survey.url} target="_blank" rel="noreferrer">
+                {t('dropout_action')}
+              </DropoutLink>
             )}
-            surveyTitle={pickLocalized(lockedEntry.survey.title_en, lockedEntry.survey.title_ko)}
-            onClose={() => setLockedEntry(null)}
-            onDoPrereq={() => {
-              const prereqSlug = lockedEntry.point_locked_by_prereq_slug;
-              setLockedEntry(null);
-              if (prereqSlug) {
-                navigate(`/surveys/${prereqSlug}/answer`, {
-                  state: { from: location.pathname + location.search },
-                });
-              }
-            }}
-          />
+          </DropoutCard>
+        )}
+        {hasTodo && (
+          <MissedDetails>
+            <MissedSummary>
+              {t('bucket_not_completed')} ({todoEntries.length})
+            </MissedSummary>
+            <MissedRows>{todoEntries.map((entry) => renderEntry(entry, entry.bucket))}</MissedRows>
+          </MissedDetails>
         )}
       </Page>
     </MainScrollContainer>

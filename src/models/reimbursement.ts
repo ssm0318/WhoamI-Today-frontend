@@ -43,12 +43,18 @@ export interface ReimbursementState {
   available_max: number;
   dollar_estimate_cents: number;
   points_per_dollar: number;
+  rounding_notice_en: string;
   awards: ReimbursementAward[];
   pending_prereqs: PendingPointPrereq[];
   interview_opportunity: {
     completed: boolean;
     potential_points: number;
     signup_url: string | null;
+    signup_deadline: string;
+  };
+  dropout_survey: {
+    completed: boolean;
+    url: string | null;
   };
   policy_notice_en: string;
 }
