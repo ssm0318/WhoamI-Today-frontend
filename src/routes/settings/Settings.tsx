@@ -9,10 +9,7 @@ import { AccountSettingButton, SettingsButton } from '@components/settings/Setti
 import { StyledSettingsAnchor } from '@components/settings/SettingsButtons.styled';
 import SubHeader from '@components/sub-header/SubHeader';
 import { DEFAULT_MARGIN, TITLE_HEADER_HEIGHT } from '@constants/layout';
-import {
-  PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_EN,
-  PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_KO,
-} from '@constants/url';
+import { PRIVACY_POLICY_NOTION_URL, TERMS_OF_SERVICE_NOTION_URL } from '@constants/url';
 import { Font, Layout } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import { useBoundStore } from '@stores/useBoundStore';
@@ -20,7 +17,7 @@ import { signOut } from '@utils/apis/user';
 import PushNotiSetting from '../../components/settings/push-noti-setting/PushNotiSetting';
 
 function Settings() {
-  const [t, i18n] = useTranslation('translation', { keyPrefix: 'settings' });
+  const [t] = useTranslation('translation', { keyPrefix: 'settings' });
   const postMessage = usePostAppMessage();
   const { myProfile, fcmToken } = useBoundStore((state) => ({
     myProfile: state.myProfile,
@@ -92,15 +89,12 @@ function Settings() {
           <PushNotiSetting />
         </Layout.FlexCol>
         <Divider width={1} />
-        {/* terms of uses */}
-        <StyledSettingsAnchor
-          link={
-            i18n.language === 'ko-KR'
-              ? PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_KO
-              : PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_EN
-          }
-        >
-          <Font.Display type="20_bold">{t('terms_of_uses')}</Font.Display>
+        <StyledSettingsAnchor link={PRIVACY_POLICY_NOTION_URL}>
+          <Font.Display type="20_bold">{t('privacy_policy')}</Font.Display>
+        </StyledSettingsAnchor>
+        <Divider width={1} />
+        <StyledSettingsAnchor link={TERMS_OF_SERVICE_NOTION_URL}>
+          <Font.Display type="20_bold">{t('terms_of_service')}</Font.Display>
         </StyledSettingsAnchor>
         <Divider width={1} />
         <SettingsButton text={t('delete_account')} onClick={handleClickDeleteAccount} />

@@ -5,10 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import CommonDialog from '@components/_common/alert-dialog/common-dialog/CommonDialog';
 import ValidatedInput from '@components/_common/validated-input/ValidatedInput';
-import {
-  PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_EN,
-  PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_KO,
-} from '@constants/url';
+import { PRIVACY_POLICY_NOTION_URL, TERMS_OF_SERVICE_NOTION_URL } from '@constants/url';
 import { Button, CheckBox, Layout, Typo } from '@design-system';
 import { usePostAppMessage } from '@hooks/useAppMessage';
 import { useTrackEvent } from '@hooks/useTrackEvent';
@@ -17,7 +14,7 @@ import { validateBirthdate, validateInviterUsername } from '@utils/apis/user';
 import { AUTH_BUTTON_WIDTH } from 'src/design-system/Button/Button.types';
 
 function Info() {
-  const [t, i18n] = useTranslation('translation', { keyPrefix: 'sign_up' });
+  const [t] = useTranslation('translation', { keyPrefix: 'sign_up' });
   const [dateOfBirthInput, setDateOfBirthInput] = useState('');
   const [dateOfBirthError, setDateOfBirthError] = useState<string | null>(null);
   const signUpInfo = useBoundStore((state) => state.signUpInfo);
@@ -34,11 +31,6 @@ function Info() {
   const navigate = useNavigate();
   const postMessage = usePostAppMessage();
   const trackEvent = useTrackEvent();
-
-  const privacyPolicyLink =
-    i18n.language === 'ko-KR'
-      ? PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_KO
-      : PRIVACY_POLICY_AND_RESEARCH_CONSENT_FORM_NOTION_URL_EN;
 
   const isValideDateOfBirth = (date: string) => {
     const dateObj = new Date(date);
@@ -119,8 +111,9 @@ function Info() {
     validateBirthdate({
       birthdate,
       onSuccess: () => {
+        setSignUpInfo({ date_of_birth: birthdate });
         trackEvent('signup_step_advanced', { step: 'info' });
-        navigate('/signup/password');
+        navigate('/signup/research');
       },
       onError: (errorMsg: string) => {
         openToast({
@@ -133,13 +126,13 @@ function Info() {
     setShowAgeConfirmDialog(false);
   };
 
-  const handleClickPrivacyPolicy = () => {
+  const openExternalLink = (url: string) => {
     if (window.ReactNativeWebView) {
       postMessage('OPEN_BROWSER', {
-        url: privacyPolicyLink,
+        url,
       });
     } else {
-      window.open(privacyPolicyLink, '_blank');
+      window.open(url, '_blank');
     }
   };
 
@@ -182,12 +175,12 @@ function Info() {
             {t('privacy_policy_guide')}
           </Typo>
           <a
-            href={privacyPolicyLink}
+            href={PRIVACY_POLICY_NOTION_URL}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => {
               e.preventDefault();
-              handleClickPrivacyPolicy();
+              openExternalLink(PRIVACY_POLICY_NOTION_URL);
             }}
           >
             <Typo type="label-medium" color="BLACK">
@@ -195,6 +188,22 @@ function Info() {
             </Typo>
             <Typo type="label-medium" color="BLACK" underline>
               {t('privacy_policy_link_view')}
+            </Typo>
+          </a>
+          <a
+            href={TERMS_OF_SERVICE_NOTION_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.preventDefault();
+              openExternalLink(TERMS_OF_SERVICE_NOTION_URL);
+            }}
+          >
+            <Typo type="label-medium" color="BLACK">
+              📄{' '}
+            </Typo>
+            <Typo type="label-medium" color="BLACK" underline>
+              {t('terms_of_service_link_view')}
             </Typo>
           </a>
           <Layout.FlexRow alignItems="center" gap={4} mt={10}>

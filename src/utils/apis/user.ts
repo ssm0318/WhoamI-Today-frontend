@@ -258,7 +258,17 @@ export const signUp = ({
 }) => {
   const formData = new FormData();
 
-  const { email, password, username, noti_time, inviter_id } = signUpInfo;
+  const {
+    email,
+    password,
+    username,
+    noti_time,
+    inviter_id,
+    date_of_birth,
+    research_agreement,
+    signature,
+    date_of_signature,
+  } = signUpInfo;
 
   // Lowercase email + username at submit so the stored value matches what we
   // ran the precheck against, and so the backend's case-insensitive uniqueness
@@ -269,6 +279,10 @@ export const signUp = ({
 
   if (noti_time) formData.append('noti_time', noti_time);
   formData.append('inviter_id', String(inviter_id));
+  if (date_of_birth) formData.append('date_of_birth', date_of_birth);
+  formData.append('research_agreement', String(!!research_agreement));
+  if (signature) formData.append('signature', signature);
+  if (date_of_signature) formData.append('date_of_signature', date_of_signature);
 
   axiosFormDataInstance
     .post('/user/signup/', formData)

@@ -77,6 +77,7 @@ import Email from './routes/sign-up/Email';
 import Info from './routes/sign-up/Info';
 import NotiSettings from './routes/sign-up/NotiSettings';
 import Password from './routes/sign-up/Password';
+import ResearchConsent from './routes/sign-up/ResearchConsent';
 import Username from './routes/sign-up/Username';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
@@ -380,6 +381,7 @@ const router = createBrowserRouter([
           { path: 'username', element: <Username /> },
           { path: 'password', element: <Password /> },
           { path: 'info', element: <Info /> },
+          { path: 'research', element: <ResearchConsent /> },
           { path: 'noti-settings', element: <NotiSettings /> },
           { path: '', element: <Navigate replace to="email" /> },
         ],
